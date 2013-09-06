@@ -46,7 +46,7 @@ def raw_writer(path, lines):
 
 def parse_wsj(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength = 10,
 			delimeter='##', tagmap = None, remappedfile = None,
-			start_section = 0, token_limit = 0):
+			start_section = 0, sentence_limit = 0):
 	all_sents = []
 	gold_sents = []
 	remapped_sents = []
@@ -72,7 +72,9 @@ def parse_wsj(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength
 			
 	finish_processing = False
 	
-	total_token_count = 0
+	# --) Number of sentences before bailing
+	sentence_count = 0
+	
 	for path in pos_files:			
 		f = file(path, 'r')
 		data = f.read()
@@ -107,13 +109,15 @@ def parse_wsj(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength
 					remapped_str += '%s%s%s ' % (word, delimeter, newtag)
 					
 				token_count += 1
-				total_token_count += 1
 				
 			if token_count <= maxlength:
 				all_sents.append(story_str.strip())
 				gold_sents.append(gold_str.strip())
 				remapped_sents.append(remapped_str.strip())
-				if total_token_count > token_limit:
+				
+				sentence_count += 1
+				
+				if sentence_count >= sentence_limit:
 					finish_processing = True
 					
 			if finish_processing:
@@ -169,14 +173,14 @@ def main(argv=None):
 		raise Exception("There were errors found in processing.")
 	
 	# MAIN BODY #
-	c = ConfigParser.ConfigParser(defaults={'tagmap':None, 'remappedfile':None, 'start_section':2,'token_limit':0})
+	c = ConfigParser.ConfigParser(defaults={'tagmap':None, 'remappedfile':None, 'start_section':2,'sentence_limit':2000})
 	c.read(opts.conf)
 	parse_wsj(c.get('wsj', 'root'), c.get('wsj', 'outdir'), c.get('wsj', 'testfile'), 
 			c.get('wsj', 'trainfile'), c.get('wsj', 'goldfile'), c.getint('wsj', 'trainsplit'), 
 			c.getint('wsj', 'maxlength'), c.get('wsj', 'delimeter'),
 			c.get('wsj', 'tagmap'), c.get('wsj', 'remappedfile'),
 			c.getint('wsj', 'start_section'),
-			c.getint('wsj', 'token_limit'))
+			c.getint('wsj', 'sentence_limit'))
 	
 		
 
