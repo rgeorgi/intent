@@ -25,6 +25,7 @@ from utils.commandline import require_opt
 from optparse import OptionParser
 import re
 from pos.TagMap import TagMap
+from trees.ptb import parse_ptb_file
 
 __all__ = []
 __version__ = 0.1
@@ -54,7 +55,7 @@ def parse_wsj(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength
 	if tagmap:
 		tm = TagMap(path=tagmap)
 	
-	posdir = os.path.join(root, 'tagged/wsj')
+	posdir = os.path.join(root, 'combined/wsj')
 	
 	
 	paths = map(lambda path: os.path.join(posdir, path), os.listdir(posdir))	
@@ -70,60 +71,47 @@ def parse_wsj(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength
 				path = os.path.join(root, path)
 				pos_files.append(path)
 			
-	finish_processing = False
 	
 	# --) Number of sentences before bailing
 	sentence_count = 0
 	
+	finished_processing = False
+	
 	for path in pos_files:			
-		f = file(path, 'r')
-		data = f.read()
-		stories = re.split('={38}', data)
-		stories = filter(lambda story: story.strip(), stories)
+		trees = parse_ptb_file(path)
 		
-		for story in stories:
-			story_str = ''
+		# Now process each tree
+		for tree in trees:
+			leaves = tree.leaves()
+			if len(leaves) > maxlength:
+				continue
+
+			sent_str = ''
 			gold_str = ''
 			remapped_str = ''
 			
-			token_count = 0
-			# Remove bracketing.
-			story = re.sub('[\[\]]', '', story)
-			
-			# Remove multiple lines.
-			story = re.sub('\s+', ' ', story)
-			
-			# tokenize on remaining whitespace.
-			tokens = re.split('\s+', story)
-			
-			for token in filter(lambda token: token.strip(), tokens):
-				word, tag = re.search('^(.*)/(.*)$', token.strip()).groups()
-				
-				# For tags such as VBG|NN, take only the first.	
-				tag = tag.split('|')[0]					
-								
-				story_str += '%s ' % word
-				gold_str += '%s%s%s ' % (word, delimeter, tag)
+			for leaf in leaves:
+				if not leaf.pos.strip():
+					continue
+				sent_str += '%s ' % leaf.label
+				gold_str += '%s%s%s ' % (leaf.label, delimeter, leaf.pos)
 				if tagmap:
-					newtag = tm[tag]
-					remapped_str += '%s%s%s ' % (word, delimeter, newtag)
+					newtag = tm[leaf.pos]
+					remapped_str += '%s%s%s ' % (leaf.label, delimeter, newtag) 
 					
-				token_count += 1
-				
-			if token_count <= maxlength:
-				all_sents.append(story_str.strip())
-				gold_sents.append(gold_str.strip())
-				remapped_sents.append(remapped_str.strip())
-				
-				sentence_count += 1
-				
-				if sentence_count >= sentence_limit:
-					finish_processing = True
+			all_sents.append(sent_str.strip())
+			gold_sents.append(gold_str.strip())
+			remapped_sents.append(remapped_str.strip())
 					
-			if finish_processing:
+			sentence_count += 1
+			if sentence_count >= sentence_limit:
+				finished_processing = True
 				break
-		if finish_processing:
+			
+		if finished_processing:
 			break
+		
+
 					
 	# Split the data into train and test.
 	train_idx = int(len(all_sents) * (float(split)/100))
