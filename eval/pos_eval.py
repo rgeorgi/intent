@@ -35,28 +35,42 @@ def pos_eval(goldpath, testpath, delimeter):
 	
 	matches = 0
 	tokens = 0
+	sents = 0
+	seen_tags = {}
 	
 	gold_lines = gold_f.readlines()
 	test_lines = test_f.readlines()
 	
 	for test, gold in zip(test_lines, gold_lines):
 		test_tokens = test.split()
-		gold_tokens = gold.split()
-		
+		gold_tokens = gold.split()		
+			
 		# Make sure all the lines are of equal length
 		if len(test_tokens) != len(gold_tokens):
+			print test_tokens
+			print gold_tokens
 			raise Exception('lines of unequal length')
+		
+		sents += 1
 		
 		for test_token, gold_token in zip(test_tokens, gold_tokens):
 			test_word, test_tag = re.search('^(.*)/(.*)$', test_token).groups()
 			gold_word, gold_tag = re.search('^(.*)/(.*)$', gold_token).groups()
 			
+			seen_tags[test_tag] = True			
+			
 			assert test_word == gold_word
 			
 			if test_tag == gold_tag:
-				matches += 1
+				matches += 1				
 			tokens += 1
 			
+	tags = seen_tags.keys()
+	
+	print 'Tags: %d' % len(tags)
+	print 'Tokens: %d' % tokens
+	print 'Matches: %d' % matches
+	print 'Sents: %d' % sents
 	print 'Accuracy: %.2f' % (float(matches) / tokens)
 				
 

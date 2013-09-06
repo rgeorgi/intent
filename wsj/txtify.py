@@ -18,12 +18,13 @@ It defines a simple parser method.
 '''
 
 import sys
-import os
+import os, glob
 import ConfigParser
 from utils.commandline import require_opt
 
 from optparse import OptionParser
 import re
+from pos.TagMap import TagMap
 
 __all__ = []
 __version__ = 0.1
@@ -40,86 +41,85 @@ def raw_writer(path, lines):
 		f.write('%s\n' % line)
 	f.close()
 
-class TagMap:
-	def __init__(self):
-		self.tagdict = {}
-		
-	def __setitem__(self, oldtag, newtag):
-		self.tagdict[oldtag] = newtag
-		
-	def __getitem__(self, key):
-		return self.tagdict[key]
-		
-	def __repr__(self):
-		return str(self.tagdict)
 
-def parse_tagmap(path):
-	if not os.path.exists(path):
-		raise Exception('Tag map "%s" does not exist.' % path)
-	
-	f = file(path, 'r')
-	lines = f.readlines()
-	f.close()
-	
-	tm = TagMap()
-	for line in lines:
-		tags = line.split()
-		newtag = tags[0]
-		for oldtag in tags[1:]:
-			tm[oldtag] = newtag
-	
-	return tm
 
-def parse_wsj(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength = 10, delimeter='##', tagmap = None, remappedfile = None):
+
+def parse_wsj(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength = 10,
+			delimeter='##', tagmap = None, remappedfile = None,
+			start_section = 0, token_limit = 0):
 	all_sents = []
 	gold_sents = []
 	remapped_sents = []
 	
 	if tagmap:
-		tagmap = parse_tagmap(tagmap)
+		tm = TagMap(path=tagmap)
 	
-	posdir = os.path.join(root, 'tagged')
+	posdir = os.path.join(root, 'tagged/wsj')
 	
-	for root, dir, files in os.walk(posdir):
-		for path in filter(lambda x: x.startswith('wsj_'), files):			
-			f = file(os.path.join(root, path), 'r')
-			data = f.read()
-			stories = re.split('={38}', data)
-			stories = filter(lambda story: story.strip(), stories)
+	
+	paths = map(lambda path: os.path.join(posdir, path), os.listdir(posdir))	
+	dirs = filter(lambda dir: os.path.isdir(dir), paths)
+	valid_dirs = filter(lambda dir: int(os.path.basename(dir)) >= start_section, dirs)
+	
+	pos_files = []
+	
+	for valid_dir in valid_dirs:
+		for root, dir, files in os.walk(valid_dir):
 			
-			for story in stories:
-				story_str = ''
-				gold_str = ''
-				remapped_str = ''
+			for path in filter(lambda x: x.startswith('wsj_'), files):
+				path = os.path.join(root, path)
+				pos_files.append(path)
+			
+	finish_processing = False
+	
+	total_token_count = 0
+	for path in pos_files:			
+		f = file(path, 'r')
+		data = f.read()
+		stories = re.split('={38}', data)
+		stories = filter(lambda story: story.strip(), stories)
+		
+		for story in stories:
+			story_str = ''
+			gold_str = ''
+			remapped_str = ''
+			
+			token_count = 0
+			# Remove bracketing.
+			story = re.sub('[\[\]]', '', story)
+			
+			# Remove multiple lines.
+			story = re.sub('\s+', ' ', story)
+			
+			# tokenize on remaining whitespace.
+			tokens = re.split('\s+', story)
+			
+			for token in filter(lambda token: token.strip(), tokens):
+				word, tag = re.search('^(.*)/(.*)$', token.strip()).groups()
 				
-				token_count = 0
-				# Remove bracketing.
-				story = re.sub('[\[\]]', '', story)
-				
-				# Remove multiple lines.
-				story = re.sub('\s+', ' ', story)
-				
-				# tokenize on remaining whitespace.
-				tokens = re.split('\s+', story)
-				
-				for token in filter(lambda token: token.strip(), tokens):
-					word, tag = re.search('^(.*)/(.*)$', token.strip()).groups()
+				# For tags such as VBG|NN, take only the first.	
+				tag = tag.split('|')[0]					
+								
+				story_str += '%s ' % word
+				gold_str += '%s%s%s ' % (word, delimeter, tag)
+				if tagmap:
+					newtag = tm[tag]
+					remapped_str += '%s%s%s ' % (word, delimeter, newtag)
 					
-					# For tags such as VBG|NN, take only the first.	
-					tag = tag.split('|')[0]					
-									
-					story_str += '%s ' % word
-					gold_str += '%s%s%s ' % (word, delimeter, tag)
-					if tagmap:
-						newtag = tagmap[tag]
-						remapped_str += '%s%s%s ' % (word, delimeter, newtag)
-						
-					token_count += 1
+				token_count += 1
+				total_token_count += 1
+				
+			if token_count <= maxlength:
+				all_sents.append(story_str.strip())
+				gold_sents.append(gold_str.strip())
+				remapped_sents.append(remapped_str.strip())
+				if total_token_count > token_limit:
+					finish_processing = True
 					
-				if token_count <= maxlength:
-					all_sents.append(story_str.strip())
-					gold_sents.append(gold_str.strip())
-					remapped_sents.append(remapped_str.strip())
+			if finish_processing:
+				break
+		if finish_processing:
+			break
 					
 	# Split the data into train and test.
 	train_idx = int(len(all_sents) * (float(split)/100))
@@ -169,9 +169,14 @@ def main(argv=None):
 		raise Exception("There were errors found in processing.")
 	
 	# MAIN BODY #
-	c = ConfigParser.ConfigParser(defaults={'tagmap':None, 'remappedfile':None})
+	c = ConfigParser.ConfigParser(defaults={'tagmap':None, 'remappedfile':None, 'start_section':2,'token_limit':0})
 	c.read(opts.conf)
-	parse_wsj(c.get('wsj', 'root'), c.get('wsj', 'outdir'), c.get('wsj', 'testfile'), c.get('wsj', 'trainfile'), c.get('wsj', 'goldfile'), c.getint('wsj', 'trainsplit'), c.getint('wsj', 'maxlength'), c.get('wsj', 'delimeter'), c.get('wsj', 'tagmap'), c.get('wsj', 'remappedfile'))
+	parse_wsj(c.get('wsj', 'root'), c.get('wsj', 'outdir'), c.get('wsj', 'testfile'), 
+			c.get('wsj', 'trainfile'), c.get('wsj', 'goldfile'), c.getint('wsj', 'trainsplit'), 
+			c.getint('wsj', 'maxlength'), c.get('wsj', 'delimeter'),
+			c.get('wsj', 'tagmap'), c.get('wsj', 'remappedfile'),
+			c.getint('wsj', 'start_section'),
+			c.getint('wsj', 'token_limit'))
 	
 		
 
