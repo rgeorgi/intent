@@ -93,14 +93,33 @@ def main(argv=None):
 	# setup option parser
 	parser = OptionParser(version=program_version_string, epilog=program_longdesc, description=program_license)
 	parser.add_option("-c", "--conf", dest="conf", help="set input path [default: %default]", metavar="FILE")
+	parser.add_option('-g', '--gold', dest='gold', help='Specify gold file without conf file.')
+	parser.add_option('-t', '--test', dest='test', help='Specify test file without conf file.')
+	parser.add_option('-d', '--delimeter', dest='delimeter', help='Specify the delimeter', default='/')
 	
 	# set defaults
 	parser.set_defaults(outfile="./out.txt", infile="./in.txt")
 	
 	(opts, args) = parser.parse_args(argv)
 	c = ConfigParser()
-	c.read(opts.conf)
-	pos_eval(c.get('main', 'goldfile'), c.get('main','testfile'), c.get('main', 'delimeter'))
+	
+	if not opts.conf:
+		if not opts.gold and opts.test:
+			sys.stderr.write('Either the conf file or gold and opts file must be specified.')
+			parser.print_help()
+			sys.exit()
+		else:
+			gold = opts.gold
+			test = opts.test
+			delimeter = opts.delimeter
+	else:
+		c.read(opts.conf)
+		gold = c.get('main', 'goldfile')
+		test = c.get('main', 'testfile')
+		delimeter = c.get('main', 'delimeter')
+		
+	
+	pos_eval(gold, test, delimeter)
 		
 
 

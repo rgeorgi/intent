@@ -115,10 +115,10 @@ def parse_wsj(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength
 					
 	# Split the data into train and test.
 	train_idx = int(len(all_sents) * (float(split)/100))
-	train_sents = all_sents[:train_idx]
-	test_sents = all_sents[train_idx:]
-	gold_out = gold_sents[train_idx:]
-	remapped_out = remapped_sents[train_idx:]
+	train_sents = all_sents
+	test_sents = all_sents
+	gold_out = gold_sents
+	remapped_out = remapped_sents
 	
 	raw_writer(os.path.join(outdir, testfile), test_sents)
 	raw_writer(os.path.join(outdir, trainfile), train_sents)
