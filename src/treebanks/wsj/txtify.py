@@ -26,6 +26,7 @@ from optparse import OptionParser
 import re
 from pos.TagMap import TagMap
 from trees.ptb import parse_ptb_file
+from treebanks.common import process_tree, write_files
 
 __all__ = []
 __version__ = 0.1
@@ -36,11 +37,6 @@ DEBUG = 0
 TESTRUN = 0
 PROFILE = 0
 
-def raw_writer(path, lines):
-	f = file(path, 'w')
-	for line in lines:
-		f.write('%s\n' % line)
-	f.close()
 
 
 
@@ -82,49 +78,23 @@ def parse_wsj(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength
 		
 		# Now process each tree
 		for tree in trees:
-			leaves = tree.leaves()
-			if len(leaves) > maxlength:
-				continue
-
-			sent_str = ''
-			gold_str = ''
-			remapped_str = ''
-			
-			for leaf in leaves:
-				if not leaf.pos.strip():
-					continue
-				sent_str += '%s ' % leaf.label
-				gold_str += '%s%s%s ' % (leaf.label, delimeter, leaf.pos)
-				if tagmap:
-					newtag = tm[leaf.pos]
-					remapped_str += '%s%s%s ' % (leaf.label, delimeter, newtag) 
-					
-			all_sents.append(sent_str.strip())
-			gold_sents.append(gold_str.strip())
-			remapped_sents.append(remapped_str.strip())
-					
-			sentence_count += 1
-			if sentence_count >= sentence_limit:
-				finished_processing = True
-				break
+			sent_str, gold_str, remapped_str =  process_tree(tree, delimeter, maxlength, tm)
+			if sent_str:						
+				all_sents.append(sent_str)
+				gold_sents.append(gold_str)
+				remapped_sents.append(remapped_str)
+						
+				sentence_count += 1
+				if sentence_count >= sentence_limit:
+					finished_processing = True
+					break
 			
 		if finished_processing:
 			break
 		
-
+		write_files(outdir, split, testfile, trainfile, goldfile, remappedfile, all_sents, gold_sents, remapped_sents)
 					
-	# Split the data into train and test.
-	train_idx = int(len(all_sents) * (float(split)/100))
-	train_sents = all_sents
-	test_sents = all_sents
-	gold_out = gold_sents
-	remapped_out = remapped_sents
-	
-	raw_writer(os.path.join(outdir, testfile), test_sents)
-	raw_writer(os.path.join(outdir, trainfile), train_sents)
-	raw_writer(os.path.join(outdir, goldfile), gold_out)
-	if remappedfile:
-		raw_writer(os.path.join(outdir, remappedfile), remapped_out)
+
 			
 			
 		

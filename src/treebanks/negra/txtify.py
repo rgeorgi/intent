@@ -9,13 +9,21 @@ from optparse import OptionParser
 from utils.commandline import require_opt
 import ConfigParser
 from trees.ptb import parse_ptb_string
+from treebanks.common import process_tree, write_files
+from pos.TagMap import TagMap
+import codecs
+
 
 def parse_negra(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength = 10,
 			delimeter='##', tagmap = None, remappedfile = None,
 			start_section = 0, sentence_limit = 0):
 	
+	tm = None
+	if tagmap:
+		tm = TagMap(path=tagmap)
+	
 	# Open up the negra treebank (in PTB format)
-	negra_f = file(root, 'r')
+	negra_f = codecs.open(root, 'r', encoding='latin-1', errors='strict')
 	negra_lines = negra_f.read()
 	negra_f.close()
 	
@@ -23,17 +31,25 @@ def parse_negra(root, outdir, testfile, trainfile, goldfile, split = 90, maxleng
 	negra_trees = re.findall('%% Sent [0-9]+([\s\S]+?)\n\n', negra_lines)
 	negra_trees = map(lambda tree: re.sub('[\s]+', ' ', tree), negra_trees)
 	
-	trees = []
+	all_sents = []
+	gold_sents = []
+	remapped_sents = []
+	
 	sent_count = 0
 	for negra_string in negra_trees:
 		negra_tree = parse_ptb_string(negra_string)
-		if maxlength and len(negra_tree.leaves()) < maxlength:
-			trees.append(negra_tree)
-			sent_count+=1
+		sent_str, gold_str, remapped_str = process_tree(negra_tree, delimeter, maxlength, tm)
+
+		if sent_str:
+			all_sents.append(sent_str)
+			gold_sents.append(gold_str)
+			remapped_sents.append(remapped_str)
+			
+			sent_count+=1			
 			if sentence_limit and sent_count == sentence_limit:
 				break
 
-	print  len(trees)
+	write_files(outdir, split, testfile, trainfile, goldfile, remappedfile, all_sents, gold_sents, remapped_sents)
 
 
 if __name__ == '__main__':
