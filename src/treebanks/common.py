@@ -16,9 +16,9 @@ def raw_writer(path, lines):
 def write_files(outdir, split, testfile, trainfile, goldfile, remappedfile, all_sents, gold_sents, remapped_sents):
 	# Split the data into train and test.
 	train_idx = int(len(all_sents) * (float(split)/100))
-	train_sents = all_sents
-	test_sents = all_sents
-	gold_out = gold_sents
+	train_sents = gold_sents[:train_idx]
+	test_sents = all_sents[train_idx:]
+	gold_out = gold_sents[train_idx:]
 	remapped_out = remapped_sents
 	
 	raw_writer(os.path.join(outdir, testfile), test_sents)
