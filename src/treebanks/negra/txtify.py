@@ -33,23 +33,21 @@ def parse_negra(root, outdir, testfile, trainfile, goldfile, split = 90, maxleng
 	
 	all_sents = []
 	gold_sents = []
-	remapped_sents = []
 	
 	sent_count = 0
 	for negra_string in negra_trees:
 		negra_tree = parse_ptb_string(negra_string)
-		sent_str, gold_str, remapped_str = process_tree(negra_tree, delimeter, maxlength, tm)
+		sent_str, gold_str = process_tree(negra_tree, delimeter, maxlength, tm)
 
 		if sent_str:
 			all_sents.append(sent_str)
 			gold_sents.append(gold_str)
-			remapped_sents.append(remapped_str)
 			
 			sent_count+=1			
 			if sentence_limit and sent_count == sentence_limit:
 				break
 
-	write_files(outdir, split, testfile, trainfile, goldfile, remappedfile, all_sents, gold_sents, remapped_sents)
+	write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents)
 
 
 if __name__ == '__main__':

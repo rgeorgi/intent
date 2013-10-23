@@ -5,6 +5,7 @@ Created on Oct 22, 2013
 '''
 import os
 import codecs
+import re
 
 def raw_writer(path, lines):
 	f = codecs.open(path, 'w', encoding='utf-8')
@@ -13,39 +14,37 @@ def raw_writer(path, lines):
 	f.close()
 
 
-def write_files(outdir, split, testfile, trainfile, goldfile, remappedfile, all_sents, gold_sents, remapped_sents):
+def write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents):
 	# Split the data into train and test.
 	train_idx = int(len(all_sents) * (float(split)/100))
 	train_sents = gold_sents[:train_idx]
 	test_sents = all_sents[train_idx:]
 	gold_out = gold_sents[train_idx:]
-	remapped_out = remapped_sents
 	
 	raw_writer(os.path.join(outdir, testfile), test_sents)
 	raw_writer(os.path.join(outdir, trainfile), train_sents)
 	raw_writer(os.path.join(outdir, goldfile), gold_out)
-	if remappedfile:
-		raw_writer(os.path.join(outdir, remappedfile), remapped_out)
+
 	
 
 def process_tree(t, delimeter, maxlength = 0, tm = None):
 	leaves = t.leaves()
 	if maxlength and (len(leaves) > maxlength):
-		return (None, None, None)
+		return (None, None)
 	else:
 		sent_str = ''
 		gold_str = ''
-		remapped_str = ''
 		
 		for leaf in leaves:
-			if not leaf.pos.strip():
+			if not leaf.pos.strip() or re.match('\*[^\*]+\*', leaf.pos.strip()):
 				continue
 			
 			# Add the token to the sentences
-			sent_str += '%s ' % leaf.label
-			gold_str += '%s%s%s ' % (leaf.label, delimeter, leaf.pos)
+			sent_str += '%s ' % leaf.label			
 			if tm:
 				newtag = tm[leaf.pos]
-				remapped_str += '%s%s%s ' % (leaf.label, delimeter, newtag)
+				gold_str += '%s%s%s ' % (leaf.label, delimeter, newtag)
+			else:
+				gold_str += '%s%s%s ' % (leaf.label, delimeter, leaf.pos)
 			
-		return (sent_str.strip(), gold_str.strip(), remapped_str.strip())
+		return (sent_str.strip(), gold_str.strip())

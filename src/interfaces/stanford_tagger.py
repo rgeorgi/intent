@@ -8,6 +8,7 @@ import os, sys
 from ConfigParser import ConfigParser
 from optparse import OptionParser
 from utils.commandline import require_opt
+from utils.systematizing import notify
 
 
 def jar():
@@ -52,3 +53,4 @@ if __name__ == '__main__':
 		 c.get('tagger', 'model'),
 		 c.get('tagger', 'out_file'),
 		 c.get('tagger', 'delimeter'))
+	notify()

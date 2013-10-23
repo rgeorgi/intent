@@ -27,6 +27,7 @@ import re
 from pos.TagMap import TagMap
 from trees.ptb import parse_ptb_file
 from treebanks.common import process_tree, write_files
+from utils.systematizing import notify
 
 __all__ = []
 __version__ = 0.1
@@ -46,8 +47,8 @@ def parse_wsj(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength
 			start_section = 0, sentence_limit = 0):
 	all_sents = []
 	gold_sents = []
-	remapped_sents = []
 	
+	tm = None
 	if tagmap:
 		tm = TagMap(path=tagmap)
 	
@@ -78,11 +79,10 @@ def parse_wsj(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength
 		
 		# Now process each tree
 		for tree in trees:
-			sent_str, gold_str, remapped_str =  process_tree(tree, delimeter, maxlength, tm)
+			sent_str, gold_str =  process_tree(tree, delimeter, maxlength, tm)
 			if sent_str:						
 				all_sents.append(sent_str)
 				gold_sents.append(gold_str)
-				remapped_sents.append(remapped_str)
 						
 				sentence_count += 1
 				if sentence_count >= sentence_limit:
@@ -91,8 +91,9 @@ def parse_wsj(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength
 			
 		if finished_processing:
 			break
-		
-		write_files(outdir, split, testfile, trainfile, goldfile, remappedfile, all_sents, gold_sents, remapped_sents)
+				
+	write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents)
+	notify()
 					
 
 			
@@ -131,7 +132,7 @@ def main(argv=None):
 		raise Exception("There were errors found in processing.")
 	
 	# MAIN BODY #
-	c = ConfigParser.ConfigParser(defaults={'tagmap':None, 'remappedfile':None, 'start_section':2,'sentence_limit':2000})
+	c = ConfigParser.ConfigParser(defaults={'tagmap':None, 'remappedfile':None, 'start_section':'2','sentence_limit':'2000'})
 	c.read(opts.conf)
 	parse_wsj(c.get('wsj', 'root'), c.get('wsj', 'outdir'), c.get('wsj', 'testfile'), 
 			c.get('wsj', 'trainfile'), c.get('wsj', 'goldfile'), c.getint('wsj', 'trainsplit'), 
