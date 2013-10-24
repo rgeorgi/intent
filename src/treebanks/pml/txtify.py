@@ -13,54 +13,54 @@ from treebanks.common import raw_writer, write_files
 from pos.TagMap import TagMap
 from utils.systematizing import notify
 
-def parse_pml(align, outdir, split, trainfile, testfile, goldfile, projtrain, projtest, projgold, delimeter, eng_tagmap, hin_tagmap):
+def parse_pml(align, outdir, split, trainfile, testfile, goldfile, projtrain, projtest, projgold, delimeter, a_tagmap, b_tagmap):
 	a = Alignments(align)
-	engpath = os.path.join(os.path.dirname(align), a.a)
-	hinpath = os.path.join(os.path.dirname(align), a.b)	
+	a_path = os.path.join(os.path.dirname(align), a.a)
+	b_path = os.path.join(os.path.dirname(align), a.b)	
 	
-	engtrees = TreeList(engpath)
-	hintrees = TreeList(hinpath)
+	a_trees = TreeList(a_path)
+	b_trees = TreeList(b_path)
 	
-	eng_snts = []
-	hin_snts = []
+	a_snts = []
+	b_snts = []
 	
-	eng_raw_snts = []
-	hin_raw_snts = []
+	a_raw_snts = []
+	b_raw_snts = []
 	
-	proj_snts = []
+	b_proj_snts = []
 
-	eng_tm = None
-	hin_tm = None
-	if eng_tagmap:
-		eng_tm = TagMap(eng_tagmap)
-	if hin_tagmap:
-		hin_tm = TagMap(hin_tagmap)
+	a_tm = None
+	b_tm = None
+	if a_tagmap:
+		a_tm = TagMap(a_tagmap)
+	if b_tagmap:
+		b_tm = TagMap(b_tagmap)
 	
 	
 	for alignment in a.sents:
-		engtree = engtrees.find_id(alignment.a)
-		hintree = hintrees.find_id(alignment.b)
+		a_t = a_trees.find_id(alignment.a)
+		b_t = b_trees.find_id(alignment.b)
 		
 
 		
-		# Remap the hindi tags when a tagmap is provided:
-		if hin_tm:
-			for b_node in hintree.nodes():				
-				b_node.pos = hin_tm[b_node.pos]
+		# Remap the foreign-language tags when a tagmap is provided:
+		if b_tm:
+			for b_node in b_t.nodes():				
+				b_node.pos = b_tm[b_node.pos]
 				
-		eng_raw_snts.append(engtree.to_snt(clean=True))
-		hin_raw_snts.append(hintree.to_snt(clean=True))
+		a_raw_snts.append(a_t.to_snt(clean=True))
+		b_raw_snts.append(b_t.to_snt(clean=True))
 		
 		# Let's start by prepping both the sentences for this...
-		eng_snts.append(engtree.to_pos(delimeter = delimeter, clean = True))
-		hin_snts.append(hintree.to_pos(delimeter = delimeter, clean = True))
+		a_snts.append(a_t.to_pos(delimeter = delimeter, clean = True))
+		b_snts.append(b_t.to_pos(delimeter = delimeter, clean = True))
 		
 		# Now, let's projected the POS tags
-		for b_node in hintree.nodes():			
+		for b_node in b_t.nodes():			
 			aligned_pairs = filter(lambda pair: pair.b == b_node.id, alignment.pairs)
 			projected = False
 			for aligned_pair in aligned_pairs:
-				a_node = engtree.find_id(aligned_pair.a)
+				a_node = a_t.find_id(aligned_pair.a)
 				if a_node:
 					
 					# Do the remapping of the projected POS
@@ -69,8 +69,8 @@ def parse_pml(align, outdir, split, trainfile, testfile, goldfile, projtrain, pr
 					# Only procede if a valid tag was found...
 					if a_tag:
 
-						if eng_tm:							
-							a_tag = eng_tm[a_tag]
+						if a_tm:							
+							a_tag = a_tm[a_tag]
 							
 						# Project the projected POS				
 						b_node.pos = a_tag
@@ -81,10 +81,10 @@ def parse_pml(align, outdir, split, trainfile, testfile, goldfile, projtrain, pr
 					
 			
 		# Now, get the sentence with the projected tags...
-		proj_snts.append(hintree.to_pos(delimeter = delimeter, clean = True))
+		b_proj_snts.append(b_t.to_pos(delimeter = delimeter, clean = True))
 		
-	write_files(outdir, split, testfile, trainfile, goldfile, hin_raw_snts, hin_snts)
-	write_files(outdir, split, projtest, projtrain, projgold, hin_raw_snts, proj_snts)
+	write_files(outdir, split, testfile, trainfile, goldfile, b_raw_snts, b_snts)
+	write_files(outdir, split, projtest, projtrain, projgold, b_raw_snts, b_proj_snts)
 	notify()
 		
 		
@@ -101,7 +101,7 @@ if __name__ == '__main__':
 		p.print_help()
 		sys.exit()
 	
-	c = ConfigParser(defaults={'eng_tagmap':None, 'hin_tagmap':None})
+	c = ConfigParser(defaults={'a_tagmap':None, 'b_tagmap':None})
 	c.read(opts.conf)
 	parse_pml(c.get('pml', 'align'),
 			  c.get('pml', 'outdir'),
@@ -113,5 +113,5 @@ if __name__ == '__main__':
 			  c.get('pml', 'projtest'),
 			  c.get('pml', 'projgold'),
 			  c.get('pml', 'delimeter'),
-			  c.get('pml', 'eng_tagmap'),
-			  c.get('pml', 'hin_tagmap'))
+			  c.get('pml', 'a_tagmap'),
+			  c.get('pml', 'b_tagmap'))
