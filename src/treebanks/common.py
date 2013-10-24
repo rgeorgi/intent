@@ -14,7 +14,7 @@ def raw_writer(path, lines):
 	f.close()
 
 
-def write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents):
+def write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents, full_file = None):
 	# Split the data into train and test.
 	train_idx = int(len(all_sents) * (float(split)/100))
 	train_sents = gold_sents[:train_idx]
@@ -24,6 +24,9 @@ def write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_se
 	raw_writer(os.path.join(outdir, testfile), test_sents)
 	raw_writer(os.path.join(outdir, trainfile), train_sents)
 	raw_writer(os.path.join(outdir, goldfile), gold_out)
+	
+	if full_file:
+		raw_writer(os.path.join(outdir, full_file), all_sents)
 
 	
 

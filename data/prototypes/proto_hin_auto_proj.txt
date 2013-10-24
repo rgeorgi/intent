@@ -1,0 +1,9 @@
+ADV	vahAz	BI	nahIM
+NOUN	kala	bAwa	seba	mInA	mAz	KIra	mIrA	SyAma	KAnA	mohana	rAXA	bacce	xillI	kiwAba	ladZakA	sIwA	Gara	rAma	cAzxa	BAI
+ADP	sAWa	kA	para	meM	kI	jEsI	ki	se
+PRT	ko
+DET	eka	yaha
+PRON	jo	ve	vaha	merA	mere	muJako
+VERB	KAwA	rahI	rahA	xI	WA	kiyA	KAI	WI	kahA	KadZA	bETA	kara	KilavAyA	hEM	gayA	hE
+CONJ	Ora
+ADJ	buxXimAna	sunxara

@@ -7,7 +7,7 @@ from utils.ListDict import ListDict
 
 class SetDict(ListDict):
 	def __init__(self):
-		super(ListDict)
+		ListDict.__init__(self)
 	
 		
 	def copy(self):

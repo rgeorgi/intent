@@ -1,0 +1,12 @@
+NOUN
+VERB	VM 
+ADJ
+ADV 
+PRON 
+DET
+ADP
+NUM
+PRT
+.	.
+CONJ 
+X

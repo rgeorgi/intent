@@ -71,7 +71,7 @@ def pos_eval(goldpath, testpath, delimeter):
 	print 'Tokens: %d' % tokens
 	print 'Matches: %d' % matches
 	print 'Sents: %d' % sents
-	print 'Accuracy: %.2f' % (float(matches) / tokens)
+	print 'Accuracy: %.2f' % (float(matches)*100 / tokens)
 				
 
 def main(argv=None):

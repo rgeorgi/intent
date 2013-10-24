@@ -1,0 +1,12 @@
+NOUN	rAma	Pala	BAI	BUka
+VERB	xI	We	gaye	hE
+ADJ	acCe	KadZA
+ADV	bAhara	nahIM
+PRON	mere	jo	merA
+DET
+ADP	xvArA	ko	nE	kara
+NUM	eka	86
+PRT	kyA
+.	.	,
+CONJ	ki	Ora
+X

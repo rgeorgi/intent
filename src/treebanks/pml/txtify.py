@@ -13,7 +13,7 @@ from treebanks.common import raw_writer, write_files
 from pos.TagMap import TagMap
 from utils.systematizing import notify
 
-def parse_pml(align, outdir, split, trainfile, testfile, goldfile, projtrain, projtest, projgold, delimeter, a_tagmap, b_tagmap):
+def parse_pml(align, outdir, split, trainfile, testfile, goldfile, projtrain, projtest, projgold, delimeter, rawfile, a_tagmap, b_tagmap):
 	a = Alignments(align)
 	a_path = os.path.join(os.path.dirname(align), a.a)
 	b_path = os.path.join(os.path.dirname(align), a.b)	
@@ -85,6 +85,7 @@ def parse_pml(align, outdir, split, trainfile, testfile, goldfile, projtrain, pr
 		
 	write_files(outdir, split, testfile, trainfile, goldfile, b_raw_snts, b_snts)
 	write_files(outdir, split, projtest, projtrain, projgold, b_raw_snts, b_proj_snts)
+	raw_writer(os.path.join(outdir, rawfile), b_raw_snts)
 	notify()
 		
 		
@@ -101,7 +102,7 @@ if __name__ == '__main__':
 		p.print_help()
 		sys.exit()
 	
-	c = ConfigParser(defaults={'a_tagmap':None, 'b_tagmap':None})
+	c = ConfigParser(defaults={'a_tagmap':None, 'b_tagmap':None, 'rawfile':None})
 	c.read(opts.conf)
 	parse_pml(c.get('pml', 'align'),
 			  c.get('pml', 'outdir'),
@@ -113,5 +114,6 @@ if __name__ == '__main__':
 			  c.get('pml', 'projtest'),
 			  c.get('pml', 'projgold'),
 			  c.get('pml', 'delimeter'),
+			  c.get('pml', 'rawfile'),
 			  c.get('pml', 'a_tagmap'),
 			  c.get('pml', 'b_tagmap'))
