@@ -11,11 +11,16 @@ class IGT(object):
 
 
 	def __init__(self):
+		self.id = None
 		self.lang_id = None
-		self.lang_line = None
-		self.gloss_line = None
-		self.trans_line = None
+		self.lang = None
+		self.gloss = None
+		self.trans = None
 		'''
 		Constructor
 		'''
+		
+		
+	def __repr__(self):
+		return '<IGT id="%s">' % (self.id)
 		

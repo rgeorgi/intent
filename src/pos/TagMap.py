@@ -52,6 +52,8 @@ class TagMap():
 			out_str += '\n'
 		return out_str
 			
+	def __nonzero__(self):
+		return True
 			
 			
 		
