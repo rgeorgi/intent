@@ -1,4 +1,4 @@
-## tagger training invoked at Wed Oct 23 18:40:52 PDT 2013 with arguments:
+## tagger training invoked at Thu Oct 24 11:11:13 PDT 2013 with arguments:
                    model = /Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/hindi_remapped.tagger
                     arch = generic
             wordFunction = 

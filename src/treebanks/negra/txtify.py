@@ -9,14 +9,17 @@ from optparse import OptionParser
 from utils.commandline import require_opt
 import ConfigParser
 from trees.ptb import parse_ptb_string
-from treebanks.common import process_tree, write_files
+from treebanks.common import process_tree, write_files, raw_writer,\
+	traintest_split
 from pos.TagMap import TagMap
 import codecs
+from utils.ConfigFile import ConfigFile
+from utils.systematizing import notify
 
 
 def parse_negra(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength = 10,
-			delimeter='##', tagmap = None, remappedfile = None,
-			start_section = 0, sentence_limit = 0):
+			delimeter='##', tagmap = None,
+			sentence_limit = 0, trainraw = None):
 	
 	tm = None
 	if tagmap:
@@ -48,6 +51,12 @@ def parse_negra(root, outdir, testfile, trainfile, goldfile, split = 90, maxleng
 				break
 
 	write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents)
+	if trainraw:
+		raw_train_sents, raw_test_sents = traintest_split(all_sents, split)
+		raw_writer(trainraw, raw_train_sents)
+		
+	notify()
+	
 
 
 if __name__ == '__main__':
@@ -80,11 +89,10 @@ if __name__ == '__main__':
 		raise Exception("There were errors found in processing.")
 	
 	# MAIN BODY #
-	c = ConfigParser.ConfigParser(defaults={'tagmap':None, 'remappedfile':None, 'start_section':'2','sentence_limit':'2000'})
-	c.read(opts.conf)
-	parse_negra(c.get('negra', 'root'), c.get('negra', 'outdir'), c.get('negra', 'testfile'), 
-			c.get('negra', 'trainfile'), c.get('negra', 'goldfile'), c.getint('negra', 'trainsplit'), 
-			c.getint('negra', 'maxlength'), c.get('negra', 'delimeter'),
-			c.get('negra', 'tagmap'), c.get('negra', 'remappedfile'),
-			c.getint('negra', 'start_section'),
-			c.getint('negra', 'sentence_limit'))
+	c = ConfigFile(opts.conf)
+	parse_negra(
+			c['root'], c['outdir'], c['testfile'], 
+			c['trainfile'], c['goldfile'], c['trainsplit'], 
+			c['maxlength'], c['delimeter'],
+			c['tagmap'],
+			c['sentence_limit'], c['trainraw'])

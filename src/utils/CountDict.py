@@ -24,11 +24,15 @@ class CountDict():
 	def __repr__(self):
 		return str(self)
 	
-	def most_frequent(self, minimum = 0):
+	def most_frequent(self, minimum = 0, num = 1):
 		items = self.dict.items()
 		items.sort(key = lambda item: item[1], reverse=True)
-		if items and items[0][1] > minimum:
-			return items[0][0]
-		else:
-			return None
+		ret_items = []
+		for item in items:
+			if item[1] > minimum:
+				ret_items.append(item[0])
+			if num and len(ret_items) == num:
+				break
+		
+		return ret_items
 			

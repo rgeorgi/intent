@@ -14,16 +14,18 @@ def raw_writer(path, lines):
 	f.close()
 
 
+def traintest_split(sentlist, split):
+	train_idx = int(len(sentlist) * (float(split)/100))
+	return (sentlist[:train_idx], sentlist[train_idx:])
+
 def write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents, full_file = None):
 	# Split the data into train and test.
-	train_idx = int(len(all_sents) * (float(split)/100))
-	train_sents = gold_sents[:train_idx]
-	test_sents = all_sents[train_idx:]
-	gold_out = gold_sents[train_idx:]
+	train, test = traintest_split(all_sents, split)
+	gold_train, gold_test = traintest_split(gold_sents, split)
 	
-	raw_writer(os.path.join(outdir, testfile), test_sents)
-	raw_writer(os.path.join(outdir, trainfile), train_sents)
-	raw_writer(os.path.join(outdir, goldfile), gold_out)
+	raw_writer(os.path.join(outdir, testfile), test)
+	raw_writer(os.path.join(outdir, trainfile), gold_train)
+	raw_writer(os.path.join(outdir, goldfile), gold_test)
 	
 	if full_file:
 		raw_writer(os.path.join(outdir, full_file), all_sents)

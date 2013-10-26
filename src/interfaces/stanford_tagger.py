@@ -9,6 +9,7 @@ from ConfigParser import ConfigParser
 from optparse import OptionParser
 from utils.commandline import require_opt
 from utils.systematizing import notify
+from utils.ConfigFile import ConfigFile
 
 
 def jar():
@@ -41,16 +42,14 @@ if __name__ == '__main__':
 		p.print_help()
 		sys.exit()
 		
+	c = ConfigFile(opts.conf)
 		
-	c = ConfigParser()
-	c.read(opts.conf)
-	
 	# Now do the testing and training
-	train(c.get('tagger', 'train_file'),
- 		  c.get('tagger', 'model'),
- 		  c.get('tagger', 'delimeter'))
-	test(c.get('tagger', 'test_file'),
- 		 c.get('tagger', 'model'),
- 		 c.get('tagger', 'out_file'),
- 		 c.get('tagger', 'delimeter'))
+	train(c['train_file'],
+ 		  c['model'],
+ 		  c['delimeter'])
+	test(c['test_file'],
+ 		 c['model'],
+ 		 c['out_file'],
+ 		 c['delimeter'])
 	notify()

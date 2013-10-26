@@ -1,9 +1,9 @@
-ADV	sAWa	nahIM
-NOUN	kala	AwiPZa	mInA	mIrA	sIwA	rAXA	bacce	kiwAba	ladZakA	pAnI	NULL	rAma	cAzxa	BAI	bAwa	buxXimAna	seba	mAz	AyA	SyAma	Gara	mohana	xillI	KAnA	KIra
+ADV	wejZa	sAWa	jalxI	nahIM	bAhara
+NOUN	kala	AwiPZa	kamare	tikata	hari	uxGAtana	mIrA	sIwA	rAXA	praSna	kiwAba	Gara	pAnI	bApU	BAI	NULL	seba	yAxava	mAz	AyA	KAnA	cAzxa	manxira	KIra	mInA	skUla	bAjZAra	bacce	ladZakA	gAMXIjI	xAna	rAma	bAwa	buxXimAna	svIkAra	SyAma	xillI	mohana	mana	cammaca	BiKArI	gussA	samaya	rAmabacana
 ADP	kA	ke	para	meM	kI	jEsI	ko	xvArA	se	ne
 .	,	.
-PRON	jo	ve	apanA	merA	vaha	vahAz	yaha	mere	muJako
-VERB	KAwA	rahA	xI	WA	kiyA	KAI	gayA	WI	rahI	bETA	kara	KilavAyA	gaye	hEM	hE	jAnA	kahA	liyA
+PRON	usane	ve	usa	yaha	apane	jo	muJako	apanA	merA	vaha	vahAz	mere
+VERB	KAwA	xeKA	WA	xeKI	gayA	rahA	WI	jA	kahA	lagI	AyegA	hEM	xiKA	huA	We	xI	kiyA	hE	KAI	gaye	rahI	KAkara	bETA	kara	KilavAyA	xilavAyI	mAnanA	mAnawe	jAnA	xilavAyA	liyA
 NUM	eka
 CONJ	ki	Ora
-ADJ	BI	KadZA	sunxara
+ADJ	nIlI	giraPZawAra	KadZA	sunxara	acCe	acCA	BI

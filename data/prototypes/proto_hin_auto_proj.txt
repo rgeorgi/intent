@@ -1,9 +1,9 @@
-ADV	vahAz	BI	nahIM
-NOUN	kala	bAwa	seba	mInA	mAz	KIra	mIrA	SyAma	KAnA	mohana	rAXA	bacce	xillI	kiwAba	ladZakA	sIwA	Gara	rAma	cAzxa	BAI
-ADP	sAWa	kA	para	meM	kI	jEsI	ki	se
-PRT	ko
-DET	eka	yaha
-PRON	jo	ve	vaha	merA	mere	muJako
-VERB	KAwA	rahI	rahA	xI	WA	kiyA	KAI	WI	kahA	KadZA	bETA	kara	KilavAyA	hEM	gayA	hE
+ADV	bahuwa	bAhara	vahAz	BI	nahIM	jalxI
+NOUN	kala	AwiPZa	kamare	tikata	hari	mInA	skUla	bAjZAra	mIrA	sIwA	gAMXIjI	rAXA	bAwa	Gara	kiwAba	ladZakA	xAna	pAnI	KAnA	rAma	cAzxa	BAI	bacce	seba	yAxava	mAz	SyAma	xillI	mohana	BiKArI	praSna	cammaca	bApU	manxira	KIra	samaya	rAmabacana
+ADP	sAWa	kA	ke	para	meM	ki	jEsI	kI	se	xvArA
+PRON	apane	jo	muJako	vaha	usane	merA	mere	ve
+DET	usa	eka	yaha
+PRT	jAnA	ko
+VERB	KAwA	uxGAtana	xiKA	WA	xeKA	AyA	gayA	We	WI	kara	lagI	AyegA	giraPZawAra	kahA	rahA	xI	kiyA	KadZA	rahI	svIkAra	xilavAyA	KAkara	bETA	KilavAyA	xilavAyI	xeKI	hEM	hE	KAI	mAnawe	liyA
 CONJ	Ora
-ADJ	buxXimAna	sunxara
+ADJ	acCA	nIlI	buxXimAna	gussA	sunxara

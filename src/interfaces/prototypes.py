@@ -10,6 +10,7 @@ from utils.commandline import require_opt
 from eval.pos_eval import pos_eval
 from utils.systematizing import notify
 from utils.ConfigFile import ConfigFile
+from utils.fileutils import remove_safe
 
 def prop():
 	global cp
@@ -30,10 +31,10 @@ def context(rawfile, modelfile):
 	global cp
 # 	conf = '/Users/rgeorgi/Dropbox/code/eclipse/prototype-sequence/conf/orig_test.conf'
 	cmd = 'java -server -mx1200m -cp %s edu.berkeley.nlp.prototype.simmodel.WordContextSimilarity ' % cp
-  	cmd += ' -dataRoot %s' % os.path.dirname(rawfile)
-  	cmd += ' -prefix %s' % os.path.basename(os.path.splitext(rawfile)[0])
- 	cmd += ' -outfile %s' % os.path.abspath(modelfile)
-  	cmd += ' -appendDistance -reduceType RAND_PROJ -contextWindow 2 -directional'
+	cmd += ' -dataRoot %s' % os.path.dirname(rawfile)
+	cmd += ' -prefix %s' % os.path.basename(os.path.splitext(rawfile)[0])
+	cmd += ' -outfile %s' % os.path.abspath(modelfile)
+	cmd += ' -appendDistance -reduceType RAND_PROJ -contextWindow 2 -directional'
 
 	sys.stderr.write(cmd+'\n')
 	os.system(cmd)
@@ -45,10 +46,13 @@ def train(rawfile, protofile, context_model, sequence_model):
 	
 	cmd += ' -dataRoot %s' % os.path.dirname(rawfile)
 	cmd += ' -prefix %s' % os.path.basename(os.path.splitext(rawfile)[0])
- 	cmd += ' -outfile %s' % os.path.abspath(sequence_model)	
+	cmd += ' -outfile %s' % os.path.abspath(sequence_model)	
 	cmd += ' -protoFile %s' % protofile
-# 	cmd += ' -simModelPath %s' % os.path.abspath(context_model)
-	cmd += ' -useHasDigit -useSuffixFeatures -useHasHyphen'
+	cmd += ' -minIters 0'
+	cmd += ' -numIters 10'
+	cmd += ' -simModelPath %s' % os.path.abspath(context_model)
+	cmd += ' -useSuffixFeatures -useHasHyphen'
+	cmd += ' -useInitialCapital'
 	cmd += ' -order 1'
 # 	cmd += ' -create -execDir %s' % os.path.join(os.path.dirname(context_model), 'exec')
 
@@ -81,6 +85,11 @@ if __name__ == '__main__':
 		sys.exit(0)
 		
 	c = ConfigFile(opts.conf)
+	
+	remove_safe(c['context_model'])
+	remove_safe(c['sequence_model'])
+	remove_safe(c['test_file']+'.tagged')
+
 	
 	context(c['rawfile'], 
 		    c['context_model'])

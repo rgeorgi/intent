@@ -1,0 +1,9 @@
+ADV	vahAz	bAhara	bahuwa	BI	jalxI
+NOUN	kala	kamare	hari	mInA	skUla	bAjZAra	mIrA	rAXA	praSna	kiwAba	ladZakA	gAMXIjI	SyAma	xAna	bacce	cAzxa	BAI	bAwa	seba	yAxava	BiKArI	xillI	tikata	Gara	mohana	cammaca	bApU	manxira	samaya	rAmabacana
+ADP	sAWa	kA	para	meM	jEsI	xvArA
+PRT	ko
+DET	usa	eka	yaha
+PRON	apane	jo	ve	vaha	usane	merA	mere	muJako
+VERB	KAwA	xeKA	xiKA	WA	uxGAtana	xeKI	gayA	rahA	WI	KadZA	lagI	AyegA	kahA	We	xI	kiyA	giraPZawAra	KAI	svIkAra	rahI	KAkara	bETA	KilavAyA	xilavAyI	hEM	mAnawe	xilavAyA	liyA
+CONJ	Ora
+ADJ	acCA	nIlI	buxXimAna	gussA	sunxara

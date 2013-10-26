@@ -27,7 +27,7 @@ class TwoLevelCountDict():
 	def __str__(self):
 		return str(self.dict)
 	
-	def most_frequent(self, key):
-		return self[key].most_frequent()
+	def most_frequent(self, key, num = 1):
+		return self[key].most_frequent(num = num)
 	
 	

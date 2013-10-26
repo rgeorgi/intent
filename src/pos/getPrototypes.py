@@ -9,8 +9,12 @@ from utils.commandline import require_opt
 from utils.ConfigFile import ConfigFile
 from utils.TwoLevelCountDict import TwoLevelCountDict
 from utils.SetDict import SetDict
+import re
 
-def get_prototypes(tagged_path, proto_out, delimeter, ignoretags = []):
+def get_prototypes(tagged_path, proto_out, delimeter, 
+				   ignoretags = [], unambiguous = False,
+				   maxproto = 0):
+	
 	tagged_file = file(tagged_path, 'r')
 	
 	tag_word_dict = TwoLevelCountDict()
@@ -21,16 +25,32 @@ def get_prototypes(tagged_path, proto_out, delimeter, ignoretags = []):
 	for line in tagged_file:
 		tokens = line.split()
 		for token in tokens:
-			word, pos = token.split(delimeter)
+			word, pos = re.search('(^.*)%s(.*?)$' % delimeter, token).groups()
 			if pos not in ignoretags:
 				tag_word_dict.add(pos, word)
 				word_tag_dict.add(word, pos)
+	
+	numproto = 0
+	# First, let's pick the maxproto most frequent words for a tag.
+	for tag in tag_word_dict.keys():		
+		words = tag_word_dict[tag].most_frequent(minimum=1, num = None)
+		found_words = 0
+		for word in words:
+			print word			
+			freq_tag = word_tag_dict[word].most_frequent(minimum=1)
 			
-	# For every word, let's pick its most frequently 
-	for word in word_tag_dict.keys():
-		freq = word_tag_dict[word].most_frequent(minimum=2)
-		if freq:
-			proto_dict.add(freq, word)
+			
+			if freq_tag:
+				print freq_tag[0]
+				proto_dict.add(freq_tag[0], word)
+				numproto += 1
+				found_words += 1
+			
+			if maxproto and found_words == maxproto:
+				break
+			
+	print numproto
+
 			
 	# Now, set up the proto file for writing.
 	proto_file = file(proto_out, 'w')
@@ -55,6 +75,11 @@ if __name__ == '__main__':
 		sys.exit()
 		
 	c = ConfigFile(opts.conf)
-	get_prototypes(c['taggedfile'], c['protofile'], c['delimeter'], c['ignoretags'])
+	get_prototypes(c['taggedfile'], 
+					c['protofile'], 
+					c['delimeter'], 
+					c['ignoretags'],
+					c['unambiguous'],
+					c['maxproto'])
 	
 	

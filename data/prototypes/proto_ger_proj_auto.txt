@@ -1,0 +1,9 @@
+ADV	nicht	hier	noch	immer	als	laut	nie
+NOUN	Buch	Gestern	Traktor	Dom	Tor	Arzt	Brief	Joachim	Bücher	AngreiferDAT	Wachen	Reim	jeder	Aufsatz	Mann	Leute	Haare	gestern	Lied	Wagen	Kindern	Frau	Touristen	Fritz	Heute	Bratwurst	Hans	Peter	Karl
+ADP	über	von	weil	dass	daß
+PRON	Ich	wir	Sie	ihr	ihm	Wen	wem	ich	Wir	sie	mich	sich	du	er	Er
+DET	des	die	diese	Die	der	Das	eine	dem	den	das	einem	Der	ein
+.	?	.
+PRT	zu	ausstellte
+VERB	gegeben	öffneten	versucht	lehrte	wurde	besucht	gesehen	glaubten	Werden	lesen	gegessen	lassen	verteidigen	bat	zurückgelassen	singt	gekauft	glauben	ist	gelesen	gemalt	ankommt	glaubt	hat	reparieren
+ADJ	leckere	nackt
