@@ -28,6 +28,8 @@ from pos.TagMap import TagMap
 from trees.ptb import parse_ptb_file
 from treebanks.common import process_tree, write_files
 from utils.systematizing import notify
+from utils.ConfigFile import ConfigFile
+from treebanks.TextParser import TextParser
 
 __all__ = []
 __version__ = 0.1
@@ -39,66 +41,79 @@ TESTRUN = 0
 PROFILE = 0
 
 
+class WSJParser(TextParser):
+	
+	def __init__(self, conf):
+		self.conf = conf
 
 
-
-def parse_wsj(root, outdir, testfile, trainfile, goldfile, split = 90, maxlength = 10,
-			delimeter='##', tagmap = None, remappedfile = None,
-			start_section = 0, sentence_limit = 0):
-	all_sents = []
-	gold_sents = []
+	def parse(self):
+		c = ConfigFile(self.conf)
 	
-	tm = None
-	if tagmap:
-		tm = TagMap(path=tagmap)
-	
-	posdir = os.path.join(root, 'combined/wsj')
-	
-	
-	paths = map(lambda path: os.path.join(posdir, path), os.listdir(posdir))	
-	dirs = filter(lambda dir: os.path.isdir(dir), paths)
-	valid_dirs = filter(lambda dir: int(os.path.basename(dir)) >= start_section, dirs)
-	
-	pos_files = []
-	
-	for valid_dir in valid_dirs:
-		for root, dir, files in os.walk(valid_dir):
-			
-			for path in filter(lambda x: x.startswith('wsj_'), files):
-				path = os.path.join(root, path)
-				pos_files.append(path)
-			
-	
-	# --) Number of sentences before bailing
-	sentence_count = 0
-	
-	finished_processing = False
-	
-	for path in pos_files:			
-		trees = parse_ptb_file(path)
 		
-		# Now process each tree
-		for tree in trees:
-			sent_str, gold_str =  process_tree(tree, delimeter, maxlength, tm)
-			if sent_str:						
+		root = c['root']
+		outdir = c['outdir']
+		testfile = c['testfile']
+		trainfile = c['trainfile']
+		goldfile = c['goldfile']
+		split = c.getint('trainsplit')
+		maxlength = c.getint('maxlength')
+		minlength = c['minlength']
+		delimeter = c['delimeter']
+		tagmap = c['tagmap']
+		start_section = c['start_section']
+		sentence_limit = c['sentence_limit']
+		
+		all_sents = []
+		gold_sents = []
+		
+		tm = None
+		if tagmap:
+			tm = TagMap(path=tagmap)
+		
+		posdir = os.path.join(root, 'combined/wsj')
+		
+		
+		paths = map(lambda path: os.path.join(posdir, path), os.listdir(posdir))	
+		dirs = filter(lambda dir: os.path.isdir(dir), paths)
+		valid_dirs = filter(lambda dir: int(os.path.basename(dir)) >= start_section, dirs)
+		
+		pos_files = []
+		
+		for valid_dir in valid_dirs:
+			for root, dir, files in os.walk(valid_dir):
+				
+				for path in filter(lambda x: x.startswith('wsj_'), files):
+					path = os.path.join(root, path)
+					pos_files.append(path)
+				
+		
+		# --) Number of sentences before bailing
+		sentence_count = 0
+		
+		finished_processing = False
+		
+		for path in pos_files:
+			trees = parse_ptb_file(path)		
+			for tree in trees:
+				sent_str, gold_str = process_tree(tree, delimeter, maxlength, tm)
+				if not sent_str:
+					continue
+				
 				all_sents.append(sent_str)
 				gold_sents.append(gold_str)
-						
+				
 				sentence_count += 1
-				if sentence_count >= sentence_limit:
+				if sentence_count and sentence_count == sentence_limit:
 					finished_processing = True
 					break
-			
-		if finished_processing:
-			break
-				
-	write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents)
-	notify()
 					
-
+			if finished_processing:
+				break
 			
-			
-		
+		write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents)
+		notify()
+						
 
 def main(argv=None):
 	'''Command line options.'''
@@ -131,16 +146,14 @@ def main(argv=None):
 	if errors:
 		raise Exception("There were errors found in processing.")
 	
-	# MAIN BODY #
-	c = ConfigParser.ConfigParser(defaults={'tagmap':None, 'remappedfile':None, 'start_section':'2','sentence_limit':'2000'})
-	c.read(opts.conf)
-	parse_wsj(c.get('wsj', 'root'), c.get('wsj', 'outdir'), c.get('wsj', 'testfile'), 
-			c.get('wsj', 'trainfile'), c.get('wsj', 'goldfile'), c.getint('wsj', 'trainsplit'), 
-			c.getint('wsj', 'maxlength'), c.get('wsj', 'delimeter'),
-			c.get('wsj', 'tagmap'), c.get('wsj', 'remappedfile'),
-			c.getint('wsj', 'start_section'),
-			c.getint('wsj', 'sentence_limit'))
+	# MAIN BODY #	
+	c = ConfigFile(opts.conf)
+	p = WSJParser(opts.conf)
+	p.parse()
+
 	
+
+
 		
 
 
