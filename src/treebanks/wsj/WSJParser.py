@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # encoding: utf-8
 '''
-wsj.txtify -- a WSJ-to-raw-text converter with.
+WSJParser -- a WSJ-to-raw-text converter with.
 
-wsj.txtify is a WSJ-to-raw-text converter
+WSJParser is a WSJ-to-raw-text converter
 
-It defines a simple parser method.
+It converts the WSJ data into a set of files for the POS tagging task.
 
 @author:     Ryan Georgi
 			
@@ -69,98 +69,48 @@ class WSJParser(TextParser):
 		
 		tm = None
 		if tagmap:
-			tm = TagMap(pos_path=tagmap)
+			tm = TagMap(path=tagmap)
 		
-		posdir = os.path.join(root, 'tagged/wsj')
-		rawdir = os.path.join(root, 'raw/wsj')
+		posdir = os.path.join(root, 'combined/wsj')
 		
-
-		# Filter the pos paths		
-		pos_paths = map(lambda pos_path: os.path.join(posdir, pos_path), os.listdir(posdir))	
-		pos_dirs = filter(lambda dir: os.path.isdir(dir), pos_paths)
-		valid_pos_dirs = filter(lambda dir: int(os.path.basename(dir)) >= start_section, pos_dirs)
 		
-		# Filter the raw files
-		raw_paths = map(lambda pos_path: os.path.join(rawdir, pos_path), os.listdir(rawdir))
-		raw_dirs = filter(lambda dir: os.path.isdir(dir), raw_paths)
-		valid_raw_dirs = filter(lambda dir: int(os.path.basename(dir)) >= start_section, raw_dirs)
+		paths = map(lambda path: os.path.join(posdir, path), os.listdir(posdir))	
+		dirs = filter(lambda dir: os.path.isdir(dir), paths)
+		valid_dirs = filter(lambda dir: int(os.path.basename(dir)) >= start_section, dirs)
 		
 		pos_files = []
-		raw_files = []
 		
-		# Add the pos files
-		for valid_pos_dir in valid_pos_dirs:
-			for root, dir, files in os.walk(valid_pos_dir):
+		for valid_dir in valid_dirs:
+			for root, dir, files in os.walk(valid_dir):
 				
-				for pos_path in filter(lambda x: x.startswith('wsj_'), files):
-					pos_path = os.path.join(root, pos_path)
-					pos_files.append(pos_path)
-					
-		# Add the raw files
-		for valid_raw_dir in valid_raw_dirs:
-			for root, dir, files in os.walk(valid_raw_dir):
+				for path in filter(lambda x: x.startswith('wsj_'), files):
+					path = os.path.join(root, path)
+					pos_files.append(path)
 				
-				for pos_path in filter(lambda x: x.startswith('wsj_'), files):
-					pos_path = os.path.join(root, pos_path)
-					raw_files.append(pos_path)
-				
-				
-		# "zip" the two lists together.
-		assert len(pos_files) == len(raw_files)
-		zipped_files = zip(pos_files, raw_files)
-		
-		
 		
 		# --) Number of sentences before bailing
 		sentence_count = 0
 		
 		finished_processing = False
 		
-		# Keep track of the sentences being processed.
-		all_sents = []
-		gold_sents = []
-		
-		for pos_path, raw_path in zipped_files:
-			
-			raw_file = file(raw_path, 'r')
-			raw_data = raw_file.read()
-			raw_file.close()
-			
-			pos_file = file(pos_path, 'r')
-			pos_data = pos_file.read()
-			pos_file.close()
-			
-			# Now, process the raw data into sents.
-			raw_data = re.sub('\.START\s+', '', raw_data)
-			raw_sents = re.split('\n\n', raw_data.strip())
-			
-			# Now, get the tokens from the pos data.
-			tokens = re.findall('(\S+)/(\S+)', pos_data)
-						
-			for sent in raw_sents:
-				raw_str, pos_str = '', ''
+		for path in pos_files:
+			trees = parse_ptb_file(path)		
+			for tree in trees:
+				sent_str, gold_str = process_tree(tree, delimeter, maxlength, tm)
+				if not sent_str:
+					continue
 				
-				sys.stderr.write(sent+'\n')				
-				while sent:
-					word, tag = tokens.pop(0)
-					print sent,
-					sent = sent[len(word):].strip()
-					print '-----', word
-					raw_str += '%s ' % word
-					pos_str += '%s%s%s ' % (word, delimeter, tag)
-
-				
-				all_sents.append(raw_str.strip())
-				gold_sents.append(pos_str.strip())
+				all_sents.append(sent_str)
+				gold_sents.append(gold_str)
 				
 				sentence_count += 1
-				if sentence_count == sentence_limit:
+				if sentence_count and sentence_count == sentence_limit:
 					finished_processing = True
 					break
-			
+					
 			if finished_processing:
 				break
-					
+			
 		write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents)
 		notify()
 						
@@ -197,7 +147,6 @@ def main(argv=None):
 		raise Exception("There were errors found in processing.")
 	
 	# MAIN BODY #	
-	c = ConfigFile(opts.conf)
 	p = WSJParser(opts.conf)
 	p.parse()
 
