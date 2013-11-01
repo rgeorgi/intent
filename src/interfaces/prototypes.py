@@ -72,12 +72,12 @@ def train(rawfile, protofile, context_model, sequence_model,  minIters = 10, num
 	sys.stderr.write(cmd+'\n')
 	os.system(cmd)
 
-def test(rawfile, sequence_model, outfile):
+def test(rawfile, sequence_model, outdir):
 	prop()
 	global cp
 	cmd = 'java -ea -server -mx1200m -cp %s edu.berkeley.nlp.prototype.PrototypeSequenceModelTester' % (cp)
 	cmd += ' -PrototypeSequenceModelTester.modelPath %s' % sequence_model
-	cmd += ' -PrototypeSequenceModelTester.outdir %s' % os.path.dirname(outfile)
+	cmd += ' -PrototypeSequenceModelTester.outdir %s' % outdir
 	cmd += ' -PrototypeSequenceModelTester.inDirRoot %s' % os.path.dirname(rawfile)
 	cmd += ' -PrototypeSequenceModelTester.inPrefix %s' % os.path.splitext(os.path.basename(rawfile))[0]
 	cmd += ' -PrototypeSequenceModelTester.inExtension .txt'
@@ -88,7 +88,7 @@ def test(rawfile, sequence_model, outfile):
 def sanity_check(c):
 	prop()
 	global cp
-	assert os.path.exists(cp)
+	assert os.path.exists(cp), cp
 	assert os.path.exists(c['rawfile']), c['rawfile']
 	assert os.path.exists(c['test_file']), c['test_file']
 	assert os.path.exists(c['gold_file'])
@@ -107,10 +107,11 @@ if __name__ == '__main__':
 		
 	c = ConfigFile(opts.conf)
 	
+	eval_file = os.path.join(c['outdir'], os.path.basename(c['test_file']))+'.tagged'
 	
 	remove_safe(c['context_model'])
 	remove_safe(c['sequence_model'])
-	remove_safe(c['test_file']+'.tagged')
+	remove_safe(eval_file)
 
 	sanity_check(c)
 	
@@ -141,12 +142,14 @@ if __name__ == '__main__':
 	#===========================================================================
 	test(c['test_file'],
 		 c['sequence_model'],
-		 c['outfile'])
+		 c['outdir'])
 	
 	#===========================================================================
 	# Evaluate.
 	#===========================================================================
+	
+
 	pos_eval(c['gold_file'],
-			 c['test_file']+'.tagged',
+			 eval_file,
 			 '/')
 	notify()
