@@ -14,6 +14,19 @@ Also automatically attempts to parses lines into python types (lists, integers).
 import re
 import sys
 
+class ConfigFileException(Exception):
+	def __init__(self, m = None):
+		Exception.__init__(self, m)
+		
+		
+class NoOptionException(ConfigFileException):
+	def __init__(self, m = None):
+		ConfigFileException.__init__(self, m)
+		
+class SetConflict(ConfigFileException):
+	def __init__(self, m = None):
+		ConfigFileException.__init__(self, m)
+
 class ConfigFile():
 	def __init__(self, path):
 		
@@ -59,3 +72,19 @@ class ConfigFile():
 			return self._settings[k]
 		else:
 			return None
+
+	def set_defaults(self, dict):
+		for key in dict:
+			self.set(key, dict[key], overwrite = False)
+				
+	def set(self, key, value, overwrite = False):
+		if overwrite or key not in self._settings:
+			self._settings[key] = value
+		
+	def getint(self, k):
+		if k not in self._settings:
+			raise NoOptionException(k)
+		else:
+			return int(self[k])
+		
+			
