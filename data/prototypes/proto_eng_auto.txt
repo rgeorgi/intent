@@ -1,0 +1,40 @@
+PRP$	their	his	its
+VBG	being	including	according
+FW	kanji	perestroika	Glasnost
+``	`	``
+VBN	expected	based	been
+POS	's	'
+''	''
+VBP	do	are	have
+WDT	whatever	which	Whatever
+JJ	new	other	last
+WP	what	who	What
+VBZ	is	has	says
+DT	a	the	The
+#	#
+RP	off	up	out
+$	US$	$	C$
+NN	company	%	year
+VBD	had	said	was
+,	,
+.	!	?	.
+TO	to	na	To
+PRP	it	they	he
+RB	n't	also	not
+:	--	;	:
+NNS	companies	shares	years
+NNP	Mr.	Corp.	U.S.
+VB	sell	be	make
+WRB	how	when	where
+CC	and	or	But
+LS	Third
+RBR	earlier	Earlier	faster
+CD	billion	million	one
+EX	There	there
+IN	of	for	in
+WP$	whose
+MD	will	could	would
+NNPS	Securities	Soviets	Brothers
+JJS	most	least	largest
+JJR	less	higher	more
+UH	Well

@@ -36,12 +36,12 @@ def get_prototypes(tagged_path, proto_out, delimeter,
 		words = tag_word_dict[tag].most_frequent(minimum=1, num = None)
 		found_words = 0
 		for word in words:
-			print word			
+			
 			freq_tag = word_tag_dict[word].most_frequent(minimum=1)
 			
 			
-			if freq_tag:
-				print freq_tag[0]
+			if freq_tag and freq_tag[0] == tag:
+				
 				proto_dict.add(freq_tag[0], word)
 				numproto += 1
 				found_words += 1
@@ -49,7 +49,7 @@ def get_prototypes(tagged_path, proto_out, delimeter,
 			if maxproto and found_words == maxproto:
 				break
 			
-	print numproto
+	print '%s Prototypes found.' % numproto
 
 			
 	# Now, set up the proto file for writing.
