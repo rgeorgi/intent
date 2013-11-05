@@ -25,7 +25,6 @@ from utils.commandline import require_opt
 from optparse import OptionParser
 import re
 from pos.TagMap import TagMap
-from nltk.corpus import treebank
 from treebanks.common import process_tree, write_files
 from utils.systematizing import notify
 from utils.ConfigFile import ConfigFile

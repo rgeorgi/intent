@@ -33,7 +33,7 @@ def write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_se
 
 	
 
-def process_tree(t, delimeter, maxlength = 0, tm = None):
+def process_tree(t, delimeter, maxlength = 0, tm = None, simplify = False, keep_traces = False):
 	treepos = t.pos()
 	
 	if maxlength and (len(treepos) > maxlength):
@@ -43,7 +43,10 @@ def process_tree(t, delimeter, maxlength = 0, tm = None):
 		gold_str = ''
 		
 		for word, pos in treepos:
-			if not pos.strip() or re.match('-NONE-', pos.strip()):
+			if simplify:
+				pos = pos.split('-')[0]
+			
+			if not pos.strip() or re.match('(?:-NONE-)|^\*', pos.strip()):
 				continue
 			
 			# Add the token to the sentences
