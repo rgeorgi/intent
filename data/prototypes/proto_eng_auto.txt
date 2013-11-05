@@ -1,7 +1,6 @@
 PRP$	their	his	its
 VBG	being	including	according
 FW	kanji	perestroika	Glasnost
-``	`	``
 VBN	expected	based	been
 POS	's	'
 ''	''
@@ -21,10 +20,11 @@ VBD	had	said	was
 TO	to	na	To
 PRP	it	they	he
 RB	n't	also	not
+-LRB-	-LRB-	-LCB-
 :	--	;	:
 NNS	companies	shares	years
 NNP	Mr.	Corp.	U.S.
-VB	sell	be	make
+``	`	``
 WRB	how	when	where
 CC	and	or	But
 LS	Third
@@ -35,6 +35,8 @@ IN	of	for	in
 WP$	whose
 MD	will	could	would
 NNPS	Securities	Soviets	Brothers
+-RRB-	-RCB-	-RRB-
 JJS	most	least	largest
 JJR	less	higher	more
+VB	sell	be	make
 UH	Well

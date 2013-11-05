@@ -3,9 +3,8 @@ Created on Aug 31, 2013
 
 @author: rgeorgi
 '''
-import optparse, sys, os, re
+import optparse, sys, os
 from ConfigParser import ConfigParser
-from glob import glob
 from utils.commandline import require_opt
 from eval.pos_eval import pos_eval
 from utils.systematizing import notify

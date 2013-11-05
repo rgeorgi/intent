@@ -4,7 +4,9 @@ Created on Sep 6, 2013
 @author: rgeorgi
 '''
 import re
-
+from corpus.reader.util import read_sexpr_block
+import sys
+import nltk
 
 def break_bracket(bracket_string):
 	'''
@@ -53,40 +55,21 @@ def break_bracket(bracket_string):
 
 	return label, children
 
-def parse_ptb_file(path):
+def parse_ptb_file(path, simplify = False, traces = False):
+	
 	ptb_file = file(path, 'r')
-	ptb = ptb_file.read()
+	block = read_sexpr_block(ptb_file)
+	ptb_trees = []
+	while block:
+		for s in block:
+			t = nltk.tree.Tree.parse(s)
+			ptb_trees.append(t)
+		block = read_sexpr_block(ptb_file)
+
 	ptb_file.close()
 	
-	ptb_trees = []
-	
-	parens = 0
-	buffer = ''
-	for c in ptb:
-			
-		if c == '(':
-			parens += 1
-		elif c == ')':
-			parens -= 1
-		buffer += c
-		
-		if parens == 0 and buffer.strip():
-			ptb_trees.append(buffer)
-			buffer = '' 
-	
-	assert parens == 0, "Unbalanced parens in file: %s" % path
-	
-	# Replace more than one space with just one space.
-	ptb_trees = map(lambda t: re.sub('\s\s+', ' ', t), ptb_trees)
-	
-	ptb_trees = map(lambda t: parse_ptb_string(t), ptb_trees)
-	for t in ptb_trees:
-		leaves = t.leaves()
-		for i in range(len(leaves)):
-			l = leaves[i]
-			leaves[i].order = i+1
-		
 	return ptb_trees
+
 
 #===============================================================================
 #  Tree Class
@@ -301,7 +284,7 @@ class Terminal(PhraseTree):
 #  Parsing Routines
 #===============================================================================
 
-def parse_ptb_string(ptb_string, root = True, simplify=True):
+def parse_ptb_string(ptb_string, root = True, simplify=True, traces = False):
 
 	pos, children = break_bracket(ptb_string.strip())
 	if simplify:
@@ -311,11 +294,18 @@ def parse_ptb_string(ptb_string, root = True, simplify=True):
 	if not children[0].startswith('('):
 		assert len(children) == 1 # (Make sure a missing bracket means this is a terminal node)
 		word = children[0]
-		t = Terminal(word, pos)
+		
+		# Skip traces...
+		if not traces and (word.startswith('*') or pos == '-NONE-'):			
+			t = Terminal('','')
+		else:
+			t = Terminal(word, pos)
 	else:
 		for child in children:
 			# Only treat the first go-through as the root...
-			t.append(parse_ptb_string(child, False, simplify), typecheck = False)
+			childtree = parse_ptb_string(child, False, simplify, traces)
+			if childtree:
+				t.append(childtree, typecheck = False)
 			
 	# If we have the root, assign "order" attributes based on depth-first
 	# order of its leaf nodes.

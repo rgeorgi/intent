@@ -6,6 +6,7 @@ Created on Oct 22, 2013
 import os
 import codecs
 import re
+import sys
 
 def raw_writer(path, lines):
 	f = codecs.open(path, 'w', encoding='utf-8')
@@ -33,23 +34,24 @@ def write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_se
 	
 
 def process_tree(t, delimeter, maxlength = 0, tm = None):
-	leaves = t.leaves()
-	if maxlength and (len(leaves) > maxlength):
+	treepos = t.pos()
+	
+	if maxlength and (len(treepos) > maxlength):
 		return (None, None)
 	else:
 		sent_str = ''
 		gold_str = ''
 		
-		for leaf in leaves:
-			if not leaf.pos.strip() or re.match('\*[^\*]+\*', leaf.pos.strip()):
+		for word, pos in treepos:
+			if not pos.strip() or re.match('-NONE-', pos.strip()):
 				continue
 			
 			# Add the token to the sentences
-			sent_str += '%s ' % leaf.label			
+			sent_str += '%s ' % word		
 			if tm:
-				newtag = tm[leaf.pos]
-				gold_str += '%s%s%s ' % (leaf.label, delimeter, newtag)
+				newtag = tm[pos]
+				gold_str += '%s%s%s ' % (word, delimeter, newtag)
 			else:
-				gold_str += '%s%s%s ' % (leaf.label, delimeter, leaf.pos)
+				gold_str += '%s%s%s ' % (word, delimeter, pos)
 			
 		return (sent_str.strip(), gold_str.strip())

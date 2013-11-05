@@ -25,11 +25,12 @@ from utils.commandline import require_opt
 from optparse import OptionParser
 import re
 from pos.TagMap import TagMap
-from trees.ptb import parse_ptb_file
+from nltk.corpus import treebank
 from treebanks.common import process_tree, write_files
 from utils.systematizing import notify
 from utils.ConfigFile import ConfigFile
 from treebanks.TextParser import TextParser
+from trees.ptb import parse_ptb_file
 
 __all__ = []
 __version__ = 0.1
@@ -94,7 +95,7 @@ class WSJParser(TextParser):
 		finished_processing = False
 		
 		for path in pos_files:
-			trees = parse_ptb_file(path)		
+			trees = parse_ptb_file(path)				
 			for tree in trees:
 				sent_str, gold_str = process_tree(tree, delimeter, maxlength, tm)
 				if not sent_str:

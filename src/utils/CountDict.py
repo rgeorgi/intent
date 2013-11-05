@@ -3,6 +3,7 @@ Created on Aug 26, 2013
 
 @author: rgeorgi
 '''
+import sys
 
 class CountDict():
 	def __init__(self):
@@ -24,6 +25,10 @@ class CountDict():
 	def __repr__(self):
 		return str(self)
 	
+	def total(self):
+		values = self.dict.values()
+		return reduce(lambda x, y: x+y, values)
+	
 	def most_frequent(self, minimum = 0, num = 1):
 		items = self.dict.items()
 		items.sort(key = lambda item: item[1], reverse=True)
@@ -35,4 +40,9 @@ class CountDict():
 				break
 		
 		return ret_items
+	
+	def most_frequent_count(self, minimum = 0, num = 1):
+		most_frequent_keys = self.most_frequent(minimum, num)
+		most_frequent_values = map(lambda key: self[key], most_frequent_keys)
+		return most_frequent_values
 			
