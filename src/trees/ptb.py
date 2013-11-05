@@ -4,9 +4,10 @@ Created on Sep 6, 2013
 @author: rgeorgi
 '''
 import re
-from corpus.reader.util import read_sexpr_block
+from nltk.corpus.reader.util import read_sexpr_block
+import nltk.tree
 import sys
-import nltk
+
 
 def break_bracket(bracket_string):
 	'''
