@@ -58,6 +58,9 @@ def train(rawfile, protofile, context_model, sequence_model,  minIters = 10, num
 	cmd += ' -minIters %s' % minIters
 	cmd += ' -numIters %s' % numIters
 	cmd += ' -simModelPath %s' % os.path.abspath(context_model)
+	cmd += ' -numSimilarWords 3'
+	cmd += ' -simThreshold 0.35'
+	
 	if useHasHyphen:
 		cmd += ' -useHasHyphen'
 	if useSuffixFeatures:
@@ -92,6 +95,7 @@ def sanity_check(c):
 	assert os.path.exists(c['test_file']), c['test_file']
 	assert os.path.exists(c['gold_file'])
 	assert os.path.exists(c['protofile'])
+	assert os.path.exists(c['outdir']), 'Outdir "%s" not defined or does not exist' % c['outdir']
 
 if __name__ == '__main__':
 	p = optparse.OptionParser()
@@ -105,6 +109,8 @@ if __name__ == '__main__':
 		sys.exit(0)
 		
 	c = ConfigFile(opts.conf)
+	c.set_defaults({'minIters':0, 'numIters':100, 'order':1})
+	sanity_check(c)
 	
 	eval_file = os.path.join(c['outdir'], os.path.basename(c['test_file']))+'.tagged'
 	
@@ -112,7 +118,7 @@ if __name__ == '__main__':
 	remove_safe(c['sequence_model'])
 	remove_safe(eval_file)
 
-	sanity_check(c)
+
 	
 	#===========================================================================
 	# Perform the context model training
