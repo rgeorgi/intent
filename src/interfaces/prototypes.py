@@ -82,6 +82,8 @@ def train(rawfile, protofile, context_model, sequence_model,  minIters = 10, num
 		cmd += ' -useSuffixFeatures'
 	if useInitialCapital:
 		cmd += ' -useInitialCapital'
+	
+	cmd += ' -useHasDigit'
 		
 	cmd += ' -order %s' % order
 # 	cmd += ' -create -execDir %s' % os.path.join(os.path.dirname(context_model), 'exec')
