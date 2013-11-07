@@ -61,6 +61,7 @@ def train(rawfile, protofile, context_model, sequence_model,  minIters = 10, num
 	cmd += ' -numSimilarWords 3'
 	cmd += ' -simThreshold 0.35'
 	
+<<<<<<< HEAD
 
 	
 	if outdir:
@@ -76,6 +77,8 @@ def train(rawfile, protofile, context_model, sequence_model,  minIters = 10, num
 		
 			
 	
+=======
+>>>>>>> 0c823eb63c4648d3c1f3d6b548e6ae38a30b1cfd
 	if useHasHyphen:
 		cmd += ' -useHasHyphen'
 	if useSuffixFeatures:
@@ -156,7 +159,7 @@ if __name__ == '__main__':
 		 					   useSuffixFeatures = c['useSuffixFeatures'],
 		 					   useHasHyphen = c['useHasHyphen'],
 		 					   useInitialCapital = c['useInitialCapital'],
-		 					   outdir = c['outdir'])
+		 					   c['outdir'])
 	
 	#===========================================================================
 	# Perform the testing.
