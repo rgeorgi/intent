@@ -38,13 +38,10 @@ def get_prototypes(tagged_path, proto_out, delimeter,
 		for word in words:
 			
 			freq_tag = word_tag_dict[word].most_frequent(minimum=1)
-			print word_tag_dict[word].total()
-			print word_tag_dict[word].most_frequent_count(minimum=1)
-			sys.exit()
-			
 			
 			
 			if freq_tag and freq_tag[0] == tag:
+# 			if freq_tag:
 				
 				proto_dict.add(freq_tag[0], word)
 				numproto += 1
