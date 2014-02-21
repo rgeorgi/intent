@@ -16,4 +16,5 @@ class TextParser(object):
 		'''
 		Constructor
 		'''
+		self.conf = conf
 		

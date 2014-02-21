@@ -1,0 +1,57 @@
+there is no id_list. Use all igts
+Finish reading 67 IGTs from gli1+2.res.danjj
+Finish reading 46 IGTs from or.110
+warning: different numbers of IGTs in two files
+igt_id=20582 does not appear in or.110
+igt_id=20569 does not appear in or.110
+igt_id=37740 does not appear in or.110
+igt_id=37739 does not appear in or.110
+igt_id=37737 does not appear in or.110
+igt_id=20594 does not appear in or.110
+igt_id=20649 does not appear in or.110
+igt_id=20626 does not appear in or.110
+igt_id=27434 does not appear in or.110
+igt_id=4041 does not appear in or.110
+igt_id=4099 does not appear in or.110
+igt_id=20252 does not appear in or.110
+igt_id=123 does not appear in or.110
+igt_id=4077 does not appear in or.110
+warning: word align pair 3-4 appeared before
+igt_id=20588 does not appear in or.110
+igt_id=4036 does not appear in or.110
+igt_id=4101 does not appear in or.110
+igt_id=29740 does not appear in or.110
+igt_id=4040 does not appear in or.110
+igt_id=20564 does not appear in or.110
+warning: word align pair 4-5 appeared before
+igt_id=15999 does not appear in or.110
+IGT numbers: file1=67 (clean=46), file2=46 (clean=46)
+Unanswered questions: file1=1, file2=276
+
+Q1: appear_in_both=46: wrong_format=0, both_clean=46, both_unclean=0, disagree=0
+among 46 both clean IGTs, src_words=252 (ave_sent_leng=5.47826086956522), trans_words=278 (ave_sent_leng=6.04347826086957)
+==> agreement=100%
+
+
+Q2: gold(Yes)=38, sys(Yes)=46, agree=38, disagree=8 accuracy=82.6086956521739
+
+Q3: gold(Yes)=38, sys(Yes)=46, agree=38, disagree=8 accuracy=82.6086956521739
+   Q3: wo_null:  gold=278, sys=278, agree=278 disagree=0 => P=100 R=100 F=100
+  Q3: w_null:   gold=278, sys=278, agree=278 disagree=0 => P=100 R=100 F=100
+
+
+Q4: gold(Yes)=46, sys(Yes)=46, agree=46, disagree=0 accuracy=100
+   Q4: wo_null:  gold=252, sys=252, agree=252 disagree=0 => P=100 R=100 F=100
+  Q4: w_null:   gold=252, sys=252, agree=252 disagree=0 => P=100 R=100 F=100
+
+
+Q5: gold(Yes)=17, sys(Yes)=46, agree=17, disagree=29 accuracy=36.9565217391304
+   Q5: wo_null:  gold=251, sys=203, agree=200 disagree=54 => P=98.5221674876847 R=79.6812749003984 F=88.1057268722467
+  Q5: w_null:   gold=302, sys=337, agree=249 disagree=141 => P=73.8872403560831 R=82.4503311258278 F=77.9342723004695
+
+
+Q6: gold(Yes)=22, sys(Yes)=46, agree=22, disagree=24 accuracy=47.8260869565217
+   Q6: wo_null:  gold=252, sys=252, agree=202 disagree=100 => P=80.1587301587302 R=80.1587301587302 F=80.1587301587302
+  Q6: w_null:   gold=252, sys=252, agree=202 disagree=100 => P=80.1587301587302 R=80.1587301587302 F=80.1587301587302
+
+

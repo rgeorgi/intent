@@ -32,3 +32,10 @@ class IGTFile(object):
 		return [instance.gloss for instance in self.instances]
 	
 	
+class NAACLFile(IGTFile):
+	
+	def __init__(self, path):
+		self.instances = []
+		f = file(path, 'r')
+		data = f.read()
+		f.close()

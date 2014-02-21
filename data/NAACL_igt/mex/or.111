@@ -1,0 +1,7329 @@
+
+###########################################################
+Igt_id=18939 Url_id=1376 flag=0 cleaned=3 src_leng=6 trans_leng=6
+tena iza no nanapaka bozaka ?
+indeed who PRT cut grass ?
+Who indeed cut the grass ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Who indeed cut the grass ?
+1 3 # Who cut
+2 3 # indeed cut
+3 -1 # cut *TOP*
+4 5 # the grass
+5 3 # grass cut
+6 3 # ? cut
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+tena iza no nanapaka bozaka ?
+indeed who PRT cut grass ?
+
+1 1 # tena indeed
+2 2 # iza who
+3 3 # no PRT
+4 4 # nanapaka cut
+5 5 # bozaka grass
+6 6 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+indeed who PRT cut grass ?
+Who indeed cut the grass ?
+
+1 2 # indeed indeed
+2 1 # who Who
+3 0 # PRT NULL
+4 3 # cut cut
+5 5 # grass grass
+6 6 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+tena iza no nanapaka bozaka ?
+indeed who PRT cut grass ?
+Who indeed cut the grass ?
+
+1 4 # tena nanapaka
+2 4 # iza nanapaka
+3 4 # no nanapaka
+4 -1 # nanapaka *TOP*
+5 4 # bozaka nanapaka
+6 4 # ? nanapaka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18914 Url_id=1375 flag=0 cleaned=0 src_leng=5 trans_leng=7
+omaly Rabe no nividy vary
+yesterday Rabe PRT buy-ACT rice
+It was yesterday that Rabe bought rice
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+It was yesterday that Rabe bought rice
+1 3 # It yesterday
+2 3 # was yesterday
+3 -1 # yesterday *TOP*
+4 6 # that bought
+5 6 # Rabe bought
+6 3 # bought yesterday
+7 6 # rice bought
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+omaly Rabe no nividy vary
+yesterday Rabe PRT buy-ACT rice
+
+1 1 # omaly yesterday
+2 2 # Rabe Rabe
+3 3 # no PRT
+4 4 # nividy buy-ACT
+5 5 # vary rice
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+yesterday Rabe PRT buy-ACT rice
+It was yesterday that Rabe bought rice
+
+1 3 # yesterday yesterday
+2 5 # Rabe Rabe
+3 0 # PRT NULL
+4 6 # buy-ACT bought
+ 4.1 0 # buy NULL
+ 4.2 0 # -ACT NULL
+5 7 # rice rice
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+omaly Rabe no nividy vary
+yesterday Rabe PRT buy-ACT rice
+It was yesterday that Rabe bought rice
+
+1 -1 # omaly *TOP*
+2 4 # Rabe nividy
+3 1 # no omaly
+4 1 # nividy omaly
+5 4 # vary nividy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18887 Url_id=1374 flag=0 cleaned=0 src_leng=5 trans_leng=5
+nividy ny mofo ilay vehivavy
+buy-ACT the bread that woman
+That woman bought the bread
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+That woman bought the bread
+1 2 # That woman
+2 3 # woman bought
+3 -1 # bought *TOP*
+4 5 # the bread
+5 3 # bread bought
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nividy ny mofo ilay vehivavy
+buy-ACT the bread that woman
+
+1 1 # nividy buy-ACT
+2 2 # ny the
+3 3 # mofo bread
+4 4 # ilay that
+5 5 # vehivavy woman
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+buy-ACT the bread that woman
+That woman bought the bread
+
+1 3 # buy-ACT bought
+ 1.1 0 # buy NULL
+ 1.2 0 # -ACT NULL
+2 4 # the the
+3 5 # bread bread
+4 1 # that That
+5 2 # woman woman
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nividy ny mofo ilay vehivavy
+buy-ACT the bread that woman
+That woman bought the bread
+
+1 -1 # nividy *TOP*
+2 3 # ny mofo
+3 1 # mofo nividy
+4 5 # ilay vehivavy
+5 1 # vehivavy nividy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18937 Url_id=1376 flag=0 cleaned=0 src_leng=4 trans_leng=5
+tena nanapaka bozaka Rabe
+indeed cut grass Rabe
+Rabe indeed cut the grass
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rabe indeed cut the grass
+1 3 # Rabe cut
+2 3 # indeed cut
+3 -1 # cut *TOP*
+4 5 # the grass
+5 3 # grass cut
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+tena nanapaka bozaka Rabe
+indeed cut grass Rabe
+
+1 1 # tena indeed
+2 2 # nanapaka cut
+3 3 # bozaka grass
+4 4 # Rabe Rabe
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+indeed cut grass Rabe
+Rabe indeed cut the grass
+
+1 2 # indeed indeed
+2 3 # cut cut
+3 5 # grass grass
+4 1 # Rabe Rabe
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+tena nanapaka bozaka Rabe
+indeed cut grass Rabe
+Rabe indeed cut the grass
+
+1 2 # tena nanapaka
+2 -1 # nanapaka *TOP*
+3 2 # bozaka nanapaka
+4 2 # Rabe nanapaka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=10144 Url_id=466 flag=0 cleaned=4 src_leng=6 trans_leng=7
+nefa tsy nanana fotoana izy .
+but NEG PST-have time they .
+but they did n't have time .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+but they did n't have time .
+1 5 # but have
+2 5 # they have
+3 5 # did have
+4 5 # n't have
+5 -1 # have *TOP*
+6 5 # time have
+7 5 # . have
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nefa tsy nanana fotoana izy .
+but NEG PST-have time they .
+
+1 1 # nefa but
+2 2 # tsy NEG
+3 3 # nanana PST-have
+4 4 # fotoana time
+5 5 # izy they
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+but NEG PST-have time they .
+but they did n't have time .
+
+1 1 # but but
+2 4 # NEG n't
+3 5 # PST-have have
+ 3.1 0 # PST NULL
+ 3.2 0 # -have NULL
+4 6 # time time
+5 2 # they they
+6 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nefa tsy nanana fotoana izy .
+but NEG PST-have time they .
+but they did n't have time .
+
+1 3 # nefa nanana
+2 3 # tsy nanana
+3 -1 # nanana *TOP*
+4 3 # fotoana nanana
+5 3 # izy nanana
+6 3 # . nanana
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=15963 Url_id=1092 flag=0 cleaned=0 src_leng=3 trans_leng=6
+no-vidi-n-dRabe ny akoho
+PAST-buy-PASS-Rabe the chicken
+The chicken was bought by Rabe
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The chicken was bought by Rabe
+1 2 # The chicken
+2 4 # chicken bought
+3 4 # was bought
+4 -1 # bought *TOP*
+5 4 # by bought
+6 5 # Rabe by
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+no-vidi-n-dRabe ny akoho
+PAST-buy-PASS-Rabe the chicken
+
+1 1 # no-vidi-n-dRabe PAST-buy-PASS-Rabe
+ 1.1 0 # no NULL
+ 1.2 0 # -vidi NULL
+ 1.3 0 # -n NULL
+ 1.4 0 # -dRabe NULL
+2 2 # ny the
+3 3 # akoho chicken
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+PAST-buy-PASS-Rabe the chicken
+The chicken was bought by Rabe
+
+1 4,6 # PAST-buy-PASS-Rabe bought,Rabe
+ 1.1 0 # PAST NULL
+ 1.2 0 # -buy NULL
+ 1.3 0 # -PASS NULL
+ 1.4 0 # -Rabe NULL
+2 1 # the The
+3 2 # chicken chicken
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+no-vidi-n-dRabe ny akoho
+PAST-buy-PASS-Rabe the chicken
+The chicken was bought by Rabe
+
+1 -1 # no-vidi-n-dRabe *TOP*
+2 3 # ny akoho
+3 1 # akoho no-vidi-n-dRabe
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20480 Url_id=1490 flag=0 cleaned=0 src_leng=5 trans_leng=7
+nanampy azy nifandefa entana isika
+past-act-help them past-rec-act-send packages we-incl
+We helped them send each other packages
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+We helped them send each other packages
+1 2 # We helped
+2 -1 # helped *TOP*
+3 4 # them send
+4 2 # send helped
+5 6 # each other
+6 4 # other send
+7 4 # packages send
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nanampy azy nifandefa entana isika
+past-act-help them past-rec-act-send packages we-incl
+
+1 1 # nanampy past-act-help
+2 2 # azy them
+3 3 # nifandefa past-rec-act-send
+4 4 # entana packages
+5 5 # isika we-incl
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+past-act-help them past-rec-act-send packages we-incl
+We helped them send each other packages
+
+1 2 # past-act-help helped
+ 1.1 0 # past NULL
+ 1.2 0 # -act NULL
+ 1.3 0 # -help NULL
+2 3 # them them
+3 4 # past-rec-act-send send
+ 3.1 0 # past NULL
+ 3.2 0 # -rec NULL
+ 3.3 0 # -act NULL
+ 3.4 0 # -send NULL
+4 7 # packages packages
+5 1 # we-incl We
+ 5.1 0 # we NULL
+ 5.2 0 # -incl NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nanampy azy nifandefa entana isika
+past-act-help them past-rec-act-send packages we-incl
+We helped them send each other packages
+
+1 -1 # nanampy *TOP*
+2 3 # azy nifandefa
+3 1 # nifandefa nanampy
+4 3 # entana nifandefa
+5 1 # isika nanampy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18907 Url_id=1375 flag=0 cleaned=0 src_leng=6 trans_leng=7
+tena hovidin' ny zaza ny fiaramanidina
+EMPH buy-PASS the child the airplane
+The child will indeed buy the airplane
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The child will indeed buy the airplane
+1 2 # The child
+2 5 # child buy
+3 5 # will buy
+4 5 # indeed buy
+5 -1 # buy *TOP*
+6 7 # the airplane
+7 5 # airplane buy
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+tena hovidin' ny zaza ny fiaramanidina
+EMPH buy-PASS the child the airplane
+
+1 1 # tena EMPH
+2 2 # hovidin' buy-PASS
+3 3 # ny the
+4 4 # zaza child
+5 5 # ny the
+6 6 # fiaramanidina airplane
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+EMPH buy-PASS the child the airplane
+The child will indeed buy the airplane
+
+1 4 # EMPH indeed
+2 5 # buy-PASS buy
+ 2.1 0 # buy NULL
+ 2.2 0 # -PASS NULL
+3 1 # the The
+4 2 # child child
+5 6 # the the
+6 7 # airplane airplane
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+tena hovidin' ny zaza ny fiaramanidina
+EMPH buy-PASS the child the airplane
+The child will indeed buy the airplane
+
+1 2 # tena hovidin'
+2 -1 # hovidin' *TOP*
+3 4 # ny zaza
+4 2 # zaza hovidin'
+5 6 # ny fiaramanidina
+6 2 # fiaramanidina hovidin'
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20418 Url_id=1490 flag=0 cleaned=1 src_leng=7 trans_leng=9
+nifangala-bitro fotsy i Vao sy i Velo
+past-rec-act-steal-rabbit white art Vao and art Velo
+Vao and Velo stole each other 's white rabbit
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Vao and Velo stole each other 's white rabbit
+1 3 # Vao Velo
+2 3 # and Velo
+3 4 # Velo stole
+4 -1 # stole *TOP*
+5 6 # each other
+6 7 # other 's
+7 9 # 's rabbit
+8 9 # white rabbit
+9 4 # rabbit stole
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nifangala-bitro fotsy i Vao sy i Velo
+past-rec-act-steal-rabbit white art Vao and art Velo
+
+1 1 # nifangala-bitro past-rec-act-steal-rabbit
+ 1.1 0 # nifangala NULL
+ 1.2 0 # -bitro NULL
+2 2 # fotsy white
+3 3 # i art
+4 4 # Vao Vao
+5 5 # sy and
+6 6 # i art
+7 7 # Velo Velo
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+past-rec-act-steal-rabbit white art Vao and art Velo
+Vao and Velo stole each other 's white rabbit
+
+1 7,5,4,6,9 # past-rec-act-steal-rabbit 's,each,stole,other,rabbit
+ 1.1 0 # past NULL
+ 1.2 0 # -rec NULL
+ 1.3 0 # -act NULL
+ 1.4 0 # -steal NULL
+ 1.5 0 # -rabbit NULL
+2 8 # white white
+3 0 # art NULL
+4 1 # Vao Vao
+5 2 # and and
+6 0 # art NULL
+7 3 # Velo Velo
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nifangala-bitro fotsy i Vao sy i Velo
+past-rec-act-steal-rabbit white art Vao and art Velo
+Vao and Velo stole each other 's white rabbit
+
+1 -1 # nifangala-bitro *TOP*
+2 1 # fotsy nifangala-bitro
+3 1 # i nifangala-bitro
+4 7 # Vao Velo
+5 7 # sy Velo
+6 1 # i nifangala-bitro
+7 1 # Velo nifangala-bitro
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20491 Url_id=1490 flag=0 cleaned=0 src_leng=4 trans_leng=8
+n-ifank-a-hita sy n-ifamp-i-arahaba izahay
+past-rec-act-seen and past-rec-act-greet we-excl
+We saw each other and greeted each other
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+We saw each other and greeted each other
+1 6 # We greeted
+2 6 # saw greeted
+3 4 # each other
+4 2 # other saw
+5 6 # and greeted
+6 -1 # greeted *TOP*
+7 8 # each other
+8 6 # other greeted
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+n-ifank-a-hita sy n-ifamp-i-arahaba izahay
+past-rec-act-seen and past-rec-act-greet we-excl
+
+1 1 # n-ifank-a-hita past-rec-act-seen
+ 1.1 0 # n NULL
+ 1.2 0 # -ifank NULL
+ 1.3 0 # -a NULL
+ 1.4 0 # -hita NULL
+2 2 # sy and
+3 3 # n-ifamp-i-arahaba past-rec-act-greet
+ 3.1 0 # n NULL
+ 3.2 0 # -ifamp NULL
+ 3.3 0 # -i NULL
+ 3.4 0 # -arahaba NULL
+4 4 # izahay we-excl
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+past-rec-act-seen and past-rec-act-greet we-excl
+We saw each other and greeted each other
+
+1 2 # past-rec-act-seen saw
+ 1.1 0 # past NULL
+ 1.2 0 # -rec NULL
+ 1.3 0 # -act NULL
+ 1.4 0 # -seen NULL
+2 5 # and and
+3 6 # past-rec-act-greet greeted
+ 3.1 0 # past NULL
+ 3.2 0 # -rec NULL
+ 3.3 0 # -act NULL
+ 3.4 0 # -greet NULL
+4 1 # we-excl We
+ 4.1 0 # we NULL
+ 4.2 0 # -excl NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+n-ifank-a-hita sy n-ifamp-i-arahaba izahay
+past-rec-act-seen and past-rec-act-greet we-excl
+We saw each other and greeted each other
+
+1 3 # n-ifank-a-hita n-ifamp-i-arahaba
+2 3 # sy n-ifamp-i-arahaba
+3 -1 # n-ifamp-i-arahaba *TOP*
+4 3 # izahay n-ifamp-i-arahaba
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=10125 Url_id=411 flag=0 cleaned=4 src_leng=8 trans_leng=10
+tsy nanomboka nihomehy t-amin ny tantara izy .
+NEG began laugh PAST-PREP the story he .
+He did n't begin to laugh at the story .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He did n't begin to laugh at the story .
+1 4 # He begin
+2 4 # did begin
+3 4 # n't begin
+4 -1 # begin *TOP*
+5 6 # to laugh
+6 4 # laugh begin
+7 6 # at laugh
+8 9 # the story
+9 7 # story at
+10 4 # . begin
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+tsy nanomboka nihomehy t-amin ny tantara izy .
+NEG began laugh PAST-PREP the story he .
+
+1 1 # tsy NEG
+2 2 # nanomboka began
+3 3 # nihomehy laugh
+4 4 # t-amin PAST-PREP
+ 4.1 0 # t NULL
+ 4.2 0 # -amin NULL
+5 5 # ny the
+6 6 # tantara story
+7 7 # izy he
+8 8 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+NEG began laugh PAST-PREP the story he .
+He did n't begin to laugh at the story .
+
+1 3 # NEG n't
+2 4 # began begin
+3 6 # laugh laugh
+4 0 # PAST-PREP NULL
+ 4.1 0 # PAST NULL
+ 4.2 0 # -PREP NULL
+5 8 # the the
+6 9 # story story
+7 1 # he He
+8 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+tsy nanomboka nihomehy t-amin ny tantara izy .
+NEG began laugh PAST-PREP the story he .
+He did n't begin to laugh at the story .
+
+1 2 # tsy nanomboka
+2 -1 # nanomboka *TOP*
+3 2 # nihomehy nanomboka
+4 2 # t-amin nanomboka
+5 6 # ny tantara
+6 3 # tantara nihomehy
+7 2 # izy nanomboka
+8 2 # . nanomboka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20464 Url_id=1490 flag=0 cleaned=0 src_leng=7 trans_leng=12
+miady mafy ireo mpifampilaza ho mpangalatra ireo
+fight hard those nom-rec-act-say as nom-act-steal those
+Those people who said each other to be thieves are fighting hard
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Those people who said each other to be thieves are fighting hard
+1 2 # Those people
+2 11 # people fighting
+3 4 # who said
+4 2 # said people
+5 6 # each other
+6 9 # other thieves
+7 9 # to thieves
+8 9 # be thieves
+9 4 # thieves said
+10 11 # are fighting
+11 -1 # fighting *TOP*
+12 11 # hard fighting
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+miady mafy ireo mpifampilaza ho mpangalatra ireo
+fight hard those nom-rec-act-say as nom-act-steal those
+
+1 1 # miady fight
+2 2 # mafy hard
+3 3 # ireo those
+4 4 # mpifampilaza nom-rec-act-say
+5 5 # ho as
+6 6 # mpangalatra nom-act-steal
+7 7 # ireo those
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+fight hard those nom-rec-act-say as nom-act-steal those
+Those people who said each other to be thieves are fighting hard
+
+1 11 # fight fighting
+2 12 # hard hard
+3 1 # those Those
+4 4 # nom-rec-act-say said
+ 4.1 0 # nom NULL
+ 4.2 0 # -rec NULL
+ 4.3 0 # -act NULL
+ 4.4 0 # -say NULL
+5 0 # as NULL
+6 9 # nom-act-steal thieves
+ 6.1 0 # nom NULL
+ 6.2 0 # -act NULL
+ 6.3 0 # -steal NULL
+7 0 # those NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+miady mafy ireo mpifampilaza ho mpangalatra ireo
+fight hard those nom-rec-act-say as nom-act-steal those
+Those people who said each other to be thieves are fighting hard
+
+1 -1 # miady *TOP*
+2 1 # mafy miady
+3 1 # ireo miady
+4 1 # mpifampilaza miady
+5 1 # ho miady
+6 4 # mpangalatra mpifampilaza
+7 1 # ireo miady
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18920 Url_id=1375 flag=0 cleaned=3 src_leng=6 trans_leng=5
+iza no tokony mamangy an-dRabe ?
+who PRT should visit-ACT ACC-Rabe ?
+Who should visit Rabe ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Who should visit Rabe ?
+1 3 # Who visit
+2 3 # should visit
+3 -1 # visit *TOP*
+4 3 # Rabe visit
+5 3 # ? visit
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+iza no tokony mamangy an-dRabe ?
+who PRT should visit-ACT ACC-Rabe ?
+
+1 1 # iza who
+2 2 # no PRT
+3 3 # tokony should
+4 4 # mamangy visit-ACT
+5 5 # an-dRabe ACC-Rabe
+ 5.1 0 # an NULL
+ 5.2 0 # -dRabe NULL
+6 6 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+who PRT should visit-ACT ACC-Rabe ?
+Who should visit Rabe ?
+
+1 1 # who Who
+2 0 # PRT NULL
+3 2 # should should
+4 3 # visit-ACT visit
+ 4.1 0 # visit NULL
+ 4.2 0 # -ACT NULL
+5 4 # ACC-Rabe Rabe
+ 5.1 0 # ACC NULL
+ 5.2 0 # -Rabe NULL
+6 5 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+iza no tokony mamangy an-dRabe ?
+who PRT should visit-ACT ACC-Rabe ?
+Who should visit Rabe ?
+
+1 4 # iza mamangy
+2 4 # no mamangy
+3 4 # tokony mamangy
+4 -1 # mamangy *TOP*
+5 4 # an-dRabe mamangy
+6 4 # ? mamangy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20340 Url_id=1489 flag=0 cleaned=1 src_leng=8 trans_leng=9
+satria tsy novakin ny mpianatra io boky io
+because not read-TF the students that book that
+because that book was n't read by the students
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+because that book was n't read by the students
+1 6 # because read
+2 3 # that book
+3 6 # book read
+4 6 # was read
+5 6 # n't read
+6 -1 # read *TOP*
+7 6 # by read
+8 9 # the students
+9 7 # students by
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+satria tsy novakin ny mpianatra io boky io
+because not read-TF the students that book that
+
+1 1 # satria because
+2 2 # tsy not
+3 3 # novakin read-TF
+4 4 # ny the
+5 5 # mpianatra students
+6 6 # io that
+7 7 # boky book
+8 8 # io that
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+because not read-TF the students that book that
+because that book was n't read by the students
+
+1 1 # because because
+2 5 # not n't
+3 6 # read-TF read
+ 3.1 0 # read NULL
+ 3.2 0 # -TF NULL
+4 8 # the the
+5 9 # students students
+6 2 # that that
+7 3 # book book
+8 2 # that that
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+satria tsy novakin ny mpianatra io boky io
+because not read-TF the students that book that
+because that book was n't read by the students
+
+1 3 # satria novakin
+2 3 # tsy novakin
+3 -1 # novakin *TOP*
+4 5 # ny mpianatra
+5 3 # mpianatra novakin
+6 7 # io boky
+7 3 # boky novakin
+8 7 # io boky
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18902 Url_id=1375 flag=0 cleaned=1 src_leng=10 trans_leng=11
+ao ambanin' ny fandriana no nanafenan' ny zaza ny lakile
+there under the bed PRT hide-CIRC the child the key
+It 's under the bed that the child hid my key
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+It 's under the bed that the child hid my key
+1 3 # It under
+2 3 # 's under
+3 -1 # under *TOP*
+4 5 # the bed
+5 3 # bed under
+6 9 # that hid
+7 8 # the child
+8 9 # child hid
+9 3 # hid under
+10 11 # my key
+11 9 # key hid
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+ao ambanin' ny fandriana no nanafenan' ny zaza ny lakile
+there under the bed PRT hide-CIRC the child the key
+
+1 1 # ao there
+2 2 # ambanin' under
+3 3 # ny the
+4 4 # fandriana bed
+5 5 # no PRT
+6 6 # nanafenan' hide-CIRC
+7 7 # ny the
+8 8 # zaza child
+9 9 # ny the
+10 10 # lakile key
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+there under the bed PRT hide-CIRC the child the key
+It 's under the bed that the child hid my key
+
+1 0 # there NULL
+2 3 # under under
+3 4 # the the
+4 5 # bed bed
+5 0 # PRT NULL
+6 9 # hide-CIRC hid
+ 6.1 0 # hide NULL
+ 6.2 0 # -CIRC NULL
+7 7 # the the
+8 8 # child child
+9 10 # the my
+10 11 # key key
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+ao ambanin' ny fandriana no nanafenan' ny zaza ny lakile
+there under the bed PRT hide-CIRC the child the key
+It 's under the bed that the child hid my key
+
+1 2 # ao ambanin'
+2 -1 # ambanin' *TOP*
+3 4 # ny fandriana
+4 2 # fandriana ambanin'
+5 2 # no ambanin'
+6 2 # nanafenan' ambanin'
+7 8 # ny zaza
+8 6 # zaza nanafenan'
+9 10 # ny lakile
+10 6 # lakile nanafenan'
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18900 Url_id=1375 flag=0 cleaned=0 src_leng=3 trans_leng=5
+Rasoa no nihomehy
+Rasoa PRT laugh-ACT
+It was Rasoa who laughed
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+It was Rasoa who laughed
+1 3 # It Rasoa
+2 3 # was Rasoa
+3 -1 # Rasoa *TOP*
+4 5 # who laughed
+5 3 # laughed Rasoa
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Rasoa no nihomehy
+Rasoa PRT laugh-ACT
+
+1 1 # Rasoa Rasoa
+2 2 # no PRT
+3 3 # nihomehy laugh-ACT
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Rasoa PRT laugh-ACT
+It was Rasoa who laughed
+
+1 3 # Rasoa Rasoa
+2 0 # PRT NULL
+3 5 # laugh-ACT laughed
+ 3.1 0 # laugh NULL
+ 3.2 0 # -ACT NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Rasoa no nihomehy
+Rasoa PRT laugh-ACT
+It was Rasoa who laughed
+
+1 -1 # Rasoa *TOP*
+2 1 # no Rasoa
+3 1 # nihomehy Rasoa
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18933 Url_id=1376 flag=0 cleaned=0 src_leng=6 trans_leng=6
+namaky ny boky daholo ny ankizy
+read the book all the child
+All the children read the book
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+All the children read the book
+1 3 # All children
+2 3 # the children
+3 4 # children read
+4 -1 # read *TOP*
+5 6 # the book
+6 4 # book read
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+namaky ny boky daholo ny ankizy
+read the book all the child
+
+1 1 # namaky read
+2 2 # ny the
+3 3 # boky book
+4 4 # daholo all
+5 5 # ny the
+6 6 # ankizy child
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+read the book all the child
+All the children read the book
+
+1 4 # read read
+2 5 # the the
+3 6 # book book
+4 1 # all All
+5 2 # the the
+6 3 # child children
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+namaky ny boky daholo ny ankizy
+read the book all the child
+All the children read the book
+
+1 -1 # namaky *TOP*
+2 3 # ny boky
+3 1 # boky namaky
+4 6 # daholo ankizy
+5 6 # ny ankizy
+6 1 # ankizy namaky
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=10133 Url_id=412 flag=0 cleaned=0 src_leng=8 trans_leng=6
+nanontany aho hoe iza no nividy ny akoho
+ask-ACT 1SG-NOM HOE who FOCUS buy-ACT the chicken
+I asked who bought the chicken
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I asked who bought the chicken
+1 2 # I asked
+2 -1 # asked *TOP*
+3 4 # who bought
+4 2 # bought asked
+5 6 # the chicken
+6 4 # chicken bought
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nanontany aho hoe iza no nividy ny akoho
+ask-ACT 1SG-NOM HOE who FOCUS buy-ACT the chicken
+
+1 1 # nanontany ask-ACT
+2 2 # aho 1SG-NOM
+3 3 # hoe HOE
+4 4 # iza who
+5 5 # no FOCUS
+6 6 # nividy buy-ACT
+7 7 # ny the
+8 8 # akoho chicken
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+ask-ACT 1SG-NOM HOE who FOCUS buy-ACT the chicken
+I asked who bought the chicken
+
+1 2 # ask-ACT asked
+ 1.1 0 # ask NULL
+ 1.2 0 # -ACT NULL
+2 1 # 1SG-NOM I
+ 2.1 0 # 1SG NULL
+ 2.2 0 # -NOM NULL
+3 0 # HOE NULL
+4 3 # who who
+5 0 # FOCUS NULL
+6 4 # buy-ACT bought
+ 6.1 0 # buy NULL
+ 6.2 0 # -ACT NULL
+7 5 # the the
+8 6 # chicken chicken
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nanontany aho hoe iza no nividy ny akoho
+ask-ACT 1SG-NOM HOE who FOCUS buy-ACT the chicken
+I asked who bought the chicken
+
+1 -1 # nanontany *TOP*
+2 1 # aho nanontany
+3 1 # hoe nanontany
+4 6 # iza nividy
+5 1 # no nanontany
+6 1 # nividy nanontany
+7 8 # ny akoho
+8 6 # akoho nividy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18892 Url_id=1374 flag=0 cleaned=0 src_leng=3 trans_leng=6
+novidin-dRasoa ny mofo
+buy-PASS-Rasoa the bread
+The bread was bought by Rasoa
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The bread was bought by Rasoa
+1 2 # The bread
+2 4 # bread bought
+3 4 # was bought
+4 -1 # bought *TOP*
+5 4 # by bought
+6 5 # Rasoa by
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+novidin-dRasoa ny mofo
+buy-PASS-Rasoa the bread
+
+1 1 # novidin-dRasoa buy-PASS-Rasoa
+ 1.1 0 # novidin NULL
+ 1.2 0 # -dRasoa NULL
+2 2 # ny the
+3 3 # mofo bread
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+buy-PASS-Rasoa the bread
+The bread was bought by Rasoa
+
+1 4,6 # buy-PASS-Rasoa bought,Rasoa
+ 1.1 0 # buy NULL
+ 1.2 0 # -PASS NULL
+ 1.3 0 # -Rasoa NULL
+2 1 # the The
+3 2 # bread bread
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+novidin-dRasoa ny mofo
+buy-PASS-Rasoa the bread
+The bread was bought by Rasoa
+
+1 -1 # novidin-dRasoa *TOP*
+2 3 # ny mofo
+3 1 # mofo novidin-dRasoa
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20352 Url_id=1489 flag=0 cleaned=3 src_leng=6 trans_leng=9
+Aiza no anasan-dRasoa lamba isan'andro ?
+Where Foc wash-CF-Rasoa-gen clothes every'day ?
+Where are clothes washed every day by Rasoa ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Where are clothes washed every day by Rasoa ?
+1 4 # Where washed
+2 4 # are washed
+3 4 # clothes washed
+4 -1 # washed *TOP*
+5 6 # every day
+6 4 # day washed
+7 4 # by washed
+8 7 # Rasoa by
+9 4 # ? washed
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Aiza no anasan-dRasoa lamba isan'andro ?
+Where Foc wash-CF-Rasoa-gen clothes every'day ?
+
+1 1 # Aiza Where
+2 2 # no Foc
+3 3 # anasan-dRasoa wash-CF-Rasoa-gen
+ 3.1 0 # anasan NULL
+ 3.2 0 # -dRasoa NULL
+4 4 # lamba clothes
+5 5 # isan'andro every'day
+6 6 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Where Foc wash-CF-Rasoa-gen clothes every'day ?
+Where are clothes washed every day by Rasoa ?
+
+1 1 # Where Where
+2 0 # Foc NULL
+3 8,4 # wash-CF-Rasoa-gen Rasoa,washed
+ 3.1 0 # wash NULL
+ 3.2 0 # -CF NULL
+ 3.3 0 # -Rasoa NULL
+ 3.4 0 # -gen NULL
+4 3 # clothes clothes
+5 6,5 # every'day day,every
+6 9 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Aiza no anasan-dRasoa lamba isan'andro ?
+Where Foc wash-CF-Rasoa-gen clothes every'day ?
+Where are clothes washed every day by Rasoa ?
+
+1 3 # Aiza anasan-dRasoa
+2 3 # no anasan-dRasoa
+3 -1 # anasan-dRasoa *TOP*
+4 3 # lamba anasan-dRasoa
+5 3 # isan'andro anasan-dRasoa
+6 3 # ? anasan-dRasoa
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=15973 Url_id=1092 flag=0 cleaned=3 src_leng=6 trans_leng=7
+mikasa hovaki-ko ity boky ity .
+intend-ACT read-PASS-1SG this book this .
+I intend to read this book .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I intend to read this book .
+1 2 # I intend
+2 -1 # intend *TOP*
+3 4 # to read
+4 2 # read intend
+5 6 # this book
+6 4 # book read
+7 2 # . intend
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+mikasa hovaki-ko ity boky ity .
+intend-ACT read-PASS-1SG this book this .
+
+1 1 # mikasa intend-ACT
+2 2 # hovaki-ko read-PASS-1SG
+ 2.1 0 # hovaki NULL
+ 2.2 0 # -ko NULL
+3 3 # ity this
+4 4 # boky book
+5 5 # ity this
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+intend-ACT read-PASS-1SG this book this .
+I intend to read this book .
+
+1 2 # intend-ACT intend
+ 1.1 0 # intend NULL
+ 1.2 0 # -ACT NULL
+2 4,1 # read-PASS-1SG read,I
+ 2.1 0 # read NULL
+ 2.2 0 # -PASS NULL
+ 2.3 0 # -1SG NULL
+3 5 # this this
+4 6 # book book
+5 5 # this this
+6 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+mikasa hovaki-ko ity boky ity .
+intend-ACT read-PASS-1SG this book this .
+I intend to read this book .
+
+1 -1 # mikasa *TOP*
+2 1 # hovaki-ko mikasa
+3 4 # ity boky
+4 2 # boky hovaki-ko
+5 4 # ity boky
+6 1 # . mikasa
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18875 Url_id=1374 flag=0 cleaned=0 src_leng=5 trans_leng=5
+m-i-toetra amin' ilay trano izahay
+PRES-ACTIVE-live in that house 1PL-EXCL-NOM
+We live in that house
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+We live in that house
+1 2 # We live
+2 -1 # live *TOP*
+3 2 # in live
+4 5 # that house
+5 3 # house in
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+m-i-toetra amin' ilay trano izahay
+PRES-ACTIVE-live in that house 1PL-EXCL-NOM
+
+1 1 # m-i-toetra PRES-ACTIVE-live
+ 1.1 0 # m NULL
+ 1.2 0 # -i NULL
+ 1.3 0 # -toetra NULL
+2 2 # amin' in
+3 3 # ilay that
+4 4 # trano house
+5 5 # izahay 1PL-EXCL-NOM
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+PRES-ACTIVE-live in that house 1PL-EXCL-NOM
+We live in that house
+
+1 2 # PRES-ACTIVE-live live
+ 1.1 0 # PRES NULL
+ 1.2 0 # -ACTIVE NULL
+ 1.3 0 # -live NULL
+2 3 # in in
+3 4 # that that
+4 5 # house house
+5 0 # 1PL-EXCL-NOM NULL
+ 5.1 0 # 1PL NULL
+ 5.2 0 # -EXCL NULL
+ 5.3 0 # -NOM NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+m-i-toetra amin' ilay trano izahay
+PRES-ACTIVE-live in that house 1PL-EXCL-NOM
+We live in that house
+
+1 -1 # m-i-toetra *TOP*
+2 1 # amin' m-i-toetra
+3 4 # ilay trano
+4 2 # trano amin'
+5 1 # izahay m-i-toetra
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18878 Url_id=1374 flag=0 cleaned=0 src_leng=6 trans_leng=11
+heverin-dRabe fa mitady ny zaza Rasoa
+think-PASS-Rabe that look-for the child Rasoa
+That Rasoa is looking for the child is thought by Rabe
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+That Rasoa is looking for the child is thought by Rabe
+1 4 # That looking
+2 4 # Rasoa looking
+3 4 # is looking
+4 9 # looking thought
+5 4 # for looking
+6 7 # the child
+7 5 # child for
+8 9 # is thought
+9 -1 # thought *TOP*
+10 9 # by thought
+11 10 # Rabe by
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+heverin-dRabe fa mitady ny zaza Rasoa
+think-PASS-Rabe that look-for the child Rasoa
+
+1 1 # heverin-dRabe think-PASS-Rabe
+ 1.1 0 # heverin NULL
+ 1.2 0 # -dRabe NULL
+2 2 # fa that
+3 3 # mitady look-for
+4 4 # ny the
+5 5 # zaza child
+6 6 # Rasoa Rasoa
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+think-PASS-Rabe that look-for the child Rasoa
+That Rasoa is looking for the child is thought by Rabe
+
+1 9,11 # think-PASS-Rabe thought,Rabe
+ 1.1 0 # think NULL
+ 1.2 0 # -PASS NULL
+ 1.3 0 # -Rabe NULL
+2 1 # that That
+3 4,5 # look-for looking,for
+ 3.1 0 # look NULL
+ 3.2 0 # -for NULL
+4 6 # the the
+5 7 # child child
+6 2 # Rasoa Rasoa
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+heverin-dRabe fa mitady ny zaza Rasoa
+think-PASS-Rabe that look-for the child Rasoa
+That Rasoa is looking for the child is thought by Rabe
+
+1 -1 # heverin-dRabe *TOP*
+2 3 # fa mitady
+3 1 # mitady heverin-dRabe
+4 5 # ny zaza
+5 3 # zaza mitady
+6 3 # Rasoa mitady
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20442 Url_id=1490 flag=0 cleaned=0 src_leng=8 trans_leng=11
+m-i-hevitra ny miaramila ho resin ny fahavalo isika
+pres-act-think the soldier-s as defeat-thm the enemy-gen we-incl
+We think the soldiers to have been defeated by the enemy
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+We think the soldiers to have been defeated by the enemy
+1 2 # We think
+2 -1 # think *TOP*
+3 4 # the soldiers
+4 8 # soldiers defeated
+5 8 # to defeated
+6 8 # have defeated
+7 8 # been defeated
+8 2 # defeated think
+9 8 # by defeated
+10 11 # the enemy
+11 9 # enemy by
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+m-i-hevitra ny miaramila ho resin ny fahavalo isika
+pres-act-think the soldier-s as defeat-thm the enemy-gen we-incl
+
+1 1 # m-i-hevitra pres-act-think
+ 1.1 0 # m NULL
+ 1.2 0 # -i NULL
+ 1.3 0 # -hevitra NULL
+2 2 # ny the
+3 3 # miaramila soldier-s
+4 4 # ho as
+5 5 # resin defeat-thm
+6 6 # ny the
+7 7 # fahavalo enemy-gen
+8 8 # isika we-incl
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-act-think the soldier-s as defeat-thm the enemy-gen we-incl
+We think the soldiers to have been defeated by the enemy
+
+1 2 # pres-act-think think
+ 1.1 0 # pres NULL
+ 1.2 0 # -act NULL
+ 1.3 0 # -think NULL
+2 3 # the the
+3 4 # soldier-s soldiers
+ 3.1 0 # soldier NULL
+ 3.2 0 # -s NULL
+4 0 # as NULL
+5 8 # defeat-thm defeated
+ 5.1 0 # defeat NULL
+ 5.2 0 # -thm NULL
+6 10 # the the
+7 11 # enemy-gen enemy
+ 7.1 0 # enemy NULL
+ 7.2 0 # -gen NULL
+8 1 # we-incl We
+ 8.1 0 # we NULL
+ 8.2 0 # -incl NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+m-i-hevitra ny miaramila ho resin ny fahavalo isika
+pres-act-think the soldier-s as defeat-thm the enemy-gen we-incl
+We think the soldiers to have been defeated by the enemy
+
+1 -1 # m-i-hevitra *TOP*
+2 3 # ny miaramila
+3 5 # miaramila resin
+4 1 # ho m-i-hevitra
+5 1 # resin m-i-hevitra
+6 7 # ny fahavalo
+7 5 # fahavalo resin
+8 1 # isika m-i-hevitra
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20435 Url_id=1490 flag=0 cleaned=0 src_leng=5 trans_leng=7
+m-i-laza an-dRasoa ho nangala-bary Ravelo
+pres-act-say acc-Rasoa as past-steal-rice Ravelo
+Ravelo says Rasoa to have stolen rice
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Ravelo says Rasoa to have stolen rice
+1 2 # Ravelo says
+2 -1 # says *TOP*
+3 6 # Rasoa stolen
+4 6 # to stolen
+5 6 # have stolen
+6 2 # stolen says
+7 6 # rice stolen
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+m-i-laza an-dRasoa ho nangala-bary Ravelo
+pres-act-say acc-Rasoa as past-steal-rice Ravelo
+
+1 1 # m-i-laza pres-act-say
+ 1.1 0 # m NULL
+ 1.2 0 # -i NULL
+ 1.3 0 # -laza NULL
+2 2 # an-dRasoa acc-Rasoa
+ 2.1 0 # an NULL
+ 2.2 0 # -dRasoa NULL
+3 3 # ho as
+4 4 # nangala-bary past-steal-rice
+ 4.1 0 # nangala NULL
+ 4.2 0 # -bary NULL
+5 5 # Ravelo Ravelo
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-act-say acc-Rasoa as past-steal-rice Ravelo
+Ravelo says Rasoa to have stolen rice
+
+1 2 # pres-act-say says
+ 1.1 0 # pres NULL
+ 1.2 0 # -act NULL
+ 1.3 0 # -say NULL
+2 3 # acc-Rasoa Rasoa
+ 2.1 0 # acc NULL
+ 2.2 0 # -Rasoa NULL
+3 0 # as NULL
+4 7,6 # past-steal-rice rice,stolen
+ 4.1 0 # past NULL
+ 4.2 0 # -steal NULL
+ 4.3 0 # -rice NULL
+5 1 # Ravelo Ravelo
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+m-i-laza an-dRasoa ho nangala-bary Ravelo
+pres-act-say acc-Rasoa as past-steal-rice Ravelo
+Ravelo says Rasoa to have stolen rice
+
+1 -1 # m-i-laza *TOP*
+2 4 # an-dRasoa nangala-bary
+3 1 # ho m-i-laza
+4 1 # nangala-bary m-i-laza
+5 1 # Ravelo m-i-laza
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18891 Url_id=1374 flag=0 cleaned=3 src_leng=7 trans_leng=7
+taiza no nividy ny mofo Rasoa ?
+where PRT buy-ACT the bread Rasoa ?
+Where did Rasoa buy the bread ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Where did Rasoa buy the bread ?
+1 4 # Where buy
+2 4 # did buy
+3 4 # Rasoa buy
+4 -1 # buy *TOP*
+5 6 # the bread
+6 4 # bread buy
+7 4 # ? buy
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+taiza no nividy ny mofo Rasoa ?
+where PRT buy-ACT the bread Rasoa ?
+
+1 1 # taiza where
+2 2 # no PRT
+3 3 # nividy buy-ACT
+4 4 # ny the
+5 5 # mofo bread
+6 6 # Rasoa Rasoa
+7 7 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+where PRT buy-ACT the bread Rasoa ?
+Where did Rasoa buy the bread ?
+
+1 1 # where Where
+2 0 # PRT NULL
+3 4 # buy-ACT buy
+ 3.1 0 # buy NULL
+ 3.2 0 # -ACT NULL
+4 5 # the the
+5 6 # bread bread
+6 3 # Rasoa Rasoa
+7 7 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+taiza no nividy ny mofo Rasoa ?
+where PRT buy-ACT the bread Rasoa ?
+Where did Rasoa buy the bread ?
+
+1 3 # taiza nividy
+2 3 # no nividy
+3 -1 # nividy *TOP*
+4 5 # ny mofo
+5 3 # mofo nividy
+6 3 # Rasoa nividy
+7 3 # ? nividy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20444 Url_id=1490 flag=0 cleaned=0 src_leng=3 trans_leng=5
+m-i-resadresaka amin-dRabe Rasoa
+pres-act-chitchat with-dRabe Rasoa
+Rasoa is chitchatting with Rabe
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rasoa is chitchatting with Rabe
+1 3 # Rasoa chitchatting
+2 3 # is chitchatting
+3 -1 # chitchatting *TOP*
+4 3 # with chitchatting
+5 4 # Rabe with
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+m-i-resadresaka amin-dRabe Rasoa
+pres-act-chitchat with-dRabe Rasoa
+
+1 1 # m-i-resadresaka pres-act-chitchat
+ 1.1 0 # m NULL
+ 1.2 0 # -i NULL
+ 1.3 0 # -resadresaka NULL
+2 2 # amin-dRabe with-dRabe
+ 2.1 0 # amin NULL
+ 2.2 0 # -dRabe NULL
+3 3 # Rasoa Rasoa
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-act-chitchat with-dRabe Rasoa
+Rasoa is chitchatting with Rabe
+
+1 3 # pres-act-chitchat chitchatting
+ 1.1 0 # pres NULL
+ 1.2 0 # -act NULL
+ 1.3 0 # -chitchat NULL
+2 4,5 # with-dRabe with,Rabe
+ 2.1 0 # with NULL
+ 2.2 0 # -dRabe NULL
+3 1 # Rasoa Rasoa
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+m-i-resadresaka amin-dRabe Rasoa
+pres-act-chitchat with-dRabe Rasoa
+Rasoa is chitchatting with Rabe
+
+1 -1 # m-i-resadresaka *TOP*
+2 1 # amin-dRabe m-i-resadresaka
+3 1 # Rasoa m-i-resadresaka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18867 Url_id=1371 flag=0 cleaned=3 src_leng=10 trans_leng=9
+Mividy ny boky ao ambanin' ny latabatra ny ankizy .
+pres-buy the book there on the table the child .
+The child buys the book on the table .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The child buys the book on the table .
+1 2 # The child
+2 3 # child buys
+3 -1 # buys *TOP*
+4 5 # the book
+5 3 # book buys
+6 5 # on book
+7 8 # the table
+8 6 # table on
+9 3 # . buys
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Mividy ny boky ao ambanin' ny latabatra ny ankizy .
+pres-buy the book there on the table the child .
+
+1 1 # Mividy pres-buy
+2 2 # ny the
+3 3 # boky book
+4 4 # ao there
+5 5 # ambanin' on
+6 6 # ny the
+7 7 # latabatra table
+8 8 # ny the
+9 9 # ankizy child
+10 10 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-buy the book there on the table the child .
+The child buys the book on the table .
+
+1 3 # pres-buy buys
+ 1.1 0 # pres NULL
+ 1.2 0 # -buy NULL
+2 4 # the the
+3 5 # book book
+4 0 # there NULL
+5 6 # on on
+6 7 # the the
+7 8 # table table
+8 1 # the The
+9 2 # child child
+10 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Mividy ny boky ao ambanin' ny latabatra ny ankizy .
+pres-buy the book there on the table the child .
+The child buys the book on the table .
+
+1 -1 # Mividy *TOP*
+2 3 # ny boky
+3 1 # boky Mividy
+4 1 # ao Mividy
+5 3 # ambanin' boky
+6 7 # ny latabatra
+7 5 # latabatra ambanin'
+8 9 # ny ankizy
+9 1 # ankizy Mividy
+10 1 # . Mividy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18912 Url_id=1375 flag=0 cleaned=3 src_leng=6 trans_leng=6
+aiza ny inona no vidinao ?
+where the what PRT buy-PASS-2SG ?
+What do you buy where ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+What do you buy where ?
+1 4 # What buy
+2 4 # do buy
+3 4 # you buy
+4 -1 # buy *TOP*
+5 4 # where buy
+6 4 # ? buy
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+aiza ny inona no vidinao ?
+where the what PRT buy-PASS-2SG ?
+
+1 1 # aiza where
+2 2 # ny the
+3 3 # inona what
+4 4 # no PRT
+5 5 # vidinao buy-PASS-2SG
+6 6 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+where the what PRT buy-PASS-2SG ?
+What do you buy where ?
+
+1 5 # where where
+2 0 # the NULL
+3 1 # what What
+4 0 # PRT NULL
+5 4,3 # buy-PASS-2SG buy,you
+ 5.1 0 # buy NULL
+ 5.2 0 # -PASS NULL
+ 5.3 0 # -2SG NULL
+6 6 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+aiza ny inona no vidinao ?
+where the what PRT buy-PASS-2SG ?
+What do you buy where ?
+
+1 5 # aiza vidinao
+2 5 # ny vidinao
+3 5 # inona vidinao
+4 5 # no vidinao
+5 -1 # vidinao *TOP*
+6 5 # ? vidinao
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18893 Url_id=1374 flag=0 cleaned=3 src_leng=4 trans_leng=6
+inona no novidin-dRasoa ?
+what PRT buy-PASS-Rasoa ?
+What was bought by Rasoa ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+What was bought by Rasoa ?
+1 3 # What bought
+2 3 # was bought
+3 -1 # bought *TOP*
+4 3 # by bought
+5 4 # Rasoa by
+6 3 # ? bought
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inona no novidin-dRasoa ?
+what PRT buy-PASS-Rasoa ?
+
+1 1 # inona what
+2 2 # no PRT
+3 3 # novidin-dRasoa buy-PASS-Rasoa
+ 3.1 0 # novidin NULL
+ 3.2 0 # -dRasoa NULL
+4 4 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+what PRT buy-PASS-Rasoa ?
+What was bought by Rasoa ?
+
+1 1 # what What
+2 0 # PRT NULL
+3 3,5 # buy-PASS-Rasoa bought,Rasoa
+ 3.1 0 # buy NULL
+ 3.2 0 # -PASS NULL
+ 3.3 0 # -Rasoa NULL
+4 6 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inona no novidin-dRasoa ?
+what PRT buy-PASS-Rasoa ?
+What was bought by Rasoa ?
+
+1 3 # inona novidin-dRasoa
+2 3 # no novidin-dRasoa
+3 -1 # novidin-dRasoa *TOP*
+4 3 # ? novidin-dRasoa
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20364 Url_id=1490 flag=0 cleaned=0 src_leng=5 trans_leng=6
+ny olona izay manenjika an-dRabe
+the person who chases acc-Rabe
+the person who is chasing Rabe
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+the person who is chasing Rabe
+1 2 # the person
+2 -1 # person *TOP*
+3 5 # who chasing
+4 5 # is chasing
+5 2 # chasing person
+6 5 # Rabe chasing
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+ny olona izay manenjika an-dRabe
+the person who chases acc-Rabe
+
+1 1 # ny the
+2 2 # olona person
+3 3 # izay who
+4 4 # manenjika chases
+5 5 # an-dRabe acc-Rabe
+ 5.1 0 # an NULL
+ 5.2 0 # -dRabe NULL
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+the person who chases acc-Rabe
+the person who is chasing Rabe
+
+1 1 # the the
+2 2 # person person
+3 3 # who who
+4 5 # chases chasing
+5 6 # acc-Rabe Rabe
+ 5.1 0 # acc NULL
+ 5.2 0 # -Rabe NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+ny olona izay manenjika an-dRabe
+the person who chases acc-Rabe
+the person who is chasing Rabe
+
+1 2 # ny olona
+2 -1 # olona *TOP*
+3 4 # izay manenjika
+4 2 # manenjika olona
+5 4 # an-dRabe manenjika
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18908 Url_id=1375 flag=0 cleaned=3 src_leng=6 trans_leng=5
+tokony iza no mamangy an-dRabe ?
+should who PRT visit-ACT ACC-Rabe ?
+Who should visit Rabe ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Who should visit Rabe ?
+1 3 # Who visit
+2 3 # should visit
+3 -1 # visit *TOP*
+4 3 # Rabe visit
+5 3 # ? visit
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+tokony iza no mamangy an-dRabe ?
+should who PRT visit-ACT ACC-Rabe ?
+
+1 1 # tokony should
+2 2 # iza who
+3 3 # no PRT
+4 4 # mamangy visit-ACT
+5 5 # an-dRabe ACC-Rabe
+ 5.1 0 # an NULL
+ 5.2 0 # -dRabe NULL
+6 6 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+should who PRT visit-ACT ACC-Rabe ?
+Who should visit Rabe ?
+
+1 2 # should should
+2 1 # who Who
+3 0 # PRT NULL
+4 3 # visit-ACT visit
+ 4.1 0 # visit NULL
+ 4.2 0 # -ACT NULL
+5 4 # ACC-Rabe Rabe
+ 5.1 0 # ACC NULL
+ 5.2 0 # -Rabe NULL
+6 5 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+tokony iza no mamangy an-dRabe ?
+should who PRT visit-ACT ACC-Rabe ?
+Who should visit Rabe ?
+
+1 4 # tokony mamangy
+2 4 # iza mamangy
+3 4 # no mamangy
+4 -1 # mamangy *TOP*
+5 4 # an-dRabe mamangy
+6 4 # ? mamangy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20454 Url_id=1490 flag=0 cleaned=0 src_leng=3 trans_leng=10
+ny soa n-if-aN-tao-vana-tsika
+the good past-rec-act-do-circ-us1pl-incl-gen
+the good that was done for each other by us
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+the good that was done for each other by us
+1 2 # the good
+2 -1 # good *TOP*
+3 5 # that done
+4 5 # was done
+5 2 # done good
+6 5 # for done
+7 8 # each other
+8 6 # other for
+9 5 # by done
+10 9 # us by
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+ny soa n-if-aN-tao-vana-tsika
+the good past-rec-act-do-circ-us1pl-incl-gen
+
+1 1 # ny the
+2 2 # soa good
+3 3 # n-if-aN-tao-vana-tsika past-rec-act-do-circ-us1pl-incl-gen
+ 3.1 0 # n NULL
+ 3.2 0 # -if NULL
+ 3.3 0 # -aN NULL
+ 3.4 0 # -tao NULL
+ 3.5 0 # -vana NULL
+ 3.6 0 # -tsika NULL
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+the good past-rec-act-do-circ-us1pl-incl-gen
+the good that was done for each other by us
+
+1 1 # the the
+2 2 # good good
+3 5 # past-rec-act-do-circ-us1pl-incl-gen done
+ 3.1 0 # past NULL
+ 3.2 0 # -rec NULL
+ 3.3 0 # -act NULL
+ 3.4 0 # -do NULL
+ 3.5 0 # -circ NULL
+ 3.6 0 # -us1pl NULL
+ 3.7 0 # -incl NULL
+ 3.8 0 # -gen NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+ny soa n-if-aN-tao-vana-tsika
+the good past-rec-act-do-circ-us1pl-incl-gen
+the good that was done for each other by us
+
+1 2 # ny soa
+2 -1 # soa *TOP*
+3 2 # n-if-aN-tao-vana-tsika soa
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=15965 Url_id=1092 flag=0 cleaned=3 src_leng=5 trans_leng=7
+m-an-aiky ho-sas-ana ny zaza .
+PRES-ACT-agree FUT-wash-PASS the child .
+The child agrees to be washed .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The child agrees to be washed .
+1 2 # The child
+2 3 # child agrees
+3 -1 # agrees *TOP*
+4 6 # to washed
+5 6 # be washed
+6 3 # washed agrees
+7 3 # . agrees
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+m-an-aiky ho-sas-ana ny zaza .
+PRES-ACT-agree FUT-wash-PASS the child .
+
+1 1 # m-an-aiky PRES-ACT-agree
+ 1.1 0 # m NULL
+ 1.2 0 # -an NULL
+ 1.3 0 # -aiky NULL
+2 2 # ho-sas-ana FUT-wash-PASS
+ 2.1 0 # ho NULL
+ 2.2 0 # -sas NULL
+ 2.3 0 # -ana NULL
+3 3 # ny the
+4 4 # zaza child
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+PRES-ACT-agree FUT-wash-PASS the child .
+The child agrees to be washed .
+
+1 3 # PRES-ACT-agree agrees
+ 1.1 0 # PRES NULL
+ 1.2 0 # -ACT NULL
+ 1.3 0 # -agree NULL
+2 6 # FUT-wash-PASS washed
+ 2.1 0 # FUT NULL
+ 2.2 0 # -wash NULL
+ 2.3 0 # -PASS NULL
+3 1 # the The
+4 2 # child child
+5 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+m-an-aiky ho-sas-ana ny zaza .
+PRES-ACT-agree FUT-wash-PASS the child .
+The child agrees to be washed .
+
+1 -1 # m-an-aiky *TOP*
+2 1 # ho-sas-ana m-an-aiky
+3 4 # ny zaza
+4 1 # zaza m-an-aiky
+5 1 # . m-an-aiky
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18882 Url_id=1374 flag=0 cleaned=0 src_leng=4 trans_leng=8
+mikiry sasan-dRasoa ny lamba
+intend wash-PASS-Rasoa the clothes
+The clothes intend to be washed by Rasoa
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The clothes intend to be washed by Rasoa
+1 2 # The clothes
+2 3 # clothes intend
+3 -1 # intend *TOP*
+4 6 # to washed
+5 6 # be washed
+6 3 # washed intend
+7 6 # by washed
+8 7 # Rasoa by
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+mikiry sasan-dRasoa ny lamba
+intend wash-PASS-Rasoa the clothes
+
+1 1 # mikiry intend
+2 2 # sasan-dRasoa wash-PASS-Rasoa
+ 2.1 0 # sasan NULL
+ 2.2 0 # -dRasoa NULL
+3 3 # ny the
+4 4 # lamba clothes
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+intend wash-PASS-Rasoa the clothes
+The clothes intend to be washed by Rasoa
+
+1 3 # intend intend
+2 6,8 # wash-PASS-Rasoa washed,Rasoa
+ 2.1 0 # wash NULL
+ 2.2 0 # -PASS NULL
+ 2.3 0 # -Rasoa NULL
+3 0 # the NULL
+4 2 # clothes clothes
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+mikiry sasan-dRasoa ny lamba
+intend wash-PASS-Rasoa the clothes
+The clothes intend to be washed by Rasoa
+
+1 -1 # mikiry *TOP*
+2 1 # sasan-dRasoa mikiry
+3 1 # ny mikiry
+4 1 # lamba mikiry
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20368 Url_id=1490 flag=0 cleaned=0 src_leng=6 trans_leng=6
+m-aN-tolotra nanolotra) vary (hoan'ny vahiny Rabe
+pres-act-offer rice to the guest Rabe
+Rabe offers rice to the guests
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rabe offers rice to the guests
+1 2 # Rabe offers
+2 -1 # offers *TOP*
+3 2 # rice offers
+4 2 # to offers
+5 6 # the guests
+6 4 # guests to
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+m-aN-tolotra nanolotra) vary (hoan'ny vahiny Rabe
+pres-act-offer rice to the guest Rabe
+
+1 1 # m-aN-tolotra pres-act-offer
+ 1.1 0 # m NULL
+ 1.2 0 # -aN NULL
+ 1.3 0 # -tolotra NULL
+2 2 # nanolotra) rice
+3 3 # vary to
+4 4 # (hoan'ny the
+5 5 # vahiny guest
+6 6 # Rabe Rabe
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-act-offer rice to the guest Rabe
+Rabe offers rice to the guests
+
+1 2 # pres-act-offer offers
+ 1.1 0 # pres NULL
+ 1.2 0 # -act NULL
+ 1.3 0 # -offer NULL
+2 3 # rice rice
+3 4 # to to
+4 5 # the the
+5 6 # guest guests
+6 1 # Rabe Rabe
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+m-aN-tolotra nanolotra) vary (hoan'ny vahiny Rabe
+pres-act-offer rice to the guest Rabe
+Rabe offers rice to the guests
+
+1 -1 # m-aN-tolotra *TOP*
+2 1 # nanolotra) m-aN-tolotra
+3 1 # vary m-aN-tolotra
+4 5 # (hoan'ny vahiny
+5 3 # vahiny vary
+6 1 # Rabe m-aN-tolotra
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20420 Url_id=1490 flag=0 cleaned=0 src_leng=3 trans_leng=5
+m-i-sasa tanana Rasoa
+pres-act-wash hand Rasoa
+Rasoa is washing her hands
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rasoa is washing her hands
+1 3 # Rasoa washing
+2 3 # is washing
+3 -1 # washing *TOP*
+4 5 # her hands
+5 3 # hands washing
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+m-i-sasa tanana Rasoa
+pres-act-wash hand Rasoa
+
+1 1 # m-i-sasa pres-act-wash
+ 1.1 0 # m NULL
+ 1.2 0 # -i NULL
+ 1.3 0 # -sasa NULL
+2 2 # tanana hand
+3 3 # Rasoa Rasoa
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-act-wash hand Rasoa
+Rasoa is washing her hands
+
+1 3 # pres-act-wash washing
+ 1.1 0 # pres NULL
+ 1.2 0 # -act NULL
+ 1.3 0 # -wash NULL
+2 5 # hand hands
+3 1 # Rasoa Rasoa
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+m-i-sasa tanana Rasoa
+pres-act-wash hand Rasoa
+Rasoa is washing her hands
+
+1 -1 # m-i-sasa *TOP*
+2 1 # tanana m-i-sasa
+3 1 # Rasoa m-i-sasa
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20467 Url_id=1490 flag=0 cleaned=1 src_leng=8 trans_leng=17
+tsara ho tadidina ny fifampitokisan ny Malagasy taloha
+good fut recall-thm the mutual-trust-circ-of the Malagasy of-yore
+It is good to recall the trust in e.o . by the Malagasy in the old days
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+It is good to recall the trust in e.o . by the Malagasy in the old days
+1 3 # It good
+2 3 # is good
+3 -1 # good *TOP*
+4 5 # to recall
+5 3 # recall good
+6 7 # the trust
+7 5 # trust recall
+8 7 # in trust
+9 8 # e.o in
+10 9 # . e.o
+11 7 # by trust
+12 13 # the Malagasy
+13 11 # Malagasy by
+14 7 # in trust
+15 17 # the days
+16 17 # old days
+17 14 # days in
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+tsara ho tadidina ny fifampitokisan ny Malagasy taloha
+good fut recall-thm the mutual-trust-circ-of the Malagasy of-yore
+
+1 1 # tsara good
+2 2 # ho fut
+3 3 # tadidina recall-thm
+4 4 # ny the
+5 5 # fifampitokisan mutual-trust-circ-of
+6 6 # ny the
+7 7 # Malagasy Malagasy
+8 8 # taloha of-yore
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+good fut recall-thm the mutual-trust-circ-of the Malagasy of-yore
+It is good to recall the trust in e.o . by the Malagasy in the old days
+
+1 3 # good good
+2 0 # fut NULL
+3 5 # recall-thm recall
+ 3.1 0 # recall NULL
+ 3.2 0 # -thm NULL
+4 6 # the the
+5 7 # mutual-trust-circ-of trust
+ 5.1 0 # mutual NULL
+ 5.2 0 # -trust NULL
+ 5.3 0 # -circ NULL
+ 5.4 0 # -of NULL
+6 12 # the the
+7 13 # Malagasy Malagasy
+8 16,17 # of-yore old,days
+ 8.1 0 # of NULL
+ 8.2 0 # -yore NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+tsara ho tadidina ny fifampitokisan ny Malagasy taloha
+good fut recall-thm the mutual-trust-circ-of the Malagasy of-yore
+It is good to recall the trust in e.o . by the Malagasy in the old days
+
+1 -1 # tsara *TOP*
+2 1 # ho tsara
+3 1 # tadidina tsara
+4 5 # ny fifampitokisan
+5 3 # fifampitokisan tadidina
+6 7 # ny Malagasy
+7 5 # Malagasy fifampitokisan
+8 5 # taloha fifampitokisan
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18917 Url_id=1375 flag=0 cleaned=0 src_leng=5 trans_leng=7
+omaly Rasoa no nanapaka bozaka
+yesterday Rasoa PRT cut grass
+It was Rasoa who cut grass yesterday
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+It was Rasoa who cut grass yesterday
+1 3 # It Rasoa
+2 3 # was Rasoa
+3 -1 # Rasoa *TOP*
+4 5 # who cut
+5 3 # cut Rasoa
+6 7 # grass yesterday
+7 5 # yesterday cut
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+omaly Rasoa no nanapaka bozaka
+yesterday Rasoa PRT cut grass
+
+1 1 # omaly yesterday
+2 2 # Rasoa Rasoa
+3 3 # no PRT
+4 4 # nanapaka cut
+5 5 # bozaka grass
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+yesterday Rasoa PRT cut grass
+It was Rasoa who cut grass yesterday
+
+1 7 # yesterday yesterday
+2 3 # Rasoa Rasoa
+3 0 # PRT NULL
+4 5 # cut cut
+5 6 # grass grass
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+omaly Rasoa no nanapaka bozaka
+yesterday Rasoa PRT cut grass
+It was Rasoa who cut grass yesterday
+
+1 4 # omaly nanapaka
+2 -1 # Rasoa *TOP*
+3 2 # no Rasoa
+4 2 # nanapaka Rasoa
+5 1 # bozaka omaly
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20471 Url_id=1490 flag=0 cleaned=0 src_leng=4 trans_leng=7
+naniry hifandefa boky izahay
+past-act-desire fut-rec-act-send book we-excl
+We desired to send each other books
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+We desired to send each other books
+1 2 # We desired
+2 -1 # desired *TOP*
+3 4 # to send
+4 2 # send desired
+5 6 # each other
+6 4 # other send
+7 4 # books send
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+naniry hifandefa boky izahay
+past-act-desire fut-rec-act-send book we-excl
+
+1 1 # naniry past-act-desire
+2 2 # hifandefa fut-rec-act-send
+3 3 # boky book
+4 4 # izahay we-excl
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+past-act-desire fut-rec-act-send book we-excl
+We desired to send each other books
+
+1 3 # past-act-desire to
+ 1.1 0 # past NULL
+ 1.2 0 # -act NULL
+ 1.3 0 # -desire NULL
+2 4 # fut-rec-act-send send
+ 2.1 0 # fut NULL
+ 2.2 0 # -rec NULL
+ 2.3 0 # -act NULL
+ 2.4 0 # -send NULL
+3 7 # book books
+4 1 # we-excl We
+ 4.1 0 # we NULL
+ 4.2 0 # -excl NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+naniry hifandefa boky izahay
+past-act-desire fut-rec-act-send book we-excl
+We desired to send each other books
+
+1 2 # naniry hifandefa
+2 -2 # hifandefa NULL
+3 2 # boky hifandefa
+4 -2 # izahay NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18888 Url_id=1374 flag=0 cleaned=3 src_leng=6 trans_leng=6
+iza no nividy ny mofo ?
+who PRT buy-ACT the bread ?
+Who bought the bread yesterday ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Who bought the bread yesterday ?
+1 2 # Who bought
+2 -1 # bought *TOP*
+3 4 # the bread
+4 2 # bread bought
+5 2 # yesterday bought
+6 2 # ? bought
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+iza no nividy ny mofo ?
+who PRT buy-ACT the bread ?
+
+1 1 # iza who
+2 2 # no PRT
+3 3 # nividy buy-ACT
+4 4 # ny the
+5 5 # mofo bread
+6 6 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+who PRT buy-ACT the bread ?
+Who bought the bread yesterday ?
+
+1 1 # who Who
+2 0 # PRT NULL
+3 2 # buy-ACT bought
+ 3.1 0 # buy NULL
+ 3.2 0 # -ACT NULL
+4 3 # the the
+5 4 # bread bread
+6 6 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+iza no nividy ny mofo ?
+who PRT buy-ACT the bread ?
+Who bought the bread yesterday ?
+
+1 3 # iza nividy
+2 3 # no nividy
+3 -1 # nividy *TOP*
+4 5 # ny mofo
+5 3 # mofo nividy
+6 3 # ? nividy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18934 Url_id=1376 flag=0 cleaned=3 src_leng=5 trans_leng=7
+any an-tsena foana Rakoto .
+there ACC-market always Rakoto .
+Rakoto is always at the market .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rakoto is always at the market .
+1 2 # Rakoto is
+2 4 # is at
+3 2 # always is
+4 -1 # at *TOP*
+5 6 # the market
+6 4 # market at
+7 2 # . is
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+any an-tsena foana Rakoto .
+there ACC-market always Rakoto .
+
+1 1 # any there
+2 2 # an-tsena ACC-market
+ 2.1 0 # an NULL
+ 2.2 0 # -tsena NULL
+3 3 # foana always
+4 4 # Rakoto Rakoto
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+there ACC-market always Rakoto .
+Rakoto is always at the market .
+
+1 0 # there NULL
+2 6 # ACC-market market
+ 2.1 0 # ACC NULL
+ 2.2 0 # -market NULL
+3 3 # always always
+4 1 # Rakoto Rakoto
+5 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+any an-tsena foana Rakoto .
+there ACC-market always Rakoto .
+Rakoto is always at the market .
+
+1 -2 # any NULL
+2 -2 # an-tsena NULL
+3 -2 # foana NULL
+4 -2 # Rakoto NULL
+5 -2 # . NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20433 Url_id=1490 flag=0 cleaned=0 src_leng=5 trans_leng=10
+nifampindram-bola intelo Rabe sy Ravao
+past-rec-borrow-money three-times Rabe and Ravao
+Rabe and Ravao borrowed money from each other three times
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rabe and Ravao borrowed money from each other three times
+1 3 # Rabe Ravao
+2 3 # and Ravao
+3 4 # Ravao borrowed
+4 -1 # borrowed *TOP*
+5 4 # money borrowed
+6 4 # from borrowed
+7 8 # each other
+8 6 # other from
+9 10 # three times
+10 4 # times borrowed
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nifampindram-bola intelo Rabe sy Ravao
+past-rec-borrow-money three-times Rabe and Ravao
+
+1 1 # nifampindram-bola past-rec-borrow-money
+ 1.1 0 # nifampindram NULL
+ 1.2 0 # -bola NULL
+2 2 # intelo three-times
+3 3 # Rabe Rabe
+4 4 # sy and
+5 5 # Ravao Ravao
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+past-rec-borrow-money three-times Rabe and Ravao
+Rabe and Ravao borrowed money from each other three times
+
+1 5,4 # past-rec-borrow-money money,borrowed
+ 1.1 0 # past NULL
+ 1.2 0 # -rec NULL
+ 1.3 0 # -borrow NULL
+ 1.4 0 # -money NULL
+2 10,9 # three-times times,three
+ 2.1 0 # three NULL
+ 2.2 0 # -times NULL
+3 1 # Rabe Rabe
+4 2 # and and
+5 3 # Ravao Ravao
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nifampindram-bola intelo Rabe sy Ravao
+past-rec-borrow-money three-times Rabe and Ravao
+Rabe and Ravao borrowed money from each other three times
+
+1 -1 # nifampindram-bola *TOP*
+2 1 # intelo nifampindram-bola
+3 5 # Rabe Ravao
+4 5 # sy Ravao
+5 1 # Ravao nifampindram-bola
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20331 Url_id=1489 flag=0 cleaned=0 src_leng=8 trans_leng=10
+milalao ao an-trano ny zazalahy sy ny zazavavy
+play there in-house the boys and the girls
+The boys and the girls are playing in the house
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The boys and the girls are playing in the house
+1 2 # The boys
+2 5 # boys girls
+3 5 # and girls
+4 5 # the girls
+5 7 # girls playing
+6 7 # are playing
+7 -1 # playing *TOP*
+8 7 # in playing
+9 10 # the house
+10 8 # house in
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+milalao ao an-trano ny zazalahy sy ny zazavavy
+play there in-house the boys and the girls
+
+1 1 # milalao play
+2 2 # ao there
+3 3 # an-trano in-house
+ 3.1 0 # an NULL
+ 3.2 0 # -trano NULL
+4 4 # ny the
+5 5 # zazalahy boys
+6 6 # sy and
+7 7 # ny the
+8 8 # zazavavy girls
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+play there in-house the boys and the girls
+The boys and the girls are playing in the house
+
+1 7 # play playing
+2 0 # there NULL
+3 8,10 # in-house in,house
+ 3.1 0 # in NULL
+ 3.2 0 # -house NULL
+4 1 # the The
+5 2 # boys boys
+6 3 # and and
+7 4 # the the
+8 5 # girls girls
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+milalao ao an-trano ny zazalahy sy ny zazavavy
+play there in-house the boys and the girls
+The boys and the girls are playing in the house
+
+1 -1 # milalao *TOP*
+2 1 # ao milalao
+3 1 # an-trano milalao
+4 5 # ny zazalahy
+5 8 # zazalahy zazavavy
+6 8 # sy zazavavy
+7 8 # ny zazavavy
+8 1 # zazavavy milalao
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18877 Url_id=1374 flag=0 cleaned=0 src_leng=7 trans_leng=9
+mihevitra Rabe fa mitady ny zaza Rasoa
+think Rabe that look-for the child Rasoa
+Rabe thinks that Rasoa is looking for the child
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rabe thinks that Rasoa is looking for the child
+1 2 # Rabe thinks
+2 -1 # thinks *TOP*
+3 6 # that looking
+4 6 # Rasoa looking
+5 6 # is looking
+6 2 # looking thinks
+7 6 # for looking
+8 9 # the child
+9 7 # child for
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+mihevitra Rabe fa mitady ny zaza Rasoa
+think Rabe that look-for the child Rasoa
+
+1 1 # mihevitra think
+2 2 # Rabe Rabe
+3 3 # fa that
+4 4 # mitady look-for
+5 5 # ny the
+6 6 # zaza child
+7 7 # Rasoa Rasoa
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+think Rabe that look-for the child Rasoa
+Rabe thinks that Rasoa is looking for the child
+
+1 2 # think thinks
+2 1 # Rabe Rabe
+3 3 # that that
+4 6,7 # look-for looking,for
+ 4.1 0 # look NULL
+ 4.2 0 # -for NULL
+5 8 # the the
+6 9 # child child
+7 4 # Rasoa Rasoa
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+mihevitra Rabe fa mitady ny zaza Rasoa
+think Rabe that look-for the child Rasoa
+Rabe thinks that Rasoa is looking for the child
+
+1 -1 # mihevitra *TOP*
+2 1 # Rabe mihevitra
+3 4 # fa mitady
+4 1 # mitady mihevitra
+5 6 # ny zaza
+6 4 # zaza mitady
+7 4 # Rasoa mitady
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=15980 Url_id=1092 flag=0 cleaned=3 src_leng=5 trans_leng=7
+nanandrana novonoin-dRasoa ny akoho .
+try-ACT kill-PASS-Rasoa the chicken .
+Rasoa tried to kill the chicken .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rasoa tried to kill the chicken .
+1 2 # Rasoa tried
+2 -1 # tried *TOP*
+3 4 # to kill
+4 2 # kill tried
+5 6 # the chicken
+6 4 # chicken kill
+7 2 # . tried
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nanandrana novonoin-dRasoa ny akoho .
+try-ACT kill-PASS-Rasoa the chicken .
+
+1 1 # nanandrana try-ACT
+2 2 # novonoin-dRasoa kill-PASS-Rasoa
+ 2.1 0 # novonoin NULL
+ 2.2 0 # -dRasoa NULL
+3 3 # ny the
+4 4 # akoho chicken
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+try-ACT kill-PASS-Rasoa the chicken .
+Rasoa tried to kill the chicken .
+
+1 2 # try-ACT tried
+ 1.1 0 # try NULL
+ 1.2 0 # -ACT NULL
+2 4,1 # kill-PASS-Rasoa kill,Rasoa
+ 2.1 0 # kill NULL
+ 2.2 0 # -PASS NULL
+ 2.3 0 # -Rasoa NULL
+3 5 # the the
+4 6 # chicken chicken
+5 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nanandrana novonoin-dRasoa ny akoho .
+try-ACT kill-PASS-Rasoa the chicken .
+Rasoa tried to kill the chicken .
+
+1 -1 # nanandrana *TOP*
+2 1 # novonoin-dRasoa nanandrana
+3 4 # ny akoho
+4 2 # akoho novonoin-dRasoa
+5 1 # . nanandrana
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20370 Url_id=1490 flag=0 cleaned=0 src_leng=3 trans_leng=5
+m-i-jery azy aho
+pres-act-look-at him I
+I am looking at him
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I am looking at him
+1 3 # I looking
+2 3 # am looking
+3 -1 # looking *TOP*
+4 3 # at looking
+5 4 # him at
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+m-i-jery azy aho
+pres-act-look-at him I
+
+1 1 # m-i-jery pres-act-look-at
+ 1.1 0 # m NULL
+ 1.2 0 # -i NULL
+ 1.3 0 # -jery NULL
+2 2 # azy him
+3 3 # aho I
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-act-look-at him I
+I am looking at him
+
+1 4,3 # pres-act-look-at at,looking
+ 1.1 0 # pres NULL
+ 1.2 0 # -act NULL
+ 1.3 0 # -look NULL
+ 1.4 0 # -at NULL
+2 5 # him him
+3 1 # I I
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+m-i-jery azy aho
+pres-act-look-at him I
+I am looking at him
+
+1 -1 # m-i-jery *TOP*
+2 1 # azy m-i-jery
+3 1 # aho m-i-jery
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20363 Url_id=1490 flag=0 cleaned=0 src_leng=5 trans_leng=7
+m-i-enjika any an-tsaha ny omby
+pres-act-run there at-hills the cows
+The cows are running to the hills
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The cows are running to the hills
+1 2 # The cows
+2 4 # cows running
+3 4 # are running
+4 -1 # running *TOP*
+5 4 # to running
+6 7 # the hills
+7 5 # hills to
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+m-i-enjika any an-tsaha ny omby
+pres-act-run there at-hills the cows
+
+1 1 # m-i-enjika pres-act-run
+ 1.1 0 # m NULL
+ 1.2 0 # -i NULL
+ 1.3 0 # -enjika NULL
+2 2 # any there
+3 3 # an-tsaha at-hills
+ 3.1 0 # an NULL
+ 3.2 0 # -tsaha NULL
+4 4 # ny the
+5 5 # omby cows
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-act-run there at-hills the cows
+The cows are running to the hills
+
+1 4 # pres-act-run running
+ 1.1 0 # pres NULL
+ 1.2 0 # -act NULL
+ 1.3 0 # -run NULL
+2 0 # there NULL
+3 7 # at-hills hills
+ 3.1 0 # at NULL
+ 3.2 0 # -hills NULL
+4 1 # the The
+5 2 # cows cows
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+m-i-enjika any an-tsaha ny omby
+pres-act-run there at-hills the cows
+The cows are running to the hills
+
+1 -1 # m-i-enjika *TOP*
+2 1 # any m-i-enjika
+3 1 # an-tsaha m-i-enjika
+4 5 # ny omby
+5 1 # omby m-i-enjika
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20443 Url_id=1490 flag=0 cleaned=0 src_leng=7 trans_leng=12
+m-ifamp-i-hevitra ho resin ny fahavalo ny miaramila
+pres-rec-act-think as defeat-thm the enemy-gen the soldiers
+The soldiers think each other to have been defeated by the enemy
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The soldiers think each other to have been defeated by the enemy
+1 2 # The soldiers
+2 3 # soldiers think
+3 -1 # think *TOP*
+4 5 # each other
+5 9 # other defeated
+6 9 # to defeated
+7 9 # have defeated
+8 9 # been defeated
+9 3 # defeated think
+10 9 # by defeated
+11 12 # the enemy
+12 10 # enemy by
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+m-ifamp-i-hevitra ho resin ny fahavalo ny miaramila
+pres-rec-act-think as defeat-thm the enemy-gen the soldiers
+
+1 1 # m-ifamp-i-hevitra pres-rec-act-think
+ 1.1 0 # m NULL
+ 1.2 0 # -ifamp NULL
+ 1.3 0 # -i NULL
+ 1.4 0 # -hevitra NULL
+2 2 # ho as
+3 3 # resin defeat-thm
+4 4 # ny the
+5 5 # fahavalo enemy-gen
+6 6 # ny the
+7 7 # miaramila soldiers
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-rec-act-think as defeat-thm the enemy-gen the soldiers
+The soldiers think each other to have been defeated by the enemy
+
+1 3 # pres-rec-act-think think
+ 1.1 0 # pres NULL
+ 1.2 0 # -rec NULL
+ 1.3 0 # -act NULL
+ 1.4 0 # -think NULL
+2 0 # as NULL
+3 9 # defeat-thm defeated
+ 3.1 0 # defeat NULL
+ 3.2 0 # -thm NULL
+4 11 # the the
+5 12 # enemy-gen enemy
+ 5.1 0 # enemy NULL
+ 5.2 0 # -gen NULL
+6 1 # the The
+7 2 # soldiers soldiers
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+m-ifamp-i-hevitra ho resin ny fahavalo ny miaramila
+pres-rec-act-think as defeat-thm the enemy-gen the soldiers
+The soldiers think each other to have been defeated by the enemy
+
+1 -1 # m-ifamp-i-hevitra *TOP*
+2 1 # ho m-ifamp-i-hevitra
+3 1 # resin m-ifamp-i-hevitra
+4 5 # ny fahavalo
+5 3 # fahavalo resin
+6 7 # ny miaramila
+7 1 # miaramila m-ifamp-i-hevitra
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=13800 Url_id=411 flag=0 cleaned=3 src_leng=8 trans_leng=9
+nanomboka niteny ity tonon-kira ity Rabe indroa .
+began knock this door this Rabe twice .
+Rabe twice began to knock on this door .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rabe twice began to knock on this door .
+1 3 # Rabe began
+2 3 # twice began
+3 -1 # began *TOP*
+4 5 # to knock
+5 3 # knock began
+6 5 # on knock
+7 8 # this door
+8 6 # door on
+9 3 # . began
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nanomboka niteny ity tonon-kira ity Rabe indroa .
+began knock this door this Rabe twice .
+
+1 1 # nanomboka began
+2 2 # niteny knock
+3 3 # ity this
+4 4 # tonon-kira door
+ 4.1 0 # tonon NULL
+ 4.2 0 # -kira NULL
+5 5 # ity this
+6 6 # Rabe Rabe
+7 7 # indroa twice
+8 8 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+began knock this door this Rabe twice .
+Rabe twice began to knock on this door .
+
+1 3 # began began
+2 5 # knock knock
+3 7 # this this
+4 8 # door door
+5 7 # this this
+6 1 # Rabe Rabe
+7 2 # twice twice
+8 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nanomboka niteny ity tonon-kira ity Rabe indroa .
+began knock this door this Rabe twice .
+Rabe twice began to knock on this door .
+
+1 -1 # nanomboka *TOP*
+2 1 # niteny nanomboka
+3 4 # ity tonon-kira
+4 2 # tonon-kira niteny
+5 4 # ity tonon-kira
+6 1 # Rabe nanomboka
+7 1 # indroa nanomboka
+8 1 # . nanomboka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=10126 Url_id=411 flag=0 cleaned=3 src_leng=9 trans_leng=10
+nanomboka tsy nihomehy t-amin ny tantara intsony izy .
+began NEG laugh PAST-PREP the story NPI he .
+He began to no longer laugh at the story .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He began to no longer laugh at the story .
+1 2 # He began
+2 -1 # began *TOP*
+3 6 # to laugh
+4 5 # no longer
+5 6 # longer laugh
+6 2 # laugh began
+7 6 # at laugh
+8 9 # the story
+9 7 # story at
+10 2 # . began
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nanomboka tsy nihomehy t-amin ny tantara intsony izy .
+began NEG laugh PAST-PREP the story NPI he .
+
+1 1 # nanomboka began
+2 2 # tsy NEG
+3 3 # nihomehy laugh
+4 4 # t-amin PAST-PREP
+ 4.1 0 # t NULL
+ 4.2 0 # -amin NULL
+5 5 # ny the
+6 6 # tantara story
+7 7 # intsony NPI
+8 8 # izy he
+9 9 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+began NEG laugh PAST-PREP the story NPI he .
+He began to no longer laugh at the story .
+
+1 2 # began began
+2 0 # NEG NULL
+3 6 # laugh laugh
+4 0 # PAST-PREP NULL
+ 4.1 0 # PAST NULL
+ 4.2 0 # -PREP NULL
+5 8 # the the
+6 9 # story story
+7 0 # NPI NULL
+8 1 # he He
+9 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nanomboka tsy nihomehy t-amin ny tantara intsony izy .
+began NEG laugh PAST-PREP the story NPI he .
+He began to no longer laugh at the story .
+
+1 -1 # nanomboka *TOP*
+2 1 # tsy nanomboka
+3 1 # nihomehy nanomboka
+4 1 # t-amin nanomboka
+5 6 # ny tantara
+6 3 # tantara nihomehy
+7 1 # intsony nanomboka
+8 1 # izy nanomboka
+9 1 # . nanomboka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20366 Url_id=1490 flag=0 cleaned=0 src_leng=4 trans_leng=7
+ny mpianatra izay mifanenjika
+the student-s rel rec-chase
+the students who are chasing each other
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+the students who are chasing each other
+1 2 # the students
+2 -1 # students *TOP*
+3 5 # who chasing
+4 5 # are chasing
+5 2 # chasing students
+6 7 # each other
+7 5 # other chasing
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+ny mpianatra izay mifanenjika
+the student-s rel rec-chase
+
+1 1 # ny the
+2 2 # mpianatra student-s
+3 3 # izay rel
+4 4 # mifanenjika rec-chase
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+the student-s rel rec-chase
+the students who are chasing each other
+
+1 1 # the the
+2 2 # student-s students
+ 2.1 0 # student NULL
+ 2.2 0 # -s NULL
+3 3 # rel who
+4 5 # rec-chase chasing
+ 4.1 0 # rec NULL
+ 4.2 0 # -chase NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+ny mpianatra izay mifanenjika
+the student-s rel rec-chase
+the students who are chasing each other
+
+1 2 # ny mpianatra
+2 -1 # mpianatra *TOP*
+3 4 # izay mifanenjika
+4 2 # mifanenjika mpianatra
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18880 Url_id=1374 flag=0 cleaned=0 src_leng=5 trans_leng=6
+mikiry manasa ny lamba Rasoa
+intend wash the clothes Rasoa
+Rasoa intends to wash the clothes
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rasoa intends to wash the clothes
+1 2 # Rasoa intends
+2 -1 # intends *TOP*
+3 4 # to wash
+4 2 # wash intends
+5 6 # the clothes
+6 4 # clothes wash
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+mikiry manasa ny lamba Rasoa
+intend wash the clothes Rasoa
+
+1 1 # mikiry intend
+2 2 # manasa wash
+3 3 # ny the
+4 4 # lamba clothes
+5 5 # Rasoa Rasoa
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+intend wash the clothes Rasoa
+Rasoa intends to wash the clothes
+
+1 2 # intend intends
+2 4 # wash wash
+3 5 # the the
+4 6 # clothes clothes
+5 1 # Rasoa Rasoa
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+mikiry manasa ny lamba Rasoa
+intend wash the clothes Rasoa
+Rasoa intends to wash the clothes
+
+1 -1 # mikiry *TOP*
+2 1 # manasa mikiry
+3 4 # ny lamba
+4 2 # lamba manasa
+5 1 # Rasoa mikiry
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20337 Url_id=1489 flag=0 cleaned=1 src_leng=7 trans_leng=8
+Tsy novakin ny mpianatra io boky io
+Not read-TF the students that book that
+That book was n't read by the students
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+That book was n't read by the students
+1 2 # That book
+2 5 # book read
+3 5 # was read
+4 5 # n't read
+5 -1 # read *TOP*
+6 5 # by read
+7 8 # the students
+8 6 # students by
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Tsy novakin ny mpianatra io boky io
+Not read-TF the students that book that
+
+1 1 # Tsy Not
+2 2 # novakin read-TF
+3 3 # ny the
+4 4 # mpianatra students
+5 5 # io that
+6 6 # boky book
+7 7 # io that
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Not read-TF the students that book that
+That book was n't read by the students
+
+1 4 # Not n't
+2 5 # read-TF read
+ 2.1 0 # read NULL
+ 2.2 0 # -TF NULL
+3 7 # the the
+4 8 # students students
+5 1 # that That
+6 2 # book book
+7 1 # that That
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Tsy novakin ny mpianatra io boky io
+Not read-TF the students that book that
+That book was n't read by the students
+
+1 2 # Tsy novakin
+2 -1 # novakin *TOP*
+3 4 # ny mpianatra
+4 2 # mpianatra novakin
+5 6 # io boky
+6 2 # boky novakin
+7 6 # io boky
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18948 Url_id=412 flag=0 cleaned=1 src_leng=5 trans_leng=7
+Rabe no nividy ny akoho
+Rabe FOCUS buy-ACT the chicken
+It 's Rabe who bought the chicken
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+It 's Rabe who bought the chicken
+1 3 # It Rabe
+2 3 # 's Rabe
+3 -1 # Rabe *TOP*
+4 5 # who bought
+5 3 # bought Rabe
+6 7 # the chicken
+7 5 # chicken bought
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Rabe no nividy ny akoho
+Rabe FOCUS buy-ACT the chicken
+
+1 1 # Rabe Rabe
+2 2 # no FOCUS
+3 3 # nividy buy-ACT
+4 4 # ny the
+5 5 # akoho chicken
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Rabe FOCUS buy-ACT the chicken
+It 's Rabe who bought the chicken
+
+1 3 # Rabe Rabe
+2 0 # FOCUS NULL
+3 5 # buy-ACT bought
+ 3.1 0 # buy NULL
+ 3.2 0 # -ACT NULL
+4 6 # the the
+5 7 # chicken chicken
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Rabe no nividy ny akoho
+Rabe FOCUS buy-ACT the chicken
+It 's Rabe who bought the chicken
+
+1 -1 # Rabe *TOP*
+2 1 # no Rabe
+3 1 # nividy Rabe
+4 5 # ny akoho
+5 3 # akoho nividy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20319 Url_id=1489 flag=0 cleaned=0 src_leng=6 trans_leng=9
+ny vehivavy antenaiko ho nanaovan-dRabe trano
+the woman hoped-1sg-gen as built-CF-Rabe-gen house
+the woman I hoped Rabe built a house for
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+the woman I hoped Rabe built a house for
+1 2 # the woman
+2 -1 # woman *TOP*
+3 4 # I hoped
+4 2 # hoped woman
+5 6 # Rabe built
+6 4 # built hoped
+7 8 # a house
+8 6 # house built
+9 6 # for built
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+ny vehivavy antenaiko ho nanaovan-dRabe trano
+the woman hoped-1sg-gen as built-CF-Rabe-gen house
+
+1 1 # ny the
+2 2 # vehivavy woman
+3 3 # antenaiko hoped-1sg-gen
+4 4 # ho as
+5 5 # nanaovan-dRabe built-CF-Rabe-gen
+ 5.1 0 # nanaovan NULL
+ 5.2 0 # -dRabe NULL
+6 6 # trano house
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+the woman hoped-1sg-gen as built-CF-Rabe-gen house
+the woman I hoped Rabe built a house for
+
+1 1 # the the
+2 2 # woman woman
+3 4,3 # hoped-1sg-gen hoped,I
+ 3.1 0 # hoped NULL
+ 3.2 0 # -1sg NULL
+ 3.3 0 # -gen NULL
+4 0 # as NULL
+5 5,6 # built-CF-Rabe-gen Rabe,built
+ 5.1 0 # built NULL
+ 5.2 0 # -CF NULL
+ 5.3 0 # -Rabe NULL
+ 5.4 0 # -gen NULL
+6 8 # house house
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+ny vehivavy antenaiko ho nanaovan-dRabe trano
+the woman hoped-1sg-gen as built-CF-Rabe-gen house
+the woman I hoped Rabe built a house for
+
+1 2 # ny vehivavy
+2 -1 # vehivavy *TOP*
+3 2 # antenaiko vehivavy
+4 2 # ho vehivavy
+5 3 # nanaovan-dRabe antenaiko
+6 5 # trano nanaovan-dRabe
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=21449 Url_id=1589 flag=0 cleaned=3 src_leng=7 trans_leng=7
+oviana Rabe no nividy ny vary ?
+when Rabe PRT buy-ACT the rice ?
+When did Rabe buy the rice ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+When did Rabe buy the rice ?
+1 4 # When buy
+2 4 # did buy
+3 4 # Rabe buy
+4 -1 # buy *TOP*
+5 6 # the rice
+6 4 # rice buy
+7 4 # ? buy
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+oviana Rabe no nividy ny vary ?
+when Rabe PRT buy-ACT the rice ?
+
+1 1 # oviana when
+2 2 # Rabe Rabe
+3 3 # no PRT
+4 4 # nividy buy-ACT
+5 5 # ny the
+6 6 # vary rice
+7 7 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+when Rabe PRT buy-ACT the rice ?
+When did Rabe buy the rice ?
+
+1 1 # when When
+2 3 # Rabe Rabe
+3 0 # PRT NULL
+4 4 # buy-ACT buy
+ 4.1 0 # buy NULL
+ 4.2 0 # -ACT NULL
+5 5 # the the
+6 6 # rice rice
+7 7 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+oviana Rabe no nividy ny vary ?
+when Rabe PRT buy-ACT the rice ?
+When did Rabe buy the rice ?
+
+1 4 # oviana nividy
+2 4 # Rabe nividy
+3 4 # no nividy
+4 -1 # nividy *TOP*
+5 6 # ny vary
+6 4 # vary nividy
+7 4 # ? nividy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20425 Url_id=1490 flag=0 cleaned=1 src_leng=8 trans_leng=10
+manintona ny volon ny zanak'i Soa i Vao
+pulls the hair the child'art Soa art Vao
+Vao is pulling the hair of the Soa 's child
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Vao is pulling the hair of the Soa 's child
+1 3 # Vao pulling
+2 3 # is pulling
+3 -1 # pulling *TOP*
+4 5 # the hair
+5 3 # hair pulling
+6 5 # of hair
+7 9 # the 's
+8 9 # Soa 's
+9 10 # 's child
+10 6 # child of
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+manintona ny volon ny zanak'i Soa i Vao
+pulls the hair the child'art Soa art Vao
+
+1 1 # manintona pulls
+2 2 # ny the
+3 3 # volon hair
+4 4 # ny the
+5 5 # zanak'i child'art
+6 6 # Soa Soa
+7 7 # i art
+8 8 # Vao Vao
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pulls the hair the child'art Soa art Vao
+Vao is pulling the hair of the Soa 's child
+
+1 3 # pulls pulling
+2 4 # the the
+3 5 # hair hair
+4 7 # the the
+5 10 # child'art child
+6 8 # Soa Soa
+7 0 # art NULL
+8 1 # Vao Vao
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+manintona ny volon ny zanak'i Soa i Vao
+pulls the hair the child'art Soa art Vao
+Vao is pulling the hair of the Soa 's child
+
+1 -1 # manintona *TOP*
+2 3 # ny volon
+3 1 # volon manintona
+4 5 # ny zanak'i
+5 3 # zanak'i volon
+6 5 # Soa zanak'i
+7 1 # i manintona
+8 1 # Vao manintona
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18921 Url_id=1375 flag=0 cleaned=4 src_leng=7 trans_leng=7
+iza no tsy nihinana ny vary ?
+who PRT NEG eat the rice ?
+Who did n't eat the rice ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Who did n't eat the rice ?
+1 4 # Who eat
+2 4 # did eat
+3 4 # n't eat
+4 -1 # eat *TOP*
+5 6 # the rice
+6 4 # rice eat
+7 4 # ? eat
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+iza no tsy nihinana ny vary ?
+who PRT NEG eat the rice ?
+
+1 1 # iza who
+2 2 # no PRT
+3 3 # tsy NEG
+4 4 # nihinana eat
+5 5 # ny the
+6 6 # vary rice
+7 7 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+who PRT NEG eat the rice ?
+Who did n't eat the rice ?
+
+1 1 # who Who
+2 0 # PRT NULL
+3 3 # NEG n't
+4 4 # eat eat
+5 5 # the the
+6 6 # rice rice
+7 7 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+iza no tsy nihinana ny vary ?
+who PRT NEG eat the rice ?
+Who did n't eat the rice ?
+
+1 4 # iza nihinana
+2 4 # no nihinana
+3 4 # tsy nihinana
+4 -1 # nihinana *TOP*
+5 6 # ny vary
+6 4 # vary nihinana
+7 4 # ? nihinana
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20306 Url_id=1489 flag=0 cleaned=0 src_leng=3 trans_leng=6
+ny fahazotoana n-i-asa-ana-Rabe
+the zeal past-AF-work-CF-Rabe-gen
+the zeal with which Rabe worked
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+the zeal with which Rabe worked
+1 2 # the zeal
+2 -1 # zeal *TOP*
+3 6 # with worked
+4 3 # which with
+5 6 # Rabe worked
+6 2 # worked zeal
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+ny fahazotoana n-i-asa-ana-Rabe
+the zeal past-AF-work-CF-Rabe-gen
+
+1 1 # ny the
+2 2 # fahazotoana zeal
+3 3 # n-i-asa-ana-Rabe past-AF-work-CF-Rabe-gen
+ 3.1 0 # n NULL
+ 3.2 0 # -i NULL
+ 3.3 0 # -asa NULL
+ 3.4 0 # -ana NULL
+ 3.5 0 # -Rabe NULL
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+the zeal past-AF-work-CF-Rabe-gen
+the zeal with which Rabe worked
+
+1 1 # the the
+2 2 # zeal zeal
+3 6,5 # past-AF-work-CF-Rabe-gen worked,Rabe
+ 3.1 0 # past NULL
+ 3.2 0 # -AF NULL
+ 3.3 0 # -work NULL
+ 3.4 0 # -CF NULL
+ 3.5 0 # -Rabe NULL
+ 3.6 0 # -gen NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+ny fahazotoana n-i-asa-ana-Rabe
+the zeal past-AF-work-CF-Rabe-gen
+the zeal with which Rabe worked
+
+1 2 # ny fahazotoana
+2 -1 # fahazotoana *TOP*
+3 2 # n-i-asa-ana-Rabe fahazotoana
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18879 Url_id=1374 flag=0 cleaned=0 src_leng=5 trans_leng=7
+manomboka manasa ny lamba Rasoa
+begin wash the clothes Rasoa
+Rasoa is beginning to wash the clothes
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rasoa is beginning to wash the clothes
+1 3 # Rasoa beginning
+2 3 # is beginning
+3 -1 # beginning *TOP*
+4 5 # to wash
+5 3 # wash beginning
+6 7 # the clothes
+7 5 # clothes wash
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+manomboka manasa ny lamba Rasoa
+begin wash the clothes Rasoa
+
+1 1 # manomboka begin
+2 2 # manasa wash
+3 3 # ny the
+4 4 # lamba clothes
+5 5 # Rasoa Rasoa
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+begin wash the clothes Rasoa
+Rasoa is beginning to wash the clothes
+
+1 3 # begin beginning
+2 5 # wash wash
+3 6 # the the
+4 7 # clothes clothes
+5 1 # Rasoa Rasoa
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+manomboka manasa ny lamba Rasoa
+begin wash the clothes Rasoa
+Rasoa is beginning to wash the clothes
+
+1 -1 # manomboka *TOP*
+2 1 # manasa manomboka
+3 4 # ny lamba
+4 2 # lamba manasa
+5 1 # Rasoa manomboka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=15959 Url_id=1092 flag=0 cleaned=3 src_leng=5 trans_leng=6
+m-i-vidy ny akoho Rabe .
+PRES-ACT-buy the chicken Rabe .
+Rabe is buying the chicken .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rabe is buying the chicken .
+1 3 # Rabe buying
+2 3 # is buying
+3 -1 # buying *TOP*
+4 5 # the chicken
+5 3 # chicken buying
+6 3 # . buying
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+m-i-vidy ny akoho Rabe .
+PRES-ACT-buy the chicken Rabe .
+
+1 1 # m-i-vidy PRES-ACT-buy
+ 1.1 0 # m NULL
+ 1.2 0 # -i NULL
+ 1.3 0 # -vidy NULL
+2 2 # ny the
+3 3 # akoho chicken
+4 4 # Rabe Rabe
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+PRES-ACT-buy the chicken Rabe .
+Rabe is buying the chicken .
+
+1 3 # PRES-ACT-buy buying
+ 1.1 0 # PRES NULL
+ 1.2 0 # -ACT NULL
+ 1.3 0 # -buy NULL
+2 4 # the the
+3 5 # chicken chicken
+4 1 # Rabe Rabe
+5 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+m-i-vidy ny akoho Rabe .
+PRES-ACT-buy the chicken Rabe .
+Rabe is buying the chicken .
+
+1 -1 # m-i-vidy *TOP*
+2 3 # ny akoho
+3 1 # akoho m-i-vidy
+4 1 # Rabe m-i-vidy
+5 1 # . m-i-vidy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18890 Url_id=1374 flag=0 cleaned=0 src_leng=6 trans_leng=6
+nividy ny mofo tany an-tsena Rasoa
+buy-ACT the bread there at-market Rasoa
+Rasoa bought bread at the market
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rasoa bought bread at the market
+1 2 # Rasoa bought
+2 -1 # bought *TOP*
+3 2 # bread bought
+4 2 # at bought
+5 6 # the market
+6 4 # market at
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nividy ny mofo tany an-tsena Rasoa
+buy-ACT the bread there at-market Rasoa
+
+1 1 # nividy buy-ACT
+2 2 # ny the
+3 3 # mofo bread
+4 4 # tany there
+5 5 # an-tsena at-market
+ 5.1 0 # an NULL
+ 5.2 0 # -tsena NULL
+6 6 # Rasoa Rasoa
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+buy-ACT the bread there at-market Rasoa
+Rasoa bought bread at the market
+
+1 2 # buy-ACT bought
+ 1.1 0 # buy NULL
+ 1.2 0 # -ACT NULL
+2 0 # the NULL
+3 3 # bread bread
+4 0 # there NULL
+5 4,6 # at-market at,market
+ 5.1 0 # at NULL
+ 5.2 0 # -market NULL
+6 1 # Rasoa Rasoa
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nividy ny mofo tany an-tsena Rasoa
+buy-ACT the bread there at-market Rasoa
+Rasoa bought bread at the market
+
+1 -1 # nividy *TOP*
+2 1 # ny nividy
+3 1 # mofo nividy
+4 1 # tany nividy
+5 1 # an-tsena nividy
+6 1 # Rasoa nividy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20472 Url_id=1490 flag=0 cleaned=0 src_leng=4 trans_leng=9
+ny boky n-iry-ina-nay h-if-aN-lefa-sana
+the books past-desire-thm-1-pl-excl-gen fut-rec-act-send-circ
+the books we desired to send to each other
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+the books we desired to send to each other
+1 2 # the books
+2 -1 # books *TOP*
+3 4 # we desired
+4 2 # desired books
+5 6 # to send
+6 4 # send desired
+7 6 # to send
+8 9 # each other
+9 7 # other to
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+ny boky n-iry-ina-nay h-if-aN-lefa-sana
+the books past-desire-thm-1-pl-excl-gen fut-rec-act-send-circ
+
+1 1 # ny the
+2 2 # boky books
+3 3 # n-iry-ina-nay past-desire-thm-1-pl-excl-gen
+ 3.1 0 # n NULL
+ 3.2 0 # -iry NULL
+ 3.3 0 # -ina NULL
+ 3.4 0 # -nay NULL
+4 4 # h-if-aN-lefa-sana fut-rec-act-send-circ
+ 4.1 0 # h NULL
+ 4.2 0 # -if NULL
+ 4.3 0 # -aN NULL
+ 4.4 0 # -lefa NULL
+ 4.5 0 # -sana NULL
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+the books past-desire-thm-1-pl-excl-gen fut-rec-act-send-circ
+the books we desired to send to each other
+
+1 1 # the the
+2 2 # books books
+3 4,3 # past-desire-thm-1-pl-excl-gen desired,we
+ 3.1 0 # past NULL
+ 3.2 0 # -desire NULL
+ 3.3 0 # -thm NULL
+ 3.4 0 # -1 NULL
+ 3.5 0 # -pl NULL
+ 3.6 0 # -excl NULL
+ 3.7 0 # -gen NULL
+4 6 # fut-rec-act-send-circ send
+ 4.1 0 # fut NULL
+ 4.2 0 # -rec NULL
+ 4.3 0 # -act NULL
+ 4.4 0 # -send NULL
+ 4.5 0 # -circ NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+ny boky n-iry-ina-nay h-if-aN-lefa-sana
+the books past-desire-thm-1-pl-excl-gen fut-rec-act-send-circ
+the books we desired to send to each other
+
+1 2 # ny boky
+2 -1 # boky *TOP*
+3 2 # n-iry-ina-nay boky
+4 3 # h-if-aN-lefa-sana n-iry-ina-nay
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=15977 Url_id=1092 flag=0 cleaned=3 src_leng=6 trans_leng=6
+nitsahatra tsy hanin-dRabe ny siramamy .
+stop-ACT NEG eat-PASS-Rabe the sugar .
+Rabe stopped not eating sugar .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rabe stopped not eating sugar .
+1 2 # Rabe stopped
+2 -1 # stopped *TOP*
+3 4 # not eating
+4 2 # eating stopped
+5 4 # sugar eating
+6 2 # . stopped
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nitsahatra tsy hanin-dRabe ny siramamy .
+stop-ACT NEG eat-PASS-Rabe the sugar .
+
+1 1 # nitsahatra stop-ACT
+2 2 # tsy NEG
+3 3 # hanin-dRabe eat-PASS-Rabe
+ 3.1 0 # hanin NULL
+ 3.2 0 # -dRabe NULL
+4 4 # ny the
+5 5 # siramamy sugar
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+stop-ACT NEG eat-PASS-Rabe the sugar .
+Rabe stopped not eating sugar .
+
+1 2 # stop-ACT stopped
+ 1.1 0 # stop NULL
+ 1.2 0 # -ACT NULL
+2 3 # NEG not
+3 4,1 # eat-PASS-Rabe eating,Rabe
+ 3.1 0 # eat NULL
+ 3.2 0 # -PASS NULL
+ 3.3 0 # -Rabe NULL
+4 0 # the NULL
+5 5 # sugar sugar
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nitsahatra tsy hanin-dRabe ny siramamy .
+stop-ACT NEG eat-PASS-Rabe the sugar .
+Rabe stopped not eating sugar .
+
+1 -1 # nitsahatra *TOP*
+2 3 # tsy hanin-dRabe
+3 1 # hanin-dRabe nitsahatra
+4 1 # ny nitsahatra
+5 3 # siramamy hanin-dRabe
+6 1 # . nitsahatra
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20446 Url_id=1490 flag=0 cleaned=0 src_leng=8 trans_leng=7
+n-i-aro ny zanany sy ny vadiny izy ireo
+past-act-defend the child-3gen and the spouse-3gen 3nom dem-pl
+They defended their children and their spouses
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+They defended their children and their spouses
+1 2 # They defended
+2 -1 # defended *TOP*
+3 4 # their children
+4 7 # children spouses
+5 7 # and spouses
+6 7 # their spouses
+7 2 # spouses defended
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+n-i-aro ny zanany sy ny vadiny izy ireo
+past-act-defend the child-3gen and the spouse-3gen 3nom dem-pl
+
+1 1 # n-i-aro past-act-defend
+ 1.1 0 # n NULL
+ 1.2 0 # -i NULL
+ 1.3 0 # -aro NULL
+2 2 # ny the
+3 3 # zanany child-3gen
+4 4 # sy and
+5 5 # ny the
+6 6 # vadiny spouse-3gen
+7 7 # izy 3nom
+8 8 # ireo dem-pl
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+past-act-defend the child-3gen and the spouse-3gen 3nom dem-pl
+They defended their children and their spouses
+
+1 2 # past-act-defend defended
+ 1.1 0 # past NULL
+ 1.2 0 # -act NULL
+ 1.3 0 # -defend NULL
+2 0 # the NULL
+3 4 # child-3gen children
+ 3.1 0 # child NULL
+ 3.2 0 # -3gen NULL
+4 5 # and and
+5 0 # the NULL
+6 7 # spouse-3gen spouses
+ 6.1 0 # spouse NULL
+ 6.2 0 # -3gen NULL
+7 1 # 3nom They
+8 0 # dem-pl NULL
+ 8.1 0 # dem NULL
+ 8.2 0 # -pl NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+n-i-aro ny zanany sy ny vadiny izy ireo
+past-act-defend the child-3gen and the spouse-3gen 3nom dem-pl
+They defended their children and their spouses
+
+1 -1 # n-i-aro *TOP*
+2 1 # ny n-i-aro
+3 6 # zanany vadiny
+4 6 # sy vadiny
+5 1 # ny n-i-aro
+6 1 # vadiny n-i-aro
+7 1 # izy n-i-aro
+8 1 # ireo n-i-aro
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=15907 Url_id=411 flag=0 cleaned=3 src_leng=7 trans_leng=8
+nanomboka omaly mihomehy daholo ny ankizy .
+began yesterday laugh all the children .
+Yesterday the children began to all laugh .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Yesterday the children began to all laugh .
+1 4 # Yesterday began
+2 3 # the children
+3 4 # children began
+4 -1 # began *TOP*
+5 7 # to laugh
+6 7 # all laugh
+7 4 # laugh began
+8 4 # . began
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nanomboka omaly mihomehy daholo ny ankizy .
+began yesterday laugh all the children .
+
+1 1 # nanomboka began
+2 2 # omaly yesterday
+3 3 # mihomehy laugh
+4 4 # daholo all
+5 5 # ny the
+6 6 # ankizy children
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+began yesterday laugh all the children .
+Yesterday the children began to all laugh .
+
+1 4 # began began
+2 1 # yesterday Yesterday
+3 7 # laugh laugh
+4 6 # all all
+5 2 # the the
+6 3 # children children
+7 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nanomboka omaly mihomehy daholo ny ankizy .
+began yesterday laugh all the children .
+Yesterday the children began to all laugh .
+
+1 -1 # nanomboka *TOP*
+2 1 # omaly nanomboka
+3 1 # mihomehy nanomboka
+4 3 # daholo mihomehy
+5 6 # ny ankizy
+6 1 # ankizy nanomboka
+7 1 # . nanomboka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18868 Url_id=1371 flag=0 cleaned=3 src_leng=5 trans_leng=5
+Mividy io ny ankizy .
+pres-buy it the child .
+The child buys it .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The child buys it .
+1 2 # The child
+2 3 # child buys
+3 -1 # buys *TOP*
+4 3 # it buys
+5 3 # . buys
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Mividy io ny ankizy .
+pres-buy it the child .
+
+1 1 # Mividy pres-buy
+2 2 # io it
+3 3 # ny the
+4 4 # ankizy child
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-buy it the child .
+The child buys it .
+
+1 3 # pres-buy buys
+ 1.1 0 # pres NULL
+ 1.2 0 # -buy NULL
+2 4 # it it
+3 1 # the The
+4 2 # child child
+5 5 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Mividy io ny ankizy .
+pres-buy it the child .
+The child buys it .
+
+1 -1 # Mividy *TOP*
+2 1 # io Mividy
+3 4 # ny ankizy
+4 1 # ankizy Mividy
+5 1 # . Mividy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20432 Url_id=1490 flag=0 cleaned=0 src_leng=5 trans_leng=8
+mifandaka intelo Rabe sy Ravao
+pres-rec-act-kick three-times Rabe and Ravao
+Rabe and Ravao kicked each other three times
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rabe and Ravao kicked each other three times
+1 3 # Rabe Ravao
+2 3 # and Ravao
+3 4 # Ravao kicked
+4 -1 # kicked *TOP*
+5 6 # each other
+6 4 # other kicked
+7 8 # three times
+8 4 # times kicked
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+mifandaka intelo Rabe sy Ravao
+pres-rec-act-kick three-times Rabe and Ravao
+
+1 1 # mifandaka pres-rec-act-kick
+2 2 # intelo three-times
+3 3 # Rabe Rabe
+4 4 # sy and
+5 5 # Ravao Ravao
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-rec-act-kick three-times Rabe and Ravao
+Rabe and Ravao kicked each other three times
+
+1 4 # pres-rec-act-kick kicked
+ 1.1 0 # pres NULL
+ 1.2 0 # -rec NULL
+ 1.3 0 # -act NULL
+ 1.4 0 # -kick NULL
+2 7,8 # three-times three,times
+ 2.1 0 # three NULL
+ 2.2 0 # -times NULL
+3 1 # Rabe Rabe
+4 2 # and and
+5 3 # Ravao Ravao
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+mifandaka intelo Rabe sy Ravao
+pres-rec-act-kick three-times Rabe and Ravao
+Rabe and Ravao kicked each other three times
+
+1 -1 # mifandaka *TOP*
+2 1 # intelo mifandaka
+3 5 # Rabe Ravao
+4 5 # sy Ravao
+5 1 # Ravao mifandaka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20445 Url_id=1490 flag=0 cleaned=0 src_leng=4 trans_leng=8
+m-ifamp-i-resadresaka Rabe sy Rasoa
+pres-rec-act-chitchat Rabe and Rasoa
+Rabe and Rasoa are chitchatting with each other
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rabe and Rasoa are chitchatting with each other
+1 3 # Rabe Rasoa
+2 3 # and Rasoa
+3 5 # Rasoa chitchatting
+4 5 # are chitchatting
+5 -1 # chitchatting *TOP*
+6 5 # with chitchatting
+7 8 # each other
+8 6 # other with
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+m-ifamp-i-resadresaka Rabe sy Rasoa
+pres-rec-act-chitchat Rabe and Rasoa
+
+1 1 # m-ifamp-i-resadresaka pres-rec-act-chitchat
+ 1.1 0 # m NULL
+ 1.2 0 # -ifamp NULL
+ 1.3 0 # -i NULL
+ 1.4 0 # -resadresaka NULL
+2 2 # Rabe Rabe
+3 3 # sy and
+4 4 # Rasoa Rasoa
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-rec-act-chitchat Rabe and Rasoa
+Rabe and Rasoa are chitchatting with each other
+
+1 5 # pres-rec-act-chitchat chitchatting
+ 1.1 0 # pres NULL
+ 1.2 0 # -rec NULL
+ 1.3 0 # -act NULL
+ 1.4 0 # -chitchat NULL
+2 1 # Rabe Rabe
+3 2 # and and
+4 3 # Rasoa Rasoa
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+m-ifamp-i-resadresaka Rabe sy Rasoa
+pres-rec-act-chitchat Rabe and Rasoa
+Rabe and Rasoa are chitchatting with each other
+
+1 -1 # m-ifamp-i-resadresaka *TOP*
+2 4 # Rabe Rasoa
+3 4 # sy Rasoa
+4 1 # Rasoa m-ifamp-i-resadresaka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=15971 Url_id=1092 flag=0 cleaned=3 src_leng=5 trans_leng=7
+nanandrana novonoin-dRasoa ny akoho .
+try-ACT kill-PASS-Rasoa the chicken .
+Rasoa tried to kill the chicken .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rasoa tried to kill the chicken .
+1 2 # Rasoa tried
+2 -1 # tried *TOP*
+3 4 # to kill
+4 2 # kill tried
+5 6 # the chicken
+6 4 # chicken kill
+7 2 # . tried
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nanandrana novonoin-dRasoa ny akoho .
+try-ACT kill-PASS-Rasoa the chicken .
+
+1 1 # nanandrana try-ACT
+2 2 # novonoin-dRasoa kill-PASS-Rasoa
+ 2.1 0 # novonoin NULL
+ 2.2 0 # -dRasoa NULL
+3 3 # ny the
+4 4 # akoho chicken
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+try-ACT kill-PASS-Rasoa the chicken .
+Rasoa tried to kill the chicken .
+
+1 2 # try-ACT tried
+ 1.1 0 # try NULL
+ 1.2 0 # -ACT NULL
+2 4,1 # kill-PASS-Rasoa kill,Rasoa
+ 2.1 0 # kill NULL
+ 2.2 0 # -PASS NULL
+ 2.3 0 # -Rasoa NULL
+3 5 # the the
+4 6 # chicken chicken
+5 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nanandrana novonoin-dRasoa ny akoho .
+try-ACT kill-PASS-Rasoa the chicken .
+Rasoa tried to kill the chicken .
+
+1 -1 # nanandrana *TOP*
+2 1 # novonoin-dRasoa nanandrana
+3 4 # ny akoho
+4 2 # akoho novonoin-dRasoa
+5 1 # . nanandrana
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18881 Url_id=1374 flag=0 cleaned=0 src_leng=4 trans_leng=9
+manomboka sasan-dRasoa ny lamba
+begin wash-PASS-Rasoa the clothes
+The clothes are beginning to be washed by Rasoa
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The clothes are beginning to be washed by Rasoa
+1 2 # The clothes
+2 4 # clothes beginning
+3 4 # are beginning
+4 -1 # beginning *TOP*
+5 7 # to washed
+6 7 # be washed
+7 4 # washed beginning
+8 7 # by washed
+9 8 # Rasoa by
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+manomboka sasan-dRasoa ny lamba
+begin wash-PASS-Rasoa the clothes
+
+1 1 # manomboka begin
+2 2 # sasan-dRasoa wash-PASS-Rasoa
+ 2.1 0 # sasan NULL
+ 2.2 0 # -dRasoa NULL
+3 3 # ny the
+4 4 # lamba clothes
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+begin wash-PASS-Rasoa the clothes
+The clothes are beginning to be washed by Rasoa
+
+1 4 # begin beginning
+2 7,9 # wash-PASS-Rasoa washed,Rasoa
+ 2.1 0 # wash NULL
+ 2.2 0 # -PASS NULL
+ 2.3 0 # -Rasoa NULL
+3 1 # the The
+4 2 # clothes clothes
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+manomboka sasan-dRasoa ny lamba
+begin wash-PASS-Rasoa the clothes
+The clothes are beginning to be washed by Rasoa
+
+1 -1 # manomboka *TOP*
+2 1 # sasan-dRasoa manomboka
+3 4 # ny lamba
+4 1 # lamba manomboka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=13798 Url_id=411 flag=0 cleaned=3 src_leng=6 trans_leng=7
+anomboh-ana mitondra ny fiara Rabe .
+begin-CIRC drive the car Rabe .
+Rabe begins to drive a car .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rabe begins to drive a car .
+1 2 # Rabe begins
+2 -1 # begins *TOP*
+3 4 # to drive
+4 2 # drive begins
+5 6 # a car
+6 4 # car drive
+7 2 # . begins
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+anomboh-ana mitondra ny fiara Rabe .
+begin-CIRC drive the car Rabe .
+
+1 1 # anomboh-ana begin-CIRC
+ 1.1 0 # anomboh NULL
+ 1.2 0 # -ana NULL
+2 2 # mitondra drive
+3 3 # ny the
+4 4 # fiara car
+5 5 # Rabe Rabe
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+begin-CIRC drive the car Rabe .
+Rabe begins to drive a car .
+
+1 2 # begin-CIRC begins
+ 1.1 0 # begin NULL
+ 1.2 0 # -CIRC NULL
+2 4 # drive drive
+3 0 # the NULL
+4 6 # car car
+5 1 # Rabe Rabe
+6 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+anomboh-ana mitondra ny fiara Rabe .
+begin-CIRC drive the car Rabe .
+Rabe begins to drive a car .
+
+1 -1 # anomboh-ana *TOP*
+2 1 # mitondra anomboh-ana
+3 1 # ny anomboh-ana
+4 2 # fiara mitondra
+5 1 # Rabe anomboh-ana
+6 1 # . anomboh-ana
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18889 Url_id=1374 flag=0 cleaned=0 src_leng=5 trans_leng=5
+nividy ny mofo omaly Rasoa
+buy-ACT the bread yesterday Rasoa
+Rasoa bought the bread yesterday
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rasoa bought the bread yesterday
+1 2 # Rasoa bought
+2 -1 # bought *TOP*
+3 4 # the bread
+4 2 # bread bought
+5 2 # yesterday bought
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nividy ny mofo omaly Rasoa
+buy-ACT the bread yesterday Rasoa
+
+1 1 # nividy buy-ACT
+2 2 # ny the
+3 3 # mofo bread
+4 4 # omaly yesterday
+5 5 # Rasoa Rasoa
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+buy-ACT the bread yesterday Rasoa
+Rasoa bought the bread yesterday
+
+1 2 # buy-ACT bought
+ 1.1 0 # buy NULL
+ 1.2 0 # -ACT NULL
+2 3 # the the
+3 4 # bread bread
+4 5 # yesterday yesterday
+5 1 # Rasoa Rasoa
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nividy ny mofo omaly Rasoa
+buy-ACT the bread yesterday Rasoa
+Rasoa bought the bread yesterday
+
+1 -1 # nividy *TOP*
+2 3 # ny mofo
+3 1 # mofo nividy
+4 1 # omaly nividy
+5 1 # Rasoa nividy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20490 Url_id=1490 flag=0 cleaned=0 src_leng=6 trans_leng=5
+n-a-hita sy n-i-arahaba azy ireo aho
+past-act-see and past-act-greet 3acc dem-pl 1-sg-nom
+I saw and greeted them
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I saw and greeted them
+1 4 # I greeted
+2 4 # saw greeted
+3 4 # and greeted
+4 -1 # greeted *TOP*
+5 4 # them greeted
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+n-a-hita sy n-i-arahaba azy ireo aho
+past-act-see and past-act-greet 3acc dem-pl 1-sg-nom
+
+1 1 # n-a-hita past-act-see
+ 1.1 0 # n NULL
+ 1.2 0 # -a NULL
+ 1.3 0 # -hita NULL
+2 2 # sy and
+3 3 # n-i-arahaba past-act-greet
+ 3.1 0 # n NULL
+ 3.2 0 # -i NULL
+ 3.3 0 # -arahaba NULL
+4 4 # azy 3acc
+5 5 # ireo dem-pl
+6 6 # aho 1-sg-nom
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+past-act-see and past-act-greet 3acc dem-pl 1-sg-nom
+I saw and greeted them
+
+1 2 # past-act-see saw
+ 1.1 0 # past NULL
+ 1.2 0 # -act NULL
+ 1.3 0 # -see NULL
+2 3 # and and
+3 4 # past-act-greet greeted
+ 3.1 0 # past NULL
+ 3.2 0 # -act NULL
+ 3.3 0 # -greet NULL
+4 5 # 3acc them
+5 5 # dem-pl them
+ 5.1 0 # dem NULL
+ 5.2 0 # -pl NULL
+6 1 # 1-sg-nom I
+ 6.1 0 # 1 NULL
+ 6.2 0 # -sg NULL
+ 6.3 0 # -nom NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+n-a-hita sy n-i-arahaba azy ireo aho
+past-act-see and past-act-greet 3acc dem-pl 1-sg-nom
+I saw and greeted them
+
+1 3 # n-a-hita n-i-arahaba
+2 3 # sy n-i-arahaba
+3 -1 # n-i-arahaba *TOP*
+4 3 # azy n-i-arahaba
+5 3 # ireo n-i-arahaba
+6 3 # aho n-i-arahaba
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20338 Url_id=1489 flag=0 cleaned=4 src_leng=9 trans_leng=9
+Tsy novakin ny mpianatra ve io boky io ?
+Not read-TF the students ? that book that ?
+Was n't that book read by the students ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Was n't that book read by the students ?
+1 5 # Was read
+2 5 # n't read
+3 4 # that book
+4 5 # book read
+5 -1 # read *TOP*
+6 5 # by read
+7 8 # the students
+8 6 # students by
+9 5 # ? read
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Tsy novakin ny mpianatra ve io boky io ?
+Not read-TF the students ? that book that ?
+
+1 1 # Tsy Not
+2 2 # novakin read-TF
+3 3 # ny the
+4 4 # mpianatra students
+5 5 # ve ?
+6 6 # io that
+7 7 # boky book
+8 8 # io that
+9 9 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Not read-TF the students ? that book that ?
+Was n't that book read by the students ?
+
+1 2 # Not n't
+2 5 # read-TF read
+ 2.1 0 # read NULL
+ 2.2 0 # -TF NULL
+3 7 # the the
+4 8 # students students
+5 0 # ? NULL
+6 3 # that that
+7 4 # book book
+8 3 # that that
+9 9 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Tsy novakin ny mpianatra ve io boky io ?
+Not read-TF the students ? that book that ?
+Was n't that book read by the students ?
+
+1 2 # Tsy novakin
+2 -1 # novakin *TOP*
+3 4 # ny mpianatra
+4 2 # mpianatra novakin
+5 2 # ve novakin
+6 7 # io boky
+7 2 # boky novakin
+8 7 # io boky
+9 2 # ? novakin
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18918 Url_id=1375 flag=0 cleaned=3 src_leng=11 trans_leng=10
+oviana Rasoa no nijinja vary ary Rabe no nanapaka bozaka ?
+when Rasoa PRT harvest rice and Rabe PRT cut grass ?
+When did Rasoa harvest rice and Rabe cut grass ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+When did Rasoa harvest rice and Rabe cut grass ?
+1 8 # When cut
+2 8 # did cut
+3 4 # Rasoa harvest
+4 8 # harvest cut
+5 4 # rice harvest
+6 8 # and cut
+7 8 # Rabe cut
+8 -1 # cut *TOP*
+9 8 # grass cut
+10 8 # ? cut
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+oviana Rasoa no nijinja vary ary Rabe no nanapaka bozaka ?
+when Rasoa PRT harvest rice and Rabe PRT cut grass ?
+
+1 1 # oviana when
+2 2 # Rasoa Rasoa
+3 3 # no PRT
+4 4 # nijinja harvest
+5 5 # vary rice
+6 6 # ary and
+7 7 # Rabe Rabe
+8 8 # no PRT
+9 9 # nanapaka cut
+10 10 # bozaka grass
+11 11 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+when Rasoa PRT harvest rice and Rabe PRT cut grass ?
+When did Rasoa harvest rice and Rabe cut grass ?
+
+1 1 # when When
+2 3 # Rasoa Rasoa
+3 0 # PRT NULL
+4 4 # harvest harvest
+5 5 # rice rice
+6 6 # and and
+7 7 # Rabe Rabe
+8 0 # PRT NULL
+9 8 # cut cut
+10 9 # grass grass
+11 10 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+oviana Rasoa no nijinja vary ary Rabe no nanapaka bozaka ?
+when Rasoa PRT harvest rice and Rabe PRT cut grass ?
+When did Rasoa harvest rice and Rabe cut grass ?
+
+1 9 # oviana nanapaka
+2 4 # Rasoa nijinja
+3 9 # no nanapaka
+4 9 # nijinja nanapaka
+5 4 # vary nijinja
+6 9 # ary nanapaka
+7 9 # Rabe nanapaka
+8 9 # no nanapaka
+9 -1 # nanapaka *TOP*
+10 9 # bozaka nanapaka
+11 9 # ? nanapaka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18913 Url_id=1375 flag=0 cleaned=3 src_leng=6 trans_leng=6
+aiza Rasoa no mividy mofo ?
+where Rasoa PRT buy-ACT bread ?
+Where does Rasoa buy bread ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Where does Rasoa buy bread ?
+1 4 # Where buy
+2 4 # does buy
+3 4 # Rasoa buy
+4 -1 # buy *TOP*
+5 4 # bread buy
+6 4 # ? buy
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+aiza Rasoa no mividy mofo ?
+where Rasoa PRT buy-ACT bread ?
+
+1 1 # aiza where
+2 2 # Rasoa Rasoa
+3 3 # no PRT
+4 4 # mividy buy-ACT
+5 5 # mofo bread
+6 6 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+where Rasoa PRT buy-ACT bread ?
+Where does Rasoa buy bread ?
+
+1 1 # where Where
+2 3 # Rasoa Rasoa
+3 0 # PRT NULL
+4 4 # buy-ACT buy
+ 4.1 0 # buy NULL
+ 4.2 0 # -ACT NULL
+5 5 # bread bread
+6 6 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+aiza Rasoa no mividy mofo ?
+where Rasoa PRT buy-ACT bread ?
+Where does Rasoa buy bread ?
+
+1 4 # aiza mividy
+2 4 # Rasoa mividy
+3 4 # no mividy
+4 -1 # mividy *TOP*
+5 4 # mofo mividy
+6 4 # ? mividy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18909 Url_id=1375 flag=0 cleaned=1 src_leng=4 trans_leng=5
+Rasoa dia manoroka an-dRabe
+Rasoa TOPIC kiss ACC-Rabe
+Rasoa , she kisses Rabe
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rasoa , she kisses Rabe
+1 4 # Rasoa kisses
+2 4 # , kisses
+3 4 # she kisses
+4 -1 # kisses *TOP*
+5 4 # Rabe kisses
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Rasoa dia manoroka an-dRabe
+Rasoa TOPIC kiss ACC-Rabe
+
+1 1 # Rasoa Rasoa
+2 2 # dia TOPIC
+3 3 # manoroka kiss
+4 4 # an-dRabe ACC-Rabe
+ 4.1 0 # an NULL
+ 4.2 0 # -dRabe NULL
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Rasoa TOPIC kiss ACC-Rabe
+Rasoa , she kisses Rabe
+
+1 1 # Rasoa Rasoa
+2 0 # TOPIC NULL
+3 4 # kiss kisses
+4 5 # ACC-Rabe Rabe
+ 4.1 0 # ACC NULL
+ 4.2 0 # -Rabe NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Rasoa dia manoroka an-dRabe
+Rasoa TOPIC kiss ACC-Rabe
+Rasoa , she kisses Rabe
+
+1 3 # Rasoa manoroka
+2 3 # dia manoroka
+3 -1 # manoroka *TOP*
+4 3 # an-dRabe manoroka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=15964 Url_id=1092 flag=0 cleaned=3 src_leng=6 trans_leng=7
+n-an-andrana n-a-mono ny akoho Rabe .
+PAST-ACT-try PAST-ACT-kill the chicken Rabe .
+Rabe tried to kill the chicken .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rabe tried to kill the chicken .
+1 2 # Rabe tried
+2 -1 # tried *TOP*
+3 4 # to kill
+4 2 # kill tried
+5 6 # the chicken
+6 4 # chicken kill
+7 2 # . tried
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+n-an-andrana n-a-mono ny akoho Rabe .
+PAST-ACT-try PAST-ACT-kill the chicken Rabe .
+
+1 1 # n-an-andrana PAST-ACT-try
+ 1.1 0 # n NULL
+ 1.2 0 # -an NULL
+ 1.3 0 # -andrana NULL
+2 2 # n-a-mono PAST-ACT-kill
+ 2.1 0 # n NULL
+ 2.2 0 # -a NULL
+ 2.3 0 # -mono NULL
+3 3 # ny the
+4 4 # akoho chicken
+5 5 # Rabe Rabe
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+PAST-ACT-try PAST-ACT-kill the chicken Rabe .
+Rabe tried to kill the chicken .
+
+1 2 # PAST-ACT-try tried
+ 1.1 0 # PAST NULL
+ 1.2 0 # -ACT NULL
+ 1.3 0 # -try NULL
+2 4 # PAST-ACT-kill kill
+ 2.1 0 # PAST NULL
+ 2.2 0 # -ACT NULL
+ 2.3 0 # -kill NULL
+3 5 # the the
+4 6 # chicken chicken
+5 1 # Rabe Rabe
+6 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+n-an-andrana n-a-mono ny akoho Rabe .
+PAST-ACT-try PAST-ACT-kill the chicken Rabe .
+Rabe tried to kill the chicken .
+
+1 -1 # n-an-andrana *TOP*
+2 1 # n-a-mono n-an-andrana
+3 4 # ny akoho
+4 2 # akoho n-a-mono
+5 1 # Rabe n-an-andrana
+6 1 # . n-an-andrana
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20422 Url_id=1490 flag=0 cleaned=1 src_leng=6 trans_leng=10
+mifanome vola zanaka Rasoa sy Ravelo
+pres-rec-act-give money child Rasoa and Ravelo
+Rasoa and Ravelo give money to each other 's children
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rasoa and Ravelo give money to each other 's children
+1 3 # Rasoa Ravelo
+2 3 # and Ravelo
+3 4 # Ravelo give
+4 -1 # give *TOP*
+5 4 # money give
+6 4 # to give
+7 9 # each 's
+8 9 # other 's
+9 10 # 's children
+10 6 # children to
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+mifanome vola zanaka Rasoa sy Ravelo
+pres-rec-act-give money child Rasoa and Ravelo
+
+1 1 # mifanome pres-rec-act-give
+2 2 # vola money
+3 3 # zanaka child
+4 4 # Rasoa Rasoa
+5 5 # sy and
+6 6 # Ravelo Ravelo
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-rec-act-give money child Rasoa and Ravelo
+Rasoa and Ravelo give money to each other 's children
+
+1 8,9,7,4 # pres-rec-act-give other,'s,each,give
+ 1.1 0 # pres NULL
+ 1.2 0 # -rec NULL
+ 1.3 0 # -act NULL
+ 1.4 0 # -give NULL
+2 5 # money money
+3 10 # child children
+4 1 # Rasoa Rasoa
+5 2 # and and
+6 3 # Ravelo Ravelo
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+mifanome vola zanaka Rasoa sy Ravelo
+pres-rec-act-give money child Rasoa and Ravelo
+Rasoa and Ravelo give money to each other 's children
+
+1 -1 # mifanome *TOP*
+2 1 # vola mifanome
+3 1 # zanaka mifanome
+4 6 # Rasoa Ravelo
+5 6 # sy Ravelo
+6 1 # Ravelo mifanome
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20397 Url_id=1490 flag=0 cleaned=0 src_leng=3 trans_leng=5
+m-i-petraka akaikin-dRasoa Rabe
+pres-act-sit next-to-Rasoa Rabe
+Rabe sits next to Rasoa
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rabe sits next to Rasoa
+1 2 # Rabe sits
+2 -1 # sits *TOP*
+3 4 # next to
+4 2 # to sits
+5 4 # Rasoa to
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+m-i-petraka akaikin-dRasoa Rabe
+pres-act-sit next-to-Rasoa Rabe
+
+1 1 # m-i-petraka pres-act-sit
+ 1.1 0 # m NULL
+ 1.2 0 # -i NULL
+ 1.3 0 # -petraka NULL
+2 2 # akaikin-dRasoa next-to-Rasoa
+ 2.1 0 # akaikin NULL
+ 2.2 0 # -dRasoa NULL
+3 3 # Rabe Rabe
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+pres-act-sit next-to-Rasoa Rabe
+Rabe sits next to Rasoa
+
+1 2 # pres-act-sit sits
+ 1.1 0 # pres NULL
+ 1.2 0 # -act NULL
+ 1.3 0 # -sit NULL
+2 3,4,5 # next-to-Rasoa next,to,Rasoa
+ 2.1 0 # next NULL
+ 2.2 0 # -to NULL
+ 2.3 0 # -Rasoa NULL
+3 1 # Rabe Rabe
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+m-i-petraka akaikin-dRasoa Rabe
+pres-act-sit next-to-Rasoa Rabe
+Rabe sits next to Rasoa
+
+1 -1 # m-i-petraka *TOP*
+2 1 # akaikin-dRasoa m-i-petraka
+3 1 # Rabe m-i-petraka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18938 Url_id=1376 flag=0 cleaned=3 src_leng=6 trans_leng=5
+tokony iza no hamangy an-dRakoto ?
+should who PRT visit ACC-Rakoto ?
+Who should visit Rakoto ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Who should visit Rakoto ?
+1 3 # Who visit
+2 3 # should visit
+3 -1 # visit *TOP*
+4 3 # Rakoto visit
+5 3 # ? visit
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+tokony iza no hamangy an-dRakoto ?
+should who PRT visit ACC-Rakoto ?
+
+1 1 # tokony should
+2 2 # iza who
+3 3 # no PRT
+4 4 # hamangy visit
+5 5 # an-dRakoto ACC-Rakoto
+ 5.1 0 # an NULL
+ 5.2 0 # -dRakoto NULL
+6 6 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+should who PRT visit ACC-Rakoto ?
+Who should visit Rakoto ?
+
+1 2 # should should
+2 1 # who Who
+3 0 # PRT NULL
+4 3 # visit visit
+5 4 # ACC-Rakoto Rakoto
+ 5.1 0 # ACC NULL
+ 5.2 0 # -Rakoto NULL
+6 5 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+tokony iza no hamangy an-dRakoto ?
+should who PRT visit ACC-Rakoto ?
+Who should visit Rakoto ?
+
+1 4 # tokony hamangy
+2 4 # iza hamangy
+3 4 # no hamangy
+4 -1 # hamangy *TOP*
+5 4 # an-dRakoto hamangy
+6 4 # ? hamangy
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=16272 Url_id=1013 flag=0 cleaned=3 src_leng=6 trans_leng=6
+Nahita ny vehivavy ny mpianatra .
+saw the woman the student .
+The student saw the woman .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The student saw the woman .
+1 2 # The student
+2 3 # student saw
+3 -1 # saw *TOP*
+4 5 # the woman
+5 3 # woman saw
+6 3 # . saw
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Nahita ny vehivavy ny mpianatra .
+saw the woman the student .
+
+1 1 # Nahita saw
+2 2 # ny the
+3 3 # vehivavy woman
+4 4 # ny the
+5 5 # mpianatra student
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+saw the woman the student .
+The student saw the woman .
+
+1 3 # saw saw
+2 4 # the the
+3 5 # woman woman
+4 1 # the The
+5 2 # student student
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Nahita ny vehivavy ny mpianatra .
+saw the woman the student .
+The student saw the woman .
+
+1 -1 # Nahita *TOP*
+2 3 # ny vehivavy
+3 1 # vehivavy Nahita
+4 5 # ny mpianatra
+5 1 # mpianatra Nahita
+6 1 # . Nahita
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=15966 Url_id=1092 flag=0 cleaned=3 src_leng=4 trans_leng=7
+novonoin-dRasoa ny akoho .
+PAST-kill-PASS-Rasoa the chicken .
+The chicken was killed by Rasoa .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The chicken was killed by Rasoa .
+1 2 # The chicken
+2 4 # chicken killed
+3 4 # was killed
+4 -1 # killed *TOP*
+5 4 # by killed
+6 5 # Rasoa by
+7 4 # . killed
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+novonoin-dRasoa ny akoho .
+PAST-kill-PASS-Rasoa the chicken .
+
+1 1 # novonoin-dRasoa PAST-kill-PASS-Rasoa
+ 1.1 0 # novonoin NULL
+ 1.2 0 # -dRasoa NULL
+2 2 # ny the
+3 3 # akoho chicken
+4 4 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+PAST-kill-PASS-Rasoa the chicken .
+The chicken was killed by Rasoa .
+
+1 4,6 # PAST-kill-PASS-Rasoa killed,Rasoa
+ 1.1 0 # PAST NULL
+ 1.2 0 # -kill NULL
+ 1.3 0 # -PASS NULL
+ 1.4 0 # -Rasoa NULL
+2 1 # the The
+3 2 # chicken chicken
+4 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+novonoin-dRasoa ny akoho .
+PAST-kill-PASS-Rasoa the chicken .
+The chicken was killed by Rasoa .
+
+1 -1 # novonoin-dRasoa *TOP*
+2 3 # ny akoho
+3 1 # akoho novonoin-dRasoa
+4 1 # . novonoin-dRasoa
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=18930 Url_id=1376 flag=0 cleaned=3 src_leng=5 trans_leng=6
+manaja an'iza ny reniny ?
+respect who-ACC the mother-3SG ?
+Who does his mother respect ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Who does his mother respect ?
+1 5 # Who respect
+2 5 # does respect
+3 4 # his mother
+4 5 # mother respect
+5 -1 # respect *TOP*
+6 5 # ? respect
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+manaja an'iza ny reniny ?
+respect who-ACC the mother-3SG ?
+
+1 1 # manaja respect
+2 2 # an'iza who-ACC
+3 3 # ny the
+4 4 # reniny mother-3SG
+5 5 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+respect who-ACC the mother-3SG ?
+Who does his mother respect ?
+
+1 5 # respect respect
+2 1 # who-ACC Who
+ 2.1 0 # who NULL
+ 2.2 0 # -ACC NULL
+3 0 # the NULL
+4 4 # mother-3SG mother
+ 4.1 0 # mother NULL
+ 4.2 0 # -3SG NULL
+5 6 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+manaja an'iza ny reniny ?
+respect who-ACC the mother-3SG ?
+Who does his mother respect ?
+
+1 -1 # manaja *TOP*
+2 1 # an'iza manaja
+3 1 # ny manaja
+4 1 # reniny manaja
+5 1 # ? manaja
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20436 Url_id=1490 flag=0 cleaned=0 src_leng=6 trans_leng=10
+n-ifamp-i-laza ho nangala-bary Rasoa sy Ravelo
+past-rec-act-say as past-steal-rice Rasoa and Ravelo
+Rasoa and Ravelo said each other to have stolen rice
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Rasoa and Ravelo said each other to have stolen rice
+1 3 # Rasoa Ravelo
+2 3 # and Ravelo
+3 4 # Ravelo said
+4 -1 # said *TOP*
+5 6 # each other
+6 9 # other stolen
+7 9 # to stolen
+8 9 # have stolen
+9 4 # stolen said
+10 9 # rice stolen
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+n-ifamp-i-laza ho nangala-bary Rasoa sy Ravelo
+past-rec-act-say as past-steal-rice Rasoa and Ravelo
+
+1 1 # n-ifamp-i-laza past-rec-act-say
+ 1.1 0 # n NULL
+ 1.2 0 # -ifamp NULL
+ 1.3 0 # -i NULL
+ 1.4 0 # -laza NULL
+2 2 # ho as
+3 3 # nangala-bary past-steal-rice
+ 3.1 0 # nangala NULL
+ 3.2 0 # -bary NULL
+4 4 # Rasoa Rasoa
+5 5 # sy and
+6 6 # Ravelo Ravelo
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+past-rec-act-say as past-steal-rice Rasoa and Ravelo
+Rasoa and Ravelo said each other to have stolen rice
+
+1 4 # past-rec-act-say said
+ 1.1 0 # past NULL
+ 1.2 0 # -rec NULL
+ 1.3 0 # -act NULL
+ 1.4 0 # -say NULL
+2 0 # as NULL
+3 9,10 # past-steal-rice stolen,rice
+ 3.1 0 # past NULL
+ 3.2 0 # -steal NULL
+ 3.3 0 # -rice NULL
+4 1 # Rasoa Rasoa
+5 2 # and and
+6 3 # Ravelo Ravelo
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+n-ifamp-i-laza ho nangala-bary Rasoa sy Ravelo
+past-rec-act-say as past-steal-rice Rasoa and Ravelo
+Rasoa and Ravelo said each other to have stolen rice
+
+1 -1 # n-ifamp-i-laza *TOP*
+2 1 # ho n-ifamp-i-laza
+3 1 # nangala-bary n-ifamp-i-laza
+4 6 # Rasoa Ravelo
+5 6 # sy Ravelo
+6 1 # Ravelo n-ifamp-i-laza
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+

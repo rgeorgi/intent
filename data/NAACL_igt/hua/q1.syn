@@ -1,0 +1,103 @@
+50	NP -> NNP
+45	NP -> NN
+30	NP -> PRP
+29	S -> NP Unaligned VP .
+20	S -> NP VP .
+16	PP -> NP
+9	VP -> VBD NP
+9	PP -> IN NP
+7	VP -> VBD PP
+7	VP -> VBN
+7	NP -> NN NP
+7	SBAR -> S
+7	S -> NP Unaligned Unaligned VP .
+6	VP -> VBG NP
+6	NP -> NNS
+6	VP -> VBG
+5	S -> VP
+5	ADVP -> RB
+4	VP -> VBD NP PP
+4	S -> NP VP
+4	VP -> VBZ NP
+4	VP -> VB NP
+3	VP -> VBD S
+3	NP -> NN DT
+3	S -> NP Unaligned VP
+2	VP -> VB
+2	VP -> VBP VP
+2	VP -> VBG PP
+2	VP -> PP
+2	VP -> VBP NP
+2	ADVP -> RB RB
+2	VP -> VBN NP
+2	VP -> NP
+2	S -> PRP+RB VP RB .
+2	NP -> NNP NNP
+2	S -> Unaligned VP .
+1	VP -> VBD+VP Unaligned PP
+1	SBARQ -> WHNP SQ .
+1	VP -> VBZ SBAR
+1	S -> NP ADVP Unaligned VP .
+1	PP -> IN Unaligned NP
+1	WHNP -> WP
+1	VP -> VBD+NP
+1	VP -> VBZ PP
+1	SQ -> NP VP
+1	VP -> VBG Unaligned NP
+1	NP -> NNP Unaligned NNP
+1	NP -> NP PP
+1	VP -> VBD Unaligned NP
+1	VP -> VBG VBG
+1	NP -> NN NNP
+1	VP -> VBZ ADVP PP
+1	S -> VP .
+1	S -> PRP+RB VB RB NP .
+1	SINV -> CC NP VP
+1	S -> NP ADVP VP .
+1	S -> PRP+VBD VBD VP .
+1	VP -> VBG+NP
+1	VP -> MD VP
+1	NP -> RB
+1	S -> ADVP , NP VP .
+1	VP -> NP VBG
+1	VP -> VBD PP NP
+1	VP -> VBG+POS Unaligned NNP NN
+1	S -> PP NP Unaligned VP .
+1	NP -> PRP$+NN
+1	NP -> NNS JJ
+1	VP -> VBD Unaligned PP NP
+1	VP -> VBN SBAR
+1	S -> NP NP VP .
+1	VP -> ADVP Unaligned VP
+1	NP -> DT
+1	VP -> VB+NP
+1	PP -> S
+1	S -> PP NNP Unaligned VBP Unaligned NNP .
+1	S -> IN NP Unaligned VP .
+1	VP -> SBAR Unaligned VBZ
+1	VP -> VBD SBAR
+1	VP -> VBD NP PRT
+1	NP -> NN NN
+1	SBAR -> SINV
+1	VP -> VB SBAR
+1	PRT -> RP
+1	NP -> NN NNS
+1	S -> ADVP NP Unaligned Unaligned VP .
+1	VP -> VBN S
+1	NP -> NP Unaligned PP
+1	VP -> VBG NP PP
+1	VP -> RB Unaligned VP
+1	S -> SBAR Unaligned VP .
+1	S -> PRP VP PRP Unaligned Unaligned VP .
+1	NP -> NP Unaligned Unaligned SBAR
+1	VP -> VBD
+1	VP -> VP ADVP
+1	VP -> VBG+PRT
+1	NP -> JJ NN
+1	VP -> PP RB
+1	VP -> VB NP Unaligned NP
+1	NP -> PP NP
+1	S -> NP
+1	S -> Unaligned NP VP Unaligned .
+1	NP -> NP Unaligned SBAR
+syntactic rules: rule_tokens=384, rule_types=102

@@ -1,0 +1,116 @@
+45	NP -> NNP
+39	S -> NP VP .
+26	NP -> PRP
+26	NP -> NN
+22	PP -> NP
+10	S -> NP VP
+10	NP -> NNS
+9	S -> VP
+9	ADVP -> RB
+8	VP -> VB
+8	NP -> DT NN
+7	WHNP -> WP
+7	VP -> ADJP
+6	NP -> NP CC NP
+6	NP -> PRP$ NN
+6	VP -> PP VBD
+5	ADJP -> JJ
+5	SQ -> NP VP
+5	VP -> S
+5	VP -> VBD
+4	VP -> NP VBD
+4	VP -> NP VBP+PRT
+3	NP -> RB
+3	VP -> NP VB
+3	VP -> VP CC VP
+3	VP -> NP
+3	VP -> PP NP VBD
+3	NP -> DT NNS
+3	ADJP -> RB JJ
+2	VP -> NP VB+PRT
+2	VP -> NP NP VBD
+2	VP -> PP VBG
+2	PP -> PP CC PP
+2	SBAR -> IN S
+2	VP -> VP VP
+2	VP -> NP VBD CC NP
+2	NP -> JJ
+2	VP -> NP VBG
+2	VP -> PP VBZ
+2	VP -> VBN
+2	NP -> DT NNS NNS
+2	VP -> VBG
+2	PP -> IN+NP
+2	NP -> CC NNP CC NNP NNP
+2	S -> NP Unaligned VP .
+1	VP -> ADVP VBN
+1	SBARQ -> WHNP SQ .
+1	VP -> NP PP VBD
+1	VP -> PP S
+1	VP -> VBZ SBAR
+1	SBARQ -> NP WHNP VP CC .
+1	S -> Unaligned S CC VP .
+1	S -> CC Unaligned VP .
+1	NP -> NNPS
+1	S -> S VP .
+1	SBARQ -> SBARQ CC WHNP SQ .
+1	VP -> NN VBZ CC NN VBZ
+1	NP -> NP PP
+1	NP -> CD NNS
+1	VP -> VBD NP
+1	VP -> NP VBG+VB
+1	S -> ADVP CC NP VP .
+1	S -> NP VP Unaligned .
+1	SBARQ -> NP WHNP NP VBP .
+1	S -> Unaligned S PP CC VBD .
+1	NP -> JJ+NNS
+1	NP -> NNP+NNPS
+1	VP -> NP VBD Unaligned NP CC
+1	VP -> MD VP
+1	NP -> DT NNP
+1	S -> NP NP ADVP ADVP .
+1	ADJP -> ADJP ADJP CC
+1	S -> PP NP NP VBD .
+1	S -> NP PP VP .
+1	VP -> ADVP VBG
+1	S -> ADJP
+1	S -> NP CC VP NP CC VP .
+1	VP -> NP NN
+1	SBARQ -> NP WHNP VP .
+1	NP -> DT+NN
+1	S -> S CC S .
+1	NP -> DT
+1	PP -> S
+1	FRAG -> CC SBAR .
+1	VP -> VBZ CC VBZ
+1	VP -> PP VBD+VP NP
+1	S -> SBAR NP VB .
+1	S -> CC VP NP .
+1	SBAR -> S ADVP
+1	ADJP -> RB JJR
+1	VP -> PP ADVP
+1	NP -> NN NN
+1	VP -> VB SBAR
+1	VP -> VB+PP
+1	VP -> NP NP VBZ+VBN
+1	VP -> VBZ CC NP VBZ VBZ
+1	SBARQ -> WHNP SQ CC Unaligned
+1	VP -> VBZ NP
+1	SBAR -> S
+1	S -> RB NP Unaligned VP
+1	S -> S NP CC VP .
+1	VP -> NP VBD PP
+1	VP -> VBG CC Unaligned VBG
+1	SBARQ -> SQ .
+1	S -> NP ADVP VP
+1	VP -> NP VBZ
+1	VP -> VP ADVP VBD CC VP
+1	NP -> NNP CC NNP
+1	NP -> PRP PRP
+1	VP -> VBG+PRT
+1	NP -> JJ NN
+1	NP -> PP NP
+1	VP -> VP VBD CC VP
+1	SBARQ -> WHNP SQ
+1	VP -> RB VP
+syntactic rules: rule_tokens=395, rule_types=115

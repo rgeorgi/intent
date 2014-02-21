@@ -1,0 +1,8284 @@
+
+###########################################################
+Igt_id=16842 Url_id=1051 flag=0 cleaned=3 src_leng=6 trans_leng=9
+Peo-Ø Goyo-ta tuuka kaba'i-ta etbwa-k-tia-Ø .
+Peo-NOM Goyo-ACC yesterday horse-ACC steal-PRFV-SAY-PRES .
+Pedro says Goyo have stolen the horse yesterday .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Pedro)) (VP (VBZ says) (SBAR (S (NP (NNP Goyo)) (VP (VBP have) (VP (VBN stolen) (NP (DT the) (NN horse) (NN yesterday))))))) (. .))
+
+(S+says (NP+Pedro (NNP Pedro))
+        (VP+says (VBZ says)
+                 (SBAR+stolen (S+stolen (NP+Goyo (NNP Goyo))
+                                        (VP+stolen (VBP have)
+                                                   (VP+stolen (VBN stolen)
+                                                              (NP+yesterday (DT the)
+                                                                            (NN horse)
+                                                                            (NN yesterday)))))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Pedro says Goyo have stolen the horse yesterday .
+1 2 # Pedro says
+2 -1 # says *TOP*
+3 5 # Goyo stolen
+4 5 # have stolen
+5 2 # stolen says
+6 8 # the yesterday
+7 8 # horse yesterday
+8 5 # yesterday stolen
+9 2 # . says
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Peo-Ø Goyo-ta tuuka kaba'i-ta etbwa-k-tia-Ø .
+Peo-NOM Goyo-ACC yesterday horse-ACC steal-PRFV-SAY-PRES .
+
+1 1 # Peo-Ø Peo-NOM
+ 1.1 1.1 # Peo Peo
+ 1.2 1.2 # -Ø -NOM
+2 2 # Goyo-ta Goyo-ACC
+ 2.1 2.1 # Goyo Goyo
+ 2.2 2.2 # -ta -ACC
+3 3 # tuuka yesterday
+4 4 # kaba'i-ta horse-ACC
+ 4.1 4.1 # kaba'i horse
+ 4.2 4.2 # -ta -ACC
+5 5 # etbwa-k-tia-Ø steal-PRFV-SAY-PRES
+ 5.1 5.1 # etbwa steal
+ 5.2 5.2 # -k -PRFV
+ 5.3 5.3 # -tia -SAY
+ 5.4 5.4 # -Ø -PRES
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Peo-NOM Goyo-ACC yesterday horse-ACC steal-PRFV-SAY-PRES .
+Pedro says Goyo have stolen the horse yesterday .
+
+1 0 # Peo-NOM NULL
+ 1.1 0 # Peo NULL
+ 1.2 0 # -NOM NULL
+2 3 # Goyo-ACC Goyo
+ 2.1 3 # Goyo Goyo
+ 2.2 0 # -ACC NULL
+3 8 # yesterday yesterday
+4 7 # horse-ACC horse
+ 4.1 7 # horse horse
+ 4.2 0 # -ACC NULL
+5 2,5 # steal-PRFV-SAY-PRES says,stolen
+ 5.1 5 # steal stolen
+ 5.2 0 # -PRFV NULL
+ 5.3 2 # -SAY says
+ 5.4 0 # -PRES NULL
+6 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Peo-Ø Goyo-ta tuuka kaba'i-ta etbwa-k-tia-Ø .
+Peo-NOM Goyo-ACC yesterday horse-ACC steal-PRFV-SAY-PRES .
+Pedro says Goyo have stolen the horse yesterday .
+
+1 5 # Peo-Ø etbwa-k-tia-Ø
+2 5 # Goyo-ta etbwa-k-tia-Ø
+3 5 # tuuka etbwa-k-tia-Ø
+4 3 # kaba'i-ta tuuka
+5 -1 # etbwa-k-tia-Ø *TOP*
+6 5 # . etbwa-k-tia-Ø
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=16843 Url_id=1051 flag=0 cleaned=7 src_leng=8 trans_leng=11
+Peo-Ø junuen jiia-ne : Goyo-Ø kaba'i-ta etbwa-`e .
+Peo-NOM this say-EXPE Goyo-ACC horse-ACC steal-IMPE R .
+Pedro will say : " Goyo , steal the horse !
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Pedro)) (VP (MD will) (VP (VB say) (: :) (S (NP (NNP ") (NNP Goyo)) (, ,) (VP (VB steal) (NP (DT the) (NN horse)))))) (. !))
+
+(S+say (NP+Pedro (NNP Pedro))
+       (VP+say (MD will)
+               (VP+say (VB say)
+                       (: :)
+                       (S+steal (NP+Goyo (NNP ")
+                                         (NNP Goyo))
+                                (, ,)
+                                (VP+steal (VB steal)
+                                          (NP+horse (DT the)
+                                                    (NN horse))))))
+       (. !))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Pedro will say : " Goyo , steal the horse !
+1 3 # Pedro say
+2 3 # will say
+3 -1 # say *TOP*
+4 3 # : say
+5 6 # " Goyo
+6 8 # Goyo steal
+7 8 # , steal
+8 3 # steal say
+9 10 # the horse
+10 8 # horse steal
+11 3 # ! say
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Peo-Ø junuen jiia-ne : Goyo-Ø kaba'i-ta etbwa-`e .
+Peo-NOM this say-EXPE Goyo-ACC horse-ACC steal-IMPE R .
+
+1 1 # Peo-Ø Peo-NOM
+ 1.1 1.1 # Peo Peo
+ 1.2 1.2 # -Ø -NOM
+2 2 # junuen this
+3 3 # jiia-ne say-EXPE
+ 3.1 3.1 # jiia say
+ 3.2 3.2 # -ne -EXPE
+4 4 # : Goyo-ACC
+5 5 # Goyo-Ø horse-ACC
+ 5.1 5.1 # Goyo horse
+ 5.2 5.2 # -Ø -ACC
+6 6 # kaba'i-ta steal-IMPE
+ 6.1 6.1 # kaba'i steal
+ 6.2 6.2 # -ta -IMPE
+7 7 # etbwa-`e R
+ 7.1 0 # etbwa NULL
+ 7.2 0 # -`e NULL
+8 8 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Peo-NOM this say-EXPE Goyo-ACC horse-ACC steal-IMPE R .
+Pedro will say : " Goyo , steal the horse !
+
+1 0 # Peo-NOM NULL
+ 1.1 0 # Peo NULL
+ 1.2 0 # -NOM NULL
+2 0 # this NULL
+3 3 # say-EXPE say
+ 3.1 3 # say say
+ 3.2 0 # -EXPE NULL
+4 6 # Goyo-ACC Goyo
+ 4.1 6 # Goyo Goyo
+ 4.2 0 # -ACC NULL
+5 10 # horse-ACC horse
+ 5.1 10 # horse horse
+ 5.2 0 # -ACC NULL
+6 8 # steal-IMPE steal
+ 6.1 8 # steal steal
+ 6.2 0 # -IMPE NULL
+7 0 # R NULL
+8 0 # . NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Peo-Ø junuen jiia-ne : Goyo-Ø kaba'i-ta etbwa-`e .
+Peo-NOM this say-EXPE Goyo-ACC horse-ACC steal-IMPE R .
+Pedro will say : " Goyo , steal the horse !
+
+1 3 # Peo-Ø jiia-ne
+2 3 # junuen jiia-ne
+3 -1 # jiia-ne *TOP*
+4 6 # : kaba'i-ta
+5 6 # Goyo-Ø kaba'i-ta
+6 3 # kaba'i-ta jiia-ne
+7 3 # etbwa-`e jiia-ne
+8 3 # . jiia-ne
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=17574 Url_id=1249 flag=0 cleaned=0 src_leng=5 trans_leng=6
+`aapo Huan-tau `uka vachi-ta maka-k
+he John-DAT Det.ACC corn-ACC give-PERF
+He gave the corn to John
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBD gave) (NP (DT the) (NN corn)) (PP (TO to) (NP (NNP John)))))
+
+(S+gave (NP+He (PRP He))
+        (VP+gave (VBD gave)
+                 (NP+corn (DT the)
+                          (NN corn))
+                 (PP+to (TO to)
+                        (NP+John (NNP John)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He gave the corn to John
+1 2 # He gave
+2 -1 # gave *TOP*
+3 4 # the corn
+4 2 # corn gave
+5 2 # to gave
+6 5 # John to
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+`aapo Huan-tau `uka vachi-ta maka-k
+he John-DAT Det.ACC corn-ACC give-PERF
+
+1 1 # `aapo he
+2 2 # Huan-tau John-DAT
+ 2.1 2.1 # Huan John
+ 2.2 2.2 # -tau -DAT
+3 3 # `uka Det.ACC
+4 4 # vachi-ta corn-ACC
+ 4.1 4.1 # vachi corn
+ 4.2 4.2 # -ta -ACC
+5 5 # maka-k give-PERF
+ 5.1 5.1 # maka give
+ 5.2 5.2 # -k -PERF
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+he John-DAT Det.ACC corn-ACC give-PERF
+He gave the corn to John
+
+1 1 # he He
+2 6 # John-DAT John
+ 2.1 6 # John John
+ 2.2 0 # -DAT NULL
+3 3 # Det.ACC the
+4 4 # corn-ACC corn
+ 4.1 4 # corn corn
+ 4.2 0 # -ACC NULL
+5 2 # give-PERF gave
+ 5.1 2 # give gave
+ 5.2 0 # -PERF NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+`aapo Huan-tau `uka vachi-ta maka-k
+he John-DAT Det.ACC corn-ACC give-PERF
+He gave the corn to John
+
+1 5 # `aapo maka-k
+2 5 # Huan-tau maka-k
+3 4 # `uka vachi-ta
+4 5 # vachi-ta maka-k
+5 -1 # maka-k *TOP*
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=17575 Url_id=1249 flag=0 cleaned=3 src_leng=6 trans_leng=6
+`aapo Huan-ta `uka vachi-ta miika-k .
+he John-ACC Det.ACC corn-ACC give(food)-PERF .
+He gave John the corn .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBD gave) (NP (NNP John)) (NP (DT the) (NN corn))) (. .))
+
+(S+gave (NP+He (PRP He))
+        (VP+gave (VBD gave)
+                 (NP+John (NNP John))
+                 (NP+corn (DT the)
+                          (NN corn)))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He gave John the corn .
+1 2 # He gave
+2 -1 # gave *TOP*
+3 2 # John gave
+4 5 # the corn
+5 2 # corn gave
+6 2 # . gave
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+`aapo Huan-ta `uka vachi-ta miika-k .
+he John-ACC Det.ACC corn-ACC give(food)-PERF .
+
+1 1 # `aapo he
+2 2 # Huan-ta John-ACC
+ 2.1 2.1 # Huan John
+ 2.2 2.2 # -ta -ACC
+3 3 # `uka Det.ACC
+4 4 # vachi-ta corn-ACC
+ 4.1 4.1 # vachi corn
+ 4.2 4.2 # -ta -ACC
+5 5 # miika-k give(food)-PERF
+ 5.1 5.1 # miika give(food)
+ 5.2 5.2 # -k -PERF
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+he John-ACC Det.ACC corn-ACC give(food)-PERF .
+He gave John the corn .
+
+1 1 # he He
+2 3 # John-ACC John
+ 2.1 3 # John John
+ 2.2 0 # -ACC NULL
+3 4 # Det.ACC the
+4 5 # corn-ACC corn
+ 4.1 5 # corn corn
+ 4.2 0 # -ACC NULL
+5 0 # give(food)-PERF NULL
+ 5.1 0 # give(food) NULL
+ 5.2 0 # -PERF NULL
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+`aapo Huan-ta `uka vachi-ta miika-k .
+he John-ACC Det.ACC corn-ACC give(food)-PERF .
+He gave John the corn .
+
+1 5 # `aapo miika-k
+2 5 # Huan-ta miika-k
+3 4 # `uka vachi-ta
+4 5 # vachi-ta miika-k
+5 -2 # miika-k NULL
+6 5 # . miika-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=17576 Url_id=1249 flag=0 cleaned=3 src_leng=6 trans_leng=7
+`aapo `uka kava'i-ta ho'ara-ta vit-tua-k .
+he Det.ACC horse-ACC house-ACC see-CAUSE-PERF .
+He showed the horse the house .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBD showed) (NP (DT the) (NN horse)) (NP (DT the) (NN house))) (. .))
+
+(S+showed (NP+He (PRP He))
+          (VP+showed (VBD showed)
+                     (NP+horse (DT the)
+                               (NN horse))
+                     (NP+house (DT the)
+                               (NN house)))
+          (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He showed the horse the house .
+1 2 # He showed
+2 -1 # showed *TOP*
+3 4 # the horse
+4 2 # horse showed
+5 6 # the house
+6 2 # house showed
+7 2 # . showed
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+`aapo `uka kava'i-ta ho'ara-ta vit-tua-k .
+he Det.ACC horse-ACC house-ACC see-CAUSE-PERF .
+
+1 1 # `aapo he
+2 2 # `uka Det.ACC
+3 3 # kava'i-ta horse-ACC
+ 3.1 3.1 # kava'i horse
+ 3.2 3.2 # -ta -ACC
+4 4 # ho'ara-ta house-ACC
+ 4.1 4.1 # ho'ara house
+ 4.2 4.2 # -ta -ACC
+5 5 # vit-tua-k see-CAUSE-PERF
+ 5.1 5.1 # vit see
+ 5.2 5.2 # -tua -CAUSE
+ 5.3 5.3 # -k -PERF
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+he Det.ACC horse-ACC house-ACC see-CAUSE-PERF .
+He showed the horse the house .
+
+1 1 # he He
+2 3 # Det.ACC the
+3 4 # horse-ACC horse
+ 3.1 4 # horse horse
+ 3.2 0 # -ACC NULL
+4 6 # house-ACC house
+ 4.1 6 # house house
+ 4.2 0 # -ACC NULL
+5 0 # see-CAUSE-PERF NULL
+ 5.1 0 # see NULL
+ 5.2 0 # -CAUSE NULL
+ 5.3 0 # -PERF NULL
+6 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+`aapo `uka kava'i-ta ho'ara-ta vit-tua-k .
+he Det.ACC horse-ACC house-ACC see-CAUSE-PERF .
+He showed the horse the house .
+
+1 5 # `aapo vit-tua-k
+2 3 # `uka kava'i-ta
+3 5 # kava'i-ta vit-tua-k
+4 5 # ho'ara-ta vit-tua-k
+5 -2 # vit-tua-k NULL
+6 5 # . vit-tua-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=17577 Url_id=1249 flag=0 cleaned=3 src_leng=6 trans_leng=8
+`aapo `uka kava'i-ta ho'ara-u vit-tua-k .
+he Det.ACC horse-ACC house-DAT see-CAUSE-PERF .
+He sent the horse to the house .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBD sent) (NP (DT the) (NN horse)) (PP (TO to) (NP (DT the) (NNP house)))) (. .))
+
+(S+sent (NP+He (PRP He))
+        (VP+sent (VBD sent)
+                 (NP+horse (DT the)
+                           (NN horse))
+                 (PP+to (TO to)
+                        (NP+house (DT the)
+                                  (NNP house))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He sent the horse to the house .
+1 2 # He sent
+2 -1 # sent *TOP*
+3 4 # the horse
+4 2 # horse sent
+5 2 # to sent
+6 7 # the house
+7 5 # house to
+8 2 # . sent
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+`aapo `uka kava'i-ta ho'ara-u vit-tua-k .
+he Det.ACC horse-ACC house-DAT see-CAUSE-PERF .
+
+1 1 # `aapo he
+2 2 # `uka Det.ACC
+3 3 # kava'i-ta horse-ACC
+ 3.1 3.1 # kava'i horse
+ 3.2 3.2 # -ta -ACC
+4 4 # ho'ara-u house-DAT
+ 4.1 4.1 # ho'ara house
+ 4.2 4.2 # -u -DAT
+5 5 # vit-tua-k see-CAUSE-PERF
+ 5.1 5.1 # vit see
+ 5.2 5.2 # -tua -CAUSE
+ 5.3 5.3 # -k -PERF
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+he Det.ACC horse-ACC house-DAT see-CAUSE-PERF .
+He sent the horse to the house .
+
+1 1 # he He
+2 3 # Det.ACC the
+3 4 # horse-ACC horse
+ 3.1 4 # horse horse
+ 3.2 0 # -ACC NULL
+4 7 # house-DAT house
+ 4.1 7 # house house
+ 4.2 0 # -DAT NULL
+5 0 # see-CAUSE-PERF NULL
+ 5.1 0 # see NULL
+ 5.2 0 # -CAUSE NULL
+ 5.3 0 # -PERF NULL
+6 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+`aapo `uka kava'i-ta ho'ara-u vit-tua-k .
+he Det.ACC horse-ACC house-DAT see-CAUSE-PERF .
+He sent the horse to the house .
+
+1 5 # `aapo vit-tua-k
+2 3 # `uka kava'i-ta
+3 5 # kava'i-ta vit-tua-k
+4 5 # ho'ara-u vit-tua-k
+5 -2 # vit-tua-k NULL
+6 5 # . vit-tua-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=21707 Url_id=1636 flag=0 cleaned=3 src_leng=5 trans_leng=6
+`Emé'e káa hunúen `án-nee .
+you-PL NEG thus do-fut .
+You must not do that .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP You)) (VP (MD must) (RB not) (VP (VB do) (NP (DT that)))) (. .))
+
+(S+do (NP+You (PRP You))
+      (VP+do (MD must)
+             (RB not)
+             (VP+do (VB do)
+                    (NP+that (DT that))))
+      (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+You must not do that .
+1 4 # You do
+2 4 # must do
+3 4 # not do
+4 -1 # do *TOP*
+5 4 # that do
+6 4 # . do
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+`Emé'e káa hunúen `án-nee .
+you-PL NEG thus do-fut .
+
+1 1 # `Emé'e you-PL
+2 2 # káa NEG
+3 3 # hunúen thus
+4 4 # `án-nee do-fut
+ 4.1 4.1 # `án do
+ 4.2 4.2 # -nee -fut
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+you-PL NEG thus do-fut .
+You must not do that .
+
+1 1 # you-PL You
+ 1.1 1 # you You
+ 1.2 0 # -PL NULL
+2 3 # NEG not
+3 0 # thus NULL
+4 4 # do-fut do
+ 4.1 4 # do do
+ 4.2 0 # -fut NULL
+5 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+`Emé'e káa hunúen `án-nee .
+you-PL NEG thus do-fut .
+You must not do that .
+
+1 4 # `Emé'e `án-nee
+2 4 # káa `án-nee
+3 4 # hunúen `án-nee
+4 -1 # `án-nee *TOP*
+5 4 # . `án-nee
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24166 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=10
+Ruben ejkuela-po ji'osia-m to'o-siika .
+Ruben school-LOC book-PL leave-go.PST .
+Ruben left the books in the school and left .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Ruben)) (VP (VP (VBD left) (NP (DT the) (NNS books)) (PP (IN in) (NP (DT the) (NN school)))) (CC and) (VP (VBD left))) (. .))
+
+(S+left (NP+Ruben (NNP Ruben))
+        (VP+left (VP+left (VBD left)
+                          (NP+books (DT the)
+                                    (NNS books))
+                          (PP+in (IN in)
+                                 (NP+school (DT the)
+                                            (NN school))))
+                 (CC and)
+                 (VP+left (VBD left)))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Ruben left the books in the school and left .
+1 9 # Ruben left
+2 9 # left left
+3 4 # the books
+4 2 # books left
+5 2 # in left
+6 7 # the school
+7 5 # school in
+8 9 # and left
+9 -1 # left *TOP*
+10 9 # . left
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ruben ejkuela-po ji'osia-m to'o-siika .
+Ruben school-LOC book-PL leave-go.PST .
+
+1 1 # Ruben Ruben
+2 2 # ejkuela-po school-LOC
+ 2.1 2.1 # ejkuela school
+ 2.2 2.2 # -po -LOC
+3 3 # ji'osia-m book-PL
+ 3.1 3.1 # ji'osia book
+ 3.2 3.2 # -m -PL
+4 4 # to'o-siika leave-go.PST
+ 4.1 4.1 # to'o leave
+ 4.2 4.2 # -siika -go.PST
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Ruben school-LOC book-PL leave-go.PST .
+Ruben left the books in the school and left .
+
+1 1 # Ruben Ruben
+2 7 # school-LOC school
+ 2.1 7 # school school
+ 2.2 0 # -LOC NULL
+3 4 # book-PL books
+ 3.1 4 # book books
+ 3.2 0 # -PL NULL
+4 2 # leave-go.PST left
+ 4.1 2 # leave left
+ 4.2 0 # -go.PST NULL
+5 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ruben ejkuela-po ji'osia-m to'o-siika .
+Ruben school-LOC book-PL leave-go.PST .
+Ruben left the books in the school and left .
+
+1 4 # Ruben to'o-siika
+2 4 # ejkuela-po to'o-siika
+3 4 # ji'osia-m to'o-siika
+4 -2 # to'o-siika NULL
+5 4 # . to'o-siika
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24167 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=8
+inepo joan-ta-mak teo-po bwiika-k .
+1SG John-NNOM.SG-COM church-LOC sing-PST .
+I sang in the church with John .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBD sang) (PP (IN in) (NP (NP (DT the) (NNP church)) (PP (IN with) (NP (NNP John)))))) (. .))
+
+(S+sang (NP+I (PRP I))
+        (VP+sang (VBD sang)
+                 (PP+in (IN in)
+                        (NP+church (NP+church (DT the)
+                                              (NNP church))
+                                   (PP+with (IN with)
+                                            (NP+John (NNP John))))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I sang in the church with John .
+1 2 # I sang
+2 -1 # sang *TOP*
+3 2 # in sang
+4 5 # the church
+5 3 # church in
+6 5 # with church
+7 6 # John with
+8 2 # . sang
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inepo joan-ta-mak teo-po bwiika-k .
+1SG John-NNOM.SG-COM church-LOC sing-PST .
+
+1 1 # inepo 1SG
+2 2 # joan-ta-mak John-NNOM.SG-COM
+ 2.1 2.1 # joan John
+ 2.2 2.2 # -ta -NNOM.SG
+ 2.3 2.3 # -mak -COM
+3 3 # teo-po church-LOC
+ 3.1 3.1 # teo church
+ 3.2 3.2 # -po -LOC
+4 4 # bwiika-k sing-PST
+ 4.1 4.1 # bwiika sing
+ 4.2 4.2 # -k -PST
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG John-NNOM.SG-COM church-LOC sing-PST .
+I sang in the church with John .
+
+1 1 # 1SG I
+2 7 # John-NNOM.SG-COM John
+ 2.1 7 # John John
+ 2.2 0 # -NNOM.SG NULL
+ 2.3 0 # -COM NULL
+3 5 # church-LOC church
+ 3.1 5 # church church
+ 3.2 0 # -LOC NULL
+4 2 # sing-PST sang
+ 4.1 2 # sing sang
+ 4.2 0 # -PST NULL
+5 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inepo joan-ta-mak teo-po bwiika-k .
+1SG John-NNOM.SG-COM church-LOC sing-PST .
+I sang in the church with John .
+
+1 4 # inepo bwiika-k
+2 3 # joan-ta-mak teo-po
+3 4 # teo-po bwiika-k
+4 -1 # bwiika-k *TOP*
+5 4 # . bwiika-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24168 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=8
+inepo teo-po bwiika-k joan-ta-mak .
+1SG church-LOC sing-PST John-NNOM.SG-COM .
+I sang in the church with John .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBD sang) (PP (IN in) (NP (NP (DT the) (NNP church)) (PP (IN with) (NP (NNP John)))))) (. .))
+
+(S+sang (NP+I (PRP I))
+        (VP+sang (VBD sang)
+                 (PP+in (IN in)
+                        (NP+church (NP+church (DT the)
+                                              (NNP church))
+                                   (PP+with (IN with)
+                                            (NP+John (NNP John))))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I sang in the church with John .
+1 2 # I sang
+2 -1 # sang *TOP*
+3 2 # in sang
+4 5 # the church
+5 3 # church in
+6 5 # with church
+7 6 # John with
+8 2 # . sang
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inepo teo-po bwiika-k joan-ta-mak .
+1SG church-LOC sing-PST John-NNOM.SG-COM .
+
+1 1 # inepo 1SG
+2 2 # teo-po church-LOC
+ 2.1 2.1 # teo church
+ 2.2 2.2 # -po -LOC
+3 3 # bwiika-k sing-PST
+ 3.1 3.1 # bwiika sing
+ 3.2 3.2 # -k -PST
+4 4 # joan-ta-mak John-NNOM.SG-COM
+ 4.1 4.1 # joan John
+ 4.2 4.2 # -ta -NNOM.SG
+ 4.3 4.3 # -mak -COM
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG church-LOC sing-PST John-NNOM.SG-COM .
+I sang in the church with John .
+
+1 1 # 1SG I
+2 5 # church-LOC church
+ 2.1 5 # church church
+ 2.2 0 # -LOC NULL
+3 2 # sing-PST sang
+ 3.1 2 # sing sang
+ 3.2 0 # -PST NULL
+4 7 # John-NNOM.SG-COM John
+ 4.1 7 # John John
+ 4.2 0 # -NNOM.SG NULL
+ 4.3 0 # -COM NULL
+5 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inepo teo-po bwiika-k joan-ta-mak .
+1SG church-LOC sing-PST John-NNOM.SG-COM .
+I sang in the church with John .
+
+1 3 # inepo bwiika-k
+2 3 # teo-po bwiika-k
+3 -1 # bwiika-k *TOP*
+4 2 # joan-ta-mak teo-po
+5 3 # . bwiika-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24172 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=7
+Joan bwite-k bweta Peo e'e .
+John run-PST but Peter not .
+John ran but Peter did not .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (S (NP (NNP John)) (VP (VBD ran))) (CC but) (S (NP (NNP Peter)) (VP (VBD did) (RB not))) (. .))
+
+(S+did (S+ran (NP+John (NNP John))
+              (VP+ran (VBD ran)))
+       (CC but)
+       (S+did (NP+Peter (NNP Peter))
+              (VP+did (VBD did)
+                      (RB not)))
+       (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John ran but Peter did not .
+1 2 # John ran
+2 5 # ran did
+3 5 # but did
+4 5 # Peter did
+5 -1 # did *TOP*
+6 5 # not did
+7 5 # . did
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan bwite-k bweta Peo e'e .
+John run-PST but Peter not .
+
+1 1 # Joan John
+2 2 # bwite-k run-PST
+ 2.1 2.1 # bwite run
+ 2.2 2.2 # -k -PST
+3 3 # bweta but
+4 4 # Peo Peter
+5 5 # e'e not
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John run-PST but Peter not .
+John ran but Peter did not .
+
+1 1 # John John
+2 2 # run-PST ran
+ 2.1 2 # run ran
+ 2.2 0 # -PST NULL
+3 3 # but but
+4 4 # Peter Peter
+5 6 # not not
+6 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan bwite-k bweta Peo e'e .
+John run-PST but Peter not .
+John ran but Peter did not .
+
+1 2 # Joan bwite-k
+2 5 # bwite-k e'e
+3 5 # bweta e'e
+4 5 # Peo e'e
+5 -2 # e'e NULL
+6 5 # . e'e
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24183 Url_id=2369 flag=0 cleaned=5 src_leng=9 trans_leng=7
+inepo Diana-ta bicha-k, , apoik achai into ketchia .
+1SG Diana-NNOM.SG see-PST , 3SG.POSS father and too .
+I saw Diana and her father .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBD saw) (NP (NP (NNP Diana)) (CC and) (NP (PRP$ her) (NN father)))) (. .))
+
+(S+saw (NP+I (PRP I))
+       (VP+saw (VBD saw)
+               (NP+father (NP+Diana (NNP Diana))
+                          (CC and)
+                          (NP+father (PRP$ her)
+                                     (NN father))))
+       (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I saw Diana and her father .
+1 2 # I saw
+2 -1 # saw *TOP*
+3 6 # Diana father
+4 6 # and father
+5 6 # her father
+6 2 # father saw
+7 2 # . saw
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inepo Diana-ta bicha-k, , apoik achai into ketchia .
+1SG Diana-NNOM.SG see-PST , 3SG.POSS father and too .
+
+1 1 # inepo 1SG
+2 2 # Diana-ta Diana-NNOM.SG
+ 2.1 2.1 # Diana Diana
+ 2.2 2.2 # -ta -NNOM.SG
+3 3 # bicha-k, see-PST
+ 3.1 3.1 # bicha see
+ 3.2 3.2 # -k, -PST
+4 4 # , ,
+5 5 # apoik 3SG.POSS
+6 6 # achai father
+7 7 # into and
+8 8 # ketchia too
+9 9 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG Diana-NNOM.SG see-PST , 3SG.POSS father and too .
+I saw Diana and her father .
+
+1 1 # 1SG I
+2 3 # Diana-NNOM.SG Diana
+ 2.1 3 # Diana Diana
+ 2.2 0 # -NNOM.SG NULL
+3 2 # see-PST saw
+ 3.1 2 # see saw
+ 3.2 0 # -PST NULL
+4 0 # , NULL
+5 0 # 3SG.POSS NULL
+6 6 # father father
+7 4 # and and
+8 0 # too NULL
+9 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inepo Diana-ta bicha-k, , apoik achai into ketchia .
+1SG Diana-NNOM.SG see-PST , 3SG.POSS father and too .
+I saw Diana and her father .
+
+1 3 # inepo bicha-k,
+2 6 # Diana-ta achai
+3 -1 # bicha-k, *TOP*
+4 3 # , bicha-k,
+5 3 # apoik bicha-k,
+6 3 # achai bicha-k,
+7 6 # into achai
+8 3 # ketchia bicha-k,
+9 3 # . bicha-k,
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24186 Url_id=2369 flag=0 cleaned=3 src_leng=8 trans_leng=9
+Yoeme bwiíka into Peo into Diana ye'e-mme .
+Man sing.PRS and Peter and Diana dance.PRS-3PL .
+The man sings and Peter and Diana dance .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NN man)) (VP (VBZ sings) (NP (CC and) (NNP Peter) (CC and) (NNP Diana) (NNP dance))) (. .))
+
+(S+sings (NP+man (DT The)
+                 (NN man))
+         (VP+sings (VBZ sings)
+                   (NP+dance (CC and)
+                             (NNP Peter)
+                             (CC and)
+                             (NNP Diana)
+                             (NNP dance)))
+         (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The man sings and Peter and Diana dance .
+1 2 # The man
+2 3 # man sings
+3 -1 # sings *TOP*
+4 8 # and dance
+5 8 # Peter dance
+6 8 # and dance
+7 8 # Diana dance
+8 3 # dance sings
+9 3 # . sings
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Yoeme bwiíka into Peo into Diana ye'e-mme .
+Man sing.PRS and Peter and Diana dance.PRS-3PL .
+
+1 1 # Yoeme Man
+2 2 # bwiíka sing.PRS
+3 3 # into and
+4 4 # Peo Peter
+5 5 # into and
+6 6 # Diana Diana
+7 7 # ye'e-mme dance.PRS-3PL
+ 7.1 7.1 # ye'e dance.PRS
+ 7.2 7.2 # -mme -3PL
+8 8 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Man sing.PRS and Peter and Diana dance.PRS-3PL .
+The man sings and Peter and Diana dance .
+
+1 2 # Man man
+2 3 # sing.PRS sings
+3 4 # and and
+4 5 # Peter Peter
+5 6 # and and
+6 7 # Diana Diana
+7 8 # dance.PRS-3PL dance
+ 7.1 8 # dance.PRS dance
+ 7.2 0 # -3PL NULL
+8 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Yoeme bwiíka into Peo into Diana ye'e-mme .
+Man sing.PRS and Peter and Diana dance.PRS-3PL .
+The man sings and Peter and Diana dance .
+
+1 2 # Yoeme bwiíka
+2 -1 # bwiíka *TOP*
+3 7 # into ye'e-mme
+4 7 # Peo ye'e-mme
+5 7 # into ye'e-mme
+6 7 # Diana ye'e-mme
+7 2 # ye'e-mme bwiíka
+8 2 # . bwiíka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24187 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=10
+Aapo kuchureo into aapo bochareo .
+3SG fisherman and 3SG shoemaker .
+He is a fisherman and he is a shoemaker .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (S (NP (PRP He)) (VP (VBZ is) (NP (DT a) (NN fisherman)))) (CC and) (S (NP (PRP he)) (VP (VBZ is) (NP (DT a) (NN shoemaker)))) (. .))
+
+(S+shoemaker (S+fisherman (NP+He (PRP He))
+                          (VP+fisherman (VBZ is)
+                                        (NP-PRD+fisherman (DT a)
+                                                          (NN fisherman))))
+             (CC and)
+             (S+shoemaker (NP+he (PRP he))
+                          (VP+shoemaker (VBZ is)
+                                        (NP-PRD+shoemaker (DT a)
+                                                          (NN shoemaker))))
+             (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He is a fisherman and he is a shoemaker .
+1 4 # He fisherman
+2 4 # is fisherman
+3 4 # a fisherman
+4 9 # fisherman shoemaker
+5 9 # and shoemaker
+6 9 # he shoemaker
+7 9 # is shoemaker
+8 9 # a shoemaker
+9 -1 # shoemaker *TOP*
+10 9 # . shoemaker
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Aapo kuchureo into aapo bochareo .
+3SG fisherman and 3SG shoemaker .
+
+1 1 # Aapo 3SG
+2 2 # kuchureo fisherman
+3 3 # into and
+4 4 # aapo 3SG
+5 5 # bochareo shoemaker
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+3SG fisherman and 3SG shoemaker .
+He is a fisherman and he is a shoemaker .
+
+1 1 # 3SG He
+2 4 # fisherman fisherman
+3 5 # and and
+4 6 # 3SG he
+5 9 # shoemaker shoemaker
+6 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Aapo kuchureo into aapo bochareo .
+3SG fisherman and 3SG shoemaker .
+He is a fisherman and he is a shoemaker .
+
+1 2 # Aapo kuchureo
+2 5 # kuchureo bochareo
+3 5 # into bochareo
+4 5 # aapo bochareo
+5 -1 # bochareo *TOP*
+6 5 # . bochareo
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24188 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=7
+Aapo kuchureo aapo into bochareo .
+3SG fisherman 3SG and shoemaker .
+He is a fisherman and he .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBZ is) (NP (NP (DT a) (NN fisherman)) (CC and) (NP (PRP he)))) (. .))
+
+(S+he (NP+He (PRP He))
+      (VP+he (VBZ is)
+             (NP-PRD+he (NP+fisherman (DT a)
+                                      (NN fisherman))
+                        (CC and)
+                        (NP+he (PRP he))))
+      (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He is a fisherman and he .
+1 6 # He he
+2 6 # is he
+3 4 # a fisherman
+4 6 # fisherman he
+5 6 # and he
+6 -1 # he *TOP*
+7 6 # . he
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Aapo kuchureo aapo into bochareo .
+3SG fisherman 3SG and shoemaker .
+
+1 1 # Aapo 3SG
+2 2 # kuchureo fisherman
+3 3 # aapo 3SG
+4 4 # into and
+5 5 # bochareo shoemaker
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+3SG fisherman 3SG and shoemaker .
+He is a fisherman and he .
+
+1 1 # 3SG He
+2 4 # fisherman fisherman
+3 6 # 3SG he
+4 5 # and and
+5 0 # shoemaker NULL
+6 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Aapo kuchureo aapo into bochareo .
+3SG fisherman 3SG and shoemaker .
+He is a fisherman and he .
+
+1 3 # Aapo aapo
+2 3 # kuchureo aapo
+3 -1 # aapo *TOP*
+4 3 # into aapo
+5 3 # bochareo aapo
+6 3 # . aapo
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24189 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=6
+Aapo bwiíka into aapo ye'e .
+3SG sing.PRS and 3SG dance.PRS .
+He is singing and he .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBZ is) (NP (NP (NN singing)) (CC and) (NP (PRP he)))) (. .))
+
+(S+he (NP+He (PRP He))
+      (VP+he (VBZ is)
+             (NP-PRD+he (NP+singing (NN singing))
+                        (CC and)
+                        (NP+he (PRP he))))
+      (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He is singing and he .
+1 5 # He he
+2 5 # is he
+3 5 # singing he
+4 5 # and he
+5 -1 # he *TOP*
+6 5 # . he
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Aapo bwiíka into aapo ye'e .
+3SG sing.PRS and 3SG dance.PRS .
+
+1 1 # Aapo 3SG
+2 2 # bwiíka sing.PRS
+3 3 # into and
+4 4 # aapo 3SG
+5 5 # ye'e dance.PRS
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+3SG sing.PRS and 3SG dance.PRS .
+He is singing and he .
+
+1 1 # 3SG He
+2 0 # sing.PRS NULL
+3 4 # and and
+4 5 # 3SG he
+5 0 # dance.PRS NULL
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Aapo bwiíka into aapo ye'e .
+3SG sing.PRS and 3SG dance.PRS .
+He is singing and he .
+
+1 4 # Aapo aapo
+2 4 # bwiíka aapo
+3 4 # into aapo
+4 -1 # aapo *TOP*
+5 4 # ye'e aapo
+6 4 # . aapo
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24190 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=6
+Aapo bwiíka aapo into ye'e .
+3SG sing.PRS 3SG and dance.PRS .
+He is singing and he .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBZ is) (NP (NP (NN singing)) (CC and) (NP (PRP he)))) (. .))
+
+(S+he (NP+He (PRP He))
+      (VP+he (VBZ is)
+             (NP-PRD+he (NP+singing (NN singing))
+                        (CC and)
+                        (NP+he (PRP he))))
+      (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He is singing and he .
+1 5 # He he
+2 5 # is he
+3 5 # singing he
+4 5 # and he
+5 -1 # he *TOP*
+6 5 # . he
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Aapo bwiíka aapo into ye'e .
+3SG sing.PRS 3SG and dance.PRS .
+
+1 1 # Aapo 3SG
+2 2 # bwiíka sing.PRS
+3 3 # aapo 3SG
+4 4 # into and
+5 5 # ye'e dance.PRS
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+3SG sing.PRS 3SG and dance.PRS .
+He is singing and he .
+
+1 1 # 3SG He
+2 0 # sing.PRS NULL
+3 5 # 3SG he
+4 4 # and and
+5 0 # dance.PRS NULL
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Aapo bwiíka aapo into ye'e .
+3SG sing.PRS 3SG and dance.PRS .
+He is singing and he .
+
+1 3 # Aapo aapo
+2 3 # bwiíka aapo
+3 -1 # aapo *TOP*
+4 3 # into aapo
+5 3 # ye'e aapo
+6 3 # . aapo
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24191 Url_id=2369 flag=0 cleaned=3 src_leng=8 trans_leng=12
+in kaba'i che'awa-su awi lobolai intok pappeya.. .
+1SG.POSS horse much.more fat round and active.. .
+My horse is much fatter and round and is very active.. .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP$ My) (NN horse)) (VP (VP (VBZ is) (ADJP (ADJP (RB much) (JJR fatter)) (CC and) (ADJP (JJ round)))) (CC and) (VP (VBZ is) (ADJP (RB very) (JJ active..)))) (. .))
+
+(S+active.. (NP+horse (PRP$ My)
+                      (NN horse))
+            (VP+active.. (VP+round (VBZ is)
+                                   (ADJP-PRD+round (ADJP+fatter (RB much)
+                                                                (JJR fatter))
+                                                   (CC and)
+                                                   (ADJP+round (JJ round))))
+                         (CC and)
+                         (VP+active.. (VBZ is)
+                                      (ADJP-PRD+active.. (RB very)
+                                                         (JJ active..))))
+            (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+My horse is much fatter and round and is very active.. .
+1 2 # My horse
+2 11 # horse active..
+3 7 # is round
+4 5 # much fatter
+5 7 # fatter round
+6 7 # and round
+7 11 # round active..
+8 11 # and active..
+9 11 # is active..
+10 11 # very active..
+11 -1 # active.. *TOP*
+12 11 # . active..
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+in kaba'i che'awa-su awi lobolai intok pappeya.. .
+1SG.POSS horse much.more fat round and active.. .
+
+1 1 # in 1SG.POSS
+2 2 # kaba'i horse
+3 3 # che'awa-su much.more
+ 3.1 0 # che'awa NULL
+ 3.2 0 # -su NULL
+4 4 # awi fat
+5 5 # lobolai round
+6 6 # intok and
+7 7 # pappeya.. active..
+8 8 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG.POSS horse much.more fat round and active.. .
+My horse is much fatter and round and is very active.. .
+
+1 0 # 1SG.POSS NULL
+2 2 # horse horse
+3 4 # much.more much
+4 0 # fat NULL
+5 7 # round round
+6 6 # and and
+7 0 # active.. NULL
+8 12 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+in kaba'i che'awa-su awi lobolai intok pappeya.. .
+1SG.POSS horse much.more fat round and active.. .
+My horse is much fatter and round and is very active.. .
+
+1 7 # in pappeya..
+2 7 # kaba'i pappeya..
+3 5 # che'awa-su lobolai
+4 7 # awi pappeya..
+5 7 # lobolai pappeya..
+6 5 # intok lobolai
+7 -2 # pappeya.. NULL
+8 7 # . pappeya..
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24192 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=6
+Joan bwiika-k María into ye'e-ka .
+John sing-PST María and dance-PST .
+John sang and María danced .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP John)) (VP (VP (VBD sang)) (CC and) (VP (VBD María) (VP (VBN danced)))) (. .))
+
+(S+danced (NP+John (NNP John))
+          (VP+danced (VP+sang (VBD sang))
+                     (CC and)
+                     (VP+danced (VBD María)
+                                (VP+danced (VBN danced))))
+          (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John sang and María danced .
+1 5 # John danced
+2 5 # sang danced
+3 5 # and danced
+4 5 # María danced
+5 -1 # danced *TOP*
+6 5 # . danced
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan bwiika-k María into ye'e-ka .
+John sing-PST María and dance-PST .
+
+1 1 # Joan John
+2 2 # bwiika-k sing-PST
+ 2.1 2.1 # bwiika sing
+ 2.2 2.2 # -k -PST
+3 3 # María María
+4 4 # into and
+5 5 # ye'e-ka dance-PST
+ 5.1 5.1 # ye'e dance
+ 5.2 5.2 # -ka -PST
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John sing-PST María and dance-PST .
+John sang and María danced .
+
+1 1 # John John
+2 2 # sing-PST sang
+ 2.1 2 # sing sang
+ 2.2 0 # -PST NULL
+3 4 # María María
+4 3 # and and
+5 0 # dance-PST NULL
+ 5.1 0 # dance NULL
+ 5.2 0 # -PST NULL
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan bwiika-k María into ye'e-ka .
+John sing-PST María and dance-PST .
+John sang and María danced .
+
+1 5 # Joan ye'e-ka
+2 5 # bwiika-k ye'e-ka
+3 5 # María ye'e-ka
+4 5 # into ye'e-ka
+5 -2 # ye'e-ka NULL
+6 5 # . ye'e-ka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24193 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=6
+Joan bwiika-k María into ye'e-ka .
+John sing-PST María and dance-PST .
+John sang and María danced .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP John)) (VP (VP (VBD sang)) (CC and) (VP (VBD María) (VP (VBN danced)))) (. .))
+
+(S+danced (NP+John (NNP John))
+          (VP+danced (VP+sang (VBD sang))
+                     (CC and)
+                     (VP+danced (VBD María)
+                                (VP+danced (VBN danced))))
+          (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John sang and María danced .
+1 5 # John danced
+2 5 # sang danced
+3 5 # and danced
+4 5 # María danced
+5 -1 # danced *TOP*
+6 5 # . danced
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan bwiika-k María into ye'e-ka .
+John sing-PST María and dance-PST .
+
+1 1 # Joan John
+2 2 # bwiika-k sing-PST
+ 2.1 2.1 # bwiika sing
+ 2.2 2.2 # -k -PST
+3 3 # María María
+4 4 # into and
+5 5 # ye'e-ka dance-PST
+ 5.1 5.1 # ye'e dance
+ 5.2 5.2 # -ka -PST
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John sing-PST María and dance-PST .
+John sang and María danced .
+
+1 1 # John John
+2 2 # sing-PST sang
+ 2.1 2 # sing sang
+ 2.2 0 # -PST NULL
+3 4 # María María
+4 3 # and and
+5 0 # dance-PST NULL
+ 5.1 0 # dance NULL
+ 5.2 0 # -PST NULL
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan bwiika-k María into ye'e-ka .
+John sing-PST María and dance-PST .
+John sang and María danced .
+
+1 5 # Joan ye'e-ka
+2 5 # bwiika-k ye'e-ka
+3 5 # María ye'e-ka
+4 5 # into ye'e-ka
+5 -2 # ye'e-ka NULL
+6 5 # . ye'e-ka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24194 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=10
+aapo kuchureo into aapo bochareo .
+3SG fisherman and 3SG shoemaker .
+He is a fisherman and he is a shoemaker .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (S (NP (PRP He)) (VP (VBZ is) (NP (DT a) (NN fisherman)))) (CC and) (S (NP (PRP he)) (VP (VBZ is) (NP (DT a) (NN shoemaker)))) (. .))
+
+(S+shoemaker (S+fisherman (NP+He (PRP He))
+                          (VP+fisherman (VBZ is)
+                                        (NP-PRD+fisherman (DT a)
+                                                          (NN fisherman))))
+             (CC and)
+             (S+shoemaker (NP+he (PRP he))
+                          (VP+shoemaker (VBZ is)
+                                        (NP-PRD+shoemaker (DT a)
+                                                          (NN shoemaker))))
+             (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He is a fisherman and he is a shoemaker .
+1 4 # He fisherman
+2 4 # is fisherman
+3 4 # a fisherman
+4 9 # fisherman shoemaker
+5 9 # and shoemaker
+6 9 # he shoemaker
+7 9 # is shoemaker
+8 9 # a shoemaker
+9 -1 # shoemaker *TOP*
+10 9 # . shoemaker
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+aapo kuchureo into aapo bochareo .
+3SG fisherman and 3SG shoemaker .
+
+1 1 # aapo 3SG
+2 2 # kuchureo fisherman
+3 3 # into and
+4 4 # aapo 3SG
+5 5 # bochareo shoemaker
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+3SG fisherman and 3SG shoemaker .
+He is a fisherman and he is a shoemaker .
+
+1 1 # 3SG He
+2 4 # fisherman fisherman
+3 5 # and and
+4 6 # 3SG he
+5 9 # shoemaker shoemaker
+6 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+aapo kuchureo into aapo bochareo .
+3SG fisherman and 3SG shoemaker .
+He is a fisherman and he is a shoemaker .
+
+1 2 # aapo kuchureo
+2 5 # kuchureo bochareo
+3 5 # into bochareo
+4 5 # aapo bochareo
+5 -1 # bochareo *TOP*
+6 5 # . bochareo
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24195 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=6
+Joan jitá bwa-ka intoko ?
+John what eat-PST and ?
+And what did John eat ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SBARQ (CC And) (WHNP (WP what)) (SQ (VBD did) (NP (NNP John)) (VP (VB eat))) (. ?))
+
+(SBARQ+eat (CC And)
+           (WHNP+what (WP what))
+           (SQ+eat (VBD did)
+                   (NP+John (NNP John))
+                   (VP+eat (VB eat)))
+           (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+And what did John eat ?
+1 5 # And eat
+2 5 # what eat
+3 5 # did eat
+4 5 # John eat
+5 -1 # eat *TOP*
+6 5 # ? eat
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan jitá bwa-ka intoko ?
+John what eat-PST and ?
+
+1 1 # Joan John
+2 2 # jitá what
+3 3 # bwa-ka eat-PST
+ 3.1 3.1 # bwa eat
+ 3.2 3.2 # -ka -PST
+4 4 # intoko and
+5 5 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John what eat-PST and ?
+And what did John eat ?
+
+1 4 # John John
+2 2 # what what
+3 5 # eat-PST eat
+ 3.1 5 # eat eat
+ 3.2 0 # -PST NULL
+4 1 # and And
+5 6 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan jitá bwa-ka intoko ?
+John what eat-PST and ?
+And what did John eat ?
+
+1 3 # Joan bwa-ka
+2 3 # jitá bwa-ka
+3 -1 # bwa-ka *TOP*
+4 3 # intoko bwa-ka
+5 3 # ? bwa-ka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24196 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=7
+aapo kuchureo aapo into bochareo .
+3SG fisherman 3SG and shoemaker .
+He is a fisherman and he .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBZ is) (NP (NP (DT a) (NN fisherman)) (CC and) (NP (PRP he)))) (. .))
+
+(S+he (NP+He (PRP He))
+      (VP+he (VBZ is)
+             (NP-PRD+he (NP+fisherman (DT a)
+                                      (NN fisherman))
+                        (CC and)
+                        (NP+he (PRP he))))
+      (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He is a fisherman and he .
+1 6 # He he
+2 6 # is he
+3 4 # a fisherman
+4 6 # fisherman he
+5 6 # and he
+6 -1 # he *TOP*
+7 6 # . he
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+aapo kuchureo aapo into bochareo .
+3SG fisherman 3SG and shoemaker .
+
+1 1 # aapo 3SG
+2 2 # kuchureo fisherman
+3 3 # aapo 3SG
+4 4 # into and
+5 5 # bochareo shoemaker
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+3SG fisherman 3SG and shoemaker .
+He is a fisherman and he .
+
+1 1 # 3SG He
+2 4 # fisherman fisherman
+3 6 # 3SG he
+4 5 # and and
+5 0 # shoemaker NULL
+6 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+aapo kuchureo aapo into bochareo .
+3SG fisherman 3SG and shoemaker .
+He is a fisherman and he .
+
+1 3 # aapo aapo
+2 3 # kuchureo aapo
+3 -1 # aapo *TOP*
+4 3 # into aapo
+5 3 # bochareo aapo
+6 3 # . aapo
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24197 Url_id=2369 flag=0 cleaned=3 src_leng=4 trans_leng=5
+Joan jitá bwa-ka ?
+John what eat-PST ?
+What did John eat ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SBARQ (WHNP (WP What)) (SQ (VBD did) (NP (NNP John)) (VP (VB eat))) (. ?))
+
+(SBARQ+eat (WHNP+What (WP What))
+           (SQ+eat (VBD did)
+                   (NP+John (NNP John))
+                   (VP+eat (VB eat)))
+           (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+What did John eat ?
+1 4 # What eat
+2 4 # did eat
+3 4 # John eat
+4 -1 # eat *TOP*
+5 4 # ? eat
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan jitá bwa-ka ?
+John what eat-PST ?
+
+1 1 # Joan John
+2 2 # jitá what
+3 3 # bwa-ka eat-PST
+ 3.1 3.1 # bwa eat
+ 3.2 3.2 # -ka -PST
+4 4 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John what eat-PST ?
+What did John eat ?
+
+1 3 # John John
+2 1 # what What
+3 4 # eat-PST eat
+ 3.1 4 # eat eat
+ 3.2 0 # -PST NULL
+4 5 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan jitá bwa-ka ?
+John what eat-PST ?
+What did John eat ?
+
+1 3 # Joan bwa-ka
+2 3 # jitá bwa-ka
+3 -1 # bwa-ka *TOP*
+4 3 # ? bwa-ka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24198 Url_id=2369 flag=0 cleaned=3 src_leng=7 trans_leng=8
+María into bwika-k Peo into ye'eka .
+Mary and.more sing-PST Peter and dance-PST .
+And moreover Mary sang and Peter danced .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (CC And) (S (ADVP (RB moreover)) (NP (NNP Mary)) (VP (VBD sang))) (CC and) (S (NP (NNP Peter)) (VP (VBD danced))) (. .))
+
+(S+danced (CC And)
+          (S+sang (ADVP+moreover (RB moreover))
+                  (NP+Mary (NNP Mary))
+                  (VP+sang (VBD sang)))
+          (CC and)
+          (S+danced (NP+Peter (NNP Peter))
+                    (VP+danced (VBD danced)))
+          (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+And moreover Mary sang and Peter danced .
+1 7 # And danced
+2 4 # moreover sang
+3 4 # Mary sang
+4 7 # sang danced
+5 7 # and danced
+6 7 # Peter danced
+7 -1 # danced *TOP*
+8 7 # . danced
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+María into bwika-k Peo into ye'eka .
+Mary and.more sing-PST Peter and dance-PST .
+
+1 1 # María Mary
+2 2 # into and.more
+3 3 # bwika-k sing-PST
+ 3.1 3.1 # bwika sing
+ 3.2 3.2 # -k -PST
+4 4 # Peo Peter
+5 5 # into and
+6 6 # ye'eka dance-PST
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Mary and.more sing-PST Peter and dance-PST .
+And moreover Mary sang and Peter danced .
+
+1 3 # Mary Mary
+2 1 # and.more And
+3 4 # sing-PST sang
+ 3.1 4 # sing sang
+ 3.2 0 # -PST NULL
+4 6 # Peter Peter
+5 5 # and and
+6 0 # dance-PST NULL
+ 6.1 0 # dance NULL
+ 6.2 0 # -PST NULL
+7 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+María into bwika-k Peo into ye'eka .
+Mary and.more sing-PST Peter and dance-PST .
+And moreover Mary sang and Peter danced .
+
+1 3 # María bwika-k
+2 6 # into ye'eka
+3 6 # bwika-k ye'eka
+4 6 # Peo ye'eka
+5 6 # into ye'eka
+6 -2 # ye'eka NULL
+7 6 # . ye'eka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24199 Url_id=2369 flag=0 cleaned=3 src_leng=8 trans_leng=8
+Joan bwiika-k into Maria into Peo ye'e-ka .
+John sing-PST and Mary and Peter dance-PST .
+John sang and Mary and Peter danced .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP John)) (VP (VBD sang) (NP (CC and) (NNP Mary) (CC and) (NNP Peter) (NNP danced))) (. .))
+
+(S+sang (NP+John (NNP John))
+        (VP+sang (VBD sang)
+                 (NP+danced (CC and)
+                            (NNP Mary)
+                            (CC and)
+                            (NNP Peter)
+                            (NNP danced)))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John sang and Mary and Peter danced .
+1 2 # John sang
+2 -1 # sang *TOP*
+3 7 # and danced
+4 7 # Mary danced
+5 7 # and danced
+6 7 # Peter danced
+7 2 # danced sang
+8 2 # . sang
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan bwiika-k into Maria into Peo ye'e-ka .
+John sing-PST and Mary and Peter dance-PST .
+
+1 1 # Joan John
+2 2 # bwiika-k sing-PST
+ 2.1 2.1 # bwiika sing
+ 2.2 2.2 # -k -PST
+3 3 # into and
+4 4 # Maria Mary
+5 5 # into and
+6 6 # Peo Peter
+7 7 # ye'e-ka dance-PST
+ 7.1 7.1 # ye'e dance
+ 7.2 7.2 # -ka -PST
+8 8 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John sing-PST and Mary and Peter dance-PST .
+John sang and Mary and Peter danced .
+
+1 1 # John John
+2 2 # sing-PST sang
+ 2.1 2 # sing sang
+ 2.2 0 # -PST NULL
+3 3 # and and
+4 4 # Mary Mary
+5 5 # and and
+6 6 # Peter Peter
+7 0 # dance-PST NULL
+ 7.1 0 # dance NULL
+ 7.2 0 # -PST NULL
+8 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan bwiika-k into Maria into Peo ye'e-ka .
+John sing-PST and Mary and Peter dance-PST .
+John sang and Mary and Peter danced .
+
+1 2 # Joan bwiika-k
+2 -1 # bwiika-k *TOP*
+3 2 # into bwiika-k
+4 2 # Maria bwiika-k
+5 2 # into bwiika-k
+6 2 # Peo bwiika-k
+7 2 # ye'e-ka bwiika-k
+8 2 # . bwiika-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24201 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=6
+tuuka jita empo ya'a-k ?
+yesterday what 2SG do-PST ?
+What did you do yesterday ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SBARQ (WHNP (WP What)) (SQ (VBD did) (NP (PRP you)) (VP (VBP do) (NP (NN yesterday)))) (. ?))
+
+(SBARQ+do (WHNP+What (WP What))
+          (SQ+do (VBD did)
+                 (NP+you (PRP you))
+                 (VP+do (VBP do)
+                        (NP+yesterday (NN yesterday))))
+          (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+What did you do yesterday ?
+1 4 # What do
+2 4 # did do
+3 4 # you do
+4 -1 # do *TOP*
+5 4 # yesterday do
+6 4 # ? do
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+tuuka jita empo ya'a-k ?
+yesterday what 2SG do-PST ?
+
+1 1 # tuuka yesterday
+2 2 # jita what
+3 3 # empo 2SG
+4 4 # ya'a-k do-PST
+ 4.1 4.1 # ya'a do
+ 4.2 4.2 # -k -PST
+5 5 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+yesterday what 2SG do-PST ?
+What did you do yesterday ?
+
+1 5 # yesterday yesterday
+2 1 # what What
+3 3 # 2SG you
+4 4 # do-PST do
+ 4.1 4 # do do
+ 4.2 0 # -PST NULL
+5 6 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+tuuka jita empo ya'a-k ?
+yesterday what 2SG do-PST ?
+What did you do yesterday ?
+
+1 4 # tuuka ya'a-k
+2 4 # jita ya'a-k
+3 4 # empo ya'a-k
+4 -1 # ya'a-k *TOP*
+5 4 # ? ya'a-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24207 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=8
+Diana chu'u-ta ibakta-kai a-muk-tua-k .
+Diana dog-NNOM.SG embrace-SUB 3NNOM.SG-die-CAUS-PST .
+Diana embracing the dog left it dead .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (S (NP (NNP Diana)) (VP (VBG embracing) (NP (DT the) (NNP dog)))) (VP (VBN left) (S (NP (PRP it)) (ADJP (JJ dead)))) (. .))
+
+(S+left (S+embracing (NP+Diana (NNP Diana))
+                     (VP+embracing (VBG embracing)
+                                   (NP+dog (DT the)
+                                           (NNP dog))))
+        (VP+left (VBN left)
+                 (S+dead (NP+it (PRP it))
+                         (ADJP+dead (JJ dead))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Diana embracing the dog left it dead .
+1 2 # Diana embracing
+2 5 # embracing left
+3 4 # the dog
+4 2 # dog embracing
+5 -1 # left *TOP*
+6 7 # it dead
+7 5 # dead left
+8 5 # . left
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Diana chu'u-ta ibakta-kai a-muk-tua-k .
+Diana dog-NNOM.SG embrace-SUB 3NNOM.SG-die-CAUS-PST .
+
+1 1 # Diana Diana
+2 2 # chu'u-ta dog-NNOM.SG
+ 2.1 2.1 # chu'u dog
+ 2.2 2.2 # -ta -NNOM.SG
+3 3 # ibakta-kai embrace-SUB
+ 3.1 3.1 # ibakta embrace
+ 3.2 3.2 # -kai -SUB
+4 4 # a-muk-tua-k 3NNOM.SG-die-CAUS-PST
+ 4.1 4.1 # a 3NNOM.SG
+ 4.2 4.2 # -muk -die
+ 4.3 4.3 # -tua -CAUS
+ 4.4 4.4 # -k -PST
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Diana dog-NNOM.SG embrace-SUB 3NNOM.SG-die-CAUS-PST .
+Diana embracing the dog left it dead .
+
+1 1 # Diana Diana
+2 4 # dog-NNOM.SG dog
+ 2.1 4 # dog dog
+ 2.2 0 # -NNOM.SG NULL
+3 0 # embrace-SUB NULL
+ 3.1 0 # embrace NULL
+ 3.2 0 # -SUB NULL
+4 0 # 3NNOM.SG-die-CAUS-PST NULL
+ 4.1 0 # 3NNOM.SG NULL
+ 4.2 0 # -die NULL
+ 4.3 0 # -CAUS NULL
+ 4.4 0 # -PST NULL
+5 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Diana chu'u-ta ibakta-kai a-muk-tua-k .
+Diana dog-NNOM.SG embrace-SUB 3NNOM.SG-die-CAUS-PST .
+Diana embracing the dog left it dead .
+
+1 4 # Diana a-muk-tua-k
+2 4 # chu'u-ta a-muk-tua-k
+3 4 # ibakta-kai a-muk-tua-k
+4 -2 # a-muk-tua-k NULL
+5 4 # . a-muk-tua-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24208 Url_id=2369 flag=0 cleaned=3 src_leng=7 trans_leng=8
+Joan tuuka buika-k into yooko yi'i-bae .
+John yesterday sing-PST and tomorrow dance-INTT .
+John sang yesterday and will dance tomorrow .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP John)) (VP (VP (VBD sang) (NP (NN yesterday))) (CC and) (VP (MD will) (VP (VB dance) (NP (NN tomorrow))))) (. .))
+
+(S+dance (NP+John (NNP John))
+         (VP+dance (VP+sang (VBD sang)
+                            (NP+yesterday (NN yesterday)))
+                   (CC and)
+                   (VP+dance (MD will)
+                             (VP+dance (VB dance)
+                                       (NP+tomorrow (NN tomorrow)))))
+         (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John sang yesterday and will dance tomorrow .
+1 6 # John dance
+2 6 # sang dance
+3 2 # yesterday sang
+4 6 # and dance
+5 6 # will dance
+6 -1 # dance *TOP*
+7 6 # tomorrow dance
+8 6 # . dance
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan tuuka buika-k into yooko yi'i-bae .
+John yesterday sing-PST and tomorrow dance-INTT .
+
+1 1 # Joan John
+2 2 # tuuka yesterday
+3 3 # buika-k sing-PST
+ 3.1 3.1 # buika sing
+ 3.2 3.2 # -k -PST
+4 4 # into and
+5 5 # yooko tomorrow
+6 6 # yi'i-bae dance-INTT
+ 6.1 6.1 # yi'i dance
+ 6.2 6.2 # -bae -INTT
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John yesterday sing-PST and tomorrow dance-INTT .
+John sang yesterday and will dance tomorrow .
+
+1 1 # John John
+2 3 # yesterday yesterday
+3 2 # sing-PST sang
+ 3.1 2 # sing sang
+ 3.2 0 # -PST NULL
+4 4 # and and
+5 7 # tomorrow tomorrow
+6 6 # dance-INTT dance
+ 6.1 6 # dance dance
+ 6.2 0 # -INTT NULL
+7 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan tuuka buika-k into yooko yi'i-bae .
+John yesterday sing-PST and tomorrow dance-INTT .
+John sang yesterday and will dance tomorrow .
+
+1 6 # Joan yi'i-bae
+2 3 # tuuka buika-k
+3 6 # buika-k yi'i-bae
+4 6 # into yi'i-bae
+5 6 # yooko yi'i-bae
+6 -1 # yi'i-bae *TOP*
+7 6 # . yi'i-bae
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24209 Url_id=2369 flag=0 cleaned=3 src_leng=8 trans_leng=8
+Jabe-ta bicha-kai jabe-ta into jikaja-k ju Peo ?
+Who-NNOM.SG see-SUB who-NNOM.SG and hear-PST DET Peter ?
+Who does Peter saw and who does ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SBARQ (SBARQ (WHNP (WP Who)) (SQ (VBZ does) (NP (NNP Peter)) (VP (VBD saw)))) (CC and) (WHNP (WP who)) (SQ (VP (VBZ does))) (. ?))
+
+(SBARQ+does (SBARQ+saw (WHNP+Who (WP Who))
+                       (SQ+saw (VBZ does)
+                               (NP+Peter (NNP Peter))
+                               (VP+saw (VBD saw))))
+            (CC and)
+            (WHNP+who (WP who))
+            (SQ+does (VP+does (VBZ does)))
+            (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Who does Peter saw and who does ?
+1 4 # Who saw
+2 4 # does saw
+3 4 # Peter saw
+4 7 # saw does
+5 7 # and does
+6 7 # who does
+7 -1 # does *TOP*
+8 7 # ? does
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Jabe-ta bicha-kai jabe-ta into jikaja-k ju Peo ?
+Who-NNOM.SG see-SUB who-NNOM.SG and hear-PST DET Peter ?
+
+1 1 # Jabe-ta Who-NNOM.SG
+ 1.1 1.1 # Jabe Who
+ 1.2 1.2 # -ta -NNOM.SG
+2 2 # bicha-kai see-SUB
+ 2.1 2.1 # bicha see
+ 2.2 2.2 # -kai -SUB
+3 3 # jabe-ta who-NNOM.SG
+ 3.1 3.1 # jabe who
+ 3.2 3.2 # -ta -NNOM.SG
+4 4 # into and
+5 5 # jikaja-k hear-PST
+ 5.1 5.1 # jikaja hear
+ 5.2 5.2 # -k -PST
+6 6 # ju DET
+7 7 # Peo Peter
+8 8 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Who-NNOM.SG see-SUB who-NNOM.SG and hear-PST DET Peter ?
+Who does Peter saw and who does ?
+
+1 1 # Who-NNOM.SG Who
+ 1.1 1 # Who Who
+ 1.2 0 # -NNOM.SG NULL
+2 4 # see-SUB saw
+ 2.1 4 # see saw
+ 2.2 0 # -SUB NULL
+3 6 # who-NNOM.SG who
+ 3.1 6 # who who
+ 3.2 0 # -NNOM.SG NULL
+4 5 # and and
+5 0 # hear-PST NULL
+ 5.1 0 # hear NULL
+ 5.2 0 # -PST NULL
+6 0 # DET NULL
+7 3 # Peter Peter
+8 8 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Jabe-ta bicha-kai jabe-ta into jikaja-k ju Peo ?
+Who-NNOM.SG see-SUB who-NNOM.SG and hear-PST DET Peter ?
+Who does Peter saw and who does ?
+
+1 2 # Jabe-ta bicha-kai
+2 7 # bicha-kai Peo
+3 7 # jabe-ta Peo
+4 7 # into Peo
+5 7 # jikaja-k Peo
+6 7 # ju Peo
+7 2 # Peo bicha-kai
+8 7 # ? Peo
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24214 Url_id=2369 flag=0 cleaned=3 src_leng=4 trans_leng=6
+inepo yoeme-m ja'abwa-k .
+1SG man-PL get.up.NNOM.PL-PST .
+I got the men up .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP got) (NP (DT the) (NNS men)) (PRT (RP up))) (. .))
+
+(S+got (NP+I (PRP I))
+       (VP+got (VBP got)
+               (NP+men (DT the)
+                       (NNS men))
+               (PRT+up (RP up)))
+       (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I got the men up .
+1 2 # I got
+2 -1 # got *TOP*
+3 4 # the men
+4 2 # men got
+5 2 # up got
+6 2 # . got
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inepo yoeme-m ja'abwa-k .
+1SG man-PL get.up.NNOM.PL-PST .
+
+1 1 # inepo 1SG
+2 2 # yoeme-m man-PL
+ 2.1 2.1 # yoeme man
+ 2.2 2.2 # -m -PL
+3 3 # ja'abwa-k get.up.NNOM.PL-PST
+ 3.1 3.1 # ja'abwa get.up.NNOM.PL
+ 3.2 3.2 # -k -PST
+4 4 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG man-PL get.up.NNOM.PL-PST .
+I got the men up .
+
+1 1 # 1SG I
+2 4 # man-PL men
+ 2.1 4 # man men
+ 2.2 0 # -PL NULL
+3 5 # get.up.NNOM.PL-PST up
+ 3.1 5 # get.up.NNOM.PL up
+ 3.2 0 # -PST NULL
+4 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inepo yoeme-m ja'abwa-k .
+1SG man-PL get.up.NNOM.PL-PST .
+I got the men up .
+
+1 3 # inepo ja'abwa-k
+2 3 # yoeme-m ja'abwa-k
+3 -2 # ja'abwa-k NULL
+4 3 # . ja'abwa-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24217 Url_id=2369 flag=0 cleaned=3 src_leng=7 trans_leng=11
+inepo yoem-ta kecha-k into usi-ta kecha-k .
+1SG man-NNOM.SG get.up.NNOM.SG-PST and child-NNOM.SG get.up.SG-PST .
+I get up the man and get up the child .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VP (VB get) (PRT (RP up)) (NP (DT the) (NN man))) (CC and) (VP (VB get) (PRT (RP up)) (NP (DT the) (NN child)))) (. .))
+
+(S+get (NP+I (PRP I))
+       (VP+get (VP+get (VB get)
+                       (PRT+up (RP up))
+                       (NP+man (DT the)
+                               (NN man)))
+               (CC and)
+               (VP+get (VB get)
+                       (PRT+up (RP up))
+                       (NP+child (DT the)
+                                 (NN child))))
+       (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I get up the man and get up the child .
+1 7 # I get
+2 7 # get get
+3 2 # up get
+4 5 # the man
+5 2 # man get
+6 7 # and get
+7 -1 # get *TOP*
+8 7 # up get
+9 10 # the child
+10 7 # child get
+11 7 # . get
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inepo yoem-ta kecha-k into usi-ta kecha-k .
+1SG man-NNOM.SG get.up.NNOM.SG-PST and child-NNOM.SG get.up.SG-PST .
+
+1 1 # inepo 1SG
+2 2 # yoem-ta man-NNOM.SG
+ 2.1 2.1 # yoem man
+ 2.2 2.2 # -ta -NNOM.SG
+3 3 # kecha-k get.up.NNOM.SG-PST
+ 3.1 3.1 # kecha get.up.NNOM.SG
+ 3.2 3.2 # -k -PST
+4 4 # into and
+5 5 # usi-ta child-NNOM.SG
+ 5.1 5.1 # usi child
+ 5.2 5.2 # -ta -NNOM.SG
+6 6 # kecha-k get.up.SG-PST
+ 6.1 6.1 # kecha get.up.SG
+ 6.2 6.2 # -k -PST
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG man-NNOM.SG get.up.NNOM.SG-PST and child-NNOM.SG get.up.SG-PST .
+I get up the man and get up the child .
+
+1 1 # 1SG I
+2 5 # man-NNOM.SG man
+ 2.1 5 # man man
+ 2.2 0 # -NNOM.SG NULL
+3 2,3 # get.up.NNOM.SG-PST get,up
+ 3.1 2,3 # get.up.NNOM.SG get,up
+ 3.2 0 # -PST NULL
+4 6 # and and
+5 10 # child-NNOM.SG child
+ 5.1 10 # child child
+ 5.2 0 # -NNOM.SG NULL
+6 7,8 # get.up.SG-PST get,up
+ 6.1 7,8 # get.up.SG get,up
+ 6.2 0 # -PST NULL
+7 11 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inepo yoem-ta kecha-k into usi-ta kecha-k .
+1SG man-NNOM.SG get.up.NNOM.SG-PST and child-NNOM.SG get.up.SG-PST .
+I get up the man and get up the child .
+
+1 6 # inepo kecha-k
+2 3 # yoem-ta kecha-k
+3 6 # kecha-k kecha-k
+4 6 # into kecha-k
+5 6 # usi-ta kecha-k
+6 -1 # kecha-k *TOP*
+7 6 # . kecha-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24218 Url_id=2369 flag=0 cleaned=3 src_leng=7 trans_leng=7
+inepo yoem-ta kecha-k into usi-ta kechia .
+1SG man-NNOM.SG get.up.SG.OBJ-PST and child-NNOM.SG too .
+I get up the man and .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP get) (PRT (RP up)) (NP (DT the) (NX (NX (NN man)) (CC and)))) (. .))
+
+(S+get (NP+I (PRP I))
+       (VP+get (VBP get)
+               (PRT+up (RP up))
+               (NP+man (DT the)
+                       (NX+man (NX+man (NN man))
+                               (CC and))))
+       (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I get up the man and .
+1 2 # I get
+2 -1 # get *TOP*
+3 2 # up get
+4 5 # the man
+5 2 # man get
+6 5 # and man
+7 2 # . get
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inepo yoem-ta kecha-k into usi-ta kechia .
+1SG man-NNOM.SG get.up.SG.OBJ-PST and child-NNOM.SG too .
+
+1 1 # inepo 1SG
+2 2 # yoem-ta man-NNOM.SG
+ 2.1 2.1 # yoem man
+ 2.2 2.2 # -ta -NNOM.SG
+3 3 # kecha-k get.up.SG.OBJ-PST
+ 3.1 3.1 # kecha get.up.SG.OBJ
+ 3.2 3.2 # -k -PST
+4 4 # into and
+5 5 # usi-ta child-NNOM.SG
+ 5.1 5.1 # usi child
+ 5.2 5.2 # -ta -NNOM.SG
+6 6 # kechia too
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG man-NNOM.SG get.up.SG.OBJ-PST and child-NNOM.SG too .
+I get up the man and .
+
+1 1 # 1SG I
+2 5 # man-NNOM.SG man
+ 2.1 5 # man man
+ 2.2 0 # -NNOM.SG NULL
+3 2,3 # get.up.SG.OBJ-PST get,up
+ 3.1 2,3 # get.up.SG.OBJ get,up
+ 3.2 0 # -PST NULL
+4 6 # and and
+5 0 # child-NNOM.SG NULL
+ 5.1 0 # child NULL
+ 5.2 0 # -NNOM.SG NULL
+6 0 # too NULL
+7 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inepo yoem-ta kecha-k into usi-ta kechia .
+1SG man-NNOM.SG get.up.SG.OBJ-PST and child-NNOM.SG too .
+I get up the man and .
+
+1 3 # inepo kecha-k
+2 3 # yoem-ta kecha-k
+3 -1 # kecha-k *TOP*
+4 2 # into yoem-ta
+5 3 # usi-ta kecha-k
+6 3 # kechia kecha-k
+7 3 # . kecha-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24219 Url_id=2369 flag=0 cleaned=0 src_leng=3 trans_leng=5
+inepo maeche'eta-m ja'abwa-k
+1SG machete-PL put.up.PL.OBJ-PST
+I put up the machetes
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP put) (PRT (RP up)) (NP (DT the) (NNS machetes))))
+
+(S+put (NP+I (PRP I))
+       (VP+put (VBP put)
+               (PRT+up (RP up))
+               (NP+machetes (DT the)
+                            (NNS machetes))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I put up the machetes
+1 2 # I put
+2 -1 # put *TOP*
+3 2 # up put
+4 5 # the machetes
+5 2 # machetes put
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inepo maeche'eta-m ja'abwa-k
+1SG machete-PL put.up.PL.OBJ-PST
+
+1 1 # inepo 1SG
+2 2 # maeche'eta-m machete-PL
+ 2.1 2.1 # maeche'eta machete
+ 2.2 2.2 # -m -PL
+3 3 # ja'abwa-k put.up.PL.OBJ-PST
+ 3.1 3.1 # ja'abwa put.up.PL.OBJ
+ 3.2 3.2 # -k -PST
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG machete-PL put.up.PL.OBJ-PST
+I put up the machetes
+
+1 1 # 1SG I
+2 5 # machete-PL machetes
+ 2.1 5 # machete machetes
+ 2.2 0 # -PL NULL
+3 2,3 # put.up.PL.OBJ-PST put,up
+ 3.1 2,3 # put.up.PL.OBJ put,up
+ 3.2 0 # -PST NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inepo maeche'eta-m ja'abwa-k
+1SG machete-PL put.up.PL.OBJ-PST
+I put up the machetes
+
+1 3 # inepo ja'abwa-k
+2 3 # maeche'eta-m ja'abwa-k
+3 -1 # ja'abwa-k *TOP*
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24221 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=9
+inepo mache'eta-m into kuchi'i-m ja'abwa-k .
+1SG machete-PL and knife-PL put.up.PL.OBJ-PST .
+I put up the machetes and the knifes .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP put) (PRT (RP up)) (NP (NP (DT the) (NNS machetes)) (CC and) (NP (DT the) (NNS knifes)))) (. .))
+
+(S+put (NP+I (PRP I))
+       (VP+put (VBP put)
+               (PRT+up (RP up))
+               (NP+knifes (NP+machetes (DT the)
+                                       (NNS machetes))
+                          (CC and)
+                          (NP+knifes (DT the)
+                                     (NNS knifes))))
+       (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I put up the machetes and the knifes .
+1 2 # I put
+2 -1 # put *TOP*
+3 2 # up put
+4 5 # the machetes
+5 8 # machetes knifes
+6 8 # and knifes
+7 8 # the knifes
+8 2 # knifes put
+9 2 # . put
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inepo mache'eta-m into kuchi'i-m ja'abwa-k .
+1SG machete-PL and knife-PL put.up.PL.OBJ-PST .
+
+1 1 # inepo 1SG
+2 2 # mache'eta-m machete-PL
+ 2.1 2.1 # mache'eta machete
+ 2.2 2.2 # -m -PL
+3 3 # into and
+4 4 # kuchi'i-m knife-PL
+ 4.1 4.1 # kuchi'i knife
+ 4.2 4.2 # -m -PL
+5 5 # ja'abwa-k put.up.PL.OBJ-PST
+ 5.1 5.1 # ja'abwa put.up.PL.OBJ
+ 5.2 5.2 # -k -PST
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG machete-PL and knife-PL put.up.PL.OBJ-PST .
+I put up the machetes and the knifes .
+
+1 1 # 1SG I
+2 5 # machete-PL machetes
+ 2.1 5 # machete machetes
+ 2.2 0 # -PL NULL
+3 6 # and and
+4 8 # knife-PL knifes
+ 4.1 8 # knife knifes
+ 4.2 0 # -PL NULL
+5 2,3 # put.up.PL.OBJ-PST put,up
+ 5.1 2,3 # put.up.PL.OBJ put,up
+ 5.2 0 # -PST NULL
+6 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inepo mache'eta-m into kuchi'i-m ja'abwa-k .
+1SG machete-PL and knife-PL put.up.PL.OBJ-PST .
+I put up the machetes and the knifes .
+
+1 5 # inepo ja'abwa-k
+2 4 # mache'eta-m kuchi'i-m
+3 4 # into kuchi'i-m
+4 5 # kuchi'i-m ja'abwa-k
+5 -1 # ja'abwa-k *TOP*
+6 5 # . ja'abwa-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24985 Url_id=2369 flag=0 cleaned=8 src_leng=9 trans_leng=10
+ili jamut yepsa-kai , jichikia-ta nu'u-kai , jichik-taite-k .
+small woman arrive-SUB , broom-NNOM.SG take-SUB , sweep-INC-PST .
+The young woman arrived , she took the broom .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (S (NP (DT The) (JJ young) (NN woman)) (VP (VBD arrived))) (, ,) (NP (PRP she)) (VP (VBD took) (NP (DT the) (NN broom))) (. .))
+
+(S+took (S+arrived (NP+woman (DT The)
+                             (JJ young)
+                             (NN woman))
+                   (VP+arrived (VBD arrived)))
+        (, ,)
+        (NP+she (PRP she))
+        (VP+took (VBD took)
+                 (NP+broom (DT the)
+                           (NN broom)))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The young woman arrived , she took the broom .
+1 3 # The woman
+2 3 # young woman
+3 4 # woman arrived
+4 7 # arrived took
+5 7 # , took
+6 7 # she took
+7 -1 # took *TOP*
+8 9 # the broom
+9 7 # broom took
+10 7 # . took
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+ili jamut yepsa-kai , jichikia-ta nu'u-kai , jichik-taite-k .
+small woman arrive-SUB , broom-NNOM.SG take-SUB , sweep-INC-PST .
+
+1 1 # ili small
+2 2 # jamut woman
+3 3 # yepsa-kai arrive-SUB
+ 3.1 3.1 # yepsa arrive
+ 3.2 3.2 # -kai -SUB
+4 4 # , ,
+5 5 # jichikia-ta broom-NNOM.SG
+ 5.1 5.1 # jichikia broom
+ 5.2 5.2 # -ta -NNOM.SG
+6 6 # nu'u-kai take-SUB
+ 6.1 6.1 # nu'u take
+ 6.2 6.2 # -kai -SUB
+7 7 # , ,
+8 8 # jichik-taite-k sweep-INC-PST
+ 8.1 8.1 # jichik sweep
+ 8.2 8.2 # -taite -INC
+ 8.3 8.3 # -k -PST
+9 9 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+small woman arrive-SUB , broom-NNOM.SG take-SUB , sweep-INC-PST .
+The young woman arrived , she took the broom .
+
+1 0 # small NULL
+2 3 # woman woman
+3 4 # arrive-SUB arrived
+ 3.1 4 # arrive arrived
+ 3.2 0 # -SUB NULL
+4 5 # , ,
+5 9 # broom-NNOM.SG broom
+ 5.1 9 # broom broom
+ 5.2 0 # -NNOM.SG NULL
+6 7 # take-SUB took
+ 6.1 7 # take took
+ 6.2 0 # -SUB NULL
+7 5 # , ,
+8 0 # sweep-INC-PST NULL
+ 8.1 0 # sweep NULL
+ 8.2 0 # -INC NULL
+ 8.3 0 # -PST NULL
+9 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+ili jamut yepsa-kai , jichikia-ta nu'u-kai , jichik-taite-k .
+small woman arrive-SUB , broom-NNOM.SG take-SUB , sweep-INC-PST .
+The young woman arrived , she took the broom .
+
+1 6 # ili nu'u-kai
+2 3 # jamut yepsa-kai
+3 6 # yepsa-kai nu'u-kai
+4 6 # , nu'u-kai
+5 6 # jichikia-ta nu'u-kai
+6 -1 # nu'u-kai *TOP*
+7 6 # , nu'u-kai
+8 6 # jichik-taite-k nu'u-kai
+9 6 # . nu'u-kai
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24986 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=10
+Ruben ejkuela-po am-to'o-siika jume ji'osia-m .
+Ruben school-LOC 3NNOM.PL-leave-go.PST DET.PL book-PL .
+Ruben left the books in the school and left .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Ruben)) (VP (VP (VBD left) (NP (DT the) (NNS books)) (PP (IN in) (NP (DT the) (NN school)))) (CC and) (VP (VBD left))) (. .))
+
+(S+left (NP+Ruben (NNP Ruben))
+        (VP+left (VP+left (VBD left)
+                          (NP+books (DT the)
+                                    (NNS books))
+                          (PP+in (IN in)
+                                 (NP+school (DT the)
+                                            (NN school))))
+                 (CC and)
+                 (VP+left (VBD left)))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Ruben left the books in the school and left .
+1 9 # Ruben left
+2 9 # left left
+3 4 # the books
+4 2 # books left
+5 2 # in left
+6 7 # the school
+7 5 # school in
+8 9 # and left
+9 -1 # left *TOP*
+10 9 # . left
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ruben ejkuela-po am-to'o-siika jume ji'osia-m .
+Ruben school-LOC 3NNOM.PL-leave-go.PST DET.PL book-PL .
+
+1 1 # Ruben Ruben
+2 2 # ejkuela-po school-LOC
+ 2.1 2.1 # ejkuela school
+ 2.2 2.2 # -po -LOC
+3 3 # am-to'o-siika 3NNOM.PL-leave-go.PST
+ 3.1 3.1 # am 3NNOM.PL
+ 3.2 3.2 # -to'o -leave
+ 3.3 3.3 # -siika -go.PST
+4 4 # jume DET.PL
+5 5 # ji'osia-m book-PL
+ 5.1 5.1 # ji'osia book
+ 5.2 5.2 # -m -PL
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Ruben school-LOC 3NNOM.PL-leave-go.PST DET.PL book-PL .
+Ruben left the books in the school and left .
+
+1 1 # Ruben Ruben
+2 7 # school-LOC school
+ 2.1 7 # school school
+ 2.2 0 # -LOC NULL
+3 2 # 3NNOM.PL-leave-go.PST left
+ 3.1 0 # 3NNOM.PL NULL
+ 3.2 2 # -leave left
+ 3.3 0 # -go.PST NULL
+4 3 # DET.PL the
+5 4 # book-PL books
+ 5.1 4 # book books
+ 5.2 0 # -PL NULL
+6 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ruben ejkuela-po am-to'o-siika jume ji'osia-m .
+Ruben school-LOC 3NNOM.PL-leave-go.PST DET.PL book-PL .
+Ruben left the books in the school and left .
+
+1 5 # Ruben ji'osia-m
+2 3 # ejkuela-po am-to'o-siika
+3 5 # am-to'o-siika ji'osia-m
+4 5 # jume ji'osia-m
+5 3 # ji'osia-m am-to'o-siika
+6 5 # . ji'osia-m
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24990 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=9
+Kaba'i into buuru ousi bwe-bwere-m .
+Horse and donkey very RED-big-PL .
+The horse and the donkey are really big .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NP (DT The) (NNP horse)) (CC and) (NP (DT the) (NNP donkey))) (VP (VBP are) (ADJP (RB really) (JJ big))) (. .))
+
+(S+big (NP+donkey (NP+horse (DT The)
+                            (NNP horse))
+                  (CC and)
+                  (NP+donkey (DT the)
+                             (NNP donkey)))
+       (VP+big (VBP are)
+               (ADJP-PRD+big (RB really)
+                             (JJ big)))
+       (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The horse and the donkey are really big .
+1 2 # The horse
+2 5 # horse donkey
+3 5 # and donkey
+4 5 # the donkey
+5 8 # donkey big
+6 8 # are big
+7 8 # really big
+8 -1 # big *TOP*
+9 8 # . big
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Kaba'i into buuru ousi bwe-bwere-m .
+Horse and donkey very RED-big-PL .
+
+1 1 # Kaba'i Horse
+2 2 # into and
+3 3 # buuru donkey
+4 4 # ousi very
+5 5 # bwe-bwere-m RED-big-PL
+ 5.1 5.1 # bwe RED
+ 5.2 5.2 # -bwere -big
+ 5.3 5.3 # -m -PL
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Horse and donkey very RED-big-PL .
+The horse and the donkey are really big .
+
+1 2 # Horse horse
+2 3 # and and
+3 5 # donkey donkey
+4 0 # very NULL
+5 8 # RED-big-PL big
+ 5.1 0 # RED NULL
+ 5.2 8 # -big big
+ 5.3 0 # -PL NULL
+6 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Kaba'i into buuru ousi bwe-bwere-m .
+Horse and donkey very RED-big-PL .
+The horse and the donkey are really big .
+
+1 3 # Kaba'i buuru
+2 3 # into buuru
+3 5 # buuru bwe-bwere-m
+4 5 # ousi bwe-bwere-m
+5 -1 # bwe-bwere-m *TOP*
+6 5 # . bwe-bwere-m
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24991 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=8
+Joan torim-po into bicam-po tekipanoa .
+John Torim-LOC and Vicam-LOC work.PRS .
+John works in Torim and in Vicam .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP John)) (VP (VBZ works) (PP (PP (IN in) (NP (NNP Torim))) (CC and) (PP (IN in) (NP (NNP Vicam))))) (. .))
+
+(S+works (NP+John (NNP John))
+         (VP+works (VBZ works)
+                   (PP+in (PP+in (IN in)
+                                 (NP+Torim (NNP Torim)))
+                          (CC and)
+                          (PP+in (IN in)
+                                 (NP+Vicam (NNP Vicam)))))
+         (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John works in Torim and in Vicam .
+1 2 # John works
+2 -1 # works *TOP*
+3 2 # in works
+4 3 # Torim in
+5 3 # and in
+6 3 # in in
+7 6 # Vicam in
+8 2 # . works
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan torim-po into bicam-po tekipanoa .
+John Torim-LOC and Vicam-LOC work.PRS .
+
+1 1 # Joan John
+2 2 # torim-po Torim-LOC
+ 2.1 2.1 # torim Torim
+ 2.2 2.2 # -po -LOC
+3 3 # into and
+4 4 # bicam-po Vicam-LOC
+ 4.1 4.1 # bicam Vicam
+ 4.2 4.2 # -po -LOC
+5 5 # tekipanoa work.PRS
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John Torim-LOC and Vicam-LOC work.PRS .
+John works in Torim and in Vicam .
+
+1 1 # John John
+2 4 # Torim-LOC Torim
+ 2.1 4 # Torim Torim
+ 2.2 0 # -LOC NULL
+3 5 # and and
+4 7 # Vicam-LOC Vicam
+ 4.1 7 # Vicam Vicam
+ 4.2 0 # -LOC NULL
+5 2 # work.PRS works
+6 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan torim-po into bicam-po tekipanoa .
+John Torim-LOC and Vicam-LOC work.PRS .
+John works in Torim and in Vicam .
+
+1 5 # Joan tekipanoa
+2 5 # torim-po tekipanoa
+3 5 # into tekipanoa
+4 5 # bicam-po tekipanoa
+5 -1 # tekipanoa *TOP*
+6 5 # . tekipanoa
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24992 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=5
+Joan bicha into jikkaja .
+John see.PRS and hear.PRS .
+Juan sees and hears .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Juan)) (VP (VBZ sees) (CC and) (VBZ hears)) (. .))
+
+(S+hears (NP+Juan (NNP Juan))
+         (VP+hears (VBZ sees)
+                   (CC and)
+                   (VBZ hears))
+         (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Juan sees and hears .
+1 4 # Juan hears
+2 4 # sees hears
+3 4 # and hears
+4 -1 # hears *TOP*
+5 4 # . hears
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan bicha into jikkaja .
+John see.PRS and hear.PRS .
+
+1 1 # Joan John
+2 2 # bicha see.PRS
+3 3 # into and
+4 4 # jikkaja hear.PRS
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John see.PRS and hear.PRS .
+Juan sees and hears .
+
+1 0 # John NULL
+2 2 # see.PRS sees
+3 3 # and and
+4 4 # hear.PRS hears
+5 5 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan bicha into jikkaja .
+John see.PRS and hear.PRS .
+Juan sees and hears .
+
+1 4 # Joan jikkaja
+2 4 # bicha jikkaja
+3 4 # into jikkaja
+4 -1 # jikkaja *TOP*
+5 4 # . jikkaja
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24993 Url_id=2369 flag=0 cleaned=3 src_leng=7 trans_leng=6
+Peo jita jinu into jita nenka .
+Peter something buy.PRS and something sell.PRS .
+Pedro buys and sells something .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Pedro)) (VP (VBZ buys) (CC and) (VBZ sells) (NP (NN something))) (. .))
+
+(S+sells (NP+Pedro (NNP Pedro))
+         (VP+sells (VBZ buys)
+                   (CC and)
+                   (VBZ sells)
+                   (NP+something (NN something)))
+         (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Pedro buys and sells something .
+1 4 # Pedro sells
+2 4 # buys sells
+3 4 # and sells
+4 -1 # sells *TOP*
+5 4 # something sells
+6 4 # . sells
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Peo jita jinu into jita nenka .
+Peter something buy.PRS and something sell.PRS .
+
+1 1 # Peo Peter
+2 2 # jita something
+3 3 # jinu buy.PRS
+4 4 # into and
+5 5 # jita something
+6 6 # nenka sell.PRS
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Peter something buy.PRS and something sell.PRS .
+Pedro buys and sells something .
+
+1 0 # Peter NULL
+2 5 # something something
+3 2 # buy.PRS buys
+4 3 # and and
+5 5 # something something
+6 4 # sell.PRS sells
+7 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Peo jita jinu into jita nenka .
+Peter something buy.PRS and something sell.PRS .
+Pedro buys and sells something .
+
+1 6 # Peo nenka
+2 6 # jita nenka
+3 6 # jinu nenka
+4 6 # into nenka
+5 6 # jita nenka
+6 -1 # nenka *TOP*
+7 6 # . nenka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24995 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=7
+Nee jo'ara-u lunes-tu-k siika .
+1SG house-DIR Monday-VERB-when go.PST .
+I went to the home Monday .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBD went) (PP (TO to) (NP (DT the) (NN home))) (NP (NNP Monday))) (. .))
+
+(S+went (NP+I (PRP I))
+        (VP+went (VBD went)
+                 (PP+to (TO to)
+                        (NP+home (DT the)
+                                 (NN home)))
+                 (NP+Monday (NNP Monday)))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I went to the home Monday .
+1 2 # I went
+2 -1 # went *TOP*
+3 2 # to went
+4 5 # the home
+5 3 # home to
+6 2 # Monday went
+7 2 # . went
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Nee jo'ara-u lunes-tu-k siika .
+1SG house-DIR Monday-VERB-when go.PST .
+
+1 1 # Nee 1SG
+2 2 # jo'ara-u house-DIR
+ 2.1 2.1 # jo'ara house
+ 2.2 2.2 # -u -DIR
+3 3 # lunes-tu-k Monday-VERB-when
+ 3.1 3.1 # lunes Monday
+ 3.2 3.2 # -tu -VERB
+ 3.3 3.3 # -k -when
+4 4 # siika go.PST
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG house-DIR Monday-VERB-when go.PST .
+I went to the home Monday .
+
+1 1 # 1SG I
+2 0 # house-DIR NULL
+ 2.1 0 # house NULL
+ 2.2 0 # -DIR NULL
+3 6 # Monday-VERB-when Monday
+ 3.1 6 # Monday Monday
+ 3.2 0 # -VERB NULL
+ 3.3 0 # -when NULL
+4 2 # go.PST went
+5 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Nee jo'ara-u lunes-tu-k siika .
+1SG house-DIR Monday-VERB-when go.PST .
+I went to the home Monday .
+
+1 4 # Nee siika
+2 4 # jo'ara-u siika
+3 4 # lunes-tu-k siika
+4 -1 # siika *TOP*
+5 4 # . siika
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24996 Url_id=2369 flag=0 cleaned=3 src_leng=7 trans_leng=6
+Ruben tekipanoa o matematika-m emo majta .
+Ruben work.PRS or mathematics-PL 3REFL teach.PRS .
+Ruben works or studies mathematics .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Ruben)) (VP (VBZ works) (CC or) (VBZ studies) (NP (NNS mathematics))) (. .))
+
+(S+studies (NP+Ruben (NNP Ruben))
+           (VP+studies (VBZ works)
+                       (CC or)
+                       (VBZ studies)
+                       (NP+mathematics (NNS mathematics)))
+           (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Ruben works or studies mathematics .
+1 4 # Ruben studies
+2 4 # works studies
+3 4 # or studies
+4 -1 # studies *TOP*
+5 4 # mathematics studies
+6 4 # . studies
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ruben tekipanoa o matematika-m emo majta .
+Ruben work.PRS or mathematics-PL 3REFL teach.PRS .
+
+1 1 # Ruben Ruben
+2 2 # tekipanoa work.PRS
+3 3 # o or
+4 4 # matematika-m mathematics-PL
+ 4.1 4.1 # matematika mathematics
+ 4.2 4.2 # -m -PL
+5 5 # emo 3REFL
+6 6 # majta teach.PRS
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Ruben work.PRS or mathematics-PL 3REFL teach.PRS .
+Ruben works or studies mathematics .
+
+1 1 # Ruben Ruben
+2 2 # work.PRS works
+3 3 # or or
+4 5 # mathematics-PL mathematics
+ 4.1 5 # mathematics mathematics
+ 4.2 0 # -PL NULL
+5 0 # 3REFL NULL
+6 0 # teach.PRS NULL
+7 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ruben tekipanoa o matematika-m emo majta .
+Ruben work.PRS or mathematics-PL 3REFL teach.PRS .
+Ruben works or studies mathematics .
+
+1 6 # Ruben majta
+2 6 # tekipanoa majta
+3 6 # o majta
+4 6 # matematika-m majta
+5 6 # emo majta
+6 -2 # majta NULL
+7 6 # . majta
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24997 Url_id=2369 flag=0 cleaned=3 src_leng=7 trans_leng=10
+Joan kot-pea bweytuk aapo kaa allea .
+John sleep-DES because 3SGP not happy .
+John wants to sleep because he is not happy .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP John)) (VP (VBZ wants) (S (VP (TO to) (VP (VB sleep) (SBAR (IN because) (S (NP (PRP he)) (VP (VBZ is) (ADJP (RB not) (JJ happy))))))))) (. .))
+
+(S+wants (NP+John (NNP John))
+         (VP+wants (VBZ wants)
+                   (S+sleep (VP+sleep (TO to)
+                                      (VP+sleep (VB sleep)
+                                                (SBAR+happy (IN because)
+                                                            (S+happy (NP+he (PRP he))
+                                                                     (VP+happy (VBZ is)
+                                                                               (ADJP-PRD+happy (RB not)
+                                                                                               (JJ happy)))))))))
+         (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John wants to sleep because he is not happy .
+1 2 # John wants
+2 -1 # wants *TOP*
+3 4 # to sleep
+4 2 # sleep wants
+5 9 # because happy
+6 9 # he happy
+7 9 # is happy
+8 9 # not happy
+9 4 # happy sleep
+10 2 # . wants
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan kot-pea bweytuk aapo kaa allea .
+John sleep-DES because 3SGP not happy .
+
+1 1 # Joan John
+2 2 # kot-pea sleep-DES
+ 2.1 2.1 # kot sleep
+ 2.2 2.2 # -pea -DES
+3 3 # bweytuk because
+4 4 # aapo 3SGP
+5 5 # kaa not
+6 6 # allea happy
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John sleep-DES because 3SGP not happy .
+John wants to sleep because he is not happy .
+
+1 1 # John John
+2 4 # sleep-DES sleep
+ 2.1 4 # sleep sleep
+ 2.2 0 # -DES NULL
+3 5 # because because
+4 6 # 3SGP he
+5 8 # not not
+6 9 # happy happy
+7 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan kot-pea bweytuk aapo kaa allea .
+John sleep-DES because 3SGP not happy .
+John wants to sleep because he is not happy .
+
+1 6 # Joan allea
+2 6 # kot-pea allea
+3 6 # bweytuk allea
+4 6 # aapo allea
+5 6 # kaa allea
+6 2 # allea kot-pea
+7 6 # . allea
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=24998 Url_id=2369 flag=0 cleaned=3 src_leng=7 trans_leng=10
+bweytuk aapo kaa allea Joan kot-pea .
+because 3SGP not happy John sleep-DES .
+John wants to sleep because he is not happy .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP John)) (VP (VBZ wants) (S (VP (TO to) (VP (VB sleep) (SBAR (IN because) (S (NP (PRP he)) (VP (VBZ is) (ADJP (RB not) (JJ happy))))))))) (. .))
+
+(S+wants (NP+John (NNP John))
+         (VP+wants (VBZ wants)
+                   (S+sleep (VP+sleep (TO to)
+                                      (VP+sleep (VB sleep)
+                                                (SBAR+happy (IN because)
+                                                            (S+happy (NP+he (PRP he))
+                                                                     (VP+happy (VBZ is)
+                                                                               (ADJP-PRD+happy (RB not)
+                                                                                               (JJ happy)))))))))
+         (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John wants to sleep because he is not happy .
+1 2 # John wants
+2 -1 # wants *TOP*
+3 4 # to sleep
+4 2 # sleep wants
+5 9 # because happy
+6 9 # he happy
+7 9 # is happy
+8 9 # not happy
+9 4 # happy sleep
+10 2 # . wants
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+bweytuk aapo kaa allea Joan kot-pea .
+because 3SGP not happy John sleep-DES .
+
+1 1 # bweytuk because
+2 2 # aapo 3SGP
+3 3 # kaa not
+4 4 # allea happy
+5 5 # Joan John
+6 6 # kot-pea sleep-DES
+ 6.1 6.1 # kot sleep
+ 6.2 6.2 # -pea -DES
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+because 3SGP not happy John sleep-DES .
+John wants to sleep because he is not happy .
+
+1 5 # because because
+2 6 # 3SGP he
+3 8 # not not
+4 9 # happy happy
+5 1 # John John
+6 4 # sleep-DES sleep
+ 6.1 4 # sleep sleep
+ 6.2 0 # -DES NULL
+7 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+bweytuk aapo kaa allea Joan kot-pea .
+because 3SGP not happy John sleep-DES .
+John wants to sleep because he is not happy .
+
+1 4 # bweytuk allea
+2 4 # aapo allea
+3 4 # kaa allea
+4 6 # allea kot-pea
+5 6 # Joan kot-pea
+6 -2 # kot-pea NULL
+7 6 # . kot-pea
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25000 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=8
+Paulina bemela-k bicha-k into teebe-k .
+Paulina young-NNOM.SG see-PST and tall-PST .
+Paulina saw the young and the tall .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Paulina)) (VP (VBD saw) (NP (NP (DT the) (JJ young)) (CC and) (NP (DT the) (JJ tall)))) (. .))
+
+(S+saw (NP+Paulina (NNP Paulina))
+       (VP+saw (VBD saw)
+               (NP+tall (NP+young (DT the)
+                                  (JJ young))
+                        (CC and)
+                        (NP+tall (DT the)
+                                 (JJ tall))))
+       (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Paulina saw the young and the tall .
+1 2 # Paulina saw
+2 -1 # saw *TOP*
+3 4 # the young
+4 7 # young tall
+5 7 # and tall
+6 7 # the tall
+7 2 # tall saw
+8 2 # . saw
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Paulina bemela-k bicha-k into teebe-k .
+Paulina young-NNOM.SG see-PST and tall-PST .
+
+1 1 # Paulina Paulina
+2 2 # bemela-k young-NNOM.SG
+ 2.1 2.1 # bemela young
+ 2.2 2.2 # -k -NNOM.SG
+3 3 # bicha-k see-PST
+ 3.1 3.1 # bicha see
+ 3.2 3.2 # -k -PST
+4 4 # into and
+5 5 # teebe-k tall-PST
+ 5.1 5.1 # teebe tall
+ 5.2 5.2 # -k -PST
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Paulina young-NNOM.SG see-PST and tall-PST .
+Paulina saw the young and the tall .
+
+1 1 # Paulina Paulina
+2 4 # young-NNOM.SG young
+ 2.1 4 # young young
+ 2.2 0 # -NNOM.SG NULL
+3 2 # see-PST saw
+ 3.1 2 # see saw
+ 3.2 0 # -PST NULL
+4 5 # and and
+5 7 # tall-PST tall
+ 5.1 7 # tall tall
+ 5.2 0 # -PST NULL
+6 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Paulina bemela-k bicha-k into teebe-k .
+Paulina young-NNOM.SG see-PST and tall-PST .
+Paulina saw the young and the tall .
+
+1 3 # Paulina bicha-k
+2 5 # bemela-k teebe-k
+3 -1 # bicha-k *TOP*
+4 5 # into teebe-k
+5 3 # teebe-k bicha-k
+6 3 # . bicha-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25001 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=6
+María into Peo nau saja-k .
+Mary and Peter together go.PL-PST .
+Mary and Peter left together .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Mary) (CC and) (NNP Peter)) (VP (VBN left) (ADVP (RB together))) (. .))
+
+(S+left (NP+Peter (NNP Mary)
+                  (CC and)
+                  (NNP Peter))
+        (VP+left (VBN left)
+                 (ADVP+together (RB together)))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Mary and Peter left together .
+1 3 # Mary Peter
+2 3 # and Peter
+3 4 # Peter left
+4 -1 # left *TOP*
+5 4 # together left
+6 4 # . left
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+María into Peo nau saja-k .
+Mary and Peter together go.PL-PST .
+
+1 1 # María Mary
+2 2 # into and
+3 3 # Peo Peter
+4 4 # nau together
+5 5 # saja-k go.PL-PST
+ 5.1 5.1 # saja go.PL
+ 5.2 5.2 # -k -PST
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Mary and Peter together go.PL-PST .
+Mary and Peter left together .
+
+1 1 # Mary Mary
+2 2 # and and
+3 3 # Peter Peter
+4 5 # together together
+5 0 # go.PL-PST NULL
+ 5.1 0 # go.PL NULL
+ 5.2 0 # -PST NULL
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+María into Peo nau saja-k .
+Mary and Peter together go.PL-PST .
+Mary and Peter left together .
+
+1 3 # María Peo
+2 3 # into Peo
+3 5 # Peo saja-k
+4 5 # nau saja-k
+5 -2 # saja-k NULL
+6 5 # . saja-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25015 Url_id=2369 flag=0 cleaned=3 src_leng=4 trans_leng=6
+Jita-po bempo tekipanoa ?
+What-LOC 3PL work.PRS ?
+What do they work on ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SBARQ (WHNP (WP What)) (SQ (VBP do) (NP (PRP they)) (VP (VB work) (PRT (RP on)))) (. ?))
+
+(SBARQ+work (WHNP+What (WP What))
+            (SQ+work (VBP do)
+                     (NP+they (PRP they))
+                     (VP+work (VB work)
+                              (PRT+on (RP on))))
+            (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+What do they work on ?
+1 4 # What work
+2 4 # do work
+3 4 # they work
+4 -1 # work *TOP*
+5 4 # on work
+6 4 # ? work
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Jita-po bempo tekipanoa ?
+What-LOC 3PL work.PRS ?
+
+1 1 # Jita-po What-LOC
+ 1.1 1.1 # Jita What
+ 1.2 1.2 # -po -LOC
+2 2 # bempo 3PL
+3 3 # tekipanoa work.PRS
+4 4 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+What-LOC 3PL work.PRS ?
+What do they work on ?
+
+1 1 # What-LOC What
+ 1.1 1 # What What
+ 1.2 0 # -LOC NULL
+2 3 # 3PL they
+3 4 # work.PRS work
+4 6 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Jita-po bempo tekipanoa ?
+What-LOC 3PL work.PRS ?
+What do they work on ?
+
+1 3 # Jita-po tekipanoa
+2 3 # bempo tekipanoa
+3 -1 # tekipanoa *TOP*
+4 3 # ? tekipanoa
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25016 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=6
+Aapo bwiíka into Ø ye'e .
+3SG sing.PRS and Ø dance.PRS .
+He is singing and dancing .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBZ is) (VP (VBG singing) (CC and) (VBG dancing))) (. .))
+
+(S+dancing (NP+He (PRP He))
+           (VP+dancing (VBZ is)
+                       (VP+dancing (VBG singing)
+                                   (CC and)
+                                   (VBG dancing)))
+           (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He is singing and dancing .
+1 5 # He dancing
+2 5 # is dancing
+3 5 # singing dancing
+4 5 # and dancing
+5 -1 # dancing *TOP*
+6 5 # . dancing
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Aapo bwiíka into Ø ye'e .
+3SG sing.PRS and Ø dance.PRS .
+
+1 1 # Aapo 3SG
+2 2 # bwiíka sing.PRS
+3 3 # into and
+4 4 # Ø Ø
+5 5 # ye'e dance.PRS
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+3SG sing.PRS and Ø dance.PRS .
+He is singing and dancing .
+
+1 1 # 3SG He
+2 3 # sing.PRS singing
+3 4 # and and
+4 0 # Ø NULL
+5 0 # dance.PRS NULL
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Aapo bwiíka into Ø ye'e .
+3SG sing.PRS and Ø dance.PRS .
+He is singing and dancing .
+
+1 5 # Aapo ye'e
+2 5 # bwiíka ye'e
+3 5 # into ye'e
+4 5 # Ø ye'e
+5 -2 # ye'e NULL
+6 5 # . ye'e
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25017 Url_id=2369 flag=0 cleaned=4 src_leng=7 trans_leng=12
+juchi `ae-koni-la sik-aa intok jo'o-t `a'a-siise-k .
+again 3SG-circle-ADV go-PPL and back-LOC 3NNOM.SG-urinate-PST .
+And having going around him , it urinated on his back .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (CC And) (S (VP (VBG having) (S (VP (VBG going) (PP (IN around) (NP (PRP him))))))) (, ,) (NP (PRP it)) (VP (VBD urinated) (PP (IN on) (NP (PRP$ his) (NN back)))) (. .))
+
+(S+urinated (CC And)
+            (S+having (VP+having (VBG having)
+                                 (S+going (VP+going (VBG going)
+                                                    (PP+around (IN around)
+                                                               (NP+him (PRP him)))))))
+            (, ,)
+            (NP+it (PRP it))
+            (VP+urinated (VBD urinated)
+                         (PP+on (IN on)
+                                (NP+back (PRP$ his)
+                                         (NN back))))
+            (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+And having going around him , it urinated on his back .
+1 8 # And urinated
+2 8 # having urinated
+3 2 # going having
+4 3 # around going
+5 4 # him around
+6 8 # , urinated
+7 8 # it urinated
+8 -1 # urinated *TOP*
+9 8 # on urinated
+10 11 # his back
+11 9 # back on
+12 8 # . urinated
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+juchi `ae-koni-la sik-aa intok jo'o-t `a'a-siise-k .
+again 3SG-circle-ADV go-PPL and back-LOC 3NNOM.SG-urinate-PST .
+
+1 1 # juchi again
+2 2 # `ae-koni-la 3SG-circle-ADV
+ 2.1 2.1 # `ae 3SG
+ 2.2 2.2 # -koni -circle
+ 2.3 2.3 # -la -ADV
+3 3 # sik-aa go-PPL
+ 3.1 3.1 # sik go
+ 3.2 3.2 # -aa -PPL
+4 4 # intok and
+5 5 # jo'o-t back-LOC
+ 5.1 5.1 # jo'o back
+ 5.2 5.2 # -t -LOC
+6 6 # `a'a-siise-k 3NNOM.SG-urinate-PST
+ 6.1 6.1 # `a'a 3NNOM.SG
+ 6.2 6.2 # -siise -urinate
+ 6.3 6.3 # -k -PST
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+again 3SG-circle-ADV go-PPL and back-LOC 3NNOM.SG-urinate-PST .
+And having going around him , it urinated on his back .
+
+1 0 # again NULL
+2 0 # 3SG-circle-ADV NULL
+ 2.1 0 # 3SG NULL
+ 2.2 0 # -circle NULL
+ 2.3 0 # -ADV NULL
+3 3 # go-PPL going
+ 3.1 3 # go going
+ 3.2 0 # -PPL NULL
+4 1 # and And
+5 11 # back-LOC back
+ 5.1 11 # back back
+ 5.2 0 # -LOC NULL
+6 0 # 3NNOM.SG-urinate-PST NULL
+ 6.1 0 # 3NNOM.SG NULL
+ 6.2 0 # -urinate NULL
+ 6.3 0 # -PST NULL
+7 12 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+juchi `ae-koni-la sik-aa intok jo'o-t `a'a-siise-k .
+again 3SG-circle-ADV go-PPL and back-LOC 3NNOM.SG-urinate-PST .
+And having going around him , it urinated on his back .
+
+1 6 # juchi `a'a-siise-k
+2 6 # `ae-koni-la `a'a-siise-k
+3 6 # sik-aa `a'a-siise-k
+4 6 # intok `a'a-siise-k
+5 6 # jo'o-t `a'a-siise-k
+6 -2 # `a'a-siise-k NULL
+7 6 # . `a'a-siise-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25018 Url_id=2369 flag=0 cleaned=4 src_leng=7 trans_leng=12
+juchi `ae-koni-la sik-aa jo'o-t intok `a'a-siise-k .
+again 3SG-circle-ADV go-PPL back-LOC and 3NNOM.SG-urinate-PST .
+And having going around him , it urinated on his back .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (CC And) (S (VP (VBG having) (S (VP (VBG going) (PP (IN around) (NP (PRP him))))))) (, ,) (NP (PRP it)) (VP (VBD urinated) (PP (IN on) (NP (PRP$ his) (NN back)))) (. .))
+
+(S+urinated (CC And)
+            (S+having (VP+having (VBG having)
+                                 (S+going (VP+going (VBG going)
+                                                    (PP+around (IN around)
+                                                               (NP+him (PRP him)))))))
+            (, ,)
+            (NP+it (PRP it))
+            (VP+urinated (VBD urinated)
+                         (PP+on (IN on)
+                                (NP+back (PRP$ his)
+                                         (NN back))))
+            (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+And having going around him , it urinated on his back .
+1 8 # And urinated
+2 8 # having urinated
+3 2 # going having
+4 3 # around going
+5 4 # him around
+6 8 # , urinated
+7 8 # it urinated
+8 -1 # urinated *TOP*
+9 8 # on urinated
+10 11 # his back
+11 9 # back on
+12 8 # . urinated
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+juchi `ae-koni-la sik-aa jo'o-t intok `a'a-siise-k .
+again 3SG-circle-ADV go-PPL back-LOC and 3NNOM.SG-urinate-PST .
+
+1 1 # juchi again
+2 2 # `ae-koni-la 3SG-circle-ADV
+ 2.1 2.1 # `ae 3SG
+ 2.2 2.2 # -koni -circle
+ 2.3 2.3 # -la -ADV
+3 3 # sik-aa go-PPL
+ 3.1 3.1 # sik go
+ 3.2 3.2 # -aa -PPL
+4 4 # jo'o-t back-LOC
+ 4.1 4.1 # jo'o back
+ 4.2 4.2 # -t -LOC
+5 5 # intok and
+6 6 # `a'a-siise-k 3NNOM.SG-urinate-PST
+ 6.1 6.1 # `a'a 3NNOM.SG
+ 6.2 6.2 # -siise -urinate
+ 6.3 6.3 # -k -PST
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+again 3SG-circle-ADV go-PPL back-LOC and 3NNOM.SG-urinate-PST .
+And having going around him , it urinated on his back .
+
+1 0 # again NULL
+2 0 # 3SG-circle-ADV NULL
+ 2.1 0 # 3SG NULL
+ 2.2 0 # -circle NULL
+ 2.3 0 # -ADV NULL
+3 3 # go-PPL going
+ 3.1 3 # go going
+ 3.2 0 # -PPL NULL
+4 11 # back-LOC back
+ 4.1 11 # back back
+ 4.2 0 # -LOC NULL
+5 1 # and And
+6 0 # 3NNOM.SG-urinate-PST NULL
+ 6.1 0 # 3NNOM.SG NULL
+ 6.2 0 # -urinate NULL
+ 6.3 0 # -PST NULL
+7 12 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+juchi `ae-koni-la sik-aa jo'o-t intok `a'a-siise-k .
+again 3SG-circle-ADV go-PPL back-LOC and 3NNOM.SG-urinate-PST .
+And having going around him , it urinated on his back .
+
+1 6 # juchi `a'a-siise-k
+2 6 # `ae-koni-la `a'a-siise-k
+3 6 # sik-aa `a'a-siise-k
+4 6 # jo'o-t `a'a-siise-k
+5 6 # intok `a'a-siise-k
+6 -2 # `a'a-siise-k NULL
+7 6 # . `a'a-siise-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25019 Url_id=2369 flag=0 cleaned=3 src_leng=7 trans_leng=9
+into-ne kaa jabe-m neu yajak junii.. .
+and-1SG not someone-PL 1SG.OBL come.PL.PST even .
+And even if someone does not come by'.. .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(FRAG (CC And) (SBAR (ADVP (RB even)) (IN if) (S (NP (NN someone)) (VP (VBZ does) (RB not) (VP (VB come) (ADVP (RB by'..)))))) (. .))
+
+(FRAG+And (CC And)
+          (SBAR+come (ADVP+even (RB even))
+                     (IN if)
+                     (S+come (NP+someone (NN someone))
+                             (VP+come (VBZ does)
+                                      (RB not)
+                                      (VP+come (VB come)
+                                               (ADVP+by'.. (RB by'..))))))
+          (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+And even if someone does not come by'.. .
+1 -1 # And *TOP*
+2 7 # even come
+3 7 # if come
+4 7 # someone come
+5 7 # does come
+6 7 # not come
+7 1 # come And
+8 7 # by'.. come
+9 1 # . And
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+into-ne kaa jabe-m neu yajak junii.. .
+and-1SG not someone-PL 1SG.OBL come.PL.PST even .
+
+1 1 # into-ne and-1SG
+ 1.1 1.1 # into and
+ 1.2 1.2 # -ne -1SG
+2 2 # kaa not
+3 3 # jabe-m someone-PL
+ 3.1 3.1 # jabe someone
+ 3.2 3.2 # -m -PL
+4 4 # neu 1SG.OBL
+5 5 # yajak come.PL.PST
+6 6 # junii.. even
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+and-1SG not someone-PL 1SG.OBL come.PL.PST even .
+And even if someone does not come by'.. .
+
+1 1 # and-1SG And
+ 1.1 1 # and And
+ 1.2 0 # -1SG NULL
+2 6 # not not
+3 4 # someone-PL someone
+ 3.1 4 # someone someone
+ 3.2 0 # -PL NULL
+4 0 # 1SG.OBL NULL
+5 7 # come.PL.PST come
+6 2 # even even
+7 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+into-ne kaa jabe-m neu yajak junii.. .
+and-1SG not someone-PL 1SG.OBL come.PL.PST even .
+And even if someone does not come by'.. .
+
+1 -1 # into-ne *TOP*
+2 5 # kaa yajak
+3 5 # jabe-m yajak
+4 1 # neu into-ne
+5 1 # yajak into-ne
+6 5 # junii.. yajak
+7 1 # . into-ne
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25022 Url_id=2369 flag=0 cleaned=7 src_leng=6 trans_leng=7
+inepo kaa ye-yena , ¿empo-su ?
+1SG not RED-smoke , you-and ?
+I do n't smoke , and ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP do) (RB n't) (VP (VB smoke) (, ,) (ADVP (CC and)))) (. ?))
+
+(S+smoke (NP+I (PRP I))
+         (VP+smoke (VBP do)
+                   (RB n't)
+                   (VP+smoke (VB smoke)
+                             (, ,)
+                             (ADVP+and (CC and))))
+         (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I do n't smoke , and ?
+1 4 # I smoke
+2 4 # do smoke
+3 4 # n't smoke
+4 -1 # smoke *TOP*
+5 4 # , smoke
+6 4 # and smoke
+7 4 # ? smoke
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inepo kaa ye-yena , ¿empo-su ?
+1SG not RED-smoke , you-and ?
+
+1 1 # inepo 1SG
+2 2 # kaa not
+3 3 # ye-yena RED-smoke
+ 3.1 3.1 # ye RED
+ 3.2 3.2 # -yena -smoke
+4 4 # , ,
+5 5 # ¿empo-su you-and
+ 5.1 5.1 # ¿empo you
+ 5.2 5.2 # -su -and
+6 6 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG not RED-smoke , you-and ?
+I do n't smoke , and ?
+
+1 1 # 1SG I
+2 0 # not NULL
+3 4 # RED-smoke smoke
+ 3.1 0 # RED NULL
+ 3.2 4 # -smoke smoke
+4 5 # , ,
+5 6 # you-and and
+ 5.1 0 # you NULL
+ 5.2 6 # -and and
+6 7 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inepo kaa ye-yena , ¿empo-su ?
+1SG not RED-smoke , you-and ?
+I do n't smoke , and ?
+
+1 3 # inepo ye-yena
+2 3 # kaa ye-yena
+3 -1 # ye-yena *TOP*
+4 3 # , ye-yena
+5 3 # ¿empo-su ye-yena
+6 3 # ? ye-yena
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25023 Url_id=2369 flag=0 cleaned=4 src_leng=9 trans_leng=12
+i'an-su intok empo kaa im yum jo'e-bae-te-k(o) juni'i .
+now-and more 2SG not here tiredness rest-INTT-COND even .
+And now if you do n't want to rest here even .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(FRAG (CC And) (RB now) (SBAR (IN if) (S (NP (PRP you)) (VP (VBP do) (RB n't) (VP (VB want) (S (VP (TO to) (VP (VB rest) (ADVP (RB here)) (ADVP (RB even))))))))) (. .))
+
+(FRAG+And (CC And)
+          (RB now)
+          (SBAR+want (IN if)
+                     (S+want (NP+you (PRP you))
+                             (VP+want (VBP do)
+                                      (RB n't)
+                                      (VP+want (VB want)
+                                               (S+rest (VP+rest (TO to)
+                                                                (VP+rest (VB rest)
+                                                                         (ADVP+here (RB here))
+                                                                         (ADVP+even (RB even)))))))))
+          (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+And now if you do n't want to rest here even .
+1 -1 # And *TOP*
+2 1 # now And
+3 7 # if want
+4 7 # you want
+5 7 # do want
+6 7 # n't want
+7 1 # want And
+8 9 # to rest
+9 7 # rest want
+10 9 # here rest
+11 9 # even rest
+12 1 # . And
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+i'an-su intok empo kaa im yum jo'e-bae-te-k(o) juni'i .
+now-and more 2SG not here tiredness rest-INTT-COND even .
+
+1 1 # i'an-su now-and
+ 1.1 1.1 # i'an now
+ 1.2 1.2 # -su -and
+2 2 # intok more
+3 3 # empo 2SG
+4 4 # kaa not
+5 5 # im here
+6 6 # yum tiredness
+7 7 # jo'e-bae-te-k(o) rest-INTT-COND
+ 7.1 0 # jo'e NULL
+ 7.2 0 # -bae NULL
+ 7.3 0 # -te NULL
+ 7.4 0 # -k(o) NULL
+8 8 # juni'i even
+9 9 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+now-and more 2SG not here tiredness rest-INTT-COND even .
+And now if you do n't want to rest here even .
+
+1 1,2 # now-and And,now
+ 1.1 2 # now now
+ 1.2 1 # -and And
+2 0 # more NULL
+3 4 # 2SG you
+4 0 # not NULL
+5 10 # here here
+6 0 # tiredness NULL
+7 9 # rest-INTT-COND rest
+ 7.1 9 # rest rest
+ 7.2 0 # -INTT NULL
+ 7.3 0 # -COND NULL
+8 11 # even even
+9 12 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+i'an-su intok empo kaa im yum jo'e-bae-te-k(o) juni'i .
+now-and more 2SG not here tiredness rest-INTT-COND even .
+And now if you do n't want to rest here even .
+
+1 -1 # i'an-su *TOP*
+2 1 # intok i'an-su
+3 1 # empo i'an-su
+4 1 # kaa i'an-su
+5 7 # im jo'e-bae-te-k(o)
+6 1 # yum i'an-su
+7 1 # jo'e-bae-te-k(o) i'an-su
+8 7 # juni'i jo'e-bae-te-k(o)
+9 1 # . i'an-su
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25025 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=9
+nií wíkit juma techóe ja'ani .
+this bird might do-bad-omen somehow .
+This bird might be of bad omen somehow .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT This) (NN bird)) (VP (MD might) (VP (VB be) (PP (IN of) (NP (JJ bad) (NNS omen))) (ADVP (RB somehow)))) (. .))
+
+(S+of (NP+bird (DT This)
+               (NN bird))
+      (VP+of (MD might)
+             (VP+of (VB be)
+                    (PP-PRD+of (IN of)
+                               (NP+omen (JJ bad)
+                                        (NNS omen)))
+                    (ADVP+somehow (RB somehow))))
+      (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+This bird might be of bad omen somehow .
+1 2 # This bird
+2 5 # bird of
+3 5 # might of
+4 5 # be of
+5 -1 # of *TOP*
+6 7 # bad omen
+7 5 # omen of
+8 5 # somehow of
+9 5 # . of
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nií wíkit juma techóe ja'ani .
+this bird might do-bad-omen somehow .
+
+1 1 # nií this
+2 2 # wíkit bird
+3 3 # juma might
+4 4 # techóe do-bad-omen
+5 5 # ja'ani somehow
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+this bird might do-bad-omen somehow .
+This bird might be of bad omen somehow .
+
+1 1 # this This
+2 2 # bird bird
+3 3 # might might
+4 6,7 # do-bad-omen bad,omen
+ 4.1 0 # do NULL
+ 4.2 6 # -bad bad
+ 4.3 7 # -omen omen
+5 8 # somehow somehow
+6 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nií wíkit juma techóe ja'ani .
+this bird might do-bad-omen somehow .
+This bird might be of bad omen somehow .
+
+1 2 # nií wíkit
+2 5 # wíkit ja'ani
+3 5 # juma ja'ani
+4 5 # techóe ja'ani
+5 -2 # ja'ani NULL
+6 5 # . ja'ani
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25027 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=8
+inepo kowí-ta bwuise-k into misí-ta .
+1SG pig-NNOM.SG grasp-PST and cat-NNOM.SG .
+I caught the pig and the cat .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBD caught) (NP (NP (DT the) (NN pig)) (CC and) (NP (DT the) (NN cat)))) (. .))
+
+(S+caught (NP+I (PRP I))
+          (VP+caught (VBD caught)
+                     (NP+cat (NP+pig (DT the)
+                                     (NN pig))
+                             (CC and)
+                             (NP+cat (DT the)
+                                     (NN cat))))
+          (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I caught the pig and the cat .
+1 2 # I caught
+2 -1 # caught *TOP*
+3 4 # the pig
+4 7 # pig cat
+5 7 # and cat
+6 7 # the cat
+7 2 # cat caught
+8 2 # . caught
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inepo kowí-ta bwuise-k into misí-ta .
+1SG pig-NNOM.SG grasp-PST and cat-NNOM.SG .
+
+1 1 # inepo 1SG
+2 2 # kowí-ta pig-NNOM.SG
+ 2.1 2.1 # kowí pig
+ 2.2 2.2 # -ta -NNOM.SG
+3 3 # bwuise-k grasp-PST
+ 3.1 3.1 # bwuise grasp
+ 3.2 3.2 # -k -PST
+4 4 # into and
+5 5 # misí-ta cat-NNOM.SG
+ 5.1 5.1 # misí cat
+ 5.2 5.2 # -ta -NNOM.SG
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG pig-NNOM.SG grasp-PST and cat-NNOM.SG .
+I caught the pig and the cat .
+
+1 1 # 1SG I
+2 4 # pig-NNOM.SG pig
+ 2.1 4 # pig pig
+ 2.2 0 # -NNOM.SG NULL
+3 0 # grasp-PST NULL
+ 3.1 0 # grasp NULL
+ 3.2 0 # -PST NULL
+4 5 # and and
+5 7 # cat-NNOM.SG cat
+ 5.1 7 # cat cat
+ 5.2 0 # -NNOM.SG NULL
+6 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inepo kowí-ta bwuise-k into misí-ta .
+1SG pig-NNOM.SG grasp-PST and cat-NNOM.SG .
+I caught the pig and the cat .
+
+1 5 # inepo misí-ta
+2 5 # kowí-ta misí-ta
+3 5 # bwuise-k misí-ta
+4 5 # into misí-ta
+5 -2 # misí-ta NULL
+6 5 # . misí-ta
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25031 Url_id=2369 flag=0 cleaned=3 src_leng=7 trans_leng=13
+i'an int-uchi jumee bakoch-im a'abo itóm-jariu .
+Now and-again those snake-PL here 3PL.OBL-search:PRS .
+And now the snakes come on this side to look for us .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (CC And) (ADVP (RB now)) (NP (DT the) (NNS snakes)) (VP (VBP come) (PP (IN on) (NP (DT this) (NN side))) (S (VP (TO to) (VP (VB look) (PP (IN for) (NP (PRP us))))))) (. .))
+
+(S+come (CC And)
+        (ADVP+now (RB now))
+        (NP+snakes (DT the)
+                   (NNS snakes))
+        (VP+come (VBP come)
+                 (PP+on (IN on)
+                        (NP+side (DT this)
+                                 (NN side)))
+                 (S+look (VP+look (TO to)
+                                  (VP+look (VB look)
+                                           (PP+for (IN for)
+                                                   (NP+us (PRP us)))))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+And now the snakes come on this side to look for us .
+1 5 # And come
+2 5 # now come
+3 4 # the snakes
+4 5 # snakes come
+5 -1 # come *TOP*
+6 5 # on come
+7 8 # this side
+8 6 # side on
+9 10 # to look
+10 5 # look come
+11 10 # for look
+12 11 # us for
+13 5 # . come
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+i'an int-uchi jumee bakoch-im a'abo itóm-jariu .
+Now and-again those snake-PL here 3PL.OBL-search:PRS .
+
+1 1 # i'an Now
+2 2 # int-uchi and-again
+ 2.1 2.1 # int and
+ 2.2 2.2 # -uchi -again
+3 3 # jumee those
+4 4 # bakoch-im snake-PL
+ 4.1 4.1 # bakoch snake
+ 4.2 4.2 # -im -PL
+5 5 # a'abo here
+6 6 # itóm-jariu 3PL.OBL-search:PRS
+ 6.1 6.1 # itóm 3PL.OBL
+ 6.2 6.2 # -jariu -search:PRS
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Now and-again those snake-PL here 3PL.OBL-search:PRS .
+And now the snakes come on this side to look for us .
+
+1 2 # Now now
+2 1 # and-again And
+ 2.1 1 # and And
+ 2.2 0 # -again NULL
+3 0 # those NULL
+4 4 # snake-PL snakes
+ 4.1 4 # snake snakes
+ 4.2 0 # -PL NULL
+5 0 # here NULL
+6 0 # 3PL.OBL-search:PRS NULL
+ 6.1 0 # 3PL.OBL NULL
+ 6.2 0 # -search:PRS NULL
+7 13 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+i'an int-uchi jumee bakoch-im a'abo itóm-jariu .
+Now and-again those snake-PL here 3PL.OBL-search:PRS .
+And now the snakes come on this side to look for us .
+
+1 6 # i'an itóm-jariu
+2 6 # int-uchi itóm-jariu
+3 6 # jumee itóm-jariu
+4 6 # bakoch-im itóm-jariu
+5 6 # a'abo itóm-jariu
+6 -2 # itóm-jariu NULL
+7 6 # . itóm-jariu
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25033 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=7
+int-um kari beju'uku kate-ka .
+And-there house leaves-LOC sit-GER .
+And he sits under the leaves .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (CC And) (NP (PRP he)) (VP (VBZ sits) (PP (IN under) (NP (DT the) (NNS leaves)))) (. .))
+
+(S+sits (CC And)
+        (NP+he (PRP he))
+        (VP+sits (VBZ sits)
+                 (PP+under (IN under)
+                           (NP+leaves (DT the)
+                                      (NNS leaves))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+And he sits under the leaves .
+1 3 # And sits
+2 3 # he sits
+3 -1 # sits *TOP*
+4 3 # under sits
+5 6 # the leaves
+6 4 # leaves under
+7 3 # . sits
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+int-um kari beju'uku kate-ka .
+And-there house leaves-LOC sit-GER .
+
+1 1 # int-um And-there
+ 1.1 1.1 # int And
+ 1.2 1.2 # -um -there
+2 2 # kari house
+3 3 # beju'uku leaves-LOC
+4 4 # kate-ka sit-GER
+ 4.1 4.1 # kate sit
+ 4.2 4.2 # -ka -GER
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+And-there house leaves-LOC sit-GER .
+And he sits under the leaves .
+
+1 1 # And-there And
+ 1.1 1 # And And
+ 1.2 0 # -there NULL
+2 0 # house NULL
+3 6 # leaves-LOC leaves
+ 3.1 6 # leaves leaves
+ 3.2 0 # -LOC NULL
+4 3 # sit-GER sits
+ 4.1 3 # sit sits
+ 4.2 0 # -GER NULL
+5 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+int-um kari beju'uku kate-ka .
+And-there house leaves-LOC sit-GER .
+And he sits under the leaves .
+
+1 4 # int-um kate-ka
+2 4 # kari kate-ka
+3 4 # beju'uku kate-ka
+4 -1 # kate-ka *TOP*
+5 4 # . kate-ka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25034 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=14
+int-a-u bo'oka a'a-bitchu ili chu'u .
+And-3NNOM.SG-DIR lay.down.PST 3NNOM.SG-look.PRS little dog .
+And the little dog laying down besides him and is looking at him .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (CC And) (NP (DT the) (JJ little) (NN dog)) (VP (VP (VBG laying) (PRT (RP down)) (PP (IN besides) (NP (PRP him)))) (CC and) (VP (VBZ is) (VP (VBG looking) (PP (IN at) (NP (PRP him)))))) (. .))
+
+(S+looking (CC And)
+           (NP+dog (DT the)
+                   (JJ little)
+                   (NN dog))
+           (VP+looking (VP+laying (VBG laying)
+                                  (PRT+down (RP down))
+                                  (PP+besides (IN besides)
+                                              (NP+him (PRP him))))
+                       (CC and)
+                       (VP+looking (VBZ is)
+                                   (VP+looking (VBG looking)
+                                               (PP+at (IN at)
+                                                      (NP+him (PRP him))))))
+           (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+And the little dog laying down besides him and is looking at him .
+1 11 # And looking
+2 4 # the dog
+3 4 # little dog
+4 11 # dog looking
+5 11 # laying looking
+6 5 # down laying
+7 5 # besides laying
+8 7 # him besides
+9 11 # and looking
+10 11 # is looking
+11 -1 # looking *TOP*
+12 11 # at looking
+13 12 # him at
+14 11 # . looking
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+int-a-u bo'oka a'a-bitchu ili chu'u .
+And-3NNOM.SG-DIR lay.down.PST 3NNOM.SG-look.PRS little dog .
+
+1 1 # int-a-u And-3NNOM.SG-DIR
+ 1.1 1.1 # int And
+ 1.2 1.2 # -a -3NNOM.SG
+ 1.3 1.3 # -u -DIR
+2 2 # bo'oka lay.down.PST
+3 3 # a'a-bitchu 3NNOM.SG-look.PRS
+ 3.1 3.1 # a'a 3NNOM.SG
+ 3.2 3.2 # -bitchu -look.PRS
+4 4 # ili little
+5 5 # chu'u dog
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+And-3NNOM.SG-DIR lay.down.PST 3NNOM.SG-look.PRS little dog .
+And the little dog laying down besides him and is looking at him .
+
+1 1 # And-3NNOM.SG-DIR And
+ 1.1 1 # And And
+ 1.2 0 # -3NNOM.SG NULL
+ 1.3 0 # -DIR NULL
+2 5,6 # lay.down.PST laying,down
+3 11 # 3NNOM.SG-look.PRS looking
+ 3.1 0 # 3NNOM.SG NULL
+ 3.2 11 # -look.PRS looking
+4 3 # little little
+5 4 # dog dog
+6 14 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+int-a-u bo'oka a'a-bitchu ili chu'u .
+And-3NNOM.SG-DIR lay.down.PST 3NNOM.SG-look.PRS little dog .
+And the little dog laying down besides him and is looking at him .
+
+1 3 # int-a-u a'a-bitchu
+2 3 # bo'oka a'a-bitchu
+3 -1 # a'a-bitchu *TOP*
+4 5 # ili chu'u
+5 3 # chu'u a'a-bitchu
+6 3 # . a'a-bitchu
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25039 Url_id=2369 flag=0 cleaned=3 src_leng=7 trans_leng=7
+Joan bwiika-k junakbea Maria into ye'e-ka .
+John sing-PST then Mary and dance-PST .
+John sang and then María danced .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP John)) (VP (VP (VBD sang)) (CC and) (VP (ADVP (RB then)) (VBD María) (VP (VBN danced)))) (. .))
+
+(S+danced (NP+John (NNP John))
+          (VP+danced (VP+sang (VBD sang))
+                     (CC and)
+                     (VP+danced (ADVP+then (RB then))
+                                (VBD María)
+                                (VP+danced (VBN danced))))
+          (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John sang and then María danced .
+1 6 # John danced
+2 6 # sang danced
+3 6 # and danced
+4 6 # then danced
+5 6 # María danced
+6 -1 # danced *TOP*
+7 6 # . danced
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan bwiika-k junakbea Maria into ye'e-ka .
+John sing-PST then Mary and dance-PST .
+
+1 1 # Joan John
+2 2 # bwiika-k sing-PST
+ 2.1 2.1 # bwiika sing
+ 2.2 2.2 # -k -PST
+3 3 # junakbea then
+4 4 # Maria Mary
+5 5 # into and
+6 6 # ye'e-ka dance-PST
+ 6.1 6.1 # ye'e dance
+ 6.2 6.2 # -ka -PST
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John sing-PST then Mary and dance-PST .
+John sang and then María danced .
+
+1 1 # John John
+2 2 # sing-PST sang
+ 2.1 2 # sing sang
+ 2.2 0 # -PST NULL
+3 4 # then then
+4 0 # Mary NULL
+5 3 # and and
+6 0 # dance-PST NULL
+ 6.1 0 # dance NULL
+ 6.2 0 # -PST NULL
+7 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan bwiika-k junakbea Maria into ye'e-ka .
+John sing-PST then Mary and dance-PST .
+John sang and then María danced .
+
+1 6 # Joan ye'e-ka
+2 6 # bwiika-k ye'e-ka
+3 6 # junakbea ye'e-ka
+4 6 # Maria ye'e-ka
+5 6 # into ye'e-ka
+6 -2 # ye'e-ka NULL
+7 6 # . ye'e-ka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25042 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=8
+inepo Mariata-mak sentro-u noite-k .
+1SG Mary-COM center-DIR go-PST .
+I with Mary went to the center .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NP (PRP I)) (PP (IN with) (NP (NNP Mary)))) (VP (VBD went) (PP (TO to) (NP (DT the) (NN center)))) (. .))
+
+(S+went (NP+I (NP+I (PRP I))
+              (PP+with (IN with)
+                       (NP+Mary (NNP Mary))))
+        (VP+went (VBD went)
+                 (PP+to (TO to)
+                        (NP+center (DT the)
+                                   (NN center))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I with Mary went to the center .
+1 4 # I went
+2 1 # with I
+3 2 # Mary with
+4 -1 # went *TOP*
+5 4 # to went
+6 7 # the center
+7 5 # center to
+8 4 # . went
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inepo Mariata-mak sentro-u noite-k .
+1SG Mary-COM center-DIR go-PST .
+
+1 1 # inepo 1SG
+2 2 # Mariata-mak Mary-COM
+ 2.1 2.1 # Mariata Mary
+ 2.2 2.2 # -mak -COM
+3 3 # sentro-u center-DIR
+ 3.1 3.1 # sentro center
+ 3.2 3.2 # -u -DIR
+4 4 # noite-k go-PST
+ 4.1 4.1 # noite go
+ 4.2 4.2 # -k -PST
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG Mary-COM center-DIR go-PST .
+I with Mary went to the center .
+
+1 1 # 1SG I
+2 3 # Mary-COM Mary
+ 2.1 3 # Mary Mary
+ 2.2 0 # -COM NULL
+3 7 # center-DIR center
+ 3.1 7 # center center
+ 3.2 0 # -DIR NULL
+4 4 # go-PST went
+ 4.1 4 # go went
+ 4.2 0 # -PST NULL
+5 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inepo Mariata-mak sentro-u noite-k .
+1SG Mary-COM center-DIR go-PST .
+I with Mary went to the center .
+
+1 4 # inepo noite-k
+2 1 # Mariata-mak inepo
+3 4 # sentro-u noite-k
+4 -1 # noite-k *TOP*
+5 4 # . noite-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25043 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=6
+¿jitá Maria jinu-k intoko? .
+What Mary buy-PST and .
+And what did Mary buy ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SBARQ (CC And) (WHNP (WP what)) (SQ (VBD did) (NP (NNP Mary)) (VP (VB buy))) (. ?))
+
+(SBARQ+buy (CC And)
+           (WHNP+what (WP what))
+           (SQ+buy (VBD did)
+                   (NP+Mary (NNP Mary))
+                   (VP+buy (VB buy)))
+           (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+And what did Mary buy ?
+1 5 # And buy
+2 5 # what buy
+3 5 # did buy
+4 5 # Mary buy
+5 -1 # buy *TOP*
+6 5 # ? buy
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+¿jitá Maria jinu-k intoko? .
+What Mary buy-PST and .
+
+1 1 # ¿jitá What
+2 2 # Maria Mary
+3 3 # jinu-k buy-PST
+ 3.1 3.1 # jinu buy
+ 3.2 3.2 # -k -PST
+4 4 # intoko? and
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+What Mary buy-PST and .
+And what did Mary buy ?
+
+1 2 # What what
+2 4 # Mary Mary
+3 5 # buy-PST buy
+ 3.1 5 # buy buy
+ 3.2 0 # -PST NULL
+4 1 # and And
+5 0 # . NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+¿jitá Maria jinu-k intoko? .
+What Mary buy-PST and .
+And what did Mary buy ?
+
+1 3 # ¿jitá jinu-k
+2 3 # Maria jinu-k
+3 -1 # jinu-k *TOP*
+4 3 # intoko? jinu-k
+5 3 # . jinu-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25044 Url_id=2369 flag=0 cleaned=3 src_leng=8 trans_leng=12
+a maala-wa hoara-u yepsa-k into aman jichik-taite-k .
+his mother-POSS house-DIR arrive.SG-PST and there sweep-INCEP-PST .
+His mother arrived at the house and began to sweep there .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP$ His) (NN mother)) (VP (VP (VBD arrived) (PP (IN at) (NP (DT the) (NNP house)))) (CC and) (VP (VBD began) (S (VP (TO to) (VP (NN sweep) (NP (RB there))))))) (. .))
+
+(S+began (NP+mother (PRP$ His)
+                    (NN mother))
+         (VP+began (VP+arrived (VBD arrived)
+                               (PP+at (IN at)
+                                      (NP+house (DT the)
+                                                (NNP house))))
+                   (CC and)
+                   (VP+began (VBD began)
+                             (S+there (VP+there (TO to)
+                                                (VP+there (NN sweep)
+                                                          (NP+there (RB there)))))))
+         (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+His mother arrived at the house and began to sweep there .
+1 2 # His mother
+2 8 # mother began
+3 8 # arrived began
+4 3 # at arrived
+5 6 # the house
+6 4 # house at
+7 8 # and began
+8 -1 # began *TOP*
+9 11 # to there
+10 11 # sweep there
+11 8 # there began
+12 8 # . began
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+a maala-wa hoara-u yepsa-k into aman jichik-taite-k .
+his mother-POSS house-DIR arrive.SG-PST and there sweep-INCEP-PST .
+
+1 1 # a his
+2 2 # maala-wa mother-POSS
+ 2.1 2.1 # maala mother
+ 2.2 2.2 # -wa -POSS
+3 3 # hoara-u house-DIR
+ 3.1 3.1 # hoara house
+ 3.2 3.2 # -u -DIR
+4 4 # yepsa-k arrive.SG-PST
+ 4.1 4.1 # yepsa arrive.SG
+ 4.2 4.2 # -k -PST
+5 5 # into and
+6 6 # aman there
+7 7 # jichik-taite-k sweep-INCEP-PST
+ 7.1 7.1 # jichik sweep
+ 7.2 7.2 # -taite -INCEP
+ 7.3 7.3 # -k -PST
+8 8 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+his mother-POSS house-DIR arrive.SG-PST and there sweep-INCEP-PST .
+His mother arrived at the house and began to sweep there .
+
+1 1 # his His
+2 2 # mother-POSS mother
+ 2.1 2 # mother mother
+ 2.2 0 # -POSS NULL
+3 6 # house-DIR house
+ 3.1 6 # house house
+ 3.2 0 # -DIR NULL
+4 3 # arrive.SG-PST arrived
+ 4.1 3 # arrive.SG arrived
+ 4.2 0 # -PST NULL
+5 7 # and and
+6 11 # there there
+7 10 # sweep-INCEP-PST sweep
+ 7.1 10 # sweep sweep
+ 7.2 0 # -INCEP NULL
+ 7.3 0 # -PST NULL
+8 12 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+a maala-wa hoara-u yepsa-k into aman jichik-taite-k .
+his mother-POSS house-DIR arrive.SG-PST and there sweep-INCEP-PST .
+His mother arrived at the house and began to sweep there .
+
+1 2 # a maala-wa
+2 7 # maala-wa jichik-taite-k
+3 4 # hoara-u yepsa-k
+4 7 # yepsa-k jichik-taite-k
+5 7 # into jichik-taite-k
+6 7 # aman jichik-taite-k
+7 6 # jichik-taite-k aman
+8 7 # . jichik-taite-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25045 Url_id=2369 flag=0 cleaned=3 src_leng=8 trans_leng=10
+jabeta Joan atea-k into jabeta Maria tebotua-k .
+who John meet-PST and who Maria greet-PST .
+Who did John find and who did Maria greet .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SBARQ (SBARQ (WHNP (WP Who)) (SQ (VBD did) (NP (NNP John)) (VP (VB find)))) (CC and) (WHNP (WP who)) (SQ (VBD did) (NP (NNP Maria)) (VP (VB greet))) (. .))
+
+(SBARQ+greet (SBARQ+find (WHNP+Who (WP Who))
+                         (SQ+find (VBD did)
+                                  (NP+John (NNP John))
+                                  (VP+find (VB find))))
+             (CC and)
+             (WHNP+who (WP who))
+             (SQ+greet (VBD did)
+                       (NP+Maria (NNP Maria))
+                       (VP+greet (VB greet)))
+             (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Who did John find and who did Maria greet .
+1 4 # Who find
+2 4 # did find
+3 4 # John find
+4 9 # find greet
+5 9 # and greet
+6 9 # who greet
+7 9 # did greet
+8 9 # Maria greet
+9 -1 # greet *TOP*
+10 9 # . greet
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+jabeta Joan atea-k into jabeta Maria tebotua-k .
+who John meet-PST and who Maria greet-PST .
+
+1 1 # jabeta who
+2 2 # Joan John
+3 3 # atea-k meet-PST
+ 3.1 3.1 # atea meet
+ 3.2 3.2 # -k -PST
+4 4 # into and
+5 5 # jabeta who
+6 6 # Maria Maria
+7 7 # tebotua-k greet-PST
+ 7.1 7.1 # tebotua greet
+ 7.2 7.2 # -k -PST
+8 8 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+who John meet-PST and who Maria greet-PST .
+Who did John find and who did Maria greet .
+
+1 1 # who Who
+2 3 # John John
+3 0 # meet-PST NULL
+ 3.1 0 # meet NULL
+ 3.2 0 # -PST NULL
+4 5 # and and
+5 6 # who who
+6 8 # Maria Maria
+7 9 # greet-PST greet
+ 7.1 9 # greet greet
+ 7.2 0 # -PST NULL
+8 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+jabeta Joan atea-k into jabeta Maria tebotua-k .
+who John meet-PST and who Maria greet-PST .
+Who did John find and who did Maria greet .
+
+1 7 # jabeta tebotua-k
+2 7 # Joan tebotua-k
+3 7 # atea-k tebotua-k
+4 7 # into tebotua-k
+5 7 # jabeta tebotua-k
+6 7 # Maria tebotua-k
+7 -1 # tebotua-k *TOP*
+8 7 # . tebotua-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25047 Url_id=2369 flag=0 cleaned=4 src_leng=5 trans_leng=9
+Maria tajkaim ya'a-su-kai am-bwa-ka .
+Maria tortillas make-TERM-SUB 3SG.NNOM.PL-eat-PST .
+After finishing making tortillas , Maria ate them .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (PP (IN After) (S (VP (VBG finishing) (VP (VBG making) (NP (NNS tortillas)))))) (, ,) (NP (NNP Maria)) (VP (VBD ate) (NP (PRP them))) (. .))
+
+(S+ate (PP+After (IN After)
+                 (S+making (VP+making (VBG finishing)
+                                      (VP+making (VBG making)
+                                                 (NP+tortillas (NNS tortillas))))))
+       (, ,)
+       (NP+Maria (NNP Maria))
+       (VP+ate (VBD ate)
+               (NP+them (PRP them)))
+       (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+After finishing making tortillas , Maria ate them .
+1 7 # After ate
+2 3 # finishing making
+3 1 # making After
+4 3 # tortillas making
+5 7 # , ate
+6 7 # Maria ate
+7 -1 # ate *TOP*
+8 7 # them ate
+9 7 # . ate
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Maria tajkaim ya'a-su-kai am-bwa-ka .
+Maria tortillas make-TERM-SUB 3SG.NNOM.PL-eat-PST .
+
+1 1 # Maria Maria
+2 2 # tajkaim tortillas
+3 3 # ya'a-su-kai make-TERM-SUB
+ 3.1 3.1 # ya'a make
+ 3.2 3.2 # -su -TERM
+ 3.3 3.3 # -kai -SUB
+4 4 # am-bwa-ka 3SG.NNOM.PL-eat-PST
+ 4.1 4.1 # am 3SG.NNOM.PL
+ 4.2 4.2 # -bwa -eat
+ 4.3 4.3 # -ka -PST
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Maria tortillas make-TERM-SUB 3SG.NNOM.PL-eat-PST .
+After finishing making tortillas , Maria ate them .
+
+1 6 # Maria Maria
+2 4 # tortillas tortillas
+3 0 # make-TERM-SUB NULL
+ 3.1 0 # make NULL
+ 3.2 0 # -TERM NULL
+ 3.3 0 # -SUB NULL
+4 7 # 3SG.NNOM.PL-eat-PST ate
+ 4.1 0 # 3SG.NNOM.PL NULL
+ 4.2 7 # -eat ate
+ 4.3 0 # -PST NULL
+5 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Maria tajkaim ya'a-su-kai am-bwa-ka .
+Maria tortillas make-TERM-SUB 3SG.NNOM.PL-eat-PST .
+After finishing making tortillas , Maria ate them .
+
+1 4 # Maria am-bwa-ka
+2 4 # tajkaim am-bwa-ka
+3 4 # ya'a-su-kai am-bwa-ka
+4 -1 # am-bwa-ka *TOP*
+5 4 # . am-bwa-ka
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25050 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=11
+Joan inien ea kari-ta jinu-pee-sime .
+John this.way think.PRS house-NNOM.SG buy-DESID-go.SG.PRS .
+John thinks that he is going to buy a house .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP John)) (VP (VBZ thinks) (SBAR (IN that) (S (NP (PRP he)) (VP (VBZ is) (VP (VBG going) (S (VP (TO to) (VP (VB buy) (NP (DT a) (NN house)))))))))) (. .))
+
+(S+thinks (NP+John (NNP John))
+          (VP+thinks (VBZ thinks)
+                     (SBAR+going (IN that)
+                                 (S+going (NP+he (PRP he))
+                                          (VP+going (VBZ is)
+                                                    (VP+going (VBG going)
+                                                              (S+buy (VP+buy (TO to)
+                                                                             (VP+buy (VB buy)
+                                                                                     (NP+house (DT a)
+                                                                                               (NN house))))))))))
+          (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John thinks that he is going to buy a house .
+1 2 # John thinks
+2 -1 # thinks *TOP*
+3 6 # that going
+4 6 # he going
+5 6 # is going
+6 2 # going thinks
+7 8 # to buy
+8 6 # buy going
+9 10 # a house
+10 8 # house buy
+11 2 # . thinks
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan inien ea kari-ta jinu-pee-sime .
+John this.way think.PRS house-NNOM.SG buy-DESID-go.SG.PRS .
+
+1 1 # Joan John
+2 2 # inien this.way
+3 3 # ea think.PRS
+4 4 # kari-ta house-NNOM.SG
+ 4.1 4.1 # kari house
+ 4.2 4.2 # -ta -NNOM.SG
+5 5 # jinu-pee-sime buy-DESID-go.SG.PRS
+ 5.1 5.1 # jinu buy
+ 5.2 5.2 # -pee -DESID
+ 5.3 5.3 # -sime -go.SG.PRS
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John this.way think.PRS house-NNOM.SG buy-DESID-go.SG.PRS .
+John thinks that he is going to buy a house .
+
+1 1 # John John
+2 0 # this.way NULL
+3 2 # think.PRS thinks
+4 10 # house-NNOM.SG house
+ 4.1 10 # house house
+ 4.2 0 # -NNOM.SG NULL
+5 6,8 # buy-DESID-go.SG.PRS going,buy
+ 5.1 8 # buy buy
+ 5.2 0 # -DESID NULL
+ 5.3 6 # -go.SG.PRS going
+6 11 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan inien ea kari-ta jinu-pee-sime .
+John this.way think.PRS house-NNOM.SG buy-DESID-go.SG.PRS .
+John thinks that he is going to buy a house .
+
+1 3 # Joan ea
+2 3 # inien ea
+3 -1 # ea *TOP*
+4 5 # kari-ta jinu-pee-sime
+5 3 # jinu-pee-sime ea
+6 3 # . ea
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25052 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=6
+Joan buika-k Maria into ye'e-ka .
+John sing-PST María and dance-PST .
+John sang and Maria dance .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP John)) (VP (VBD sang) (NP (CC and) (NP (NNP Maria) (NN dance)))) (. .))
+
+(S+sang (NP+John (NNP John))
+        (VP+sang (VBD sang)
+                 (NP+dance (CC and)
+                           (NP+dance (NNP Maria)
+                                     (NN dance))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John sang and Maria dance .
+1 2 # John sang
+2 -1 # sang *TOP*
+3 5 # and dance
+4 5 # Maria dance
+5 2 # dance sang
+6 2 # . sang
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan buika-k Maria into ye'e-ka .
+John sing-PST María and dance-PST .
+
+1 1 # Joan John
+2 2 # buika-k sing-PST
+ 2.1 2.1 # buika sing
+ 2.2 2.2 # -k -PST
+3 3 # Maria María
+4 4 # into and
+5 5 # ye'e-ka dance-PST
+ 5.1 5.1 # ye'e dance
+ 5.2 5.2 # -ka -PST
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John sing-PST María and dance-PST .
+John sang and Maria dance .
+
+1 1 # John John
+2 2 # sing-PST sang
+ 2.1 2 # sing sang
+ 2.2 0 # -PST NULL
+3 0 # María NULL
+4 3 # and and
+5 5 # dance-PST dance
+ 5.1 5 # dance dance
+ 5.2 0 # -PST NULL
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan buika-k Maria into ye'e-ka .
+John sing-PST María and dance-PST .
+John sang and Maria dance .
+
+1 2 # Joan buika-k
+2 -1 # buika-k *TOP*
+3 2 # Maria buika-k
+4 5 # into ye'e-ka
+5 2 # ye'e-ka buika-k
+6 2 # . buika-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25053 Url_id=2369 flag=0 cleaned=3 src_leng=8 trans_leng=9
+Joan tuuka buika-k Maria into yooko yi'i-bae .
+John yesterday sing-PST María and tomorrow dance-INTT .
+John sang yesterday and Maria will dance tomorrow .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (S (NP (NNP John)) (VP (VBD sang) (NP (NN yesterday)))) (CC and) (S (NP (NNP Maria)) (VP (MD will) (VP (VB dance) (NP (NN tomorrow))))) (. .))
+
+(S+dance (S+sang (NP+John (NNP John))
+                 (VP+sang (VBD sang)
+                          (NP+yesterday (NN yesterday))))
+         (CC and)
+         (S+dance (NP+Maria (NNP Maria))
+                  (VP+dance (MD will)
+                            (VP+dance (VB dance)
+                                      (NP+tomorrow (NN tomorrow)))))
+         (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John sang yesterday and Maria will dance tomorrow .
+1 2 # John sang
+2 7 # sang dance
+3 2 # yesterday sang
+4 7 # and dance
+5 7 # Maria dance
+6 7 # will dance
+7 -1 # dance *TOP*
+8 7 # tomorrow dance
+9 7 # . dance
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Joan tuuka buika-k Maria into yooko yi'i-bae .
+John yesterday sing-PST María and tomorrow dance-INTT .
+
+1 1 # Joan John
+2 2 # tuuka yesterday
+3 3 # buika-k sing-PST
+ 3.1 3.1 # buika sing
+ 3.2 3.2 # -k -PST
+4 4 # Maria María
+5 5 # into and
+6 6 # yooko tomorrow
+7 7 # yi'i-bae dance-INTT
+ 7.1 7.1 # yi'i dance
+ 7.2 7.2 # -bae -INTT
+8 8 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+John yesterday sing-PST María and tomorrow dance-INTT .
+John sang yesterday and Maria will dance tomorrow .
+
+1 1 # John John
+2 3 # yesterday yesterday
+3 2 # sing-PST sang
+ 3.1 2 # sing sang
+ 3.2 0 # -PST NULL
+4 0 # María NULL
+5 4 # and and
+6 8 # tomorrow tomorrow
+7 7 # dance-INTT dance
+ 7.1 7 # dance dance
+ 7.2 0 # -INTT NULL
+8 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Joan tuuka buika-k Maria into yooko yi'i-bae .
+John yesterday sing-PST María and tomorrow dance-INTT .
+John sang yesterday and Maria will dance tomorrow .
+
+1 3 # Joan buika-k
+2 3 # tuuka buika-k
+3 7 # buika-k yi'i-bae
+4 7 # Maria yi'i-bae
+5 7 # into yi'i-bae
+6 7 # yooko yi'i-bae
+7 -1 # yi'i-bae *TOP*
+8 7 # . yi'i-bae
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25054 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=6
+Ju-me maejto-m libro-m jinu-k .
+DET-PL teacher-PL book-PL buy-PST .
+The teachers bought a book .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NNS teachers)) (VP (VBD bought) (NP (DT a) (NN book))) (. .))
+
+(S+bought (NP+teachers (DT The)
+                       (NNS teachers))
+          (VP+bought (VBD bought)
+                     (NP+book (DT a)
+                              (NN book)))
+          (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The teachers bought a book .
+1 2 # The teachers
+2 3 # teachers bought
+3 -1 # bought *TOP*
+4 5 # a book
+5 3 # book bought
+6 3 # . bought
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ju-me maejto-m libro-m jinu-k .
+DET-PL teacher-PL book-PL buy-PST .
+
+1 1 # Ju-me DET-PL
+ 1.1 1.1 # Ju DET
+ 1.2 1.2 # -me -PL
+2 2 # maejto-m teacher-PL
+ 2.1 2.1 # maejto teacher
+ 2.2 2.2 # -m -PL
+3 3 # libro-m book-PL
+ 3.1 3.1 # libro book
+ 3.2 3.2 # -m -PL
+4 4 # jinu-k buy-PST
+ 4.1 4.1 # jinu buy
+ 4.2 4.2 # -k -PST
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+DET-PL teacher-PL book-PL buy-PST .
+The teachers bought a book .
+
+1 1 # DET-PL The
+ 1.1 1 # DET The
+ 1.2 0 # -PL NULL
+2 2 # teacher-PL teachers
+ 2.1 2 # teacher teachers
+ 2.2 0 # -PL NULL
+3 5 # book-PL book
+ 3.1 5 # book book
+ 3.2 0 # -PL NULL
+4 3 # buy-PST bought
+ 4.1 3 # buy bought
+ 4.2 0 # -PST NULL
+5 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ju-me maejto-m libro-m jinu-k .
+DET-PL teacher-PL book-PL buy-PST .
+The teachers bought a book .
+
+1 2 # Ju-me maejto-m
+2 4 # maejto-m jinu-k
+3 4 # libro-m jinu-k
+4 -1 # jinu-k *TOP*
+5 4 # . jinu-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25055 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=6
+Chikti maejto-m libro-m jinu-k .
+Each teacher-PL book-PL buy-PST .
+Each teacher bought a book .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT Each) (NN teacher)) (VP (VBD bought) (NP (DT a) (NN book))) (. .))
+
+(S+bought (NP+teacher (DT Each)
+                      (NN teacher))
+          (VP+bought (VBD bought)
+                     (NP+book (DT a)
+                              (NN book)))
+          (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Each teacher bought a book .
+1 2 # Each teacher
+2 3 # teacher bought
+3 -1 # bought *TOP*
+4 5 # a book
+5 3 # book bought
+6 3 # . bought
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Chikti maejto-m libro-m jinu-k .
+Each teacher-PL book-PL buy-PST .
+
+1 1 # Chikti Each
+2 2 # maejto-m teacher-PL
+ 2.1 2.1 # maejto teacher
+ 2.2 2.2 # -m -PL
+3 3 # libro-m book-PL
+ 3.1 3.1 # libro book
+ 3.2 3.2 # -m -PL
+4 4 # jinu-k buy-PST
+ 4.1 4.1 # jinu buy
+ 4.2 4.2 # -k -PST
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Each teacher-PL book-PL buy-PST .
+Each teacher bought a book .
+
+1 1 # Each Each
+2 2 # teacher-PL teacher
+ 2.1 2 # teacher teacher
+ 2.2 0 # -PL NULL
+3 5 # book-PL book
+ 3.1 5 # book book
+ 3.2 0 # -PL NULL
+4 3 # buy-PST bought
+ 4.1 3 # buy bought
+ 4.2 0 # -PST NULL
+5 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Chikti maejto-m libro-m jinu-k .
+Each teacher-PL book-PL buy-PST .
+Each teacher bought a book .
+
+1 2 # Chikti maejto-m
+2 4 # maejto-m jinu-k
+3 4 # libro-m jinu-k
+4 -1 # jinu-k *TOP*
+5 4 # . jinu-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25061 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=6
+nem juubi chu'u-m tu'ure .
+1SG.POSS wife dog-PL like.PRS .
+My wife likes the dogs .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP$ My) (NN wife)) (VP (VBZ likes) (NP (DT the) (NNS dogs))) (. .))
+
+(S+likes (NP+wife (PRP$ My)
+                  (NN wife))
+         (VP+likes (VBZ likes)
+                   (NP+dogs (DT the)
+                            (NNS dogs)))
+         (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+My wife likes the dogs .
+1 2 # My wife
+2 3 # wife likes
+3 -1 # likes *TOP*
+4 5 # the dogs
+5 3 # dogs likes
+6 3 # . likes
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+nem juubi chu'u-m tu'ure .
+1SG.POSS wife dog-PL like.PRS .
+
+1 1 # nem 1SG.POSS
+2 2 # juubi wife
+3 3 # chu'u-m dog-PL
+ 3.1 3.1 # chu'u dog
+ 3.2 3.2 # -m -PL
+4 4 # tu'ure like.PRS
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG.POSS wife dog-PL like.PRS .
+My wife likes the dogs .
+
+1 0 # 1SG.POSS NULL
+2 2 # wife wife
+3 5 # dog-PL dogs
+ 3.1 5 # dog dogs
+ 3.2 0 # -PL NULL
+4 3 # like.PRS likes
+5 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+nem juubi chu'u-m tu'ure .
+1SG.POSS wife dog-PL like.PRS .
+My wife likes the dogs .
+
+1 4 # nem tu'ure
+2 4 # juubi tu'ure
+3 4 # chu'u-m tu'ure
+4 -1 # tu'ure *TOP*
+5 4 # . tu'ure
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25064 Url_id=2369 flag=0 cleaned=3 src_leng=8 trans_leng=9
+jume uúsi-m into ju'u maejto aman saja-k .
+DET.PL child-PL and DET.SG teacher there go.PL-PST .
+The children and the teacher went over there .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NP (DT The) (NNP children)) (CC and) (NP (DT the) (NN teacher))) (VP (VBD went) (PP (IN over) (NP (RB there)))) (. .))
+
+(S+went (NP+teacher (NP+children (DT The)
+                                 (NNP children))
+                    (CC and)
+                    (NP+teacher (DT the)
+                                (NN teacher)))
+        (VP+went (VBD went)
+                 (PP+over (IN over)
+                          (NP+there (RB there))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The children and the teacher went over there .
+1 2 # The children
+2 5 # children teacher
+3 5 # and teacher
+4 5 # the teacher
+5 6 # teacher went
+6 -1 # went *TOP*
+7 6 # over went
+8 7 # there over
+9 6 # . went
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+jume uúsi-m into ju'u maejto aman saja-k .
+DET.PL child-PL and DET.SG teacher there go.PL-PST .
+
+1 1 # jume DET.PL
+2 2 # uúsi-m child-PL
+ 2.1 2.1 # uúsi child
+ 2.2 2.2 # -m -PL
+3 3 # into and
+4 4 # ju'u DET.SG
+5 5 # maejto teacher
+6 6 # aman there
+7 7 # saja-k go.PL-PST
+ 7.1 7.1 # saja go.PL
+ 7.2 7.2 # -k -PST
+8 8 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+DET.PL child-PL and DET.SG teacher there go.PL-PST .
+The children and the teacher went over there .
+
+1 1 # DET.PL The
+2 0 # child-PL NULL
+ 2.1 0 # child NULL
+ 2.2 0 # -PL NULL
+3 3 # and and
+4 4 # DET.SG the
+5 5 # teacher teacher
+6 8 # there there
+7 6 # go.PL-PST went
+ 7.1 6 # go.PL went
+ 7.2 0 # -PST NULL
+8 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+jume uúsi-m into ju'u maejto aman saja-k .
+DET.PL child-PL and DET.SG teacher there go.PL-PST .
+The children and the teacher went over there .
+
+1 5 # jume maejto
+2 7 # uúsi-m saja-k
+3 5 # into maejto
+4 5 # ju'u maejto
+5 7 # maejto saja-k
+6 7 # aman saja-k
+7 -1 # saja-k *TOP*
+8 7 # . saja-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25066 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=10
+bejo'ori-m into sakkao-m inim yumjoe .
+lizard-PL and gila.monster-PL here rest.PRS .
+The lizards and the gila monsters are resting here .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NP (DT The) (NNPS lizards)) (CC and) (NP (DT the) (NNP gila) (NNPS monsters))) (VP (VBP are) (VP (VBG resting) (ADVP (RB here)))) (. .))
+
+(S+resting (NP+monsters (NP+lizards (DT The)
+                                    (NNPS lizards))
+                        (CC and)
+                        (NP+monsters (DT the)
+                                     (NNP gila)
+                                     (NNPS monsters)))
+           (VP+resting (VBP are)
+                       (VP+resting (VBG resting)
+                                   (ADVP+here (RB here))))
+           (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The lizards and the gila monsters are resting here .
+1 2 # The lizards
+2 6 # lizards monsters
+3 6 # and monsters
+4 6 # the monsters
+5 6 # gila monsters
+6 8 # monsters resting
+7 8 # are resting
+8 -1 # resting *TOP*
+9 8 # here resting
+10 8 # . resting
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+bejo'ori-m into sakkao-m inim yumjoe .
+lizard-PL and gila.monster-PL here rest.PRS .
+
+1 1 # bejo'ori-m lizard-PL
+ 1.1 1.1 # bejo'ori lizard
+ 1.2 1.2 # -m -PL
+2 2 # into and
+3 3 # sakkao-m gila.monster-PL
+ 3.1 3.1 # sakkao gila.monster
+ 3.2 3.2 # -m -PL
+4 4 # inim here
+5 5 # yumjoe rest.PRS
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+lizard-PL and gila.monster-PL here rest.PRS .
+The lizards and the gila monsters are resting here .
+
+1 0 # lizard-PL NULL
+ 1.1 0 # lizard NULL
+ 1.2 0 # -PL NULL
+2 3 # and and
+3 5 # gila.monster-PL gila
+ 3.1 5 # gila.monster gila
+ 3.2 0 # -PL NULL
+4 9 # here here
+5 8 # rest.PRS resting
+6 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+bejo'ori-m into sakkao-m inim yumjoe .
+lizard-PL and gila.monster-PL here rest.PRS .
+The lizards and the gila monsters are resting here .
+
+1 5 # bejo'ori-m yumjoe
+2 5 # into yumjoe
+3 5 # sakkao-m yumjoe
+4 5 # inim yumjoe
+5 -1 # yumjoe *TOP*
+6 5 # . yumjoe
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25076 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=9
+inepo mache'eta-m into kuchi'i-m kecha-k .
+1SG machete-PL and knife-PL put.up.SG.OBJ-PST .
+I put up the machete and the knife .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP put) (PRT (RP up)) (NP (NP (DT the) (NN machete)) (CC and) (NP (DT the) (NN knife)))) (. .))
+
+(S+put (NP+I (PRP I))
+       (VP+put (VBP put)
+               (PRT+up (RP up))
+               (NP+knife (NP+machete (DT the)
+                                     (NN machete))
+                         (CC and)
+                         (NP+knife (DT the)
+                                   (NN knife))))
+       (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I put up the machete and the knife .
+1 2 # I put
+2 -1 # put *TOP*
+3 2 # up put
+4 5 # the machete
+5 8 # machete knife
+6 8 # and knife
+7 8 # the knife
+8 2 # knife put
+9 2 # . put
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inepo mache'eta-m into kuchi'i-m kecha-k .
+1SG machete-PL and knife-PL put.up.SG.OBJ-PST .
+
+1 1 # inepo 1SG
+2 2 # mache'eta-m machete-PL
+ 2.1 2.1 # mache'eta machete
+ 2.2 2.2 # -m -PL
+3 3 # into and
+4 4 # kuchi'i-m knife-PL
+ 4.1 4.1 # kuchi'i knife
+ 4.2 4.2 # -m -PL
+5 5 # kecha-k put.up.SG.OBJ-PST
+ 5.1 5.1 # kecha put.up.SG.OBJ
+ 5.2 5.2 # -k -PST
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+1SG machete-PL and knife-PL put.up.SG.OBJ-PST .
+I put up the machete and the knife .
+
+1 1 # 1SG I
+2 5 # machete-PL machete
+ 2.1 5 # machete machete
+ 2.2 0 # -PL NULL
+3 6 # and and
+4 8 # knife-PL knife
+ 4.1 8 # knife knife
+ 4.2 0 # -PL NULL
+5 2,3 # put.up.SG.OBJ-PST put,up
+ 5.1 2,3 # put.up.SG.OBJ put,up
+ 5.2 0 # -PST NULL
+6 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inepo mache'eta-m into kuchi'i-m kecha-k .
+1SG machete-PL and knife-PL put.up.SG.OBJ-PST .
+I put up the machete and the knife .
+
+1 5 # inepo kecha-k
+2 4 # mache'eta-m kuchi'i-m
+3 4 # into kuchi'i-m
+4 5 # kuchi'i-m kecha-k
+5 -1 # kecha-k *TOP*
+6 5 # . kecha-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25084 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=8
+jiba bena iani junak bena-sia .
+already seem today then seem-sia .
+It is the same now and then .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP It)) (VP (VBZ is) (NP (NP (DT the) (JJ same)) (ADVP (RB now) (CC and) (RB then)))) (. .))
+
+(S+same (NP+It (PRP It))
+        (VP+same (VBZ is)
+                 (NP-PRD+same (NP+same (DT the)
+                                       (JJ same))
+                              (ADVP+then (RB now)
+                                         (CC and)
+                                         (RB then))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+It is the same now and then .
+1 4 # It same
+2 4 # is same
+3 4 # the same
+4 -1 # same *TOP*
+5 7 # now then
+6 7 # and then
+7 4 # then same
+8 4 # . same
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+jiba bena iani junak bena-sia .
+already seem today then seem-sia .
+
+1 1 # jiba already
+2 2 # bena seem
+3 3 # iani today
+4 4 # junak then
+5 5 # bena-sia seem-sia
+ 5.1 5.1 # bena seem
+ 5.2 5.2 # -sia -sia
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+already seem today then seem-sia .
+It is the same now and then .
+
+1 0 # already NULL
+2 0 # seem NULL
+3 0 # today NULL
+4 7 # then then
+5 0 # seem-sia NULL
+ 5.1 0 # seem NULL
+ 5.2 0 # -sia NULL
+6 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+jiba bena iani junak bena-sia .
+already seem today then seem-sia .
+It is the same now and then .
+
+1 5 # jiba bena-sia
+2 5 # bena bena-sia
+3 5 # iani bena-sia
+4 5 # junak bena-sia
+5 -2 # bena-sia NULL
+6 5 # . bena-sia
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25085 Url_id=2369 flag=0 cleaned=3 src_leng=7 trans_leng=8
+Em chu'u into em miisi nau-nassua .
+Your dog and your cat together-fight.PRS .
+Your dog and your cat are fighting .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NP (PRP$ Your) (NN dog)) (CC and) (NP (PRP$ your) (NN cat))) (VP (VBP are) (VP (VBG fighting))) (. .))
+
+(S+fighting (NP+cat (NP+dog (PRP$ Your)
+                            (NN dog))
+                    (CC and)
+                    (NP+cat (PRP$ your)
+                            (NN cat)))
+            (VP+fighting (VBP are)
+                         (VP+fighting (VBG fighting)))
+            (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Your dog and your cat are fighting .
+1 2 # Your dog
+2 5 # dog cat
+3 5 # and cat
+4 5 # your cat
+5 7 # cat fighting
+6 7 # are fighting
+7 -1 # fighting *TOP*
+8 7 # . fighting
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Em chu'u into em miisi nau-nassua .
+Your dog and your cat together-fight.PRS .
+
+1 1 # Em Your
+2 2 # chu'u dog
+3 3 # into and
+4 4 # em your
+5 5 # miisi cat
+6 6 # nau-nassua together-fight.PRS
+ 6.1 6.1 # nau together
+ 6.2 6.2 # -nassua -fight.PRS
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Your dog and your cat together-fight.PRS .
+Your dog and your cat are fighting .
+
+1 1 # Your Your
+2 2 # dog dog
+3 3 # and and
+4 4 # your your
+5 5 # cat cat
+6 7 # together-fight.PRS fighting
+ 6.1 0 # together NULL
+ 6.2 7 # -fight.PRS fighting
+7 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Em chu'u into em miisi nau-nassua .
+Your dog and your cat together-fight.PRS .
+Your dog and your cat are fighting .
+
+1 2 # Em chu'u
+2 5 # chu'u miisi
+3 5 # into miisi
+4 5 # em miisi
+5 6 # miisi nau-nassua
+6 -1 # nau-nassua *TOP*
+7 6 # . nau-nassua
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25089 Url_id=2369 flag=0 cleaned=4 src_leng=7 trans_leng=10
+Sandra-ta into Joel-ta -ne yokia-m maka-k .
+Sandra-NNOM.SG and Joel-NNOM.SG -1SG marker-PL give-PST .
+I gave the markers to Sandra and to Joel .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBD gave) (NP (DT the) (NNS markers)) (PP (PP (TO to) (NP (NNP Sandra))) (CC and) (PP (TO to) (NP (NNP Joel))))) (. .))
+
+(S+gave (NP+I (PRP I))
+        (VP+gave (VBD gave)
+                 (NP+markers (DT the)
+                             (NNS markers))
+                 (PP+to (PP+to (TO to)
+                               (NP+Sandra (NNP Sandra)))
+                        (CC and)
+                        (PP+to (TO to)
+                               (NP+Joel (NNP Joel)))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I gave the markers to Sandra and to Joel .
+1 2 # I gave
+2 -1 # gave *TOP*
+3 4 # the markers
+4 2 # markers gave
+5 2 # to gave
+6 5 # Sandra to
+7 5 # and to
+8 5 # to to
+9 8 # Joel to
+10 2 # . gave
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Sandra-ta into Joel-ta -ne yokia-m maka-k .
+Sandra-NNOM.SG and Joel-NNOM.SG -1SG marker-PL give-PST .
+
+1 1 # Sandra-ta Sandra-NNOM.SG
+ 1.1 1.1 # Sandra Sandra
+ 1.2 1.2 # -ta -NNOM.SG
+2 2 # into and
+3 3 # Joel-ta Joel-NNOM.SG
+ 3.1 3.1 # Joel Joel
+ 3.2 3.2 # -ta -NNOM.SG
+4 4 # -ne -1SG
+ 4.1 4.1 #  
+ 4.2 4.2 # -ne -1SG
+5 5 # yokia-m marker-PL
+ 5.1 5.1 # yokia marker
+ 5.2 5.2 # -m -PL
+6 6 # maka-k give-PST
+ 6.1 6.1 # maka give
+ 6.2 6.2 # -k -PST
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Sandra-NNOM.SG and Joel-NNOM.SG -1SG marker-PL give-PST .
+I gave the markers to Sandra and to Joel .
+
+1 6 # Sandra-NNOM.SG Sandra
+ 1.1 6 # Sandra Sandra
+ 1.2 0 # -NNOM.SG NULL
+2 7 # and and
+3 9 # Joel-NNOM.SG Joel
+ 3.1 9 # Joel Joel
+ 3.2 0 # -NNOM.SG NULL
+4 1 # -1SG I
+ 4.1 0 #  NULL
+ 4.2 1 # -1SG I
+5 4 # marker-PL markers
+ 5.1 4 # marker markers
+ 5.2 0 # -PL NULL
+6 2 # give-PST gave
+ 6.1 2 # give gave
+ 6.2 0 # -PST NULL
+7 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Sandra-ta into Joel-ta -ne yokia-m maka-k .
+Sandra-NNOM.SG and Joel-NNOM.SG -1SG marker-PL give-PST .
+I gave the markers to Sandra and to Joel .
+
+1 6 # Sandra-ta maka-k
+2 6 # into maka-k
+3 6 # Joel-ta maka-k
+4 6 # -ne maka-k
+5 6 # yokia-m maka-k
+6 -1 # maka-k *TOP*
+7 6 # . maka-k
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25139 Url_id=2406 flag=0 cleaned=3 src_leng=7 trans_leng=9
+kwarénta péso dyáryota-ne ne-kóba íani ínine .
+forty peso daily-CLIT.1SG 1SG-earn now here .
+Now I make forty pesos a day here .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (ADVP (RB Now)) (NP (PRP I)) (VP (VBP make) (NP (NP (CD forty) (NNS pesos)) (NP (DT a) (NN day)) (ADVP (RB here)))) (. .))
+
+(S+make (ADVP+Now (RB Now))
+        (NP+I (PRP I))
+        (VP+make (VBP make)
+                 (NP+day (NP+pesos (CD forty)
+                                   (NNS pesos))
+                         (NP+day (DT a)
+                                 (NN day))
+                         (ADVP+here (RB here))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Now I make forty pesos a day here .
+1 3 # Now make
+2 3 # I make
+3 -1 # make *TOP*
+4 5 # forty pesos
+5 7 # pesos day
+6 7 # a day
+7 3 # day make
+8 7 # here day
+9 3 # . make
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+kwarénta péso dyáryota-ne ne-kóba íani ínine .
+forty peso daily-CLIT.1SG 1SG-earn now here .
+
+1 1 # kwarénta forty
+2 2 # péso peso
+3 3 # dyáryota-ne daily-CLIT.1SG
+ 3.1 3.1 # dyáryota daily
+ 3.2 3.2 # -ne -CLIT.1SG
+4 4 # ne-kóba 1SG-earn
+ 4.1 4.1 # ne 1SG
+ 4.2 4.2 # -kóba -earn
+5 5 # íani now
+6 6 # ínine here
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+forty peso daily-CLIT.1SG 1SG-earn now here .
+Now I make forty pesos a day here .
+
+1 4 # forty forty
+2 5 # peso pesos
+3 2 # daily-CLIT.1SG I
+ 3.1 0 # daily NULL
+ 3.2 2 # -CLIT.1SG I
+4 2 # 1SG-earn I
+ 4.1 2 # 1SG I
+ 4.2 0 # -earn NULL
+5 1 # now Now
+6 8 # here here
+7 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+kwarénta péso dyáryota-ne ne-kóba íani ínine .
+forty peso daily-CLIT.1SG 1SG-earn now here .
+Now I make forty pesos a day here .
+
+1 2 # kwarénta péso
+2 6 # péso ínine
+3 6 # dyáryota-ne ínine
+4 6 # ne-kóba ínine
+5 6 # íani ínine
+6 -2 # ínine NULL
+7 6 # . ínine
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=28709 Url_id=2568 flag=0 cleaned=0 src_leng=5 trans_leng=5
+Ume ili chuu'u-m si ho-hovoi
+The.PL little dog-PL very RED-full
+The pups are very full
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NNS pups)) (VP (VBP are) (ADJP (RB very) (JJ full))))
+
+(S+full (NP+pups (DT The)
+                 (NNS pups))
+        (VP+full (VBP are)
+                 (ADJP-PRD+full (RB very)
+                                (JJ full))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The pups are very full
+1 2 # The pups
+2 5 # pups full
+3 5 # are full
+4 5 # very full
+5 -1 # full *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ume ili chuu'u-m si ho-hovoi
+The.PL little dog-PL very RED-full
+
+1 1 # Ume The.PL
+2 2 # ili little
+3 3 # chuu'u-m dog-PL
+ 3.1 3.1 # chuu'u dog
+ 3.2 3.2 # -m -PL
+4 4 # si very
+5 5 # ho-hovoi RED-full
+ 5.1 5.1 # ho RED
+ 5.2 5.2 # -hovoi -full
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+The.PL little dog-PL very RED-full
+The pups are very full
+
+1 1 # The.PL The
+2 0 # little NULL
+3 0 # dog-PL NULL
+ 3.1 0 # dog NULL
+ 3.2 0 # -PL NULL
+4 4 # very very
+5 5 # RED-full full
+ 5.1 0 # RED NULL
+ 5.2 5 # -full full
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ume ili chuu'u-m si ho-hovoi
+The.PL little dog-PL very RED-full
+The pups are very full
+
+1 5 # Ume ho-hovoi
+2 5 # ili ho-hovoi
+3 5 # chuu'u-m ho-hovoi
+4 5 # si ho-hovoi
+5 -1 # ho-hovoi *TOP*
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=28711 Url_id=2568 flag=0 cleaned=0 src_leng=5 trans_leng=5
+Ume ili miisim vesa-su ho-hovoa-k
+Those little cats already-EMPH RED-full-PERF
+Those kittens finally got full
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT Those) (NNS kittens)) (ADVP (RB finally)) (VP (VBD got) (ADJP (JJ full))))
+
+(S+got (NP+kittens (DT Those)
+                   (NNS kittens))
+       (ADVP+finally (RB finally))
+       (VP+got (VBD got)
+               (ADJP+full (JJ full))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Those kittens finally got full
+1 2 # Those kittens
+2 4 # kittens got
+3 4 # finally got
+4 -1 # got *TOP*
+5 4 # full got
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ume ili miisim vesa-su ho-hovoa-k
+Those little cats already-EMPH RED-full-PERF
+
+1 1 # Ume Those
+2 2 # ili little
+3 3 # miisim cats
+4 4 # vesa-su already-EMPH
+ 4.1 4.1 # vesa already
+ 4.2 4.2 # -su -EMPH
+5 5 # ho-hovoa-k RED-full-PERF
+ 5.1 5.1 # ho RED
+ 5.2 5.2 # -hovoa -full
+ 5.3 5.3 # -k -PERF
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Those little cats already-EMPH RED-full-PERF
+Those kittens finally got full
+
+1 1 # Those Those
+2 0 # little NULL
+3 0 # cats NULL
+4 0 # already-EMPH NULL
+ 4.1 0 # already NULL
+ 4.2 0 # -EMPH NULL
+5 5 # RED-full-PERF full
+ 5.1 0 # RED NULL
+ 5.2 5 # -full full
+ 5.3 0 # -PERF NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ume ili miisim vesa-su ho-hovoa-k
+Those little cats already-EMPH RED-full-PERF
+Those kittens finally got full
+
+1 5 # Ume ho-hovoa-k
+2 5 # ili ho-hovoa-k
+3 5 # miisim ho-hovoa-k
+4 5 # vesa-su ho-hovoa-k
+5 -2 # ho-hovoa-k NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=28715 Url_id=2568 flag=0 cleaned=0 src_leng=4 trans_leng=5
+Uu semalulukut hunuum ko-kowe-k
+The hummingbird there RED-hover-PERF
+The hummingbird hovered over there
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NN hummingbird)) (VP (VBD hovered) (PP (IN over) (NP (RB there)))))
+
+(S+hovered (NP+hummingbird (DT The)
+                           (NN hummingbird))
+           (VP+hovered (VBD hovered)
+                       (PP+over (IN over)
+                                (NP+there (RB there)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The hummingbird hovered over there
+1 2 # The hummingbird
+2 3 # hummingbird hovered
+3 -1 # hovered *TOP*
+4 3 # over hovered
+5 4 # there over
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Uu semalulukut hunuum ko-kowe-k
+The hummingbird there RED-hover-PERF
+
+1 1 # Uu The
+2 2 # semalulukut hummingbird
+3 3 # hunuum there
+4 4 # ko-kowe-k RED-hover-PERF
+ 4.1 4.1 # ko RED
+ 4.2 4.2 # -kowe -hover
+ 4.3 4.3 # -k -PERF
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+The hummingbird there RED-hover-PERF
+The hummingbird hovered over there
+
+1 1 # The The
+2 2 # hummingbird hummingbird
+3 5 # there there
+4 3 # RED-hover-PERF hovered
+ 4.1 0 # RED NULL
+ 4.2 3 # -hover hovered
+ 4.3 0 # -PERF NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Uu semalulukut hunuum ko-kowe-k
+The hummingbird there RED-hover-PERF
+The hummingbird hovered over there
+
+1 2 # Uu semalulukut
+2 4 # semalulukut ko-kowe-k
+3 4 # hunuum ko-kowe-k
+4 -1 # ko-kowe-k *TOP*
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=32018 Url_id=2733 flag=0 cleaned=3 src_leng=3 trans_leng=5
+haí-sa-te `án-nee ?
+how-Q-1P do-FUT ?
+what shall we do ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SBARQ (WHNP (WP what)) (SQ (MD shall) (NP (PRP we)) (VP (VB do))) (. ?))
+
+(SBARQ+do (WHNP+what (WP what))
+          (SQ+do (MD shall)
+                 (NP+we (PRP we))
+                 (VP+do (VB do)))
+          (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+what shall we do ?
+1 4 # what do
+2 4 # shall do
+3 4 # we do
+4 -1 # do *TOP*
+5 4 # ? do
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+haí-sa-te `án-nee ?
+how-Q-1P do-FUT ?
+
+1 1 # haí-sa-te how-Q-1P
+ 1.1 1.1 # haí how
+ 1.2 1.2 # -sa -Q
+ 1.3 1.3 # -te -1P
+2 2 # `án-nee do-FUT
+ 2.1 2.1 # `án do
+ 2.2 2.2 # -nee -FUT
+3 3 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+how-Q-1P do-FUT ?
+what shall we do ?
+
+1 3 # how-Q-1P we
+ 1.1 0 # how NULL
+ 1.2 0 # -Q NULL
+ 1.3 3 # -1P we
+2 4 # do-FUT do
+ 2.1 4 # do do
+ 2.2 0 # -FUT NULL
+3 5 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+haí-sa-te `án-nee ?
+how-Q-1P do-FUT ?
+what shall we do ?
+
+1 2 # haí-sa-te `án-nee
+2 -1 # `án-nee *TOP*
+3 2 # ? `án-nee
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=14900 Url_id=730 flag=0 cleaned=3 src_leng=3 trans_leng=6
+inepo kari-ne .
+I house-FUT .
+I will have a house .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (MD will) (VP (VB have) (NP (DT a) (NN house)))) (. .))
+
+(S+have (NP+I (PRP I))
+        (VP+have (MD will)
+                 (VP+have (VB have)
+                          (NP+house (DT a)
+                                    (NN house))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I will have a house .
+1 3 # I have
+2 3 # will have
+3 -1 # have *TOP*
+4 5 # a house
+5 3 # house have
+6 3 # . have
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+inepo kari-ne .
+I house-FUT .
+
+1 1 # inepo I
+2 2 # kari-ne house-FUT
+ 2.1 2.1 # kari house
+ 2.2 2.2 # -ne -FUT
+3 3 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+I house-FUT .
+I will have a house .
+
+1 1 # I I
+2 5 # house-FUT house
+ 2.1 5 # house house
+ 2.2 0 # -FUT NULL
+3 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+inepo kari-ne .
+I house-FUT .
+I will have a house .
+
+1 2 # inepo kari-ne
+2 -2 # kari-ne NULL
+3 2 # . kari-ne
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=14901 Url_id=82 flag=0 cleaned=0 src_leng=1 trans_leng=6
+miik-tua-wa-k
+give-CAUS-PASS-PERF
+to be made to give' Yaqui
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(FRAG (S (VP (TO to) (VP (VB be) (VP (VBN made) (PP (TO to) (NP (NNP give') (NNP Yaqui))))))))
+
+(FRAG+made (S+made (VP+made (TO to)
+                            (VP+made (VB be)
+                                     (VP+made (VBN made)
+                                              (PP+to (TO to)
+                                                     (NP+Yaqui (NNP give')
+                                                               (NNP Yaqui))))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+to be made to give' Yaqui
+1 3 # to made
+2 3 # be made
+3 -1 # made *TOP*
+4 3 # to made
+5 6 # give' Yaqui
+6 4 # Yaqui to
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+miik-tua-wa-k
+give-CAUS-PASS-PERF
+
+1 1 # miik-tua-wa-k give-CAUS-PASS-PERF
+ 1.1 1.1 # miik give
+ 1.2 1.2 # -tua -CAUS
+ 1.3 1.3 # -wa -PASS
+ 1.4 1.4 # -k -PERF
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+give-CAUS-PASS-PERF
+to be made to give' Yaqui
+
+1 0 # give-CAUS-PASS-PERF NULL
+ 1.1 0 # give NULL
+ 1.2 0 # -CAUS NULL
+ 1.3 0 # -PASS NULL
+ 1.4 0 # -PERF NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+miik-tua-wa-k
+give-CAUS-PASS-PERF
+to be made to give' Yaqui
+
+1 -2 # miik-tua-wa-k NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+

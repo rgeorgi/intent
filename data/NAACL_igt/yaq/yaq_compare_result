@@ -1,0 +1,33 @@
+there is no id_list. Use all igts
+Finish reading 84 IGTs from yaq.res.gold
+Finish reading 84 IGTs from yaq.res.new
+IGT numbers: file1=84 (clean=68), file2=84 (clean=84)
+Unanswered questions: file1=0, file2=504
+
+Q1: appear_in_both=84: wrong_format=0, both_clean=68, both_unclean=0, disagree=16
+among 68 both clean IGTs, src_words=404 (ave_sent_leng=5.94117647058824), trans_words=544 (ave_sent_leng=8)
+==> agreement=80.9523809523809%
+
+
+Q2: gold(Yes)=50, sys(Yes)=68, agree=50, disagree=18 accuracy=73.5294117647059
+
+Q3: gold(Yes)=51, sys(Yes)=68, agree=51, disagree=17 accuracy=75
+   Q3: wo_null:  gold=544, sys=544, agree=509 disagree=70 => P=93.5661764705882 R=93.5661764705882 F=93.5661764705882
+  Q3: w_null:   gold=544, sys=544, agree=509 disagree=70 => P=93.5661764705882 R=93.5661764705882 F=93.5661764705882
+
+
+Q4: gold(Yes)=68, sys(Yes)=68, agree=68, disagree=0 accuracy=100
+   Q4: wo_null:  gold=404, sys=404, agree=404 disagree=0 => P=100 R=100 F=100
+  Q4: w_null:   gold=404, sys=404, agree=404 disagree=0 => P=100 R=100 F=100
+
+
+Q5: gold(Yes)=35, sys(Yes)=68, agree=35, disagree=33 accuracy=51.4705882352941
+   Q5: wo_null:  gold=410, sys=361, agree=361 disagree=49 => P=100 R=88.0487804878049 F=93.6446173800259
+  Q5: w_null:   gold=559, sys=598, agree=510 disagree=137 => P=85.2842809364548 R=91.2343470483005 F=88.1590319792567
+
+
+Q6: gold(Yes)=31, sys(Yes)=68, agree=31, disagree=37 accuracy=45.5882352941176
+   Q6: wo_null:  gold=405, sys=404, agree=321 disagree=167 => P=79.4554455445545 R=79.2592592592593 F=79.3572311495674
+  Q6: w_null:   gold=405, sys=404, agree=321 disagree=167 => P=79.4554455445545 R=79.2592592592593 F=79.3572311495674
+
+

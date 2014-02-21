@@ -1,0 +1,11 @@
+ADV	cinccalo	acwu	kakkum	taytanhi
+NOUN	mwul-ul	sikan-tongan-i	chayk-i	john-un	ai-tul-i	cip-ey	atul-eykey	swuni-ka	chayk-ul	ton-ul	mary-ka	chelswu-ka	sakwa-lul	satan-i	sikan-tongan-ul	cwul-ul	chelswu-ka	os-ul	mary-eykey	apeci-kkeyse	john-i
+DET	i	ku	ku
+ADP	ane	wie	chung
+.	?	.	!
+PRON	nay-ka	na-nun	nay-ka	ku-ka	na-nun
+VERB	ilk-hi-ess-ta	wen.hay-ss-ta	amsi.hay-ss-ta	ka-ki	i-ta	ka-ki-lul	mek-ess-ta	hay-ss-ta	ilk-e	cwu-si-ess-ta	elli-ess-ta	palay-ss-ta
+NUM	sey	han
+ADJ	say	chicek-i-ta
+CONJ	kyeom
+X	??

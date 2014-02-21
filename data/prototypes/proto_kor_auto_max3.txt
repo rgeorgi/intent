@@ -1,0 +1,10 @@
+ADV	neomu	ddo	cheongmal	keoseuro	chom	an
+NOUN	keosi	su	kil	keot	ddae	teung
+ADP	mane	chung	ddaemune	chunge	hu	ihu
+DET	myeoc	eoddeon	kak	i	keu	modeun
+.	!	),	..	,	?	.
+PRON	ireul	chasinyi	keuneun	keuyi	chega	ineun
+VERB	kaneun	handa	taehan	issda	issneun	allyeojweo
+NUM	ch-eot	han	hana	tu	hananeun	se
+CONJ	mic	keurigo	hogeun	ddoneun
+ADJ	saeroun	k-eun	tareun	masisseoyo	chohayo	yeoreo

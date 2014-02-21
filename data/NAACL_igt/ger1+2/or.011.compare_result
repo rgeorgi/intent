@@ -1,0 +1,91 @@
+there is no id_list. Use all igts
+Finish reading 162 IGTs from ger1+2.res.danjj
+Finish reading 105 IGTs from or.011
+warning: different numbers of IGTs in two files
+igt_id=23469 does not appear in or.011
+igt_id=3999 does not appear in or.011
+igt_id=3892 does not appear in or.011
+igt_id=32359 does not appear in or.011
+igt_id=16783 does not appear in or.011
+igt_id=20817 does not appear in or.011
+igt_id=15611 does not appear in or.011
+igt_id=17829 does not appear in or.011
+igt_id=3497 does not appear in or.011
+igt_id=25320 does not appear in or.011
+igt_id=3858 does not appear in or.011
+igt_id=16738 does not appear in or.011
+igt_id=3433 does not appear in or.011
+igt_id=3848 does not appear in or.011
+igt_id=3403 does not appear in or.011
+igt_id=3487 does not appear in or.011
+igt_id=16785 does not appear in or.011
+igt_id=3287 does not appear in or.011
+igt_id=23495 does not appear in or.011
+igt_id=2933 does not appear in or.011
+igt_id=16892 does not appear in or.011
+igt_id=16789 does not appear in or.011
+igt_id=3286 does not appear in or.011
+igt_id=3738 does not appear in or.011
+igt_id=16769 does not appear in or.011
+igt_id=17308 does not appear in or.011
+igt_id=25322 does not appear in or.011
+igt_id=3900 does not appear in or.011
+igt_id=6276 does not appear in or.011
+igt_id=13073 does not appear in or.011
+igt_id=3381 does not appear in or.011
+igt_id=23374 does not appear in or.011
+igt_id=3834 does not appear in or.011
+igt_id=15610 does not appear in or.011
+igt_id=25325 does not appear in or.011
+igt_id=25323 does not appear in or.011
+igt_id=16760 does not appear in or.011
+igt_id=16726 does not appear in or.011
+igt_id=3740 does not appear in or.011
+igt_id=15569 does not appear in or.011
+igt_id=3404 does not appear in or.011
+igt_id=25150 does not appear in or.011
+igt_id=21997 does not appear in or.011
+igt_id=3710 does not appear in or.011
+igt_id=25321 does not appear in or.011
+igt_id=15568 does not appear in or.011
+igt_id=3890 does not appear in or.011
+igt_id=23470 does not appear in or.011
+igt_id=26851 does not appear in or.011
+igt_id=3877 does not appear in or.011
+igt_id=3380 does not appear in or.011
+igt_id=3318 does not appear in or.011
+igt_id=16758 does not appear in or.011
+igt_id=3485 does not appear in or.011
+igt_id=3379 does not appear in or.011
+igt_id=28722 does not appear in or.011
+igt_id=3476 does not appear in or.011
+IGT numbers: file1=162 (clean=105), file2=105 (clean=105)
+Unanswered questions: file1=2, file2=525
+
+Q1: appear_in_both=105: wrong_format=0, both_clean=105, both_unclean=0, disagree=0
+among 105 both clean IGTs, src_words=746 (ave_sent_leng=7.1047619047619), trans_words=778 (ave_sent_leng=7.40952380952381)
+==> agreement=100%
+
+
+Q2: gold(Yes)=86, sys(Yes)=105, agree=86, disagree=19 accuracy=81.9047619047619
+
+Q3: gold(Yes)=85, sys(Yes)=105, agree=85, disagree=20 accuracy=80.9523809523809
+   Q3: wo_null:  gold=777, sys=778, agree=729 disagree=97 => P=93.7017994858612 R=93.8223938223938 F=93.7620578778135
+  Q3: w_null:   gold=778, sys=778, agree=729 disagree=98 => P=93.7017994858612 R=93.7017994858612 F=93.7017994858612
+
+
+Q4: gold(Yes)=105, sys(Yes)=105, agree=105, disagree=0 accuracy=100
+   Q4: wo_null:  gold=746, sys=746, agree=746 disagree=0 => P=100 R=100 F=100
+  Q4: w_null:   gold=746, sys=746, agree=746 disagree=0 => P=100 R=100 F=100
+
+
+Q5: gold(Yes)=61, sys(Yes)=105, agree=61, disagree=44 accuracy=58.0952380952381
+   Q5: wo_null:  gold=692, sys=692, agree=692 disagree=0 => P=100 R=100 F=100
+  Q5: w_null:   gold=853, sys=853, agree=853 disagree=0 => P=100 R=100 F=100
+
+
+Q6: gold(Yes)=44, sys(Yes)=105, agree=44, disagree=61 accuracy=41.9047619047619
+   Q6: wo_null:  gold=749, sys=755, agree=645 disagree=214 => P=85.4304635761589 R=86.1148197596796 F=85.7712765957447
+  Q6: w_null:   gold=749, sys=755, agree=645 disagree=214 => P=85.4304635761589 R=86.1148197596796 F=85.7712765957447
+
+

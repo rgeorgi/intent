@@ -1,9 +1,9 @@
-ADV	wejZa	sAWa	jalxI	nahIM	bAhara
-NOUN	kala	AwiPZa	kamare	tikata	hari	uxGAtana	mIrA	sIwA	rAXA	praSna	kiwAba	Gara	pAnI	bApU	BAI	NULL	seba	yAxava	mAz	AyA	KAnA	cAzxa	manxira	KIra	mInA	skUla	bAjZAra	bacce	ladZakA	gAMXIjI	xAna	rAma	bAwa	buxXimAna	svIkAra	SyAma	xillI	mohana	mana	cammaca	BiKArI	gussA	samaya	rAmabacana
-ADP	kA	ke	para	meM	kI	jEsI	ko	xvArA	se	ne
-.	,	.
-PRON	usane	ve	usa	yaha	apane	jo	muJako	apanA	merA	vaha	vahAz	mere
-VERB	KAwA	xeKA	WA	xeKI	gayA	rahA	WI	jA	kahA	lagI	AyegA	hEM	xiKA	huA	We	xI	kiyA	hE	KAI	gaye	rahI	KAkara	bETA	kara	KilavAyA	xilavAyI	mAnanA	mAnawe	jAnA	xilavAyA	liyA
-NUM	eka
+ADV	jZyAxA	kama	pAsa	wejZa	kaI	pahale	bAxa	KZUba	jalxI	bahuwa	bAhara	sAWa	nahIM	KUba
+NOUN	KuSI	kala	AwiPZa	kamare	betiyAz	hari	uxGAtana	AyA	mIrA	corI	sIwA	rAXA	gAnA	ravi	kiwAba	piSAca	mAz	xera	NULL	pAnI	cAzxa	BAI	kAma	bacce	anuBava	seba	cAkU	mana	AriPZa	xillI	KAnA	bAra	gahane	rASi	mAovAxI	bApU	manxira	KIra	wohaPZA	kRamA	monA	varNana	mInA	skUla	bAjZAra	dOYktara	rAjA	bahana	ladZakA	gAMXIjI	SyAma	xAna	rAma	PZilma	xAvA	bAwa	buxXimAna	patAKe	miTAI	svIkAra	xivAlI	tikata	Gara	mohana	gussA	vruwAMwa	praSna	cammaca	BiKArI	xAnA	yAxava	samaya	rAmabacana
+ADP	kA	ke	para	meM	kI	jEsI	ko	ne	xvArA	liye	se
+.	)	(	,	.
+PRON	unhoMne	wuma	usane	usa	vaha	yaha	merA	muJako	merI	apane	jo	muJe	apanA	vahAz	mEne	Apa	jEsA	mere	ve
+VERB	KAwA	KAyI	hue	WI	paDZI	kara	lagI	kahA	rahawI	We	xI	WA	rahI	cAhie	sakawe	KarixavAye	bETA	KilavAyA	xilavAyI	mAnawe	xilavAyA	A	xeKA	gayI	kiyA	rahe	xeKI	gayA	rahA	ho	AyegA	jAne	xiKA	KarIxI	KA	uTA	huA	karawA	liKI	KAI	xiyA	huI	gaye	KAkara	AegI	mAnanA	gaI	hEM	jAnawA	liyA	jAnA	jA	hE
+NUM	wIna	xo	eka
 CONJ	ki	Ora
-ADJ	nIlI	giraPZawAra	KadZA	sunxara	acCe	acCA	BI
+ADJ	acCe	nIlI	giraPZawAra	KadZA	sunxara	lambA	pawA	nIlA	acCA	BI

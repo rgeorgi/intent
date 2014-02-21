@@ -1,0 +1,130 @@
+39	NP -> DT NN
+32	S -> VP NP
+30	S -> VP
+27	NP -> NNP
+21	NP -> NN
+16	VP -> VB NP
+15	NP -> DT NNS
+14	NP -> PRP
+14	PP -> NP
+12	WHNP -> WP
+10	SBAR -> S
+9	VP -> VBD NP
+9	S -> VP NP .
+8	NP -> NNS
+7	VP -> VBN+PP
+7	NP -> NP SBAR
+6	ADVP -> RB
+5	VP -> VBN PP
+5	WHADVP -> WRB
+5	NP -> NNP CC NNP
+5	NP -> DT NN DT
+4	VP -> NP
+4	SBARQ -> WHNP Unaligned SQ .
+4	VP -> RB VP
+4	VP -> VBG NP
+4	VP -> VBZ NP
+3	VP -> VB
+3	VP -> VBD S
+3	SBAR -> IN S
+3	SBARQ -> WHADVP SQ .
+3	SQ -> NP Unaligned VP
+3	VP -> VBG+IN NP
+3	SQ -> VP
+3	VP -> VBD Unaligned S
+3	VP -> VBZ S
+3	PP -> IN NP
+3	NP -> NP PP
+3	S -> VP Unaligned NP
+3	PP -> IN+NP
+3	S -> NP Unaligned VP
+3	VP -> VBD
+2	VP -> VB Unaligned PP
+2	SBARQ -> WHADVP Unaligned SQ .
+2	VP -> VBD Unaligned NP
+2	SBARQ -> MD WHNP Unaligned VP .
+2	VP -> VBP S
+2	NP -> DT NNP
+2	S -> VP NP Unaligned
+2	NP -> NP Unaligned SBAR
+2	VP -> VBN+NP
+2	SBAR -> WHNP S
+2	VP -> VBG Unaligned PP
+2	S -> VBD NNP+VB NP .
+2	VP -> VBN
+2	NP -> CD+NNS
+2	VP -> VBG S
+2	VP -> VBG
+2	NP -> NP Unaligned PP
+1	NP -> WRB
+1	S -> VP Unaligned
+1	S -> VBD NP NP
+1	S -> NNP+VP
+1	VP -> VBG PP
+1	NP -> NP CC NP
+1	VP -> VB+NP NP NNS
+1	NP -> DT NN NNP
+1	VP -> VBG ADVP
+1	NP -> JJ+NNS
+1	NP -> NP CC Unaligned NP
+1	NP -> PDT DT NNS
+1	VP -> VBP Unaligned S
+1	NP -> NNP Unaligned NN NNP CC NNP
+1	NP -> DT+NN
+1	VP -> VP CC VP
+1	NP -> DT NN NN
+1	S -> CC VP NP .
+1	S -> ADVP VP NP
+1	SBARQ -> ADVP WHNP Unaligned VP .
+1	S -> VBD NP Unaligned SBAR
+1	VP -> VBD+NP PP
+1	S -> PRP+VBD S
+1	SBAR -> WHNP Unaligned S
+1	VP -> VP DT
+1	SQ -> VBN+PP NP NP
+1	VP -> NP SBAR
+1	S -> PRP+VBD Unaligned SBAR
+1	ADJP -> JJ Unaligned S
+1	S -> VP Unaligned NP .
+1	SBARQ -> VP WHNP Unaligned NP .
+1	SQ -> RB VP
+1	S -> Unaligned VP NP .
+1	S -> VP SBAR
+1	S -> VBZ NP SBAR
+1	NP -> NNP CC Unaligned NNP
+1	VP -> VBZ PP
+1	S -> VBD RB NNP+VBG Unaligned NP .
+1	NP -> NNPS
+1	VP -> VB PP
+1	S -> VBD NP S NP .
+1	VP -> VB Unaligned NP
+1	SQ -> VP NP
+1	S -> NNP+VBD NP
+1	SQ -> RB VP Unaligned NP .
+1	VP -> VB S
+1	NP -> PRP$ NN
+1	SBARQ -> NP Unaligned WHNP Unaligned PRP+VB .
+1	VP -> VB NP PP
+1	VP -> MD VP
+1	S -> VBP PRP+VB NP .
+1	VP -> TO VP
+1	PP -> JJ+PP
+1	VP -> VBD+DT+JJ+VBZ+NN JJ
+1	S -> NP VP
+1	S -> ADVP VB NP NP
+1	VP -> VBD CC VBD NP
+1	NP -> DT
+1	VP -> VBN Unaligned S
+1	S -> Unaligned VP
+1	VP -> S
+1	VP -> ADJP
+1	VP -> PP ADVP
+1	VP -> PP Unaligned SBAR
+1	NP -> NN NP Unaligned VBD NN
+1	VP -> VBP PP
+1	NP -> PRP PRP
+1	S -> VP NP ADVP .
+1	PP -> TO NP
+1	VP -> VBZ VP
+1	S -> NP
+syntactic rules: rule_tokens=466, rule_types=129

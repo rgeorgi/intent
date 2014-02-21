@@ -1,0 +1,1503 @@
+
+###########################################################
+Igt_id=24189 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=6
+Aapo bwiíka into aapo ye'e .
+3SG sing.PRS and 3SG dance.PRS .
+He is singing and he .
+
+######## Q1: IGT is clean? Answer: y
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: y
+
+
+
+###############################  Q3: English DS 
+He is singing and he .
+1 5 # He he
+2 5 # is he
+3 5 # singing he
+4 5 # and he
+5 -1 # he *TOP*
+6 5 # . he
+
+
+########  Q3: English DS is correct? Answer: y
+
+
+
+#######################  Q4: src and gloss alignment
+Aapo bwiíka into aapo ye'e .
+3SG sing.PRS and 3SG dance.PRS .
+
+1 1 # Aapo 3SG
+2 2 # bwiíka sing.PRS
+3 3 # into and
+4 4 # aapo 3SG
+5 5 # ye'e dance.PRS
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: y
+
+
+
+######################### Q5: gloss and translation alignment
+3SG sing.PRS and 3SG dance.PRS .
+He is singing and he .
+
+1 1 # 3SG He
+2 0 # sing.PRS NULL
+3 4 # and and
+4 5 # 3SG he
+5 0 # dance.PRS NULL
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: y
+
+
+############################# Q6: src DS
+Aapo bwiíka into aapo ye'e .
+3SG sing.PRS and 3SG dance.PRS .
+He is singing and he .
+
+1 4 # Aapo aapo
+2 4 # bwiíka aapo
+3 4 # into aapo
+4 -1 # aapo *TOP*
+5 4 # ye'e aapo
+6 4 # . aapo
+
+
+####### Q6: src DS is correct? Answer: y
+
+
+
+
+
+
+Q7: src_PS: 
+
+(S (NP (PRP He))
+   (VP (VBZ is)
+       (NP (NP (NN singing))
+           (CC and)
+           (NP (PRP he))))
+   (. .))
+
+replace_words:
+(S (NP (PRP Aapo))
+   (VP (VBZ )
+       (NP (NP (NN ))
+           (CC into)
+           (NP (PRP aapo))))
+   (. .))
+
+remove_unaligned_words:
+(S (NP (PRP Aapo))
+   (VP (NP (CC into)
+           (NP (PRP aapo))))
+   (. .))
+
+After reordering: remove_tnode_num=0, suc=1
+(S (NP (PRP Aapo))
+   (VP (NP (CC into)
+           (NP (PRP aapo))))
+   (. .))
+
+After attaching unaligned src word: total_cnt=2, suc=2
+(S (NP (PRP Aapo))
+   (Unaligned bwiíka)
+   (VP (NP (CC into)
+           (NP (PRP aapo))))
+   (Unaligned ye'e)
+   (. .))
+
+
+**** Extracted CFG:
+2	NP -> PRP
+1	CC -> into
+1	NP -> CC NP
+1	PRP -> Aapo
+1	S -> NP Unaligned VP Unaligned .
+1	. -> .
+1	VP -> NP
+1	Unaligned -> ye'e
+1	Unaligned -> bwiíka
+1	PRP -> aapo
+rule_tokens=11, rule_types=10
+
+###########################################################
+Igt_id=25033 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=7
+int-um kari beju'uku kate-ka .
+And-there house leaves-LOC sit-GER .
+And he sits under the leaves .
+
+######## Q1: IGT is clean? Answer: y
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: y
+
+
+
+###############################  Q3: English DS 
+And he sits under the leaves .
+1 3 # And sits
+2 3 # he sits
+3 -1 # sits *TOP*
+4 3 # under sits
+5 6 # the leaves
+6 4 # leaves under
+7 3 # . sits
+
+
+########  Q3: English DS is correct? Answer: y
+
+
+
+#######################  Q4: src and gloss alignment
+int-um kari beju'uku kate-ka .
+And-there house leaves-LOC sit-GER .
+
+1 1 # int-um And-there
+ 1.1 0 # int NULL
+ 1.2 0 # -um NULL
+2 2 # kari house
+3 3 # beju'uku leaves-LOC
+4 4 # kate-ka sit-GER
+ 4.1 0 # kate NULL
+ 4.2 0 # -ka NULL
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: y
+
+
+
+######################### Q5: gloss and translation alignment
+And-there house leaves-LOC sit-GER .
+And he sits under the leaves .
+
+1 1 # And-there And
+ 1.1 0 # And NULL
+ 1.2 0 # -there NULL
+2 0 # house NULL
+3 6 # leaves-LOC leaves
+ 3.1 0 # leaves NULL
+ 3.2 0 # -LOC NULL
+4 3 # sit-GER sits
+ 4.1 0 # sit NULL
+ 4.2 0 # -GER NULL
+5 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: y
+
+
+############################# Q6: src DS
+int-um kari beju'uku kate-ka .
+And-there house leaves-LOC sit-GER .
+And he sits under the leaves .
+
+1 4 # int-um kate-ka
+2 4 # kari kate-ka
+3 4 # beju'uku kate-ka
+4 -1 # kate-ka *TOP*
+5 4 # . kate-ka
+
+
+####### Q6: src DS is correct? Answer: y
+
+
+
+
+
+
+Q7: src_PS: 
+
+(S (CC And)
+   (NP (PRP he))
+   (VP (VBZ sits)
+       (PP (IN under)
+           (NP (DT the)
+               (NNS leaves))))
+   (. .))
+
+replace_words:
+(S (CC int-um)
+   (NP (PRP ))
+   (VP (VBZ kate-ka)
+       (PP (IN )
+           (NP (DT )
+               (NNS beju'uku))))
+   (. .))
+
+remove_unaligned_words:
+(S (CC int-um)
+   (VP (VBZ kate-ka)
+       (PP (NP (NNS beju'uku))))
+   (. .))
+
+After reordering: remove_tnode_num=0, suc=1
+(S (CC int-um)
+   (VP (PP (NP (NNS beju'uku)))
+       (VBZ kate-ka))
+   (. .))
+
+After attaching unaligned src word: total_cnt=1, suc=1
+(S (CC int-um)
+   (Unaligned kari)
+   (VP (PP (NP (NNS beju'uku)))
+       (VBZ kate-ka))
+   (. .))
+
+
+**** Extracted CFG:
+1	PP -> NP
+1	Unaligned -> kari
+1	. -> .
+1	VP -> PP VBZ
+1	CC -> int-um
+1	NNS -> beju'uku
+1	S -> CC Unaligned VP .
+1	NP -> NNS
+1	VBZ -> kate-ka
+rule_tokens=9, rule_types=9
+
+###########################################################
+Igt_id=25047 Url_id=2369 flag=0 cleaned=4 src_leng=5 trans_leng=9
+Maria tajkaim ya'a-su-kai am-bwa-ka .
+Maria tortillas make-TERM-SUB 3SG.NNOM.PL-eat-PST .
+After finishing making tortillas , Maria ate them .
+
+######## Q1: IGT is clean? Answer: y
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: y
+
+
+
+###############################  Q3: English DS 
+After finishing making tortillas , Maria ate them .
+1 7 # After ate
+2 3 # finishing making
+3 1 # making After
+4 3 # tortillas making
+5 7 # , ate
+6 7 # Maria ate
+7 -1 # ate *TOP*
+8 7 # them ate
+9 7 # . ate
+
+
+########  Q3: English DS is correct? Answer: y
+
+
+
+#######################  Q4: src and gloss alignment
+Maria tajkaim ya'a-su-kai am-bwa-ka .
+Maria tortillas make-TERM-SUB 3SG.NNOM.PL-eat-PST .
+
+1 1 # Maria Maria
+2 2 # tajkaim tortillas
+3 3 # ya'a-su-kai make-TERM-SUB
+ 3.1 0 # ya'a NULL
+ 3.2 0 # -su NULL
+ 3.3 0 # -kai NULL
+4 4 # am-bwa-ka 3SG.NNOM.PL-eat-PST
+ 4.1 0 # am NULL
+ 4.2 0 # -bwa NULL
+ 4.3 0 # -ka NULL
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: y
+
+
+
+######################### Q5: gloss and translation alignment
+Maria tortillas make-TERM-SUB 3SG.NNOM.PL-eat-PST .
+After finishing making tortillas , Maria ate them .
+
+1 6 # Maria Maria
+2 4 # tortillas tortillas
+3 0 # make-TERM-SUB NULL
+ 3.1 0 # make NULL
+ 3.2 0 # -TERM NULL
+ 3.3 0 # -SUB NULL
+4 7 # 3SG.NNOM.PL-eat-PST ate
+ 4.1 0 # 3SG.NNOM.PL NULL
+ 4.2 0 # -eat NULL
+ 4.3 0 # -PST NULL
+5 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: y
+
+
+############################# Q6: src DS
+Maria tajkaim ya'a-su-kai am-bwa-ka .
+Maria tortillas make-TERM-SUB 3SG.NNOM.PL-eat-PST .
+After finishing making tortillas , Maria ate them .
+
+1 4 # Maria am-bwa-ka
+2 4 # tajkaim am-bwa-ka
+3 4 # ya'a-su-kai am-bwa-ka
+4 -1 # am-bwa-ka *TOP*
+5 4 # . am-bwa-ka
+
+
+####### Q6: src DS is correct? Answer: y
+
+
+
+
+
+
+Q7: src_PS: 
+
+(S (PP (IN After)
+       (S (VP (VBG finishing)
+              (VP (VBG making)
+                  (NP (NNS tortillas))))))
+   (, ,)
+   (NP (NNP Maria))
+   (VP (VBD ate)
+       (NP (PRP them)))
+   (. .))
+
+replace_words:
+(S (PP (IN )
+       (S (VP (VBG )
+              (VP (VBG )
+                  (NP (NNS tajkaim))))))
+   (, )
+   (NP (NNP Maria))
+   (VP (VBD am-bwa-ka)
+       (NP (PRP )))
+   (. .))
+
+remove_unaligned_words:
+(S (PP (S (VP (NP (NNS tajkaim)))))
+   (NP (NNP Maria))
+   (VP (VBD am-bwa-ka))
+   (. .))
+
+After reordering: remove_tnode_num=0, suc=1
+(S (NP (NNP Maria))
+   (PP (S (VP (NP (NNS tajkaim)))))
+   (VP (VBD am-bwa-ka))
+   (. .))
+
+After attaching unaligned src word: total_cnt=1, suc=1
+(S (NP (NNP Maria))
+   (PP (S (VP (NP (NNS tajkaim)))))
+   (Unaligned ya'a-su-kai)
+   (VP (VBD am-bwa-ka))
+   (. .))
+
+
+**** Extracted CFG:
+1	Unaligned -> ya'a-su-kai
+1	VP -> VBD
+1	NNS -> tajkaim
+1	VBD -> am-bwa-ka
+1	NNP -> Maria
+1	. -> .
+1	S -> VP
+1	PP -> S
+1	VP -> NP
+1	NP -> NNP
+1	NP -> NNS
+1	S -> NP PP Unaligned VP .
+rule_tokens=12, rule_types=12
+
+###########################################################
+Igt_id=25089 Url_id=2369 flag=0 cleaned=4 src_leng=7 trans_leng=10
+Sandra-ta into Joel-ta -ne yokia-m maka-k .
+Sandra-NNOM.SG and Joel-NNOM.SG -1SG marker-PL give-PST .
+I gave the markers to Sandra and to Joel .
+
+######## Q1: IGT is clean? Answer: y
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: y
+
+
+
+###############################  Q3: English DS 
+I gave the markers to Sandra and to Joel .
+1 2 # I gave
+2 -1 # gave *TOP*
+3 4 # the markers
+4 2 # markers gave
+5 2 # to gave
+6 5 # Sandra to
+7 5 # and to
+8 5 # to to
+9 8 # Joel to
+10 2 # . gave
+
+
+########  Q3: English DS is correct? Answer: y
+
+
+
+#######################  Q4: src and gloss alignment
+Sandra-ta into Joel-ta -ne yokia-m maka-k .
+Sandra-NNOM.SG and Joel-NNOM.SG -1SG marker-PL give-PST .
+
+1 1 # Sandra-ta Sandra-NNOM.SG
+ 1.1 0 # Sandra NULL
+ 1.2 0 # -ta NULL
+2 2 # into and
+3 3 # Joel-ta Joel-NNOM.SG
+ 3.1 0 # Joel NULL
+ 3.2 0 # -ta NULL
+4 4 # -ne -1SG
+ 4.1 0 #  NULL
+ 4.2 0 # -ne NULL
+5 5 # yokia-m marker-PL
+ 5.1 0 # yokia NULL
+ 5.2 0 # -m NULL
+6 6 # maka-k give-PST
+ 6.1 0 # maka NULL
+ 6.2 0 # -k NULL
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: y
+
+
+
+######################### Q5: gloss and translation alignment
+Sandra-NNOM.SG and Joel-NNOM.SG -1SG marker-PL give-PST .
+I gave the markers to Sandra and to Joel .
+
+1 6 # Sandra-NNOM.SG Sandra
+ 1.1 0 # Sandra NULL
+ 1.2 0 # -NNOM.SG NULL
+2 7 # and and
+3 9 # Joel-NNOM.SG Joel
+ 3.1 0 # Joel NULL
+ 3.2 0 # -NNOM.SG NULL
+4 1 # -1SG I
+ 4.1 0 #  NULL
+ 4.2 0 # -1SG NULL
+5 4 # marker-PL markers
+ 5.1 0 # marker NULL
+ 5.2 0 # -PL NULL
+6 2 # give-PST gave
+ 6.1 0 # give NULL
+ 6.2 0 # -PST NULL
+7 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: y
+
+
+############################# Q6: src DS
+Sandra-ta into Joel-ta -ne yokia-m maka-k .
+Sandra-NNOM.SG and Joel-NNOM.SG -1SG marker-PL give-PST .
+I gave the markers to Sandra and to Joel .
+
+1 6 # Sandra-ta maka-k
+2 6 # into maka-k
+3 6 # Joel-ta maka-k
+4 6 # -ne maka-k
+5 6 # yokia-m maka-k
+6 -1 # maka-k *TOP*
+7 6 # . maka-k
+
+
+####### Q6: src DS is correct? Answer: y
+
+
+
+
+
+
+Q7: src_PS: 
+
+(S (NP (PRP I))
+   (VP (VBD gave)
+       (NP (DT the)
+           (NNS markers))
+       (PP (PP (TO to)
+               (NP (NNP Sandra)))
+           (CC and)
+           (PP (TO to)
+               (NP (NNP Joel)))))
+   (. .))
+
+replace_words:
+(S (NP (PRP -ne))
+   (VP (VBD maka-k)
+       (NP (DT )
+           (NNS yokia-m))
+       (PP (PP (TO )
+               (NP (NNP Sandra-ta)))
+           (CC into)
+           (PP (TO )
+               (NP (NNP Joel-ta)))))
+   (. .))
+
+remove_unaligned_words:
+(S (NP (PRP -ne))
+   (VP (VBD maka-k)
+       (NP (NNS yokia-m))
+       (PP (PP (NP (NNP Sandra-ta)))
+           (CC into)
+           (PP (NP (NNP Joel-ta)))))
+   (. .))
+
+After reordering: remove_tnode_num=1, suc=1
+(S (PP (PP (NP (NNP Sandra-ta)))
+       (CC into)
+       (PP (NP (NNP Joel-ta))))
+   (NP (PRP -ne))
+   (NP (NNS yokia-m))
+   (VBD maka-k)
+   (. .))
+
+After attaching unaligned src word: total_cnt=0, suc=0
+(S (PP (PP (NP (NNP Sandra-ta)))
+       (CC into)
+       (PP (NP (NNP Joel-ta))))
+   (NP (PRP -ne))
+   (NP (NNS yokia-m))
+   (VBD maka-k)
+   (. .))
+
+
+**** Extracted CFG:
+2	PP -> NP
+2	NP -> NNP
+1	VBD -> maka-k
+1	CC -> into
+1	NP -> PRP
+1	PRP -> -ne
+1	NNS -> yokia-m
+1	S -> PP NP NP VBD .
+1	. -> .
+1	NP -> NNS
+1	PP -> PP CC PP
+1	NNP -> Joel-ta
+1	NNP -> Sandra-ta
+rule_tokens=15, rule_types=13
+
+###########################################################
+Igt_id=25050 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=11
+Joan inien ea kari-ta jinu-pee-sime .
+John this.way think.PRS house-NNOM.SG buy-DESID-go.SG.PRS .
+John thinks that he is going to buy a house .
+
+######## Q1: IGT is clean? Answer: y
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: y
+
+
+
+###############################  Q3: English DS 
+John thinks that he is going to buy a house .
+1 2 # John thinks
+2 -1 # thinks *TOP*
+3 6 # that going
+4 6 # he going
+5 6 # is going
+6 2 # going thinks
+7 8 # to buy
+8 6 # buy going
+9 10 # a house
+10 8 # house buy
+11 2 # . thinks
+
+
+########  Q3: English DS is correct? Answer: y
+
+
+
+#######################  Q4: src and gloss alignment
+Joan inien ea kari-ta jinu-pee-sime .
+John this.way think.PRS house-NNOM.SG buy-DESID-go.SG.PRS .
+
+1 1 # Joan John
+2 2 # inien this.way
+3 3 # ea think.PRS
+4 4 # kari-ta house-NNOM.SG
+ 4.1 0 # kari NULL
+ 4.2 0 # -ta NULL
+5 5 # jinu-pee-sime buy-DESID-go.SG.PRS
+ 5.1 0 # jinu NULL
+ 5.2 0 # -pee NULL
+ 5.3 0 # -sime NULL
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: y
+
+
+
+######################### Q5: gloss and translation alignment
+John this.way think.PRS house-NNOM.SG buy-DESID-go.SG.PRS .
+John thinks that he is going to buy a house .
+
+1 1 # John John
+2 0 # this.way NULL
+3 2 # think.PRS thinks
+4 10 # house-NNOM.SG house
+ 4.1 0 # house NULL
+ 4.2 0 # -NNOM.SG NULL
+5 6,8 # buy-DESID-go.SG.PRS going,buy
+ 5.1 0 # buy NULL
+ 5.2 0 # -DESID NULL
+ 5.3 0 # -go.SG.PRS NULL
+6 11 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: y
+
+
+############################# Q6: src DS
+Joan inien ea kari-ta jinu-pee-sime .
+John this.way think.PRS house-NNOM.SG buy-DESID-go.SG.PRS .
+John thinks that he is going to buy a house .
+
+1 3 # Joan ea
+2 3 # inien ea
+3 -1 # ea *TOP*
+4 5 # kari-ta jinu-pee-sime
+5 3 # jinu-pee-sime ea
+6 3 # . ea
+
+
+####### Q6: src DS is correct? Answer: y
+
+
+
+
+
+
+Q7: src_PS: 
+
+(S (NP (NNP John))
+   (VP (VBZ thinks)
+       (SBAR (IN that)
+             (S (NP (PRP he))
+                (VP (VBZ is)
+                    (VP (VBG going)
+                        (S (VP (TO to)
+                               (VP (VB buy)
+                                   (NP (DT a)
+                                       (NN house))))))))))
+   (. .))
+
+replace_words:
+(S (NP (NNP Joan))
+   (VP (VBZ ea)
+       (SBAR (IN )
+             (S (NP (PRP ))
+                (VP (VBZ )
+                    (VP (VBG jinu-pee-sime)
+                        (S (VP (TO )
+                               (VP (VB jinu-pee-sime)
+                                   (NP (DT )
+                                       (NN kari-ta))))))))))
+   (. .))
+
+remove_unaligned_words:
+(S (NP (NNP Joan))
+   (VP (VBZ ea)
+       (SBAR (S (VP (VBG jinu-pee-sime)
+                    (S (VP (VB jinu-pee-sime)
+                           (NP (NN kari-ta))))))))
+   (. .))
+
+After reordering: remove_tnode_num=2, suc=1
+(S (NP (NNP Joan))
+   (VP (VBZ ea)
+       (SBAR (S (VP (NP (NN kari-ta))
+                    (VBG+VB jinu-pee-sime)))))
+   (. .))
+
+After attaching unaligned src word: total_cnt=1, suc=1
+(S (NP (NNP Joan))
+   (Unaligned inien)
+   (VP (VBZ ea)
+       (SBAR (S (VP (NP (NN kari-ta))
+                    (VBG+VB jinu-pee-sime)))))
+   (. .))
+
+
+**** Extracted CFG:
+1	VP -> NP VBG+VB
+1	NP -> NN
+1	SBAR -> S
+1	VBG+VB -> jinu-pee-sime
+1	VP -> VBZ SBAR
+1	NN -> kari-ta
+1	NNP -> Joan
+1	. -> .
+1	S -> VP
+1	S -> NP Unaligned VP .
+1	NP -> NNP
+1	Unaligned -> inien
+1	VBZ -> ea
+rule_tokens=13, rule_types=13
+
+###########################################################
+Igt_id=24192 Url_id=2369 flag=0 cleaned=3 src_leng=6 trans_leng=6
+Joan bwiika-k María into ye'e-ka .
+John sing-PST María and dance-PST .
+John sang and María danced .
+
+######## Q1: IGT is clean? Answer: y
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: y
+
+
+
+###############################  Q3: English DS 
+John sang and María danced .
+1 5 # John danced
+2 5 # sang danced
+3 5 # and danced
+4 5 # María danced
+5 -1 # danced *TOP*
+6 5 # . danced
+
+
+########  Q3: English DS is correct? Answer: y
+
+
+
+#######################  Q4: src and gloss alignment
+Joan bwiika-k María into ye'e-ka .
+John sing-PST María and dance-PST .
+
+1 1 # Joan John
+2 2 # bwiika-k sing-PST
+ 2.1 0 # bwiika NULL
+ 2.2 0 # -k NULL
+3 3 # María María
+4 4 # into and
+5 5 # ye'e-ka dance-PST
+ 5.1 0 # ye'e NULL
+ 5.2 0 # -ka NULL
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: y
+
+
+
+######################### Q5: gloss and translation alignment
+John sing-PST María and dance-PST .
+John sang and María danced .
+
+1 1 # John John
+2 2 # sing-PST sang
+ 2.1 0 # sing NULL
+ 2.2 0 # -PST NULL
+3 4 # María María
+4 3 # and and
+5 0 # dance-PST NULL
+ 5.1 0 # dance NULL
+ 5.2 0 # -PST NULL
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: y
+
+
+############################# Q6: src DS
+Joan bwiika-k María into ye'e-ka .
+John sing-PST María and dance-PST .
+John sang and María danced .
+
+1 5 # Joan ye'e-ka
+2 5 # bwiika-k ye'e-ka
+3 5 # María ye'e-ka
+4 5 # into ye'e-ka
+5 -2 # ye'e-ka NULL
+6 5 # . ye'e-ka
+
+
+####### Q6: src DS is correct? Answer: y
+
+
+
+
+
+
+Q7: src_PS: 
+
+(S (NP (NNP John))
+   (VP (VP (VBD sang))
+       (CC and)
+       (VP (VBD María)
+           (VP (VBN danced))))
+   (. .))
+
+replace_words:
+(S (NP (NNP Joan))
+   (VP (VP (VBD bwiika-k))
+       (CC into)
+       (VP (VBD María)
+           (VP (VBN ))))
+   (. .))
+
+remove_unaligned_words:
+(S (NP (NNP Joan))
+   (VP (VP (VBD bwiika-k))
+       (CC into)
+       (VP (VBD María)))
+   (. .))
+
+After reordering: remove_tnode_num=0, suc=1
+(S (NP (NNP Joan))
+   (VP (VP (VBD bwiika-k))
+       (VP (VBD María))
+       (CC into))
+   (. .))
+
+After attaching unaligned src word: total_cnt=1, suc=1
+(S (NP (NNP Joan))
+   (VP (VP (VBD bwiika-k))
+       (VP (VBD María))
+       (CC into))
+   (Unaligned ye'e-ka)
+   (. .))
+
+
+**** Extracted CFG:
+2	VP -> VBD
+1	CC -> into
+1	S -> NP VP Unaligned .
+1	Unaligned -> ye'e-ka
+1	VP -> VP VP CC
+1	VBD -> María
+1	NNP -> Joan
+1	. -> .
+1	NP -> NNP
+1	VBD -> bwiika-k
+rule_tokens=11, rule_types=10
+
+###########################################################
+Igt_id=14900 Url_id=730 flag=0 cleaned=3 src_leng=3 trans_leng=6
+inepo kari-ne .
+I house-FUT .
+I will have a house .
+
+######## Q1: IGT is clean? Answer: y
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: y
+
+
+
+###############################  Q3: English DS 
+I will have a house .
+1 3 # I have
+2 3 # will have
+3 -1 # have *TOP*
+4 5 # a house
+5 3 # house have
+6 3 # . have
+
+
+########  Q3: English DS is correct? Answer: y
+
+
+
+#######################  Q4: src and gloss alignment
+inepo kari-ne .
+I house-FUT .
+
+1 1 # inepo I
+2 2 # kari-ne house-FUT
+ 2.1 0 # kari NULL
+ 2.2 0 # -ne NULL
+3 3 # . .
+######## Q4: src and gloss alignment is correct? Answer: y
+
+
+
+######################### Q5: gloss and translation alignment
+I house-FUT .
+I will have a house .
+
+1 1 # I I
+2 5 # house-FUT house
+ 2.1 0 # house NULL
+ 2.2 0 # -FUT NULL
+3 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: y
+
+
+############################# Q6: src DS
+inepo kari-ne .
+I house-FUT .
+I will have a house .
+
+1 2 # inepo kari-ne
+2 -2 # kari-ne NULL
+3 2 # . kari-ne
+
+
+####### Q6: src DS is correct? Answer: y
+
+
+
+
+
+
+Q7: src_PS: 
+
+(S (NP (PRP I))
+   (VP (MD will)
+       (VP (VB have)
+           (NP (DT a)
+               (NN house))))
+   (. .))
+
+replace_words:
+(S (NP (PRP inepo))
+   (VP (MD )
+       (VP (VB )
+           (NP (DT )
+               (NN kari-ne))))
+   (. .))
+
+remove_unaligned_words:
+(S (NP (PRP inepo))
+   (VP (NP (NN kari-ne)))
+   (. .))
+
+After reordering: remove_tnode_num=0, suc=1
+(S (NP (PRP inepo))
+   (VP (NP (NN kari-ne)))
+   (. .))
+
+After attaching unaligned src word: total_cnt=0, suc=0
+(S (NP (PRP inepo))
+   (VP (NP (NN kari-ne)))
+   (. .))
+
+
+**** Extracted CFG:
+1	NP -> NN
+1	NP -> PRP
+1	PRP -> inepo
+1	S -> NP VP .
+1	. -> .
+1	VP -> NP
+1	NN -> kari-ne
+rule_tokens=7, rule_types=7
+
+###########################################################
+Igt_id=24197 Url_id=2369 flag=0 cleaned=3 src_leng=4 trans_leng=5
+Joan jitá bwa-ka ?
+John what eat-PST ?
+What did John eat ?
+
+######## Q1: IGT is clean? Answer: y
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: y
+
+
+
+###############################  Q3: English DS 
+What did John eat ?
+1 4 # What eat
+2 4 # did eat
+3 4 # John eat
+4 -1 # eat *TOP*
+5 4 # ? eat
+
+
+########  Q3: English DS is correct? Answer: y
+
+
+
+#######################  Q4: src and gloss alignment
+Joan jitá bwa-ka ?
+John what eat-PST ?
+
+1 1 # Joan John
+2 2 # jitá what
+3 3 # bwa-ka eat-PST
+ 3.1 0 # bwa NULL
+ 3.2 0 # -ka NULL
+4 4 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: y
+
+
+
+######################### Q5: gloss and translation alignment
+John what eat-PST ?
+What did John eat ?
+
+1 3 # John John
+2 1 # what What
+3 4 # eat-PST eat
+ 3.1 0 # eat NULL
+ 3.2 0 # -PST NULL
+4 5 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: y
+
+
+############################# Q6: src DS
+Joan jitá bwa-ka ?
+John what eat-PST ?
+What did John eat ?
+
+1 3 # Joan bwa-ka
+2 3 # jitá bwa-ka
+3 -1 # bwa-ka *TOP*
+4 3 # ? bwa-ka
+
+
+####### Q6: src DS is correct? Answer: y
+
+
+
+
+
+
+Q7: src_PS: 
+
+(SBARQ (WHNP (WP What))
+       (SQ (VBD did)
+           (NP (NNP John))
+           (VP (VB eat)))
+       (. ?))
+
+replace_words:
+(SBARQ (WHNP (WP jitá))
+       (SQ (VBD )
+           (NP (NNP Joan))
+           (VP (VB bwa-ka)))
+       (. ?))
+
+remove_unaligned_words:
+(SBARQ (WHNP (WP jitá))
+       (SQ (NP (NNP Joan))
+           (VP (VB bwa-ka)))
+       (. ?))
+
+After reordering: remove_tnode_num=1, suc=1
+(SBARQ (NP (NNP Joan))
+       (WHNP (WP jitá))
+       (VP (VB bwa-ka))
+       (. ?))
+
+After attaching unaligned src word: total_cnt=0, suc=0
+(SBARQ (NP (NNP Joan))
+       (WHNP (WP jitá))
+       (VP (VB bwa-ka))
+       (. ?))
+
+
+**** Extracted CFG:
+1	VP -> VB
+1	SBARQ -> NP WHNP VP .
+1	. -> ?
+1	NNP -> Joan
+1	VB -> bwa-ka
+1	WHNP -> WP
+1	WP -> jitá
+1	NP -> NNP
+rule_tokens=8, rule_types=8
+
+###########################################################
+Igt_id=25055 Url_id=2369 flag=0 cleaned=3 src_leng=5 trans_leng=6
+Chikti maejto-m libro-m jinu-k .
+Each teacher-PL book-PL buy-PST .
+Each teacher bought a book .
+
+######## Q1: IGT is clean? Answer: y
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: y
+
+
+
+###############################  Q3: English DS 
+Each teacher bought a book .
+1 2 # Each teacher
+2 3 # teacher bought
+3 -1 # bought *TOP*
+4 5 # a book
+5 3 # book bought
+6 3 # . bought
+
+
+########  Q3: English DS is correct? Answer: y
+
+
+
+#######################  Q4: src and gloss alignment
+Chikti maejto-m libro-m jinu-k .
+Each teacher-PL book-PL buy-PST .
+
+1 1 # Chikti Each
+2 2 # maejto-m teacher-PL
+ 2.1 0 # maejto NULL
+ 2.2 0 # -m NULL
+3 3 # libro-m book-PL
+ 3.1 0 # libro NULL
+ 3.2 0 # -m NULL
+4 4 # jinu-k buy-PST
+ 4.1 0 # jinu NULL
+ 4.2 0 # -k NULL
+5 5 # . .
+######## Q4: src and gloss alignment is correct? Answer: y
+
+
+
+######################### Q5: gloss and translation alignment
+Each teacher-PL book-PL buy-PST .
+Each teacher bought a book .
+
+1 1 # Each Each
+2 2 # teacher-PL teacher
+ 2.1 0 # teacher NULL
+ 2.2 0 # -PL NULL
+3 5 # book-PL book
+ 3.1 0 # book NULL
+ 3.2 0 # -PL NULL
+4 3 # buy-PST bought
+ 4.1 0 # buy NULL
+ 4.2 0 # -PST NULL
+5 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: y
+
+
+############################# Q6: src DS
+Chikti maejto-m libro-m jinu-k .
+Each teacher-PL book-PL buy-PST .
+Each teacher bought a book .
+
+1 2 # Chikti maejto-m
+2 4 # maejto-m jinu-k
+3 4 # libro-m jinu-k
+4 -1 # jinu-k *TOP*
+5 4 # . jinu-k
+
+
+####### Q6: src DS is correct? Answer: y
+
+
+
+
+
+
+Q7: src_PS: 
+
+(S (NP (DT Each)
+       (NN teacher))
+   (VP (VBD bought)
+       (NP (DT a)
+           (NN book)))
+   (. .))
+
+replace_words:
+(S (NP (DT Chikti)
+       (NN maejto-m))
+   (VP (VBD jinu-k)
+       (NP (DT )
+           (NN libro-m)))
+   (. .))
+
+remove_unaligned_words:
+(S (NP (DT Chikti)
+       (NN maejto-m))
+   (VP (VBD jinu-k)
+       (NP (NN libro-m)))
+   (. .))
+
+After reordering: remove_tnode_num=0, suc=1
+(S (NP (DT Chikti)
+       (NN maejto-m))
+   (VP (NP (NN libro-m))
+       (VBD jinu-k))
+   (. .))
+
+After attaching unaligned src word: total_cnt=0, suc=0
+(S (NP (DT Chikti)
+       (NN maejto-m))
+   (VP (NP (NN libro-m))
+       (VBD jinu-k))
+   (. .))
+
+
+**** Extracted CFG:
+1	NP -> NN
+1	VBD -> jinu-k
+1	DT -> Chikti
+1	S -> NP VP .
+1	VP -> NP VBD
+1	. -> .
+1	NP -> DT NN
+1	NN -> libro-m
+1	NN -> maejto-m
+rule_tokens=9, rule_types=9
+
+###########################################################
+Igt_id=17574 Url_id=1249 flag=0 cleaned=0 src_leng=5 trans_leng=6
+`aapo Huan-tau `uka vachi-ta maka-k
+he John-DAT Det.ACC corn-ACC give-PERF
+He gave the corn to John
+
+######## Q1: IGT is clean? Answer: y
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: y
+
+
+
+###############################  Q3: English DS 
+He gave the corn to John
+1 2 # He gave
+2 -1 # gave *TOP*
+3 4 # the corn
+4 2 # corn gave
+5 2 # to gave
+6 5 # John to
+
+
+########  Q3: English DS is correct? Answer: y
+
+
+
+#######################  Q4: src and gloss alignment
+`aapo Huan-tau `uka vachi-ta maka-k
+he John-DAT Det.ACC corn-ACC give-PERF
+
+1 1 # `aapo he
+2 2 # Huan-tau John-DAT
+ 2.1 0 # Huan NULL
+ 2.2 0 # -tau NULL
+3 3 # `uka Det.ACC
+4 4 # vachi-ta corn-ACC
+ 4.1 0 # vachi NULL
+ 4.2 0 # -ta NULL
+5 5 # maka-k give-PERF
+ 5.1 0 # maka NULL
+ 5.2 0 # -k NULL
+######## Q4: src and gloss alignment is correct? Answer: y
+
+
+
+######################### Q5: gloss and translation alignment
+he John-DAT Det.ACC corn-ACC give-PERF
+He gave the corn to John
+
+1 1 # he He
+2 6 # John-DAT John
+ 2.1 0 # John NULL
+ 2.2 0 # -DAT NULL
+3 3 # Det.ACC the
+4 4 # corn-ACC corn
+ 4.1 0 # corn NULL
+ 4.2 0 # -ACC NULL
+5 2 # give-PERF gave
+ 5.1 0 # give NULL
+ 5.2 0 # -PERF NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: y
+
+
+############################# Q6: src DS
+`aapo Huan-tau `uka vachi-ta maka-k
+he John-DAT Det.ACC corn-ACC give-PERF
+He gave the corn to John
+
+1 5 # `aapo maka-k
+2 5 # Huan-tau maka-k
+3 4 # `uka vachi-ta
+4 5 # vachi-ta maka-k
+5 -1 # maka-k *TOP*
+
+
+####### Q6: src DS is correct? Answer: y
+
+
+
+
+
+
+Q7: src_PS: 
+
+(S (NP (PRP He))
+   (VP (VBD gave)
+       (NP (DT the)
+           (NN corn))
+       (PP (TO to)
+           (NP (NNP John)))))
+
+replace_words:
+(S (NP (PRP `aapo))
+   (VP (VBD maka-k)
+       (NP (DT `uka)
+           (NN vachi-ta))
+       (PP (TO )
+           (NP (NNP Huan-tau)))))
+
+remove_unaligned_words:
+(S (NP (PRP `aapo))
+   (VP (VBD maka-k)
+       (NP (DT `uka)
+           (NN vachi-ta))
+       (PP (NP (NNP Huan-tau)))))
+
+After reordering: remove_tnode_num=0, suc=1
+(S (NP (PRP `aapo))
+   (VP (PP (NP (NNP Huan-tau)))
+       (NP (DT `uka)
+           (NN vachi-ta))
+       (VBD maka-k)))
+
+After attaching unaligned src word: total_cnt=0, suc=0
+(S (NP (PRP `aapo))
+   (VP (PP (NP (NNP Huan-tau)))
+       (NP (DT `uka)
+           (NN vachi-ta))
+       (VBD maka-k)))
+
+
+**** Extracted CFG:
+1	VBD -> maka-k
+1	PP -> NP
+1	NP -> PRP
+1	DT -> `uka
+1	PRP -> `aapo
+1	NN -> vachi-ta
+1	NNP -> Huan-tau
+1	NP -> DT NN
+1	S -> NP VP
+1	NP -> NNP
+1	VP -> PP NP VBD
+rule_tokens=11, rule_types=11
+
+###########################################################
+Igt_id=14901 Url_id=82 flag=0 cleaned=0 src_leng=1 trans_leng=6
+miik-tua-wa-k
+give-CAUS-PASS-PERF
+to be made to give' Yaqui
+
+######## Q1: IGT is clean? Answer: y
+
+
+############################## Q2: English parse tree 
+
+
+###### Q2: English parse tree is correct? Answer: y
+
+
+
+###############################  Q3: English DS 
+to be made to give' Yaqui
+1 3 # to made
+2 3 # be made
+3 -1 # made *TOP*
+4 3 # to made
+5 6 # give' Yaqui
+6 4 # Yaqui to
+
+
+########  Q3: English DS is correct? Answer: y
+
+
+
+#######################  Q4: src and gloss alignment
+miik-tua-wa-k
+give-CAUS-PASS-PERF
+
+1 1 # miik-tua-wa-k give-CAUS-PASS-PERF
+ 1.1 0 # miik NULL
+ 1.2 0 # -tua NULL
+ 1.3 0 # -wa NULL
+ 1.4 0 # -k NULL
+######## Q4: src and gloss alignment is correct? Answer: y
+
+
+
+######################### Q5: gloss and translation alignment
+give-CAUS-PASS-PERF
+to be made to give' Yaqui
+
+1 0 # give-CAUS-PASS-PERF NULL
+ 1.1 0 # give NULL
+ 1.2 0 # -CAUS NULL
+ 1.3 0 # -PASS NULL
+ 1.4 0 # -PERF NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: y
+
+
+############################# Q6: src DS
+miik-tua-wa-k
+give-CAUS-PASS-PERF
+to be made to give' Yaqui
+
+1 -2 # miik-tua-wa-k NULL
+
+
+####### Q6: src DS is correct? Answer: y
+
+
+
+
+
+
+Q7: src_PS: 
+
+(FRAG (S (VP (TO to)
+             (VP (VB be)
+                 (VP (VBN made)
+                     (PP (TO to)
+                         (NP (NNP give')
+                             (NNP Yaqui))))))))
+
+replace_words:
+(FRAG (S (VP (TO )
+             (VP (VB )
+                 (VP (VBN )
+                     (PP (TO )
+                         (NP (NNP )
+                             (NNP ))))))))
+
+remove_unaligned_words:
+(FRAG )

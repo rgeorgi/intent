@@ -49,7 +49,7 @@ def context(rawfile, modelfile, appendDistance = True, contextWindow = 2, direct
 def train(rawfile, protofile, context_model, sequence_model,  minIters = 10, numIters = 200, order = 2, useSuffixFeatures = True, useHasHyphen = True, useInitialCapital = True, outdir = None):
 	prop()
 	global cp	
-	cmd = 'java -server -Xmx2048m -cp %s edu.berkeley.nlp.prototype.PrototypeSequenceModelTrainer ' % cp
+	cmd = 'java -server -Xmx4048m -cp %s edu.berkeley.nlp.prototype.PrototypeSequenceModelTrainer ' % cp
 	
 	cmd += ' -dataRoot %s' % os.path.dirname(rawfile)
 	cmd += ' -prefix %s' % os.path.basename(os.path.splitext(rawfile)[0])
@@ -102,6 +102,8 @@ def test(rawfile, sequence_model, outdir):
 	cmd += ' -PrototypeSequenceModelTester.inExtension .txt'
 	cmd += ' -delimeter /'
 	cmd += ' -outExtension .tagged'
+	
+	sys.stderr.write(cmd+'\n')
 	os.system(cmd)
 	
 def sanity_check(c):
@@ -131,46 +133,46 @@ if __name__ == '__main__':
 	
 	eval_file = os.path.join(c['outdir'], os.path.basename(c['test_file']))+'.tagged'
 	
-	remove_safe(c['context_model'])
-	remove_safe(c['sequence_model'])
-	remove_safe(eval_file)
+# 	remove_safe(c['context_model'])
+# 	remove_safe(c['sequence_model'])
+# 	remove_safe(eval_file)
 
 
 	
 	#===========================================================================
 	# Perform the context model training
-	#===========================================================================
-	context(c['rawfile'], 
-		    c['context_model'], appendDistance = c['appendDistance'],
-		    					contextWindow = c['contextWindow'],
-		    					directional = c['directional'],
-		    					reduceType = c['reduceType'])
-	
-	#===========================================================================
-	#  Perform the sequence model training.
-	#===========================================================================
-	train(c['rawfile'],
-		  c['protofile'],
-		  c['context_model'],
-		  c['sequence_model'], numIters = c['numIters'],
-		 					   minIters = c['minIters'],
-		 					   order = c['order'],
-		 					   useSuffixFeatures = c['useSuffixFeatures'],
-		 					   useHasHyphen = c['useHasHyphen'],
-		 					   useInitialCapital = c['useInitialCapital'],
-		 					   outdir = c['outdir'])
+# 	#===========================================================================
+# 	context(c['rawfile'], 
+# 		    c['context_model'], appendDistance = c['appendDistance'],
+# 		    					contextWindow = c['contextWindow'],
+# 		    					directional = c['directional'],
+# 		    					reduceType = c['reduceType'])
+# 	
+# # 	#===========================================================================
+# 	#  Perform the sequence model training.
+# 	#===========================================================================
+# 	train(c['rawfile'],
+# 		  c['protofile'],
+# 		  c['context_model'],
+# 		  c['sequence_model'], numIters = c['numIters'],
+# 		 					   minIters = c['minIters'],
+# 		 					   order = c['order'],
+# 		 					   useSuffixFeatures = c['useSuffixFeatures'],
+# 		 					   useHasHyphen = c['useHasHyphen'],
+# 		 					   useInitialCapital = c['useInitialCapital'],
+# 		 					   outdir = c['outdir'])
 	
 	#===========================================================================
 	# Perform the testing.
 	#===========================================================================
-	test(c['test_file'],
-		 c['sequence_model'],
-		 c['outdir'])
-	
+# 	test(c['test_file'],
+# 		 c['sequence_model'],
+# 		 c['outdir'])
+# 	
 	#===========================================================================
 	# Evaluate.
 	#===========================================================================
-	
+		
 
 	pos_eval(c['gold_file'],
 			 eval_file,

@@ -58,7 +58,7 @@ def get_prototypes(tagged_path, proto_out, delimeter,
 	for tag in proto_dict:
 		proto_file.write(tag)
 		for word in proto_dict[tag]:
-			proto_file.write('\t'+word)
+			proto_file.write('\t'+word.lower()) # LOWERCASE for testing
 		proto_file.write('\n')
 	proto_file.close()
 			

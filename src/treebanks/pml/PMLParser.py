@@ -35,8 +35,7 @@ class PMLParser(TextParser):
 		rawfile = c['rawfile']
 		a_tagmap = c['a_tagmap']
 		b_tagmap = c['b_tagmap']
-
-	
+		
 		a = Alignments(align)
 		a_path = os.path.join(os.path.dirname(align), a.a)
 		b_path = os.path.join(os.path.dirname(align), a.b)	

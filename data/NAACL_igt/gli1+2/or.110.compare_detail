@@ -1,0 +1,5923 @@
+
+
+**************** igt_id=20633 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+an fear ar dochtúir é
+the man C-rel doctor he
+The man who he is a doctor
+
+
+------------------- igt_id=20633: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20633: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20633: question Q3 ans1=1, ans2=1 -----------
+English DS:
+The man who he is a doctor
+
+1 2 # The man
+2 -1 # man *TOP*
+3 7 # who doctor
+4 7 # he doctor
+5 7 # is doctor
+6 7 # a doctor
+7 2 # doctor man
+
+1 2 # The man
+2 -1 # man *TOP*
+3 7 # who doctor
+4 7 # he doctor
+5 7 # is doctor
+6 7 # a doctor
+7 2 # doctor man
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=20633: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+an fear ar dochtúir é
+the man C-rel doctor he
+
+1 1 # an the
+2 2 # fear man
+3 3 # ar C-rel
+4 4 # dochtúir doctor
+5 5 # é he
+
+1 1 # an the
+2 2 # fear man
+3 3 # ar C-rel
+4 4 # dochtúir doctor
+5 5 # é he
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=20633: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+the man C-rel doctor he
+The man who he is a doctor
+
+1 1 # the The
+2 2 # man man
+3 5,3 # C-rel NULL x
+4 7 # doctor doctor
+5 4 # he he
+
+1 1 # the The
+2 2 # man man
+3 0 # C-rel NULL
+4 7 # doctor doctor
+5 4 # he he
+
+DISAGREE in Q5: file1 has +3 3+, file2 does not, type=1
+DISAGREE in Q5: file1 has +3 5+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 3+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +3 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 5+, file2 does, type=2
+
+
+wo_null: file1=6,file2=4, agree=4
+w_null:  file1=7,file2=8, agree=5
+
+
+------------------- igt_id=20633: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+an fear ar dochtúir é
+the man C-rel doctor he
+The man who he is a doctor
+
+1 2 # an fear
+2 -1 # fear *TOP*
+3 4 # ar fear x
+4 2 # dochtúir fear
+5 4 # é dochtúir
+
+1 2 # an fear
+2 -1 # fear *TOP*
+3 2 # ar fear
+4 2 # dochtúir fear
+5 4 # é dochtúir
+
+DISAGREE in Q6: file1 has +3 4+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +3 2+, file2 does, type=1
+
+
+wo_null: file1=5,file2=5, agree=4
+w_null:  file1=5,file2=5, agree=4
+
+
+**************** igt_id=20634 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+an fear arbh é an dochtúir é
+the man C-rel agr the doctor he
+The man who he was the doctor
+
+
+------------------- igt_id=20634: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20634: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20634: question Q3 ans1=1, ans2=1 -----------
+English DS:
+The man who he was the doctor
+
+1 2 # The man
+2 -1 # man *TOP*
+3 7 # who doctor
+4 7 # he doctor
+5 7 # was doctor
+6 7 # the doctor
+7 2 # doctor man
+
+1 2 # The man
+2 -1 # man *TOP*
+3 7 # who doctor
+4 7 # he doctor
+5 7 # was doctor
+6 7 # the doctor
+7 2 # doctor man
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=20634: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+an fear arbh é an dochtúir é
+the man C-rel agr the doctor he
+
+1 1 # an the
+2 2 # fear man
+3 3 # arbh C-rel
+4 4 # é agr
+5 5 # an the
+6 6 # dochtúir doctor
+7 7 # é he
+
+1 1 # an the
+2 2 # fear man
+3 3 # arbh C-rel
+4 4 # é agr
+5 5 # an the
+6 6 # dochtúir doctor
+7 7 # é he
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=20634: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+the man C-rel agr the doctor he
+The man who he was the doctor
+
+1 1 # the The
+2 2 # man man
+3 5,3 # C-rel NULL x
+4 0 # agr NULL
+5 6 # the the
+6 7 # doctor doctor
+7 4 # he he
+
+1 1 # the The
+2 2 # man man
+3 0 # C-rel NULL
+4 0 # agr NULL
+5 6 # the the
+6 7 # doctor doctor
+7 4 # he he
+
+DISAGREE in Q5: file1 has +3 3+, file2 does not, type=1
+DISAGREE in Q5: file1 has +3 5+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 3+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +3 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 5+, file2 does, type=2
+
+
+wo_null: file1=7,file2=5, agree=5
+w_null:  file1=8,file2=9, agree=6
+
+
+------------------- igt_id=20634: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+an fear arbh é an dochtúir é
+the man C-rel agr the doctor he
+The man who he was the doctor
+
+1 2 # an fear
+2 -1 # fear *TOP*
+3 6 # arbh fear x
+4 6 # é fear
+5 6 # an dochtúir
+6 2 # dochtúir fear
+7 6 # é dochtúir
+
+1 2 # an fear
+2 -1 # fear *TOP*
+3 2 # arbh fear
+4 2 # é fear
+5 6 # an dochtúir
+6 2 # dochtúir fear
+7 6 # é dochtúir
+
+DISAGREE in Q6: file1 has +3 6+, file2 does not, type=1
+DISAGREE in Q6: file1 has +4 6+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +4 2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +3 2+, file2 does, type=1
+
+
+wo_null: file1=7,file2=7, agree=5
+w_null:  file1=7,file2=7, agree=5
+
+
+**************** igt_id=20622 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Is é an platapas Seán .
+C agr the platypus John .
+The platypus is John .
+
+
+------------------- igt_id=20622: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20622: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20622: question Q3 ans1=1, ans2=1 -----------
+English DS:
+The platypus is John .
+
+1 2 # The platypus
+2 4 # platypus John
+3 4 # is John
+4 -1 # John *TOP*
+5 4 # . John
+
+1 2 # The platypus
+2 4 # platypus John
+3 4 # is John
+4 -1 # John *TOP*
+5 4 # . John
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=20622: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Is é an platapas Seán .
+C agr the platypus John .
+
+1 1 # Is C
+2 2 # é agr
+3 3 # an the
+4 4 # platapas platypus
+5 5 # Seán John
+6 6 # . .
+
+1 1 # Is C
+2 2 # é agr
+3 3 # an the
+4 4 # platapas platypus
+5 5 # Seán John
+6 6 # . .
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=20622: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+C agr the platypus John .
+The platypus is John .
+
+1 3 # C NULL x
+2 0 # agr NULL
+3 1 # the The
+4 2 # platypus platypus
+5 4 # John John
+6 5 # . .
+
+1 0 # C NULL
+2 0 # agr NULL
+3 1 # the The
+4 2 # platypus platypus
+5 4 # John John
+6 5 # . .
+
+DISAGREE in Q5: file1 has +1 3+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 3+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+
+
+wo_null: file1=5,file2=4, agree=4
+w_null:  file1=6,file2=7, agree=5
+
+
+------------------- igt_id=20622: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Is é an platapas Seán .
+C agr the platypus John .
+The platypus is John .
+
+1 5 # Is Seán
+2 5 # é Seán
+3 4 # an platapas
+4 5 # platapas Seán
+5 -1 # Seán *TOP*
+6 5 # . Seán
+
+1 5 # Is Seán
+2 5 # é Seán
+3 4 # an platapas
+4 5 # platapas Seán
+5 -1 # Seán *TOP*
+6 5 # . Seán
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+**************** igt_id=30782 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+hata fhear an t\xED
+hat man the house-GEN
+the hat of the man of the house
+
+
+------------------- igt_id=30782: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=30782: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=30782: question Q3 ans1=1, ans2=1 -----------
+English DS:
+the hat of the man of the house
+
+1 2 # the hat
+2 -1 # hat *TOP*
+3 2 # of hat
+4 5 # the man
+5 3 # man of
+6 5 # of man
+7 8 # the house
+8 6 # house of
+
+1 2 # the hat
+2 -1 # hat *TOP*
+3 2 # of hat
+4 5 # the man
+5 3 # man of
+6 5 # of man
+7 8 # the house
+8 6 # house of
+
+
+
+wo_null: file1=8,file2=8, agree=8
+w_null:  file1=8,file2=8, agree=8
+
+
+------------------- igt_id=30782: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+hata fhear an t\xED
+hat man the house-GEN
+
+1 1 # hata hat
+2 2 # fhear man
+3 3 # an the
+4 4 # t\xED house-GEN
+
+1 1 # hata hat
+2 2 # fhear man
+3 3 # an the
+4 4 # t\xED house-GEN
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=30782: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+hat man the house-GEN
+the hat of the man of the house
+
+1 2 # hat hat
+2 5 # man man
+3 7 # the the x
+4 8 # house-GEN house
+
+1 2 # hat hat
+2 5 # man man
+3 1 # the the
+4 8 # house-GEN house
+
+DISAGREE in Q5: file1 has +0 1+, file2 does not, type=2
+DISAGREE in Q5: file1 has +3 7+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 7+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +3 1+, file2 does, type=1
+
+
+wo_null: file1=4,file2=4, agree=3
+w_null:  file1=8,file2=8, agree=6
+
+
+------------------- igt_id=30782: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+hata fhear an t\xED
+hat man the house-GEN
+the hat of the man of the house
+
+1 -1 # hata *TOP*
+2 1 # fhear hata
+3 4 # an hata x
+4 2 # t\xED fhear
+
+1 -1 # hata *TOP*
+2 1 # fhear hata
+3 1 # an hata
+4 2 # t\xED fhear
+
+DISAGREE in Q6: file1 has +3 4+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +3 1+, file2 does, type=1
+
+
+wo_null: file1=4,file2=4, agree=3
+w_null:  file1=4,file2=4, agree=3
+
+
+**************** igt_id=4081 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Tá mé ag scríobh na habairte anois
+Be-pres I prog write the sentence-gen now
+I am writing the sentence now
+
+
+------------------- igt_id=4081: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4081: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4081: question Q3 ans1=1, ans2=1 -----------
+English DS:
+I am writing the sentence now
+
+1 3 # I writing
+2 3 # am writing
+3 -1 # writing *TOP*
+4 5 # the sentence
+5 3 # sentence writing
+6 3 # now writing
+
+1 3 # I writing
+2 3 # am writing
+3 -1 # writing *TOP*
+4 5 # the sentence
+5 3 # sentence writing
+6 3 # now writing
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=4081: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Tá mé ag scríobh na habairte anois
+Be-pres I prog write the sentence-gen now
+
+1 1 # Tá Be-pres
+2 2 # mé I
+3 3 # ag prog
+4 4 # scríobh write
+5 5 # na the
+6 6 # habairte sentence-gen
+7 7 # anois now
+
+1 1 # Tá Be-pres
+2 2 # mé I
+3 3 # ag prog
+4 4 # scríobh write
+5 5 # na the
+6 6 # habairte sentence-gen
+7 7 # anois now
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=4081: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+Be-pres I prog write the sentence-gen now
+I am writing the sentence now
+
+1 2 # Be-pres NULL x
+2 1 # I I
+3 3 # prog NULL x
+4 3 # write writing
+5 4 # the the
+6 5 # sentence-gen sentence
+7 6 # now now
+
+1 0 # Be-pres NULL
+2 1 # I I
+3 0 # prog NULL
+4 3 # write writing
+5 4 # the the
+6 5 # sentence-gen sentence
+7 6 # now now
+
+DISAGREE in Q5: file1 has +3 3+, file2 does not, type=1
+DISAGREE in Q5: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 2+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +3 0+, file2 does, type=2
+
+
+wo_null: file1=7,file2=5, agree=5
+w_null:  file1=7,file2=8, agree=5
+
+
+------------------- igt_id=4081: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Tá mé ag scríobh na habairte anois
+Be-pres I prog write the sentence-gen now
+I am writing the sentence now
+
+1 4 # Tá scríobh
+2 4 # mé scríobh
+3 4 # ag scríobh
+4 -1 # scríobh *TOP*
+5 6 # na habairte
+6 4 # habairte scríobh
+7 4 # anois scríobh
+
+1 4 # Tá scríobh
+2 4 # mé scríobh
+3 4 # ag scríobh
+4 -1 # scríobh *TOP*
+5 6 # na habairte
+6 4 # habairte scríobh
+7 4 # anois scríobh
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+**************** igt_id=37731 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+T\xE1 s\xE9 docht\xFAir
+Is he doctor
+He is a doctor
+
+
+------------------- igt_id=37731: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=37731: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=37731: question Q3 ans1=1, ans2=1 -----------
+English DS:
+He is a doctor
+
+1 4 # He doctor
+2 4 # is doctor
+3 4 # a doctor
+4 -1 # doctor *TOP*
+
+1 4 # He doctor
+2 4 # is doctor
+3 4 # a doctor
+4 -1 # doctor *TOP*
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=37731: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+T\xE1 s\xE9 docht\xFAir
+Is he doctor
+
+1 1 # T\xE1 Is
+2 2 # s\xE9 he
+3 3 # docht\xFAir doctor
+
+1 1 # T\xE1 Is
+2 2 # s\xE9 he
+3 3 # docht\xFAir doctor
+
+
+
+wo_null: file1=3,file2=3, agree=3
+w_null:  file1=3,file2=3, agree=3
+
+
+------------------- igt_id=37731: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+Is he doctor
+He is a doctor
+
+1 2 # Is is
+2 1 # he He
+3 4 # doctor doctor
+
+1 2 # Is is
+2 1 # he He
+3 4 # doctor doctor
+
+
+
+wo_null: file1=3,file2=3, agree=3
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=37731: question Q6 ans1=1, ans2=1 -----------
+src DS:
+T\xE1 s\xE9 docht\xFAir
+Is he doctor
+He is a doctor
+
+1 3 # T\xE1 docht\xFAir
+2 3 # s\xE9 docht\xFAir
+3 -1 # docht\xFAir *TOP*
+
+1 3 # T\xE1 docht\xFAir
+2 3 # s\xE9 docht\xFAir
+3 -1 # docht\xFAir *TOP*
+
+
+
+wo_null: file1=3,file2=3, agree=3
+w_null:  file1=3,file2=3, agree=3
+
+
+**************** igt_id=4090 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Ní amadán é
+C-neg-pres fool him
+He is not a fool
+
+
+------------------- igt_id=4090: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4090: question Q2 ans1=0, ans2=1 -----------
+DiSAGREE in Q2 answer
+
+
+------------------- igt_id=4090: question Q3 ans1=0, ans2=1 -----------
+DiSAGREE in Q3 answer
+English DS:
+He is not a fool
+
+1 5 # He is x
+2 5 # is *TOP* x
+3 5 # not is x
+4 5 # a fool
+5 -1 # fool is x
+
+1 5 # He fool
+2 5 # is fool
+3 5 # not fool
+4 5 # a fool
+5 -1 # fool *TOP*
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=4090: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Ní amadán é
+C-neg-pres fool him
+
+1 1 # Ní C-neg-pres
+2 2 # amadán fool
+3 3 # é him
+
+1 1 # Ní C-neg-pres
+2 2 # amadán fool
+3 3 # é him
+
+
+
+wo_null: file1=3,file2=3, agree=3
+w_null:  file1=3,file2=3, agree=3
+
+
+------------------- igt_id=4090: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+C-neg-pres fool him
+He is not a fool
+
+1 2,3 # C-neg-pres NULL x
+2 5 # fool fool
+3 1 # him NULL x
+
+1 3 # C-neg-pres not
+2 5 # fool fool
+3 0 # him NULL
+
+DISAGREE in Q5: file1 has +3 1+, file2 does not, type=1
+DISAGREE in Q5: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 2+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 1+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +3 0+, file2 does, type=2
+
+
+wo_null: file1=4,file2=2, agree=2
+w_null:  file1=5,file2=6, agree=3
+
+
+------------------- igt_id=4090: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Ní amadán é
+C-neg-pres fool him
+He is not a fool
+
+1 2 # Ní NULL x
+2 -1 # amadán NULL x
+3 2 # é NULL x
+
+1 2 # Ní amadán
+2 -1 # amadán *TOP*
+3 2 # é amadán
+
+
+
+wo_null: file1=3,file2=3, agree=3
+w_null:  file1=3,file2=3, agree=3
+
+
+**************** igt_id=20610 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Más ceart mo chuimhne
+if-C right my memory
+If my memory is right
+
+
+------------------- igt_id=20610: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20610: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20610: question Q3 ans1=1, ans2=1 -----------
+English DS:
+If my memory is right
+
+1 5 # If right
+2 3 # my memory
+3 5 # memory right
+4 5 # is right
+5 -1 # right *TOP*
+
+1 5 # If right
+2 3 # my memory
+3 5 # memory right
+4 5 # is right
+5 -1 # right *TOP*
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=20610: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Más ceart mo chuimhne
+if-C right my memory
+
+1 1 # Más if-C
+2 2 # ceart right
+3 3 # mo my
+4 4 # chuimhne memory
+
+1 1 # Más if-C
+2 2 # ceart right
+3 3 # mo my
+4 4 # chuimhne memory
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=20610: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+if-C right my memory
+If my memory is right
+
+1 1,4 # if-C If x
+2 5 # right right
+3 2 # my my
+4 3 # memory memory
+
+1 1 # if-C If
+2 5 # right right
+3 2 # my my
+4 3 # memory memory
+
+DISAGREE in Q5: file1 has +1 4+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 4+, file2 does, type=2
+
+
+wo_null: file1=5,file2=4, agree=4
+w_null:  file1=5,file2=5, agree=4
+
+
+------------------- igt_id=20610: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Más ceart mo chuimhne
+if-C right my memory
+If my memory is right
+
+1 2 # Más ceart
+2 -1 # ceart *TOP*
+3 4 # mo chuimhne
+4 2 # chuimhne ceart
+
+1 2 # Más ceart
+2 -1 # ceart *TOP*
+3 4 # mo chuimhne
+4 2 # chuimhne ceart
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+**************** igt_id=4068 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Chonaic , cinnte , an fear an réaltlong
+Saw , certainly , the man the starship
+The man certainly saw a starship
+
+
+------------------- igt_id=4068: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4068: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4068: question Q3 ans1=1, ans2=1 -----------
+English DS:
+The man certainly saw a starship
+
+1 2 # The man
+2 4 # man saw
+3 4 # certainly saw
+4 -1 # saw *TOP*
+5 6 # a starship
+6 4 # starship saw
+
+1 2 # The man
+2 4 # man saw
+3 4 # certainly saw
+4 -1 # saw *TOP*
+5 6 # a starship
+6 4 # starship saw
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=4068: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Chonaic , cinnte , an fear an réaltlong
+Saw , certainly , the man the starship
+
+1 1 # Chonaic Saw
+2 2 # , ,
+3 3 # cinnte certainly
+4 4 # , ,
+5 5 # an the
+6 6 # fear man
+7 7 # an the
+8 8 # réaltlong starship
+
+1 1 # Chonaic Saw
+2 2 # , ,
+3 3 # cinnte certainly
+4 4 # , ,
+5 5 # an the
+6 6 # fear man
+7 7 # an the
+8 8 # réaltlong starship
+
+
+
+wo_null: file1=8,file2=8, agree=8
+w_null:  file1=8,file2=8, agree=8
+
+
+------------------- igt_id=4068: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+Saw , certainly , the man the starship
+The man certainly saw a starship
+
+1 4 # Saw saw
+2 0 # , NULL
+3 3 # certainly certainly
+4 0 # , NULL
+5 1 # the The
+6 2 # man man
+7 5 # the The x
+8 6 # starship starship
+
+1 4 # Saw saw
+2 0 # , NULL
+3 3 # certainly certainly
+4 0 # , NULL
+5 1 # the The
+6 2 # man man
+7 1 # the The
+8 6 # starship starship
+
+DISAGREE in Q5: file1 has +7 5+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +7 1+, file2 does, type=1
+DISAGREE in Q5: file1 does not have +0 5+, file2 does, type=2
+
+
+wo_null: file1=6,file2=6, agree=5
+w_null:  file1=8,file2=9, agree=7
+
+
+------------------- igt_id=4068: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Chonaic , cinnte , an fear an réaltlong
+Saw , certainly , the man the starship
+The man certainly saw a starship
+
+1 -1 # Chonaic *TOP*
+2 1 # , Chonaic
+3 1 # cinnte Chonaic
+4 1 # , Chonaic
+5 6 # an fear
+6 1 # fear Chonaic
+7 8 # an fear x
+8 1 # réaltlong Chonaic
+
+1 -1 # Chonaic *TOP*
+2 1 # , Chonaic
+3 1 # cinnte Chonaic
+4 1 # , Chonaic
+5 6 # an fear
+6 1 # fear Chonaic
+7 6 # an fear
+8 1 # réaltlong Chonaic
+
+DISAGREE in Q6: file1 has +7 8+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +7 6+, file2 does, type=1
+
+
+wo_null: file1=8,file2=8, agree=7
+w_null:  file1=8,file2=8, agree=7
+
+
+**************** igt_id=4113 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Scaoil an Captaen na féasair ar na Clingeánaí
+Fired the Captain the phasers on the Klingons
+The Captain fired the phasers at the Klingons
+
+
+------------------- igt_id=4113: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4113: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4113: question Q3 ans1=1, ans2=1 -----------
+English DS:
+The Captain fired the phasers at the Klingons
+
+1 2 # The Captain
+2 3 # Captain fired
+3 -1 # fired *TOP*
+4 5 # the phasers
+5 3 # phasers fired
+6 3 # at fired
+7 8 # the Klingons
+8 6 # Klingons at
+
+1 2 # The Captain
+2 3 # Captain fired
+3 -1 # fired *TOP*
+4 5 # the phasers
+5 3 # phasers fired
+6 3 # at fired
+7 8 # the Klingons
+8 6 # Klingons at
+
+
+
+wo_null: file1=8,file2=8, agree=8
+w_null:  file1=8,file2=8, agree=8
+
+
+------------------- igt_id=4113: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Scaoil an Captaen na féasair ar na Clingeánaí
+Fired the Captain the phasers on the Klingons
+
+1 1 # Scaoil Fired
+2 2 # an the
+3 3 # Captaen Captain
+4 4 # na the
+5 5 # féasair phasers
+6 6 # ar on
+7 7 # na the
+8 8 # Clingeánaí Klingons
+
+1 1 # Scaoil Fired
+2 2 # an the
+3 3 # Captaen Captain
+4 4 # na the
+5 5 # féasair phasers
+6 6 # ar on
+7 7 # na the
+8 8 # Clingeánaí Klingons
+
+
+
+wo_null: file1=8,file2=8, agree=8
+w_null:  file1=8,file2=8, agree=8
+
+
+------------------- igt_id=4113: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+Fired the Captain the phasers on the Klingons
+The Captain fired the phasers at the Klingons
+
+1 3 # Fired fired
+2 1 # the The
+3 2 # Captain Captain
+4 4 # the the
+5 5 # phasers phasers
+6 6 # on NULL x
+7 7 # the the
+8 8 # Klingons Klingons
+
+1 3 # Fired fired
+2 1 # the The
+3 2 # Captain Captain
+4 4 # the the
+5 5 # phasers phasers
+6 0 # on NULL
+7 7 # the the
+8 8 # Klingons Klingons
+
+DISAGREE in Q5: file1 has +6 6+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +6 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 6+, file2 does, type=2
+
+
+wo_null: file1=8,file2=7, agree=7
+w_null:  file1=8,file2=9, agree=7
+
+
+------------------- igt_id=4113: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Scaoil an Captaen na féasair ar na Clingeánaí
+Fired the Captain the phasers on the Klingons
+The Captain fired the phasers at the Klingons
+
+1 -1 # Scaoil *TOP*
+2 3 # an Captaen
+3 1 # Captaen Scaoil
+4 5 # na féasair
+5 1 # féasair Scaoil
+6 1 # ar Scaoil x
+7 8 # na Clingeánaí
+8 6 # Clingeánaí Scaoil
+
+1 -1 # Scaoil *TOP*
+2 3 # an Captaen
+3 1 # Captaen Scaoil
+4 5 # na féasair
+5 1 # féasair Scaoil
+6 1 # ar Scaoil
+7 8 # na Clingeánaí
+8 1 # Clingeánaí Scaoil
+
+DISAGREE in Q6: file1 has +8 6+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +8 1+, file2 does, type=1
+
+
+wo_null: file1=8,file2=8, agree=7
+w_null:  file1=8,file2=8, agree=7
+
+
+**************** igt_id=29739 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Cheannaigh siad teach ?
+bought they house ?
+Did they buy a house ?
+
+
+------------------- igt_id=29739: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=29739: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=29739: question Q3 ans1=1, ans2=1 -----------
+English DS:
+Did they buy a house ?
+
+1 3 # Did buy
+2 3 # they buy
+3 -1 # buy *TOP*
+4 5 # a house
+5 3 # house buy
+6 3 # ? buy
+
+1 3 # Did buy
+2 3 # they buy
+3 -1 # buy *TOP*
+4 5 # a house
+5 3 # house buy
+6 3 # ? buy
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=29739: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Cheannaigh siad teach ?
+bought they house ?
+
+1 1 # Cheannaigh bought
+2 2 # siad they
+3 3 # teach house
+4 4 # ? ?
+
+1 1 # Cheannaigh bought
+2 2 # siad they
+3 3 # teach house
+4 4 # ? ?
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=29739: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+bought they house ?
+Did they buy a house ?
+
+1 3 # bought buy
+2 2 # they they
+3 5 # house house
+4 6 # ? ?
+
+1 3 # bought buy
+2 2 # they they
+3 5 # house house
+4 6 # ? ?
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=29739: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Cheannaigh siad teach ?
+bought they house ?
+Did they buy a house ?
+
+1 -1 # Cheannaigh *TOP*
+2 1 # siad Cheannaigh
+3 1 # teach Cheannaigh
+4 1 # ? Cheannaigh
+
+1 -1 # Cheannaigh *TOP*
+2 1 # siad Cheannaigh
+3 1 # teach Cheannaigh
+4 1 # ? Cheannaigh
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+**************** igt_id=37724 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+T\xE1 an t-url\xE1r fuar
+Be the floor cold
+The floor is cold
+
+
+------------------- igt_id=37724: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=37724: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=37724: question Q3 ans1=1, ans2=1 -----------
+English DS:
+The floor is cold
+
+1 2 # The floor
+2 4 # floor cold
+3 4 # is cold
+4 -1 # cold *TOP*
+
+1 2 # The floor
+2 4 # floor cold
+3 4 # is cold
+4 -1 # cold *TOP*
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=37724: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+T\xE1 an t-url\xE1r fuar
+Be the floor cold
+
+1 1 # T\xE1 Be
+2 2 # an the
+3 3 # t-url\xE1r floor
+4 4 # fuar cold
+
+1 1 # T\xE1 Be
+2 2 # an the
+3 3 # t-url\xE1r floor
+4 4 # fuar cold
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=37724: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+Be the floor cold
+The floor is cold
+
+1 3 # Be is
+2 1 # the The
+3 2 # floor floor
+4 4 # cold cold
+
+1 3 # Be is
+2 1 # the The
+3 2 # floor floor
+4 4 # cold cold
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=37724: question Q6 ans1=1, ans2=1 -----------
+src DS:
+T\xE1 an t-url\xE1r fuar
+Be the floor cold
+The floor is cold
+
+1 4 # T\xE1 fuar
+2 3 # an t-url\xE1r
+3 4 # t-url\xE1r fuar
+4 -1 # fuar *TOP*
+
+1 4 # T\xE1 fuar
+2 3 # an t-url\xE1r
+3 4 # t-url\xE1r fuar
+4 -1 # fuar *TOP*
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+**************** igt_id=16077 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Tá mé ag scriobh an abairt
+Am I ing write the letter
+I am writing the letter
+
+
+------------------- igt_id=16077: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=16077: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=16077: question Q3 ans1=1, ans2=1 -----------
+English DS:
+I am writing the letter
+
+1 3 # I writing
+2 3 # am writing
+3 -1 # writing *TOP*
+4 5 # the letter
+5 3 # letter writing
+
+1 3 # I writing
+2 3 # am writing
+3 -1 # writing *TOP*
+4 5 # the letter
+5 3 # letter writing
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=16077: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Tá mé ag scriobh an abairt
+Am I ing write the letter
+
+1 1 # Tá Am
+2 2 # mé I
+3 3 # ag ing
+4 4 # scriobh write
+5 5 # an the
+6 6 # abairt letter
+
+1 1 # Tá Am
+2 2 # mé I
+3 3 # ag ing
+4 4 # scriobh write
+5 5 # an the
+6 6 # abairt letter
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=16077: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+Am I ing write the letter
+I am writing the letter
+
+1 2 # Am am
+2 1 # I I
+3 0 # ing NULL
+4 3 # write writing
+5 4 # the the
+6 5 # letter letter
+
+1 2 # Am am
+2 1 # I I
+3 0 # ing NULL
+4 3 # write writing
+5 4 # the the
+6 5 # letter letter
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=16077: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Tá mé ag scriobh an abairt
+Am I ing write the letter
+I am writing the letter
+
+1 4 # Tá scriobh
+2 4 # mé scriobh
+3 4 # ag scriobh
+4 -1 # scriobh *TOP*
+5 6 # an abairt
+6 4 # abairt scriobh
+
+1 4 # Tá scriobh
+2 4 # mé scriobh
+3 4 # ag scriobh
+4 -1 # scriobh *TOP*
+5 6 # an abairt
+6 4 # abairt scriobh
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+**************** igt_id=4031 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+LocativeTá an mhin sa phota .
+BE the oatmeal in-the pot .
+The oatmeal is in the pot .
+
+
+------------------- igt_id=4031: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4031: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4031: question Q3 ans1=1, ans2=1 -----------
+English DS:
+The oatmeal is in the pot .
+
+1 2 # The oatmeal
+2 4 # oatmeal in
+3 4 # is in
+4 -1 # in *TOP*
+5 6 # the pot
+6 4 # pot in
+7 4 # . in
+
+1 2 # The oatmeal
+2 4 # oatmeal in
+3 4 # is in
+4 -1 # in *TOP*
+5 6 # the pot
+6 4 # pot in
+7 4 # . in
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=4031: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+LocativeTá an mhin sa phota .
+BE the oatmeal in-the pot .
+
+1 1 # LocativeTá BE
+2 2 # an the
+3 3 # mhin oatmeal
+4 4 # sa in-the
+5 5 # phota pot
+6 6 # . .
+
+1 1 # LocativeTá BE
+2 2 # an the
+3 3 # mhin oatmeal
+4 4 # sa in-the
+5 5 # phota pot
+6 6 # . .
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=4031: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+BE the oatmeal in-the pot .
+The oatmeal is in the pot .
+
+1 3 # BE NULL x
+2 1 # the The
+3 2 # oatmeal oatmeal
+4 4,5 # in-the in,the
+5 6 # pot pot
+6 7 # . .
+
+1 3 # BE is
+2 1 # the The
+3 2 # oatmeal oatmeal
+4 5,4 # in-the the,in
+5 6 # pot pot
+6 7 # . .
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=4031: question Q6 ans1=1, ans2=1 -----------
+src DS:
+LocativeTá an mhin sa phota .
+BE the oatmeal in-the pot .
+The oatmeal is in the pot .
+
+1 4 # LocativeTá sa
+2 3 # an mhin
+3 4 # mhin sa
+4 -1 # sa *TOP*
+5 4 # phota sa
+6 4 # . sa
+
+1 4 # LocativeTá sa
+2 3 # an mhin
+3 4 # mhin sa
+4 -1 # sa *TOP*
+5 4 # phota sa
+6 4 # . sa
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+**************** igt_id=20611 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Is de bhunadh Phrotastúnach í
+C of stock Prostestant her
+She is of Protestant stock
+
+
+------------------- igt_id=20611: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20611: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20611: question Q3 ans1=1, ans2=1 -----------
+English DS:
+She is of Protestant stock
+
+1 3 # She of
+2 3 # is of
+3 -1 # of *TOP*
+4 5 # Protestant stock
+5 3 # stock of
+
+1 3 # She of
+2 3 # is of
+3 -1 # of *TOP*
+4 5 # Protestant stock
+5 3 # stock of
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=20611: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Is de bhunadh Phrotastúnach í
+C of stock Prostestant her
+
+1 1 # Is C
+2 2 # de of
+3 3 # bhunadh stock
+4 4 # Phrotastúnach Prostestant
+5 5 # í her
+
+1 1 # Is C
+2 2 # de of
+3 3 # bhunadh stock
+4 4 # Phrotastúnach Prostestant
+5 5 # í her
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=20611: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+C of stock Prostestant her
+She is of Protestant stock
+
+1 2 # C NULL x
+2 3 # of of
+3 5 # stock stock
+4 4 # Prostestant NULL x
+5 1 # her NULL x
+
+1 0 # C NULL
+2 3 # of of
+3 5 # stock stock
+4 0 # Prostestant NULL
+5 0 # her NULL
+
+DISAGREE in Q5: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q5: file1 has +5 1+, file2 does not, type=1
+DISAGREE in Q5: file1 has +4 4+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 4+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 2+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +4 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +5 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 1+, file2 does, type=2
+
+
+wo_null: file1=5,file2=2, agree=2
+w_null:  file1=5,file2=8, agree=2
+
+
+------------------- igt_id=20611: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Is de bhunadh Phrotastúnach í
+C of stock Prostestant her
+She is of Protestant stock
+
+1 2 # Is de
+2 -1 # de *TOP*
+3 2 # bhunadh de
+4 3 # Phrotastúnach de x
+5 2 # í de
+
+1 2 # Is de
+2 -1 # de *TOP*
+3 2 # bhunadh de
+4 2 # Phrotastúnach de
+5 2 # í de
+
+DISAGREE in Q6: file1 has +4 3+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +4 2+, file2 does, type=1
+
+
+wo_null: file1=5,file2=5, agree=4
+w_null:  file1=5,file2=5, agree=4
+
+
+**************** igt_id=23628 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Phóg an fear an mhuc .
+kissed the man the pig .
+The man kissed the pig .
+
+
+------------------- igt_id=23628: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=23628: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=23628: question Q3 ans1=1, ans2=1 -----------
+English DS:
+The man kissed the pig .
+
+1 2 # The man
+2 3 # man kissed
+3 -1 # kissed *TOP*
+4 5 # the pig
+5 3 # pig kissed
+6 3 # . kissed
+
+1 2 # The man
+2 3 # man kissed
+3 -1 # kissed *TOP*
+4 5 # the pig
+5 3 # pig kissed
+6 3 # . kissed
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=23628: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Phóg an fear an mhuc .
+kissed the man the pig .
+
+1 1 # Phóg kissed
+2 2 # an the
+3 3 # fear man
+4 4 # an the
+5 5 # mhuc pig
+6 6 # . .
+
+1 1 # Phóg kissed
+2 2 # an the
+3 3 # fear man
+4 4 # an the
+5 5 # mhuc pig
+6 6 # . .
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=23628: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+kissed the man the pig .
+The man kissed the pig .
+
+1 3 # kissed kissed
+2 1 # the The
+3 2 # man man
+4 4 # the the
+5 5 # pig pig
+6 6 # . .
+
+1 3 # kissed kissed
+2 1 # the The
+3 2 # man man
+4 4 # the the
+5 5 # pig pig
+6 6 # . .
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=23628: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Phóg an fear an mhuc .
+kissed the man the pig .
+The man kissed the pig .
+
+1 -1 # Phóg *TOP*
+2 3 # an fear
+3 1 # fear Phóg
+4 5 # an mhuc
+5 1 # mhuc Phóg
+6 1 # . Phóg
+
+1 -1 # Phóg *TOP*
+2 3 # an fear
+3 1 # fear Phóg
+4 5 # an mhuc
+5 1 # mhuc Phóg
+6 1 # . Phóg
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+**************** igt_id=17565 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Thug Míleó caisearbhán do Bhinclí
+Gave Milo dandelion to Binkley
+Milo gave a dandelion to Binkley
+
+
+------------------- igt_id=17565: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=17565: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=17565: question Q3 ans1=1, ans2=1 -----------
+English DS:
+Milo gave a dandelion to Binkley
+
+1 2 # Milo gave
+2 -1 # gave *TOP*
+3 4 # a dandelion
+4 2 # dandelion gave
+5 2 # to gave
+6 5 # Binkley to
+
+1 2 # Milo gave
+2 -1 # gave *TOP*
+3 4 # a dandelion
+4 2 # dandelion gave
+5 2 # to gave
+6 5 # Binkley to
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=17565: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Thug Míleó caisearbhán do Bhinclí
+Gave Milo dandelion to Binkley
+
+1 1 # Thug Gave
+2 2 # Míleó Milo
+3 3 # caisearbhán dandelion
+4 4 # do to
+5 5 # Bhinclí Binkley
+
+1 1 # Thug Gave
+2 2 # Míleó Milo
+3 3 # caisearbhán dandelion
+4 4 # do to
+5 5 # Bhinclí Binkley
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=17565: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+Gave Milo dandelion to Binkley
+Milo gave a dandelion to Binkley
+
+1 2 # Gave gave
+2 1 # Milo Milo
+3 4 # dandelion dandelion
+4 5 # to to
+5 6 # Binkley Binkley
+
+1 2 # Gave gave
+2 1 # Milo Milo
+3 4 # dandelion dandelion
+4 5 # to to
+5 6 # Binkley Binkley
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=17565: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Thug Míleó caisearbhán do Bhinclí
+Gave Milo dandelion to Binkley
+Milo gave a dandelion to Binkley
+
+1 -1 # Thug *TOP*
+2 1 # Míleó Thug
+3 1 # caisearbhán Thug
+4 1 # do Thug
+5 4 # Bhinclí do
+
+1 -1 # Thug *TOP*
+2 1 # Míleó Thug
+3 1 # caisearbhán Thug
+4 1 # do Thug
+5 4 # Bhinclí do
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+**************** igt_id=15993 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Leanann an t-ainmní an briathar i nGaeilge
+follow-PRES the subject the verb in Irish
+The subject follows the verb in Irish
+
+
+------------------- igt_id=15993: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=15993: question Q2 ans1=0, ans2=1 -----------
+DiSAGREE in Q2 answer
+
+
+------------------- igt_id=15993: question Q3 ans1=0, ans2=1 -----------
+DiSAGREE in Q3 answer
+English DS:
+The subject follows the verb in Irish
+
+1 2 # The subject
+2 3 # subject follows
+3 -1 # follows *TOP*
+4 5 # the verb
+5 3 # verb follows
+6 3 # in verb x
+7 6 # Irish in
+
+1 2 # The subject
+2 3 # subject follows
+3 -1 # follows *TOP*
+4 5 # the verb
+5 3 # verb follows
+6 3 # in follows
+7 6 # Irish in
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=15993: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Leanann an t-ainmní an briathar i nGaeilge
+follow-PRES the subject the verb in Irish
+
+1 1 # Leanann follow-PRES
+2 2 # an the
+3 3 # t-ainmní subject
+4 4 # an the
+5 5 # briathar verb
+6 6 # i in
+7 7 # nGaeilge Irish
+
+1 1 # Leanann follow-PRES
+2 2 # an the
+3 3 # t-ainmní subject
+4 4 # an the
+5 5 # briathar verb
+6 6 # i in
+7 7 # nGaeilge Irish
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=15993: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+follow-PRES the subject the verb in Irish
+The subject follows the verb in Irish
+
+1 3 # follow-PRES follows
+2 1 # the The
+3 2 # subject subject
+4 4 # the the
+5 5 # verb verb
+6 6 # in in
+7 7 # Irish Irish
+
+1 3 # follow-PRES follows
+2 1 # the The
+3 2 # subject subject
+4 4 # the the
+5 5 # verb verb
+6 6 # in in
+7 7 # Irish Irish
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=15993: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Leanann an t-ainmní an briathar i nGaeilge
+follow-PRES the subject the verb in Irish
+The subject follows the verb in Irish
+
+1 -1 # Leanann *TOP*
+2 3 # an t-ainmní
+3 1 # t-ainmní Leanann
+4 5 # an briathar
+5 1 # briathar Leanann
+6 1 # i briathar x
+7 6 # nGaeilge i
+
+1 -1 # Leanann *TOP*
+2 3 # an t-ainmní
+3 1 # t-ainmní Leanann
+4 5 # an briathar
+5 1 # briathar Leanann
+6 1 # i Leanann
+7 6 # nGaeilge i
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+**************** igt_id=4060 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Is lá maith é
+C day good it
+it is a good day
+
+
+------------------- igt_id=4060: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4060: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4060: question Q3 ans1=1, ans2=1 -----------
+English DS:
+it is a good day
+
+1 5 # it day
+2 5 # is day
+3 5 # a day
+4 5 # good day
+5 -1 # day *TOP*
+
+1 5 # it day
+2 5 # is day
+3 5 # a day
+4 5 # good day
+5 -1 # day *TOP*
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=4060: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Is lá maith é
+C day good it
+
+1 1 # Is C
+2 2 # lá day
+3 3 # maith good
+4 4 # é it
+
+1 1 # Is C
+2 2 # lá day
+3 3 # maith good
+4 4 # é it
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=4060: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+C day good it
+it is a good day
+
+1 2 # C NULL x
+2 5 # day day
+3 4 # good good
+4 1 # it it
+
+1 0 # C NULL
+2 5 # day day
+3 4 # good good
+4 1 # it it
+
+DISAGREE in Q5: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 2+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+
+
+wo_null: file1=4,file2=3, agree=3
+w_null:  file1=5,file2=6, agree=4
+
+
+------------------- igt_id=4060: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Is lá maith é
+C day good it
+it is a good day
+
+1 3 # Is lá x
+2 3 # lá *TOP* x
+3 -1 # maith lá x
+4 3 # é lá x
+
+1 2 # Is lá
+2 -1 # lá *TOP*
+3 2 # maith lá
+4 2 # é lá
+
+DISAGREE in Q6: file1 has +2 3+, file2 does not, type=1
+DISAGREE in Q6: file1 has +3 -1+, file2 does not, type=1
+DISAGREE in Q6: file1 has +4 3+, file2 does not, type=1
+DISAGREE in Q6: file1 has +1 3+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +4 2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +2 -1+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +3 2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +1 2+, file2 does, type=1
+
+
+wo_null: file1=4,file2=4, agree=0
+w_null:  file1=4,file2=4, agree=0
+
+
+**************** igt_id=13916 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Is fear mór Seán
+C man big John
+John is a big man
+
+
+------------------- igt_id=13916: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=13916: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=13916: question Q3 ans1=1, ans2=1 -----------
+English DS:
+John is a big man
+
+1 5 # John man
+2 5 # is man
+3 5 # a man
+4 5 # big man
+5 -1 # man *TOP*
+
+1 5 # John man
+2 5 # is man
+3 5 # a man
+4 5 # big man
+5 -1 # man *TOP*
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=13916: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Is fear mór Seán
+C man big John
+
+1 1 # Is C
+2 2 # fear man
+3 3 # mór big
+4 4 # Seán John
+
+1 1 # Is C
+2 2 # fear man
+3 3 # mór big
+4 4 # Seán John
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=13916: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+C man big John
+John is a big man
+
+1 2 # C NULL x
+2 5 # man man
+3 4 # big big
+4 1 # John John
+
+1 0 # C NULL
+2 5 # man man
+3 4 # big big
+4 1 # John John
+
+DISAGREE in Q5: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 2+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+
+
+wo_null: file1=4,file2=3, agree=3
+w_null:  file1=5,file2=6, agree=4
+
+
+------------------- igt_id=13916: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Is fear mór Seán
+C man big John
+John is a big man
+
+1 2 # Is fear
+2 -1 # fear *TOP*
+3 2 # mór fear
+4 2 # Seán fear
+
+1 2 # Is fear
+2 -1 # fear *TOP*
+3 2 # mór fear
+4 2 # Seán fear
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+**************** igt_id=25682 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Cathain a deirir a dh\xEDolfir m\xE9 ?
+when aL you-say aL you-will-pay me ?
+When do you say that you will pay me ?
+
+
+------------------- igt_id=25682: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=25682: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=25682: question Q3 ans1=1, ans2=1 -----------
+English DS:
+When do you say that you will pay me ?
+
+1 4 # When say
+2 4 # do say
+3 4 # you say
+4 -1 # say *TOP*
+5 8 # that pay
+6 8 # you pay
+7 8 # will pay
+8 4 # pay say
+9 8 # me pay
+10 4 # ? say
+
+1 4 # When say
+2 4 # do say
+3 4 # you say
+4 -1 # say *TOP*
+5 8 # that pay
+6 8 # you pay
+7 8 # will pay
+8 4 # pay say
+9 8 # me pay
+10 4 # ? say
+
+
+
+wo_null: file1=10,file2=10, agree=10
+w_null:  file1=10,file2=10, agree=10
+
+
+------------------- igt_id=25682: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Cathain a deirir a dh\xEDolfir m\xE9 ?
+when aL you-say aL you-will-pay me ?
+
+1 1 # Cathain when
+2 2 # a aL
+3 3 # deirir you-say
+4 4 # a aL
+5 5 # dh\xEDolfir you-will-pay
+6 6 # m\xE9 me
+7 7 # ? ?
+
+1 1 # Cathain when
+2 2 # a aL
+3 3 # deirir you-say
+4 4 # a aL
+5 5 # dh\xEDolfir you-will-pay
+6 6 # m\xE9 me
+7 7 # ? ?
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=25682: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+when aL you-say aL you-will-pay me ?
+When do you say that you will pay me ?
+
+1 1 # when When
+2 0 # aL NULL
+3 3,4 # you-say you,say
+4 0 # aL NULL
+5 6,7,8 # you-will-pay you,will,pay
+6 9 # me me
+7 10 # ? ?
+
+1 1 # when When
+2 0 # aL NULL
+3 3,4 # you-say you,say
+4 0 # aL NULL
+5 7,6,8 # you-will-pay will,you,pay
+6 9 # me me
+7 10 # ? ?
+
+
+
+wo_null: file1=8,file2=8, agree=8
+w_null:  file1=12,file2=12, agree=12
+
+
+------------------- igt_id=25682: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Cathain a deirir a dh\xEDolfir m\xE9 ?
+when aL you-say aL you-will-pay me ?
+When do you say that you will pay me ?
+
+1 3 # Cathain deirir
+2 3 # a deirir
+3 -1 # deirir *TOP*
+4 5 # a deirir x
+5 3 # dh\xEDolfir deirir
+6 5 # m\xE9 dh\xEDolfir
+7 3 # ? deirir
+
+1 3 # Cathain deirir
+2 3 # a deirir
+3 -1 # deirir *TOP*
+4 3 # a deirir
+5 3 # dh\xEDolfir deirir
+6 5 # m\xE9 dh\xEDolfir
+7 3 # ? deirir
+
+DISAGREE in Q6: file1 has +4 5+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +4 3+, file2 does, type=1
+
+
+wo_null: file1=7,file2=7, agree=6
+w_null:  file1=7,file2=7, agree=6
+
+
+**************** igt_id=4085 ++++++++
+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+Warning: Gold standard for igt_id=4085 has 1 unanswered questions
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Beidh an trachtas críochnaithe agam amárach .
+be-fut the thesis finished at-me tomorrow .
+I 'll have the thesis finished tomorrow .
+
+
+------------------- igt_id=4085: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4085: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4085: question Q3 ans1=1, ans2=1 -----------
+English DS:
+I 'll have the thesis finished tomorrow .
+
+1 3 # I have
+2 3 # 'll have
+3 -1 # have *TOP*
+4 5 # the thesis
+5 6 # thesis finished
+6 3 # finished have
+7 6 # tomorrow finished
+8 3 # . have
+
+1 3 # I have
+2 3 # 'll have
+3 -1 # have *TOP*
+4 5 # the thesis
+5 6 # thesis finished
+6 3 # finished have
+7 6 # tomorrow finished
+8 3 # . have
+
+
+
+wo_null: file1=8,file2=8, agree=8
+w_null:  file1=8,file2=8, agree=8
+
+
+------------------- igt_id=4085: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Beidh an trachtas críochnaithe agam amárach .
+be-fut the thesis finished at-me tomorrow .
+
+1 1 # Beidh be-fut
+2 2 # an the
+3 3 # trachtas thesis
+4 4 # críochnaithe finished
+5 5 # agam at-me
+6 6 # amárach tomorrow
+7 7 # . .
+
+1 1 # Beidh be-fut
+2 2 # an the
+3 3 # trachtas thesis
+4 4 # críochnaithe finished
+5 5 # agam at-me
+6 6 # amárach tomorrow
+7 7 # . .
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=4085: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+be-fut the thesis finished at-me tomorrow .
+I 'll have the thesis finished tomorrow .
+
+1 2 # be-fut NULL x
+2 4 # the the
+3 5 # thesis thesis
+4 6 # finished finished
+5 1 # at-me NULL
+6 7 # tomorrow tomorrow
+7 8 # . .
+
+1 0 # be-fut NULL
+2 4 # the the
+3 5 # thesis thesis
+4 6 # finished finished
+5 0 # at-me NULL
+6 7 # tomorrow tomorrow
+7 8 # . .
+
+DISAGREE in Q5: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q5: file1 has +5 1+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 2+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +5 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 1+, file2 does, type=2
+
+
+wo_null: file1=7,file2=5, agree=5
+w_null:  file1=8,file2=10, agree=6
+
+
+------------------- igt_id=4085: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Beidh an trachtas críochnaithe agam amárach .
+be-fut the thesis finished at-me tomorrow .
+I 'll have the thesis finished tomorrow .
+
+1 4 # Beidh NULL x
+2 3 # an trachtas
+3 4 # trachtas críochnaithe
+4 -1 # críochnaithe NULL x
+5 4 # agam NULL x
+6 4 # amárach críochnaithe
+7 4 # . NULL x
+
+1 -2 # Beidh NULL
+2 3 # an trachtas
+3 4 # trachtas críochnaithe
+4 -2 # críochnaithe NULL
+5 -2 # agam NULL
+6 4 # amárach críochnaithe
+7 -2 # . NULL
+
+DISAGREE in Q6: file1 has +1 4+, file2 does not, type=1
+DISAGREE in Q6: file1 has +7 4+, file2 does not, type=1
+DISAGREE in Q6: file1 has +5 4+, file2 does not, type=1
+DISAGREE in Q6: file1 has +4 -1+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +4 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +5 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +1 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +7 -2+, file2 does, type=1
+
+
+wo_null: file1=7,file2=7, agree=3
+w_null:  file1=7,file2=7, agree=3
+
+
+**************** igt_id=20630 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Is ríomhaire leifteanantcheannasaí Data
+C computer Lieutenant-Commander Data
+Lieutenant Commander Data is a computer
+
+
+------------------- igt_id=20630: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20630: question Q2 ans1=0, ans2=1 -----------
+DiSAGREE in Q2 answer
+
+
+------------------- igt_id=20630: question Q3 ans1=0, ans2=1 -----------
+DiSAGREE in Q3 answer
+English DS:
+Lieutenant Commander Data is a computer
+
+1 2 # Lieutenant Data x
+2 3 # Commander Data
+3 6 # Data computer
+4 6 # is computer
+5 6 # a computer
+6 -1 # computer *TOP*
+
+1 2 # Lieutenant Commander
+2 3 # Commander Data
+3 6 # Data computer
+4 6 # is computer
+5 6 # a computer
+6 -1 # computer *TOP*
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=20630: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Is ríomhaire leifteanantcheannasaí Data
+C computer Lieutenant-Commander Data
+
+1 1 # Is C
+2 2 # ríomhaire computer
+3 3 # leifteanantcheannasaí Lieutenant-Commander
+4 4 # Data Data
+
+1 1 # Is C
+2 2 # ríomhaire computer
+3 3 # leifteanantcheannasaí Lieutenant-Commander
+4 4 # Data Data
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=20630: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+C computer Lieutenant-Commander Data
+Lieutenant Commander Data is a computer
+
+1 4 # C NULL x
+2 6 # computer computer
+3 1,2 # Lieutenant-Commander Lieutenant,Commander
+4 3 # Data Data
+
+1 0 # C NULL
+2 6 # computer computer
+3 2,1 # Lieutenant-Commander Commander,Lieutenant
+4 3 # Data Data
+
+DISAGREE in Q5: file1 has +1 4+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 4+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+
+
+wo_null: file1=5,file2=4, agree=4
+w_null:  file1=6,file2=7, agree=5
+
+
+------------------- igt_id=20630: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Is ríomhaire leifteanantcheannasaí Data
+C computer Lieutenant-Commander Data
+Lieutenant Commander Data is a computer
+
+1 2 # Is ríomhaire
+2 -1 # ríomhaire *TOP*
+3 4,4 # leifteanantcheannasaí Data,Data
+4 2 # Data ríomhaire
+
+1 2 # Is ríomhaire
+2 -1 # ríomhaire *TOP*
+3 4 # leifteanantcheannasaí Data
+4 2 # Data ríomhaire
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+**************** igt_id=20628 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Is é Ceannasaí Radhcár an t-amadán
+C agr Commander Riker the fool
+Commander Riker is the fool
+
+
+------------------- igt_id=20628: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20628: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20628: question Q3 ans1=1, ans2=1 -----------
+English DS:
+Commander Riker is the fool
+
+1 2 # Commander Riker
+2 5 # Riker fool
+3 5 # is fool
+4 5 # the fool
+5 -1 # fool *TOP*
+
+1 2 # Commander Riker
+2 5 # Riker fool
+3 5 # is fool
+4 5 # the fool
+5 -1 # fool *TOP*
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=20628: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Is é Ceannasaí Radhcár an t-amadán
+C agr Commander Riker the fool
+
+1 1 # Is C
+2 2 # é agr
+3 3 # Ceannasaí Commander
+4 4 # Radhcár Riker
+5 5 # an the
+6 6 # t-amadán fool
+
+1 1 # Is C
+2 2 # é agr
+3 3 # Ceannasaí Commander
+4 4 # Radhcár Riker
+5 5 # an the
+6 6 # t-amadán fool
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=20628: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+C agr Commander Riker the fool
+Commander Riker is the fool
+
+1 3 # C NULL x
+2 0 # agr NULL
+3 1 # Commander Commander
+4 2 # Riker Riker
+5 4 # the the
+6 5 # fool fool
+
+1 0 # C NULL
+2 0 # agr NULL
+3 1 # Commander Commander
+4 2 # Riker Riker
+5 4 # the the
+6 5 # fool fool
+
+DISAGREE in Q5: file1 has +1 3+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 3+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+
+
+wo_null: file1=5,file2=4, agree=4
+w_null:  file1=6,file2=7, agree=5
+
+
+------------------- igt_id=20628: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Is é Ceannasaí Radhcár an t-amadán
+C agr Commander Riker the fool
+Commander Riker is the fool
+
+1 6 # Is t-amadán
+2 6 # é t-amadán
+3 4 # Ceannasaí Radhcár
+4 6 # Radhcár t-amadán
+5 6 # an t-amadán
+6 -1 # t-amadán *TOP*
+
+1 6 # Is t-amadán
+2 6 # é t-amadán
+3 4 # Ceannasaí Radhcár
+4 6 # Radhcár t-amadán
+5 6 # an t-amadán
+6 -1 # t-amadán *TOP*
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+**************** igt_id=4058 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Is maith an lá é
+C good the day he
+It is a NICE day
+
+
+------------------- igt_id=4058: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4058: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4058: question Q3 ans1=1, ans2=1 -----------
+English DS:
+It is a NICE day
+
+1 5 # It day
+2 5 # is day
+3 5 # a day
+4 5 # NICE day
+5 -1 # day *TOP*
+
+1 5 # It day
+2 5 # is day
+3 5 # a day
+4 5 # NICE day
+5 -1 # day *TOP*
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=4058: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Is maith an lá é
+C good the day he
+
+1 1 # Is C
+2 2 # maith good
+3 3 # an the
+4 4 # lá day
+5 5 # é he
+
+1 1 # Is C
+2 2 # maith good
+3 3 # an the
+4 4 # lá day
+5 5 # é he
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=4058: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+C good the day he
+It is a NICE day
+
+1 2 # C NULL x
+2 4 # good NULL x
+3 0 # the NULL
+4 5 # day day
+5 1 # he NULL x
+
+1 0 # C NULL
+2 0 # good NULL
+3 0 # the NULL
+4 5 # day day
+5 0 # he NULL
+
+DISAGREE in Q5: file1 has +2 4+, file2 does not, type=1
+DISAGREE in Q5: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q5: file1 has +5 1+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 4+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 2+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +5 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 1+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +2 0+, file2 does, type=2
+
+
+wo_null: file1=4,file2=1, agree=1
+w_null:  file1=6,file2=9, agree=3
+
+
+------------------- igt_id=4058: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Is maith an lá é
+C good the day he
+It is a NICE day
+
+1 4 # Is lá
+2 4 # maith lá
+3 4 # an lá
+4 -1 # lá *TOP*
+5 4 # é lá
+
+1 4 # Is lá
+2 4 # maith lá
+3 4 # an lá
+4 -1 # lá *TOP*
+5 4 # é lá
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+**************** igt_id=4089 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Níor thóg Seán an teach
+Neg-past build J the house
+John did not build the house
+
+
+------------------- igt_id=4089: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4089: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4089: question Q3 ans1=1, ans2=1 -----------
+English DS:
+John did not build the house
+
+1 4 # John build
+2 4 # did build
+3 4 # not build
+4 -1 # build *TOP*
+5 6 # the house
+6 4 # house build
+
+1 4 # John build
+2 4 # did build
+3 4 # not build
+4 -1 # build *TOP*
+5 6 # the house
+6 4 # house build
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=4089: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Níor thóg Seán an teach
+Neg-past build J the house
+
+1 1 # Níor Neg-past
+2 2 # thóg build
+3 3 # Seán J
+4 4 # an the
+5 5 # teach house
+
+1 1 # Níor Neg-past
+2 2 # thóg build
+3 3 # Seán J
+4 4 # an the
+5 5 # teach house
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=4089: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+Neg-past build J the house
+John did not build the house
+
+1 3,2 # Neg-past NULL x
+2 4 # build build
+3 1 # J NULL x
+4 5 # the the
+5 6 # house house
+
+1 3 # Neg-past not
+2 4 # build build
+3 0 # J NULL
+4 5 # the the
+5 6 # house house
+
+DISAGREE in Q5: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q5: file1 has +3 1+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 2+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 1+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +3 0+, file2 does, type=2
+
+
+wo_null: file1=6,file2=4, agree=4
+w_null:  file1=6,file2=7, agree=4
+
+
+------------------- igt_id=4089: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Níor thóg Seán an teach
+Neg-past build J the house
+John did not build the house
+
+1 2 # Níor thóg
+2 -1 # thóg *TOP*
+3 2 # Seán thóg
+4 5 # an teach
+5 2 # teach thóg
+
+1 2 # Níor thóg
+2 -1 # thóg *TOP*
+3 2 # Seán thóg
+4 5 # an teach
+5 2 # teach thóg
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+**************** igt_id=20637 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Is dochtúir capall é
+C doctor horses-gen him
+He is a doctor of horses
+
+
+------------------- igt_id=20637: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20637: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20637: question Q3 ans1=1, ans2=1 -----------
+English DS:
+He is a doctor of horses
+
+1 4 # He doctor
+2 4 # is doctor
+3 4 # a doctor
+4 -1 # doctor *TOP*
+5 4 # of doctor
+6 5 # horses of
+
+1 4 # He doctor
+2 4 # is doctor
+3 4 # a doctor
+4 -1 # doctor *TOP*
+5 4 # of doctor
+6 5 # horses of
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=20637: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Is dochtúir capall é
+C doctor horses-gen him
+
+1 1 # Is C
+2 2 # dochtúir doctor
+3 3 # capall horses-gen
+4 4 # é him
+
+1 1 # Is C
+2 2 # dochtúir doctor
+3 3 # capall horses-gen
+4 4 # é him
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=20637: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+C doctor horses-gen him
+He is a doctor of horses
+
+1 2 # C NULL x
+2 4 # doctor doctor
+3 6 # horses-gen horses
+4 1 # him NULL x
+
+1 0 # C NULL
+2 4 # doctor doctor
+3 6 # horses-gen horses
+4 0 # him NULL
+
+DISAGREE in Q5: file1 has +4 1+, file2 does not, type=1
+DISAGREE in Q5: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 2+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +4 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 1+, file2 does, type=2
+
+
+wo_null: file1=4,file2=2, agree=2
+w_null:  file1=6,file2=8, agree=4
+
+
+------------------- igt_id=20637: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Is dochtúir capall é
+C doctor horses-gen him
+He is a doctor of horses
+
+1 2 # Is dochtúir
+2 -1 # dochtúir *TOP*
+3 2 # capall dochtúir
+4 2 # é dochtúir
+
+1 2 # Is dochtúir
+2 -1 # dochtúir *TOP*
+3 2 # capall dochtúir
+4 2 # é dochtúir
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+**************** igt_id=20642 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Tá máthair an fhir san otharlann
+Be-pres mother the man-gen in-the hospital
+The man 's mother is in the hospital
+
+
+------------------- igt_id=20642: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20642: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20642: question Q3 ans1=1, ans2=1 -----------
+English DS:
+The man 's mother is in the hospital
+
+1 3 # The 's
+2 3 # man 's
+3 4 # 's mother
+4 6 # mother in
+5 6 # is in
+6 -1 # in *TOP*
+7 8 # the hospital
+8 6 # hospital in
+
+1 3 # The 's
+2 3 # man 's
+3 4 # 's mother
+4 6 # mother in
+5 6 # is in
+6 -1 # in *TOP*
+7 8 # the hospital
+8 6 # hospital in
+
+
+
+wo_null: file1=8,file2=8, agree=8
+w_null:  file1=8,file2=8, agree=8
+
+
+------------------- igt_id=20642: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Tá máthair an fhir san otharlann
+Be-pres mother the man-gen in-the hospital
+
+1 1 # Tá Be-pres
+2 2 # máthair mother
+3 3 # an the
+4 4 # fhir man-gen
+5 5 # san in-the
+6 6 # otharlann hospital
+
+1 1 # Tá Be-pres
+2 2 # máthair mother
+3 3 # an the
+4 4 # fhir man-gen
+5 5 # san in-the
+6 6 # otharlann hospital
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=20642: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+Be-pres mother the man-gen in-the hospital
+The man 's mother is in the hospital
+
+1 5 # Be-pres NULL x
+2 4 # mother mother
+3 1 # the The
+4 2,3 # man-gen man x
+5 6,7 # in-the in,the
+6 8 # hospital hospital
+
+1 5 # Be-pres is
+2 4 # mother mother
+3 1 # the The
+4 2 # man-gen man
+5 7,6 # in-the the,in
+6 8 # hospital hospital
+
+DISAGREE in Q5: file1 has +4 3+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 3+, file2 does, type=2
+
+
+wo_null: file1=8,file2=7, agree=7
+w_null:  file1=8,file2=8, agree=7
+
+
+------------------- igt_id=20642: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Tá máthair an fhir san otharlann
+Be-pres mother the man-gen in-the hospital
+The man 's mother is in the hospital
+
+1 5 # Tá san
+2 5 # máthair san
+3 4 # an san x
+4 2 # fhir san x
+5 -1 # san *TOP*
+6 5 # otharlann san
+
+1 5 # Tá san
+2 5 # máthair san
+3 2 # an máthair
+4 2 # fhir máthair
+5 -1 # san *TOP*
+6 5 # otharlann san
+
+DISAGREE in Q6: file1 has +3 4+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +3 2+, file2 does, type=1
+
+
+wo_null: file1=6,file2=6, agree=5
+w_null:  file1=6,file2=6, agree=5
+
+
+**************** igt_id=37729 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Started mise ag an scoil seo
+Started me -emph at this school
+I started at this school
+
+
+------------------- igt_id=37729: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=37729: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=37729: question Q3 ans1=1, ans2=1 -----------
+English DS:
+I started at this school
+
+1 2 # I started
+2 -1 # started *TOP*
+3 2 # at started
+4 5 # this school
+5 3 # school at
+
+1 2 # I started
+2 -1 # started *TOP*
+3 2 # at started
+4 5 # this school
+5 3 # school at
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=37729: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Started mise ag an scoil seo
+Started me -emph at this school
+
+1 1 # Started Started
+2 2 # mise me
+3 3 # ag -emph
+4 4 # an at
+5 5 # scoil this
+6 6 # seo school
+
+1 1 # Started Started
+2 2 # mise me
+3 3 # ag -emph
+4 4 # an at
+5 5 # scoil this
+6 6 # seo school
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=37729: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+Started me -emph at this school
+I started at this school
+
+1 2 # Started started
+2 1 # me NULL x
+3 0 # -emph NULL
+4 3 # at at
+5 4 # this this
+6 5 # school school
+
+1 2 # Started started
+2 0 # me NULL
+3 0 # -emph NULL
+4 3 # at at
+5 4 # this this
+6 5 # school school
+
+DISAGREE in Q5: file1 has +2 1+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 1+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +2 0+, file2 does, type=2
+
+
+wo_null: file1=5,file2=4, agree=4
+w_null:  file1=6,file2=7, agree=5
+
+
+------------------- igt_id=37729: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Started mise ag an scoil seo
+Started me -emph at this school
+I started at this school
+
+1 -1 # Started *TOP*
+2 1 # mise Started
+3 2 # ag Started x
+4 1 # an Started
+5 6 # scoil seo
+6 4 # seo an
+
+1 -1 # Started *TOP*
+2 1 # mise Started
+3 1 # ag Started
+4 1 # an Started
+5 6 # scoil seo
+6 4 # seo an
+
+DISAGREE in Q6: file1 has +3 2+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +3 1+, file2 does, type=1
+
+
+wo_null: file1=6,file2=6, agree=5
+w_null:  file1=6,file2=6, agree=5
+
+
+**************** igt_id=37730 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Is docht\xFAir \xE9
+Is doctor him
+He is a doctor
+
+
+------------------- igt_id=37730: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=37730: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=37730: question Q3 ans1=1, ans2=1 -----------
+English DS:
+He is a doctor
+
+1 4 # He doctor
+2 4 # is doctor
+3 4 # a doctor
+4 -1 # doctor *TOP*
+
+1 4 # He doctor
+2 4 # is doctor
+3 4 # a doctor
+4 -1 # doctor *TOP*
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=37730: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Is docht\xFAir \xE9
+Is doctor him
+
+1 1 # Is Is
+2 2 # docht\xFAir doctor
+3 3 # \xE9 him
+
+1 1 # Is Is
+2 2 # docht\xFAir doctor
+3 3 # \xE9 him
+
+
+
+wo_null: file1=3,file2=3, agree=3
+w_null:  file1=3,file2=3, agree=3
+
+
+------------------- igt_id=37730: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+Is doctor him
+He is a doctor
+
+1 2 # Is is
+2 4 # doctor doctor
+3 1 # him NULL x
+
+1 2 # Is is
+2 4 # doctor doctor
+3 0 # him NULL
+
+DISAGREE in Q5: file1 has +3 1+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 1+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +3 0+, file2 does, type=2
+
+
+wo_null: file1=3,file2=2, agree=2
+w_null:  file1=4,file2=5, agree=3
+
+
+------------------- igt_id=37730: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Is docht\xFAir \xE9
+Is doctor him
+He is a doctor
+
+1 2 # Is docht\xFAir
+2 -1 # docht\xFAir *TOP*
+3 2 # \xE9 docht\xFAir
+
+1 2 # Is docht\xFAir
+2 -1 # docht\xFAir *TOP*
+3 2 # \xE9 docht\xFAir
+
+
+
+wo_null: file1=3,file2=3, agree=3
+w_null:  file1=3,file2=3, agree=3
+
+
+**************** igt_id=29741 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+N\xEDor cheannaigh .
+NEG-PAST bought .
+No , They did n't .
+
+
+------------------- igt_id=29741: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=29741: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=29741: question Q3 ans1=1, ans2=1 -----------
+English DS:
+No , They did n't .
+
+1 4 # No did
+2 4 # , did
+3 4 # They did
+4 -1 # did *TOP*
+5 4 # n't did
+6 4 # . did
+
+1 4 # No did
+2 4 # , did
+3 4 # They did
+4 -1 # did *TOP*
+5 4 # n't did
+6 4 # . did
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=29741: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+N\xEDor cheannaigh .
+NEG-PAST bought .
+
+1 1 # N\xEDor NEG-PAST
+2 2 # cheannaigh bought
+3 3 # . .
+
+1 1 # N\xEDor NEG-PAST
+2 2 # cheannaigh bought
+3 3 # . .
+
+
+
+wo_null: file1=3,file2=3, agree=3
+w_null:  file1=3,file2=3, agree=3
+
+
+------------------- igt_id=29741: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+NEG-PAST bought .
+No , They did n't .
+
+1 5 # NEG-PAST n't
+2 0 # bought NULL
+3 6 # . .
+
+1 5 # NEG-PAST n't
+2 0 # bought NULL
+3 6 # . .
+
+
+
+wo_null: file1=2,file2=2, agree=2
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=29741: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+N\xEDor cheannaigh .
+NEG-PAST bought .
+No , They did n't .
+
+1 2 # N\xEDor NULL x
+2 -1 # cheannaigh NULL x
+3 2 # . NULL x
+
+1 -2 # N\xEDor NULL
+2 -2 # cheannaigh NULL
+3 -2 # . NULL
+
+DISAGREE in Q6: file1 has +2 -1+, file2 does not, type=1
+DISAGREE in Q6: file1 has +3 2+, file2 does not, type=1
+DISAGREE in Q6: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +3 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +1 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +2 -2+, file2 does, type=1
+
+
+wo_null: file1=3,file2=3, agree=0
+w_null:  file1=3,file2=3, agree=0
+
+
+**************** igt_id=16924 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Tá máthair an fhir san otharlann
+Be-PRES mother the man-GEN in-the hospital
+The man 's mother is in the hospital
+
+
+------------------- igt_id=16924: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=16924: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=16924: question Q3 ans1=1, ans2=1 -----------
+English DS:
+The man 's mother is in the hospital
+
+1 3 # The 's
+2 3 # man 's
+3 4 # 's mother
+4 6 # mother in
+5 6 # is in
+6 -1 # in *TOP*
+7 8 # the hospital
+8 6 # hospital in
+
+1 3 # The 's
+2 3 # man 's
+3 4 # 's mother
+4 6 # mother in
+5 6 # is in
+6 -1 # in *TOP*
+7 8 # the hospital
+8 6 # hospital in
+
+
+
+wo_null: file1=8,file2=8, agree=8
+w_null:  file1=8,file2=8, agree=8
+
+
+------------------- igt_id=16924: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Tá máthair an fhir san otharlann
+Be-PRES mother the man-GEN in-the hospital
+
+1 1 # Tá Be-PRES
+2 2 # máthair mother
+3 3 # an the
+4 4 # fhir man-GEN
+5 5 # san in-the
+6 6 # otharlann hospital
+
+1 1 # Tá Be-PRES
+2 2 # máthair mother
+3 3 # an the
+4 4 # fhir man-GEN
+5 5 # san in-the
+6 6 # otharlann hospital
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=16924: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+Be-PRES mother the man-GEN in-the hospital
+The man 's mother is in the hospital
+
+1 4 # Be-PRES NULL x
+2 4 # mother mother
+3 1 # the The
+4 2,3 # man-GEN man x
+5 6,7 # in-the in,the
+6 8 # hospital hospital
+
+1 5 # Be-PRES is
+2 4 # mother mother
+3 1 # the The
+4 2 # man-GEN man
+5 7,6 # in-the the,in
+6 8 # hospital hospital
+
+DISAGREE in Q5: file1 has +1 4+, file2 does not, type=1
+DISAGREE in Q5: file1 has +0 5+, file2 does not, type=2
+DISAGREE in Q5: file1 has +4 3+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 3+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 5+, file2 does, type=1
+
+
+wo_null: file1=8,file2=7, agree=6
+w_null:  file1=9,file2=8, agree=6
+
+
+------------------- igt_id=16924: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Tá máthair an fhir san otharlann
+Be-PRES mother the man-GEN in-the hospital
+The man 's mother is in the hospital
+
+1 5 # Tá san
+2 5 # máthair san
+3 4 # an san x
+4 2 # fhir san x
+5 -1 # san *TOP*
+6 5 # otharlann san
+
+1 5 # Tá san
+2 5 # máthair san
+3 2 # an máthair
+4 2 # fhir máthair
+5 -1 # san *TOP*
+6 5 # otharlann san
+
+DISAGREE in Q6: file1 has +3 4+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +3 2+, file2 does, type=1
+
+
+wo_null: file1=6,file2=6, agree=5
+w_null:  file1=6,file2=6, agree=5
+
+
+**************** igt_id=37234 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+C\xE9n bhean a ph\xF3sfadh s\xE9 ?
+Which woman that would-marry he ?
+Which woman would he marry ?
+
+
+------------------- igt_id=37234: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=37234: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=37234: question Q3 ans1=1, ans2=1 -----------
+English DS:
+Which woman would he marry ?
+
+1 2 # Which woman
+2 5 # woman marry
+3 5 # would marry
+4 5 # he marry
+5 -1 # marry *TOP*
+6 5 # ? marry
+
+1 2 # Which woman
+2 5 # woman marry
+3 5 # would marry
+4 5 # he marry
+5 -1 # marry *TOP*
+6 5 # ? marry
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=37234: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+C\xE9n bhean a ph\xF3sfadh s\xE9 ?
+Which woman that would-marry he ?
+
+1 1 # C\xE9n Which
+2 2 # bhean woman
+3 3 # a that
+4 4 # ph\xF3sfadh would-marry
+5 5 # s\xE9 he
+6 6 # ? ?
+
+1 1 # C\xE9n Which
+2 2 # bhean woman
+3 3 # a that
+4 4 # ph\xF3sfadh would-marry
+5 5 # s\xE9 he
+6 6 # ? ?
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=37234: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+Which woman that would-marry he ?
+Which woman would he marry ?
+
+1 1 # Which Which
+2 2 # woman woman
+3 0 # that NULL
+4 3,5 # would-marry would,marry
+5 4 # he he
+6 6 # ? ?
+
+1 1 # Which Which
+2 2 # woman woman
+3 0 # that NULL
+4 5,3 # would-marry marry,would
+5 4 # he he
+6 6 # ? ?
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=37234: question Q6 ans1=1, ans2=1 -----------
+src DS:
+C\xE9n bhean a ph\xF3sfadh s\xE9 ?
+Which woman that would-marry he ?
+Which woman would he marry ?
+
+1 2 # C\xE9n bhean
+2 4 # bhean ph\xF3sfadh
+3 4 # a ph\xF3sfadh
+4 -1 # ph\xF3sfadh *TOP*
+5 4 # s\xE9 ph\xF3sfadh
+6 4 # ? ph\xF3sfadh
+
+1 2 # C\xE9n bhean
+2 4 # bhean ph\xF3sfadh
+3 4 # a ph\xF3sfadh
+4 -1 # ph\xF3sfadh *TOP*
+5 4 # s\xE9 ph\xF3sfadh
+6 4 # ? ph\xF3sfadh
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+**************** igt_id=26264 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Chonaic Eoghan Siobh\xE1n agus Eoghna\xED Ciar\xE1n .
+saw Eoghan Siobh\xE1n and Eoghna\xED Ciar\xE1n .
+Eoghan saw Siobh\xE1n , and Eoghna\xED , Ciar\xE1n .
+
+
+------------------- igt_id=26264: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=26264: question Q2 ans1=0, ans2=1 -----------
+DiSAGREE in Q2 answer
+
+
+------------------- igt_id=26264: question Q3 ans1=0, ans2=1 -----------
+DiSAGREE in Q3 answer
+English DS:
+Eoghan saw Siobh\xE1n , and Eoghna\xED , Ciar\xE1n .
+
+1 2 # Eoghan saw
+2 -1 # saw *TOP*
+3 8 # Siobh\xE1n Eoghna\xED x
+4 8 # , Eoghna\xED x
+5 8 # and Eoghna\xED x
+6 8 # Eoghna\xED Ciar\xE1n x
+7 8 # , Eoghna\xED x
+8 2 # Ciar\xE1n saw
+9 2 # . saw
+
+1 2 # Eoghan saw
+2 -1 # saw *TOP*
+3 8 # Siobh\xE1n Ciar\xE1n
+4 8 # , Ciar\xE1n
+5 8 # and Ciar\xE1n
+6 8 # Eoghna\xED Ciar\xE1n
+7 8 # , Ciar\xE1n
+8 2 # Ciar\xE1n saw
+9 2 # . saw
+
+
+
+wo_null: file1=9,file2=9, agree=9
+w_null:  file1=9,file2=9, agree=9
+
+
+------------------- igt_id=26264: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Chonaic Eoghan Siobh\xE1n agus Eoghna\xED Ciar\xE1n .
+saw Eoghan Siobh\xE1n and Eoghna\xED Ciar\xE1n .
+
+1 1 # Chonaic saw
+2 2 # Eoghan Eoghan
+3 3 # Siobh\xE1n Siobh\xE1n
+4 4 # agus and
+5 5 # Eoghna\xED Eoghna\xED
+6 6 # Ciar\xE1n Ciar\xE1n
+7 7 # . .
+
+1 1 # Chonaic saw
+2 2 # Eoghan Eoghan
+3 3 # Siobh\xE1n Siobh\xE1n
+4 4 # agus and
+5 5 # Eoghna\xED Eoghna\xED
+6 6 # Ciar\xE1n Ciar\xE1n
+7 7 # . .
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=26264: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+saw Eoghan Siobh\xE1n and Eoghna\xED Ciar\xE1n .
+Eoghan saw Siobh\xE1n , and Eoghna\xED , Ciar\xE1n .
+
+1 2 # saw saw
+2 1 # Eoghan Eoghan
+3 3 # Siobh\xE1n Siobh\xE1n
+4 5 # and and
+5 6 # Eoghna\xED Eoghna\xED
+6 8 # Ciar\xE1n Ciar\xE1n
+7 9 # . .
+
+1 2 # saw saw
+2 1 # Eoghan Eoghan
+3 3 # Siobh\xE1n Siobh\xE1n
+4 5 # and and
+5 6 # Eoghna\xED Eoghna\xED
+6 8 # Ciar\xE1n Ciar\xE1n
+7 9 # . .
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=9,file2=9, agree=9
+
+
+------------------- igt_id=26264: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Chonaic Eoghan Siobh\xE1n agus Eoghna\xED Ciar\xE1n .
+saw Eoghan Siobh\xE1n and Eoghna\xED Ciar\xE1n .
+Eoghan saw Siobh\xE1n , and Eoghna\xED , Ciar\xE1n .
+
+1 -1 # Chonaic *TOP*
+2 1 # Eoghan Chonaic
+3 7 # Siobh\xE1n Eoghna\xED x
+4 7 # agus Eoghna\xED x
+5 7 # Eoghna\xED Ciar\xE1n x
+6 1 # Ciar\xE1n Chonaic
+7 1 # . Chonaic
+
+1 -1 # Chonaic *TOP*
+2 1 # Eoghan Chonaic
+3 6 # Siobh\xE1n Ciar\xE1n
+4 6 # agus Ciar\xE1n
+5 6 # Eoghna\xED Ciar\xE1n
+6 1 # Ciar\xE1n Chonaic
+7 1 # . Chonaic
+
+DISAGREE in Q6: file1 has +5 7+, file2 does not, type=1
+DISAGREE in Q6: file1 has +4 7+, file2 does not, type=1
+DISAGREE in Q6: file1 has +3 7+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +4 6+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +5 6+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +3 6+, file2 does, type=1
+
+
+wo_null: file1=7,file2=7, agree=4
+w_null:  file1=7,file2=7, agree=4
+
+
+**************** igt_id=4056 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Is teangeolaí ar phóg Seán é Peadar
+C linguist C-rel kiss Shawn agr Peter
+Peter is a linguist who Shawn kissed
+
+
+------------------- igt_id=4056: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4056: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4056: question Q3 ans1=1, ans2=1 -----------
+English DS:
+Peter is a linguist who Shawn kissed
+
+1 4 # Peter linguist
+2 4 # is linguist
+3 4 # a linguist
+4 -1 # linguist *TOP*
+5 7 # who kissed
+6 7 # Shawn kissed
+7 4 # kissed linguist
+
+1 4 # Peter linguist
+2 4 # is linguist
+3 4 # a linguist
+4 -1 # linguist *TOP*
+5 7 # who kissed
+6 7 # Shawn kissed
+7 4 # kissed linguist
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=4056: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Is teangeolaí ar phóg Seán é Peadar
+C linguist C-rel kiss Shawn agr Peter
+
+1 1 # Is C
+2 2 # teangeolaí linguist
+3 3 # ar C-rel
+4 4 # phóg kiss
+5 5 # Seán Shawn
+6 6 # é agr
+7 7 # Peadar Peter
+
+1 1 # Is C
+2 2 # teangeolaí linguist
+3 3 # ar C-rel
+4 4 # phóg kiss
+5 5 # Seán Shawn
+6 6 # é agr
+7 7 # Peadar Peter
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=4056: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+C linguist C-rel kiss Shawn agr Peter
+Peter is a linguist who Shawn kissed
+
+1 2 # C NULL x
+2 4 # linguist linguist
+3 5 # C-rel NULL x
+4 7 # kiss kissed
+5 6 # Shawn Shawn
+6 0 # agr NULL
+7 1 # Peter Peter
+
+1 0 # C NULL
+2 4 # linguist linguist
+3 0 # C-rel NULL
+4 7 # kiss kissed
+5 6 # Shawn Shawn
+6 0 # agr NULL
+7 1 # Peter Peter
+
+DISAGREE in Q5: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q5: file1 has +3 5+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 2+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +3 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 5+, file2 does, type=2
+
+
+wo_null: file1=6,file2=4, agree=4
+w_null:  file1=8,file2=10, agree=6
+
+
+------------------- igt_id=4056: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Is teangeolaí ar phóg Seán é Peadar
+C linguist C-rel kiss Shawn agr Peter
+Peter is a linguist who Shawn kissed
+
+1 2 # Is teangeolaí
+2 -1 # teangeolaí *TOP*
+3 4 # ar teangeolaí x
+4 2 # phóg teangeolaí
+5 4 # Seán phóg
+6 2 # é teangeolaí
+7 2 # Peadar teangeolaí
+
+1 2 # Is teangeolaí
+2 -1 # teangeolaí *TOP*
+3 2 # ar teangeolaí
+4 2 # phóg teangeolaí
+5 4 # Seán phóg
+6 2 # é teangeolaí
+7 2 # Peadar teangeolaí
+
+DISAGREE in Q6: file1 has +3 4+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +3 2+, file2 does, type=1
+
+
+wo_null: file1=7,file2=7, agree=6
+w_null:  file1=7,file2=7, agree=6
+
+
+**************** igt_id=4080 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Tá mé ag scríobh an abairt anois
+Be-pres I prog write the sentence-acc now
+I am writing the sentence now
+
+
+------------------- igt_id=4080: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4080: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4080: question Q3 ans1=1, ans2=1 -----------
+English DS:
+I am writing the sentence now
+
+1 3 # I writing
+2 3 # am writing
+3 -1 # writing *TOP*
+4 5 # the sentence
+5 3 # sentence writing
+6 3 # now writing
+
+1 3 # I writing
+2 3 # am writing
+3 -1 # writing *TOP*
+4 5 # the sentence
+5 3 # sentence writing
+6 3 # now writing
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=4080: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Tá mé ag scríobh an abairt anois
+Be-pres I prog write the sentence-acc now
+
+1 1 # Tá Be-pres
+2 2 # mé I
+3 3 # ag prog
+4 4 # scríobh write
+5 5 # an the
+6 6 # abairt sentence-acc
+7 7 # anois now
+
+1 1 # Tá Be-pres
+2 2 # mé I
+3 3 # ag prog
+4 4 # scríobh write
+5 5 # an the
+6 6 # abairt sentence-acc
+7 7 # anois now
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=4080: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+Be-pres I prog write the sentence-acc now
+I am writing the sentence now
+
+1 2 # Be-pres NULL x
+2 1 # I I
+3 3 # prog NULL x
+4 3 # write writing
+5 4 # the the
+6 5 # sentence-acc sentence
+7 6 # now now
+
+1 0 # Be-pres NULL
+2 1 # I I
+3 0 # prog NULL
+4 3 # write writing
+5 4 # the the
+6 5 # sentence-acc sentence
+7 6 # now now
+
+DISAGREE in Q5: file1 has +3 3+, file2 does not, type=1
+DISAGREE in Q5: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 2+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +3 0+, file2 does, type=2
+
+
+wo_null: file1=7,file2=5, agree=5
+w_null:  file1=7,file2=8, agree=5
+
+
+------------------- igt_id=4080: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Tá mé ag scríobh an abairt anois
+Be-pres I prog write the sentence-acc now
+I am writing the sentence now
+
+1 4 # Tá scríobh
+2 4 # mé scríobh
+3 4 # ag scríobh
+4 -1 # scríobh *TOP*
+5 6 # an abairt
+6 4 # abairt scríobh
+7 4 # anois scríobh
+
+1 4 # Tá scríobh
+2 4 # mé scríobh
+3 4 # ag scríobh
+4 -1 # scríobh *TOP*
+5 6 # an abairt
+6 4 # abairt scríobh
+7 4 # anois scríobh
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+**************** igt_id=4079 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Ceapaim go bhfuil sé ansin
+Think.1.s that be-pres he there
+I think that he is there
+
+
+------------------- igt_id=4079: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4079: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4079: question Q3 ans1=1, ans2=1 -----------
+English DS:
+I think that he is there
+
+1 2 # I think
+2 -1 # think *TOP*
+3 5 # that is
+4 5 # he is
+5 2 # is think
+6 5 # there is
+
+1 2 # I think
+2 -1 # think *TOP*
+3 5 # that is
+4 5 # he is
+5 2 # is think
+6 5 # there is
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=4079: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Ceapaim go bhfuil sé ansin
+Think.1.s that be-pres he there
+
+1 1 # Ceapaim Think.1.s
+2 2 # go that
+3 3 # bhfuil be-pres
+4 4 # sé he
+5 5 # ansin there
+
+1 1 # Ceapaim Think.1.s
+2 2 # go that
+3 3 # bhfuil be-pres
+4 4 # sé he
+5 5 # ansin there
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=4079: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+Think.1.s that be-pres he there
+I think that he is there
+
+1 2,1 # Think.1.s think x
+2 3 # that that
+3 5 # be-pres NULL x
+4 4 # he he
+5 6 # there there
+
+1 2 # Think.1.s think
+2 3 # that that
+3 5 # be-pres is
+4 4 # he he
+5 6 # there there
+
+DISAGREE in Q5: file1 has +1 1+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 1+, file2 does, type=2
+
+
+wo_null: file1=6,file2=5, agree=5
+w_null:  file1=6,file2=6, agree=5
+
+
+------------------- igt_id=4079: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Ceapaim go bhfuil sé ansin
+Think.1.s that be-pres he there
+I think that he is there
+
+1 -1 # Ceapaim *TOP*
+2 5 # go Ceapaim x
+3 5 # bhfuil Ceapaim x
+4 5 # sé Ceapaim x
+5 1 # ansin Ceapaim
+
+1 -1 # Ceapaim *TOP*
+2 3 # go bhfuil
+3 1 # bhfuil Ceapaim
+4 3 # sé bhfuil
+5 3 # ansin bhfuil
+
+DISAGREE in Q6: file1 has +4 5+, file2 does not, type=1
+DISAGREE in Q6: file1 has +2 5+, file2 does not, type=1
+DISAGREE in Q6: file1 has +5 1+, file2 does not, type=1
+DISAGREE in Q6: file1 has +3 5+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +2 3+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +3 1+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +5 3+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +4 3+, file2 does, type=1
+
+
+wo_null: file1=5,file2=5, agree=1
+w_null:  file1=5,file2=5, agree=1
+
+
+**************** igt_id=4115 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Scaoil an Captaen ar na Clingeánaí iad
+Fired the Captain on the Klingons them
+The Captain fired them at the Klingons
+
+
+------------------- igt_id=4115: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4115: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4115: question Q3 ans1=1, ans2=1 -----------
+English DS:
+The Captain fired them at the Klingons
+
+1 2 # The Captain
+2 3 # Captain fired
+3 -1 # fired *TOP*
+4 3 # them fired
+5 3 # at fired
+6 7 # the Klingons
+7 5 # Klingons at
+
+1 2 # The Captain
+2 3 # Captain fired
+3 -1 # fired *TOP*
+4 3 # them fired
+5 3 # at fired
+6 7 # the Klingons
+7 5 # Klingons at
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=4115: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Scaoil an Captaen ar na Clingeánaí iad
+Fired the Captain on the Klingons them
+
+1 1 # Scaoil Fired
+2 2 # an the
+3 3 # Captaen Captain
+4 4 # ar on
+5 5 # na the
+6 6 # Clingeánaí Klingons
+7 7 # iad them
+
+1 1 # Scaoil Fired
+2 2 # an the
+3 3 # Captaen Captain
+4 4 # ar on
+5 5 # na the
+6 6 # Clingeánaí Klingons
+7 7 # iad them
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=4115: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+Fired the Captain on the Klingons them
+The Captain fired them at the Klingons
+
+1 3 # Fired fired
+2 1 # the The
+3 2 # Captain Captain
+4 0 # on NULL
+5 6 # the the
+6 7 # Klingons Klingons
+7 4 # them them
+
+1 3 # Fired fired
+2 1 # the The
+3 2 # Captain Captain
+4 0 # on NULL
+5 6 # the the
+6 7 # Klingons Klingons
+7 4 # them them
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=8,file2=8, agree=8
+
+
+------------------- igt_id=4115: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Scaoil an Captaen ar na Clingeánaí iad
+Fired the Captain on the Klingons them
+The Captain fired them at the Klingons
+
+1 -1 # Scaoil *TOP*
+2 3 # an Captaen
+3 1 # Captaen Scaoil
+4 1 # ar Scaoil
+5 6 # na Clingeánaí
+6 1 # Clingeánaí Scaoil
+7 1 # iad Scaoil
+
+1 -1 # Scaoil *TOP*
+2 3 # an Captaen
+3 1 # Captaen Scaoil
+4 1 # ar Scaoil
+5 6 # na Clingeánaí
+6 1 # Clingeánaí Scaoil
+7 1 # iad Scaoil
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+**************** igt_id=30781 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+hata an fhir
+hat the man-GEN
+the man 's hat
+
+
+------------------- igt_id=30781: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=30781: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=30781: question Q3 ans1=1, ans2=1 -----------
+English DS:
+the man 's hat
+
+1 3 # the 's
+2 3 # man 's
+3 4 # 's hat
+4 -1 # hat *TOP*
+
+1 3 # the 's
+2 3 # man 's
+3 4 # 's hat
+4 -1 # hat *TOP*
+
+
+
+wo_null: file1=4,file2=4, agree=4
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=30781: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+hata an fhir
+hat the man-GEN
+
+1 1 # hata hat
+2 2 # an the
+3 3 # fhir man-GEN
+
+1 1 # hata hat
+2 2 # an the
+3 3 # fhir man-GEN
+
+
+
+wo_null: file1=3,file2=3, agree=3
+w_null:  file1=3,file2=3, agree=3
+
+
+------------------- igt_id=30781: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+hat the man-GEN
+the man 's hat
+
+1 4 # hat hat
+2 1 # the the
+3 2 # man-GEN man
+
+1 4 # hat hat
+2 1 # the the
+3 2 # man-GEN man
+
+
+
+wo_null: file1=3,file2=3, agree=3
+w_null:  file1=4,file2=4, agree=4
+
+
+------------------- igt_id=30781: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+hata an fhir
+hat the man-GEN
+the man 's hat
+
+1 -1 # hata *TOP*
+2 3 # an hata x
+3 1 # fhir hata
+
+1 -1 # hata *TOP*
+2 1 # an hata
+3 1 # fhir hata
+
+DISAGREE in Q6: file1 has +2 3+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +2 1+, file2 does, type=1
+
+
+wo_null: file1=3,file2=3, agree=2
+w_null:  file1=3,file2=3, agree=2
+
+
+**************** igt_id=20632 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+an fear a bhí __ breoite
+the man who was __ ill
+The man that was ill
+
+
+------------------- igt_id=20632: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20632: question Q2 ans1=0, ans2=1 -----------
+DiSAGREE in Q2 answer
+
+
+------------------- igt_id=20632: question Q3 ans1=0, ans2=1 -----------
+DiSAGREE in Q3 answer
+English DS:
+The man that was ill
+
+1 2 # The man
+2 -1 # man ill x
+3 5 # that ill
+4 5 # was ill
+5 2 # ill *TOP* x
+
+1 2 # The man
+2 -1 # man *TOP*
+3 5 # that ill
+4 5 # was ill
+5 2 # ill man
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=20632: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+an fear a bhí __ breoite
+the man who was __ ill
+
+1 1 # an the
+2 2 # fear man
+3 3 # a who
+4 4 # bhí was
+5 5 # __ __
+6 6 # breoite ill
+
+1 1 # an the
+2 2 # fear man
+3 3 # a who
+4 4 # bhí was
+5 5 # __ __
+6 6 # breoite ill
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=20632: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+the man who was __ ill
+The man that was ill
+
+1 1 # the The
+2 2 # man man
+3 3 # who NULL x
+4 4 # was was
+5 0 # __ NULL
+6 5 # ill ill
+
+1 1 # the The
+2 2 # man man
+3 0 # who NULL
+4 4 # was was
+5 0 # __ NULL
+6 5 # ill ill
+
+DISAGREE in Q5: file1 has +3 3+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 3+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +3 0+, file2 does, type=2
+
+
+wo_null: file1=5,file2=4, agree=4
+w_null:  file1=6,file2=7, agree=5
+
+
+------------------- igt_id=20632: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+an fear a bhí __ breoite
+the man who was __ ill
+The man that was ill
+
+1 2 # an fear
+2 -1 # fear breoite x
+3 6 # a breoite
+4 6 # bhí breoite
+5 6 # __ breoite
+6 2 # breoite *TOP* x
+
+1 2 # an fear
+2 -1 # fear *TOP*
+3 2 # a fear
+4 6 # bhí breoite
+5 2 # __ fear
+6 2 # breoite fear
+
+DISAGREE in Q6: file1 has +5 6+, file2 does not, type=1
+DISAGREE in Q6: file1 has +3 6+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +3 2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +5 2+, file2 does, type=1
+
+
+wo_null: file1=6,file2=6, agree=4
+w_null:  file1=6,file2=6, agree=4
+
+
+**************** igt_id=20629 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Is ríomhaire é leifteanantcheannasaí Data
+C computer agr Lieutenant-Commander Data
+Lieutenant Commander Data is a computer'14
+
+
+------------------- igt_id=20629: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=20629: question Q2 ans1=0, ans2=1 -----------
+DiSAGREE in Q2 answer
+
+
+------------------- igt_id=20629: question Q3 ans1=0, ans2=1 -----------
+DiSAGREE in Q3 answer
+English DS:
+Lieutenant Commander Data is a computer'14
+
+1 2 # Lieutenant Data x
+2 3 # Commander Data
+3 6 # Data computer'14
+4 6 # is computer'14
+5 6 # a computer'14
+6 -1 # computer'14 *TOP*
+
+1 2 # Lieutenant Commander
+2 3 # Commander Data
+3 6 # Data computer'14
+4 6 # is computer'14
+5 6 # a computer'14
+6 -1 # computer'14 *TOP*
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=20629: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Is ríomhaire é leifteanantcheannasaí Data
+C computer agr Lieutenant-Commander Data
+
+1 1 # Is C
+2 2 # ríomhaire computer
+3 3 # é agr
+4 4 # leifteanantcheannasaí Lieutenant-Commander
+5 5 # Data Data
+
+1 1 # Is C
+2 2 # ríomhaire computer
+3 3 # é agr
+4 4 # leifteanantcheannasaí Lieutenant-Commander
+5 5 # Data Data
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=20629: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+C computer agr Lieutenant-Commander Data
+Lieutenant Commander Data is a computer'14
+
+1 4 # C NULL x
+2 6 # computer NULL x
+3 0 # agr NULL
+4 1,2 # Lieutenant-Commander Lieutenant,Commander
+5 3 # Data Data
+
+1 0 # C NULL
+2 0 # computer NULL
+3 0 # agr NULL
+4 2,1 # Lieutenant-Commander Commander,Lieutenant
+5 3 # Data Data
+
+DISAGREE in Q5: file1 has +2 6+, file2 does not, type=1
+DISAGREE in Q5: file1 has +1 4+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 4+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 6+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +2 0+, file2 does, type=2
+
+
+wo_null: file1=5,file2=3, agree=3
+w_null:  file1=7,file2=9, agree=5
+
+
+------------------- igt_id=20629: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Is ríomhaire é leifteanantcheannasaí Data
+C computer agr Lieutenant-Commander Data
+Lieutenant Commander Data is a computer'14
+
+1 2 # Is NULL x
+2 -1 # ríomhaire NULL x
+3 2 # é NULL x
+4 5,5 # leifteanantcheannasaí Data,Data
+5 2 # Data NULL x
+
+1 -2 # Is NULL
+2 -2 # ríomhaire NULL
+3 -2 # é NULL
+4 5 # leifteanantcheannasaí Data
+5 -2 # Data NULL
+
+DISAGREE in Q6: file1 has +2 -1+, file2 does not, type=1
+DISAGREE in Q6: file1 has +3 2+, file2 does not, type=1
+DISAGREE in Q6: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q6: file1 has +5 2+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +5 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +3 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +1 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +2 -2+, file2 does, type=1
+
+
+wo_null: file1=5,file2=5, agree=1
+w_null:  file1=5,file2=5, agree=1
+
+
+**************** igt_id=3013 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Chonaic sé an platapas le ghloiní
+Saw he the platypus with binoculars
+He saw the platypus with binoculars
+
+
+------------------- igt_id=3013: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=3013: question Q2 ans1=0, ans2=1 -----------
+DiSAGREE in Q2 answer
+
+
+------------------- igt_id=3013: question Q3 ans1=0, ans2=1 -----------
+DiSAGREE in Q3 answer
+English DS:
+He saw the platypus with binoculars
+
+1 2 # He saw
+2 -1 # saw *TOP*
+3 4 # the platypus
+4 2 # platypus saw
+5 2 # with platypus x
+6 5 # binoculars with
+
+1 2 # He saw
+2 -1 # saw *TOP*
+3 4 # the platypus
+4 2 # platypus saw
+5 2 # with saw
+6 5 # binoculars with
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=3013: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Chonaic sé an platapas le ghloiní
+Saw he the platypus with binoculars
+
+1 1 # Chonaic Saw
+2 2 # sé he
+3 3 # an the
+4 4 # platapas platypus
+5 5 # le with
+6 6 # ghloiní binoculars
+
+1 1 # Chonaic Saw
+2 2 # sé he
+3 3 # an the
+4 4 # platapas platypus
+5 5 # le with
+6 6 # ghloiní binoculars
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=3013: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+Saw he the platypus with binoculars
+He saw the platypus with binoculars
+
+1 2 # Saw saw
+2 1 # he He
+3 3 # the the
+4 4 # platypus platypus
+5 5 # with with
+6 6 # binoculars binoculars
+
+1 2 # Saw saw
+2 1 # he He
+3 3 # the the
+4 4 # platypus platypus
+5 5 # with with
+6 6 # binoculars binoculars
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=3013: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Chonaic sé an platapas le ghloiní
+Saw he the platypus with binoculars
+He saw the platypus with binoculars
+
+1 -1 # Chonaic *TOP*
+2 1 # sé Chonaic
+3 4 # an platapas
+4 1 # platapas Chonaic
+5 1 # le platapas x
+6 5 # ghloiní le
+
+1 -1 # Chonaic *TOP*
+2 1 # sé Chonaic
+3 4 # an platapas
+4 1 # platapas Chonaic
+5 1 # le Chonaic
+6 5 # ghloiní le
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+**************** igt_id=16139 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Is cosúil lena chéile iad
+C like with-3-pl-poss each-other them
+They are like one another
+
+
+------------------- igt_id=16139: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=16139: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=16139: question Q3 ans1=1, ans2=1 -----------
+English DS:
+They are like one another
+
+1 3 # They like
+2 3 # are like
+3 -1 # like *TOP*
+4 5 # one another
+5 3 # another like
+
+1 3 # They like
+2 3 # are like
+3 -1 # like *TOP*
+4 5 # one another
+5 3 # another like
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=16139: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Is cosúil lena chéile iad
+C like with-3-pl-poss each-other them
+
+1 1 # Is C
+2 2 # cosúil like
+3 3 # lena with-3-pl-poss
+4 4 # chéile each-other
+5 5 # iad them
+
+1 1 # Is C
+2 2 # cosúil like
+3 3 # lena with-3-pl-poss
+4 4 # chéile each-other
+5 5 # iad them
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=16139: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+C like with-3-pl-poss each-other them
+They are like one another
+
+1 2 # C NULL x
+2 3 # like like
+3 0 # with-3-pl-poss NULL
+4 4,5 # each-other NULL x
+5 1 # them NULL x
+
+1 0 # C NULL
+2 3 # like like
+3 0 # with-3-pl-poss NULL
+4 0 # each-other NULL
+5 0 # them NULL
+
+DISAGREE in Q5: file1 has +4 5+, file2 does not, type=1
+DISAGREE in Q5: file1 has +1 2+, file2 does not, type=1
+DISAGREE in Q5: file1 has +5 1+, file2 does not, type=1
+DISAGREE in Q5: file1 has +4 4+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 4+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 2+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +4 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +5 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 1+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 5+, file2 does, type=2
+
+
+wo_null: file1=5,file2=1, agree=1
+w_null:  file1=6,file2=9, agree=2
+
+
+------------------- igt_id=16139: question Q6 ans1=1, ans2=1 -----------
+src DS:
+Is cosúil lena chéile iad
+C like with-3-pl-poss each-other them
+They are like one another
+
+1 2 # Is cosúil
+2 -1 # cosúil *TOP*
+3 2 # lena cosúil
+4 2 # chéile cosúil
+5 2 # iad cosúil
+
+1 2 # Is cosúil
+2 -1 # cosúil *TOP*
+3 2 # lena cosúil
+4 2 # chéile cosúil
+5 2 # iad cosúil
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+**************** igt_id=4066 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Chonaic Seán agus Máire lena chéile
+Saw John and Mary with-their other
+John and Mary saw each other
+
+
+------------------- igt_id=4066: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4066: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4066: question Q3 ans1=1, ans2=1 -----------
+English DS:
+John and Mary saw each other
+
+1 3 # John Mary
+2 3 # and Mary
+3 4 # Mary saw
+4 -1 # saw *TOP*
+5 6 # each other
+6 4 # other saw
+
+1 3 # John Mary
+2 3 # and Mary
+3 4 # Mary saw
+4 -1 # saw *TOP*
+5 6 # each other
+6 4 # other saw
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=4066: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Chonaic Seán agus Máire lena chéile
+Saw John and Mary with-their other
+
+1 1 # Chonaic Saw
+2 2 # Seán John
+3 3 # agus and
+4 4 # Máire Mary
+5 5 # lena with-their
+6 6 # chéile other
+
+1 1 # Chonaic Saw
+2 2 # Seán John
+3 3 # agus and
+4 4 # Máire Mary
+5 5 # lena with-their
+6 6 # chéile other
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=4066: question Q5 ans1=1, ans2=1 -----------
+gloss-trans alignment:
+Saw John and Mary with-their other
+John and Mary saw each other
+
+1 4 # Saw saw
+2 1 # John John
+3 2 # and and
+4 3 # Mary Mary
+5 0 # with-their NULL
+6 6 # other other
+
+1 4 # Saw saw
+2 1 # John John
+3 2 # and and
+4 3 # Mary Mary
+5 0 # with-their NULL
+6 6 # other other
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=4066: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Chonaic Seán agus Máire lena chéile
+Saw John and Mary with-their other
+John and Mary saw each other
+
+1 -1 # Chonaic *TOP*
+2 4 # Seán Máire
+3 4 # agus Máire
+4 1 # Máire Chonaic
+5 6 # lena Chonaic x
+6 1 # chéile Chonaic
+
+1 -1 # Chonaic *TOP*
+2 4 # Seán Máire
+3 4 # agus Máire
+4 1 # Máire Chonaic
+5 1 # lena Chonaic
+6 1 # chéile Chonaic
+
+DISAGREE in Q6: file1 has +5 6+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +5 1+, file2 does, type=1
+
+
+wo_null: file1=6,file2=6, agree=5
+w_null:  file1=6,file2=6, agree=5
+
+
+**************** igt_id=4065 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Ní raibh mé ach ag déanamh grinn
+Neg be-past I only prog make fun
+I was only making fun
+
+
+------------------- igt_id=4065: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4065: question Q2 ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4065: question Q3 ans1=1, ans2=1 -----------
+English DS:
+I was only making fun
+
+1 4 # I making
+2 4 # was making
+3 4 # only making
+4 -1 # making *TOP*
+5 4 # fun making
+
+1 4 # I making
+2 4 # was making
+3 4 # only making
+4 -1 # making *TOP*
+5 4 # fun making
+
+
+
+wo_null: file1=5,file2=5, agree=5
+w_null:  file1=5,file2=5, agree=5
+
+
+------------------- igt_id=4065: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Ní raibh mé ach ag déanamh grinn
+Neg be-past I only prog make fun
+
+1 1 # Ní Neg
+2 2 # raibh be-past
+3 3 # mé I
+4 4 # ach only
+5 5 # ag prog
+6 6 # déanamh make
+7 7 # grinn fun
+
+1 1 # Ní Neg
+2 2 # raibh be-past
+3 3 # mé I
+4 4 # ach only
+5 5 # ag prog
+6 6 # déanamh make
+7 7 # grinn fun
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=4065: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+Neg be-past I only prog make fun
+I was only making fun
+
+1 0 # Neg NULL
+2 2 # be-past NULL x
+3 1 # I I
+4 3 # only only
+5 4 # prog NULL x
+6 4 # make NULL x
+7 5 # fun fun
+
+1 0 # Neg NULL
+2 2 # be-past was
+3 1 # I I
+4 3 # only only
+5 0 # prog NULL
+6 0 # make NULL
+7 5 # fun fun
+
+DISAGREE in Q5: file1 has +6 4+, file2 does not, type=1
+DISAGREE in Q5: file1 has +5 4+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 4+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +6 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +5 0+, file2 does, type=2
+
+
+wo_null: file1=6,file2=4, agree=4
+w_null:  file1=7,file2=8, agree=5
+
+
+------------------- igt_id=4065: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Ní raibh mé ach ag déanamh grinn
+Neg be-past I only prog make fun
+I was only making fun
+
+1 6 # Ní NULL x
+2 6 # raibh NULL x
+3 6 # mé NULL x
+4 6 # ach NULL x
+5 6 # ag NULL x
+6 -1 # déanamh NULL x
+7 6 # grinn NULL x
+
+1 -2 # Ní NULL
+2 -2 # raibh NULL
+3 -2 # mé NULL
+4 -2 # ach NULL
+5 -2 # ag NULL
+6 -2 # déanamh NULL
+7 -2 # grinn NULL
+
+DISAGREE in Q6: file1 has +2 6+, file2 does not, type=1
+DISAGREE in Q6: file1 has +7 6+, file2 does not, type=1
+DISAGREE in Q6: file1 has +4 6+, file2 does not, type=1
+DISAGREE in Q6: file1 has +5 6+, file2 does not, type=1
+DISAGREE in Q6: file1 has +3 6+, file2 does not, type=1
+DISAGREE in Q6: file1 has +1 6+, file2 does not, type=1
+DISAGREE in Q6: file1 has +6 -1+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +4 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +5 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +6 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +3 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +1 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +2 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +7 -2+, file2 does, type=1
+
+
+wo_null: file1=7,file2=7, agree=0
+w_null:  file1=7,file2=7, agree=0
+
+
+**************** igt_id=4062 ++++++++
+
+1 is not answered in +######## Q1: IGT is clean? Answer:+. Assuming the answer is yes.
+warning: Q1 is not answered: +######## Q1: IGT is clean? Answer:+
+2 is not answered in +###### Q2: English parse tree is correct? Answer:+. Assuming the answer is yes.
+warning: Q2 is not answered: +###### Q2: English parse tree is correct? Answer:+
+3 is not answered in +########  Q3: English DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q3 is not answered: +########  Q3: English DS is correct? Answer:+
+4 is not answered in +######## Q4: src and gloss alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q4 is not answered: +######## Q4: src and gloss alignment is correct? Answer:+
+5 is not answered in +######## Q5: gloss and translation alignment is correct? Answer:+. Assuming the answer is yes.
+warning: Q5 is not answered: +######## Q5: gloss and translation alignment is correct? Answer:+
+6 is not answered in +####### Q6: src DS is correct? Answer:+. Assuming the answer is yes.
+warning: Q6 is not answered: +####### Q6: src DS is correct? Answer:+
+Tá na Clingeánaí ag scaoileadh na féasar
+Be-pres the Klingons prog fire the phasers-gen
+The Klingons are firing the phasers
+
+
+------------------- igt_id=4062: question Q1: ans1=1, ans2=1 -----------
+
+
+------------------- igt_id=4062: question Q2 ans1=0, ans2=1 -----------
+DiSAGREE in Q2 answer
+
+
+------------------- igt_id=4062: question Q3 ans1=0, ans2=1 -----------
+DiSAGREE in Q3 answer
+English DS:
+The Klingons are firing the phasers
+
+1 2 # The Klingons
+2 4 # Klingons are x
+3 4 # are *TOP* x
+4 -1 # firing are x
+5 6 # the phasers
+6 4 # phasers are x
+
+1 2 # The Klingons
+2 4 # Klingons firing
+3 4 # are firing
+4 -1 # firing *TOP*
+5 6 # the phasers
+6 4 # phasers firing
+
+
+
+wo_null: file1=6,file2=6, agree=6
+w_null:  file1=6,file2=6, agree=6
+
+
+------------------- igt_id=4062: question Q4 ans1=1, ans2=1 -----------
+src-gloss alignment:
+Tá na Clingeánaí ag scaoileadh na féasar
+Be-pres the Klingons prog fire the phasers-gen
+
+1 1 # Tá Be-pres
+2 2 # na the
+3 3 # Clingeánaí Klingons
+4 4 # ag prog
+5 5 # scaoileadh fire
+6 6 # na the
+7 7 # féasar phasers-gen
+
+1 1 # Tá Be-pres
+2 2 # na the
+3 3 # Clingeánaí Klingons
+4 4 # ag prog
+5 5 # scaoileadh fire
+6 6 # na the
+7 7 # féasar phasers-gen
+
+
+
+wo_null: file1=7,file2=7, agree=7
+w_null:  file1=7,file2=7, agree=7
+
+
+------------------- igt_id=4062: question Q5 ans1=0, ans2=1 -----------
+DiSAGREE in Q5 answer
+gloss-trans alignment:
+Be-pres the Klingons prog fire the phasers-gen
+The Klingons are firing the phasers
+
+1 3 # Be-pres NULL x
+2 1 # the The
+3 2 # Klingons Klingons
+4 4 # prog NULL x
+5 4 # fire NULL x
+6 5 # the the
+7 6 # phasers-gen phasers
+
+1 0 # Be-pres NULL
+2 1 # the The
+3 2 # Klingons Klingons
+4 0 # prog NULL
+5 0 # fire NULL
+6 5 # the the
+7 6 # phasers-gen phasers
+
+DISAGREE in Q5: file1 has +4 4+, file2 does not, type=1
+DISAGREE in Q5: file1 has +5 4+, file2 does not, type=1
+DISAGREE in Q5: file1 has +1 3+, file2 does not, type=1
+DISAGREE in Q5: file1 does not have +0 4+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +4 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +0 3+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +5 0+, file2 does, type=2
+DISAGREE in Q5: file1 does not have +1 0+, file2 does, type=2
+
+
+wo_null: file1=7,file2=4, agree=4
+w_null:  file1=7,file2=9, agree=4
+
+
+------------------- igt_id=4062: question Q6 ans1=0, ans2=1 -----------
+DiSAGREE in Q6 answer
+src DS:
+Tá na Clingeánaí ag scaoileadh na féasar
+Be-pres the Klingons prog fire the phasers-gen
+The Klingons are firing the phasers
+
+1 5 # Tá NULL x
+2 3 # na Clingeánaí
+3 5 # Clingeánaí NULL x
+4 5 # ag NULL x
+5 -1 # scaoileadh NULL x
+6 7 # na féasar
+7 5 # féasar NULL x
+
+1 -2 # Tá NULL
+2 3 # na Clingeánaí
+3 -2 # Clingeánaí NULL
+4 -2 # ag NULL
+5 -2 # scaoileadh NULL
+6 7 # na féasar
+7 -2 # féasar NULL
+
+DISAGREE in Q6: file1 has +4 5+, file2 does not, type=1
+DISAGREE in Q6: file1 has +1 5+, file2 does not, type=1
+DISAGREE in Q6: file1 has +7 5+, file2 does not, type=1
+DISAGREE in Q6: file1 has +5 -1+, file2 does not, type=1
+DISAGREE in Q6: file1 has +3 5+, file2 does not, type=1
+DISAGREE in Q6: file1 does not have +4 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +5 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +3 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +1 -2+, file2 does, type=1
+DISAGREE in Q6: file1 does not have +7 -2+, file2 does, type=1
+
+
+wo_null: file1=7,file2=7, agree=2
+w_null:  file1=7,file2=7, agree=2

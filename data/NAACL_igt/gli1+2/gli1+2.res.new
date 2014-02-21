@@ -1,0 +1,5896 @@
+
+###########################################################
+Igt_id=15993 Url_id=1093 flag=0 cleaned=0 src_leng=7 trans_leng=7
+Leanann an t-ainmní an briathar i nGaeilge
+follow-PRES the subject the verb in Irish
+The subject follows the verb in Irish
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NN subject)) (VP (VBZ follows) (NP (NP (DT the) (NN verb)) (PP (IN in) (NP (NNP Irish))))))
+
+(S+follows (NP+subject (DT The)
+                       (NN subject))
+           (VP+follows (VBZ follows)
+                       (NP+verb (NP+verb (DT the)
+                                         (NN verb))
+                                (PP+in (IN in)
+                                       (NP+Irish (NNP Irish))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The subject follows the verb in Irish
+1 2 # The subject
+2 3 # subject follows
+3 -1 # follows *TOP*
+4 5 # the verb
+5 3 # verb follows
+6 5 # in verb
+7 6 # Irish in
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Leanann an t-ainmní an briathar i nGaeilge
+follow-PRES the subject the verb in Irish
+
+1 1 # Leanann follow-PRES
+2 2 # an the
+3 3 # t-ainmní subject
+ 3.1 0 # t NULL
+ 3.2 0 # -ainmní NULL
+4 4 # an the
+5 5 # briathar verb
+6 6 # i in
+7 7 # nGaeilge Irish
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+follow-PRES the subject the verb in Irish
+The subject follows the verb in Irish
+
+1 3 # follow-PRES follows
+ 1.1 3 # follow follows
+ 1.2 0 # -PRES NULL
+2 1 # the The
+3 2 # subject subject
+4 4 # the the
+5 5 # verb verb
+6 6 # in in
+7 7 # Irish Irish
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Leanann an t-ainmní an briathar i nGaeilge
+follow-PRES the subject the verb in Irish
+The subject follows the verb in Irish
+
+1 -1 # Leanann *TOP*
+2 3 # an t-ainmní
+3 1 # t-ainmní Leanann
+4 5 # an briathar
+5 1 # briathar Leanann
+6 5 # i briathar
+7 6 # nGaeilge i
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=15999 Url_id=1093 flag=0 cleaned=3 src_leng=6 trans_leng=6
+Tú a bheith `do luí.. .
+you prt be-inf in.2 lying .
+You to be lying there.. .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP You)) (VP (TO to) (VP (VB be) (VP (VBG lying) (ADVP (RB there..))))) (. .))
+
+(S+lying (NP+You (PRP You))
+         (VP+lying (TO to)
+                   (VP+lying (VB be)
+                             (VP+lying (VBG lying)
+                                       (ADVP+there.. (RB there..)))))
+         (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+You to be lying there.. .
+1 4 # You lying
+2 4 # to lying
+3 4 # be lying
+4 -1 # lying *TOP*
+5 4 # there.. lying
+6 4 # . lying
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Tú a bheith `do luí.. .
+you prt be-inf in.2 lying .
+
+1 1 # Tú you
+2 2 # a prt
+3 3 # bheith be-inf
+4 4 # `do in.2
+5 5 # luí.. lying
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+you prt be-inf in.2 lying .
+You to be lying there.. .
+
+1 1 # you You
+2 0 # prt NULL
+3 3 # be-inf be
+ 3.1 3 # be be
+ 3.2 0 # -inf NULL
+4 0 # in.2 NULL
+5 4 # lying lying
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Tú a bheith `do luí.. .
+you prt be-inf in.2 lying .
+You to be lying there.. .
+
+1 5 # Tú luí..
+2 5 # a luí..
+3 5 # bheith luí..
+4 5 # `do luí..
+5 -1 # luí.. *TOP*
+6 5 # . luí..
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=16077 Url_id=1097 flag=0 cleaned=0 src_leng=6 trans_leng=5
+Tá mé ag scriobh an abairt
+Am I ing write the letter
+I am writing the letter
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP am) (VP (VBG writing) (NP (DT the) (NN letter)))))
+
+(S+writing (NP+I (PRP I))
+           (VP+writing (VBP am)
+                       (VP+writing (VBG writing)
+                                   (NP+letter (DT the)
+                                              (NN letter)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I am writing the letter
+1 3 # I writing
+2 3 # am writing
+3 -1 # writing *TOP*
+4 5 # the letter
+5 3 # letter writing
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Tá mé ag scriobh an abairt
+Am I ing write the letter
+
+1 1 # Tá Am
+2 2 # mé I
+3 3 # ag ing
+4 4 # scriobh write
+5 5 # an the
+6 6 # abairt letter
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Am I ing write the letter
+I am writing the letter
+
+1 2 # Am am
+2 1 # I I
+3 0 # ing NULL
+4 3 # write writing
+5 4 # the the
+6 5 # letter letter
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Tá mé ag scriobh an abairt
+Am I ing write the letter
+I am writing the letter
+
+1 4 # Tá scriobh
+2 4 # mé scriobh
+3 4 # ag scriobh
+4 -1 # scriobh *TOP*
+5 6 # an abairt
+6 4 # abairt scriobh
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=16924 Url_id=1242 flag=0 cleaned=1 src_leng=6 trans_leng=8
+Tá máthair an fhir san otharlann
+Be-PRES mother the man-GEN in-the hospital
+The man 's mother is in the hospital
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NP (DT The) (NN man) (POS 's)) (NN mother)) (VP (VBZ is) (PP (IN in) (NP (DT the) (NN hospital)))))
+
+(S+in (NP+mother (NP+'s (DT The)
+                        (NN man)
+                        (POS 's))
+                 (NN mother))
+      (VP+in (VBZ is)
+             (PP-PRD+in (IN in)
+                        (NP+hospital (DT the)
+                                     (NN hospital)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The man 's mother is in the hospital
+1 3 # The 's
+2 3 # man 's
+3 4 # 's mother
+4 6 # mother in
+5 6 # is in
+6 -1 # in *TOP*
+7 8 # the hospital
+8 6 # hospital in
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Tá máthair an fhir san otharlann
+Be-PRES mother the man-GEN in-the hospital
+
+1 1 # Tá Be-PRES
+2 2 # máthair mother
+3 3 # an the
+4 4 # fhir man-GEN
+5 5 # san in-the
+6 6 # otharlann hospital
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Be-PRES mother the man-GEN in-the hospital
+The man 's mother is in the hospital
+
+1 5 # Be-PRES is
+ 1.1 5 # Be is
+ 1.2 0 # -PRES NULL
+2 4 # mother mother
+3 1 # the The
+4 2 # man-GEN man
+ 4.1 2 # man man
+ 4.2 0 # -GEN NULL
+5 6,7 # in-the in,the
+ 5.1 6 # in in
+ 5.2 7 # -the the
+6 8 # hospital hospital
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Tá máthair an fhir san otharlann
+Be-PRES mother the man-GEN in-the hospital
+The man 's mother is in the hospital
+
+1 5 # Tá san
+2 5 # máthair san
+3 2 # an máthair
+4 2 # fhir máthair
+5 -1 # san *TOP*
+6 5 # otharlann san
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=17565 Url_id=1249 flag=0 cleaned=0 src_leng=5 trans_leng=6
+Thug Míleó caisearbhán do Bhinclí
+Gave Milo dandelion to Binkley
+Milo gave a dandelion to Binkley
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Milo)) (VP (VBD gave) (NP (DT a) (NN dandelion)) (PP (TO to) (NP (NNP Binkley)))))
+
+(S+gave (NP+Milo (NNP Milo))
+        (VP+gave (VBD gave)
+                 (NP+dandelion (DT a)
+                               (NN dandelion))
+                 (PP+to (TO to)
+                        (NP+Binkley (NNP Binkley)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Milo gave a dandelion to Binkley
+1 2 # Milo gave
+2 -1 # gave *TOP*
+3 4 # a dandelion
+4 2 # dandelion gave
+5 2 # to gave
+6 5 # Binkley to
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Thug Míleó caisearbhán do Bhinclí
+Gave Milo dandelion to Binkley
+
+1 1 # Thug Gave
+2 2 # Míleó Milo
+3 3 # caisearbhán dandelion
+4 4 # do to
+5 5 # Bhinclí Binkley
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Gave Milo dandelion to Binkley
+Milo gave a dandelion to Binkley
+
+1 2 # Gave gave
+2 1 # Milo Milo
+3 4 # dandelion dandelion
+4 5 # to to
+5 6 # Binkley Binkley
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Thug Míleó caisearbhán do Bhinclí
+Gave Milo dandelion to Binkley
+Milo gave a dandelion to Binkley
+
+1 -1 # Thug *TOP*
+2 1 # Míleó Thug
+3 1 # caisearbhán Thug
+4 1 # do Thug
+5 4 # Bhinclí do
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=23628 Url_id=2136 flag=0 cleaned=3 src_leng=6 trans_leng=6
+Phóg an fear an mhuc .
+kissed the man the pig .
+The man kissed the pig .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NN man)) (VP (VBD kissed) (NP (DT the) (NN pig))) (. .))
+
+(S+kissed (NP+man (DT The)
+                  (NN man))
+          (VP+kissed (VBD kissed)
+                     (NP+pig (DT the)
+                             (NN pig)))
+          (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The man kissed the pig .
+1 2 # The man
+2 3 # man kissed
+3 -1 # kissed *TOP*
+4 5 # the pig
+5 3 # pig kissed
+6 3 # . kissed
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Phóg an fear an mhuc .
+kissed the man the pig .
+
+1 1 # Phóg kissed
+2 2 # an the
+3 3 # fear man
+4 4 # an the
+5 5 # mhuc pig
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+kissed the man the pig .
+The man kissed the pig .
+
+1 3 # kissed kissed
+2 1 # the The
+3 2 # man man
+4 4 # the the
+5 5 # pig pig
+6 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Phóg an fear an mhuc .
+kissed the man the pig .
+The man kissed the pig .
+
+1 -1 # Phóg *TOP*
+2 3 # an fear
+3 1 # fear Phóg
+4 5 # an mhuc
+5 1 # mhuc Phóg
+6 1 # . Phóg
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4036 Url_id=60 flag=0 cleaned=0 src_leng=7 trans_leng=7
+Leanann an t-ainmní an briathar i nGaeilge
+follow-PRES the subject the verb in Irish
+The subject follows the verb in Irish
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NN subject)) (VP (VBZ follows) (NP (NP (DT the) (NN verb)) (PP (IN in) (NP (NNP Irish))))))
+
+(S+follows (NP+subject (DT The)
+                       (NN subject))
+           (VP+follows (VBZ follows)
+                       (NP+verb (NP+verb (DT the)
+                                         (NN verb))
+                                (PP+in (IN in)
+                                       (NP+Irish (NNP Irish))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The subject follows the verb in Irish
+1 2 # The subject
+2 3 # subject follows
+3 -1 # follows *TOP*
+4 5 # the verb
+5 3 # verb follows
+6 5 # in verb
+7 6 # Irish in
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Leanann an t-ainmní an briathar i nGaeilge
+follow-PRES the subject the verb in Irish
+
+1 1 # Leanann follow-PRES
+2 2 # an the
+3 3 # t-ainmní subject
+ 3.1 0 # t NULL
+ 3.2 0 # -ainmní NULL
+4 4 # an the
+5 5 # briathar verb
+6 6 # i in
+7 7 # nGaeilge Irish
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+follow-PRES the subject the verb in Irish
+The subject follows the verb in Irish
+
+1 3 # follow-PRES follows
+ 1.1 3 # follow follows
+ 1.2 0 # -PRES NULL
+2 1 # the The
+3 2 # subject subject
+4 4 # the the
+5 5 # verb verb
+6 6 # in in
+7 7 # Irish Irish
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Leanann an t-ainmní an briathar i nGaeilge
+follow-PRES the subject the verb in Irish
+The subject follows the verb in Irish
+
+1 -1 # Leanann *TOP*
+2 3 # an t-ainmní
+3 1 # t-ainmní Leanann
+4 5 # an briathar
+5 1 # briathar Leanann
+6 5 # i briathar
+7 6 # nGaeilge i
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=13916 Url_id=61 flag=0 cleaned=0 src_leng=4 trans_leng=5
+Is fear mór Seán
+C man big John
+John is a big man
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP John)) (VP (VBZ is) (NP (DT a) (JJ big) (NN man))))
+
+(S+man (NP+John (NNP John))
+       (VP+man (VBZ is)
+               (NP-PRD+man (DT a)
+                           (JJ big)
+                           (NN man))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John is a big man
+1 5 # John man
+2 5 # is man
+3 5 # a man
+4 5 # big man
+5 -1 # man *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is fear mór Seán
+C man big John
+
+1 1 # Is C
+2 2 # fear man
+3 3 # mór big
+4 4 # Seán John
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C man big John
+John is a big man
+
+1 0 # C NULL
+2 5 # man man
+3 4 # big big
+4 1 # John John
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is fear mór Seán
+C man big John
+John is a big man
+
+1 2 # Is fear
+2 -1 # fear *TOP*
+3 2 # mór fear
+4 2 # Seán fear
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=16139 Url_id=61 flag=0 cleaned=0 src_leng=5 trans_leng=5
+Is cosúil lena chéile iad
+C like with-3-pl-poss each-other them
+They are like one another
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP They)) (VP (VBP are) (PP (IN like) (NP (CD one) (DT another)))))
+
+(S+like (NP+They (PRP They))
+        (VP+like (VBP are)
+                 (PP-PRD+like (IN like)
+                              (NP+another (CD one)
+                                          (DT another)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+They are like one another
+1 3 # They like
+2 3 # are like
+3 -1 # like *TOP*
+4 5 # one another
+5 3 # another like
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is cosúil lena chéile iad
+C like with-3-pl-poss each-other them
+
+1 1 # Is C
+2 2 # cosúil like
+3 3 # lena with-3-pl-poss
+4 4 # chéile each-other
+5 5 # iad them
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C like with-3-pl-poss each-other them
+They are like one another
+
+1 0 # C NULL
+2 3 # like like
+3 0 # with-3-pl-poss NULL
+ 3.1 0 # with NULL
+ 3.2 0 # -3 NULL
+ 3.3 0 # -pl NULL
+ 3.4 0 # -poss NULL
+4 0 # each-other NULL
+ 4.1 0 # each NULL
+ 4.2 0 # -other NULL
+5 0 # them NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is cosúil lena chéile iad
+C like with-3-pl-poss each-other them
+They are like one another
+
+1 2 # Is cosúil
+2 -1 # cosúil *TOP*
+3 2 # lena cosúil
+4 2 # chéile cosúil
+5 2 # iad cosúil
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20564 Url_id=61 flag=0 cleaned=4 src_leng=17 trans_leng=13
+Níor thug , nó is beag má thug , an pobal aon aird ar an bhean bhocht
+neg gave , or C small if gave , the people any attention on the woman poor
+The community paid no attention or almost no attention to the poor woman
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NN community)) (VP (VBD paid) (NP (NP (DT no) (NN attention)) (CC or) (RB almost)) (NP (NP (DT no) (NN attention)) (PP (TO to) (NP (DT the) (JJ poor) (NN woman))))))
+
+(S+paid (NP+community (DT The)
+                      (NN community))
+        (VP+paid (VBD paid)
+                 (NP+attention (NP+attention (DT no)
+                                             (NN attention))
+                               (CC or)
+                               (RB almost))
+                 (NP+attention (NP+attention (DT no)
+                                             (NN attention))
+                               (PP+to (TO to)
+                                      (NP+woman (DT the)
+                                                (JJ poor)
+                                                (NN woman))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The community paid no attention or almost no attention to the poor woman
+1 2 # The community
+2 3 # community paid
+3 -1 # paid *TOP*
+4 5 # no attention
+5 3 # attention paid
+6 5 # or attention
+7 5 # almost attention
+8 9 # no attention
+9 3 # attention paid
+10 9 # to attention
+11 13 # the woman
+12 13 # poor woman
+13 10 # woman to
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Níor thug , nó is beag má thug , an pobal aon aird ar an bhean bhocht
+neg gave , or C small if gave , the people any attention on the woman poor
+
+1 1 # Níor neg
+2 2 # thug gave
+3 3 # , ,
+4 4 # nó or
+5 5 # is C
+6 6 # beag small
+7 7 # má if
+8 8 # thug gave
+9 9 # , ,
+10 10 # an the
+11 11 # pobal people
+12 12 # aon any
+13 13 # aird attention
+14 14 # ar on
+15 15 # an the
+16 16 # bhean woman
+17 17 # bhocht poor
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+neg gave , or C small if gave , the people any attention on the woman poor
+The community paid no attention or almost no attention to the poor woman
+
+1 0 # neg NULL
+2 0 # gave NULL
+3 0 # , NULL
+4 6 # or or
+5 0 # C NULL
+6 0 # small NULL
+7 0 # if NULL
+8 0 # gave NULL
+9 0 # , NULL
+10 1 # the The
+11 0 # people NULL
+12 0 # any NULL
+13 5 # attention attention
+14 0 # on NULL
+15 11 # the the
+16 13 # woman woman
+17 12 # poor poor
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Níor thug , nó is beag má thug , an pobal aon aird ar an bhean bhocht
+neg gave , or C small if gave , the people any attention on the woman poor
+The community paid no attention or almost no attention to the poor woman
+
+1 -2 # Níor NULL
+2 -2 # thug NULL
+3 -2 # , NULL
+4 13 # nó aird
+5 -2 # is NULL
+6 -2 # beag NULL
+7 -2 # má NULL
+8 -2 # thug NULL
+9 -2 # , NULL
+10 -2 # an NULL
+11 -2 # pobal NULL
+12 -2 # aon NULL
+13 -2 # aird NULL
+14 -2 # ar NULL
+15 16 # an bhean
+16 -2 # bhean NULL
+17 16 # bhocht bhean
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20569 Url_id=61 flag=0 cleaned=0 src_leng=8 trans_leng=10
+Pingin rua char caith mé ar an bhád
+Penny red negC spend I on the boat
+Not a red cent did I spend on the boat
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (RB Not) (NP (DT a) (JJ red) (NN cent)) (VP (VBD did) (SBAR (S (NP (PRP I)) (VP (VBP spend) (PP (IN on) (NP (DT the) (NN boat))))))))
+
+(S+did (RB Not)
+       (NP+cent (DT a)
+                (JJ red)
+                (NN cent))
+       (VP+did (VBD did)
+               (SBAR+spend (S+spend (NP+I (PRP I))
+                                    (VP+spend (VBP spend)
+                                              (PP+on (IN on)
+                                                     (NP+boat (DT the)
+                                                              (NN boat))))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Not a red cent did I spend on the boat
+1 5 # Not did
+2 4 # a cent
+3 4 # red cent
+4 5 # cent did
+5 -1 # did *TOP*
+6 7 # I spend
+7 5 # spend did
+8 7 # on spend
+9 10 # the boat
+10 8 # boat on
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Pingin rua char caith mé ar an bhád
+Penny red negC spend I on the boat
+
+1 1 # Pingin Penny
+2 2 # rua red
+3 3 # char negC
+4 4 # caith spend
+5 5 # mé I
+6 6 # ar on
+7 7 # an the
+8 8 # bhád boat
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Penny red negC spend I on the boat
+Not a red cent did I spend on the boat
+
+1 0 # Penny NULL
+2 3 # red red
+3 0 # negC NULL
+4 7 # spend spend
+5 6 # I I
+6 8 # on on
+7 9 # the the
+8 10 # boat boat
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Pingin rua char caith mé ar an bhád
+Penny red negC spend I on the boat
+Not a red cent did I spend on the boat
+
+1 -2 # Pingin NULL
+2 -2 # rua NULL
+3 -2 # char NULL
+4 -2 # caith NULL
+5 4 # mé caith
+6 4 # ar caith
+7 8 # an bhád
+8 6 # bhád ar
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20594 Url_id=61 flag=0 cleaned=3 src_leng=9 trans_leng=10
+Bhí na sealgairí tamall fada ag amharc orthu .
+Was the hunters time long prog look on-them .
+The hunters were watching them for a long time .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NNS hunters)) (VP (VBD were) (VP (VBG watching) (NP (PRP them)) (PP (IN for) (NP (DT a) (JJ long) (NN time))))) (. .))
+
+(S+watching (NP+hunters (DT The)
+                        (NNS hunters))
+            (VP+watching (VBD were)
+                         (VP+watching (VBG watching)
+                                      (NP+them (PRP them))
+                                      (PP+for (IN for)
+                                              (NP+time (DT a)
+                                                       (JJ long)
+                                                       (NN time)))))
+            (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The hunters were watching them for a long time .
+1 2 # The hunters
+2 4 # hunters watching
+3 4 # were watching
+4 -1 # watching *TOP*
+5 4 # them watching
+6 4 # for watching
+7 9 # a time
+8 9 # long time
+9 6 # time for
+10 4 # . watching
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Bhí na sealgairí tamall fada ag amharc orthu .
+Was the hunters time long prog look on-them .
+
+1 1 # Bhí Was
+2 2 # na the
+3 3 # sealgairí hunters
+4 4 # tamall time
+5 5 # fada long
+6 6 # ag prog
+7 7 # amharc look
+8 8 # orthu on-them
+9 9 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Was the hunters time long prog look on-them .
+The hunters were watching them for a long time .
+
+1 3 # Was were
+2 1 # the The
+3 2 # hunters hunters
+4 9 # time time
+5 8 # long long
+6 0 # prog NULL
+7 0 # look NULL
+8 5 # on-them them
+ 8.1 0 # on NULL
+ 8.2 5 # -them them
+9 10 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Bhí na sealgairí tamall fada ag amharc orthu .
+Was the hunters time long prog look on-them .
+The hunters were watching them for a long time .
+
+1 -2 # Bhí NULL
+2 3 # na sealgairí
+3 -2 # sealgairí NULL
+4 -2 # tamall NULL
+5 4 # fada tamall
+6 -2 # ag NULL
+7 -2 # amharc NULL
+8 -2 # orthu NULL
+9 -2 # . NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20610 Url_id=61 flag=0 cleaned=0 src_leng=4 trans_leng=5
+Más ceart mo chuimhne
+if-C right my memory
+If my memory is right
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(FRAG (SBAR (IN If) (S (NP (PRP$ my) (NN memory)) (VP (VBZ is) (ADJP (JJ right))))))
+
+(FRAG+right (SBAR+right (IN If)
+                        (S+right (NP+memory (PRP$ my)
+                                            (NN memory))
+                                 (VP+right (VBZ is)
+                                           (ADJP-PRD+right (JJ right))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+If my memory is right
+1 5 # If right
+2 3 # my memory
+3 5 # memory right
+4 5 # is right
+5 -1 # right *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Más ceart mo chuimhne
+if-C right my memory
+
+1 1 # Más if-C
+2 2 # ceart right
+3 3 # mo my
+4 4 # chuimhne memory
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+if-C right my memory
+If my memory is right
+
+1 1 # if-C If
+ 1.1 1 # if If
+ 1.2 0 # -C NULL
+2 5 # right right
+3 2 # my my
+4 3 # memory memory
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Más ceart mo chuimhne
+if-C right my memory
+If my memory is right
+
+1 2 # Más ceart
+2 -1 # ceart *TOP*
+3 4 # mo chuimhne
+4 2 # chuimhne ceart
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20611 Url_id=61 flag=0 cleaned=0 src_leng=5 trans_leng=5
+Is de bhunadh Phrotastúnach í
+C of stock Prostestant her
+She is of Protestant stock
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP She)) (VP (VBZ is) (PP (IN of) (NP (JJ Protestant) (NN stock)))))
+
+(S+of (NP+She (PRP She))
+      (VP+of (VBZ is)
+             (PP-PRD+of (IN of)
+                        (NP+stock (JJ Protestant)
+                                  (NN stock)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+She is of Protestant stock
+1 3 # She of
+2 3 # is of
+3 -1 # of *TOP*
+4 5 # Protestant stock
+5 3 # stock of
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is de bhunadh Phrotastúnach í
+C of stock Prostestant her
+
+1 1 # Is C
+2 2 # de of
+3 3 # bhunadh stock
+4 4 # Phrotastúnach Prostestant
+5 5 # í her
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C of stock Prostestant her
+She is of Protestant stock
+
+1 0 # C NULL
+2 3 # of of
+3 5 # stock stock
+4 0 # Prostestant NULL
+5 0 # her NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is de bhunadh Phrotastúnach í
+C of stock Prostestant her
+She is of Protestant stock
+
+1 2 # Is de
+2 -1 # de *TOP*
+3 2 # bhunadh de
+4 2 # Phrotastúnach de
+5 2 # í de
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20622 Url_id=61 flag=0 cleaned=3 src_leng=6 trans_leng=5
+Is é an platapas Seán .
+C agr the platypus John .
+The platypus is John .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NN platypus)) (VP (VBZ is) (ADJP (NNP John))) (. .))
+
+(S+John (NP+platypus (DT The)
+                     (NN platypus))
+        (VP+John (VBZ is)
+                 (ADJP-PRD+John (NNP John)))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The platypus is John .
+1 2 # The platypus
+2 4 # platypus John
+3 4 # is John
+4 -1 # John *TOP*
+5 4 # . John
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is é an platapas Seán .
+C agr the platypus John .
+
+1 1 # Is C
+2 2 # é agr
+3 3 # an the
+4 4 # platapas platypus
+5 5 # Seán John
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C agr the platypus John .
+The platypus is John .
+
+1 0 # C NULL
+2 0 # agr NULL
+3 1 # the The
+4 2 # platypus platypus
+5 4 # John John
+6 5 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is é an platapas Seán .
+C agr the platypus John .
+The platypus is John .
+
+1 5 # Is Seán
+2 5 # é Seán
+3 4 # an platapas
+4 5 # platapas Seán
+5 -1 # Seán *TOP*
+6 5 # . Seán
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20626 Url_id=61 flag=0 cleaned=6 src_leng=7 trans_leng=6
+Fuair , cinnte , Taisia Eár bás
+Got , certainly , Tasha Yar death
+Tasha Yar , certianly , died
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Tasha) (NNP Yar)) (, ,) (ADVP (RB certianly)) (, ,) (VP (VBD died)))
+
+(S+died (NP+Yar (NNP Tasha)
+                (NNP Yar))
+        (, ,)
+        (ADVP+certianly (RB certianly))
+        (, ,)
+        (VP+died (VBD died)))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Tasha Yar , certianly , died
+1 2 # Tasha Yar
+2 6 # Yar died
+3 6 # , died
+4 6 # certianly died
+5 6 # , died
+6 -1 # died *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Fuair , cinnte , Taisia Eár bás
+Got , certainly , Tasha Yar death
+
+1 1 # Fuair Got
+2 2 # , ,
+3 3 # cinnte certainly
+4 4 # , ,
+5 5 # Taisia Tasha
+6 6 # Eár Yar
+7 7 # bás death
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Got , certainly , Tasha Yar death
+Tasha Yar , certianly , died
+
+1 0 # Got NULL
+2 3 # , ,
+3 0 # certainly NULL
+4 5 # , ,
+5 1 # Tasha Tasha
+6 2 # Yar Yar
+7 0 # death NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Fuair , cinnte , Taisia Eár bás
+Got , certainly , Tasha Yar death
+Tasha Yar , certianly , died
+
+1 -2 # Fuair NULL
+2 -2 # , NULL
+3 -2 # cinnte NULL
+4 -2 # , NULL
+5 6 # Taisia Eár
+6 -2 # Eár NULL
+7 -2 # bás NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20628 Url_id=61 flag=0 cleaned=0 src_leng=6 trans_leng=5
+Is é Ceannasaí Radhcár an t-amadán
+C agr Commander Riker the fool
+Commander Riker is the fool
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Commander) (NNP Riker)) (VP (VBZ is) (NP (DT the) (NN fool))))
+
+(S+fool (NP+Riker (NNP Commander)
+                  (NNP Riker))
+        (VP+fool (VBZ is)
+                 (NP-PRD+fool (DT the)
+                              (NN fool))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Commander Riker is the fool
+1 2 # Commander Riker
+2 5 # Riker fool
+3 5 # is fool
+4 5 # the fool
+5 -1 # fool *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is é Ceannasaí Radhcár an t-amadán
+C agr Commander Riker the fool
+
+1 1 # Is C
+2 2 # é agr
+3 3 # Ceannasaí Commander
+4 4 # Radhcár Riker
+5 5 # an the
+6 6 # t-amadán fool
+ 6.1 0 # t NULL
+ 6.2 0 # -amadán NULL
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C agr Commander Riker the fool
+Commander Riker is the fool
+
+1 0 # C NULL
+2 0 # agr NULL
+3 1 # Commander Commander
+4 2 # Riker Riker
+5 4 # the the
+6 5 # fool fool
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is é Ceannasaí Radhcár an t-amadán
+C agr Commander Riker the fool
+Commander Riker is the fool
+
+1 6 # Is t-amadán
+2 6 # é t-amadán
+3 4 # Ceannasaí Radhcár
+4 6 # Radhcár t-amadán
+5 6 # an t-amadán
+6 -1 # t-amadán *TOP*
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20629 Url_id=61 flag=0 cleaned=0 src_leng=5 trans_leng=6
+Is ríomhaire é leifteanantcheannasaí Data
+C computer agr Lieutenant-Commander Data
+Lieutenant Commander Data is a computer'14
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NN Lieutenant) (NNP Commander) (NNP Data)) (VP (VBZ is) (NP (DT a) (CD computer'14))))
+
+(S+computer'14 (NP+Data (NN Lieutenant)
+                        (NNP Commander)
+                        (NNP Data))
+               (VP+computer'14 (VBZ is)
+                               (NP-PRD+computer'14 (DT a)
+                                                   (CD computer'14))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Lieutenant Commander Data is a computer'14
+1 3 # Lieutenant Data
+2 3 # Commander Data
+3 6 # Data computer'14
+4 6 # is computer'14
+5 6 # a computer'14
+6 -1 # computer'14 *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is ríomhaire é leifteanantcheannasaí Data
+C computer agr Lieutenant-Commander Data
+
+1 1 # Is C
+2 2 # ríomhaire computer
+3 3 # é agr
+4 4 # leifteanantcheannasaí Lieutenant-Commander
+5 5 # Data Data
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C computer agr Lieutenant-Commander Data
+Lieutenant Commander Data is a computer'14
+
+1 0 # C NULL
+2 0 # computer NULL
+3 0 # agr NULL
+4 1,2 # Lieutenant-Commander Lieutenant,Commander
+ 4.1 1 # Lieutenant Lieutenant
+ 4.2 2 # -Commander Commander
+5 3 # Data Data
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is ríomhaire é leifteanantcheannasaí Data
+C computer agr Lieutenant-Commander Data
+Lieutenant Commander Data is a computer'14
+
+1 -2 # Is NULL
+2 -2 # ríomhaire NULL
+3 -2 # é NULL
+4 5 # leifteanantcheannasaí Data
+5 -2 # Data NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20630 Url_id=61 flag=0 cleaned=0 src_leng=4 trans_leng=6
+Is ríomhaire leifteanantcheannasaí Data
+C computer Lieutenant-Commander Data
+Lieutenant Commander Data is a computer
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NN Lieutenant) (NNP Commander) (NNP Data)) (VP (VBZ is) (NP (DT a) (NN computer))))
+
+(S+computer (NP+Data (NN Lieutenant)
+                     (NNP Commander)
+                     (NNP Data))
+            (VP+computer (VBZ is)
+                         (NP-PRD+computer (DT a)
+                                          (NN computer))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Lieutenant Commander Data is a computer
+1 3 # Lieutenant Data
+2 3 # Commander Data
+3 6 # Data computer
+4 6 # is computer
+5 6 # a computer
+6 -1 # computer *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is ríomhaire leifteanantcheannasaí Data
+C computer Lieutenant-Commander Data
+
+1 1 # Is C
+2 2 # ríomhaire computer
+3 3 # leifteanantcheannasaí Lieutenant-Commander
+4 4 # Data Data
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C computer Lieutenant-Commander Data
+Lieutenant Commander Data is a computer
+
+1 0 # C NULL
+2 6 # computer computer
+3 1,2 # Lieutenant-Commander Lieutenant,Commander
+ 3.1 1 # Lieutenant Lieutenant
+ 3.2 2 # -Commander Commander
+4 3 # Data Data
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is ríomhaire leifteanantcheannasaí Data
+C computer Lieutenant-Commander Data
+Lieutenant Commander Data is a computer
+
+1 2 # Is ríomhaire
+2 -1 # ríomhaire *TOP*
+3 4 # leifteanantcheannasaí Data
+4 2 # Data ríomhaire
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20632 Url_id=61 flag=0 cleaned=0 src_leng=6 trans_leng=5
+an fear a bhí __ breoite
+the man who was __ ill
+The man that was ill
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NN man)) (NP (DT that)) (VP (VBD was) (ADJP (JJ ill))))
+
+(S+ill (NP+man (DT The)
+               (NN man))
+       (NP+that (DT that))
+       (VP+ill (VBD was)
+               (ADJP-PRD+ill (JJ ill))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The man that was ill
+1 2 # The man
+2 5 # man ill
+3 5 # that ill
+4 5 # was ill
+5 -1 # ill *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+an fear a bhí __ breoite
+the man who was __ ill
+
+1 1 # an the
+2 2 # fear man
+3 3 # a who
+4 4 # bhí was
+5 5 # __ __
+6 6 # breoite ill
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+the man who was __ ill
+The man that was ill
+
+1 1 # the The
+2 2 # man man
+3 0 # who NULL
+4 4 # was was
+5 0 # __ NULL
+6 5 # ill ill
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+an fear a bhí __ breoite
+the man who was __ ill
+The man that was ill
+
+1 2 # an fear
+2 6 # fear breoite
+3 6 # a breoite
+4 6 # bhí breoite
+5 6 # __ breoite
+6 -1 # breoite *TOP*
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20633 Url_id=61 flag=0 cleaned=0 src_leng=5 trans_leng=7
+an fear ar dochtúir é
+the man C-rel doctor he
+The man who he is a doctor
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(NP (NP (DT The) (NN man)) (SBAR (WHNP (WP who)) (S (NP (PRP he)) (VP (VBZ is) (NP (DT a) (NN doctor))))))
+
+(NP+man (NP+man (DT The)
+                (NN man))
+        (SBAR+doctor (WHNP+who (WP who))
+                     (S+doctor (NP+he (PRP he))
+                               (VP+doctor (VBZ is)
+                                          (NP-PRD+doctor (DT a)
+                                                         (NN doctor))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The man who he is a doctor
+1 2 # The man
+2 -1 # man *TOP*
+3 7 # who doctor
+4 7 # he doctor
+5 7 # is doctor
+6 7 # a doctor
+7 2 # doctor man
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+an fear ar dochtúir é
+the man C-rel doctor he
+
+1 1 # an the
+2 2 # fear man
+3 3 # ar C-rel
+4 4 # dochtúir doctor
+5 5 # é he
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+the man C-rel doctor he
+The man who he is a doctor
+
+1 1 # the The
+2 2 # man man
+3 0 # C-rel NULL
+ 3.1 0 # C NULL
+ 3.2 0 # -rel NULL
+4 7 # doctor doctor
+5 4 # he he
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+an fear ar dochtúir é
+the man C-rel doctor he
+The man who he is a doctor
+
+1 2 # an fear
+2 -1 # fear *TOP*
+3 2 # ar fear
+4 2 # dochtúir fear
+5 4 # é dochtúir
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20634 Url_id=61 flag=0 cleaned=0 src_leng=7 trans_leng=7
+an fear arbh é an dochtúir é
+the man C-rel agr the doctor he
+The man who he was the doctor
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(NP (NP (DT The) (NN man)) (SBAR (WHNP (WP who)) (S (NP (PRP he)) (VP (VBD was) (NP (DT the) (NN doctor))))))
+
+(NP+man (NP+man (DT The)
+                (NN man))
+        (SBAR+doctor (WHNP+who (WP who))
+                     (S+doctor (NP+he (PRP he))
+                               (VP+doctor (VBD was)
+                                          (NP-PRD+doctor (DT the)
+                                                         (NN doctor))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The man who he was the doctor
+1 2 # The man
+2 -1 # man *TOP*
+3 7 # who doctor
+4 7 # he doctor
+5 7 # was doctor
+6 7 # the doctor
+7 2 # doctor man
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+an fear arbh é an dochtúir é
+the man C-rel agr the doctor he
+
+1 1 # an the
+2 2 # fear man
+3 3 # arbh C-rel
+4 4 # é agr
+5 5 # an the
+6 6 # dochtúir doctor
+7 7 # é he
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+the man C-rel agr the doctor he
+The man who he was the doctor
+
+1 1 # the The
+2 2 # man man
+3 0 # C-rel NULL
+ 3.1 0 # C NULL
+ 3.2 0 # -rel NULL
+4 0 # agr NULL
+5 6 # the the
+6 7 # doctor doctor
+7 4 # he he
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+an fear arbh é an dochtúir é
+the man C-rel agr the doctor he
+The man who he was the doctor
+
+1 2 # an fear
+2 -1 # fear *TOP*
+3 2 # arbh fear
+4 2 # é fear
+5 6 # an dochtúir
+6 2 # dochtúir fear
+7 6 # é dochtúir
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20637 Url_id=61 flag=0 cleaned=0 src_leng=4 trans_leng=6
+Is dochtúir capall é
+C doctor horses-gen him
+He is a doctor of horses
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBZ is) (NP (NP (DT a) (NN doctor)) (PP (IN of) (NP (NNS horses))))))
+
+(S+doctor (NP+He (PRP He))
+          (VP+doctor (VBZ is)
+                     (NP-PRD+doctor (NP+doctor (DT a)
+                                               (NN doctor))
+                                    (PP+of (IN of)
+                                           (NP+horses (NNS horses))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He is a doctor of horses
+1 4 # He doctor
+2 4 # is doctor
+3 4 # a doctor
+4 -1 # doctor *TOP*
+5 4 # of doctor
+6 5 # horses of
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is dochtúir capall é
+C doctor horses-gen him
+
+1 1 # Is C
+2 2 # dochtúir doctor
+3 3 # capall horses-gen
+4 4 # é him
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C doctor horses-gen him
+He is a doctor of horses
+
+1 0 # C NULL
+2 4 # doctor doctor
+3 6 # horses-gen horses
+ 3.1 6 # horses horses
+ 3.2 0 # -gen NULL
+4 0 # him NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is dochtúir capall é
+C doctor horses-gen him
+He is a doctor of horses
+
+1 2 # Is dochtúir
+2 -1 # dochtúir *TOP*
+3 2 # capall dochtúir
+4 2 # é dochtúir
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20642 Url_id=61 flag=0 cleaned=1 src_leng=6 trans_leng=8
+Tá máthair an fhir san otharlann
+Be-pres mother the man-gen in-the hospital
+The man 's mother is in the hospital
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NP (DT The) (NN man) (POS 's)) (NN mother)) (VP (VBZ is) (PP (IN in) (NP (DT the) (NN hospital)))))
+
+(S+in (NP+mother (NP+'s (DT The)
+                        (NN man)
+                        (POS 's))
+                 (NN mother))
+      (VP+in (VBZ is)
+             (PP-PRD+in (IN in)
+                        (NP+hospital (DT the)
+                                     (NN hospital)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The man 's mother is in the hospital
+1 3 # The 's
+2 3 # man 's
+3 4 # 's mother
+4 6 # mother in
+5 6 # is in
+6 -1 # in *TOP*
+7 8 # the hospital
+8 6 # hospital in
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Tá máthair an fhir san otharlann
+Be-pres mother the man-gen in-the hospital
+
+1 1 # Tá Be-pres
+2 2 # máthair mother
+3 3 # an the
+4 4 # fhir man-gen
+5 5 # san in-the
+6 6 # otharlann hospital
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Be-pres mother the man-gen in-the hospital
+The man 's mother is in the hospital
+
+1 5 # Be-pres is
+ 1.1 5 # Be is
+ 1.2 0 # -pres NULL
+2 4 # mother mother
+3 1 # the The
+4 2 # man-gen man
+ 4.1 2 # man man
+ 4.2 0 # -gen NULL
+5 6,7 # in-the in,the
+ 5.1 6 # in in
+ 5.2 7 # -the the
+6 8 # hospital hospital
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Tá máthair an fhir san otharlann
+Be-pres mother the man-gen in-the hospital
+The man 's mother is in the hospital
+
+1 5 # Tá san
+2 5 # máthair san
+3 2 # an máthair
+4 2 # fhir máthair
+5 -1 # san *TOP*
+6 5 # otharlann san
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=3013 Url_id=61 flag=0 cleaned=0 src_leng=6 trans_leng=6
+Chonaic sé an platapas le ghloiní
+Saw he the platypus with binoculars
+He saw the platypus with binoculars
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBD saw) (NP (NP (DT the) (NN platypus)) (PP (IN with) (NP (NNS binoculars))))))
+
+(S+saw (NP+He (PRP He))
+       (VP+saw (VBD saw)
+               (NP+platypus (NP+platypus (DT the)
+                                         (NN platypus))
+                            (PP+with (IN with)
+                                     (NP+binoculars (NNS binoculars))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He saw the platypus with binoculars
+1 2 # He saw
+2 -1 # saw *TOP*
+3 4 # the platypus
+4 2 # platypus saw
+5 4 # with platypus
+6 5 # binoculars with
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Chonaic sé an platapas le ghloiní
+Saw he the platypus with binoculars
+
+1 1 # Chonaic Saw
+2 2 # sé he
+3 3 # an the
+4 4 # platapas platypus
+5 5 # le with
+6 6 # ghloiní binoculars
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Saw he the platypus with binoculars
+He saw the platypus with binoculars
+
+1 2 # Saw saw
+2 1 # he He
+3 3 # the the
+4 4 # platypus platypus
+5 5 # with with
+6 6 # binoculars binoculars
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Chonaic sé an platapas le ghloiní
+Saw he the platypus with binoculars
+He saw the platypus with binoculars
+
+1 -1 # Chonaic *TOP*
+2 1 # sé Chonaic
+3 4 # an platapas
+4 1 # platapas Chonaic
+5 4 # le platapas
+6 5 # ghloiní le
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4040 Url_id=61 flag=0 cleaned=0 src_leng=4 trans_leng=5
+Doktor si Beverly Crusher
+doctor NOM24 Beverly Crusher
+Beverly Crusher is a doctor
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Beverly) (NNP Crusher)) (VP (VBZ is) (NP (DT a) (NN doctor))))
+
+(S+doctor (NP+Crusher (NNP Beverly)
+                      (NNP Crusher))
+          (VP+doctor (VBZ is)
+                     (NP-PRD+doctor (DT a)
+                                    (NN doctor))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Beverly Crusher is a doctor
+1 2 # Beverly Crusher
+2 5 # Crusher doctor
+3 5 # is doctor
+4 5 # a doctor
+5 -1 # doctor *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Doktor si Beverly Crusher
+doctor NOM24 Beverly Crusher
+
+1 1 # Doktor doctor
+2 2 # si NOM24
+3 3 # Beverly Beverly
+4 4 # Crusher Crusher
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+doctor NOM24 Beverly Crusher
+Beverly Crusher is a doctor
+
+1 5 # doctor doctor
+2 0 # NOM24 NULL
+3 1 # Beverly Beverly
+4 2 # Crusher Crusher
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Doktor si Beverly Crusher
+doctor NOM24 Beverly Crusher
+Beverly Crusher is a doctor
+
+1 -1 # Doktor *TOP*
+2 1 # si Doktor
+3 4 # Beverly Crusher
+4 1 # Crusher Doktor
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4041 Url_id=61 flag=0 cleaned=0 src_leng=7 trans_leng=8
+Si Jean-Luc Picard ang kapitan ng Enterprise
+NOM Jean-Luc Picard NOM captain GEN Enterprise
+Jean-Luc Picard is the captain of the Enterprise
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Jean-Luc) (NNP Picard)) (VP (VBZ is) (NP (NP (DT the) (NN captain)) (PP (IN of) (NP (DT the) (NN Enterprise))))))
+
+(S+captain (NP+Picard (NNP Jean-Luc)
+                      (NNP Picard))
+           (VP+captain (VBZ is)
+                       (NP-PRD+captain (NP+captain (DT the)
+                                                   (NN captain))
+                                       (PP+of (IN of)
+                                              (NP+Enterprise (DT the)
+                                                             (NN Enterprise))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Jean-Luc Picard is the captain of the Enterprise
+1 2 # Jean-Luc Picard
+2 5 # Picard captain
+3 5 # is captain
+4 5 # the captain
+5 -1 # captain *TOP*
+6 5 # of captain
+7 8 # the Enterprise
+8 6 # Enterprise of
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Si Jean-Luc Picard ang kapitan ng Enterprise
+NOM Jean-Luc Picard NOM captain GEN Enterprise
+
+1 1 # Si NOM
+2 2 # Jean-Luc Jean-Luc
+ 2.1 2.1 # Jean Jean
+ 2.2 2.2 # -Luc -Luc
+3 3 # Picard Picard
+4 4 # ang NOM
+5 5 # kapitan captain
+6 6 # ng GEN
+7 7 # Enterprise Enterprise
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+NOM Jean-Luc Picard NOM captain GEN Enterprise
+Jean-Luc Picard is the captain of the Enterprise
+
+1 0 # NOM NULL
+2 0 # Jean-Luc NULL
+ 2.1 0 # Jean NULL
+ 2.2 0 # -Luc NULL
+3 2 # Picard Picard
+4 0 # NOM NULL
+5 5 # captain captain
+6 0 # GEN NULL
+7 8 # Enterprise Enterprise
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Si Jean-Luc Picard ang kapitan ng Enterprise
+NOM Jean-Luc Picard NOM captain GEN Enterprise
+Jean-Luc Picard is the captain of the Enterprise
+
+1 5 # Si kapitan
+2 5 # Jean-Luc kapitan
+3 5 # Picard kapitan
+4 5 # ang kapitan
+5 -1 # kapitan *TOP*
+6 5 # ng kapitan
+7 5 # Enterprise kapitan
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4056 Url_id=61 flag=0 cleaned=0 src_leng=7 trans_leng=7
+Is teangeolaí ar phóg Seán é Peadar
+C linguist C-rel kiss Shawn agr Peter
+Peter is a linguist who Shawn kissed
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Peter)) (VP (VBZ is) (NP (NP (DT a) (NN linguist)) (SBAR (WHNP (WP who)) (S (NP (NNP Shawn)) (VP (VBD kissed)))))))
+
+(S+linguist (NP+Peter (NNP Peter))
+            (VP+linguist (VBZ is)
+                         (NP-PRD+linguist (NP+linguist (DT a)
+                                                       (NN linguist))
+                                          (SBAR+kissed (WHNP+who (WP who))
+                                                       (S+kissed (NP+Shawn (NNP Shawn))
+                                                                 (VP+kissed (VBD kissed)))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Peter is a linguist who Shawn kissed
+1 4 # Peter linguist
+2 4 # is linguist
+3 4 # a linguist
+4 -1 # linguist *TOP*
+5 7 # who kissed
+6 7 # Shawn kissed
+7 4 # kissed linguist
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is teangeolaí ar phóg Seán é Peadar
+C linguist C-rel kiss Shawn agr Peter
+
+1 1 # Is C
+2 2 # teangeolaí linguist
+3 3 # ar C-rel
+4 4 # phóg kiss
+5 5 # Seán Shawn
+6 6 # é agr
+7 7 # Peadar Peter
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C linguist C-rel kiss Shawn agr Peter
+Peter is a linguist who Shawn kissed
+
+1 0 # C NULL
+2 4 # linguist linguist
+3 0 # C-rel NULL
+ 3.1 0 # C NULL
+ 3.2 0 # -rel NULL
+4 7 # kiss kissed
+5 6 # Shawn Shawn
+6 0 # agr NULL
+7 1 # Peter Peter
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is teangeolaí ar phóg Seán é Peadar
+C linguist C-rel kiss Shawn agr Peter
+Peter is a linguist who Shawn kissed
+
+1 2 # Is teangeolaí
+2 -1 # teangeolaí *TOP*
+3 2 # ar teangeolaí
+4 2 # phóg teangeolaí
+5 4 # Seán phóg
+6 2 # é teangeolaí
+7 2 # Peadar teangeolaí
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4058 Url_id=61 flag=0 cleaned=0 src_leng=5 trans_leng=5
+Is maith an lá é
+C good the day he
+It is a NICE day
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP It)) (VP (VBZ is) (NP (DT a) (JJ NICE) (NN day))))
+
+(S+day (NP+It (PRP It))
+       (VP+day (VBZ is)
+               (NP-PRD+day (DT a)
+                           (JJ NICE)
+                           (NN day))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+It is a NICE day
+1 5 # It day
+2 5 # is day
+3 5 # a day
+4 5 # NICE day
+5 -1 # day *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is maith an lá é
+C good the day he
+
+1 1 # Is C
+2 2 # maith good
+3 3 # an the
+4 4 # lá day
+5 5 # é he
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C good the day he
+It is a NICE day
+
+1 0 # C NULL
+2 0 # good NULL
+3 0 # the NULL
+4 5 # day day
+5 0 # he NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is maith an lá é
+C good the day he
+It is a NICE day
+
+1 4 # Is lá
+2 4 # maith lá
+3 4 # an lá
+4 -1 # lá *TOP*
+5 4 # é lá
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4060 Url_id=61 flag=0 cleaned=0 src_leng=4 trans_leng=5
+Is lá maith é
+C day good it
+it is a good day
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP it)) (VP (VBZ is) (NP (DT a) (JJ good) (NN day))))
+
+(S+day (NP+it (PRP it))
+       (VP+day (VBZ is)
+               (NP-PRD+day (DT a)
+                           (JJ good)
+                           (NN day))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+it is a good day
+1 5 # it day
+2 5 # is day
+3 5 # a day
+4 5 # good day
+5 -1 # day *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is lá maith é
+C day good it
+
+1 1 # Is C
+2 2 # lá day
+3 3 # maith good
+4 4 # é it
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C day good it
+it is a good day
+
+1 0 # C NULL
+2 5 # day day
+3 4 # good good
+4 1 # it it
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is lá maith é
+C day good it
+it is a good day
+
+1 2 # Is lá
+2 -1 # lá *TOP*
+3 2 # maith lá
+4 2 # é lá
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4062 Url_id=61 flag=0 cleaned=0 src_leng=7 trans_leng=6
+Tá na Clingeánaí ag scaoileadh na féasar
+Be-pres the Klingons prog fire the phasers-gen
+The Klingons are firing the phasers
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NNS Klingons)) (VP (VBP are) (ADVP (NN firing)) (NP (DT the) (NNS phasers))))
+
+(S+are (NP+Klingons (DT The)
+                    (NNS Klingons))
+       (VP+are (VBP are)
+               (ADVP+firing (NN firing))
+               (NP+phasers (DT the)
+                           (NNS phasers))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The Klingons are firing the phasers
+1 2 # The Klingons
+2 3 # Klingons are
+3 -1 # are *TOP*
+4 3 # firing are
+5 6 # the phasers
+6 3 # phasers are
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Tá na Clingeánaí ag scaoileadh na féasar
+Be-pres the Klingons prog fire the phasers-gen
+
+1 1 # Tá Be-pres
+2 2 # na the
+3 3 # Clingeánaí Klingons
+4 4 # ag prog
+5 5 # scaoileadh fire
+6 6 # na the
+7 7 # féasar phasers-gen
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Be-pres the Klingons prog fire the phasers-gen
+The Klingons are firing the phasers
+
+1 0 # Be-pres NULL
+ 1.1 0 # Be NULL
+ 1.2 0 # -pres NULL
+2 1 # the The
+3 2 # Klingons Klingons
+4 0 # prog NULL
+5 0 # fire NULL
+6 5 # the the
+7 6 # phasers-gen phasers
+ 7.1 6 # phasers phasers
+ 7.2 0 # -gen NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Tá na Clingeánaí ag scaoileadh na féasar
+Be-pres the Klingons prog fire the phasers-gen
+The Klingons are firing the phasers
+
+1 -2 # Tá NULL
+2 3 # na Clingeánaí
+3 -2 # Clingeánaí NULL
+4 -2 # ag NULL
+5 -2 # scaoileadh NULL
+6 7 # na féasar
+7 -2 # féasar NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4065 Url_id=61 flag=0 cleaned=0 src_leng=7 trans_leng=5
+Ní raibh mé ach ag déanamh grinn
+Neg be-past I only prog make fun
+I was only making fun
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBD was) (ADVP (RB only)) (VP (VBG making) (NP (NN fun)))))
+
+(S+making (NP+I (PRP I))
+          (VP+making (VBD was)
+                     (ADVP+only (RB only))
+                     (VP+making (VBG making)
+                                (NP+fun (NN fun)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I was only making fun
+1 4 # I making
+2 4 # was making
+3 4 # only making
+4 -1 # making *TOP*
+5 4 # fun making
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ní raibh mé ach ag déanamh grinn
+Neg be-past I only prog make fun
+
+1 1 # Ní Neg
+2 2 # raibh be-past
+3 3 # mé I
+4 4 # ach only
+5 5 # ag prog
+6 6 # déanamh make
+7 7 # grinn fun
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Neg be-past I only prog make fun
+I was only making fun
+
+1 0 # Neg NULL
+2 2 # be-past was
+ 2.1 2 # be was
+ 2.2 0 # -past NULL
+3 1 # I I
+4 3 # only only
+5 0 # prog NULL
+6 0 # make NULL
+7 5 # fun fun
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ní raibh mé ach ag déanamh grinn
+Neg be-past I only prog make fun
+I was only making fun
+
+1 -2 # Ní NULL
+2 -2 # raibh NULL
+3 -2 # mé NULL
+4 -2 # ach NULL
+5 -2 # ag NULL
+6 -2 # déanamh NULL
+7 -2 # grinn NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4066 Url_id=61 flag=0 cleaned=0 src_leng=6 trans_leng=6
+Chonaic Seán agus Máire lena chéile
+Saw John and Mary with-their other
+John and Mary saw each other
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP John) (CC and) (NNP Mary)) (VP (VBD saw) (NP (DT each) (JJ other))))
+
+(S+saw (NP+Mary (NNP John)
+                (CC and)
+                (NNP Mary))
+       (VP+saw (VBD saw)
+               (NP+other (DT each)
+                         (JJ other))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John and Mary saw each other
+1 3 # John Mary
+2 3 # and Mary
+3 4 # Mary saw
+4 -1 # saw *TOP*
+5 6 # each other
+6 4 # other saw
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Chonaic Seán agus Máire lena chéile
+Saw John and Mary with-their other
+
+1 1 # Chonaic Saw
+2 2 # Seán John
+3 3 # agus and
+4 4 # Máire Mary
+5 5 # lena with-their
+6 6 # chéile other
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Saw John and Mary with-their other
+John and Mary saw each other
+
+1 4 # Saw saw
+2 1 # John John
+3 2 # and and
+4 3 # Mary Mary
+5 0 # with-their NULL
+ 5.1 0 # with NULL
+ 5.2 0 # -their NULL
+6 6 # other other
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Chonaic Seán agus Máire lena chéile
+Saw John and Mary with-their other
+John and Mary saw each other
+
+1 -1 # Chonaic *TOP*
+2 4 # Seán Máire
+3 4 # agus Máire
+4 1 # Máire Chonaic
+5 1 # lena Chonaic
+6 1 # chéile Chonaic
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4068 Url_id=61 flag=0 cleaned=4 src_leng=8 trans_leng=6
+Chonaic , cinnte , an fear an réaltlong
+Saw , certainly , the man the starship
+The man certainly saw a starship
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NN man)) (ADVP (RB certainly)) (VP (VBD saw) (NP (DT a) (NN starship))))
+
+(S+saw (NP+man (DT The)
+               (NN man))
+       (ADVP+certainly (RB certainly))
+       (VP+saw (VBD saw)
+               (NP+starship (DT a)
+                            (NN starship))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The man certainly saw a starship
+1 2 # The man
+2 4 # man saw
+3 4 # certainly saw
+4 -1 # saw *TOP*
+5 6 # a starship
+6 4 # starship saw
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Chonaic , cinnte , an fear an réaltlong
+Saw , certainly , the man the starship
+
+1 1 # Chonaic Saw
+2 2 # , ,
+3 3 # cinnte certainly
+4 4 # , ,
+5 5 # an the
+6 6 # fear man
+7 7 # an the
+8 8 # réaltlong starship
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Saw , certainly , the man the starship
+The man certainly saw a starship
+
+1 4 # Saw saw
+2 0 # , NULL
+3 3 # certainly certainly
+4 0 # , NULL
+5 1 # the The
+6 2 # man man
+7 1 # the The
+8 6 # starship starship
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Chonaic , cinnte , an fear an réaltlong
+Saw , certainly , the man the starship
+The man certainly saw a starship
+
+1 -1 # Chonaic *TOP*
+2 1 # , Chonaic
+3 1 # cinnte Chonaic
+4 1 # , Chonaic
+5 6 # an fear
+6 1 # fear Chonaic
+7 6 # an fear
+8 1 # réaltlong Chonaic
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4077 Url_id=61 flag=0 cleaned=3 src_leng=8 trans_leng=8
+Ba mhaith liom an teach a thógáil .
+C good with.1s the house-ACC TRANS build .
+I would like to build the house .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (MD would) (VP (VB like) (S (VP (TO to) (VP (VB build) (NP (DT the) (NN house))))))) (. .))
+
+(S+like (NP+I (PRP I))
+        (VP+like (MD would)
+                 (VP+like (VB like)
+                          (S+build (VP+build (TO to)
+                                             (VP+build (VB build)
+                                                       (NP+house (DT the)
+                                                                 (NN house)))))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I would like to build the house .
+1 3 # I like
+2 3 # would like
+3 -1 # like *TOP*
+4 5 # to build
+5 3 # build like
+6 7 # the house
+7 5 # house build
+8 3 # . like
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ba mhaith liom an teach a thógáil .
+C good with.1s the house-ACC TRANS build .
+
+1 1 # Ba C
+2 2 # mhaith good
+3 3 # liom with.1s
+4 4 # an the
+5 5 # teach house-ACC
+6 6 # a TRANS
+7 7 # thógáil build
+8 8 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C good with.1s the house-ACC TRANS build .
+I would like to build the house .
+
+1 0 # C NULL
+2 0 # good NULL
+3 0 # with.1s NULL
+4 6 # the the
+5 7 # house-ACC house
+ 5.1 7 # house house
+ 5.2 0 # -ACC NULL
+6 0 # TRANS NULL
+7 5 # build build
+8 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ba mhaith liom an teach a thógáil .
+C good with.1s the house-ACC TRANS build .
+I would like to build the house .
+
+1 -2 # Ba NULL
+2 -2 # mhaith NULL
+3 -2 # liom NULL
+4 5 # an teach
+5 7 # teach thógáil
+6 -2 # a NULL
+7 -2 # thógáil NULL
+8 -2 # . NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4079 Url_id=61 flag=0 cleaned=0 src_leng=5 trans_leng=6
+Ceapaim go bhfuil sé ansin
+Think.1.s that be-pres he there
+I think that he is there
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP think) (SBAR (IN that) (S (NP (PRP he)) (VP (VBZ is) (ADVP (RB there)))))))
+
+(S+think (NP+I (PRP I))
+         (VP+think (VBP think)
+                   (SBAR+is (IN that)
+                            (S+is (NP+he (PRP he))
+                                  (VP+is (VBZ is)
+                                         (ADVP+there (RB there)))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I think that he is there
+1 2 # I think
+2 -1 # think *TOP*
+3 5 # that is
+4 5 # he is
+5 2 # is think
+6 5 # there is
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ceapaim go bhfuil sé ansin
+Think.1.s that be-pres he there
+
+1 1 # Ceapaim Think.1.s
+2 2 # go that
+3 3 # bhfuil be-pres
+4 4 # sé he
+5 5 # ansin there
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Think.1.s that be-pres he there
+I think that he is there
+
+1 2 # Think.1.s think
+2 3 # that that
+3 5 # be-pres is
+ 3.1 5 # be is
+ 3.2 0 # -pres NULL
+4 4 # he he
+5 6 # there there
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ceapaim go bhfuil sé ansin
+Think.1.s that be-pres he there
+I think that he is there
+
+1 -1 # Ceapaim *TOP*
+2 3 # go bhfuil
+3 1 # bhfuil Ceapaim
+4 3 # sé bhfuil
+5 3 # ansin bhfuil
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4080 Url_id=61 flag=0 cleaned=0 src_leng=7 trans_leng=6
+Tá mé ag scríobh an abairt anois
+Be-pres I prog write the sentence-acc now
+I am writing the sentence now
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP am) (VP (VBG writing) (NP (DT the) (NN sentence)) (ADVP (RB now)))))
+
+(S+writing (NP+I (PRP I))
+           (VP+writing (VBP am)
+                       (VP+writing (VBG writing)
+                                   (NP+sentence (DT the)
+                                                (NN sentence))
+                                   (ADVP+now (RB now)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I am writing the sentence now
+1 3 # I writing
+2 3 # am writing
+3 -1 # writing *TOP*
+4 5 # the sentence
+5 3 # sentence writing
+6 3 # now writing
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Tá mé ag scríobh an abairt anois
+Be-pres I prog write the sentence-acc now
+
+1 1 # Tá Be-pres
+2 2 # mé I
+3 3 # ag prog
+4 4 # scríobh write
+5 5 # an the
+6 6 # abairt sentence-acc
+7 7 # anois now
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Be-pres I prog write the sentence-acc now
+I am writing the sentence now
+
+1 0 # Be-pres NULL
+ 1.1 0 # Be NULL
+ 1.2 0 # -pres NULL
+2 1 # I I
+3 0 # prog NULL
+4 3 # write writing
+5 4 # the the
+6 5 # sentence-acc sentence
+ 6.1 5 # sentence sentence
+ 6.2 0 # -acc NULL
+7 6 # now now
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Tá mé ag scríobh an abairt anois
+Be-pres I prog write the sentence-acc now
+I am writing the sentence now
+
+1 4 # Tá scríobh
+2 4 # mé scríobh
+3 4 # ag scríobh
+4 -1 # scríobh *TOP*
+5 6 # an abairt
+6 4 # abairt scríobh
+7 4 # anois scríobh
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4081 Url_id=61 flag=0 cleaned=0 src_leng=7 trans_leng=6
+Tá mé ag scríobh na habairte anois
+Be-pres I prog write the sentence-gen now
+I am writing the sentence now
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP am) (VP (VBG writing) (NP (DT the) (NN sentence)) (ADVP (RB now)))))
+
+(S+writing (NP+I (PRP I))
+           (VP+writing (VBP am)
+                       (VP+writing (VBG writing)
+                                   (NP+sentence (DT the)
+                                                (NN sentence))
+                                   (ADVP+now (RB now)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I am writing the sentence now
+1 3 # I writing
+2 3 # am writing
+3 -1 # writing *TOP*
+4 5 # the sentence
+5 3 # sentence writing
+6 3 # now writing
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Tá mé ag scríobh na habairte anois
+Be-pres I prog write the sentence-gen now
+
+1 1 # Tá Be-pres
+2 2 # mé I
+3 3 # ag prog
+4 4 # scríobh write
+5 5 # na the
+6 6 # habairte sentence-gen
+7 7 # anois now
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Be-pres I prog write the sentence-gen now
+I am writing the sentence now
+
+1 0 # Be-pres NULL
+ 1.1 0 # Be NULL
+ 1.2 0 # -pres NULL
+2 1 # I I
+3 0 # prog NULL
+4 3 # write writing
+5 4 # the the
+6 5 # sentence-gen sentence
+ 6.1 5 # sentence sentence
+ 6.2 0 # -gen NULL
+7 6 # now now
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Tá mé ag scríobh na habairte anois
+Be-pres I prog write the sentence-gen now
+I am writing the sentence now
+
+1 4 # Tá scríobh
+2 4 # mé scríobh
+3 4 # ag scríobh
+4 -1 # scríobh *TOP*
+5 6 # na habairte
+6 4 # habairte scríobh
+7 4 # anois scríobh
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4085 Url_id=61 flag=0 cleaned=4 src_leng=7 trans_leng=8
+Beidh an trachtas críochnaithe agam amárach .
+be-fut the thesis finished at-me tomorrow .
+I 'll have the thesis finished tomorrow .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (MD 'll) (VP (VB have) (S (NP (DT the) (NN thesis)) (VP (VB finished) (NP (NN tomorrow)))))) (. .))
+
+(S+have (NP+I (PRP I))
+        (VP+have (MD 'll)
+                 (VP+have (VB have)
+                          (S+finished (NP+thesis (DT the)
+                                                 (NN thesis))
+                                      (VP+finished (VB finished)
+                                                   (NP+tomorrow (NN tomorrow))))))
+        (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I 'll have the thesis finished tomorrow .
+1 3 # I have
+2 3 # 'll have
+3 -1 # have *TOP*
+4 5 # the thesis
+5 6 # thesis finished
+6 3 # finished have
+7 6 # tomorrow finished
+8 3 # . have
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Beidh an trachtas críochnaithe agam amárach .
+be-fut the thesis finished at-me tomorrow .
+
+1 1 # Beidh be-fut
+2 2 # an the
+3 3 # trachtas thesis
+4 4 # críochnaithe finished
+5 5 # agam at-me
+6 6 # amárach tomorrow
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+be-fut the thesis finished at-me tomorrow .
+I 'll have the thesis finished tomorrow .
+
+1 0 # be-fut NULL
+ 1.1 0 # be NULL
+ 1.2 0 # -fut NULL
+2 4 # the the
+3 5 # thesis thesis
+4 6 # finished finished
+5 0 # at-me NULL
+ 5.1 0 # at NULL
+ 5.2 0 # -me NULL
+6 7 # tomorrow tomorrow
+7 8 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Beidh an trachtas críochnaithe agam amárach .
+be-fut the thesis finished at-me tomorrow .
+I 'll have the thesis finished tomorrow .
+
+1 -2 # Beidh NULL
+2 3 # an trachtas
+3 4 # trachtas críochnaithe
+4 -2 # críochnaithe NULL
+5 -2 # agam NULL
+6 4 # amárach críochnaithe
+7 -2 # . NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4089 Url_id=61 flag=0 cleaned=0 src_leng=5 trans_leng=6
+Níor thóg Seán an teach
+Neg-past build J the house
+John did not build the house
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP John)) (VP (VBD did) (RB not) (VP (VB build) (NP (DT the) (NN house)))))
+
+(S+build (NP+John (NNP John))
+         (VP+build (VBD did)
+                   (RB not)
+                   (VP+build (VB build)
+                             (NP+house (DT the)
+                                       (NN house)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+John did not build the house
+1 4 # John build
+2 4 # did build
+3 4 # not build
+4 -1 # build *TOP*
+5 6 # the house
+6 4 # house build
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Níor thóg Seán an teach
+Neg-past build J the house
+
+1 1 # Níor Neg-past
+2 2 # thóg build
+3 3 # Seán J
+4 4 # an the
+5 5 # teach house
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Neg-past build J the house
+John did not build the house
+
+1 3 # Neg-past not
+ 1.1 3 # Neg not
+ 1.2 0 # -past NULL
+2 4 # build build
+3 0 # J NULL
+4 5 # the the
+5 6 # house house
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Níor thóg Seán an teach
+Neg-past build J the house
+John did not build the house
+
+1 2 # Níor thóg
+2 -1 # thóg *TOP*
+3 2 # Seán thóg
+4 5 # an teach
+5 2 # teach thóg
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4090 Url_id=61 flag=0 cleaned=0 src_leng=3 trans_leng=5
+Ní amadán é
+C-neg-pres fool him
+He is not a fool
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBZ is) (RB not) (NP (DT a) (NN fool))))
+
+(S+is (NP+He (PRP He))
+      (VP+is (VBZ is)
+             (RB not)
+             (NP+fool (DT a)
+                      (NN fool))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He is not a fool
+1 2 # He is
+2 -1 # is *TOP*
+3 2 # not is
+4 5 # a fool
+5 2 # fool is
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ní amadán é
+C-neg-pres fool him
+
+1 1 # Ní C-neg-pres
+2 2 # amadán fool
+3 3 # é him
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C-neg-pres fool him
+He is not a fool
+
+1 3 # C-neg-pres not
+ 1.1 0 # C NULL
+ 1.2 3 # -neg not
+ 1.3 0 # -pres NULL
+2 5 # fool fool
+3 0 # him NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ní amadán é
+C-neg-pres fool him
+He is not a fool
+
+1 -2 # Ní NULL
+2 -2 # amadán NULL
+3 -2 # é NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4099 Url_id=61 flag=0 cleaned=0 src_leng=5 trans_leng=5
+Is as Inis Eoghain é
+C out-of Inish Owen him
+He is from Inish Owen
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBZ is) (PP (IN from) (NP (NNP Inish) (NNP Owen)))))
+
+(S+from (NP+He (PRP He))
+        (VP+from (VBZ is)
+                 (PP-PRD+from (IN from)
+                              (NP+Owen (NNP Inish)
+                                       (NNP Owen)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He is from Inish Owen
+1 3 # He from
+2 3 # is from
+3 -1 # from *TOP*
+4 5 # Inish Owen
+5 3 # Owen from
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is as Inis Eoghain é
+C out-of Inish Owen him
+
+1 1 # Is C
+2 2 # as out-of
+3 3 # Inis Inish
+4 4 # Eoghain Owen
+5 5 # é him
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C out-of Inish Owen him
+He is from Inish Owen
+
+1 0 # C NULL
+2 0 # out-of NULL
+ 2.1 0 # out NULL
+ 2.2 0 # -of NULL
+3 4 # Inish Inish
+4 5 # Owen Owen
+5 0 # him NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is as Inis Eoghain é
+C out-of Inish Owen him
+He is from Inish Owen
+
+1 -2 # Is NULL
+2 -2 # as NULL
+3 4 # Inis Eoghain
+4 -2 # Eoghain NULL
+5 -2 # é NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4101 Url_id=61 flag=0 cleaned=0 src_leng=6 trans_leng=5
+Is liomsa an t-Alfa Romeo sin
+C with-me the Alfa Romeo that
+I own that Alfa Romeo
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP own) (NP (DT that) (NN Alfa) (NN Romeo))))
+
+(S+own (NP+I (PRP I))
+       (VP+own (VBP own)
+               (NP+Romeo (DT that)
+                         (NN Alfa)
+                         (NN Romeo))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I own that Alfa Romeo
+1 2 # I own
+2 -1 # own *TOP*
+3 5 # that Romeo
+4 5 # Alfa Romeo
+5 2 # Romeo own
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is liomsa an t-Alfa Romeo sin
+C with-me the Alfa Romeo that
+
+1 1 # Is C
+2 2 # liomsa with-me
+3 3 # an the
+4 4 # t-Alfa Alfa
+ 4.1 0 # t NULL
+ 4.2 0 # -Alfa NULL
+5 5 # Romeo Romeo
+6 6 # sin that
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C with-me the Alfa Romeo that
+I own that Alfa Romeo
+
+1 0 # C NULL
+2 0 # with-me NULL
+ 2.1 0 # with NULL
+ 2.2 0 # -me NULL
+3 0 # the NULL
+4 4 # Alfa Alfa
+5 5 # Romeo Romeo
+6 3 # that that
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is liomsa an t-Alfa Romeo sin
+C with-me the Alfa Romeo that
+I own that Alfa Romeo
+
+1 -2 # Is NULL
+2 -2 # liomsa NULL
+3 -2 # an NULL
+4 5 # t-Alfa Romeo
+5 -2 # Romeo NULL
+6 5 # sin Romeo
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4113 Url_id=61 flag=0 cleaned=0 src_leng=8 trans_leng=8
+Scaoil an Captaen na féasair ar na Clingeánaí
+Fired the Captain the phasers on the Klingons
+The Captain fired the phasers at the Klingons
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NN Captain)) (VP (VBD fired) (NP (DT the) (NNS phasers)) (PP (IN at) (NP (DT the) (NNS Klingons)))))
+
+(S+fired (NP+Captain (DT The)
+                     (NN Captain))
+         (VP+fired (VBD fired)
+                   (NP+phasers (DT the)
+                               (NNS phasers))
+                   (PP+at (IN at)
+                          (NP+Klingons (DT the)
+                                       (NNS Klingons)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The Captain fired the phasers at the Klingons
+1 2 # The Captain
+2 3 # Captain fired
+3 -1 # fired *TOP*
+4 5 # the phasers
+5 3 # phasers fired
+6 3 # at fired
+7 8 # the Klingons
+8 6 # Klingons at
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Scaoil an Captaen na féasair ar na Clingeánaí
+Fired the Captain the phasers on the Klingons
+
+1 1 # Scaoil Fired
+2 2 # an the
+3 3 # Captaen Captain
+4 4 # na the
+5 5 # féasair phasers
+6 6 # ar on
+7 7 # na the
+8 8 # Clingeánaí Klingons
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Fired the Captain the phasers on the Klingons
+The Captain fired the phasers at the Klingons
+
+1 3 # Fired fired
+2 1 # the The
+3 2 # Captain Captain
+4 4 # the the
+5 5 # phasers phasers
+6 0 # on NULL
+7 7 # the the
+8 8 # Klingons Klingons
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Scaoil an Captaen na féasair ar na Clingeánaí
+Fired the Captain the phasers on the Klingons
+The Captain fired the phasers at the Klingons
+
+1 -1 # Scaoil *TOP*
+2 3 # an Captaen
+3 1 # Captaen Scaoil
+4 5 # na féasair
+5 1 # féasair Scaoil
+6 1 # ar Scaoil
+7 8 # na Clingeánaí
+8 1 # Clingeánaí Scaoil
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4115 Url_id=61 flag=0 cleaned=0 src_leng=7 trans_leng=7
+Scaoil an Captaen ar na Clingeánaí iad
+Fired the Captain on the Klingons them
+The Captain fired them at the Klingons
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NN Captain)) (VP (VBD fired) (NP (PRP them)) (PP (IN at) (NP (DT the) (NNS Klingons)))))
+
+(S+fired (NP+Captain (DT The)
+                     (NN Captain))
+         (VP+fired (VBD fired)
+                   (NP+them (PRP them))
+                   (PP+at (IN at)
+                          (NP+Klingons (DT the)
+                                       (NNS Klingons)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The Captain fired them at the Klingons
+1 2 # The Captain
+2 3 # Captain fired
+3 -1 # fired *TOP*
+4 3 # them fired
+5 3 # at fired
+6 7 # the Klingons
+7 5 # Klingons at
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Scaoil an Captaen ar na Clingeánaí iad
+Fired the Captain on the Klingons them
+
+1 1 # Scaoil Fired
+2 2 # an the
+3 3 # Captaen Captain
+4 4 # ar on
+5 5 # na the
+6 6 # Clingeánaí Klingons
+7 7 # iad them
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Fired the Captain on the Klingons them
+The Captain fired them at the Klingons
+
+1 3 # Fired fired
+2 1 # the The
+3 2 # Captain Captain
+4 0 # on NULL
+5 6 # the the
+6 7 # Klingons Klingons
+7 4 # them them
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Scaoil an Captaen ar na Clingeánaí iad
+Fired the Captain on the Klingons them
+The Captain fired them at the Klingons
+
+1 -1 # Scaoil *TOP*
+2 3 # an Captaen
+3 1 # Captaen Scaoil
+4 1 # ar Scaoil
+5 6 # na Clingeánaí
+6 1 # Clingeánaí Scaoil
+7 1 # iad Scaoil
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20252 Url_id=53 flag=0 cleaned=0 src_leng=5 trans_leng=6
+Thug Míleó caisearbhán do Bhinclí
+Gave Milo dandelion to Binkley
+Milo gave a dandelion to Binkley
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Milo)) (VP (VBD gave) (NP (DT a) (NN dandelion)) (PP (TO to) (NP (NNP Binkley)))))
+
+(S+gave (NP+Milo (NNP Milo))
+        (VP+gave (VBD gave)
+                 (NP+dandelion (DT a)
+                               (NN dandelion))
+                 (PP+to (TO to)
+                        (NP+Binkley (NNP Binkley)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Milo gave a dandelion to Binkley
+1 2 # Milo gave
+2 -1 # gave *TOP*
+3 4 # a dandelion
+4 2 # dandelion gave
+5 2 # to gave
+6 5 # Binkley to
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Thug Míleó caisearbhán do Bhinclí
+Gave Milo dandelion to Binkley
+
+1 1 # Thug Gave
+2 2 # Míleó Milo
+3 3 # caisearbhán dandelion
+4 4 # do to
+5 5 # Bhinclí Binkley
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Gave Milo dandelion to Binkley
+Milo gave a dandelion to Binkley
+
+1 2 # Gave gave
+2 1 # Milo Milo
+3 4 # dandelion dandelion
+4 5 # to to
+5 6 # Binkley Binkley
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Thug Míleó caisearbhán do Bhinclí
+Gave Milo dandelion to Binkley
+Milo gave a dandelion to Binkley
+
+1 -1 # Thug *TOP*
+2 1 # Míleó Thug
+3 1 # caisearbhán Thug
+4 1 # do Thug
+5 4 # Bhinclí do
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=4031 Url_id=53 flag=0 cleaned=3 src_leng=6 trans_leng=7
+LocativeTá an mhin sa phota .
+BE the oatmeal in-the pot .
+The oatmeal is in the pot .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NN oatmeal)) (VP (VBZ is) (PP (IN in) (NP (DT the) (NN pot)))) (. .))
+
+(S+in (NP+oatmeal (DT The)
+                  (NN oatmeal))
+      (VP+in (VBZ is)
+             (PP-PRD+in (IN in)
+                        (NP+pot (DT the)
+                                (NN pot))))
+      (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The oatmeal is in the pot .
+1 2 # The oatmeal
+2 4 # oatmeal in
+3 4 # is in
+4 -1 # in *TOP*
+5 6 # the pot
+6 4 # pot in
+7 4 # . in
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+LocativeTá an mhin sa phota .
+BE the oatmeal in-the pot .
+
+1 1 # LocativeTá BE
+2 2 # an the
+3 3 # mhin oatmeal
+4 4 # sa in-the
+5 5 # phota pot
+6 6 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+BE the oatmeal in-the pot .
+The oatmeal is in the pot .
+
+1 3 # BE is
+2 1 # the The
+3 2 # oatmeal oatmeal
+4 4,5 # in-the in,the
+ 4.1 4 # in in
+ 4.2 5 # -the the
+5 6 # pot pot
+6 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+LocativeTá an mhin sa phota .
+BE the oatmeal in-the pot .
+The oatmeal is in the pot .
+
+1 4 # LocativeTá sa
+2 3 # an mhin
+3 4 # mhin sa
+4 -1 # sa *TOP*
+5 4 # phota sa
+6 4 # . sa
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=123 Url_id=61 flag=0 cleaned=0 src_leng=8 trans_leng=7
+Ba mhaith liom CP Seán scríobh na habairte
+C good with.1S John-ACC TRAN write the sentence-GEN
+I want John to write the sentence
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP want) (S (NP (NNP John)) (VP (TO to) (VP (VB write) (NP (DT the) (NN sentence)))))))
+
+(S+want (NP+I (PRP I))
+        (VP+want (VBP want)
+                 (S+write (NP+John (NNP John))
+                          (VP+write (TO to)
+                                    (VP+write (VB write)
+                                              (NP+sentence (DT the)
+                                                           (NN sentence)))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I want John to write the sentence
+1 2 # I want
+2 -1 # want *TOP*
+3 5 # John write
+4 5 # to write
+5 2 # write want
+6 7 # the sentence
+7 5 # sentence write
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ba mhaith liom CP Seán scríobh na habairte
+C good with.1S John-ACC TRAN write the sentence-GEN
+
+1 1 # Ba C
+2 2 # mhaith good
+3 3 # liom with.1S
+4 4 # CP John-ACC
+5 5 # Seán TRAN
+6 6 # scríobh write
+7 7 # na the
+8 8 # habairte sentence-GEN
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C good with.1S John-ACC TRAN write the sentence-GEN
+I want John to write the sentence
+
+1 0 # C NULL
+2 0 # good NULL
+3 0 # with.1S NULL
+4 3 # John-ACC John
+ 4.1 3 # John John
+ 4.2 0 # -ACC NULL
+5 0 # TRAN NULL
+6 5 # write write
+7 6 # the the
+8 7 # sentence-GEN sentence
+ 8.1 7 # sentence sentence
+ 8.2 0 # -GEN NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ba mhaith liom CP Seán scríobh na habairte
+C good with.1S John-ACC TRAN write the sentence-GEN
+I want John to write the sentence
+
+1 -2 # Ba NULL
+2 -2 # mhaith NULL
+3 -2 # liom NULL
+4 6 # CP scríobh
+5 -2 # Seán NULL
+6 -2 # scríobh NULL
+7 8 # na habairte
+8 6 # habairte scríobh
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20582 Url_id=61 flag=0 cleaned=0 src_leng=8 trans_leng=7
+Ba mhaith liom CP Seán an abairt scríobh
+C good with.1S John-ACC the sentence-ACC TRAN write
+I want John to write the sentence
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP want) (S (NP (NNP John)) (VP (TO to) (VP (VB write) (NP (DT the) (NN sentence)))))))
+
+(S+want (NP+I (PRP I))
+        (VP+want (VBP want)
+                 (S+write (NP+John (NNP John))
+                          (VP+write (TO to)
+                                    (VP+write (VB write)
+                                              (NP+sentence (DT the)
+                                                           (NN sentence)))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I want John to write the sentence
+1 2 # I want
+2 -1 # want *TOP*
+3 5 # John write
+4 5 # to write
+5 2 # write want
+6 7 # the sentence
+7 5 # sentence write
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ba mhaith liom CP Seán an abairt scríobh
+C good with.1S John-ACC the sentence-ACC TRAN write
+
+1 1 # Ba C
+2 2 # mhaith good
+3 3 # liom with.1S
+4 4 # CP John-ACC
+5 5 # Seán the
+6 6 # an sentence-ACC
+7 7 # abairt TRAN
+8 8 # scríobh write
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C good with.1S John-ACC the sentence-ACC TRAN write
+I want John to write the sentence
+
+1 0 # C NULL
+2 0 # good NULL
+3 0 # with.1S NULL
+4 3 # John-ACC John
+ 4.1 3 # John John
+ 4.2 0 # -ACC NULL
+5 6 # the the
+6 7 # sentence-ACC sentence
+ 6.1 7 # sentence sentence
+ 6.2 0 # -ACC NULL
+7 0 # TRAN NULL
+8 5 # write write
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ba mhaith liom CP Seán an abairt scríobh
+C good with.1S John-ACC the sentence-ACC TRAN write
+I want John to write the sentence
+
+1 -2 # Ba NULL
+2 -2 # mhaith NULL
+3 -2 # liom NULL
+4 8 # CP scríobh
+5 6 # Seán an
+6 8 # an scríobh
+7 -2 # abairt NULL
+8 -2 # scríobh NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20588 Url_id=61 flag=0 cleaned=0 src_leng=8 trans_leng=7
+Ba mhaith liom CP é an abairt scríobh
+C good with.1S him the sentence-ACC TRAN write
+I want him to write the sentence
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBP want) (S (NP (PRP him)) (VP (TO to) (VP (VB write) (NP (DT the) (NN sentence)))))))
+
+(S+want (NP+I (PRP I))
+        (VP+want (VBP want)
+                 (S+write (NP+him (PRP him))
+                          (VP+write (TO to)
+                                    (VP+write (VB write)
+                                              (NP+sentence (DT the)
+                                                           (NN sentence)))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I want him to write the sentence
+1 2 # I want
+2 -1 # want *TOP*
+3 5 # him write
+4 5 # to write
+5 2 # write want
+6 7 # the sentence
+7 5 # sentence write
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ba mhaith liom CP é an abairt scríobh
+C good with.1S him the sentence-ACC TRAN write
+
+1 1 # Ba C
+2 2 # mhaith good
+3 3 # liom with.1S
+4 4 # CP him
+5 5 # é the
+6 6 # an sentence-ACC
+7 7 # abairt TRAN
+8 8 # scríobh write
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+C good with.1S him the sentence-ACC TRAN write
+I want him to write the sentence
+
+1 0 # C NULL
+2 0 # good NULL
+3 0 # with.1S NULL
+4 3 # him him
+5 6 # the the
+6 7 # sentence-ACC sentence
+ 6.1 7 # sentence sentence
+ 6.2 0 # -ACC NULL
+7 0 # TRAN NULL
+8 5 # write write
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ba mhaith liom CP é an abairt scríobh
+C good with.1S him the sentence-ACC TRAN write
+I want him to write the sentence
+
+1 -2 # Ba NULL
+2 -2 # mhaith NULL
+3 -2 # liom NULL
+4 8 # CP scríobh
+5 6 # é an
+6 8 # an scríobh
+7 -2 # abairt NULL
+8 -2 # scríobh NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=20649 Url_id=61 flag=0 cleaned=3 src_leng=3 trans_leng=6
+Is ea ?
+Q Doctor ?
+Is Leonard McCoy a doctor ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SQ (VBZ Is) (NP (NNP Leonard) (NNP McCoy)) (NP (DT a) (NN doctor)) (. ?))
+
+(SQ+? (VBZ Is)
+      (NP+McCoy (NNP Leonard)
+                (NNP McCoy))
+      (NP+doctor (DT a)
+                 (NN doctor))
+      (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Is Leonard McCoy a doctor ?
+1 6 # Is ?
+2 3 # Leonard McCoy
+3 6 # McCoy ?
+4 5 # a doctor
+5 6 # doctor ?
+6 -1 # ? *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is ea ?
+Q Doctor ?
+
+1 1 # Is Q
+2 2 # ea Doctor
+3 3 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Q Doctor ?
+Is Leonard McCoy a doctor ?
+
+1 0 # Q NULL
+2 5 # Doctor doctor
+3 6 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is ea ?
+Q Doctor ?
+Is Leonard McCoy a doctor ?
+
+1 3 # Is ?
+2 3 # ea ?
+3 -1 # ? *TOP*
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=25682 Url_id=2433 flag=0 cleaned=3 src_leng=7 trans_leng=10
+Cathain a deirir a dh\xEDolfir m\xE9 ?
+when aL you-say aL you-will-pay me ?
+When do you say that you will pay me ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SBARQ (WHADVP (WRB When)) (SQ (VBP do) (NP (PRP you)) (VP (VB say) (SBAR (IN that) (S (NP (PRP you)) (VP (MD will) (VP (VB pay) (NP (PRP me)))))))) (. ?))
+
+(SBARQ+say (WHADVP+When (WRB When))
+           (SQ+say (VBP do)
+                   (NP+you (PRP you))
+                   (VP+say (VB say)
+                           (SBAR+pay (IN that)
+                                     (S+pay (NP+you (PRP you))
+                                            (VP+pay (MD will)
+                                                    (VP+pay (VB pay)
+                                                            (NP+me (PRP me))))))))
+           (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+When do you say that you will pay me ?
+1 4 # When say
+2 4 # do say
+3 4 # you say
+4 -1 # say *TOP*
+5 8 # that pay
+6 8 # you pay
+7 8 # will pay
+8 4 # pay say
+9 8 # me pay
+10 4 # ? say
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Cathain a deirir a dh\xEDolfir m\xE9 ?
+when aL you-say aL you-will-pay me ?
+
+1 1 # Cathain when
+2 2 # a aL
+3 3 # deirir you-say
+4 4 # a aL
+5 5 # dh\xEDolfir you-will-pay
+6 6 # m\xE9 me
+7 7 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+when aL you-say aL you-will-pay me ?
+When do you say that you will pay me ?
+
+1 1 # when When
+2 0 # aL NULL
+3 3,4 # you-say you,say
+ 3.1 3 # you you
+ 3.2 4 # -say say
+4 0 # aL NULL
+5 6,7,8 # you-will-pay you,will,pay
+ 5.1 6 # you you
+ 5.2 7 # -will will
+ 5.3 8 # -pay pay
+6 9 # me me
+7 10 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Cathain a deirir a dh\xEDolfir m\xE9 ?
+when aL you-say aL you-will-pay me ?
+When do you say that you will pay me ?
+
+1 3 # Cathain deirir
+2 3 # a deirir
+3 -1 # deirir *TOP*
+4 3 # a deirir
+5 3 # dh\xEDolfir deirir
+6 5 # m\xE9 dh\xEDolfir
+7 3 # ? deirir
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=26264 Url_id=2488 flag=0 cleaned=5 src_leng=7 trans_leng=9
+Chonaic Eoghan Siobh\xE1n agus Eoghna\xED Ciar\xE1n .
+saw Eoghan Siobh\xE1n and Eoghna\xED Ciar\xE1n .
+Eoghan saw Siobh\xE1n , and Eoghna\xED , Ciar\xE1n .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (NNP Eoghan)) (VP (VBD saw) (NP (ADJP (JJ Siobh\xE1n) (, ,) (CC and) (JJ Eoghna\xED) (, ,)) (NNS Ciar\xE1n))) (. .))
+
+(S+saw (NP+Eoghan (NNP Eoghan))
+       (VP+saw (VBD saw)
+               (NP+Ciar\xE1n (ADJP+Eoghna\xED (JJ Siobh\xE1n)
+                                              (, ,)
+                                              (CC and)
+                                              (JJ Eoghna\xED)
+                                              (, ,))
+                             (NNS Ciar\xE1n)))
+       (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Eoghan saw Siobh\xE1n , and Eoghna\xED , Ciar\xE1n .
+1 2 # Eoghan saw
+2 -1 # saw *TOP*
+3 6 # Siobh\xE1n Eoghna\xED
+4 6 # , Eoghna\xED
+5 6 # and Eoghna\xED
+6 8 # Eoghna\xED Ciar\xE1n
+7 6 # , Eoghna\xED
+8 2 # Ciar\xE1n saw
+9 2 # . saw
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Chonaic Eoghan Siobh\xE1n agus Eoghna\xED Ciar\xE1n .
+saw Eoghan Siobh\xE1n and Eoghna\xED Ciar\xE1n .
+
+1 1 # Chonaic saw
+2 2 # Eoghan Eoghan
+3 3 # Siobh\xE1n Siobh\xE1n
+4 4 # agus and
+5 5 # Eoghna\xED Eoghna\xED
+6 6 # Ciar\xE1n Ciar\xE1n
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+saw Eoghan Siobh\xE1n and Eoghna\xED Ciar\xE1n .
+Eoghan saw Siobh\xE1n , and Eoghna\xED , Ciar\xE1n .
+
+1 2 # saw saw
+2 1 # Eoghan Eoghan
+3 3 # Siobh\xE1n Siobh\xE1n
+4 5 # and and
+5 6 # Eoghna\xED Eoghna\xED
+6 8 # Ciar\xE1n Ciar\xE1n
+7 9 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Chonaic Eoghan Siobh\xE1n agus Eoghna\xED Ciar\xE1n .
+saw Eoghan Siobh\xE1n and Eoghna\xED Ciar\xE1n .
+Eoghan saw Siobh\xE1n , and Eoghna\xED , Ciar\xE1n .
+
+1 -1 # Chonaic *TOP*
+2 1 # Eoghan Chonaic
+3 5 # Siobh\xE1n Eoghna\xED
+4 5 # agus Eoghna\xED
+5 6 # Eoghna\xED Ciar\xE1n
+6 1 # Ciar\xE1n Chonaic
+7 1 # . Chonaic
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=27434 Url_id=2608 flag=0 cleaned=3 src_leng=7 trans_leng=7
+Chuirf-inn isteach ar an phost sin .
+put-COND.1SG in on the job that .
+I would apply for that job .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (MD would) (VP (VB apply) (PP (IN for) (NP (DT that) (NN job))))) (. .))
+
+(S+apply (NP+I (PRP I))
+         (VP+apply (MD would)
+                   (VP+apply (VB apply)
+                             (PP+for (IN for)
+                                     (NP+job (DT that)
+                                             (NN job)))))
+         (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I would apply for that job .
+1 3 # I apply
+2 3 # would apply
+3 -1 # apply *TOP*
+4 3 # for apply
+5 6 # that job
+6 4 # job for
+7 3 # . apply
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Chuirf-inn isteach ar an phost sin .
+put-COND.1SG in on the job that .
+
+1 1 # Chuirf-inn put-COND.1SG
+ 1.1 1.1 # Chuirf put
+ 1.2 1.2 # -inn -COND.1SG
+2 2 # isteach in
+3 3 # ar on
+4 4 # an the
+5 5 # phost job
+6 6 # sin that
+7 7 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+put-COND.1SG in on the job that .
+I would apply for that job .
+
+1 1 # put-COND.1SG I
+ 1.1 0 # put NULL
+ 1.2 1 # -COND.1SG I
+2 0 # in NULL
+3 0 # on NULL
+4 0 # the NULL
+5 6 # job job
+6 5 # that that
+7 7 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Chuirf-inn isteach ar an phost sin .
+put-COND.1SG in on the job that .
+I would apply for that job .
+
+1 -2 # Chuirf-inn NULL
+2 -2 # isteach NULL
+3 -2 # ar NULL
+4 -2 # an NULL
+5 -2 # phost NULL
+6 5 # sin phost
+7 -2 # . NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=29739 Url_id=2831 flag=0 cleaned=3 src_leng=4 trans_leng=6
+Cheannaigh siad teach ?
+bought they house ?
+Did they buy a house ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SQ (VBD Did) (NP (PRP they)) (VP (VB buy) (NP (DT a) (NN house))) (. ?))
+
+(SQ+buy (VBD Did)
+        (NP+they (PRP they))
+        (VP+buy (VB buy)
+                (NP+house (DT a)
+                          (NN house)))
+        (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Did they buy a house ?
+1 3 # Did buy
+2 3 # they buy
+3 -1 # buy *TOP*
+4 5 # a house
+5 3 # house buy
+6 3 # ? buy
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Cheannaigh siad teach ?
+bought they house ?
+
+1 1 # Cheannaigh bought
+2 2 # siad they
+3 3 # teach house
+4 4 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+bought they house ?
+Did they buy a house ?
+
+1 3 # bought buy
+2 2 # they they
+3 5 # house house
+4 6 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Cheannaigh siad teach ?
+bought they house ?
+Did they buy a house ?
+
+1 -1 # Cheannaigh *TOP*
+2 1 # siad Cheannaigh
+3 1 # teach Cheannaigh
+4 1 # ? Cheannaigh
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=29740 Url_id=2831 flag=0 cleaned=4 src_leng=2 trans_leng=5
+Cheannaigh .
+bought .
+Yes , They did .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (INTJ (UH Yes)) (, ,) (NP (PRP They)) (VP (VBD did)) (. .))
+
+(S+did (INTJ+Yes (UH Yes))
+       (, ,)
+       (NP+They (PRP They))
+       (VP+did (VBD did))
+       (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Yes , They did .
+1 4 # Yes did
+2 4 # , did
+3 4 # They did
+4 -1 # did *TOP*
+5 4 # . did
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Cheannaigh .
+bought .
+
+1 1 # Cheannaigh bought
+2 2 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+bought .
+Yes , They did .
+
+1 0 # bought NULL
+2 5 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Cheannaigh .
+bought .
+Yes , They did .
+
+1 -2 # Cheannaigh NULL
+2 -2 # . NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=29741 Url_id=2831 flag=0 cleaned=5 src_leng=3 trans_leng=6
+N\xEDor cheannaigh .
+NEG-PAST bought .
+No , They did n't .
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (INTJ (UH No)) (, ,) (NP (PRP They)) (VP (VBD did) (RB n't)) (. .))
+
+(S+did (INTJ+No (UH No))
+       (, ,)
+       (NP+They (PRP They))
+       (VP+did (VBD did)
+               (RB n't))
+       (. .))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+No , They did n't .
+1 4 # No did
+2 4 # , did
+3 4 # They did
+4 -1 # did *TOP*
+5 4 # n't did
+6 4 # . did
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+N\xEDor cheannaigh .
+NEG-PAST bought .
+
+1 1 # N\xEDor NEG-PAST
+2 2 # cheannaigh bought
+3 3 # . .
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+NEG-PAST bought .
+No , They did n't .
+
+1 5 # NEG-PAST n't
+ 1.1 5 # NEG n't
+ 1.2 0 # -PAST NULL
+2 0 # bought NULL
+3 6 # . .
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+N\xEDor cheannaigh .
+NEG-PAST bought .
+No , They did n't .
+
+1 -2 # N\xEDor NULL
+2 -2 # cheannaigh NULL
+3 -2 # . NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=30781 Url_id=2950 flag=0 cleaned=1 src_leng=3 trans_leng=4
+hata an fhir
+hat the man-GEN
+the man 's hat
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(NP (NP (DT the) (NN man) (POS 's)) (NN hat))
+
+(NP+hat (NP+'s (DT the)
+               (NN man)
+               (POS 's))
+        (NN hat))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+the man 's hat
+1 3 # the 's
+2 3 # man 's
+3 4 # 's hat
+4 -1 # hat *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+hata an fhir
+hat the man-GEN
+
+1 1 # hata hat
+2 2 # an the
+3 3 # fhir man-GEN
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+hat the man-GEN
+the man 's hat
+
+1 4 # hat hat
+2 1 # the the
+3 2 # man-GEN man
+ 3.1 2 # man man
+ 3.2 0 # -GEN NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+hata an fhir
+hat the man-GEN
+the man 's hat
+
+1 -1 # hata *TOP*
+2 1 # an hata
+3 1 # fhir hata
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=30782 Url_id=2950 flag=0 cleaned=0 src_leng=4 trans_leng=8
+hata fhear an t\xED
+hat man the house-GEN
+the hat of the man of the house
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(NP (NP (DT the) (NN hat)) (PP (IN of) (NP (NP (DT the) (NN man)) (PP (IN of) (NP (DT the) (NNP house))))))
+
+(NP+hat (NP+hat (DT the)
+                (NN hat))
+        (PP+of (IN of)
+               (NP+man (NP+man (DT the)
+                               (NN man))
+                       (PP+of (IN of)
+                              (NP+house (DT the)
+                                        (NNP house))))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+the hat of the man of the house
+1 2 # the hat
+2 -1 # hat *TOP*
+3 2 # of hat
+4 5 # the man
+5 3 # man of
+6 5 # of man
+7 8 # the house
+8 6 # house of
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+hata fhear an t\xED
+hat man the house-GEN
+
+1 1 # hata hat
+2 2 # fhear man
+3 3 # an the
+4 4 # t\xED house-GEN
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+hat man the house-GEN
+the hat of the man of the house
+
+1 2 # hat hat
+2 5 # man man
+3 1 # the the
+4 8 # house-GEN house
+ 4.1 8 # house house
+ 4.2 0 # -GEN NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+hata fhear an t\xED
+hat man the house-GEN
+the hat of the man of the house
+
+1 -1 # hata *TOP*
+2 1 # fhear hata
+3 1 # an hata
+4 2 # t\xED fhear
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=37234 Url_id=3424 flag=0 cleaned=3 src_leng=6 trans_leng=6
+C\xE9n bhean a ph\xF3sfadh s\xE9 ?
+Which woman that would-marry he ?
+Which woman would he marry ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SBARQ (WHNP (WDT Which) (NN woman)) (SQ (MD would) (NP (PRP he)) (VP (VB marry))) (. ?))
+
+(SBARQ+marry (WHNP+woman (WDT Which)
+                         (NN woman))
+             (SQ+marry (MD would)
+                       (NP+he (PRP he))
+                       (VP+marry (VB marry)))
+             (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Which woman would he marry ?
+1 2 # Which woman
+2 5 # woman marry
+3 5 # would marry
+4 5 # he marry
+5 -1 # marry *TOP*
+6 5 # ? marry
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+C\xE9n bhean a ph\xF3sfadh s\xE9 ?
+Which woman that would-marry he ?
+
+1 1 # C\xE9n Which
+2 2 # bhean woman
+3 3 # a that
+4 4 # ph\xF3sfadh would-marry
+5 5 # s\xE9 he
+6 6 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Which woman that would-marry he ?
+Which woman would he marry ?
+
+1 1 # Which Which
+2 2 # woman woman
+3 0 # that NULL
+4 3,5 # would-marry would,marry
+ 4.1 3 # would would
+ 4.2 5 # -marry marry
+5 4 # he he
+6 6 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+C\xE9n bhean a ph\xF3sfadh s\xE9 ?
+Which woman that would-marry he ?
+Which woman would he marry ?
+
+1 2 # C\xE9n bhean
+2 4 # bhean ph\xF3sfadh
+3 4 # a ph\xF3sfadh
+4 -1 # ph\xF3sfadh *TOP*
+5 4 # s\xE9 ph\xF3sfadh
+6 4 # ? ph\xF3sfadh
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=37724 Url_id=3484 flag=0 cleaned=0 src_leng=4 trans_leng=4
+T\xE1 an t-url\xE1r fuar
+Be the floor cold
+The floor is cold
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (DT The) (NN floor)) (VP (VBZ is) (ADJP (JJ cold))))
+
+(S+cold (NP+floor (DT The)
+                  (NN floor))
+        (VP+cold (VBZ is)
+                 (ADJP-PRD+cold (JJ cold))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+The floor is cold
+1 2 # The floor
+2 4 # floor cold
+3 4 # is cold
+4 -1 # cold *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+T\xE1 an t-url\xE1r fuar
+Be the floor cold
+
+1 1 # T\xE1 Be
+2 2 # an the
+3 3 # t-url\xE1r floor
+ 3.1 0 # t NULL
+ 3.2 0 # -url\xE1r NULL
+4 4 # fuar cold
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Be the floor cold
+The floor is cold
+
+1 3 # Be is
+2 1 # the The
+3 2 # floor floor
+4 4 # cold cold
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+T\xE1 an t-url\xE1r fuar
+Be the floor cold
+The floor is cold
+
+1 4 # T\xE1 fuar
+2 3 # an t-url\xE1r
+3 4 # t-url\xE1r fuar
+4 -1 # fuar *TOP*
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=37729 Url_id=3484 flag=0 cleaned=0 src_leng=6 trans_leng=5
+Started mise ag an scoil seo
+Started me -emph at this school
+I started at this school
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP I)) (VP (VBN started) (PP (IN at) (NP (DT this) (NN school)))))
+
+(S+started (NP+I (PRP I))
+           (VP+started (VBN started)
+                       (PP+at (IN at)
+                              (NP+school (DT this)
+                                         (NN school)))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+I started at this school
+1 2 # I started
+2 -1 # started *TOP*
+3 2 # at started
+4 5 # this school
+5 3 # school at
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Started mise ag an scoil seo
+Started me -emph at this school
+
+1 1 # Started Started
+2 2 # mise me
+3 3 # ag -emph
+4 4 # an at
+5 5 # scoil this
+6 6 # seo school
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Started me -emph at this school
+I started at this school
+
+1 2 # Started started
+2 0 # me NULL
+3 0 # -emph NULL
+ 3.1 0 #  NULL
+ 3.2 0 # -emph NULL
+4 3 # at at
+5 4 # this this
+6 5 # school school
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Started mise ag an scoil seo
+Started me -emph at this school
+I started at this school
+
+1 -1 # Started *TOP*
+2 1 # mise Started
+3 1 # ag Started
+4 1 # an Started
+5 6 # scoil seo
+6 4 # seo an
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=37730 Url_id=3484 flag=0 cleaned=0 src_leng=3 trans_leng=4
+Is docht\xFAir \xE9
+Is doctor him
+He is a doctor
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBZ is) (NP (DT a) (NN doctor))))
+
+(S+doctor (NP+He (PRP He))
+          (VP+doctor (VBZ is)
+                     (NP-PRD+doctor (DT a)
+                                    (NN doctor))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He is a doctor
+1 4 # He doctor
+2 4 # is doctor
+3 4 # a doctor
+4 -1 # doctor *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Is docht\xFAir \xE9
+Is doctor him
+
+1 1 # Is Is
+2 2 # docht\xFAir doctor
+3 3 # \xE9 him
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Is doctor him
+He is a doctor
+
+1 2 # Is is
+2 4 # doctor doctor
+3 0 # him NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Is docht\xFAir \xE9
+Is doctor him
+He is a doctor
+
+1 2 # Is docht\xFAir
+2 -1 # docht\xFAir *TOP*
+3 2 # \xE9 docht\xFAir
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=37731 Url_id=3484 flag=0 cleaned=0 src_leng=3 trans_leng=4
+T\xE1 s\xE9 docht\xFAir
+Is he doctor
+He is a doctor
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP He)) (VP (VBZ is) (NP (DT a) (NN doctor))))
+
+(S+doctor (NP+He (PRP He))
+          (VP+doctor (VBZ is)
+                     (NP-PRD+doctor (DT a)
+                                    (NN doctor))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+He is a doctor
+1 4 # He doctor
+2 4 # is doctor
+3 4 # a doctor
+4 -1 # doctor *TOP*
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+T\xE1 s\xE9 docht\xFAir
+Is he doctor
+
+1 1 # T\xE1 Is
+2 2 # s\xE9 he
+3 3 # docht\xFAir doctor
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Is he doctor
+He is a doctor
+
+1 2 # Is is
+2 1 # he He
+3 4 # doctor doctor
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+T\xE1 s\xE9 docht\xFAir
+Is he doctor
+He is a doctor
+
+1 3 # T\xE1 docht\xFAir
+2 3 # s\xE9 docht\xFAir
+3 -1 # docht\xFAir *TOP*
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=37737 Url_id=3484 flag=0 cleaned=3 src_leng=6 trans_leng=5
+An maith le tusa bl\xE1th ?
+Be good with you flower ?
+Do you like flowers ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SQ (VBP Do) (NP (PRP you)) (VP (VB like) (NP (NNS flowers))) (. ?))
+
+(SQ+like (VBP Do)
+         (NP+you (PRP you))
+         (VP+like (VB like)
+                  (NP+flowers (NNS flowers)))
+         (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Do you like flowers ?
+1 3 # Do like
+2 3 # you like
+3 -1 # like *TOP*
+4 3 # flowers like
+5 3 # ? like
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+An maith le tusa bl\xE1th ?
+Be good with you flower ?
+
+1 1 # An Be
+2 2 # maith good
+3 3 # le with
+4 4 # tusa you
+5 5 # bl\xE1th flower
+6 6 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Be good with you flower ?
+Do you like flowers ?
+
+1 0 # Be NULL
+2 0 # good NULL
+3 0 # with NULL
+4 2 # you you
+5 4 # flower flowers
+6 5 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+An maith le tusa bl\xE1th ?
+Be good with you flower ?
+Do you like flowers ?
+
+1 -2 # An NULL
+2 -2 # maith NULL
+3 -2 # le NULL
+4 -2 # tusa NULL
+5 -2 # bl\xE1th NULL
+6 -2 # ? NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=37739 Url_id=3484 flag=0 cleaned=0 src_leng=6 trans_leng=6
+T\xE1 mama\xED agus daid\xED ag iad
+Be mummy and daddy at them
+They have a mummy and daddy
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(S (NP (PRP They)) (VP (VBP have) (NP (DT a) (NN mummy) (CC and) (NN daddy))))
+
+(S+have (NP+They (PRP They))
+        (VP+have (VBP have)
+                 (NP+daddy (DT a)
+                           (NN mummy)
+                           (CC and)
+                           (NN daddy))))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+They have a mummy and daddy
+1 2 # They have
+2 -1 # have *TOP*
+3 6 # a daddy
+4 6 # mummy daddy
+5 6 # and daddy
+6 2 # daddy have
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+T\xE1 mama\xED agus daid\xED ag iad
+Be mummy and daddy at them
+
+1 1 # T\xE1 Be
+2 2 # mama\xED mummy
+3 3 # agus and
+4 4 # daid\xED daddy
+5 5 # ag at
+6 6 # iad them
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Be mummy and daddy at them
+They have a mummy and daddy
+
+1 0 # Be NULL
+2 4 # mummy mummy
+3 5 # and and
+4 6 # daddy daddy
+5 0 # at NULL
+6 0 # them NULL
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+T\xE1 mama\xED agus daid\xED ag iad
+Be mummy and daddy at them
+They have a mummy and daddy
+
+1 -2 # T\xE1 NULL
+2 4 # mama\xED daid\xED
+3 4 # agus daid\xED
+4 -2 # daid\xED NULL
+5 -2 # ag NULL
+6 -2 # iad NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
+
+###########################################################
+Igt_id=37740 Url_id=3484 flag=0 cleaned=5 src_leng=5 trans_leng=5
+Ar mhaith leat ... ?
+Q good with you ?
+Do you like ... ?
+
+######## Q1: IGT is clean? Answer: 
+
+
+############################## Q2: English parse tree 
+(SQ (VBP Do) (NP (PRP you)) (VP (VB like) (: ...)) (. ?))
+
+(SQ+like (VBP Do)
+         (NP+you (PRP you))
+         (VP+like (VB like)
+                  (: ...))
+         (. ?))
+
+
+###### Q2: English parse tree is correct? Answer: 
+
+
+
+###############################  Q3: English DS 
+Do you like ... ?
+1 3 # Do like
+2 3 # you like
+3 -1 # like *TOP*
+4 3 # ... like
+5 3 # ? like
+
+
+########  Q3: English DS is correct? Answer: 
+
+
+
+#######################  Q4: src and gloss alignment
+Ar mhaith leat ... ?
+Q good with you ?
+
+1 1 # Ar Q
+2 2 # mhaith good
+3 3 # leat with
+4 4 # ... you
+5 5 # ? ?
+######## Q4: src and gloss alignment is correct? Answer: 
+
+
+
+######################### Q5: gloss and translation alignment
+Q good with you ?
+Do you like ... ?
+
+1 0 # Q NULL
+2 0 # good NULL
+3 0 # with NULL
+4 2 # you you
+5 5 # ? ?
+
+
+######## Q5: gloss and translation alignment is correct? Answer: 
+
+
+############################# Q6: src DS
+Ar mhaith leat ... ?
+Q good with you ?
+Do you like ... ?
+
+1 -2 # Ar NULL
+2 -2 # mhaith NULL
+3 -2 # leat NULL
+4 -2 # ... NULL
+5 -2 # ? NULL
+
+
+####### Q6: src DS is correct? Answer: 
+
+
+
+
