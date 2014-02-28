@@ -1,0 +1,1617 @@
+# Sentence pair (1) source length 9 target length 11 alignment score : 7.12633e-10
+next year , i 'll write a book on semantics . 
+NULL ({ }) next ({ 1 }) year ({ 2 }) write(prs) ({ 3 5 6 }) i ({ 4 }) a ({ 7 }) book ({ 8 }) on ({ 9 }) semantics ({ 10 }) . ({ 11 }) 
+# Sentence pair (2) source length 6 target length 7 alignment score : 6.7258e-12
+he has chased away dogs with it 
+NULL ({ }) there ({ 1 }) has ({ 2 }) he ({ }) with ({ 6 }) dogs ({ 3 }) chases-away ({ 4 5 7 }) 
+# Sentence pair (3) source length 6 target length 6 alignment score : 5.1828e-05
+because he loudly sings the song 
+NULL ({ 5 }) because ({ 1 }) he ({ 2 }) loud ({ 3 }) the ({ }) song ({ 4 }) sings ({ 6 }) 
+# Sentence pair (4) source length 6 target length 6 alignment score : 3.14769e-05
+because the teacher liked the novel 
+NULL ({ 5 }) because ({ 1 }) the-dat ({ 2 }) teacher ({ 3 }) the-nom ({ }) novel ({ 4 }) liked ({ 6 }) 
+# Sentence pair (5) source length 9 target length 11 alignment score : 1.92223e-13
+due to the shock , his hair stood on end . 
+NULL ({ 3 }) him-dat ({ 1 }) stood ({ 5 }) with ({ 2 }) fright ({ 4 6 }) the ({ }) hairs ({ 7 }) to ({ 8 }) mountain ({ 9 10 }) . ({ 11 }) 
+# Sentence pair (6) source length 6 target length 6 alignment score : 0.000423425
+since i seldom pet the cat 
+NULL ({ }) since ({ 1 }) i ({ 2 }) seldom ({ 3 4 }) the ({ 5 }) cat ({ }) pet ({ 6 }) 
+# Sentence pair (7) source length 8 target length 7 alignment score : 0.000110556
+i ran this road two miles . 
+NULL ({ }) i-nom ({ 1 }) run-pst ({ 2 }) two ({ }) miles-acc ({ 3 }) the ({ }) street-acc ({ 4 5 }) along ({ 6 }) . ({ 7 }) 
+# Sentence pair (8) source length 6 target length 5 alignment score : 0.000699498
+the petition of the docent 
+NULL ({ }) the ({ 1 }) petition ({ 2 }) of-the.gen.sg ({ 3 }) or ({ }) of-the.gen.pl ({ 4 }) docent.msc.gen.(sg/pl) ({ 5 }) 
+# Sentence pair (9) source length 8 target length 8 alignment score : 7.79665e-14
+naked , he advised her to sleep . 
+NULL ({ }) he ({ 3 }) has ({ 2 }) her ({ 4 5 }) naked ({ 1 }) to ({ 6 }) sleep ({ }) advised ({ 7 }) . ({ 8 }) 
+# Sentence pair (10) source length 5 target length 5 alignment score : 0.000448558
+you write the paper ! 
+NULL ({ }) write2sg.imp ({ 1 2 }) you ({ }) the ({ 3 }) paper ({ 4 }) ! ({ 5 }) 
+# Sentence pair (11) source length 7 target length 6 alignment score : 0.00175371
+i visited new york twice . 
+NULL ({ }) i-nom ({ 1 }) visit-pst ({ 2 }) new ({ 3 }) york-acc ({ 4 }) two ({ }) times-ac ({ 5 }) . ({ 6 }) 
+# Sentence pair (12) source length 5 target length 8 alignment score : 4.26879e-14
+there are rabbits hopping in the garden . 
+NULL ({ 6 }) in-the ({ 1 5 }) garden ({ 2 7 }) hop ({ 4 }) rabbits ({ 3 }) . ({ 8 }) 
+# Sentence pair (13) source length 8 target length 8 alignment score : 1.56384e-05
+uli went to the exhibit last week . 
+NULL ({ }) uli ({ 1 }) has ({ }) last ({ 2 }) week ({ 3 }) the ({ 4 }) exhibit ({ 5 6 }) visited ({ 7 }) . ({ 8 }) 
+# Sentence pair (14) source length 11 target length 11 alignment score : 1.33584e-08
+. . . that hans saw peter make marie swim . 
+NULL ({ }) . ({ 1 }) . ({ 2 }) . ({ 3 }) that ({ 4 }) hans ({ 5 }) peter ({ 7 }) marie ({ 8 }) swim ({ 9 }) make ({ 10 }) saw ({ 6 }) . ({ 11 }) 
+# Sentence pair (15) source length 5 target length 5 alignment score : 0.0158823
+she tears the paper . 
+NULL ({ }) `she ({ 1 }) zer-tears ({ 2 }) the ({ 3 }) paper' ({ 4 }) . ({ 5 }) 
+# Sentence pair (16) source length 4 target length 5 alignment score : 0.00175844
+the preparation of tropical wood 
+NULL ({ }) the ({ 1 }) preparation ({ 2 }) tropical-en ({ 3 }) wood-gen ({ 4 5 }) 
+# Sentence pair (17) source length 5 target length 6 alignment score : 1.22203e-05
+are you writing the paper ? 
+NULL ({ }) write ({ 1 }) you ({ 2 3 }) the ({ 4 }) paper ({ 5 }) ? ({ 6 }) 
+# Sentence pair (18) source length 8 target length 9 alignment score : 6.64276e-05
+the guards opened the gate for the attacker . 
+NULL ({ }) the ({ 1 }) guards ({ 2 }) opened ({ 3 }) the-dat ({ 4 }) attacker ({ 5 6 }) the ({ 7 }) gate ({ 8 }) . ({ 9 }) 
+# Sentence pair (19) source length 7 target length 7 alignment score : 1.17101e-06
+you shall switch on the light . 
+NULL ({ 5 }) on ({ 1 }) shall ({ 2 }) you ({ 3 }) the ({ }) light ({ 4 }) make ({ 6 }) . ({ 7 }) 
+# Sentence pair (20) source length 6 target length 6 alignment score : 6.56985e-05
+she wrote out the letter . 
+NULL ({ 4 }) she ({ 1 }) wrote ({ 2 }) the ({ }) letter ({ 3 }) out ({ 5 }) . ({ 6 }) 
+# Sentence pair (21) source length 6 target length 6 alignment score : 2.55359e-06
+will these people defend themselves ? 
+NULL ({ }) will ({ 1 }) themselves ({ 4 }) these ({ 2 }) people ({ 3 }) defend ({ 5 }) ? ({ 6 }) 
+# Sentence pair (22) source length 7 target length 7 alignment score : 8.29985e-07
+johannes bought a car to himself . 
+NULL ({ 5 }) johannes ({ 1 }) has ({ }) sich ({ 2 }) a ({ 3 }) car ({ 4 }) bought ({ 6 }) . ({ 7 }) 
+# Sentence pair (23) source length 8 target length 9 alignment score : 9.48934e-14
+we will read the scoundrel the riot act . 
+NULL ({ }) the ({ 4 }) leviticus ({ 5 }) will ({ 2 }) we ({ 1 }) the ({ 6 }) scoundrel ({ 7 8 }) read ({ 3 }) . ({ 9 }) 
+# Sentence pair (24) source length 7 target length 7 alignment score : 1.32707e-07
+...that otto always reads books about wombats 
+NULL ({ }) that ({ 1 }) otto ({ 2 }) always ({ 3 }) books ({ 5 }) about ({ 4 }) wombats ({ 6 }) reads ({ 7 }) 
+# Sentence pair (25) source length 8 target length 7 alignment score : 0.000201463
+the friends admire anna 's car . 
+NULL ({ }) the ({ 1 }) friends ({ 2 }) admire ({ 3 }) the-dat ({ }) anna ({ 4 }) her-acc ({ 5 }) car ({ 6 }) . ({ 7 }) 
+# Sentence pair (26) source length 6 target length 6 alignment score : 1.61906e-05
+the book was read naked . 
+NULL ({ }) the ({ 1 }) book ({ 2 }) was ({ 3 }) naked ({ 5 }) read ({ 4 }) . ({ 6 }) 
+# Sentence pair (27) source length 8 target length 7 alignment score : 1.06834e-06
+he asked me to help him . 
+NULL ({ }) he ({ 1 }) asked ({ 2 }) me ({ 3 }) pro ({ }) him ({ }) to ({ 4 }) help ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (28) source length 7 target length 7 alignment score : 2.41487e-08
+that book the students have n't read 
+NULL ({ }) the ({ }) book ({ 2 }) have ({ 1 }) the ({ 3 }) students ({ 4 5 }) not ({ 6 }) read ({ 7 }) 
+# Sentence pair (29) source length 7 target length 6 alignment score : 5.43103e-05
+to hans i gave the book 
+NULL ({ }) the.dat ({ 1 }) hans ({ 2 }) have ({ 3 }) i.nom ({ 4 }) the.acc ({ 5 }) book ({ 6 }) given ({ }) 
+# Sentence pair (30) source length 6 target length 6 alignment score : 0.00532085
+the man shudders at bears . 
+NULL ({ }) the ({ 1 }) man-acc ({ 2 }) shudders ({ 3 }) at ({ 4 }) bears ({ 5 }) . ({ 6 }) 
+# Sentence pair (31) source length 8 target length 9 alignment score : 1.13673e-10
+the medicine hastily prescribed to me by a doctor 
+NULL ({ }) the ({ 1 }) 1sg.dat ({ 2 }) hastily ({ 3 4 }) by ({ 7 }) a ({ 8 }) doctor ({ 9 }) prescribed ({ 5 6 }) medicine ({ }) 
+# Sentence pair (32) source length 5 target length 5 alignment score : 0.00182117
+she has two bikes . 
+NULL ({ }) 3sg/fem(nom) ({ 1 }) `have':pres3sg ({ 2 }) `two'(acc) ({ 3 }) `bike':pl.acc ({ 4 }) . ({ 5 }) 
+# Sentence pair (33) source length 5 target length 9 alignment score : 1.37206e-10
+as for books , anna can see three . 
+NULL ({ }) books ({ 1 }) sees ({ 2 3 4 5 6 }) anna ({ 7 }) three ({ 8 }) . ({ 9 }) 
+# Sentence pair (34) source length 7 target length 7 alignment score : 1.16951e-07
+when the tourist was shown the cathedral 
+NULL ({ }) when ({ 1 }) the-dat ({ 2 }) tourist ({ 3 }) the-nom ({ 6 }) cathedral ({ 7 }) shown ({ 5 }) was ({ 4 }) 
+# Sentence pair (35) source length 11 target length 9 alignment score : 9.83874e-07
+this is the ambassador that the hunters visited . 
+NULL ({ }) this ({ 1 }) is ({ 2 }) the ({ 3 }) ambassador ({ 4 }) , ({ }) that ({ 5 }) the ({ 6 }) hunters ({ 7 }) visited ({ 8 }) have ({ }) . ({ 9 }) 
+# Sentence pair (36) source length 4 target length 5 alignment score : 0.00154434
+say it to the woman 
+NULL ({ 4 }) say-it ({ 1 }) dm ({ 2 }) the:dsf ({ 3 }) woman ({ 5 }) 
+# Sentence pair (37) source length 7 target length 7 alignment score : 6.09868e-06
+since somebody tried to eat the caviar 
+NULL ({ 6 }) since ({ 1 }) the ({ }) caviar-nom ({ 2 3 }) to ({ 4 }) eat ({ 5 }) tried ({ 7 }) was ({ }) 
+# Sentence pair (38) source length 8 target length 10 alignment score : 2.25396e-13
+because we can call up the information at any time 
+NULL ({ 6 }) because ({ 1 }) we ({ 2 }) the ({ }) information ({ 3 }) always ({ 8 }) up ({ 4 5 7 }) call ({ 9 }) can ({ 10 }) 
+# Sentence pair (39) source length 6 target length 6 alignment score : 0.0002047
+because he sings the song loud 
+NULL ({ 4 }) because ({ 1 }) he ({ 2 }) the ({ }) song ({ 3 }) loud ({ 5 }) sings ({ 6 }) 
+# Sentence pair (40) source length 9 target length 9 alignment score : 4.20963e-11
+who do you think hans is talking to ? 
+NULL ({ 6 8 }) with ({ }) whodat ({ 1 }) think ({ 2 }) you ({ }) with ({ 3 }) whodat ({ 4 }) hans ({ 5 }) speaks ({ 7 }) ? ({ 9 }) 
+# Sentence pair (41) source length 7 target length 8 alignment score : 4.80971e-14
+... that otto always reads books about wombats 
+NULL ({ }) that ({ 2 }) otto ({ 3 }) books ({ 1 6 }) about ({ 5 }) wombats ({ 7 }) always ({ 4 }) reads ({ 8 }) 
+# Sentence pair (42) source length 7 target length 7 alignment score : 0.00127023
+because he helps the woman naked . 
+NULL ({ }) because ({ 1 }) he ({ 2 }) naked ({ 3 }) the ({ 4 }) woman ({ 5 }) helps ({ 6 }) . ({ 7 }) 
+# Sentence pair (43) source length 7 target length 11 alignment score : 3.02622e-16
+as for cats , every child saw five such animals . 
+NULL ({ }) every ({ 1 2 3 5 }) child ({ 6 }) has ({ 4 }) five ({ 7 }) cats ({ 8 9 }) seen ({ 10 }) . ({ 11 }) 
+# Sentence pair (44) source length 10 target length 9 alignment score : 1.55105e-08
+peter has left the pictures that he painted . 
+NULL ({ }) peter ({ 1 }) has ({ 2 }) the ({ 4 }) pictures ({ 5 }) that ({ 6 }) he ({ 7 }) painted ({ 3 }) has ({ }) left ({ 8 }) . ({ 9 }) 
+# Sentence pair (45) source length 6 target length 8 alignment score : 1.21249e-08
+the movie is said to be good . 
+NULL ({ 3 }) the ({ 1 }) movie ({ 2 }) sollen-3-sg ({ 4 5 6 }) good ({ 7 }) be ({ }) . ({ 8 }) 
+# Sentence pair (46) source length 5 target length 6 alignment score : 0.000581942
+the fate of the famous zeppelin 
+NULL ({ 4 }) the ({ 1 }) fate ({ 2 }) the-gen ({ 3 }) famous ({ 5 }) zeppelin-gen ({ 6 }) 
+# Sentence pair (47) source length 8 target length 8 alignment score : 9.39092e-09
+how did who fix the car yesterday ? 
+NULL ({ }) how ({ 1 }) has ({ 2 }) the ({ 5 }) car ({ 6 }) yesterday ({ 7 }) who ({ 3 }) fixed ({ 4 }) ? ({ 8 }) 
+# Sentence pair (48) source length 7 target length 7 alignment score : 4.0989e-06
+since they tried to repair the tractor 
+NULL ({ 6 }) since ({ 1 }) the.nom ({ 2 }) tractor ({ 3 }) to ({ 4 }) repair ({ 5 }) tried ({ 7 }) was ({ }) 
+# Sentence pair (49) source length 6 target length 7 alignment score : 5.21586e-08
+fritz has been sick since thursday . 
+NULL ({ }) fritz ({ 1 }) is ({ 2 }) since ({ 5 }) thursday ({ 3 4 }) sick ({ 6 }) . ({ 7 }) 
+# Sentence pair (50) source length 8 target length 8 alignment score : 5.33941e-05
+an outsider has never won here yet . 
+NULL ({ }) annom ({ 1 }) outsider ({ 2 3 }) won ({ 4 }) has ({ }) hier ({ 5 }) still ({ 6 }) never ({ 7 }) . ({ 8 }) 
+# Sentence pair (51) source length 9 target length 6 alignment score : 1.82797e-06
+i always wanted a bike . 
+NULL ({ }) i ({ 1 }) have ({ 2 }) me ({ }) already ({ 3 }) always ({ }) a ({ 4 }) bike ({ }) wished ({ 5 }) . ({ 6 }) 
+# Sentence pair (52) source length 7 target length 8 alignment score : 0.000184641
+peter tells a story to the children . 
+NULL ({ 6 }) peter ({ 1 }) tells ({ 2 }) the:dat ({ 3 }) children:dat ({ 4 }) an:acc ({ 5 }) story:acc ({ 7 }) . ({ 8 }) 
+# Sentence pair (53) source length 8 target length 9 alignment score : 2.27482e-06
+we believed that she wrote out the letter . 
+NULL ({ 7 }) we ({ 1 }) believed ({ 2 }) that ({ 3 }) she ({ 4 }) the ({ }) letter ({ 5 6 }) out-wrote ({ 8 }) . ({ 9 }) 
+# Sentence pair (54) source length 8 target length 7 alignment score : 1.14888e-05
+peter worked on a small table . 
+NULL ({ }) peter ({ 1 }) has ({ 2 }) on ({ 3 }) a ({ 4 }) small ({ 5 }) table ({ }) worked ({ 6 }) . ({ 7 }) 
+# Sentence pair (55) source length 6 target length 6 alignment score : 0.00474597
+will these people defend themselves ? 
+NULL ({ }) will ({ 1 }) these ({ 2 }) people ({ 3 }) themselves ({ 4 }) defend ({ 5 }) ? ({ 6 }) 
+# Sentence pair (56) source length 7 target length 8 alignment score : 1.33165e-09
+the book is to be read naked . 
+NULL ({ }) the ({ 1 }) book ({ 2 }) is ({ 3 }) naked ({ 5 7 }) to ({ 4 }) read ({ 6 }) . ({ 8 }) 
+# Sentence pair (57) source length 3 target length 5 alignment score : 1.8005e-05
+no hard piece of wood 
+NULL ({ }) no ({ 1 }) hard-casstrong ({ 2 3 }) wood ({ 4 5 }) 
+# Sentence pair (58) source length 7 target length 7 alignment score : 0.00260449
+even the janitor gave a speech . 
+NULL ({ }) even ({ 1 }) the ({ 2 }) janitor ({ 3 }) held ({ 4 }) a ({ 5 }) speech ({ 6 }) . ({ 7 }) 
+# Sentence pair (59) source length 8 target length 8 alignment score : 1.48517e-06
+when the man gave the girl the basket 
+NULL ({ 7 }) when ({ 1 }) the-nom ({ 2 }) man ({ 3 }) the-dat ({ }) girl ({ 4 }) the-acc ({ 5 }) basket ({ 6 }) gave ({ 8 }) 
+# Sentence pair (60) source length 8 target length 9 alignment score : 6.53252e-05
+she is never allowed to invite just anybody . 
+NULL ({ }) she ({ 1 }) may ({ 2 }) never ({ 3 }) just ({ 4 }) only ({ 5 }) irgend-one ({ 6 7 }) invite ({ 8 }) . ({ 9 }) 
+# Sentence pair (61) source length 8 target length 8 alignment score : 3.23545e-06
+the mother braided her daughter 's hair . 
+NULL ({ }) the ({ 1 }) mother ({ 2 }) braided ({ 3 }) the.dat ({ 4 }) daughter ({ 5 6 }) the ({ }) hairs ({ 7 }) . ({ 8 }) 
+# Sentence pair (62) source length 8 target length 8 alignment score : 6.09239e-07
+yesterday , joachim ate a tasty bratwurst . 
+NULL ({ }) yesterday ({ 1 }) has ({ 2 }) joachim ({ 3 }) a ({ 5 }) tasty ({ 4 }) bratwurst ({ 6 }) eaten ({ 7 }) . ({ 8 }) 
+# Sentence pair (63) source length 5 target length 5 alignment score : 0.00166918
+who did everyone see ? 
+NULL ({ }) whom ({ 1 }) has ({ 2 }) everyone ({ 3 }) seen ({ 4 }) ? ({ 5 }) 
+# Sentence pair (64) source length 8 target length 8 alignment score : 0.000214198
+one can work well with this device . 
+NULL ({ }) it ({ 1 }) works ({ 2 }) sich ({ 3 }) well ({ 4 }) with ({ 5 }) this ({ 6 }) device ({ 7 }) . ({ 8 }) 
+# Sentence pair (65) source length 8 target length 7 alignment score : 2.38245e-07
+swimming in the sea was fun . 
+NULL ({ 3 }) in-the ({ 1 2 }) sea ({ 4 }) to ({ }) swim ({ 5 }) has ({ }) fun ({ }) made ({ 6 }) . ({ 7 }) 
+# Sentence pair (66) source length 7 target length 6 alignment score : 0.000330075
+i do n't read books . 
+NULL ({ }) i ({ 1 }) do ({ 2 }) not ({ 3 }) with.pleasure ({ 4 }) books ({ 5 }) read ({ }) . ({ 6 }) 
+# Sentence pair (67) source length 5 target length 5 alignment score : 9.36306e-08
+since people danced here yesterday 
+NULL ({ }) since ({ 1 }) yesterday ({ 5 }) here ({ 4 }) danced ({ 2 3 }) was ({ }) 
+# Sentence pair (68) source length 8 target length 7 alignment score : 3.37368e-08
+the ball was thrown far out . 
+NULL ({ }) far ({ 1 }) out ({ }) is ({ }) the ({ }) ball ({ 2 }) thrown ({ 3 4 5 }) got ({ 6 }) . ({ 7 }) 
+# Sentence pair (69) source length 6 target length 9 alignment score : 1.29669e-09
+as for rabbits , anna could see some . 
+NULL ({ }) rabbits ({ 1 2 3 }) has ({ 4 }) anna ({ 5 }) some ({ 6 }) seen ({ 7 8 }) . ({ 9 }) 
+# Sentence pair (70) source length 8 target length 9 alignment score : 9.1284e-10
+since two of the linguists had something against it 
+NULL ({ 4 }) since ({ 1 }) two ({ 2 }) linguists ({ 3 5 }) prt ({ }) prt ({ 6 }) something ({ 7 }) against ({ 8 }) have ({ 9 }) 
+# Sentence pair (71) source length 7 target length 7 alignment score : 3.31873e-07
+because he sings the song too loud 
+NULL ({ 4 }) because ({ 1 }) he ({ 2 }) the ({ }) song ({ 3 }) too ({ 6 }) loud ({ 5 }) sings ({ 7 }) 
+# Sentence pair (72) source length 6 target length 7 alignment score : 0.000166794
+three apples per y were rotten . 
+NULL ({ }) je ({ 1 }) three ({ 2 }) apples ({ 3 }) were ({ 4 }) rotten ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (73) source length 6 target length 6 alignment score : 9.87043e-05
+when he taught me the rhyme 
+NULL ({ 5 }) when ({ 1 }) he ({ 2 }) 1sg.acc ({ 3 }) the.acc ({ }) rhyme ({ 4 }) teached ({ 6 }) 
+# Sentence pair (74) source length 12 target length 10 alignment score : 4.58524e-10
+yesterday a man visited mary who looked like my uncle 
+NULL ({ }) yesterday ({ 1 }) has ({ }) a ({ 2 }) man-nom ({ 3 }) the ({ }) mary ({ 5 }) visited ({ 4 }) who-masc ({ 6 7 }) like ({ 8 }) my ({ }) uncle ({ 9 }) looked ({ 10 }) 
+# Sentence pair (75) source length 8 target length 9 alignment score : 2.27482e-06
+we believed that she wrote out the letter . 
+NULL ({ 7 }) we ({ 1 }) believed ({ 2 }) that ({ 3 }) she ({ 4 }) the ({ }) letter ({ 5 6 }) out-wrote ({ 8 }) . ({ 9 }) 
+# Sentence pair (76) source length 7 target length 6 alignment score : 5.38294e-05
+i gave the book to hans 
+NULL ({ }) i.nom ({ 1 }) have ({ 2 }) the.acc ({ 3 }) book ({ 4 }) the.dat ({ 5 }) hans ({ 6 }) given ({ }) 
+# Sentence pair (77) source length 9 target length 11 alignment score : 1.11308e-21
+as for cars , he has not yet bought one . 
+NULL ({ }) a ({ }) car ({ }) bought ({ 4 }) has ({ 6 }) he ({ 5 }) himself ({ 7 }) yet ({ 8 }) none ({ 1 2 3 9 10 }) . ({ 11 }) 
+# Sentence pair (78) source length 9 target length 8 alignment score : 6.07077e-10
+i thought that karl bought the book yesterday 
+NULL ({ }) i ({ 1 }) thought ({ 2 }) that ({ 3 }) karl ({ 4 5 }) yesterday ({ 8 }) the ({ 6 }) book ({ 7 }) bought ({ }) has ({ }) 
+# Sentence pair (79) source length 10 target length 11 alignment score : 7.89197e-09
+the hat was given to the man by the women . 
+NULL ({ 6 }) the.nom ({ 1 }) hat ({ 2 }) was ({ 3 }) the.dat ({ 4 5 }) man ({ 7 }) by ({ 8 }) the.dat ({ 9 }) women ({ 10 }) given ({ }) . ({ 11 }) 
+# Sentence pair (80) source length 5 target length 5 alignment score : 0.0273161
+chris admired his brother . 
+NULL ({ }) chris ({ 1 }) admired ({ 2 }) his ({ 3 }) brother ({ 4 }) . ({ 5 }) 
+# Sentence pair (81) source length 7 target length 8 alignment score : 8.40386e-07
+when peter showed the cathedral to the tourist 
+NULL ({ 7 }) when ({ 1 }) peter ({ 2 }) the-dat ({ }) tourist ({ 3 }) the-acc ({ 4 }) cathedral ({ 5 6 }) showed ({ 8 }) 
+# Sentence pair (82) source length 7 target length 9 alignment score : 1.48814e-08
+the doctor withdrew some of paula 's blood . 
+NULL ({ }) the ({ 1 }) doctor ({ 2 }) has ({ }) paula ({ 3 }) blood ({ 4 5 6 }) withdrawn ({ 7 8 }) . ({ 9 }) 
+# Sentence pair (83) source length 8 target length 9 alignment score : 2.07962e-05
+the guards opened the gate for the attacker . 
+NULL ({ }) the ({ 1 }) guards ({ 2 }) opened ({ 3 }) the.dat ({ 4 }) attacker ({ 5 6 }) the ({ 7 }) gate ({ 8 }) . ({ 9 }) 
+# Sentence pair (84) source length 5 target length 5 alignment score : 0.00747762
+your heart is breaking . 
+NULL ({ }) you-dat ({ 1 }) breaks ({ 2 }) the-nom ({ 3 }) heart ({ 4 }) . ({ 5 }) 
+# Sentence pair (85) source length 4 target length 5 alignment score : 0.00220611
+a chess-board to take along 
+NULL ({ }) a ({ 1 }) chess-board ({ 2 }) to.the(neuter) ({ 3 4 }) take.along ({ 5 }) 
+# Sentence pair (86) source length 8 target length 9 alignment score : 3.4335e-08
+did the man give the woman the book ? 
+NULL ({ 4 }) gave ({ 1 }) the ({ 2 }) man ({ 3 }) the ({ 5 }) woman ({ 6 }) the ({ 7 }) book ({ 8 }) ? ({ 9 }) 
+# Sentence pair (87) source length 8 target length 8 alignment score : 6.09239e-07
+yesterday , joachim ate a tasty bratwurst . 
+NULL ({ }) yesterday ({ 1 }) has ({ 2 }) joachim ({ 3 }) a ({ 5 }) tasty ({ 4 }) bratwurst ({ 6 }) eaten ({ 7 }) . ({ 8 }) 
+# Sentence pair (88) source length 8 target length 7 alignment score : 1.28983e-06
+the driver had the tractor repaired . 
+NULL ({ 4 }) the.nom ({ 1 }) driver ({ 2 }) has ({ }) the.acc ({ }) tractor ({ 3 }) repair ({ 5 }) let ({ 6 }) . ({ 7 }) 
+# Sentence pair (89) source length 7 target length 7 alignment score : 0.00576516
+we believe that she arrives today . 
+NULL ({ }) we ({ 1 }) believe ({ 2 }) that ({ 3 }) she ({ 4 }) today ({ 5 }) arrives ({ 6 }) . ({ 7 }) 
+# Sentence pair (90) source length 8 target length 8 alignment score : 6.06604e-06
+who does everyone believe that karl saw ? 
+NULL ({ }) who ({ 1 }) believes ({ 2 }) everyone ({ 3 4 }) that ({ 5 }) karl ({ 6 }) seen ({ 7 }) has ({ }) ? ({ 8 }) 
+# Sentence pair (91) source length 5 target length 5 alignment score : 2.81358e-06
+the book written by fritz 
+NULL ({ }) the ({ 1 }) by ({ 4 }) fritz ({ 5 }) written ({ 3 }) book ({ 2 }) 
+# Sentence pair (92) source length 8 target length 9 alignment score : 1.80061e-07
+because the doctor exposed the patient to a test 
+NULL ({ 5 }) because ({ 1 }) the.nom ({ 2 }) doctor ({ 3 }) the.acc ({ }) patient ({ 4 }) a.dat ({ 6 7 }) test ({ 8 }) exposed ({ 9 }) 
+# Sentence pair (93) source length 6 target length 6 alignment score : 0.00217971
+this book , martin wrote . 
+NULL ({ }) this ({ 1 }) book ({ 2 }) has ({ 3 }) martin ({ 4 }) written ({ 5 }) . ({ 6 }) 
+# Sentence pair (94) source length 6 target length 6 alignment score : 6.94835e-05
+when he taught me the rhyme 
+NULL ({ 5 }) when ({ 1 }) he ({ 2 }) 1sg-acc ({ 3 }) the-acc ({ }) rhyme ({ 4 }) teached ({ 6 }) 
+# Sentence pair (95) source length 7 target length 7 alignment score : 0.00249139
+hans kicked him in the shin . 
+NULL ({ }) hans ({ 1 }) kicked ({ 2 }) him.dat ({ 3 }) against ({ 4 }) the ({ 5 }) shin ({ 6 }) . ({ 7 }) 
+# Sentence pair (96) source length 12 target length 12 alignment score : 9.20184e-12
+after lea 's birth , wolfgang drank a beer every evening . 
+NULL ({ }) wolfgang ({ 1 }) has ({ }) after ({ 2 }) lea's ({ 3 }) birth ({ 4 }) on ({ 5 }) every ({ 10 }) evening ({ 6 7 }) a ({ 8 }) beer ({ 9 }) drunk ({ 11 }) . ({ 12 }) 
+# Sentence pair (97) source length 5 target length 5 alignment score : 0.000889008
+i slept an hour . 
+NULL ({ }) i-nom ({ 1 }) sleep-pst ({ 2 3 }) one ({ }) hour-acc ({ 4 }) . ({ 5 }) 
+# Sentence pair (98) source length 7 target length 7 alignment score : 0.00576516
+we believe that she arrives today . 
+NULL ({ }) we ({ 1 }) believe ({ 2 }) that ({ 3 }) she ({ 4 }) today ({ 5 }) arrives ({ 6 }) . ({ 7 }) 
+# Sentence pair (99) source length 7 target length 8 alignment score : 5.93904e-05
+peter takes the book from the children . 
+NULL ({ }) peter ({ 1 }) takes ({ 2 }) the-dat ({ 3 }) children-dat ({ 4 5 }) the-acc ({ 6 }) book-acc ({ 7 }) . ({ 8 }) 
+# Sentence pair (100) source length 10 target length 11 alignment score : 9.60405e-14
+john thinks that he has seen a ghost at the graveyard 
+NULL ({ 10 }) a ({ 7 }) ghost-acc ({ 8 9 }) seen ({ 11 }) thinks ({ 2 }) john ({ 1 }) that ({ 3 }) he ({ 4 }) at-the ({ 5 }) graveyard ({ 6 }) has ({ }) 
+# Sentence pair (101) source length 8 target length 9 alignment score : 1.88657e-07
+he asked me to write out the letter . 
+NULL ({ 7 }) he ({ 1 }) asked ({ 2 }) me ({ 3 }) pro ({ 4 5 }) the ({ }) letter ({ 6 }) out-to-write ({ 8 }) . ({ 9 }) 
+# Sentence pair (102) source length 8 target length 7 alignment score : 2.51617e-07
+peter has left what he painted . 
+NULL ({ }) peter ({ 1 }) has ({ 2 }) what ({ 4 }) he ({ 5 }) painted ({ 3 }) has ({ }) left ({ 6 }) . ({ 7 }) 
+# Sentence pair (103) source length 8 target length 7 alignment score : 3.13099e-09
+since children do play on the street 
+NULL ({ }) since ({ 1 }) prt ({ }) prt ({ }) children ({ 2 }) on ({ 5 }) the ({ 6 }) street ({ 3 4 }) play ({ 7 }) 
+# Sentence pair (104) source length 6 target length 6 alignment score : 0.000167315
+nora has cleaned her room . 
+NULL ({ }) (nora ({ 1 }) has ({ 2 }) her ({ }) room ({ 3 }) cleaned.) ({ 4 5 }) . ({ 6 }) 
+# Sentence pair (105) source length 6 target length 6 alignment score : 5.84419e-10
+where did everyone see who ? 
+NULL ({ }) whom ({ 5 }) has ({ 2 }) everyone ({ 3 }) where ({ 1 }) seen ({ 4 }) ? ({ 6 }) 
+# Sentence pair (106) source length 5 target length 7 alignment score : 1.46777e-07
+the man who he is a doctor 
+NULL ({ 5 }) the ({ 1 }) man ({ 2 }) c-rel ({ 3 }) doctor ({ 6 7 }) he ({ 4 }) 
+# Sentence pair (107) source length 7 target length 7 alignment score : 4.92725e-06
+the man who he was the doctor 
+NULL ({ }) the ({ 1 }) man ({ 2 }) c-rel ({ 3 }) agr ({ 5 }) the ({ 6 }) doctor ({ 7 }) he ({ 4 }) 
+# Sentence pair (108) source length 6 target length 5 alignment score : 7.468e-06
+the platypus is john . 
+NULL ({ 3 }) c ({ }) agr ({ }) the ({ 1 }) platypus ({ 2 }) john ({ 4 }) . ({ 5 }) 
+# Sentence pair (109) source length 4 target length 8 alignment score : 4.89079e-12
+the hat of the man of the house 
+NULL ({ 1 4 }) hat ({ 2 }) man ({ 5 }) the ({ 7 }) house-gen ({ 3 6 8 }) 
+# Sentence pair (110) source length 7 target length 6 alignment score : 6.21115e-05
+i am writing the sentence now 
+NULL ({ }) be-pres ({ }) i ({ 1 }) prog ({ 2 }) write ({ 3 }) the ({ 4 }) sentence-gen ({ 5 }) now ({ 6 }) 
+# Sentence pair (111) source length 3 target length 4 alignment score : 1.9131e-05
+he is a doctor 
+NULL ({ }) is ({ 2 }) he ({ 1 }) doctor ({ 3 4 }) 
+# Sentence pair (112) source length 3 target length 5 alignment score : 2.2813e-07
+he is not a fool 
+NULL ({ }) c-neg-pres ({ 1 2 3 }) fool ({ 5 }) him ({ 4 }) 
+# Sentence pair (113) source length 4 target length 5 alignment score : 1.00872e-05
+if my memory is right 
+NULL ({ }) if-c ({ 1 }) right ({ 3 }) my ({ 2 }) memory ({ 4 5 }) 
+# Sentence pair (114) source length 8 target length 6 alignment score : 8.93396e-08
+the man certainly saw a starship 
+NULL ({ 1 }) saw ({ }) , ({ 2 }) certainly ({ 3 }) , ({ 4 }) the ({ }) man ({ }) the ({ }) starship ({ 5 6 }) 
+# Sentence pair (115) source length 8 target length 8 alignment score : 5.84324e-06
+the captain fired the phasers at the klingons 
+NULL ({ }) fired ({ 1 }) the ({ }) captain ({ 2 3 }) the ({ 4 }) phasers ({ 5 }) on ({ 6 }) the ({ 7 }) klingons ({ 8 }) 
+# Sentence pair (116) source length 4 target length 6 alignment score : 2.2983e-06
+did they buy a house ? 
+NULL ({ }) bought ({ 1 2 }) they ({ 3 }) house ({ 4 5 }) ? ({ 6 }) 
+# Sentence pair (117) source length 4 target length 4 alignment score : 0.00078979
+the floor is cold 
+NULL ({ }) be ({ 1 }) the ({ }) floor ({ 2 3 }) cold ({ 4 }) 
+# Sentence pair (118) source length 6 target length 5 alignment score : 0.000539764
+i am writing the letter 
+NULL ({ }) am ({ }) i ({ 1 }) ing ({ 2 }) write ({ 3 }) the ({ 4 }) letter ({ 5 }) 
+# Sentence pair (119) source length 6 target length 7 alignment score : 1.39034e-05
+the oatmeal is in the pot . 
+NULL ({ 5 }) be ({ 1 }) the ({ }) oatmeal ({ 2 }) in-the ({ 3 4 }) pot ({ 6 }) . ({ 7 }) 
+# Sentence pair (120) source length 5 target length 5 alignment score : 4.38717e-07
+she is of protestant stock 
+NULL ({ }) c ({ 2 }) of ({ 3 }) stock ({ 1 }) prostestant ({ 4 }) her ({ 5 }) 
+# Sentence pair (121) source length 6 target length 6 alignment score : 3.16693e-06
+the man kissed the pig . 
+NULL ({ }) kissed ({ 3 }) the ({ 1 }) man ({ 2 }) the ({ 4 }) pig ({ 5 }) . ({ 6 }) 
+# Sentence pair (122) source length 5 target length 6 alignment score : 0.000427535
+milo gave a dandelion to binkley 
+NULL ({ }) gave ({ 1 }) milo ({ 2 }) dandelion ({ 3 4 }) to ({ 5 }) binkley ({ 6 }) 
+# Sentence pair (123) source length 7 target length 7 alignment score : 7.31581e-05
+the subject follows the verb in irish 
+NULL ({ }) follow-pres ({ 1 }) the ({ }) subject ({ 2 3 }) the ({ 4 }) verb ({ 5 }) in ({ 6 }) irish ({ 7 }) 
+# Sentence pair (124) source length 4 target length 5 alignment score : 1.27724e-05
+it is a good day 
+NULL ({ 2 }) c ({ 1 }) day ({ 3 }) good ({ 4 }) it ({ 5 }) 
+# Sentence pair (125) source length 4 target length 5 alignment score : 2.51408e-08
+john is a big man 
+NULL ({ 2 }) c ({ 3 }) man ({ 5 }) big ({ 4 }) john ({ 1 }) 
+# Sentence pair (126) source length 7 target length 10 alignment score : 2.70394e-08
+when do you say that you will pay me ? 
+NULL ({ }) when ({ 1 }) al ({ 2 }) you-say ({ 3 4 5 6 }) al ({ 7 }) you-will-pay ({ 8 }) me ({ 9 }) ? ({ 10 }) 
+# Sentence pair (127) source length 7 target length 8 alignment score : 2.3491e-06
+i 'll have the thesis finished tomorrow . 
+NULL ({ 4 }) be-fut ({ 1 }) the ({ }) thesis ({ 2 3 }) finished ({ 5 }) at-me ({ 6 }) tomorrow ({ 7 }) . ({ 8 }) 
+# Sentence pair (128) source length 4 target length 6 alignment score : 2.26418e-08
+lieutenant commander data is a computer 
+NULL ({ 4 }) c ({ }) computer ({ 1 2 }) lieutenant-commander ({ 3 5 }) data ({ 6 }) 
+# Sentence pair (129) source length 6 target length 5 alignment score : 4.29443e-06
+commander riker is the fool 
+NULL ({ 3 }) c ({ }) agr ({ }) commander ({ 1 }) riker ({ 2 }) the ({ 4 }) fool ({ 5 }) 
+# Sentence pair (130) source length 5 target length 5 alignment score : 2.38835e-07
+it is a nice day 
+NULL ({ }) c ({ 1 }) good ({ 2 }) the ({ }) day ({ 3 4 5 }) he ({ }) 
+# Sentence pair (131) source length 5 target length 6 alignment score : 7.22367e-05
+john did not build the house 
+NULL ({ }) neg-past ({ 1 2 }) build ({ 3 }) j ({ 4 }) the ({ 5 }) house ({ 6 }) 
+# Sentence pair (132) source length 4 target length 6 alignment score : 8.2069e-10
+he is a doctor of horses 
+NULL ({ 2 }) c ({ }) doctor ({ 1 3 }) horses-gen ({ 4 5 }) him ({ 6 }) 
+# Sentence pair (133) source length 6 target length 8 alignment score : 1.4034e-07
+the man 's mother is in the hospital 
+NULL ({ 7 }) be-pres ({ 1 }) mother ({ 2 }) the ({ }) man-gen ({ 3 4 }) in-the ({ 5 6 }) hospital ({ 8 }) 
+# Sentence pair (134) source length 6 target length 5 alignment score : 0.00172067
+i started at this school 
+NULL ({ }) started ({ 1 }) me ({ }) -emph ({ 2 }) at ({ 3 }) this ({ 4 }) school ({ 5 }) 
+# Sentence pair (135) source length 3 target length 4 alignment score : 1.2751e-05
+he is a doctor 
+NULL ({ }) is ({ 2 }) doctor ({ 3 4 }) him ({ 1 }) 
+# Sentence pair (136) source length 3 target length 6 alignment score : 1.46622e-07
+no , they did n't . 
+NULL ({ }) neg-past ({ 1 }) bought ({ 2 3 4 5 }) . ({ 6 }) 
+# Sentence pair (137) source length 6 target length 8 alignment score : 1.4034e-07
+the man 's mother is in the hospital 
+NULL ({ 7 }) be-pres ({ 1 }) mother ({ 2 }) the ({ }) man-gen ({ 3 4 }) in-the ({ 5 6 }) hospital ({ 8 }) 
+# Sentence pair (138) source length 6 target length 6 alignment score : 1.12044e-07
+which woman would he marry ? 
+NULL ({ }) which ({ 1 }) woman ({ 2 }) that ({ }) would-marry ({ 3 5 }) he ({ 4 }) ? ({ 6 }) 
+# Sentence pair (139) source length 7 target length 9 alignment score : 5.61996e-08
+eoghan saw siobh\xe1n , and eoghna\xed , ciar\xe1n . 
+NULL ({ }) saw ({ 2 }) eoghan ({ 1 }) siobh\xe1n ({ 3 4 }) and ({ 5 }) eoghna\xed ({ 6 7 }) ciar\xe1n ({ 8 }) . ({ 9 }) 
+# Sentence pair (140) source length 7 target length 7 alignment score : 5.49921e-08
+peter is a linguist who shawn kissed 
+NULL ({ 2 }) c ({ 3 }) linguist ({ 4 }) c-rel ({ 5 }) kiss ({ 6 }) shawn ({ 7 }) agr ({ }) peter ({ 1 }) 
+# Sentence pair (141) source length 7 target length 6 alignment score : 6.21115e-05
+i am writing the sentence now 
+NULL ({ }) be-pres ({ }) i ({ 1 }) prog ({ 2 }) write ({ 3 }) the ({ 4 }) sentence-acc ({ 5 }) now ({ 6 }) 
+# Sentence pair (142) source length 5 target length 6 alignment score : 9.3256e-07
+i think that he is there 
+NULL ({ 5 }) think.1.s ({ 1 2 }) that ({ 3 }) be-pres ({ }) he ({ 4 }) there ({ 6 }) 
+# Sentence pair (143) source length 7 target length 7 alignment score : 8.17632e-08
+the captain fired them at the klingons 
+NULL ({ }) fired ({ 1 }) the ({ }) captain ({ 2 3 }) on ({ 5 }) the ({ 6 }) klingons ({ 7 }) them ({ 4 }) 
+# Sentence pair (144) source length 3 target length 4 alignment score : 2.99642e-06
+the man 's hat 
+NULL ({ }) hat ({ 4 }) the ({ 1 }) man-gen ({ 2 3 }) 
+# Sentence pair (145) source length 6 target length 5 alignment score : 9.85896e-06
+the man that was ill 
+NULL ({ }) the ({ 1 }) man ({ 2 }) who ({ }) was ({ 4 }) __ ({ 3 }) ill ({ 5 }) 
+# Sentence pair (146) source length 5 target length 6 alignment score : 5.38765e-08
+lieutenant commander data is a computer'14 
+NULL ({ 4 }) c ({ }) computer ({ 1 }) agr ({ 2 }) lieutenant-commander ({ 3 5 }) data ({ 6 }) 
+# Sentence pair (147) source length 6 target length 6 alignment score : 2.77839e-06
+he saw the platypus with binoculars 
+NULL ({ }) saw ({ 2 }) he ({ 1 }) the ({ 3 }) platypus ({ 4 }) with ({ 5 }) binoculars ({ 6 }) 
+# Sentence pair (148) source length 5 target length 5 alignment score : 6.65068e-08
+they are like one another 
+NULL ({ }) c ({ }) like ({ 3 }) with-3-pl-poss ({ 1 2 }) each-other ({ 4 }) them ({ 5 }) 
+# Sentence pair (149) source length 6 target length 6 alignment score : 0.000678816
+john and mary saw each other 
+NULL ({ }) saw ({ }) john ({ 1 }) and ({ 2 }) mary ({ 3 }) with-their ({ 4 5 }) other ({ 6 }) 
+# Sentence pair (150) source length 7 target length 5 alignment score : 4.77956e-07
+i was only making fun 
+NULL ({ }) neg ({ }) be-past ({ 2 }) i ({ 1 }) only ({ 3 }) prog ({ }) make ({ 4 }) fun ({ 5 }) 
+# Sentence pair (151) source length 7 target length 6 alignment score : 0.000216976
+the klingons are firing the phasers 
+NULL ({ }) be-pres ({ 1 }) the ({ }) klingons ({ 2 }) prog ({ 3 }) fire ({ 4 }) the ({ 5 }) phasers-gen ({ 6 }) 
+# Sentence pair (152) source length 5 target length 5 alignment score : 0.000767524
+abdu went to maradi . 
+NULL ({ }) abdu ({ 1 }) 3ms-perf ({ }) go-iii ({ 2 3 }) maradi ({ 4 }) . ({ 5 }) 
+# Sentence pair (153) source length 8 target length 6 alignment score : 3.38994e-06
+i did send you money . 
+NULL ({ }) indeed ({ }) 1s-perf ({ 1 }) send-vi ({ 2 }) ma-2p ({ 3 }) with ({ 4 }) money ({ 5 }) yesterday ({ }) . ({ 6 }) 
+# Sentence pair (154) source length 6 target length 8 alignment score : 1.534e-07
+abdu sat on the teacher 's chair . 
+NULL ({ 4 }) abdu ({ 1 }) 3ms-perf ({ }) sit-i ({ 2 3 }) chair-of ({ 5 6 }) teacher ({ 7 }) . ({ 8 }) 
+# Sentence pair (155) source length 7 target length 7 alignment score : 8.29169e-07
+indo lent her bike to abdu . 
+NULL ({ }) indo ({ 1 }) 3fs-perf ({ 2 }) lend-i ({ 3 4 }) ma ({ 5 }) abdu ({ 6 }) bike-of-3fs ({ }) . ({ 7 }) 
+# Sentence pair (156) source length 8 target length 14 alignment score : 1.25073e-18
+kalala is there at balki 's house where she is cutting his hair . 
+NULL ({ 10 }) kalala ({ 1 }) 3ms-be ({ 2 }) there ({ 3 4 }) balki ({ 5 }) 3fs-cont ({ 6 }) ma-3ms ({ 7 11 }) hair-cut ({ 8 9 12 13 }) . ({ 14 }) 
+# Sentence pair (157) source length 6 target length 8 alignment score : 1.2053e-05
+he put himself into frying the peanuts . 
+NULL ({ 6 }) 3ms-perf ({ 1 }) put ({ 2 }) himself ({ 3 }) fry-dn-of ({ 4 5 }) peanuts ({ 7 }) . ({ 8 }) 
+# Sentence pair (158) source length 4 target length 5 alignment score : 0.00138918
+he called the man . 
+NULL ({ 3 }) 3sm-cmpl-abs ({ 1 }) call-v-irr-c ({ 2 }) man ({ 4 }) . ({ 5 }) 
+# Sentence pair (159) source length 6 target length 7 alignment score : 1.69414e-06
+abdu is indeed washing his car . 
+NULL ({ 2 }) abdu ({ 1 }) indeed ({ 3 }) 3ms-cont ({ }) wash ({ 4 }) car-of-3ms ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (160) source length 8 target length 10 alignment score : 2.57773e-07
+i turned the boy and faced him toward here . 
+NULL ({ 3 }) 1s-perf ({ 1 }) turn-i ({ 2 }) boy ({ 4 }) 1s-perf ({ 5 }) face-vi ({ 6 7 }) 3ms ({ 8 }) here ({ 9 }) . ({ 10 }) 
+# Sentence pair (161) source length 6 target length 9 alignment score : 7.71584e-13
+some kids are throwing at indo 's dog . 
+NULL ({ }) kids ({ 1 }) 3p-cont ({ 2 3 }) throw-ii-dn-of ({ 4 7 }) dog-of ({ 5 8 }) indo ({ 6 }) . ({ 9 }) 
+# Sentence pair (162) source length 5 target length 6 alignment score : 2.09201e-06
+he did n't shoot it . 
+NULL ({ }) 3sm-cmpl-neg ({ 1 }) shoot-v-gr2-b ({ 2 3 4 }) her ({ 5 }) neg ({ }) . ({ 6 }) 
+# Sentence pair (163) source length 5 target length 5 alignment score : 0.0127951
+he left san diego . 
+NULL ({ }) 3ms-perf ({ 1 }) leave-vi ({ 2 }) san ({ 3 }) diego ({ 4 }) . ({ 5 }) 
+# Sentence pair (164) source length 7 target length 8 alignment score : 2.33901e-06
+abdu sat on the teacher 's chair . 
+NULL ({ 4 }) abdu ({ 1 }) 3ms-perf ({ }) sit-i ({ 2 }) on ({ 3 }) chair-of ({ 5 6 }) teacher ({ 7 }) . ({ 8 }) 
+# Sentence pair (165) source length 6 target length 5 alignment score : 0.0021753
+ali indeed knows abdu . 
+NULL ({ }) ali ({ 1 }) indeed ({ 2 }) 3ms-perf ({ }) know-ii ({ 3 }) abdu ({ 4 }) . ({ 5 }) 
+# Sentence pair (166) source length 7 target length 7 alignment score : 0.000264571
+indo is kicking ali 's donkey . 
+NULL ({ }) indo ({ 1 }) 3fs-cont ({ 2 }) kick-ii-vn-of ({ 3 }) ix ({ 4 }) ali ({ 5 }) donkey ({ 6 }) . ({ 7 }) 
+# Sentence pair (167) source length 7 target length 8 alignment score : 3.63232e-07
+that she finish her work suits aisha . 
+NULL ({ }) 3fs-sub ({ 1 }) finish-i ({ 2 }) work-of-3fs ({ 3 4 }) 3ms-perf ({ 5 }) suit-ii ({ 6 }) aisha ({ 7 }) . ({ 8 }) 
+# Sentence pair (168) source length 5 target length 5 alignment score : 0.00428159
+the donkey is dying . 
+NULL ({ }) donkey ({ 1 }) cont ({ 2 }) at ({ 3 }) die-dn ({ 4 }) . ({ 5 }) 
+# Sentence pair (169) source length 6 target length 7 alignment score : 4.11897e-08
+they returned inside indo 's room . 
+NULL ({ }) 3p-perf ({ 1 }) return-i ({ 2 }) inside-of ({ 3 5 }) room-of ({ 6 }) indo ({ 4 }) . ({ 7 }) 
+# Sentence pair (170) source length 5 target length 5 alignment score : 7.98764e-05
+i am eating fufu . 
+NULL ({ }) i ({ 1 }) am ({ 2 }) fufu ({ 4 }) eating ({ 3 }) . ({ 5 }) 
+# Sentence pair (171) source length 5 target length 5 alignment score : 0.00340965
+abdu went to kano . 
+NULL ({ }) abdu ({ 1 }) 3p-perf ({ 2 }) go-iii ({ 3 }) kano ({ 4 }) . ({ 5 }) 
+# Sentence pair (172) source length 4 target length 5 alignment score : 0.00294691
+they shot a lion . 
+NULL ({ }) 3p-cmpl-abs ({ 1 }) shot-v-gr6-c ({ 2 3 }) lion ({ 4 }) . ({ 5 }) 
+# Sentence pair (173) source length 5 target length 5 alignment score : 8.35155e-05
+the lead is melting . 
+NULL ({ 1 }) lead ({ 2 }) 3fs-cont ({ 3 }) at ({ }) melt-iv-vn ({ 4 }) . ({ 5 }) 
+# Sentence pair (174) source length 8 target length 11 alignment score : 7.46181e-11
+audu usually searchs for a job in the dry season . 
+NULL ({ 8 }) abdu ({ 1 }) 3ms-hab ({ 2 }) search-ii ({ 3 4 5 }) job ({ 6 }) all ({ }) dry ({ 7 }) season ({ 9 10 }) . ({ 11 }) 
+# Sentence pair (175) source length 5 target length 5 alignment score : 0.0171566
+he gave indo kolanuts . 
+NULL ({ }) 3ms-perf ({ 1 }) give ({ 2 }) indo ({ 3 }) kolanuts ({ 4 }) . ({ 5 }) 
+# Sentence pair (176) source length 5 target length 5 alignment score : 0.0173354
+i caught fish for musa 
+NULL ({ }) 1s-cmpl-abs ({ 1 }) catch ({ 2 }) for ({ 3 }) musa ({ 4 }) fish ({ 5 }) 
+# Sentence pair (177) source length 4 target length 5 alignment score : 0.00181811
+the water they drew . 
+NULL ({ 1 }) water ({ 2 }) 3p-perf ({ 3 }) draw-iv ({ 4 }) . ({ 5 }) 
+# Sentence pair (178) source length 5 target length 7 alignment score : 5.36762e-07
+he did n't shoot an elephant . 
+NULL ({ }) 3sm-cmpl-neg ({ 1 }) shoot-v-gr2-c ({ 2 3 4 }) neg ({ }) elephant ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (179) source length 5 target length 5 alignment score : 0.0127951
+he left san diego . 
+NULL ({ }) 3ms-perf ({ 1 }) leave-ii ({ 2 }) san ({ 3 }) diego ({ 4 }) . ({ 5 }) 
+# Sentence pair (180) source length 6 target length 6 alignment score : 8.61836e-05
+abdu sat on the chair . 
+NULL ({ 4 }) abdu ({ 1 }) 3ms-perf ({ }) sit-i ({ 2 }) on ({ 3 }) chair-def ({ 5 }) . ({ 6 }) 
+# Sentence pair (181) source length 7 target length 9 alignment score : 1.03954e-10
+the camel 's meat is slightly cut into . 
+NULL ({ 5 }) meat-of ({ 1 }) camel ({ 2 }) 3ms-perf ({ }) cut-vii ({ 3 4 6 }) little ({ 7 }) little ({ 8 }) . ({ 9 }) 
+# Sentence pair (182) source length 8 target length 7 alignment score : 5.7115e-12
+abdu cannot live in this district . 
+NULL ({ }) district ({ 4 }) this ({ 5 }) neg ({ }) 3fs-cont ({ 6 }) live-vii-dn ({ 2 3 }) at ({ }) abdu ({ 1 }) . ({ 7 }) 
+# Sentence pair (183) source length 6 target length 7 alignment score : 2.14627e-10
+abdu replied to indo and came . 
+NULL ({ 3 }) abdu ({ 1 }) 3ms-perf ({ }) reply-vi ({ 2 5 }) ma ({ 6 }) indo ({ 4 }) . ({ 7 }) 
+# Sentence pair (184) source length 5 target length 6 alignment score : 0.000529198
+he began tanning the leather . 
+NULL ({ }) 3ms-perf ({ 1 }) begin-i ({ 2 }) tan-dn-of ({ 3 4 }) leather ({ 5 }) . ({ 6 }) 
+# Sentence pair (185) source length 6 target length 6 alignment score : 0.00554901
+fufu , i am eating . 
+NULL ({ }) fufu ({ 1 }) , ({ 2 }) i ({ 3 }) am ({ 4 }) eating ({ 5 }) . ({ 6 }) 
+# Sentence pair (186) source length 4 target length 6 alignment score : 2.474e-06
+he is squashing the lemon . 
+NULL ({ 4 }) 3ms-cont ({ 1 2 }) squash-i-vn-of ({ 3 }) lemon ({ 5 }) . ({ 6 }) 
+# Sentence pair (187) source length 4 target length 5 alignment score : 2.29633e-06
+this horse of bello 's 
+NULL ({ }) horse ({ 2 }) this ({ 1 }) of-masc ({ 3 4 }) bello ({ 5 }) 
+# Sentence pair (188) source length 4 target length 7 alignment score : 1.52608e-07
+the news is spread all over . 
+NULL ({ 1 }) news ({ 2 }) 3ms-perf ({ 3 }) spread-vii ({ 4 5 6 }) . ({ 7 }) 
+# Sentence pair (189) source length 4 target length 5 alignment score : 0.000668112
+the people are gathering . 
+NULL ({ 1 }) people ({ 2 }) 3p-cont ({ 3 }) gather-vii-vn ({ 4 }) . ({ 5 }) 
+# Sentence pair (190) source length 8 target length 7 alignment score : 0.000168209
+abdu saw indo holding a boy . 
+NULL ({ }) abdu ({ 1 }) 3ms-perf ({ }) see-ii ({ 2 }) indo ({ 3 }) holding ({ 4 }) with ({ 5 }) boy ({ 6 }) . ({ 7 }) 
+# Sentence pair (191) source length 6 target length 5 alignment score : 0.00352511
+abdu is planting trees . 
+NULL ({ }) abdu ({ 1 }) 3ms-cont ({ 2 }) do ({ }) planting-of ({ 3 }) trees ({ 4 }) . ({ 5 }) 
+# Sentence pair (192) source length 6 target length 7 alignment score : 1.07302e-06
+balki 's pot is filling up . 
+NULL ({ }) pot-of ({ 1 }) balki ({ 2 3 }) 3ms-cont ({ 4 }) at ({ }) fill.up-iii-vn ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (193) source length 5 target length 6 alignment score : 6.00033e-06
+the ring cannot be stolen . 
+NULL ({ 1 }) ring-def ({ 2 3 }) neg ({ }) 3ms-cont ({ 4 }) steal-vii ({ 5 }) . ({ 6 }) 
+# Sentence pair (194) source length 7 target length 9 alignment score : 9.5683e-07
+what did they read and did they write ? 
+NULL ({ }) what ({ 1 }) 3pl,rpf ({ 2 3 }) read ({ 4 }) also ({ 5 }) 3pl,rpf ({ 6 7 }) write ({ 8 }) ? ({ 9 }) 
+# Sentence pair (195) source length 4 target length 5 alignment score : 0.000927145
+they ripened the lemon . 
+NULL ({ 3 }) 3p-perf ({ 1 }) ripen-i ({ 2 }) lemon ({ 4 }) . ({ 5 }) 
+# Sentence pair (196) source length 4 target length 7 alignment score : 4.10625e-07
+the corn is spread all over . 
+NULL ({ 1 }) corn ({ 2 }) 3fs-perf ({ 3 }) spread-vii ({ 4 5 6 }) . ({ 7 }) 
+# Sentence pair (197) source length 5 target length 5 alignment score : 0.00150345
+indo caught some fish . 
+NULL ({ }) indo ({ 1 }) 3fs-perf ({ 2 }) catch-i ({ 3 }) fish ({ 4 }) . ({ 5 }) 
+# Sentence pair (198) source length 5 target length 5 alignment score : 0.000131985
+the gown is drying . 
+NULL ({ 1 }) gown ({ 2 }) 3fs-cont ({ 3 }) at ({ }) dry-iv-vn ({ 4 }) . ({ 5 }) 
+# Sentence pair (199) source length 7 target length 8 alignment score : 1.57607e-07
+it fits that aisha finishes her work . 
+NULL ({ }) aisha ({ 1 2 }) 3fs-sub ({ 3 }) finish-i ({ 4 5 }) work-3fs ({ 6 }) 3ms-perf ({ }) fit-iii ({ 7 }) . ({ 8 }) 
+# Sentence pair (200) source length 4 target length 5 alignment score : 4.14873e-05
+the plant took hold . 
+NULL ({ 1 }) plant ({ 2 }) 3ms-perf ({ }) take.hold-i ({ 3 4 }) . ({ 5 }) 
+# Sentence pair (201) source length 5 target length 6 alignment score : 5.69927e-06
+abdu sat on the chair . 
+NULL ({ 4 }) abdu ({ 1 }) 3ms-perf ({ }) sit-i ({ 2 3 }) chair-def ({ 5 }) . ({ 6 }) 
+# Sentence pair (202) source length 7 target length 5 alignment score : 0.000703306
+yams ama is cooking . 
+NULL ({ }) yams ({ 1 }) afoc ({ 2 }) ama ({ }) pres ({ 3 }) cook ({ }) cook-prog ({ 4 }) . ({ 5 }) 
+# Sentence pair (203) source length 7 target length 9 alignment score : 5.75161e-13
+as for the book indo gave it out . 
+NULL ({ 3 }) book ({ 4 }) indo ({ 5 }) 3fs-perf ({ 2 }) give-i ({ 1 6 }) 3ms ({ 7 }) out ({ 8 }) . ({ 9 }) 
+# Sentence pair (204) source length 5 target length 5 alignment score : 0.000435723
+balki should know idi . 
+NULL ({ }) balki ({ 1 }) 3fs-cont ({ }) know-ii-dn ({ 2 3 }) idi ({ 4 }) . ({ 5 }) 
+# Sentence pair (205) source length 5 target length 7 alignment score : 2.38677e-07
+so an elephant can be killed ! 
+NULL ({ }) so ({ 1 }) elephant ({ 2 }) 3fs-cont ({ 3 }) kill-vii-vn ({ 4 5 6 }) ! ({ 7 }) 
+# Sentence pair (206) source length 8 target length 10 alignment score : 3.88022e-09
+the children found indo has finished cooking the food . 
+NULL ({ 1 8 }) children ({ 2 }) 3p-perf ({ }) find-i ({ 3 }) indo ({ 4 }) 3fs-perf ({ 5 }) finish-iv ({ 6 7 }) food ({ 9 }) . ({ 10 }) 
+# Sentence pair (207) source length 6 target length 7 alignment score : 1.79911e-05
+we left the children at home . 
+NULL ({ 3 }) 1p-cmpl-abs ({ 1 }) leave-v-gr6-c ({ 2 }) children ({ 4 }) at ({ 5 }) house ({ 6 }) . ({ 7 }) 
+# Sentence pair (208) source length 4 target length 7 alignment score : 2.34825e-07
+i have bought myself a car . 
+NULL ({ }) 1s-perf ({ 1 }) buy-vi ({ 2 3 4 5 }) car ({ 6 }) . ({ 7 }) 
+# Sentence pair (209) source length 4 target length 5 alignment score : 0.00264218
+i read the book . 
+NULL ({ 3 }) 1s-cmpl-abs ({ 1 }) read ({ 2 }) book ({ 4 }) . ({ 5 }) 
+# Sentence pair (210) source length 7 target length 10 alignment score : 8.68282e-13
+the malicious kids are throwing at indo 's dog . 
+NULL ({ }) kids ({ 1 }) malicious ({ 2 3 }) 3p-cont ({ 4 }) throw-ii-dn-of ({ 5 8 }) dog-of ({ 6 9 }) indo ({ 7 }) . ({ 10 }) 
+# Sentence pair (211) source length 5 target length 6 alignment score : 0.00117549
+abdu is washing his car . 
+NULL ({ }) abdu ({ 1 }) 3ms-cont ({ 2 }) wash ({ 3 }) car-of-3ms ({ 4 5 }) . ({ 6 }) 
+# Sentence pair (212) source length 7 target length 7 alignment score : 7.90188e-06
+no! , abdu does love her . 
+NULL ({ }) no ({ 1 }) ! ({ 2 }) abdu ({ 3 }) 3ms-cont ({ }) indeed ({ 4 }) love-dn-of-3fs ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (213) source length 4 target length 5 alignment score : 0.00166597
+he read the news . 
+NULL ({ 3 }) 3sm-cmpl-abs ({ 1 }) read-v-gr6-c ({ 2 }) news ({ 4 }) . ({ 5 }) 
+# Sentence pair (214) source length 8 target length 7 alignment score : 1.43581e-05
+indo borrowed a bike from abdu . 
+NULL ({ }) indo ({ 1 }) 3fs-perf ({ }) borrow-ii ({ 2 3 }) bike ({ 4 }) from ({ 5 }) place-of ({ }) abdu ({ 6 }) . ({ 7 }) 
+# Sentence pair (215) source length 8 target length 10 alignment score : 3.20264e-06
+the one who has finished her work can go . 
+NULL ({ }) one-f-that ({ 1 2 }) 3fs-rp ({ 3 4 }) finish ({ 5 }) work-of-3fs ({ 6 }) 3fs-ipfv ({ 7 }) can ({ 8 }) go ({ 9 }) . ({ 10 }) 
+# Sentence pair (216) source length 5 target length 7 alignment score : 5.36762e-07
+he did n't shoot an elephant . 
+NULL ({ }) 3sm-cmpl-neg ({ 1 }) shoot-v-gr2-c ({ 2 3 4 }) elephant ({ 5 6 }) neg ({ }) . ({ 7 }) 
+# Sentence pair (217) source length 6 target length 8 alignment score : 3.20787e-10
+they sent a letter to indo abdu . 
+NULL ({ 5 }) 3p-perf ({ 1 }) send-i ({ 2 3 }) ix/ ({ 6 }) abdu ({ 7 }) letter ({ 4 }) . ({ 8 }) 
+# Sentence pair (218) source length 4 target length 6 alignment score : 5.99446e-05
+he has increased the offer . 
+NULL ({ 4 }) 3ms-perf ({ 1 }) increase-i ({ 2 3 }) money ({ 5 }) . ({ 6 }) 
+# Sentence pair (219) source length 6 target length 6 alignment score : 0.00489624
+i caught fish for musa . 
+NULL ({ }) 1s-cmpl-abs ({ 1 }) catch-v-gr1-d=a ({ 2 }) for ({ 3 }) musa ({ 4 }) fish ({ 5 }) . ({ 6 }) 
+# Sentence pair (220) source length 6 target length 6 alignment score : 2.71205e-07
+abdu lived in this district . 
+NULL ({ }) abdu ({ 1 }) 3ms-perf ({ }) live-i ({ 2 5 }) district ({ 3 }) this ({ 4 }) . ({ 6 }) 
+# Sentence pair (221) source length 4 target length 6 alignment score : 1.79094e-05
+the chair is sat on . 
+NULL ({ 1 }) chair ({ 2 }) 3fs-perf ({ 3 }) sit-vii ({ 4 5 }) . ({ 6 }) 
+# Sentence pair (222) source length 6 target length 8 alignment score : 2.54701e-06
+they are ripening lemon in the garden . 
+NULL ({ 6 }) 3p-cont ({ 1 2 }) ripen-i ({ 3 }) lemon ({ 4 }) in ({ 5 }) garden ({ 7 }) . ({ 8 }) 
+# Sentence pair (223) source length 8 target length 10 alignment score : 2.35516e-08
+it is said that abdu does n't love balki . 
+NULL ({ }) imp-perf ({ 1 2 }) say ({ 3 4 }) abdu ({ 5 }) neg-cont ({ 6 }) 3ms ({ }) love-dn-of ({ 7 8 }) balki ({ 9 }) . ({ 10 }) 
+# Sentence pair (224) source length 4 target length 5 alignment score : 0.000201585
+she turned the boy . 
+NULL ({ 3 }) 3fs-perf ({ 1 }) turn-i ({ 2 }) boy ({ 4 }) . ({ 5 }) 
+# Sentence pair (225) source length 7 target length 11 alignment score : 2.23278e-11
+abdu pulled the log up to here from the field . 
+NULL ({ 3 9 }) abdu ({ 1 }) 3ms-perf ({ }) pull-viii ({ 2 4 5 6 }) wood ({ 7 }) from ({ 8 }) field ({ 10 }) . ({ 11 }) 
+# Sentence pair (226) source length 5 target length 5 alignment score : 0.000130752
+the snake is coiling . 
+NULL ({ 1 }) snake ({ 2 }) 3ms-cont ({ 3 }) at ({ }) coil-iv-vn ({ 4 }) . ({ 5 }) 
+# Sentence pair (227) source length 7 target length 8 alignment score : 5.45822e-07
+it fits that aisha finishes her work . 
+NULL ({ }) 3ms-perf ({ }) fit-iii ({ 1 }) aisha ({ 2 }) 3fs-sub ({ 3 }) finish-i ({ 4 5 }) work-3fs ({ 6 7 }) . ({ 8 }) 
+# Sentence pair (228) source length 5 target length 7 alignment score : 7.39816e-08
+the camel meat can be cut . 
+NULL ({ }) meat-of ({ 1 }) camel ({ 2 3 }) 3ms-cont ({ 4 }) cut-vii-vn ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (229) source length 3 target length 5 alignment score : 5.8514e-05
+the box is heavy . 
+NULL ({ }) box-nom ({ 1 }) heavy-decl ({ 2 3 4 }) . ({ 5 }) 
+# Sentence pair (230) source length 4 target length 6 alignment score : 5.21133e-07
+my sister is a lawyer . 
+NULL ({ }) i-nom ({ }) sister-nom ({ 1 2 }) lawyer-be-dec ({ 3 4 5 }) . ({ 6 }) 
+# Sentence pair (231) source length 5 target length 6 alignment score : 1.82433e-05
+this building is a school . 
+NULL ({ }) this ({ 1 }) building-top ({ 2 3 }) school ({ 4 5 }) cop-decl ({ }) . ({ 6 }) 
+# Sentence pair (232) source length 4 target length 8 alignment score : 9.93897e-08
+the unit is moving to the frontline . 
+NULL ({ 6 }) unit-nom ({ 1 2 }) frontline-to ({ 3 4 }) move-pres-decl ({ 5 7 }) . ({ 8 }) 
+# Sentence pair (233) source length 5 target length 8 alignment score : 1.69028e-06
+the book was read for one hour . 
+NULL ({ }) book-nom ({ 1 }) one ({ 2 }) hour-for-nom ({ 3 4 5 }) read-pass-pst-dec ({ 6 7 }) . ({ 8 }) 
+# Sentence pair (234) source length 5 target length 6 alignment score : 7.04833e-07
+this building is not school . 
+NULL ({ }) this ({ 1 }) building-top ({ 2 }) school-nom ({ 3 5 }) not ({ 4 }) . ({ 6 }) 
+# Sentence pair (235) source length 6 target length 7 alignment score : 0.000161259
+9th unit sent headquarters the report . 
+NULL ({ }) 9 ({ 1 }) unit-nom ({ 2 }) headquarter-to ({ 3 }) report-acc ({ 4 }) send-past-decl ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (236) source length 5 target length 8 alignment score : 2.84218e-08
+he froze the water for an hour . 
+NULL ({ 3 }) he-nom ({ 1 }) 1-hour-for ({ 2 }) water-acc ({ 4 5 }) freeze-past-dec ({ 6 7 }) . ({ 8 }) 
+# Sentence pair (237) source length 6 target length 9 alignment score : 2.3077e-07
+i made the maid [work starting this morning] . 
+NULL ({ 3 }) i-nom ({ 1 }) maid-nom ({ 2 }) morning-from ({ 4 5 }) work-com ({ 6 7 }) do-past-dec ({ 8 }) . ({ 9 }) 
+# Sentence pair (238) source length 4 target length 5 alignment score : 0.00393624
+detection activity is occurring . 
+NULL ({ }) detection ({ 1 }) activity-nom ({ 2 }) occur-pres-decl ({ 3 4 }) . ({ 5 }) 
+# Sentence pair (239) source length 6 target length 7 alignment score : 1.16458e-08
+john hoped mary would go home . 
+NULL ({ }) mary-nom ({ 2 3 }) home-dir ({ 4 }) go-cmp-acc ({ 5 }) john-top ({ 1 }) hope-pst-dec ({ 6 }) . ({ 7 }) 
+# Sentence pair (240) source length 7 target length 9 alignment score : 3.06325e-06
+the person from japan is actually that student . 
+NULL ({ }) japan-from ({ 1 2 }) come-mod ({ 3 }) person-top ({ 4 5 }) actually ({ 6 }) that ({ 7 }) student-cop-decl ({ 8 }) . ({ 9 }) 
+# Sentence pair (241) source length 6 target length 8 alignment score : 1.20456e-06
+john hoped that mary would go home . 
+NULL ({ }) john-top ({ 1 }) mary-nom ({ 2 3 }) home-dir ({ 4 5 }) go-cmp-acc ({ 6 }) hope-pst-dec ({ 7 }) . ({ 8 }) 
+# Sentence pair (242) source length 6 target length 7 alignment score : 0.000388311
+my idea is different from yours . 
+NULL ({ }) my ({ 1 }) idea-top ({ 2 }) your ({ 3 }) idea-from ({ 4 }) different-decl ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (243) source length 7 target length 12 alignment score : 1.03535e-17
+yesterday i dug out this spot to the extent of ten meters 
+NULL ({ 7 8 }) i-top ({ 2 }) yesterday ({ 1 }) this ({ 5 }) spot-acc ({ 3 }) ten ({ 4 }) meter-extent-acc ({ 6 9 11 }) dig.out-p ({ 10 12 }) 
+# Sentence pair (244) source length 6 target length 8 alignment score : 1.69996e-06
+john hoped that mary would go home . 
+NULL ({ }) john-top ({ 1 }) mary-nom ({ 2 3 }) home-dir ({ 4 5 }) go-cmp ({ 6 }) hope-pst-dec ({ 7 }) . ({ 8 }) 
+# Sentence pair (245) source length 8 target length 11 alignment score : 1.72855e-12
+i will bring back the book that i borrowed tomorrow . 
+NULL ({ 5 }) book ({ 6 }) borrow ({ 7 }) go-past ({ 8 }) kes ({ 1 }) tomorrow ({ 2 }) bring-ing ({ 3 }) come-fut-pol-dec ({ 4 9 10 }) . ({ 11 }) 
+# Sentence pair (246) source length 5 target length 6 alignment score : 4.74657e-05
+the student needs three books . 
+NULL ({ }) student-nom ({ 1 }) book-nom ({ }) three-volumes-nom ({ 2 3 }) need-dec ({ 4 5 }) . ({ 6 }) 
+# Sentence pair (247) source length 6 target length 6 alignment score : 3.2826e-05
+most teenagers like michael jackson . 
+NULL ({ }) teenager-pl-nom ({ 1 }) most ({ 2 }) michael ({ 3 4 }) jackson-acc ({ 5 }) like ({ }) . ({ 6 }) 
+# Sentence pair (248) source length 5 target length 10 alignment score : 3.3976e-10
+if the radio is broken , communication is impossible . 
+NULL ({ 2 }) radio-nom ({ 1 }) broke-past-if ({ 3 }) communication-nom ({ 4 5 6 8 }) impossible-decl ({ 7 9 }) . ({ 10 }) 
+# Sentence pair (249) source length 4 target length 5 alignment score : 9.33914e-06
+she 's very intelligent . 
+NULL ({ }) she-nom ({ 1 }) very ({ }) intelligent-be-pres ({ 2 3 4 }) . ({ 5 }) 
+# Sentence pair (250) source length 5 target length 7 alignment score : 2.65258e-06
+the father gave the son money . 
+NULL ({ 4 }) father-hnom ({ 1 2 }) money-acc ({ 3 }) son-dat ({ 5 }) give-hon-pst-dec ({ 6 }) . ({ 7 }) 
+# Sentence pair (251) source length 5 target length 7 alignment score : 8.29953e-06
+the father gave the son money . 
+NULL ({ 4 }) son-dat ({ 1 }) father-hnom ({ 2 }) money-acc ({ 3 }) give-hon-pst-dec ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (252) source length 6 target length 9 alignment score : 7.8349e-07
+my aunt expects my cousin to go sometimes . 
+NULL ({ }) cousin-acc ({ 1 2 }) aunt-top ({ 3 4 }) sometimes ({ 5 6 }) go-cmp ({ 7 }) expect-pres-dec ({ 8 }) . ({ 9 }) 
+# Sentence pair (253) source length 3 target length 5 alignment score : 0.000514544
+the flower is yellow . 
+NULL ({ 1 }) flower-nom ({ 2 3 }) yellow-decl ({ 4 }) . ({ 5 }) 
+# Sentence pair (254) source length 5 target length 6 alignment score : 0.00167519
+tom visited america two times . 
+NULL ({ }) tom-top ({ 1 }) america-acc ({ 2 }) two-time-acc ({ 3 }) visit-pst-dec ({ 4 5 }) . ({ 6 }) 
+# Sentence pair (255) source length 7 target length 10 alignment score : 1.16522e-08
+he requested us to pay attention to the fact . 
+NULL ({ 8 }) he-nom ({ 1 }) us-plur-dat ({ 2 }) that ({ }) fact-acc ({ 3 }) pay.attention-cmp ({ 4 5 6 7 }) request-pst-dec ({ 9 }) . ({ 10 }) 
+# Sentence pair (256) source length 4 target length 6 alignment score : 6.93595e-06
+he is freezing the water . 
+NULL ({ 4 }) he-nom ({ 1 }) water-acc ({ 2 }) freeze-prog-pre-dec ({ 3 5 }) . ({ 6 }) 
+# Sentence pair (257) source length 3 target length 5 alignment score : 5.17544e-05
+she 's very intelligent . 
+NULL ({ }) very ({ 1 }) intelligent-be-pres ({ 2 3 4 }) . ({ 5 }) 
+# Sentence pair (258) source length 4 target length 6 alignment score : 3.82436e-05
+why did no one resign ? 
+NULL ({ }) anyone ({ 1 }) why ({ 2 }) resign-ci-not-past-q ({ 3 4 5 }) ? ({ 6 }) 
+# Sentence pair (259) source length 4 target length 5 alignment score : 3.62611e-06
+man is not social . 
+NULL ({ }) man-top ({ 1 }) social-nom ({ 2 4 }) not ({ 3 }) . ({ 5 }) 
+# Sentence pair (260) source length 4 target length 5 alignment score : 0.000897404
+suni boils the milk . 
+NULL ({ }) swuni-nom ({ 1 }) milk-acc ({ 2 }) boil-cau-pre-dec ({ 3 4 }) . ({ 5 }) 
+# Sentence pair (261) source length 6 target length 13 alignment score : 7.90212e-21
+as for catching and pulling the string , the children pulled it . 
+NULL ({ 6 9 }) the ({ }) child-plu-nom ({ 1 7 8 }) string-acc ({ 2 }) catch-e-pull-nml-top ({ 3 10 11 }) pull-pst-dcl ({ 4 5 12 }) . ({ 13 }) 
+# Sentence pair (262) source length 7 target length 11 alignment score : 6.60971e-09
+it happened twice that a stone rolled down the hill . 
+NULL ({ 9 }) stone-nom ({ 1 }) hill ({ 2 }) bottom-to ({ 3 4 5 }) 2 ({ 6 }) times-nom ({ 7 8 }) rolled ({ 10 }) . ({ 11 }) 
+# Sentence pair (263) source length 6 target length 6 alignment score : 0.00307303
+because he told me so . 
+NULL ({ }) because ({ 1 }) he-nom ({ 2 }) i-dat ({ 3 }) so ({ 4 }) say-past-dcl ({ 5 }) . ({ 6 }) 
+# Sentence pair (264) source length 5 target length 7 alignment score : 6.75698e-06
+the father gave the son money . 
+NULL ({ 4 }) father-hnom ({ 1 }) son-dat ({ 2 }) money-acc ({ 3 }) give-hon-pst-dec ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (265) source length 6 target length 13 alignment score : 8.53289e-21
+as for trying to catch the string , the children tried it . 
+NULL ({ 6 9 }) the ({ }) child-plu-nom ({ 1 7 8 }) string-acc ({ 2 }) catch-e-try-nml-top ({ 3 10 11 }) try-pst-dcl ({ 4 5 12 }) . ({ 13 }) 
+# Sentence pair (266) source length 3 target length 5 alignment score : 0.000221869
+the room is bright . 
+NULL ({ }) room-nom ({ 1 2 }) bright-dec ({ 3 4 }) . ({ 5 }) 
+# Sentence pair (267) source length 5 target length 6 alignment score : 1.18839e-05
+that man is the commander . 
+NULL ({ 4 }) that ({ 1 }) man-nom ({ 2 }) commander ({ 3 }) cop-decl ({ 5 }) . ({ 6 }) 
+# Sentence pair (268) source length 5 target length 5 alignment score : 5.86679e-05
+john ate the apple . 
+NULL ({ }) eat-ki-top ({ 1 2 }) john-nom ({ }) apple-acc ({ 3 }) eat-past-decl ({ 4 }) . ({ 5 }) 
+# Sentence pair (269) source length 5 target length 6 alignment score : 0.000220636
+chelswu is eating an apple . 
+NULL ({ }) chelswu-nom ({ 1 }) apple-acc ({ 2 }) eat-aux-connect ({ 3 4 }) be-pres-decl ({ 5 }) . ({ 6 }) 
+# Sentence pair (270) source length 4 target length 7 alignment score : 2.85149e-06
+john bought peanuts and ate them . 
+NULL ({ }) nom ({ 1 }) peanuts-acc ({ 2 3 4 }) buy-eat-past-decl ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (271) source length 5 target length 8 alignment score : 6.38219e-07
+john suggested a war to the people . 
+NULL ({ 6 }) john-nom ({ 1 }) person-plur-dat ({ 2 3 }) war-acc ({ 4 }) suggest-pst-dec ({ 5 7 }) . ({ 8 }) 
+# Sentence pair (272) source length 4 target length 5 alignment score : 0.00242942
+chelswu became a doctor . 
+NULL ({ }) chelswu-nom ({ 1 }) doctor-nom ({ 2 3 }) become-past-decl ({ 4 }) . ({ 5 }) 
+# Sentence pair (273) source length 4 target length 5 alignment score : 0.000312067
+chelswu eats an apple . 
+NULL ({ }) chelswu-nom ({ 1 }) apple-acc ({ 2 }) eat-pres-dec ({ 3 4 }) . ({ 5 }) 
+# Sentence pair (274) source length 4 target length 6 alignment score : 2.06155e-05
+the box is not heavy . 
+NULL ({ 1 }) box-top ({ 2 }) heavy-ci ({ 3 }) not-decl ({ 4 5 }) . ({ 6 }) 
+# Sentence pair (275) source length 6 target length 7 alignment score : 1.63667e-10
+john very muchwanted to go home . 
+NULL ({ }) john-top ({ 1 }) home-dir ({ }) go-cmp-acc ({ 5 }) very ({ 2 }) muchwant-pst-dec ({ 3 4 6 }) . ({ 7 }) 
+# Sentence pair (276) source length 5 target length 7 alignment score : 4.56225e-05
+john hit mary on the hand . 
+NULL ({ 5 }) john-nom ({ 1 }) mary-acc ({ 2 }) hand-acc ({ 3 4 }) hit-pst-ind ({ 6 }) . ({ 7 }) 
+# Sentence pair (277) source length 5 target length 7 alignment score : 3.75204e-06
+john suggested going , to mary . 
+NULL ({ }) john-nom ({ 1 }) mary-dat ({ 2 3 }) go-cmp ({ 4 }) suggest-pst-dec ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (278) source length 3 target length 5 alignment score : 4.15301e-05
+john 's study of english 
+NULL ({ }) john-gen ({ 1 2 }) english-gen ({ 3 }) study ({ 4 5 }) 
+# Sentence pair (279) source length 4 target length 8 alignment score : 3.49754e-08
+the students were happy for several hours . 
+NULL ({ }) student-plur-nom ({ 1 }) several-hour-nom ({ 2 3 4 5 }) be.happy-pst-dec ({ 6 7 }) . ({ 8 }) 
+# Sentence pair (280) source length 5 target length 5 alignment score : 0.00854651
+balls he catches quick . 
+NULL ({ }) ball-acc ({ 1 }) cwuni-nom ({ 2 }) quick ({ 3 }) catch-pres ({ 4 }) . ({ 5 }) 
+# Sentence pair (281) source length 4 target length 5 alignment score : 3.70789e-05
+chelswu wore the new clothes 
+NULL ({ 3 }) chelswu-nom ({ 1 }) new ({ }) clothes-acc ({ 2 }) wear-past-dec ({ 4 5 }) 
+# Sentence pair (282) source length 5 target length 6 alignment score : 0.000214953
+john wanted to go home . 
+NULL ({ }) john-top ({ 1 }) home-dir ({ 2 }) go-cmp-acc ({ 3 4 }) want-pst-dec ({ 5 }) . ({ 6 }) 
+# Sentence pair (283) source length 5 target length 5 alignment score : 4.5756e-05
+chelswu eats apples frequently . 
+NULL ({ }) frequently ({ 1 2 }) chelswu-nom ({ }) apple-acc ({ 3 }) eat-pres-decl ({ 4 }) . ({ 5 }) 
+# Sentence pair (284) source length 5 target length 5 alignment score : 0.000696263
+man is not social . 
+NULL ({ }) man-top ({ 1 }) social ({ 2 }) cop-ci ({ 3 4 }) not ({ }) . ({ 5 }) 
+# Sentence pair (285) source length 5 target length 6 alignment score : 0.000128285
+he froze the water vigorously . 
+NULL ({ }) he-nom ({ 1 }) vigorously ({ 2 3 }) water-acc ({ 4 }) freeze-past-dec ({ 5 }) . ({ 6 }) 
+# Sentence pair (286) source length 6 target length 8 alignment score : 8.19348e-07
+the book was read for one hour . 
+NULL ({ }) book-nom ({ 1 }) one ({ 2 }) hour-for-nom ({ 3 4 5 }) read-cmp ({ 6 }) pasaux-pst-dec ({ 7 }) . ({ 8 }) 
+# Sentence pair (287) source length 5 target length 6 alignment score : 0.00156821
+intelligence originates from many sources . 
+NULL ({ }) intelligence-nom ({ 1 }) many ({ 2 }) source-from ({ 3 }) originate-pres-decl ({ 4 5 }) . ({ 6 }) 
+# Sentence pair (288) source length 6 target length 7 alignment score : 4.80452e-08
+read the book , chelswu did . 
+NULL ({ 2 }) chelswu-nom ({ }) that ({ }) book-acc ({ 1 }) read-cmp-top ({ 3 4 }) do-pst-dec ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (289) source length 5 target length 8 alignment score : 1.57345e-06
+the book was read for one hour . 
+NULL ({ }) book-nom ({ 1 }) one ({ 2 }) hour-for-acc ({ 3 4 5 }) read-pass-pst-dec ({ 6 7 }) . ({ 8 }) 
+# Sentence pair (290) source length 4 target length 6 alignment score : 2.01869e-05
+chelswu is not a fool . 
+NULL ({ }) chelswu-top ({ 1 }) fool-nom ({ 2 3 }) not-decl ({ 4 5 }) . ({ 6 }) 
+# Sentence pair (291) source length 5 target length 9 alignment score : 1.92545e-08
+john divided the apples into groups of three . 
+NULL ({ 3 }) john-nom ({ 1 }) apple-acc ({ 2 4 }) three-cl-ssik ({ 5 6 }) divide-pst-decl ({ 7 8 }) . ({ 9 }) 
+# Sentence pair (292) source length 7 target length 9 alignment score : 7.33448e-11
+john very much hoped mary would go home . 
+NULL ({ }) john-top ({ 1 }) mary-nom ({ 4 5 }) home-dir ({ 6 }) go-cmp ({ 7 }) very.much ({ 2 3 }) hope-pst-dec ({ 8 }) . ({ 9 }) 
+# Sentence pair (293) source length 4 target length 7 alignment score : 4.10042e-09
+the hometown where i used to live 
+NULL ({ 1 }) i ({ 4 }) Â­gen ({ 2 }) live-ret-n ({ 3 5 }) hometown ({ 6 7 }) 
+# Sentence pair (294) source length 5 target length 7 alignment score : 8.26974e-06
+chelswu has swept up the leaves . 
+NULL ({ 5 }) chelswu-nom ({ 1 }) leaves-acc ({ 2 }) sweep-e ({ 3 }) clean-past-decl ({ 4 6 }) . ({ 7 }) 
+# Sentence pair (295) source length 7 target length 9 alignment score : 7.35786e-06
+that student is actually a person from japan . 
+NULL ({ }) that ({ 1 }) student-top ({ 2 }) actually ({ 3 4 }) japan-from ({ 5 6 }) come-mod ({ 7 }) person-cop-decl ({ 8 }) . ({ 9 }) 
+# Sentence pair (296) source length 5 target length 9 alignment score : 3.73234e-08
+for chelswu t o arrive early is difficult . 
+NULL ({ }) chelswu-nom ({ 1 2 }) early ({ 3 }) arrive-nominalizer-nom ({ 4 5 6 }) difficult ({ 7 8 }) . ({ 9 }) 
+# Sentence pair (297) source length 5 target length 8 alignment score : 9.23947e-09
+i think minho to be a genius . 
+NULL ({ 4 }) i-nom ({ 1 }) minho-acc ({ 2 }) genius-cop-comp ({ 3 5 6 }) think ({ 7 }) . ({ 8 }) 
+# Sentence pair (298) source length 4 target length 6 alignment score : 6.68798e-05
+she ate cereal , mary . 
+NULL ({ }) cereal-acc ({ 1 2 }) eat-pst-dec ({ 3 4 }) mary-nom ({ 5 }) . ({ 6 }) 
+# Sentence pair (299) source length 4 target length 7 alignment score : 3.17299e-09
+if i try to draw a picture 
+NULL ({ }) i-nom ({ 2 }) picture-acc ({ 1 }) draw-cmp-acc ({ 3 4 5 }) try-if ({ 6 7 }) 
+# Sentence pair (300) source length 5 target length 6 alignment score : 0.00279219
+john washed mary 's hair . 
+NULL ({ }) john-nom ({ 1 }) mary-gen ({ 2 }) hair-acc ({ 3 }) wash-cau-past-dec ({ 4 5 }) . ({ 6 }) 
+# Sentence pair (301) source length 4 target length 6 alignment score : 3.3595e-05
+the headquarter maintains the database . 
+NULL ({ 4 }) headquarter-nom ({ 1 }) database-acc ({ 2 }) maintain-pres-decl ({ 3 5 }) . ({ 6 }) 
+# Sentence pair (302) source length 5 target length 8 alignment score : 4.26672e-07
+he froze the water in an hour . 
+NULL ({ 3 }) he-nom ({ 1 }) 1-hour-in ({ 2 }) water-acc ({ 4 5 }) freeze-past-dec ({ 6 7 }) . ({ 8 }) 
+# Sentence pair (303) source length 4 target length 8 alignment score : 4.59877e-09
+the mother sang a lullaby for the son 
+NULL ({ 7 }) mother-nom ({ 1 }) son-dat ({ }) lullaby-acc ({ 2 }) sing-pf-give-past-dec ({ 3 4 5 6 8 }) 
+# Sentence pair (304) source length 5 target length 6 alignment score : 0.000104715
+john wanted to go home . 
+NULL ({ }) john-top ({ 1 }) home-dir ({ 2 }) go-cmp ({ 3 4 }) want-pst-dec ({ 5 }) . ({ 6 }) 
+# Sentence pair (305) source length 5 target length 8 alignment score : 4.13647e-07
+firemen are afraid of the winter wind . 
+NULL ({ 5 }) fireman-dat-nom ({ 1 }) winter ({ 2 3 }) wind-nom ({ 4 6 }) fear ({ 7 }) . ({ 8 }) 
+# Sentence pair (306) source length 6 target length 7 alignment score : 0.000113613
+chelswu read books for three hours . 
+NULL ({ }) chelswu-nom ({ 1 }) book-acc ({ 2 }) three ({ 3 }) hour-during-acc ({ 4 5 }) read-pst-dec ({ 6 }) . ({ 7 }) 
+# Sentence pair (307) source length 4 target length 10 alignment score : 2.32996e-14
+as for linguistics , getting a job is difficult . 
+NULL ({ }) linguistics-nom ({ 1 2 4 5 6 }) employment-nom ({ 3 7 }) difficult ({ 8 9 }) . ({ 10 }) 
+# Sentence pair (308) source length 4 target length 6 alignment score : 0.000719999
+john arrived at the seoul station 
+NULL ({ }) john-top ({ 1 }) seoul ({ 2 }) station-to-acc ({ 3 4 }) arrival-do-pst-decl ({ 5 6 }) 
+# Sentence pair (309) source length 6 target length 7 alignment score : 6.89213e-10
+i made chelswu wear the new clothes 
+NULL ({ 5 }) i-nom ({ 1 }) chelswu-nom ({ 3 }) new ({ 6 }) clothes-acc ({ 2 }) wear-com ({ 4 }) do-past-dec ({ 7 }) 
+# Sentence pair (310) source length 6 target length 9 alignment score : 2.39137e-08
+mother persuaded the child to read the book . 
+NULL ({ 3 }) mother-hnom ({ 1 2 }) child-dat ({ 4 5 }) book-acc ({ 6 }) read-cmp ({ 7 }) persuade-hon-pst-dec ({ 8 }) . ({ 9 }) 
+# Sentence pair (311) source length 5 target length 6 alignment score : 0.00026321
+that box is very big . 
+NULL ({ }) that ({ 1 }) box-top ({ 2 3 }) very ({ 4 }) big ({ 5 }) . ({ 6 }) 
+# Sentence pair (312) source length 4 target length 5 alignment score : 0.00351086
+chelswu has a car . 
+NULL ({ }) chelswu-nom ({ 1 }) car-nom ({ 2 }) have-decl ({ 3 4 }) . ({ 5 }) 
+# Sentence pair (313) source length 4 target length 5 alignment score : 0.000520342
+who do you love ? 
+NULL ({ }) you-top ({ 1 2 }) who-acc ({ 3 }) love-q ({ 4 }) ? ({ 5 }) 
+# Sentence pair (314) source length 6 target length 8 alignment score : 7.27057e-06
+john comforted her when she was crying . 
+NULL ({ }) john-top ({ 1 }) she-nom ({ 2 }) cry-rel-imprf ({ 3 4 }) kes-acc ({ 5 6 }) comforted ({ 7 }) . ({ 8 }) 
+# Sentence pair (315) source length 4 target length 6 alignment score : 0.000179704
+john 's talk with mary . 
+NULL ({ }) john-gen ({ 1 2 }) mary-with-gen ({ 3 4 }) talk ({ 5 }) . ({ 6 }) 
+# Sentence pair (316) source length 5 target length 6 alignment score : 1.12119e-05
+swuni ran for an hour . 
+NULL ({ }) swuni-nom ({ 1 }) one ({ 2 }) hour-for-acc ({ 3 }) run-pst-dec ({ 4 5 }) . ({ 6 }) 
+# Sentence pair (317) source length 4 target length 5 alignment score : 1.86725e-05
+chelswu is a doctor . 
+NULL ({ 2 }) chelswu-top ({ 1 }) doctor ({ 3 }) cop-decl ({ 4 }) . ({ 5 }) 
+# Sentence pair (318) source length 5 target length 9 alignment score : 4.29051e-08
+my aunt put my cousin to sleep sometimes . 
+NULL ({ }) aunt-nom ({ 1 }) cousin-acc ({ 2 3 4 }) sometimes ({ 5 6 }) put.to.sleep-pst-dec ({ 7 8 }) . ({ 9 }) 
+# Sentence pair (319) source length 6 target length 10 alignment score : 1.28305e-09
+the quality is good but it 's too expensive . 
+NULL ({ 3 }) quality-nom ({ 1 }) good-ki-ct ({ 2 4 5 }) do-but ({ 6 7 }) too ({ 8 }) expensive-polite ({ 9 }) . ({ 10 }) 
+# Sentence pair (320) source length 7 target length 9 alignment score : 5.19707e-11
+john very much hoped mary would go home . 
+NULL ({ }) john-top ({ 1 }) mary-nom ({ 4 5 }) home-dir ({ 6 }) go-cmp-acc ({ 7 }) very.much ({ 2 3 }) hope-pst-dec ({ 8 }) . ({ 9 }) 
+# Sentence pair (321) source length 6 target length 8 alignment score : 7.62716e-07
+the book was read for one hour . 
+NULL ({ }) book-nom ({ 1 }) one ({ 2 }) hour-for-acc ({ 3 4 5 }) read-cmp ({ 6 }) pasaux-pst-dec ({ 7 }) . ({ 8 }) 
+# Sentence pair (322) source length 9 target length 7 alignment score : 5.12517e-05
+two men carried three ssik suitcases . 
+NULL ({ }) man ({ }) two ({ 1 }) cl-nom ({ 2 }) suitcase ({ 3 }) three ({ 4 }) cl ({ }) ssik-acc ({ 5 }) carry-pst-dec ({ 6 }) . ({ 7 }) 
+# Sentence pair (323) source length 6 target length 8 alignment score : 5.66972e-06
+the professor had me read the book . 
+NULL ({ 6 }) professor-nom ({ 1 }) me-acc ({ 2 3 }) book-ac ({ 4 }) read-com ({ 5 }) do-past-dec ({ 7 }) . ({ 8 }) 
+# Sentence pair (324) source length 6 target length 9 alignment score : 4.52659e-09
+this problem is the same as that problem . 
+NULL ({ 4 }) this ({ 1 }) problem-top ({ 2 3 }) that ({ 7 }) problem-as ({ 5 6 }) same ({ 8 }) . ({ 9 }) 
+# Sentence pair (325) source length 6 target length 6 alignment score : 8.42595e-07
+i made that one leave . 
+NULL ({ }) i-top ({ 1 }) that ({ 3 }) one-nom ({ 4 }) leave-com ({ 5 }) do-past-dec ({ 2 }) . ({ 6 }) 
+# Sentence pair (326) source length 6 target length 9 alignment score : 7.78138e-08
+john suggested to mary that bill would come . 
+NULL ({ }) john-nom ({ 1 }) mary-dat ({ 2 3 }) bill-nom ({ 4 5 }) come-fut-thing-cmp ({ 6 7 }) suggest-pst-dec ({ 8 }) . ({ 9 }) 
+# Sentence pair (327) source length 6 target length 8 alignment score : 8.81032e-05
+i was not unable to eat kimchi . 
+NULL ({ }) i-top ({ 1 }) kimchi-acc ({ 2 }) neg-cannot ({ 3 4 }) eat-cmp ({ 5 }) negaux-pst-dec ({ 6 7 }) . ({ 8 }) 
+# Sentence pair (328) source length 7 target length 9 alignment score : 1.0706e-05
+chelswu persuaded each child to do the homework . 
+NULL ({ 7 }) chelswu-top ({ 1 }) each-gen ({ 2 }) child-nom ({ 3 4 }) homework-acc ({ 5 }) do-comp ({ 6 }) persuaded ({ 8 }) . ({ 9 }) 
+# Sentence pair (329) source length 6 target length 7 alignment score : 0.00147781
+i ordered mary to come quickly . 
+NULL ({ }) i-top ({ 1 }) mary-to ({ 2 }) quickly ({ 3 }) come-la-comp ({ 4 }) order-past-dec ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (330) source length 4 target length 6 alignment score : 5.44428e-05
+the lamp lights the room . 
+NULL ({ 4 }) lamp-nom ({ 1 }) room-acc ({ 2 }) bright-cau-pre-dec ({ 3 5 }) . ({ 6 }) 
+# Sentence pair (331) source length 4 target length 5 alignment score : 0.00483475
+the commander orders intelligence-activity . 
+NULL ({ }) commander-nom ({ 1 }) intelligence-activity-acc ({ 2 }) order-pres-decl ({ 3 4 }) . ({ 5 }) 
+# Sentence pair (332) source length 6 target length 6 alignment score : 4.34397e-07
+who indeed cut the grass ? 
+NULL ({ 4 }) indeed ({ 2 }) who ({ 1 }) prt ({ }) cut ({ 3 }) grass ({ 5 }) ? ({ 6 }) 
+# Sentence pair (333) source length 5 target length 7 alignment score : 7.83218e-09
+it was yesterday that rabe bought rice 
+NULL ({ }) yesterday ({ 1 2 3 4 }) rabe ({ 5 }) prt ({ }) buy-act ({ 6 }) rice ({ 7 }) 
+# Sentence pair (334) source length 5 target length 5 alignment score : 4.0785e-05
+that woman bought the bread 
+NULL ({ }) buy-act ({ 3 }) the ({ 4 }) bread ({ 5 }) that ({ 1 }) woman ({ 2 }) 
+# Sentence pair (335) source length 4 target length 5 alignment score : 8.02143e-06
+rabe indeed cut the grass 
+NULL ({ 4 }) indeed ({ 2 }) cut ({ 3 }) grass ({ 5 }) rabe ({ 1 }) 
+# Sentence pair (336) source length 6 target length 7 alignment score : 8.14722e-09
+but they did n't have time . 
+NULL ({ }) but ({ 1 }) neg ({ 3 }) pst-have ({ 4 5 }) time ({ 6 }) they ({ 2 }) . ({ 7 }) 
+# Sentence pair (337) source length 3 target length 6 alignment score : 5.44042e-10
+the chicken was bought by rabe 
+NULL ({ }) past-buy-pass-rabe ({ 4 5 }) the ({ 1 }) chicken ({ 2 3 6 }) 
+# Sentence pair (338) source length 5 target length 7 alignment score : 9.08186e-05
+we helped them send each other packages 
+NULL ({ }) past-act-help ({ 1 2 }) them ({ 3 }) past-rec-act-send ({ 4 5 }) packages ({ 6 }) we-incl ({ 7 }) 
+# Sentence pair (339) source length 6 target length 7 alignment score : 2.1591e-10
+the child will indeed buy the airplane 
+NULL ({ 6 }) emph ({ 1 }) buy-pass ({ 3 4 }) the ({ }) child ({ 2 }) the ({ }) airplane ({ 5 7 }) 
+# Sentence pair (340) source length 7 target length 9 alignment score : 8.97842e-14
+vao and velo stole each other 's white rabbit 
+NULL ({ }) past-rec-act-steal-rabbit ({ 1 }) white ({ 2 }) art ({ 3 }) vao ({ }) and ({ }) art ({ 7 }) velo ({ 4 5 6 8 9 }) 
+# Sentence pair (341) source length 4 target length 8 alignment score : 2.64533e-13
+we saw each other and greeted each other 
+NULL ({ }) past-rec-act-seen ({ 1 4 }) and ({ 5 }) past-rec-act-greet ({ 2 6 }) we-excl ({ 3 7 8 }) 
+# Sentence pair (342) source length 8 target length 10 alignment score : 1.54183e-11
+he did n't begin to laugh at the story . 
+NULL ({ }) neg ({ 1 2 3 }) began ({ 4 }) laugh ({ 5 6 }) past-prep ({ 7 }) the ({ 8 }) story ({ 9 }) he ({ }) . ({ 10 }) 
+# Sentence pair (343) source length 7 target length 12 alignment score : 9.80137e-12
+those people who said each other to be thieves are fighting hard 
+NULL ({ }) fight ({ 1 2 }) hard ({ 3 }) those ({ 4 }) nom-rec-act-say ({ 5 6 }) as ({ 7 }) nom-act-steal ({ 8 9 }) those ({ 10 11 12 }) 
+# Sentence pair (344) source length 6 target length 5 alignment score : 0.00276593
+who should visit rabe ? 
+NULL ({ }) who ({ 1 }) prt ({ }) should ({ 2 }) visit-act ({ 3 }) acc-rabe ({ 4 }) ? ({ 5 }) 
+# Sentence pair (345) source length 8 target length 9 alignment score : 9.64983e-10
+because that book was n't read by the students 
+NULL ({ }) because ({ 1 }) not ({ 5 }) read-tf ({ 6 7 }) the ({ 8 }) students ({ 9 }) that ({ 2 }) book ({ 3 }) that ({ 4 }) 
+# Sentence pair (346) source length 10 target length 11 alignment score : 1.30412e-10
+it 's under the bed that the child hid my key 
+NULL ({ }) there ({ 1 }) under ({ 2 3 }) the ({ 4 }) bed ({ 5 }) prt ({ }) hide-circ ({ 6 }) the ({ 7 }) child ({ 8 }) the ({ }) key ({ 9 10 11 }) 
+# Sentence pair (347) source length 3 target length 5 alignment score : 7.70141e-10
+it was rasoa who laughed 
+NULL ({ }) rasoa ({ 3 }) prt ({ 2 }) laugh-act ({ 1 4 5 }) 
+# Sentence pair (348) source length 6 target length 6 alignment score : 1.56071e-06
+all the children read the book 
+NULL ({ }) read ({ 4 }) the ({ 5 }) book ({ 6 }) all ({ 1 }) the ({ 2 }) child ({ 3 }) 
+# Sentence pair (349) source length 8 target length 6 alignment score : 0.00012863
+i asked who bought the chicken 
+NULL ({ }) ask-act ({ 1 }) 1sg-nom ({ 2 }) hoe ({ }) who ({ }) focus ({ 3 }) buy-act ({ 4 }) the ({ 5 }) chicken ({ 6 }) 
+# Sentence pair (350) source length 3 target length 6 alignment score : 3.15926e-08
+the bread was bought by rasoa 
+NULL ({ }) buy-pass-rasoa ({ 3 4 5 6 }) the ({ 1 }) bread ({ 2 }) 
+# Sentence pair (351) source length 6 target length 9 alignment score : 1.33015e-07
+where are clothes washed every day by rasoa ? 
+NULL ({ }) where ({ 1 }) foc ({ 2 }) wash-cf-rasoa-gen ({ 3 4 5 6 }) clothes ({ 7 }) every'day ({ 8 }) ? ({ 9 }) 
+# Sentence pair (352) source length 6 target length 7 alignment score : 2.60211e-05
+i intend to read this book . 
+NULL ({ }) intend-act ({ 1 2 }) read-pass-1sg ({ 3 4 }) this ({ 5 }) book ({ 6 }) this ({ }) . ({ 7 }) 
+# Sentence pair (353) source length 5 target length 5 alignment score : 0.000155297
+we live in that house 
+NULL ({ }) pres-active-live ({ 1 2 }) in ({ 3 }) that ({ 4 }) house ({ }) 1pl-excl-nom ({ 5 }) 
+# Sentence pair (354) source length 6 target length 11 alignment score : 2.0809e-16
+that rasoa is looking for the child is thought by rabe 
+NULL ({ 8 }) think-pass-rabe ({ 9 10 }) that ({ 1 }) look-for ({ 2 3 4 5 }) the ({ 6 }) child ({ 7 }) rasoa ({ 11 }) 
+# Sentence pair (355) source length 8 target length 11 alignment score : 3.75026e-08
+we think the soldiers to have been defeated by the enemy 
+NULL ({ 10 }) pres-act-think ({ 1 2 }) the ({ 3 }) soldier-s ({ 4 }) as ({ 5 }) defeat-thm ({ 6 7 }) the ({ }) enemy-gen ({ 8 9 }) we-incl ({ 11 }) 
+# Sentence pair (356) source length 5 target length 7 alignment score : 3.49997e-05
+ravelo says rasoa to have stolen rice 
+NULL ({ }) pres-act-say ({ 1 }) acc-rasoa ({ 2 3 }) as ({ 4 }) past-steal-rice ({ 5 6 }) ravelo ({ 7 }) 
+# Sentence pair (357) source length 7 target length 7 alignment score : 5.06534e-07
+where did rasoa buy the bread ? 
+NULL ({ }) where ({ 1 }) prt ({ 2 }) buy-act ({ 3 4 }) the ({ 5 }) bread ({ 6 }) rasoa ({ }) ? ({ 7 }) 
+# Sentence pair (358) source length 3 target length 5 alignment score : 1.95241e-05
+rasoa is chitchatting with rabe 
+NULL ({ }) pres-act-chitchat ({ 2 3 }) with-drabe ({ 4 5 }) rasoa ({ 1 }) 
+# Sentence pair (359) source length 10 target length 9 alignment score : 1.05253e-09
+the child buys the book on the table . 
+NULL ({ }) pres-buy ({ 3 }) the ({ 4 }) book ({ 5 }) there ({ }) on ({ 6 }) the ({ 7 }) table ({ 8 }) the ({ 1 }) child ({ 2 }) . ({ 9 }) 
+# Sentence pair (360) source length 6 target length 6 alignment score : 4.4223e-09
+what do you buy where ? 
+NULL ({ }) where ({ 5 }) the ({ }) what ({ 1 }) prt ({ 2 }) buy-pass-2sg ({ 3 4 }) ? ({ 6 }) 
+# Sentence pair (361) source length 4 target length 6 alignment score : 1.08123e-06
+what was bought by rasoa ? 
+NULL ({ }) what ({ 1 }) prt ({ }) buy-pass-rasoa ({ 2 3 4 5 }) ? ({ 6 }) 
+# Sentence pair (362) source length 5 target length 6 alignment score : 0.000785118
+the person who is chasing rabe 
+NULL ({ }) the ({ 1 }) person ({ 2 }) who ({ 3 }) chases ({ 4 5 }) acc-rabe ({ 6 }) 
+# Sentence pair (363) source length 6 target length 5 alignment score : 0.000262397
+who should visit rabe ? 
+NULL ({ }) should ({ 1 2 }) who ({ }) prt ({ }) visit-act ({ 3 }) acc-rabe ({ 4 }) ? ({ 5 }) 
+# Sentence pair (364) source length 3 target length 10 alignment score : 2.19652e-10
+the good that was done for each other by us 
+NULL ({ }) the ({ 1 }) good ({ 2 }) past-rec-act-do-circ-us1pl-incl-gen ({ 3 4 5 6 7 8 9 10 }) 
+# Sentence pair (365) source length 5 target length 7 alignment score : 1.32567e-08
+the child agrees to be washed . 
+NULL ({ }) pres-act-agree ({ 3 4 }) fut-wash-pass ({ 5 6 }) the ({ 1 }) child ({ 2 }) . ({ 7 }) 
+# Sentence pair (366) source length 4 target length 8 alignment score : 5.52438e-10
+the clothes intend to be washed by rasoa 
+NULL ({ 1 }) intend ({ 2 3 }) wash-pass-rasoa ({ 4 5 }) the ({ }) clothes ({ 6 7 8 }) 
+# Sentence pair (367) source length 6 target length 6 alignment score : 0.000336936
+rabe offers rice to the guests 
+NULL ({ }) pres-act-offer ({ 1 2 }) rice ({ 3 }) to ({ 4 }) the ({ 5 }) guest ({ 6 }) rabe ({ }) 
+# Sentence pair (368) source length 3 target length 5 alignment score : 8.25627e-07
+rasoa is washing her hands 
+NULL ({ 2 }) pres-act-wash ({ 3 4 }) hand ({ 5 }) rasoa ({ 1 }) 
+# Sentence pair (369) source length 8 target length 17 alignment score : 3.32985e-20
+it is good to recall the trust in e.o . by the malagasy in the old days 
+NULL ({ 12 15 }) good ({ 1 2 3 }) fut ({ 4 }) recall-thm ({ 5 }) the ({ 6 }) mutual-trust-circ-of ({ 7 }) the ({ }) malagasy ({ 8 }) of-yore ({ 9 10 11 13 14 16 17 }) 
+# Sentence pair (370) source length 5 target length 7 alignment score : 9.24782e-08
+it was rasoa who cut grass yesterday 
+NULL ({ }) yesterday ({ 1 2 }) rasoa ({ 3 }) prt ({ 4 }) cut ({ 5 }) grass ({ 6 7 }) 
+# Sentence pair (371) source length 4 target length 7 alignment score : 4.94232e-09
+we desired to send each other books 
+NULL ({ }) past-act-desire ({ 1 }) fut-rec-act-send ({ 2 3 4 }) book ({ }) we-excl ({ 5 6 7 }) 
+# Sentence pair (372) source length 6 target length 6 alignment score : 3.9273e-05
+who bought the bread yesterday ? 
+NULL ({ }) who ({ 1 }) prt ({ }) buy-act ({ 2 }) the ({ 3 }) bread ({ 4 5 }) ? ({ 6 }) 
+# Sentence pair (373) source length 5 target length 7 alignment score : 1.61255e-06
+rakoto is always at the market . 
+NULL ({ 5 }) there ({ }) acc-market ({ 1 2 }) always ({ 3 4 }) rakoto ({ 6 }) . ({ 7 }) 
+# Sentence pair (374) source length 5 target length 10 alignment score : 2.04301e-14
+rabe and ravao borrowed money from each other three times 
+NULL ({ }) past-rec-borrow-money ({ 3 4 5 6 }) three-times ({ 7 }) rabe ({ 1 }) and ({ 2 }) ravao ({ 8 9 10 }) 
+# Sentence pair (375) source length 8 target length 10 alignment score : 3.71832e-14
+the boys and the girls are playing in the house 
+NULL ({ 9 }) play ({ 1 }) there ({ }) in-house ({ 5 }) the ({ }) boys ({ 2 }) and ({ 3 }) the ({ 4 }) girls ({ 6 7 8 10 }) 
+# Sentence pair (376) source length 7 target length 9 alignment score : 3.97873e-12
+rabe thinks that rasoa is looking for the child 
+NULL ({ 5 }) think ({ 2 }) rabe ({ 1 }) that ({ 3 }) look-for ({ 6 7 }) the ({ 8 }) child ({ 9 }) rasoa ({ 4 }) 
+# Sentence pair (377) source length 5 target length 7 alignment score : 5.71057e-06
+rasoa tried to kill the chicken . 
+NULL ({ }) try-act ({ 1 }) kill-pass-rasoa ({ 2 3 4 }) the ({ 5 }) chicken ({ 6 }) . ({ 7 }) 
+# Sentence pair (378) source length 3 target length 5 alignment score : 5.70813e-07
+i am looking at him 
+NULL ({ }) pres-act-look-at ({ 2 3 4 }) him ({ 5 }) i ({ 1 }) 
+# Sentence pair (379) source length 5 target length 7 alignment score : 4.78072e-08
+the cows are running to the hills 
+NULL ({ 5 }) pres-act-run ({ 1 2 }) there ({ }) at-hills ({ 3 4 }) the ({ 6 }) cows ({ 7 }) 
+# Sentence pair (380) source length 7 target length 12 alignment score : 5.99492e-12
+the soldiers think each other to have been defeated by the enemy 
+NULL ({ }) pres-rec-act-think ({ 1 2 3 4 5 }) as ({ 6 }) defeat-thm ({ 7 8 }) the ({ }) enemy-gen ({ 9 10 }) the ({ 11 }) soldiers ({ 12 }) 
+# Sentence pair (381) source length 8 target length 9 alignment score : 2.98035e-11
+rabe twice began to knock on this door . 
+NULL ({ 4 }) began ({ 1 }) knock ({ 2 3 5 }) this ({ }) door ({ 6 }) this ({ 7 }) rabe ({ }) twice ({ 8 }) . ({ 9 }) 
+# Sentence pair (382) source length 9 target length 10 alignment score : 3.65546e-14
+he began to no longer laugh at the story . 
+NULL ({ 3 }) began ({ 2 }) neg ({ 5 }) laugh ({ 6 }) past-prep ({ 7 }) the ({ 8 }) story ({ 9 }) npi ({ 4 }) he ({ 1 }) . ({ 10 }) 
+# Sentence pair (383) source length 4 target length 7 alignment score : 1.42966e-06
+the students who are chasing each other 
+NULL ({ }) the ({ 1 }) student-s ({ 2 }) rel ({ 3 }) rec-chase ({ 4 5 6 7 }) 
+# Sentence pair (384) source length 5 target length 6 alignment score : 2.41611e-08
+rasoa intends to wash the clothes 
+NULL ({ 3 }) intend ({ 1 2 }) wash ({ 4 }) the ({ 5 }) clothes ({ 6 }) rasoa ({ }) 
+# Sentence pair (385) source length 7 target length 8 alignment score : 2.47467e-09
+that book was n't read by the students 
+NULL ({ }) not ({ 4 }) read-tf ({ 5 6 }) the ({ 7 }) students ({ 8 }) that ({ 1 }) book ({ 2 }) that ({ 3 }) 
+# Sentence pair (386) source length 5 target length 7 alignment score : 2.73533e-08
+it 's rabe who bought the chicken 
+NULL ({ }) rabe ({ 1 }) focus ({ 2 3 4 }) buy-act ({ 5 }) the ({ 6 }) chicken ({ 7 }) 
+# Sentence pair (387) source length 6 target length 9 alignment score : 1.06188e-08
+the woman i hoped rabe built a house for 
+NULL ({ }) the ({ 1 }) woman ({ 2 }) hoped-1sg-gen ({ 3 4 }) as ({ }) built-cf-rabe-gen ({ 5 6 }) house ({ 7 8 9 }) 
+# Sentence pair (388) source length 7 target length 7 alignment score : 1.29177e-06
+when did rabe buy the rice ? 
+NULL ({ }) when ({ 1 }) rabe ({ 3 }) prt ({ 2 }) buy-act ({ 4 }) the ({ 5 }) rice ({ 6 }) ? ({ 7 }) 
+# Sentence pair (389) source length 8 target length 10 alignment score : 5.76829e-08
+vao is pulling the hair of the soa 's child 
+NULL ({ 7 }) pulls ({ 1 2 }) the ({ }) hair ({ 3 }) the ({ 4 }) child'art ({ 5 6 }) soa ({ 8 }) art ({ 9 }) vao ({ 10 }) 
+# Sentence pair (390) source length 7 target length 7 alignment score : 0.000487725
+who did n't eat the rice ? 
+NULL ({ }) who ({ 1 }) prt ({ 2 }) neg ({ 3 }) eat ({ 4 }) the ({ 5 }) rice ({ 6 }) ? ({ 7 }) 
+# Sentence pair (391) source length 3 target length 6 alignment score : 0.000144378
+the zeal with which rabe worked 
+NULL ({ }) the ({ 1 }) zeal ({ 2 }) past-af-work-cf-rabe-gen ({ 3 4 5 6 }) 
+# Sentence pair (392) source length 5 target length 7 alignment score : 1.5085e-09
+rasoa is beginning to wash the clothes 
+NULL ({ 2 }) begin ({ 3 4 }) wash ({ 5 }) the ({ 6 }) clothes ({ 7 }) rasoa ({ 1 }) 
+# Sentence pair (393) source length 5 target length 6 alignment score : 2.60772e-06
+rabe is buying the chicken . 
+NULL ({ }) pres-act-buy ({ 1 2 3 }) the ({ 4 }) chicken ({ 5 }) rabe ({ }) . ({ 6 }) 
+# Sentence pair (394) source length 6 target length 6 alignment score : 2.05672e-07
+rasoa bought bread at the market 
+NULL ({ 5 }) buy-act ({ 2 }) the ({ }) bread ({ 3 }) there ({ 4 }) at-market ({ 6 }) rasoa ({ 1 }) 
+# Sentence pair (395) source length 4 target length 9 alignment score : 1.01342e-06
+the books we desired to send to each other 
+NULL ({ }) the ({ 1 }) books ({ 2 }) past-desire-thm-1-pl-excl-gen ({ 3 4 }) fut-rec-act-send-circ ({ 5 6 7 8 9 }) 
+# Sentence pair (396) source length 6 target length 6 alignment score : 7.44724e-05
+rabe stopped not eating sugar . 
+NULL ({ }) stop-act ({ 1 2 }) neg ({ 3 }) eat-pass-rabe ({ 4 }) the ({ }) sugar ({ 5 }) . ({ 6 }) 
+# Sentence pair (397) source length 8 target length 7 alignment score : 2.34372e-08
+they defended their children and their spouses 
+NULL ({ }) past-act-defend ({ 1 }) the ({ }) child-3gen ({ 2 3 }) and ({ 5 }) the ({ }) spouse-3gen ({ 6 }) 3nom ({ 4 }) dem-pl ({ 7 }) 
+# Sentence pair (398) source length 7 target length 8 alignment score : 7.67733e-14
+yesterday the children began to all laugh . 
+NULL ({ }) began ({ 4 }) yesterday ({ 1 }) laugh ({ 5 }) all ({ 6 }) the ({ 2 }) children ({ 3 7 }) . ({ 8 }) 
+# Sentence pair (399) source length 5 target length 5 alignment score : 1.54173e-06
+the child buys it . 
+NULL ({ }) pres-buy ({ 3 }) it ({ 4 }) the ({ 1 }) child ({ 2 }) . ({ 5 }) 
+# Sentence pair (400) source length 5 target length 8 alignment score : 2.51709e-10
+rabe and ravao kicked each other three times 
+NULL ({ }) pres-rec-act-kick ({ 3 4 }) three-times ({ 5 }) rabe ({ 1 }) and ({ 2 }) ravao ({ 6 7 8 }) 
+# Sentence pair (401) source length 4 target length 8 alignment score : 1.61845e-09
+rabe and rasoa are chitchatting with each other 
+NULL ({ }) pres-rec-act-chitchat ({ 4 5 6 7 8 }) rabe ({ 1 }) and ({ 2 }) rasoa ({ 3 }) 
+# Sentence pair (402) source length 5 target length 7 alignment score : 5.71057e-06
+rasoa tried to kill the chicken . 
+NULL ({ }) try-act ({ 1 }) kill-pass-rasoa ({ 2 3 4 }) the ({ 5 }) chicken ({ 6 }) . ({ 7 }) 
+# Sentence pair (403) source length 4 target length 9 alignment score : 4.20658e-12
+the clothes are beginning to be washed by rasoa 
+NULL ({ 1 }) begin ({ 2 3 4 }) wash-pass-rasoa ({ 5 6 }) the ({ }) clothes ({ 7 8 9 }) 
+# Sentence pair (404) source length 6 target length 7 alignment score : 1.74841e-08
+rabe begins to drive a car . 
+NULL ({ 3 }) begin-circ ({ 1 2 }) drive ({ 4 5 }) the ({ }) car ({ 6 }) rabe ({ }) . ({ 7 }) 
+# Sentence pair (405) source length 5 target length 5 alignment score : 5.80873e-05
+rasoa bought the bread yesterday 
+NULL ({ }) buy-act ({ 2 }) the ({ 3 }) bread ({ 4 }) yesterday ({ 5 }) rasoa ({ 1 }) 
+# Sentence pair (406) source length 6 target length 5 alignment score : 5.21669e-05
+i saw and greeted them 
+NULL ({ }) past-act-see ({ 1 }) and ({ }) past-act-greet ({ 2 3 }) 3acc ({ 4 }) dem-pl ({ }) 1-sg-nom ({ 5 }) 
+# Sentence pair (407) source length 9 target length 9 alignment score : 2.26204e-13
+was n't that book read by the students ? 
+NULL ({ }) not ({ 2 }) read-tf ({ 5 6 }) the ({ 7 }) students ({ 8 }) ? ({ 9 }) that ({ 3 }) book ({ 4 }) that ({ 1 }) ? ({ }) 
+# Sentence pair (408) source length 11 target length 10 alignment score : 1.14381e-07
+when did rasoa harvest rice and rabe cut grass ? 
+NULL ({ }) when ({ 1 }) rasoa ({ 3 }) prt ({ 2 }) harvest ({ 4 }) rice ({ 5 }) and ({ 6 }) rabe ({ 7 }) prt ({ }) cut ({ 8 }) grass ({ 9 }) ? ({ 10 }) 
+# Sentence pair (409) source length 6 target length 6 alignment score : 2.06743e-05
+where does rasoa buy bread ? 
+NULL ({ }) where ({ 1 2 }) rasoa ({ 3 }) prt ({ }) buy-act ({ 4 }) bread ({ 5 }) ? ({ 6 }) 
+# Sentence pair (410) source length 4 target length 5 alignment score : 0.000481902
+rasoa , she kisses rabe 
+NULL ({ }) rasoa ({ 1 }) topic ({ 2 3 }) kiss ({ 4 }) acc-rabe ({ 5 }) 
+# Sentence pair (411) source length 6 target length 7 alignment score : 1.02103e-06
+rabe tried to kill the chicken . 
+NULL ({ }) past-act-try ({ 1 }) past-act-kill ({ 2 3 4 }) the ({ 5 }) chicken ({ 6 }) rabe ({ }) . ({ 7 }) 
+# Sentence pair (412) source length 6 target length 10 alignment score : 9.12834e-18
+rasoa and ravelo give money to each other 's children 
+NULL ({ }) pres-rec-act-give ({ 4 6 7 8 }) money ({ 5 }) child ({ 10 }) rasoa ({ 1 }) and ({ 2 }) ravelo ({ 3 9 }) 
+# Sentence pair (413) source length 3 target length 5 alignment score : 3.31542e-06
+rabe sits next to rasoa 
+NULL ({ }) pres-act-sit ({ 2 3 }) next-to-rasoa ({ 4 5 }) rabe ({ 1 }) 
+# Sentence pair (414) source length 6 target length 5 alignment score : 0.000200807
+who should visit rakoto ? 
+NULL ({ }) should ({ 1 2 }) who ({ }) prt ({ }) visit ({ 3 }) acc-rakoto ({ 4 }) ? ({ 5 }) 
+# Sentence pair (415) source length 6 target length 6 alignment score : 1.04385e-06
+the student saw the woman . 
+NULL ({ }) saw ({ 3 }) the ({ 4 }) woman ({ 5 }) the ({ 1 }) student ({ 2 }) . ({ 6 }) 
+# Sentence pair (416) source length 4 target length 7 alignment score : 1.78713e-11
+the chicken was killed by rasoa . 
+NULL ({ }) past-kill-pass-rasoa ({ 3 4 }) the ({ 1 }) chicken ({ 2 5 6 }) . ({ 7 }) 
+# Sentence pair (417) source length 5 target length 6 alignment score : 2.15628e-05
+who does his mother respect ? 
+NULL ({ }) respect ({ 1 2 }) who-acc ({ 3 }) the ({ }) mother-3sg ({ 4 5 }) ? ({ 6 }) 
+# Sentence pair (418) source length 6 target length 10 alignment score : 8.1098e-13
+rasoa and ravelo said each other to have stolen rice 
+NULL ({ }) past-rec-act-say ({ 4 5 6 }) as ({ 7 }) past-steal-rice ({ 8 9 }) rasoa ({ 1 }) and ({ 2 }) ravelo ({ 3 10 }) 
+# Sentence pair (419) source length 5 target length 5 alignment score : 8.95391e-06
+i do n't know . 
+NULL ({ }) neg-be-pres ({ 2 }) i ({ 1 }) prog ({ 3 }) know ({ 4 }) . ({ 5 }) 
+# Sentence pair (420) source length 4 target length 4 alignment score : 0.0182341
+my favourite old dog 
+NULL ({ }) 1s-gen ({ 1 }) favourite ({ 2 }) old ({ 3 }) dog ({ 4 }) 
+# Sentence pair (421) source length 7 target length 8 alignment score : 1.11952e-05
+the man came so they could see her 
+NULL ({ }) came ({ 1 }) the ({ }) man ({ 2 }) to-3pl ({ 3 4 }) 3sgf ({ 5 }) see-nonfin ({ 6 7 }) her ({ 8 }) 
+# Sentence pair (422) source length 6 target length 6 alignment score : 0.000167659
+gwyn will not be sleeping . 
+NULL ({ }) be-fut-3sg ({ 1 }) gwyn ({ 2 }) neg ({ 3 }) prog ({ 4 }) sleep ({ 5 }) . ({ 6 }) 
+# Sentence pair (423) source length 5 target length 5 alignment score : 0.00115818
+gwyn will be sleeping . 
+NULL ({ }) be-fut-3sg ({ 1 }) gwyn ({ 2 }) prog ({ 3 }) sleep ({ 4 }) . ({ 5 }) 
+# Sentence pair (424) source length 6 target length 5 alignment score : 0.000378177
+gwen saw three cats . 
+NULL ({ }) saw ({ }) g ({ 1 }) {l}-3-fem ({ 2 3 }) cat ({ }) fem ({ 4 }) . ({ 5 }) 
+# Sentence pair (425) source length 9 target length 7 alignment score : 1.31162e-05
+do you see sioned these days ? 
+NULL ({ }) be-pres-2sg ({ 1 }) you-sg ({ 2 }) prog ({ }) see ({ 3 }) sioned ({ 4 }) the ({ }) days ({ 5 }) here ({ 6 }) ? ({ 7 }) 
+# Sentence pair (426) source length 6 target length 7 alignment score : 5.83775e-07
+the man did buy a car . 
+NULL ({ }) did ({ 1 }) the ({ }) man ({ 2 }) buy ({ 3 4 5 }) car ({ 6 }) . ({ 7 }) 
+# Sentence pair (427) source length 7 target length 7 alignment score : 0.00391417
+i and my brother saw ourselves . 
+NULL ({ }) saw-1s ({ 1 }) 1s ({ 2 }) and-1s ({ 3 }) brother ({ 4 }) 1pl ({ 5 }) self ({ 6 }) . ({ 7 }) 
+# Sentence pair (428) source length 7 target length 7 alignment score : 5.08782e-05
+the woman was buying a bike . 
+NULL ({ }) was ({ }) the ({ 1 }) woman ({ 2 }) prog ({ 3 }) buy-vn ({ 4 5 }) bike ({ 6 }) . ({ 7 }) 
+# Sentence pair (429) source length 6 target length 6 alignment score : 1.089e-07
+where john is is in london 
+NULL ({ 4 }) be ({ }) where ({ 1 }) is ({ 3 }) john ({ 2 }) in ({ 5 }) london ({ 6 }) 
+# Sentence pair (430) source length 5 target length 5 alignment score : 0.000327095
+he has woken up . 
+NULL ({ }) is ({ }) he ({ 1 }) perf ({ 2 }) wake-inf ({ 3 4 }) . ({ 5 }) 
+# Sentence pair (431) source length 10 target length 10 alignment score : 3.40877e-11
+i know that sioned will not be working tonight . 
+NULL ({ }) know-pres-1sg ({ 2 }) i ({ 1 }) neg ({ }) be-fut-3sg ({ 3 }) sioned ({ 4 5 }) neg ({ 6 }) prog ({ 7 }) work ({ 8 }) tonight ({ 9 }) . ({ 10 }) 
+# Sentence pair (432) source length 4 target length 5 alignment score : 0.000983224
+a big green chinese cup 
+NULL ({ }) cup ({ 1 }) big ({ 2 }) green ({ 3 }) chinese ({ 4 5 }) 
+# Sentence pair (433) source length 5 target length 5 alignment score : 2.87231e-05
+john saw a dragon . 
+NULL ({ }) do-3sg-past ({ 2 }) john ({ 1 }) see-vn ({ 3 }) dragon ({ 4 }) . ({ 5 }) 
+# Sentence pair (434) source length 4 target length 5 alignment score : 7.70038e-07
+dafydd 's big black dog 
+NULL ({ }) dog ({ 1 }) big ({ 3 }) black ({ 4 }) dafydd ({ 2 5 }) 
+# Sentence pair (435) source length 7 target length 15 alignment score : 7.55282e-16
+this is the best possible site the best site that there could possibly be . 
+NULL ({ 7 }) this ({ 1 }) is ({ 2 }) the ({ 3 }) site ({ 4 }) best ({ 5 6 8 9 10 }) possible ({ 11 12 13 14 }) . ({ 15 }) 
+# Sentence pair (436) source length 7 target length 6 alignment score : 4.1547e-07
+i do n't not worry . 
+NULL ({ }) be-pres-1sg ({ 2 }) i ({ 1 }) neg ({ 3 }) neg ({ }) prog ({ 4 }) worry ({ 5 }) . ({ 6 }) 
+# Sentence pair (437) source length 4 target length 5 alignment score : 0.00233928
+his destruction of the town 
+NULL ({ }) his ({ 1 }) destruction ({ 2 }) of-the ({ 3 4 }) town ({ 5 }) 
+# Sentence pair (438) source length 4 target length 5 alignment score : 5.05681e-05
+ieuan 's new red car 
+NULL ({ }) car ({ 1 }) red ({ 2 }) new ({ 3 }) ieuan ({ 4 5 }) 
+# Sentence pair (439) source length 4 target length 4 alignment score : 0.0205304
+the interfering little sneak 
+NULL ({ }) the ({ 1 }) sneak ({ 2 }) little ({ 3 }) interfering ({ 4 }) 
+# Sentence pair (440) source length 4 target length 4 alignment score : 0.01797
+the other smaller parties 
+NULL ({ }) the ({ 1 }) parties ({ 2 }) smaller ({ 3 }) other-pl ({ 4 }) 
+# Sentence pair (441) source length 5 target length 4 alignment score : 1.52421e-06
+this little well-behaved girl 
+NULL ({ }) the ({ }) girl ({ 4 }) little ({ 2 }) quiet ({ 3 }) this ({ 1 }) 
+# Sentence pair (442) source length 4 target length 5 alignment score : 5.64248e-08
+he did n't sleep . 
+NULL ({ }) slept-3s ({ 2 4 }) he ({ 1 }) neg ({ 3 }) . ({ 5 }) 
+# Sentence pair (443) source length 4 target length 5 alignment score : 0.000411024
+without owing anything to him 
+NULL ({ }) without ({ 1 }) owe-nonfin ({ 2 }) anything ({ 3 }) to-him ({ 4 5 }) 
+# Sentence pair (444) source length 6 target length 5 alignment score : 5.27485e-06
+gwyn is not sleeping . 
+NULL ({ }) neg-be-pres-3sg ({ 1 2 }) gwyn ({ }) neg ({ }) prog ({ 3 }) sleep ({ 4 }) . ({ 5 }) 
+# Sentence pair (445) source length 5 target length 5 alignment score : 0.00541873
+they saw the girl . 
+NULL ({ }) see-3pl-past ({ 1 }) they ({ 2 }) the ({ 3 }) girl ({ 4 }) . ({ 5 }) 
+# Sentence pair (446) source length 8 target length 7 alignment score : 3.69545e-05
+aled was convincing elen to go home 
+NULL ({ }) was ({ }) a ({ 1 }) prog ({ 2 }) convince ({ 3 }) e ({ 4 }) to ({ 5 }) go-nonfin ({ 6 }) home ({ 7 }) 
+# Sentence pair (447) source length 7 target length 9 alignment score : 1.11438e-09
+a new welsh adaptation of thomas middleton 's play 
+NULL ({ }) adaptation ({ 1 2 3 }) welsh ({ 4 }) new ({ }) of ({ 5 }) play ({ }) thomas ({ 6 7 }) middleton ({ 8 9 }) 
+# Sentence pair (448) source length 5 target length 5 alignment score : 0.00444555
+sioned has not arrived . 
+NULL ({ }) be-pres-3sg ({ 1 }) sioned ({ 2 }) without ({ 3 }) arrive ({ 4 }) . ({ 5 }) 
+# Sentence pair (449) source length 6 target length 6 alignment score : 0.000278596
+the driver described the accident . 
+NULL ({ }) described ({ 1 }) the ({ }) driver ({ 2 3 }) the ({ 4 }) accident ({ 5 }) . ({ 6 }) 
+# Sentence pair (450) source length 9 target length 10 alignment score : 6.34428e-13
+i know that sioned will not be working tonight . 
+NULL ({ }) know-pres-1sg ({ 2 }) i ({ 1 }) neg ({ }) be-fut-3sg ({ 3 }) sioned ({ 4 5 }) prog ({ 6 7 }) work ({ 8 }) tonight ({ 9 }) . ({ 10 }) 
+# Sentence pair (451) source length 7 target length 8 alignment score : 9.31544e-06
+and he saw the horse 's tracks . 
+NULL ({ }) and ({ 1 }) tracks ({ 2 3 }) the ({ 4 }) horse ({ 5 }) prt ({ }) saw-impf-3s ({ 6 7 }) . ({ 8 }) 
+# Sentence pair (452) source length 5 target length 6 alignment score : 0.00164884
+where were you last night ? 
+NULL ({ }) where ({ 1 }) be-past-2sg ({ 2 }) you-sg ({ 3 }) last-night ({ 4 5 }) ? ({ 6 }) 
+# Sentence pair (453) source length 6 target length 5 alignment score : 7.17477e-05
+sioned has not arrived . 
+NULL ({ }) neg-be-pres-3sg ({ 1 }) sioned ({ 2 }) neg ({ }) perf ({ 3 }) arrive ({ 4 }) . ({ 5 }) 
+# Sentence pair (454) source length 8 target length 7 alignment score : 1.67643e-07
+aled is endeavoring to finish his work 
+NULL ({ }) is ({ }) a ({ 1 }) prog ({ 2 }) endeavor ({ 3 }) to ({ 4 }) finish-nonfin ({ 5 }) his ({ 6 }) work ({ 7 }) 
+# Sentence pair (455) source length 9 target length 7 alignment score : 4.76841e-05
+megan expected sioned to go home . 
+NULL ({ }) expect-past-3sg ({ 1 }) megan ({ 2 }) to ({ }) sioned ({ 3 }) neg ({ }) with ({ 4 }) go ({ 5 }) home ({ 6 }) . ({ 7 }) 
+# Sentence pair (456) source length 6 target length 6 alignment score : 0.000191282
+sioned has not not arrived . 
+NULL ({ }) neg-be-pres-3sg ({ 1 }) sioned ({ 2 }) neg ({ 3 }) without ({ 4 }) arrive ({ 5 }) . ({ 6 }) 
+# Sentence pair (457) source length 4 target length 4 alignment score : 0.0284001
+soft round red seats 
+NULL ({ }) seats ({ 1 }) round ({ 2 }) red ({ 3 }) soft ({ 4 }) 
+# Sentence pair (458) source length 8 target length 9 alignment score : 1.21011e-06
+steffan said that nia had painted the picture . 
+NULL ({ }) said ({ 1 }) steffan ({ 2 3 }) to ({ }) nia ({ 4 }) paint-vn ({ 5 6 }) the ({ 7 }) picture ({ 8 }) . ({ 9 }) 
+# Sentence pair (459) source length 4 target length 4 alignment score : 0.000203975
+other great new songs 
+NULL ({ }) songs ({ 1 2 }) new ({ }) great ({ 3 }) other-pl ({ 4 }) 
+# Sentence pair (460) source length 3 target length 4 alignment score : 0.00882005
+a promising young poet 
+NULL ({ }) poet ({ 1 }) young ({ 2 }) promising ({ 3 4 }) 
+# Sentence pair (461) source length 6 target length 6 alignment score : 0.000337133
+the dragon killed the man . 
+NULL ({ }) killed ({ 1 }) the ({ }) dragon ({ 2 3 }) the ({ 4 }) man ({ 5 }) . ({ 6 }) 
+# Sentence pair (462) source length 8 target length 10 alignment score : 1.93529e-11
+here is the book in which i read the story 
+NULL ({ }) here-is ({ 1 2 }) the ({ 3 }) book ({ 4 }) that ({ }) read.1 ({ 5 6 }) the ({ 9 }) story ({ 10 }) in-it ({ 7 8 }) 
+# Sentence pair (463) source length 4 target length 5 alignment score : 0.00214002
+what did you see ? 
+NULL ({ }) what ({ 1 }) see-past-2sg ({ 2 }) you-sg ({ 3 4 }) ? ({ 5 }) 
+# Sentence pair (464) source length 6 target length 5 alignment score : 0.00493352
+the boy who was reading 
+NULL ({ }) the ({ 1 }) boy ({ 2 }) who ({ 3 }) was ({ }) a' ({ 4 }) reading ({ 5 }) 
+# Sentence pair (465) source length 9 target length 10 alignment score : 5.70813e-11
+gwyn did n't try to not answer the question . 
+NULL ({ }) try-past-3sg ({ 4 }) gwyn ({ 1 }) neg ({ 2 }) neg ({ 3 }) with ({ 5 }) answer ({ 6 7 }) the ({ 8 }) question ({ 9 }) . ({ 10 }) 
+# Sentence pair (466) source length 5 target length 5 alignment score : 4.56406e-06
+the children read the book 
+NULL ({ }) read-past-3sg ({ 3 }) the ({ 1 }) children ({ 2 }) the ({ 4 }) book ({ 5 }) 
+# Sentence pair (467) source length 5 target length 4 alignment score : 2.54774e-05
+these three other parties 
+NULL ({ }) the ({ }) three ({ 2 }) party ({ 1 }) other-sg ({ 3 }) these-pl ({ 4 }) 
+# Sentence pair (468) source length 4 target length 6 alignment score : 0.00030874
+a son was born to her 
+NULL ({ }) son ({ 1 }) ptc ({ 2 }) be-born-pret-impers ({ 3 4 }) to-her ({ 5 6 }) 
+# Sentence pair (469) source length 7 target length 7 alignment score : 3.68468e-05
+the romans will destroy our city . 
+NULL ({ }) will ({ }) the ({ 1 }) romans ({ 2 3 }) destroy ({ 4 }) our ({ 5 }) city ({ 6 }) . ({ 7 }) 
+# Sentence pair (470) source length 7 target length 7 alignment score : 1.4957e-06
+i have n't slept at all . 
+NULL ({ }) be-pres-1s ({ 1 2 }) i ({ }) neg ({ 3 }) perf ({ 4 }) sleep-inf ({ 5 }) dim ({ 6 }) . ({ 7 }) 
+# Sentence pair (471) source length 7 target length 7 alignment score : 4.37494e-06
+megan expected sioned to go home . 
+NULL ({ 4 }) expect-past-3sg ({ 1 }) megan ({ 2 }) to ({ }) sioned ({ 3 }) go ({ 5 }) home ({ 6 }) . ({ 7 }) 
+# Sentence pair (472) source length 5 target length 7 alignment score : 1.44352e-05
+and he sits under the leaves . 
+NULL ({ 5 }) and-there ({ 1 }) house ({ 2 }) leaves-loc ({ 3 4 }) sit-ger ({ 6 }) . ({ 7 }) 
+# Sentence pair (473) source length 5 target length 9 alignment score : 3.08055e-11
+after finishing making tortillas , maria ate them . 
+NULL ({ }) maria ({ 1 }) tortillas ({ 2 3 }) make-term-sub ({ 4 7 }) 3sg.nnom.pl-eat-pst ({ 5 6 8 }) . ({ 9 }) 
+# Sentence pair (474) source length 7 target length 10 alignment score : 6.4084e-12
+i gave the markers to sandra and to joel . 
+NULL ({ 3 }) sandra-nnom.sg ({ 1 6 }) and ({ 7 }) joel-nnom.sg ({ 2 }) -1sg ({ 4 }) marker-pl ({ 5 8 }) give-pst ({ 9 }) . ({ 10 }) 
+# Sentence pair (475) source length 6 target length 11 alignment score : 8.17356e-13
+john thinks that he is going to buy a house . 
+NULL ({ 9 }) john ({ 1 }) this.way ({ 2 }) think.prs ({ 3 4 }) house-nnom.sg ({ 5 6 }) buy-desid-go.sg.prs ({ 7 8 10 }) . ({ 11 }) 
+# Sentence pair (476) source length 6 target length 6 alignment score : 8.21605e-05
+john sang and maría danced . 
+NULL ({ }) john ({ 1 }) sing-pst ({ 2 }) maría ({ }) and ({ 3 }) dance-pst ({ 4 5 }) . ({ 6 }) 
+# Sentence pair (477) source length 3 target length 6 alignment score : 1.72817e-06
+i will have a house . 
+NULL ({ }) i ({ 1 }) house-fut ({ 2 3 4 5 }) . ({ 6 }) 
+# Sentence pair (478) source length 4 target length 5 alignment score : 2.05327e-06
+what did john eat ? 
+NULL ({ }) john ({ }) what ({ 1 }) eat-pst ({ 2 3 4 }) ? ({ 5 }) 
+# Sentence pair (479) source length 5 target length 6 alignment score : 0.00106898
+each teacher bought a book . 
+NULL ({ }) each ({ 1 }) teacher-pl ({ 2 3 }) book-pl ({ 4 }) buy-pst ({ 5 }) . ({ 6 }) 
+# Sentence pair (480) source length 5 target length 6 alignment score : 0.000260706
+he gave the corn to john 
+NULL ({ }) he ({ 1 }) john-dat ({ 2 }) det.acc ({ 3 }) corn-acc ({ 4 }) give-perf ({ 5 6 }) 
+# Sentence pair (481) source length 7 target length 8 alignment score : 3.22151e-07
+john sang yesterday and will dance tomorrow . 
+NULL ({ }) john ({ 1 }) yesterday ({ 3 }) sing-pst ({ 2 }) and ({ 4 }) tomorrow ({ 5 }) dance-intt ({ 6 7 }) . ({ 8 }) 
+# Sentence pair (482) source length 5 target length 5 alignment score : 1.17384e-05
+those kittens finally got full 
+NULL ({ }) those ({ 1 }) little ({ }) cats ({ 2 }) already-emph ({ 3 }) red-full-perf ({ 4 5 }) 
+# Sentence pair (483) source length 6 target length 9 alignment score : 9.5614e-08
+this bird might be of bad omen somehow . 
+NULL ({ }) this ({ 1 }) bird ({ 2 }) might ({ 3 4 }) do-bad-omen ({ 5 6 7 }) somehow ({ 8 }) . ({ 9 }) 
+# Sentence pair (484) source length 5 target length 8 alignment score : 1.4072e-10
+i sang in the church with john . 
+NULL ({ 4 }) 1sg ({ 1 }) church-loc ({ 3 5 }) sing-pst ({ 2 }) john-nnom.sg-com ({ 6 7 }) . ({ 8 }) 
+# Sentence pair (485) source length 5 target length 6 alignment score : 0.000397304
+my wife likes the dogs . 
+NULL ({ 4 }) 1sg.poss ({ 1 }) wife ({ 2 }) dog-pl ({ 3 }) like.prs ({ 5 }) . ({ 6 }) 
+# Sentence pair (486) source length 6 target length 6 alignment score : 1.43549e-05
+he gave john the corn . 
+NULL ({ 4 }) he ({ 1 }) john-acc ({ 2 }) det.acc ({ }) corn-acc ({ 3 }) give(food)-perf ({ 5 }) . ({ 6 }) 
+# Sentence pair (487) source length 7 target length 12 alignment score : 1.58337e-12
+and having going around him , it urinated on his back . 
+NULL ({ }) again ({ 1 }) 3sg-circle-adv ({ 2 3 4 5 6 }) go-ppl ({ 7 8 }) and ({ }) back-loc ({ 9 10 }) 3nnom.sg-urinate-pst ({ 11 }) . ({ 12 }) 
+# Sentence pair (488) source length 7 target length 13 alignment score : 7.33721e-16
+and now the snakes come on this side to look for us . 
+NULL ({ 3 }) now ({ 1 2 }) and-again ({ 4 5 6 7 8 }) those ({ 9 }) snake-pl ({ 10 }) here ({ }) 3pl.obl-search:prs ({ 11 12 }) . ({ 13 }) 
+# Sentence pair (489) source length 7 target length 9 alignment score : 6.97232e-08
+now i make forty pesos a day here . 
+NULL ({ }) forty ({ 1 }) peso ({ 2 }) daily-clit.1sg ({ 3 4 5 6 }) 1sg-earn ({ 7 }) now ({ }) here ({ 8 }) . ({ 9 }) 
+# Sentence pair (490) source length 6 target length 7 alignment score : 1.45033e-05
+he showed the horse the house . 
+NULL ({ 3 }) he ({ 1 }) det.acc ({ 2 }) horse-acc ({ 4 }) house-acc ({ 5 }) see-cause-perf ({ 6 }) . ({ 7 }) 
+# Sentence pair (491) source length 6 target length 8 alignment score : 1.0123e-06
+john works in torim and in vicam . 
+NULL ({ }) john ({ 1 }) torim-loc ({ 2 3 4 }) and ({ 5 }) vicam-loc ({ 6 }) work.prs ({ 7 }) . ({ 8 }) 
+# Sentence pair (492) source length 8 target length 8 alignment score : 0.000866964
+john sang and mary and peter danced . 
+NULL ({ }) john ({ 1 }) sing-pst ({ 2 }) and ({ 3 }) mary ({ 4 }) and ({ 5 }) peter ({ 6 }) dance-pst ({ 7 }) . ({ 8 }) 
+# Sentence pair (493) source length 6 target length 9 alignment score : 3.56352e-12
+pedro says goyo have stolen the horse yesterday . 
+NULL ({ 6 }) peo-nom ({ 1 }) goyo-acc ({ 2 3 }) yesterday ({ }) horse-acc ({ 4 7 }) steal-prfv-say-pres ({ 5 8 }) . ({ 9 }) 
+# Sentence pair (494) source length 7 target length 10 alignment score : 6.55078e-13
+john wants to sleep because he is not happy . 
+NULL ({ 7 }) because ({ 5 }) 3sgp ({ 6 }) not ({ 8 }) happy ({ 9 }) john ({ 1 }) sleep-des ({ 2 3 4 }) . ({ 10 }) 
+# Sentence pair (495) source length 6 target length 9 alignment score : 1.10186e-10
+i put up the machetes and the knifes . 
+NULL ({ 7 }) 1sg ({ 1 }) machete-pl ({ 2 }) and ({ 6 }) knife-pl ({ 3 4 }) put.up.pl.obj-pst ({ 5 8 }) . ({ 9 }) 
+# Sentence pair (496) source length 7 target length 11 alignment score : 1.29587e-08
+i get up the man and get up the child . 
+NULL ({ 4 9 }) 1sg ({ 1 }) man-nnom.sg ({ 2 }) get.up.nnom.sg-pst ({ 3 5 }) and ({ 6 }) child-nnom.sg ({ 7 8 }) get.up.sg-pst ({ 10 }) . ({ 11 }) 
+# Sentence pair (497) source length 8 target length 9 alignment score : 2.89594e-09
+the children and the teacher went over there . 
+NULL ({ 4 }) det.pl ({ 1 }) child-pl ({ 2 }) and ({ 3 }) det.sg ({ 6 }) teacher ({ 5 }) there ({ 7 }) go.pl-pst ({ 8 }) . ({ 9 }) 
+# Sentence pair (498) source length 5 target length 6 alignment score : 0.000179117
+you must not do that . 
+NULL ({ }) you-pl ({ 1 2 }) neg ({ 3 }) thus ({ 4 }) do-fut ({ 5 }) . ({ 6 }) 
+# Sentence pair (499) source length 5 target length 5 alignment score : 4.48175e-05
+the pups are very full 
+NULL ({ }) the.pl ({ 1 2 }) little ({ }) dog-pl ({ 3 }) very ({ 4 }) red-full ({ 5 }) 
+# Sentence pair (500) source length 5 target length 5 alignment score : 0.000971701
+juan sees and hears . 
+NULL ({ }) john ({ 1 }) see.prs ({ 2 }) and ({ 3 }) hear.prs ({ 4 }) . ({ 5 }) 
+# Sentence pair (501) source length 4 target length 6 alignment score : 2.06869e-06
+what do they work on ? 
+NULL ({ }) what-loc ({ 1 }) 3pl ({ 2 3 4 }) work.prs ({ 5 }) ? ({ 6 }) 
+# Sentence pair (502) source length 6 target length 9 alignment score : 1.26747e-06
+the horse and the donkey are really big . 
+NULL ({ 1 }) horse ({ 2 }) and ({ 3 }) donkey ({ 4 5 }) very ({ 6 }) red-big-pl ({ 7 8 }) . ({ 9 }) 
+# Sentence pair (503) source length 3 target length 5 alignment score : 0.000191976
+what shall we do ? 
+NULL ({ }) how-q-1p ({ 1 2 }) do-fut ({ 3 4 }) ? ({ 5 }) 
+# Sentence pair (504) source length 6 target length 8 alignment score : 3.92074e-05
+i caught the pig and the cat . 
+NULL ({ 6 }) 1sg ({ 1 }) pig-nnom.sg ({ 2 }) grasp-pst ({ 3 4 }) and ({ 5 }) cat-nnom.sg ({ 7 }) . ({ 8 }) 
+# Sentence pair (505) source length 5 target length 10 alignment score : 2.3903e-10
+ruben left the books in the school and left . 
+NULL ({ 3 6 }) ruben ({ 1 }) school-loc ({ 2 4 5 }) book-pl ({ 7 }) leave-go.pst ({ 8 9 }) . ({ 10 }) 
+# Sentence pair (506) source length 8 target length 12 alignment score : 3.9561e-11
+his mother arrived at the house and began to sweep there . 
+NULL ({ 5 9 }) his ({ 1 }) mother-poss ({ 2 3 }) house-dir ({ 4 }) arrive.sg-pst ({ 6 }) and ({ 7 }) there ({ 8 }) sweep-incep-pst ({ 10 11 }) . ({ 12 }) 
+# Sentence pair (507) source length 8 target length 12 alignment score : 1.29296e-10
+my horse is much fatter and round and is very active.. . 
+NULL ({ 9 }) 1sg.poss ({ 1 }) horse ({ 2 }) much.more ({ 3 }) fat ({ 4 5 6 }) round ({ 7 }) and ({ 8 }) active.. ({ 10 11 }) . ({ 12 }) 
+# Sentence pair (508) source length 7 target length 9 alignment score : 1.63667e-07
+and even if someone does not come by'.. . 
+NULL ({ }) and-1sg ({ 1 }) not ({ }) someone-pl ({ 2 3 }) 1sg.obl ({ 4 5 }) come.pl.pst ({ 6 7 }) even ({ 8 }) . ({ 9 }) 
+# Sentence pair (509) source length 5 target length 8 alignment score : 1.04296e-07
+i sang in the church with john . 
+NULL ({ 4 }) 1sg ({ 1 }) john-nnom.sg-com ({ 2 3 }) church-loc ({ 5 6 }) sing-pst ({ 7 }) . ({ 8 }) 
+# Sentence pair (510) source length 5 target length 8 alignment score : 1.34246e-06
+i with mary went to the center . 
+NULL ({ 6 }) 1sg ({ 1 }) mary-com ({ 2 }) center-dir ({ 3 4 }) go-pst ({ 5 7 }) . ({ 8 }) 
+# Sentence pair (511) source length 6 target length 14 alignment score : 1.39512e-21
+and the little dog laying down besides him and is looking at him . 
+NULL ({ 2 10 }) and-3nnom.sg-dir ({ 1 5 6 9 }) lay.down.pst ({ 7 11 12 }) 3nnom.sg-look.prs ({ 8 13 }) little ({ 3 }) dog ({ 4 }) . ({ 14 }) 
+# Sentence pair (512) source length 6 target length 6 alignment score : 2.31239e-05
+he is singing and dancing . 
+NULL ({ }) 3sg ({ 1 }) sing.prs ({ 2 3 }) and ({ 4 }) Ø ({ 5 }) dance.prs ({ }) . ({ 6 }) 
+# Sentence pair (513) source length 6 target length 8 alignment score : 2.3219e-05
+paulina saw the young and the tall . 
+NULL ({ 6 }) paulina ({ 1 }) young-nnom.sg ({ 2 3 }) see-pst ({ 4 }) and ({ 5 }) tall-pst ({ 7 }) . ({ 8 }) 
+# Sentence pair (514) source length 5 target length 6 alignment score : 0.000180148
+the teachers bought a book . 
+NULL ({ }) det-pl ({ 1 2 }) teacher-pl ({ 3 }) book-pl ({ 4 }) buy-pst ({ 5 }) . ({ 6 }) 
+# Sentence pair (515) source length 7 target length 10 alignment score : 1.37581e-08
+john wants to sleep because he is not happy . 
+NULL ({ 7 }) john ({ 1 }) sleep-des ({ 2 3 4 }) because ({ 5 }) 3sgp ({ 6 }) not ({ 8 }) happy ({ 9 }) . ({ 10 }) 
+# Sentence pair (516) source length 5 target length 6 alignment score : 1.80508e-06
+what did you do yesterday ? 
+NULL ({ }) yesterday ({ }) what ({ 1 2 }) 2sg ({ 3 }) do-pst ({ 4 5 }) ? ({ 6 }) 
+# Sentence pair (517) source length 5 target length 7 alignment score : 1.32125e-05
+i went to the home monday . 
+NULL ({ 4 }) 1sg ({ 1 }) house-dir ({ 2 3 }) monday-verb-when ({ 5 }) go.pst ({ 6 }) . ({ 7 }) 
+# Sentence pair (518) source length 8 target length 9 alignment score : 3.72322e-10
+john sang yesterday and maria will dance tomorrow . 
+NULL ({ }) john ({ 1 }) yesterday ({ 3 }) sing-pst ({ 2 }) maría ({ 5 }) and ({ 4 }) tomorrow ({ 6 }) dance-intt ({ 7 8 }) . ({ 9 }) 
+# Sentence pair (519) source length 7 target length 6 alignment score : 3.25271e-05
+pedro buys and sells something . 
+NULL ({ }) peter ({ }) something ({ 1 }) buy.prs ({ 2 }) and ({ 3 }) something ({ 4 }) sell.prs ({ 5 }) . ({ 6 }) 
+# Sentence pair (520) source length 6 target length 10 alignment score : 2.25875e-09
+he is a fisherman and he is a shoemaker . 
+NULL ({ 2 7 }) 3sg ({ 1 }) fisherman ({ 3 4 }) and ({ 5 }) 3sg ({ 6 }) shoemaker ({ 8 9 }) . ({ 10 }) 
+# Sentence pair (521) source length 8 target length 10 alignment score : 1.70833e-10
+who did john find and who did maria greet . 
+NULL ({ 2 }) who ({ 1 }) john ({ 3 }) meet-pst ({ 4 }) and ({ 5 }) who ({ 6 }) maria ({ 7 8 }) greet-pst ({ 9 }) . ({ 10 }) 
+# Sentence pair (522) source length 3 target length 5 alignment score : 0.000112751
+i put up the machetes 
+NULL ({ 4 }) 1sg ({ 1 }) machete-pl ({ 2 }) put.up.pl.obj-pst ({ 3 5 }) 
+# Sentence pair (523) source length 7 target length 8 alignment score : 4.78436e-08
+and moreover mary sang and peter danced . 
+NULL ({ }) mary ({ 1 }) and.more ({ 2 3 }) sing-pst ({ 4 }) peter ({ 6 }) and ({ 5 }) dance-pst ({ 7 }) . ({ 8 }) 
+# Sentence pair (524) source length 6 target length 6 alignment score : 0.00364087
+mary and peter left together . 
+NULL ({ }) mary ({ 1 }) and ({ 2 }) peter ({ 3 }) together ({ 4 }) go.pl-pst ({ 5 }) . ({ 6 }) 
+# Sentence pair (525) source length 9 target length 7 alignment score : 9.46274e-07
+i saw diana and her father . 
+NULL ({ }) 1sg ({ 1 }) diana-nnom.sg ({ 2 3 }) see-pst ({ 4 }) , ({ }) 3sg.poss ({ 5 }) father ({ 6 }) and ({ }) too ({ }) . ({ 7 }) 
+# Sentence pair (526) source length 8 target length 9 alignment score : 3.12243e-05
+the man sings and peter and diana dance . 
+NULL ({ 1 }) man ({ 2 }) sing.prs ({ 3 }) and ({ 4 }) peter ({ 5 }) and ({ 6 }) diana ({ 7 }) dance.prs-3pl ({ 8 }) . ({ 9 }) 
+# Sentence pair (527) source length 6 target length 10 alignment score : 5.21243e-10
+ruben left the books in the school and left . 
+NULL ({ 3 6 }) ruben ({ 1 }) school-loc ({ 2 }) 3nnom.pl-leave-go.pst ({ 4 5 7 }) det.pl ({ 8 }) book-pl ({ 9 }) . ({ 10 }) 
+# Sentence pair (528) source length 6 target length 8 alignment score : 9.19653e-06
+he sent the horse to the house . 
+NULL ({ 3 }) he ({ 1 }) det.acc ({ 2 }) horse-acc ({ 4 }) house-dat ({ 5 }) see-cause-perf ({ 6 7 }) . ({ 8 }) 
+# Sentence pair (529) source length 7 target length 6 alignment score : 0.000322113
+ruben works or studies mathematics . 
+NULL ({ }) ruben ({ 1 }) work.prs ({ }) or ({ 2 }) mathematics-pl ({ 3 }) 3refl ({ 4 }) teach.prs ({ 5 }) . ({ 6 }) 
+# Sentence pair (530) source length 7 target length 8 alignment score : 0.00035084
+your dog and your cat are fighting . 
+NULL ({ }) your ({ 1 }) dog ({ 2 }) and ({ 3 }) your ({ 4 }) cat ({ 5 }) together-fight.prs ({ 6 7 }) . ({ 8 }) 
+# Sentence pair (531) source length 5 target length 8 alignment score : 1.93448e-06
+diana embracing the dog left it dead . 
+NULL ({ 3 }) diana ({ 1 }) dog-nnom.sg ({ 2 }) embrace-sub ({ 4 }) 3nnom.sg-die-caus-pst ({ 5 6 7 }) . ({ 8 }) 
+# Sentence pair (532) source length 7 target length 12 alignment score : 1.58337e-12
+and having going around him , it urinated on his back . 
+NULL ({ }) again ({ 1 }) 3sg-circle-adv ({ 2 3 4 5 6 }) go-ppl ({ 7 8 }) back-loc ({ 9 10 }) and ({ }) 3nnom.sg-urinate-pst ({ 11 }) . ({ 12 }) 
+# Sentence pair (533) source length 7 target length 7 alignment score : 9.87332e-08
+john sang and then maría danced . 
+NULL ({ }) john ({ 1 }) sing-pst ({ 2 }) then ({ 4 }) mary ({ }) and ({ 3 }) dance-pst ({ 5 6 }) . ({ 7 }) 
+# Sentence pair (534) source length 5 target length 6 alignment score : 6.19736e-11
+and what did mary buy ? 
+NULL ({ }) what ({ 2 3 }) mary ({ 4 }) buy-pst ({ 5 }) and ({ 1 }) . ({ 6 }) 
+# Sentence pair (535) source length 4 target length 5 alignment score : 6.37117e-06
+the hummingbird hovered over there 
+NULL ({ }) the ({ 1 }) hummingbird ({ 2 }) there ({ 5 }) red-hover-perf ({ 3 4 }) 
+# Sentence pair (536) source length 5 target length 6 alignment score : 1.63948e-07
+and what did john eat ? 
+NULL ({ }) john ({ 1 }) what ({ 2 }) eat-pst ({ 3 4 5 }) and ({ }) ? ({ 6 }) 
+# Sentence pair (537) source length 6 target length 9 alignment score : 2.19427e-10
+i put up the machete and the knife . 
+NULL ({ 7 }) 1sg ({ 1 }) machete-pl ({ 2 }) and ({ 6 }) knife-pl ({ 3 4 }) put.up.sg.obj-pst ({ 5 8 }) . ({ 9 }) 
+# Sentence pair (538) source length 4 target length 6 alignment score : 0.000379731
+i got the men up . 
+NULL ({ 3 }) 1sg ({ 1 }) man-pl ({ 2 }) get.up.nnom.pl-pst ({ 4 5 }) . ({ 6 }) 
+# Sentence pair (539) source length 6 target length 10 alignment score : 5.00029e-12
+the lizards and the gila monsters are resting here . 
+NULL ({ 4 }) lizard-pl ({ 1 2 }) and ({ 3 }) gila.monster-pl ({ 5 8 }) here ({ 9 }) rest.prs ({ 6 7 }) . ({ 10 }) 

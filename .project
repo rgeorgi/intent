@@ -3,6 +3,7 @@
 	<name>dissertation</name>
 	<comment></comment>
 	<projects>
+		<project>aggregation</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -4,17 +4,20 @@ Created on Feb 14, 2014
 @author: rgeorgi
 '''
 
-from nltk.align import AlignedSent
+
 
 class AlignEval():
-	def __init__(self, aligned_corpus):
+	def __init__(self, aligned_corpus_a, aligned_corpus_b):
 		self.matches = 0.
 		self.total_test = 0.
 		self.total_gold = 0.
 		
+		aligned_corpus = zip(aligned_corpus_a, aligned_corpus_b)
+
 		for model_sent, gold_sent in aligned_corpus:
-			model_aln = model_sent.alignment
-			gold_aln = gold_sent.alignment
+			model_aln = model_sent.aln
+			gold_aln = gold_sent.aln
+		
 		
 			self.matches += len(model_aln & gold_aln)
 			self.total_test += len(model_aln)
