@@ -20,26 +20,37 @@ It defines a main method that scores tag accuracy.
 import sys
 import os
 
-from optparse import OptionParser
-from ConfigParser import ConfigParser
+from argparse import ArgumentParser
+from utils import ConfigFile
 import re
+from eval.EvalException import POSEvalException
+from pos.TagMap import TagMap
 
 __all__ = []
 __version__ = 0.1
 __date__ = '2013-08-26'
 __updated__ = '2013-08-26'
 
-def pos_eval(goldpath, testpath, delimeter):
+def pos_eval(goldpath, testpath, delimeter, tagmap=None):
+	if not goldpath:
+		raise POSEvalException('Gold Path not set.')
+	if not testpath:
+		raise POSEvalException('Test path not set.')
+	
 	gold_f = file(goldpath, 'r')
 	test_f = file(testpath, 'r')
 	
 	matches = 0
 	tokens = 0
 	sents = 0
+	remapped_matches = 0
 	seen_tags = {}
 	
 	gold_lines = gold_f.readlines()
 	test_lines = test_f.readlines()
+	
+	if tagmap:
+		tm = TagMap(tagmap)
 	
 	for test, gold in zip(test_lines, gold_lines):
 		test_tokens = test.split()
@@ -49,13 +60,20 @@ def pos_eval(goldpath, testpath, delimeter):
 		if len(test_tokens) != len(gold_tokens):
 			print test_tokens
 			print gold_tokens
-			raise Exception('lines of unequal length')
+			raise POSEvalException('lines of unequal length')
+		
 		
 		sents += 1
 		
 		for test_token, gold_token in zip(test_tokens, gold_tokens):
 			test_word, test_tag = re.search('^(.*)/(.*)$', test_token).groups()
 			gold_word, gold_tag = re.search('^(.*)/(.*)$', gold_token).groups()
+			
+			if tagmap:
+				test_remapped = tm[test_tag]
+				gold_remapped = tm[gold_tag]
+				if test_remapped == gold_remapped:
+					remapped_matches += 1
 			
 			seen_tags[test_tag] = True			
 			
@@ -72,6 +90,8 @@ def pos_eval(goldpath, testpath, delimeter):
 	print 'Matches: %d' % matches
 	print 'Sents: %d' % sents
 	print 'Accuracy: %.2f' % (float(matches)*100 / tokens)
+	if tagmap:
+		print 'Remapped Accuracy: %.2f' % (float(remapped_matches)*100/tokens)
 				
 
 def main(argv=None):
@@ -91,35 +111,40 @@ def main(argv=None):
 		argv = sys.argv[1:]
 
 	# setup option parser
-	parser = OptionParser(version=program_version_string, epilog=program_longdesc, description=program_license)
-	parser.add_option("-c", "--conf", dest="conf", help="set input path [default: %default]", metavar="FILE")
-	parser.add_option('-g', '--gold', dest='gold', help='Specify gold file without conf file.')
-	parser.add_option('-t', '--test', dest='test', help='Specify test file without conf file.')
-	parser.add_option('-d', '--delimeter', dest='delimeter', help='Specify the delimeter', default='/')
+	parser = ArgumentParser()
+	parser.add_argument("-c", "--conf", dest="conf", help="set input path [default: %default]", metavar="FILE")
+	parser.add_argument('-g', '--gold', dest='gold', help='Specify gold file without conf file.')
+	parser.add_argument('-t', '--test', dest='test', help='Specify test file without conf file.')
+	parser.add_argument('-d', '--delimeter', dest='delimeter', help='Specify the delimeter', default='/')
 	
 	# set defaults
 	parser.set_defaults(outfile="./out.txt", infile="./in.txt")
 	
-	(opts, args) = parser.parse_args(argv)
-	c = ConfigParser()
+	args = parser.parse_args()
 	
-	if not opts.conf:
-		if not opts.gold and opts.test:
+
+	if not args.conf:
+		if not args.gold and args.test:
 			sys.stderr.write('Either the conf file or gold and opts file must be specified.')
 			parser.print_help()
 			sys.exit()
 		else:
-			gold = opts.gold
-			test = opts.test
-			delimeter = opts.delimeter
+			gold = args.gold
+			test = args.test
+			delimeter = args.delimeter
 	else:
-		c.read(opts.conf)
-		gold = c.get('main', 'goldfile')
-		test = c.get('main', 'testfile')
-		delimeter = c.get('main', 'delimeter')
+		c = ConfigFile.ConfigFile(args.conf)
+		gold = c['goldfile']
+		test = c['testfile']
+		delimeter = c['delimeter']
+		tagmap = c['tagmap']
 		
-	
-	pos_eval(gold, test, delimeter)
+	if gold and test and delimeter:
+		pos_eval(gold, test, delimeter, tagmap)
+	else:
+		sys.stderr.write('Arguments missing.')
+		sys.exit()
+		
 		
 
 

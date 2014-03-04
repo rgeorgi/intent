@@ -170,4 +170,10 @@ class Alignment(set):
 			if src == key:
 				return pair
 		return contains 
+	
+	def flip(self):
+		a = Alignment()
+		for pair in self:
+			a.add((pair[1], pair[0]))
+		return a
 		

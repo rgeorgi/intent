@@ -5,7 +5,11 @@ Created on Oct 23, 2013
 '''
 
 def all_indices(item, seq):
-	return [i for i, x in enumerate(seq) if x == item]
+	matches = []
+	for i in range(len(seq)):
+		if item == seq[i]:
+			matches.append(i)
+	return matches
 
 def uniqify (seq, idfun=None): 
 	# order preserving

@@ -33,7 +33,7 @@ class TigerParser(TextParser):
 		goldfile = c['goldfile']
 		sentlimit = c['sentence_limit']
 		delimeter = c['delimeter']
-		split = c['split']
+		split = int(c['trainsplit'])
 		outdir = c['outdir']
 		maxlength = c['maxlength']
 		minlength = c['minlength']

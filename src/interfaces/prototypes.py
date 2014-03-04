@@ -60,6 +60,7 @@ def train(rawfile, protofile, context_model, sequence_model,  minIters = 10, num
 	cmd += ' -simModelPath %s' % os.path.abspath(context_model)
 	cmd += ' -numSimilarWords 3'
 	cmd += ' -simThreshold 0.35'
+	cmd += ' -sigmaSquared 0.5'
 	
 
 	
@@ -142,33 +143,33 @@ if __name__ == '__main__':
 	#===========================================================================
 	# Perform the context model training
 # 	#===========================================================================
-# 	context(c['rawfile'], 
-# 		    c['context_model'], appendDistance = c['appendDistance'],
-# 		    					contextWindow = c['contextWindow'],
-# 		    					directional = c['directional'],
-# 		    					reduceType = c['reduceType'])
-# 	
+	context(c['rawfile'], 
+		    c['context_model'], appendDistance = c['appendDistance'],
+		    					contextWindow = c['contextWindow'],
+		    					directional = c['directional'],
+		    					reduceType = c['reduceType'])
+	
 # # 	#===========================================================================
 # 	#  Perform the sequence model training.
 # 	#===========================================================================
-# 	train(c['rawfile'],
-# 		  c['protofile'],
-# 		  c['context_model'],
-# 		  c['sequence_model'], numIters = c['numIters'],
-# 		 					   minIters = c['minIters'],
-# 		 					   order = c['order'],
-# 		 					   useSuffixFeatures = c['useSuffixFeatures'],
-# 		 					   useHasHyphen = c['useHasHyphen'],
-# 		 					   useInitialCapital = c['useInitialCapital'],
-# 		 					   outdir = c['outdir'])
+	train(c['rawfile'],
+		  c['protofile'],
+		  c['context_model'],
+		  c['sequence_model'], numIters = c['numIters'],
+		 					   minIters = c['minIters'],
+		 					   order = c['order'],
+		 					   useSuffixFeatures = c['useSuffixFeatures'],
+		 					   useHasHyphen = c['useHasHyphen'],
+		 					   useInitialCapital = c['useInitialCapital'],
+		 					   outdir = c['outdir'])
 	
 	#===========================================================================
 	# Perform the testing.
 	#===========================================================================
-# 	test(c['test_file'],
-# 		 c['sequence_model'],
-# 		 c['outdir'])
-# 	
+	test(c['test_file'],
+		 c['sequence_model'],
+		 c['outdir'])
+	
 	#===========================================================================
 	# Evaluate.
 	#===========================================================================

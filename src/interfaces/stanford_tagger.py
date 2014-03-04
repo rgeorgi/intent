@@ -10,6 +10,7 @@ from optparse import OptionParser
 from utils.commandline import require_opt
 from utils.systematizing import notify
 from utils.ConfigFile import ConfigFile
+from eval.pos_eval import pos_eval
 
 
 def jar():
@@ -26,7 +27,9 @@ def train(train_file, model_path, delimeter = '/'):
 
 def test(test_file, model_path, out_file, delimeter):
 	global stanford_jar
-	os.system('java -Xmx300m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -testFile %s -tagSeparator %s -outputFile %s' % (stanford_jar, model_path, test_file, delimeter, out_file))
+	cmd = 'java -Xmx300m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s -outputFormat slashTags -outputFile %s' % (stanford_jar, model_path, test_file, delimeter, out_file)
+	sys.stderr.write(cmd)
+	os.system(cmd)
 	
 	
 
@@ -52,4 +55,5 @@ if __name__ == '__main__':
  		 c['model'],
  		 c['out_file'],
  		 c['delimeter'])
-	notify()
+	pos_eval(c['gold_file'], c['out_file'], c['delimeter'])
+# 	notify()
