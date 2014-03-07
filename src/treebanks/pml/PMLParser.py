@@ -127,8 +127,8 @@ class PMLParser(TextParser):
 			
 			b_proj_corp.add(b_t.to_pos_corpus_instance())
 			
-		b_proj_corp.writesplit(projtrain, projtest, split, 'slashtags', outdir=outdir, lowercase=True)
-		b_orig_corp.writesplit(trainfile, testfile, split, 'slashtags', outdir=outdir, lowercase=True)
+		b_proj_corp.writesplit(projtrain, projtest, 100, 'slashtags', outdir=outdir, lowercase=True)
+		b_orig_corp.writesplit(trainfile, testfile, 100, 'slashtags', outdir=outdir, lowercase=True)
 		b_orig_corp.writesplit(rawfile, testfile, 100, 'raw', outdir=outdir)
 		
 # 		write_mallet(outdir, split, testfile, trainfile, goldfile, b_raw_snts, b_snts, lowercase = True)

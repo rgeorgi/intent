@@ -19,7 +19,80 @@ from alignment.align import heuristic_align, heuristic_align_corpus
 from corpora.POSCorpus import POSCorpus
 from utils.encodingutils import getencoding
 import codecs
+from corpora.IGTCorpus import IGTCorpus, IGTInstance, IGTTier, IGTToken
 
+class NAACLInstanceText(str):
+	def __init__(self, seq=''):
+		str.__init__(self, seq)
+		
+	def igt(self):		
+		'''
+		Create an IGTInstance out of the igt data. Note that this does not include
+		the alignment or POS tags also included in the NAACL data, merely the raw instance.
+		'''
+		text = self.igttext()
+		lines = text.split('\n')
+		
+		# Split the first line into attribute:value pairs.
+		attrs = {sp[0].lower():int(sp[1]) for sp in [attr.split('=') for attr in lines[0].split()]}
+		
+		i = IGTInstance(id = attrs['igt_id'])
+		
+		for linenum in range(1, len(lines)):
+			line = lines[linenum]
+			if not line.strip():
+				continue
+			
+			if linenum == 1:
+				kind = 'lang'
+			if linenum == 2:
+				if len(lines) > 3:
+					kind = 'gloss'
+				elif len(lines) == 3:
+					kind = 'trans'
+			if linenum >= 3:
+				kind = 'trans'
+				
+			tier = IGTTier(kind=kind)
+			
+			# Now, go through and add the tokens to the tier.
+			for word in line.split():
+				token = IGTToken(word)
+				tier.append(token)
+				
+			# Now add the tier to the instance
+			i.append(tier)
+			
+		return i
+				
+	def glossalign(self):
+		q5 = re.search('Q5:.*?\n([\S\s]+?)#+ Q5:', self).group(1)
+		return get_align_indices(q5)
+		
+	
+	def langalign(self):
+		q4 = re.search('Q4:.*?\n([\S\s]+?)#+ Q4:', self).group(1)
+		return get_align_indices(q4)
+	
+	
+	def igttext(self):
+		return re.search('(Igt_id[\s\S]+?)#+ Q1', self).group(1)
+
+#===============================================================================
+#  Helper functions
+#===============================================================================
+
+def get_align_indices(question):
+	aligns = []
+	for gloss_indices, trans_indices in re.findall('(\S+) (\S+) #', question):
+		# Skip morphemes (for now)
+		if '.' in gloss_indices:
+			continue
+		
+		# Otherwise, deal with multiple alignments.
+		for trans_i in trans_indices.split(','):
+			aligns.append((int(gloss_indices), int(trans_i)))
+	return aligns
 
 class NAACLParser(TextParser):
 	
@@ -64,12 +137,11 @@ class NAACLParser(TextParser):
 		print(ae.all())
 		print(ae2.all())
 		
-				
 		
 	def get_sents(self):
 		c = self.conf
 		
-		corpus = POSCorpus()
+		corpus = IGTCorpus()
 		
 		sents = AlignedCorpus()
 		
@@ -80,41 +152,29 @@ class NAACLParser(TextParser):
 			f = codecs.open(root.strip(), encoding=encoding)
 			data = f.read()
 			f.close()
+		
 			
-			print data
-			sys.exit()
+			#===================================================================
+			# Search for the gloss alignment and parse it.
+			#===================================================================
 			
-			gloss_aligns = re.findall('Q5:[^\n]+\n(.+?)\n(.+?)\n[\s\n]+([0-9][\s\S]+?)######## Q5', data)
+			instances = re.findall('#+\nIgt_id[\s\S]+?Q6:', data)
 			
-			for gloss, trans, ga in gloss_aligns:
+			for instance in [NAACLInstanceText(i) for i in instances]:
+				i = instance.igt()
 				
-				gloss = gloss.lower()
-				trans = trans.lower()
+				ga_indices = instance.glossalign()
+				la_indices = instance.langalign()				
 				
-				gloss_tokens = gloss.split()
-				trans_tokens = trans.split()
-				
-				alignments = Alignment()
-				
-				# For each line in the alignment...
-				for ga_line in ga.split('\n'):
+				for g_i, t_i in ga_indices:
+					i.glossalign.add((g_i, t_i))
 					
-					# Skip empties...
-					if not ga_line.strip() or len(ga_line.split()) != 5:
-						continue
-									
-					gloss_i, trans_i, hash, gloss_w, trans_w = ga_line.split()
-					
-					# Also skip morpheme splits.
-					if '.' in gloss_i:
-						continue
-					
-					for trans_sub in trans_i.split(','):
-						if int(trans_sub)-1 < 0:
-							continue
-						alignments.add((int(gloss_i), int(trans_sub)))
+				for l_i, g_i in la_indices:
+					i.langalign.add((l_i, t_i)) 
 						
-				sents.append(AlignedSent(gloss_tokens, trans_tokens, alignments))		
+				# TODO: Zero-indexed makes me uncomfortable...
+				sents.append(AlignedSent(i.gloss()[0], i.trans()[0], i.glossalign))
+						
 		return sents
 	
 			

@@ -105,16 +105,16 @@ def heuristic_align(a_sent, lowercase=True, remove_punc = True, stem = True, mor
 	tgt_tokens = a_sent.tgt_tokens
 	
 	if lowercase:
-		src_tokens = map(lambda s: s.lower(), src_tokens)
-		tgt_tokens = map(lambda t: t.lower(), tgt_tokens)
+		src_tokens = [token.lower() for token in src_tokens]
+		tgt_tokens = [token.lower() for token in tgt_tokens]
 		
 	if remove_punc:
-		src_tokens = map(remove_punctuation, src_tokens)
-		tgt_tokens = map(remove_punctuation, tgt_tokens)
+		src_tokens = [remove_punctuation(token) for token in src_tokens]
+		tgt_tokens = [remove_punctuation(token) for token in tgt_tokens]
 		
 	if stem:
-		src_tokens = map(stem_token, src_tokens)
-		tgt_tokens = map(stem_token, tgt_tokens)
+		src_tokens = [stem_token(token) for token in src_tokens]
+		tgt_tokens = [stem_token(token) for token in tgt_tokens]
 		
 	
 	alignments = Alignment()

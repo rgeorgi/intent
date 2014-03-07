@@ -20,7 +20,7 @@ class AlignedSent():
 		for a in self.aln:
 			src_i, tgt_i = a
 			if src_i - 1 >= len(self.src_tokens):
-				raise AlignmentError('Source index %d is too high'  % src_i)
+				raise AlignmentError('Source index %d is too high for %s'  % (src_i, self.src_tokens))
 			if tgt_i - 1 >= len(self.tgt_tokens):
 				raise AlignmentError('Target index %d is too high' % tgt_i)			
 			

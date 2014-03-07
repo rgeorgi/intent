@@ -88,13 +88,13 @@ def pos_eval(goldpath, testpath, delimeter, tagmap=None):
 			
 	tags = seen_tags.keys()
 	
-	print('Tags: %d' % len(tags))
-	print('Tokens: %d' % tokens)
-	print('Matches: %d' % matches)
-	print('Sents: %d' % sents)
-	print('Accuracy: %.2f' % (float(matches)*100 / tokens))
+	sys.stdout.write('Tags: %d\n' % len(tags))
+	sys.stdout.write('Tokens: %d\n' % tokens)
+	sys.stdout.write('Matches: %d\n' % matches)
+	sys.stdout.write('Sents: %d\n' % sents)
+	sys.stdout.write('Accuracy: %.2f\n' % (float(matches)*100 / tokens))
 	if tagmap:
-		print('Remapped Accuracy: %.2f' % (float(remapped_matches)*100/tokens))
+		sys.stdout.write('Remapped Accuracy: %.2f\n' % (float(remapped_matches)*100/tokens))
 				
 
 def main(argv=None):

@@ -5,20 +5,19 @@ Created on Oct 22, 2013
 '''
 
 import os, sys
-from ConfigParser import ConfigParser
 from optparse import OptionParser
 from utils.commandline import require_opt
 from utils.systematizing import notify
 from utils.ConfigFile import ConfigFile
 from eval.pos_eval import pos_eval
+import time
 
 
 def jar():
 	global stanford_jar
-	c = ConfigParser()
 	mydir = os.path.abspath(os.path.dirname(__file__))
-	c.read(os.path.join(mydir, 'stanford_tagger.prop'))	
-	stanford_jar = c.get('stanford', 'jar')
+	c = ConfigFile(os.path.join(mydir, 'stanford_tagger.prop'))	
+	stanford_jar = c['jar']
 	
 
 def train(train_file, model_path, delimeter = '/'):
@@ -55,5 +54,6 @@ if __name__ == '__main__':
  		 c['model'],
  		 c['out_file'],
  		 c['delimeter'])
+	time.sleep(1)
 	pos_eval(c['gold_file'], c['out_file'], c['delimeter'])
 # 	notify()

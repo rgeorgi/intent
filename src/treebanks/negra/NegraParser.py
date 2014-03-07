@@ -7,9 +7,7 @@ Created on Oct 14, 2013
 import os, sys, re
 from optparse import OptionParser
 from utils.commandline import require_opt
-from trees.ptb import parse_ptb_string
-from treebanks.common import process_tree, write_files, raw_writer,\
-	traintest_split
+
 from pos.TagMap import TagMap
 import codecs
 from utils.ConfigFile import ConfigFile
@@ -39,6 +37,7 @@ class NegraParser(TextParser):
 		sentence_limit = c.getint('sentence_limit')
 		trainraw = c['trainraw']
 		minlength = c.getint('minlength')
+		testraw = c['testraw']
 			
 		
 		tm = None
@@ -72,6 +71,14 @@ class NegraParser(TextParser):
 				continue
 			
 			for word, pos in negra_tree.pos():
+				
+				pos = re.sub(r'(.*?)-.*', r'\1', pos)
+				if re.match('\*T', pos):
+					continue
+
+				if tagmap:
+					pos = tm[pos]
+				
 				token = POSToken(word, pos)
 				inst.append(token)
 			if len(inst):
@@ -83,6 +90,8 @@ class NegraParser(TextParser):
 			
 		print(outdir, trainfile)
 		corpus.writesplit(trainfile, testfile, split, 'slashtags', delimeter=delimeter, lowercase=True, outdir=outdir)
+		corpus.writesplit(trainraw, testraw, split, 'raw', outdir=outdir, lowercase=True)
+		
 # 		write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents)
 # 		if trainraw:
 # 			raw_train_sents, raw_test_sents = traintest_split(all_sents, split)

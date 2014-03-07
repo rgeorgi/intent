@@ -4,17 +4,16 @@ Created on Oct 23, 2013
 
 @author: rgeorgi
 '''
-from ConfigParser import ConfigParser
 import os
 from tempfile import NamedTemporaryFile
-import sys, jpype
+import sys
+from utils.ConfigFile import ConfigFile
 
 def prop():
 	global parser_jar
-	c = ConfigParser()
 	mydir = os.path.abspath(os.path.dirname(__file__))
-	c.read(os.path.join(mydir, 'stanford_parser.prop'))	
-	parser_jar = c.get('stanford', 'jar')
+	c = ConfigFile(os.path.join(mydir, 'stanford_parser.prop'))	
+	parser_jar = c['jar']
 
 def parse_file(filename):
 	prop()

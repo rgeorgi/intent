@@ -27,8 +27,16 @@ class CountDict(defaultdict):
 	def total(self):
 		values = self.dict.values()
 		return reduce(lambda x, y: x+y, values)
+			
 	
 	def most_frequent(self, minimum = 0, num = 1):
+		'''
+		Return the @num entries with the highest counts that
+		also have at least @minimum occurrences. 
+		
+		@param minimum: int
+		@param num: int
+		'''
 		items = list(self.items())
 		items.sort(key = lambda item: item[1], reverse=True)
 		ret_items = []
