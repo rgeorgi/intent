@@ -1,8 +1,8 @@
-## tagger training invoked at Fri Oct 25 22:57:08 PDT 2013 with arguments:
+## tagger training invoked at Mon Mar 03 16:50:11 EST 2014 with arguments:
                    model = /Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/tiger_remapped.tagger
                     arch = generic
             wordFunction = 
-               trainFile = /Users/rgeorgi/Dropbox/code/eclipse/prototype-sequence/data/ger_igt_proj_train.txt
+               trainFile = /Users/rgeorgi/Dropbox/code/eclipse/prototype-sequence/data/tiger_train_small.txt
          closedClassTags = 
  closedClassTagThreshold = 40
  curWordMinFeatureThresh = 2

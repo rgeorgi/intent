@@ -1,539 +1,539 @@
-next year write(prs) i a book on semantics .
+next year write(PRS) I a book on semantics .
 there has he with dogs chases-away
 because he loud the song sings
-because the-dat teacher the-nom novel liked
-him-dat stood with fright the hairs to mountain .
-since i seldom the cat pet
-i-nom run-pst two miles-acc the street-acc along .
-the petition of-the.gen.sg or of-the.gen.pl docent.msc.gen.(sg/pl)
+because the-DAT teacher the-NOM novel liked
+him-DAT stood with fright the hairs to mountain .
+since I seldom the cat pet
+I-NOM run-PST two miles-ACC the street-ACC along .
+the petition of-the.GEN.SG or of-the.GEN.PL docent.MSC.GEN.(SG/PL)
 he has her naked to sleep advised .
-write2sg.imp you the paper !
-i-nom visit-pst new york-acc two times-ac .
+write2sg.Imp you the paper !
+I-NOM visit-PST New York-ACC two times-AC .
 in-the garden hop rabbits .
-uli has last week the exhibit visited .
-. . . that hans peter marie swim make saw .
-`she zer-tears the paper' .
-the preparation tropical-en wood-gen
+Uli has last week the exhibit visited .
+. . . that Hans Peter Marie swim make saw .
+`She ZER-tears the paper' .
+the preparation tropical-en wood-GEN
 write you the paper ?
-the guards opened the-dat attacker the gate .
+the guards opened the-DAT attacker the gate .
 on shall you the light make .
 she wrote the letter out .
 will themselves these people defend ?
-johannes has sich a car bought .
-the leviticus will we the scoundrel read .
-that otto always books about wombats reads
-the friends admire the-dat anna her-acc car .
+Johannes has SICH a car bought .
+the Leviticus will we the scoundrel read .
+that Otto always books about wombats reads
+the friends admire the-DAT Anna her-ACC car .
 the book was naked read .
-he asked me pro him to help .
+he asked me PRO him to help .
 the book have the students not read
-the.dat hans have i.nom the.acc book given
+the.dat Hans have I.nom the.acc book given
 the man-acc shudders at bears .
-the 1sg.dat hastily by a doctor prescribed medicine
-3sg/fem(nom) `have':pres3sg `two'(acc) `bike':pl.acc .
-books sees anna three .
-when the-dat tourist the-nom cathedral shown was
+the 1sg.DAT hastily by a doctor prescribed medicine
+3SG/FEM(NOM) `have':PRES3SG `two'(ACC) `bike':PL.ACC .
+Books sees Anna three .
+when the-DAT tourist the-NOM cathedral shown was
 this is the ambassador , that the hunters visited have .
-say-it dm the:dsf woman
-since the caviar-nom to eat tried was
+say-it DM the:Dsf woman
+since the caviar-NOM to eat tried was
 because we the information always up call can
 because he the song loud sings
-with whodat think you with whodat hans speaks ?
-that otto books about wombats always reads
+with whoDAT think you with whoDAT Hans speaks ?
+that Otto books about wombats always reads
 because he naked the woman helps .
 every child has five cats seen .
-peter has the pictures that he painted has left .
+Peter has the pictures that he painted has left .
 the movie sollen-3-sg good be .
-the fate the-gen famous zeppelin-gen
+the fate THE-GEN famous Zeppelin-GEN
 how has the car yesterday who fixed ?
-since the.nom tractor to repair tried was
-fritz is since thursday sick .
+since the.NOM tractor to repair tried was
+Fritz is since Thursday sick .
 annom outsider won has hier still never .
-i have me already always a bike wished .
-peter tells the:dat children:dat an:acc story:acc .
+I have me already always a bike wished .
+Peter tells the:DAT children:DAT an:ACC story:ACC .
 we believed that she the letter out-wrote .
-peter has on a small table worked .
+Peter has on a small table worked .
 will these people themselves defend ?
 the book is naked to read .
-no hard-casstrong wood
+no hard-CASstrong wood
 even the janitor held a speech .
-when the-nom man the-dat girl the-acc basket gave
-she may never just only irgend-one invite .
-the mother braided the.dat daughter the hairs .
-yesterday has joachim a tasty bratwurst eaten .
+when the-NOM man the-DAT girl the-ACC basket gave
+She may never just only irgend-one invite .
+the mother braided the.DAT daughter the hairs .
+yesterday has Joachim a tasty bratwurst eaten .
 whom has everyone seen ?
-it works sich well with this device .
+it works SICH well with this device .
 in-the sea to swim has fun made .
-i do not with.pleasure books read .
+I do not with.pleasure books read .
 since yesterday here danced was
 far out is the ball thrown got .
-rabbits has anna some seen .
-since two linguists prt prt something against have
+rabbits has Anna some seen .
+since two linguists PRT PRT something against have
 because he the song too loud sings
 je three apples were rotten .
-when he 1sg.acc the.acc rhyme teached
-yesterday has a man-nom the mary visited who-masc like my uncle looked
+when he 1sg.ACC the.ACC rhyme teached
+Yesterday has a man-NOM the Mary visited who-MASC like my uncle looked
 we believed that she the letter out-wrote .
-i.nom have the.acc book the.dat hans given
-a car bought has he himself yet none .
-i thought that karl yesterday the book bought has
-the.nom hat was the.dat man by the.dat women given .
-chris admired his brother .
-when peter the-dat tourist the-acc cathedral showed
-the doctor has paula blood withdrawn .
-the guards opened the.dat attacker the gate .
-you-dat breaks the-nom heart .
+I.nom have the.acc book the.dat Hans given
+A car bought has he himself yet none .
+I thought that Karl yesterday the book bought has
+the.NOM hat was the.DAT man by the.DAT women given .
+Chris admired his brother .
+when Peter the-DAT tourist the-ACC cathedral showed
+the doctor has Paula blood withdrawn .
+the guards opened the.DAT attacker the gate .
+you-DAT breaks the-NOM heart .
 a chess-board to.the(neuter) take.along
 gave the man the woman the book ?
-yesterday has joachim a tasty bratwurst eaten .
-the.nom driver has the.acc tractor repair let .
+yesterday has Joachim a tasty bratwurst eaten .
+the.Nom driver has the.Acc tractor repair let .
 we believe that she today arrives .
-who believes everyone that karl seen has ?
-the by fritz written book
-because the.nom doctor the.acc patient a.dat test exposed
-this book has martin written .
-when he 1sg-acc the-acc rhyme teached
-hans kicked him.dat against the shin .
-wolfgang has after lea's birth on every evening a beer drunk .
-i-nom sleep-pst one hour-acc .
+Who believes everyone that Karl seen has ?
+the by Fritz written book
+because the.NOM doctor the.ACC patient a.DAT test exposed
+this book has Martin written .
+when he 1sg-ACC the-ACC rhyme teached
+Hans kicked him.DAT against the shin .
+Wolfgang has after Lea's birth on every evening a beer drunk .
+I-NOM sleep-PST one hour-ACC .
 we believe that she today arrives .
-peter takes the-dat children-dat the-acc book-acc .
-a ghost-acc seen thinks john that he at-the graveyard has
-he asked me pro the letter out-to-write .
-peter has what he painted has left .
-since prt prt children on the street play
-(nora has her room cleaned.) .
+Peter takes the-DAT children-DAT the-ACC book-ACC .
+A ghost-ACC seen thinks John that he at-the graveyard has
+he asked me PRO the letter out-to-write .
+Peter has what he painted has left .
+since PRT PRT children on the street play
+(Nora has her ROOM cleaned.) .
 whom has everyone where seen ?
-the man c-rel doctor he
-the man c-rel agr the doctor he
-c agr the platypus john .
-hat man the house-gen
-be-pres i prog write the sentence-gen now
-is he doctor
-c-neg-pres fool him
-if-c right my memory
-saw , certainly , the man the starship
-fired the captain the phasers on the klingons
+the man C-rel doctor he
+the man C-rel agr the doctor he
+C agr the platypus John .
+hat man the house-GEN
+Be-pres I prog write the sentence-gen now
+Is he doctor
+C-neg-pres fool him
+if-C right my memory
+Saw , certainly , the man the starship
+Fired the Captain the phasers on the Klingons
 bought they house ?
-be the floor cold
-am i ing write the letter
-be the oatmeal in-the pot .
-c of stock prostestant her
+Be the floor cold
+Am I ing write the letter
+BE the oatmeal in-the pot .
+C of stock Prostestant her
 kissed the man the pig .
-gave milo dandelion to binkley
-follow-pres the subject the verb in irish
-c day good it
-c man big john
-when al you-say al you-will-pay me ?
+Gave Milo dandelion to Binkley
+follow-PRES the subject the verb in Irish
+C day good it
+C man big John
+when aL you-say aL you-will-pay me ?
 be-fut the thesis finished at-me tomorrow .
-c computer lieutenant-commander data
-c agr commander riker the fool
-c good the day he
-neg-past build j the house
-c doctor horses-gen him
-be-pres mother the man-gen in-the hospital
-started me -emph at this school
-is doctor him
-neg-past bought .
-be-pres mother the man-gen in-the hospital
-which woman that would-marry he ?
-saw eoghan siobh\xe1n and eoghna\xed ciar\xe1n .
-c linguist c-rel kiss shawn agr peter
-be-pres i prog write the sentence-acc now
-think.1.s that be-pres he there
-fired the captain on the klingons them
-hat the man-gen
+C computer Lieutenant-Commander Data
+C agr Commander Riker the fool
+C good the day he
+Neg-past build J the house
+C doctor horses-gen him
+Be-pres mother the man-gen in-the hospital
+Started me -emph at this school
+Is doctor him
+NEG-PAST bought .
+Be-PRES mother the man-GEN in-the hospital
+Which woman that would-marry he ?
+saw Eoghan Siobh\xE1n and Eoghna\xED Ciar\xE1n .
+C linguist C-rel kiss Shawn agr Peter
+Be-pres I prog write the sentence-acc now
+Think.1.s that be-pres he there
+Fired the Captain on the Klingons them
+hat the man-GEN
 the man who was __ ill
-c computer agr lieutenant-commander data
-saw he the platypus with binoculars
-c like with-3-pl-poss each-other them
-saw john and mary with-their other
-neg be-past i only prog make fun
-be-pres the klingons prog fire the phasers-gen
-abdu 3ms-perf go-iii maradi .
-indeed 1s-perf send-vi ma-2p with money yesterday .
-abdu 3ms-perf sit-i chair-of teacher .
-indo 3fs-perf lend-i ma abdu bike-of-3fs .
-kalala 3ms-be there balki 3fs-cont ma-3ms hair-cut .
-3ms-perf put himself fry-dn-of peanuts .
-3sm-cmpl-abs call-v-irr-c man .
-abdu indeed 3ms-cont wash car-of-3ms .
-1s-perf turn-i boy 1s-perf face-vi 3ms here .
-kids 3p-cont throw-ii-dn-of dog-of indo .
-3sm-cmpl-neg shoot-v-gr2-b her neg .
-3ms-perf leave-vi san diego .
-abdu 3ms-perf sit-i on chair-of teacher .
-ali indeed 3ms-perf know-ii abdu .
-indo 3fs-cont kick-ii-vn-of ix ali donkey .
-3fs-sub finish-i work-of-3fs 3ms-perf suit-ii aisha .
-donkey cont at die-dn .
-3p-perf return-i inside-of room-of indo .
-i am fufu eating .
-abdu 3p-perf go-iii kano .
-3p-cmpl-abs shot-v-gr6-c lion .
-lead 3fs-cont at melt-iv-vn .
-abdu 3ms-hab search-ii job all dry season .
-3ms-perf give indo kolanuts .
-1s-cmpl-abs catch for musa fish
-water 3p-perf draw-iv .
-3sm-cmpl-neg shoot-v-gr2-c neg elephant .
-3ms-perf leave-ii san diego .
-abdu 3ms-perf sit-i on chair-def .
-meat-of camel 3ms-perf cut-vii little little .
-district this neg 3fs-cont live-vii-dn at abdu .
-abdu 3ms-perf reply-vi ma indo .
-3ms-perf begin-i tan-dn-of leather .
-fufu , i am eating .
-3ms-cont squash-i-vn-of lemon .
-horse this of-masc bello
-news 3ms-perf spread-vii .
-people 3p-cont gather-vii-vn .
-abdu 3ms-perf see-ii indo holding with boy .
-abdu 3ms-cont do planting-of trees .
-pot-of balki 3ms-cont at fill.up-iii-vn .
-ring-def neg 3ms-cont steal-vii .
-what 3pl,rpf read also 3pl,rpf write ?
-3p-perf ripen-i lemon .
-corn 3fs-perf spread-vii .
-indo 3fs-perf catch-i fish .
-gown 3fs-cont at dry-iv-vn .
-aisha 3fs-sub finish-i work-3fs 3ms-perf fit-iii .
-plant 3ms-perf take.hold-i .
-abdu 3ms-perf sit-i chair-def .
-yams afoc ama pres cook cook-prog .
-book indo 3fs-perf give-i 3ms out .
-balki 3fs-cont know-ii-dn idi .
-so elephant 3fs-cont kill-vii-vn !
-children 3p-perf find-i indo 3fs-perf finish-iv food .
-1p-cmpl-abs leave-v-gr6-c children at house .
-1s-perf buy-vi car .
-1s-cmpl-abs read book .
-kids malicious 3p-cont throw-ii-dn-of dog-of indo .
-abdu 3ms-cont wash car-of-3ms .
-no ! abdu 3ms-cont indeed love-dn-of-3fs .
-3sm-cmpl-abs read-v-gr6-c news .
-indo 3fs-perf borrow-ii bike from place-of abdu .
-one-f-that 3fs-rp finish work-of-3fs 3fs-ipfv can go .
-3sm-cmpl-neg shoot-v-gr2-c elephant neg .
-3p-perf send-i ix/ abdu letter .
-3ms-perf increase-i money .
-1s-cmpl-abs catch-v-gr1-d=a for musa fish .
-abdu 3ms-perf live-i district this .
-chair 3fs-perf sit-vii .
-3p-cont ripen-i lemon in garden .
-imp-perf say abdu neg-cont 3ms love-dn-of balki .
-3fs-perf turn-i boy .
-abdu 3ms-perf pull-viii wood from field .
-snake 3ms-cont at coil-iv-vn .
-3ms-perf fit-iii aisha 3fs-sub finish-i work-3fs .
-meat-of camel 3ms-cont cut-vii-vn .
-box-nom heavy-decl .
-i-nom sister-nom lawyer-be-dec .
-this building-top school cop-decl .
-unit-nom frontline-to move-pres-decl .
-book-nom one hour-for-nom read-pass-pst-dec .
-this building-top school-nom not .
-9 unit-nom headquarter-to report-acc send-past-decl .
-he-nom 1-hour-for water-acc freeze-past-dec .
-i-nom maid-nom morning-from work-com do-past-dec .
-detection activity-nom occur-pres-decl .
-mary-nom home-dir go-cmp-acc john-top hope-pst-dec .
-japan-from come-mod person-top actually that student-cop-decl .
-john-top mary-nom home-dir go-cmp-acc hope-pst-dec .
-my idea-top your idea-from different-decl .
-i-top yesterday this spot-acc ten meter-extent-acc dig.out-p
-john-top mary-nom home-dir go-cmp hope-pst-dec .
-book borrow go-past kes tomorrow bring-ing come-fut-pol-dec .
-student-nom book-nom three-volumes-nom need-dec .
-teenager-pl-nom most michael jackson-acc like .
-radio-nom broke-past-if communication-nom impossible-decl .
-she-nom very intelligent-be-pres .
-father-hnom money-acc son-dat give-hon-pst-dec .
-son-dat father-hnom money-acc give-hon-pst-dec .
-cousin-acc aunt-top sometimes go-cmp expect-pres-dec .
-flower-nom yellow-decl .
-tom-top america-acc two-time-acc visit-pst-dec .
-he-nom us-plur-dat that fact-acc pay.attention-cmp request-pst-dec .
-he-nom water-acc freeze-prog-pre-dec .
-very intelligent-be-pres .
-anyone why resign-ci-not-past-q ?
-man-top social-nom not .
-swuni-nom milk-acc boil-cau-pre-dec .
-the child-plu-nom string-acc catch-e-pull-nml-top pull-pst-dcl .
-stone-nom hill bottom-to 2 times-nom rolled .
-because he-nom i-dat so say-past-dcl .
-father-hnom son-dat money-acc give-hon-pst-dec .
-the child-plu-nom string-acc catch-e-try-nml-top try-pst-dcl .
-room-nom bright-dec .
-that man-nom commander cop-decl .
-eat-ki-top john-nom apple-acc eat-past-decl .
-chelswu-nom apple-acc eat-aux-connect be-pres-decl .
-nom peanuts-acc buy-eat-past-decl .
-john-nom person-plur-dat war-acc suggest-pst-dec .
-chelswu-nom doctor-nom become-past-decl .
-chelswu-nom apple-acc eat-pres-dec .
-box-top heavy-ci not-decl .
-john-top home-dir go-cmp-acc very muchwant-pst-dec .
-john-nom mary-acc hand-acc hit-pst-ind .
-john-nom mary-dat go-cmp suggest-pst-dec .
-john-gen english-gen study
-student-plur-nom several-hour-nom be.happy-pst-dec .
-ball-acc cwuni-nom quick catch-pres .
-chelswu-nom new clothes-acc wear-past-dec
-john-top home-dir go-cmp-acc want-pst-dec .
-frequently chelswu-nom apple-acc eat-pres-decl .
-man-top social cop-ci not .
-he-nom vigorously water-acc freeze-past-dec .
-book-nom one hour-for-nom read-cmp pasaux-pst-dec .
-intelligence-nom many source-from originate-pres-decl .
-chelswu-nom that book-acc read-cmp-top do-pst-dec .
-book-nom one hour-for-acc read-pass-pst-dec .
-chelswu-top fool-nom not-decl .
-john-nom apple-acc three-cl-ssik divide-pst-decl .
-john-top mary-nom home-dir go-cmp very.much hope-pst-dec .
-i Â­gen live-ret-n hometown
-chelswu-nom leaves-acc sweep-e clean-past-decl .
-that student-top actually japan-from come-mod person-cop-decl .
-chelswu-nom early arrive-nominalizer-nom difficult .
-i-nom minho-acc genius-cop-comp think .
-cereal-acc eat-pst-dec mary-nom .
-i-nom picture-acc draw-cmp-acc try-if
-john-nom mary-gen hair-acc wash-cau-past-dec .
-headquarter-nom database-acc maintain-pres-decl .
-he-nom 1-hour-in water-acc freeze-past-dec .
-mother-nom son-dat lullaby-acc sing-pf-give-past-dec
-john-top home-dir go-cmp want-pst-dec .
-fireman-dat-nom winter wind-nom fear .
-chelswu-nom book-acc three hour-during-acc read-pst-dec .
-linguistics-nom employment-nom difficult .
-john-top seoul station-to-acc arrival-do-pst-decl
-i-nom chelswu-nom new clothes-acc wear-com do-past-dec
-mother-hnom child-dat book-acc read-cmp persuade-hon-pst-dec .
-that box-top very big .
-chelswu-nom car-nom have-decl .
-you-top who-acc love-q ?
-john-top she-nom cry-rel-imprf kes-acc comforted .
-john-gen mary-with-gen talk .
-swuni-nom one hour-for-acc run-pst-dec .
-chelswu-top doctor cop-decl .
-aunt-nom cousin-acc sometimes put.to.sleep-pst-dec .
-quality-nom good-ki-ct do-but too expensive-polite .
-john-top mary-nom home-dir go-cmp-acc very.much hope-pst-dec .
-book-nom one hour-for-acc read-cmp pasaux-pst-dec .
+C computer agr Lieutenant-Commander Data
+Saw he the platypus with binoculars
+C like with-3-pl-poss each-other them
+Saw John and Mary with-their other
+Neg be-past I only prog make fun
+Be-pres the Klingons prog fire the phasers-gen
+Abdu 3ms-PERF go-III Maradi .
+indeed 1s-PERF send-VI MA-2p with money yesterday .
+Abdu 3ms-PERF sit-I chair-of teacher .
+Indo 3fs-PERF lend-I MA Abdu bike-of-3fs .
+Kalala 3ms-be there Balki 3fs-CONT MA-3ms hair-cut .
+3ms-PERF put himself fry-DN-of peanuts .
+3SM-CMPL-ABS call-V-Irr-C man .
+Abdu indeed 3ms-CONT wash car-of-3ms .
+1s-PERF turn-I boy 1s-PERF face-VI 3ms here .
+kids 3p-CONT throw-II-DN-of dog-of Indo .
+3SM-CMPL-NEG shoot-V-Gr2-B her NEG .
+3ms-PERF leave-VI San Diego .
+Abdu 3ms-PERF sit-I on chair-of teacher .
+Ali indeed 3ms-PERF know-II Abdu .
+Indo 3fs-CONT kick-II-VN-of IX Ali donkey .
+3fs-SUB finish-I work-of-3fs 3ms-PERF suit-II Aisha .
+donkey CONT at die-DN .
+3p-PERF return-I inside-of room-of Indo .
+I am fufu eating .
+Abdu 3p-PERF go-III Kano .
+3P-CMPL-ABS shot-V-Gr6-C lion .
+lead 3fs-CONT at melt-IV-VN .
+Abdu 3ms-HAB search-II job all dry season .
+3ms-PERF give Indo kolanuts .
+1S-CMPL-ABS catch for Musa fish
+water 3p-PERF draw-IV .
+3SM-CMPL-NEG shoot-V-Gr2-C NEG elephant .
+3ms-PERF leave-II San Diego .
+Abdu 3ms-PERF sit-I on chair-DEF .
+meat-of camel 3ms-PERF cut-VII little little .
+district this NEG 3fs-CONT live-VII-DN at Abdu .
+Abdu 3ms-PERF reply-VI MA Indo .
+3ms-PERF begin-I tan-DN-of leather .
+fufu , I am eating .
+3ms-CONT squash-I-VN-of lemon .
+horse this of-MASC Bello
+news 3ms-PERF spread-VII .
+people 3p-CONT gather-VII-VN .
+Abdu 3ms-PERF see-II Indo holding with boy .
+Abdu 3ms-CONT do planting-of trees .
+pot-of Balki 3ms-CONT at fill.up-III-VN .
+ring-DEF NEG 3ms-CONT steal-VII .
+what 3pl,Rpf read also 3pl,Rpf write ?
+3p-PERF ripen-I lemon .
+corn 3fs-PERF spread-VII .
+Indo 3fs-PERF catch-I fish .
+gown 3fs-CONT at dry-IV-VN .
+Aisha 3fs-SUB finish-I work-3fs 3ms-PERF fit-III .
+plant 3ms-PERF take.hold-I .
+Abdu 3ms-PERF sit-I chair-DEF .
+yams aFOC Ama PRES cook cook-PROG .
+book Indo 3fs-PERF give-I 3ms out .
+Balki 3fs-CONT know-II-DN Idi .
+so elephant 3fs-CONT kill-VII-VN !
+children 3p-PERF find-I Indo 3fs-PERF finish-IV food .
+1P-CMPL-ABS leave-V-Gr6-C children at house .
+1s-PERF buy-VI car .
+1S-CMPL-ABS read book .
+kids malicious 3p-CONT throw-II-DN-of dog-of Indo .
+Abdu 3ms-CONT wash car-of-3ms .
+No ! Abdu 3ms-CONT indeed love-DN-of-3fs .
+3SM-CMPL-ABS read-V-Gr6-C news .
+Indo 3fs-PERF borrow-II bike from place-of Abdu .
+one-f-that 3fs-RP finish work-of-3fs 3fs-IPFV can go .
+3SM-CMPL-NEG shoot-V-Gr2-C elephant NEG .
+3p-PERF send-I IX/ Abdu letter .
+3ms-PERF increase-I money .
+1S-CMPL-ABS catch-V-Gr1-D=A for Musa fish .
+Abdu 3ms-PERF live-I district this .
+chair 3fs-PERF sit-VII .
+3p-CONT ripen-I lemon in garden .
+IMP-PERF say Abdu NEG-CONT 3ms love-DN-of Balki .
+3fs-PERF turn-I boy .
+Abdu 3ms-PERF pull-VIII wood from field .
+snake 3ms-CONT at coil-IV-VN .
+3ms-PERF fit-III Aisha 3fs-SUB finish-I work-3fs .
+meat-of camel 3ms-CONT cut-VII-VN .
+box-Nom heavy-Decl .
+I-Nom sister-Nom lawyer-be-Dec .
+this building-Top school Cop-Decl .
+unit-Nom frontline-to move-Pres-Decl .
+book-Nom one hour-for-Nom read-Pass-Pst-Dec .
+this building-Top school-Nom not .
+9 unit-Nom headquarter-to report-Acc send-Past-Decl .
+he-Nom 1-hour-for water-Acc freeze-Past-Dec .
+I-Nom maid-Nom morning-from work-Com do-Past-Dec .
+detection activity-Nom occur-Pres-Decl .
+Mary-Nom home-Dir go-Cmp-Acc John-Top hope-Pst-Dec .
+Japan-from come-MOD person-TOP actually that student-COP-DECL .
+John-Top Mary-Nom home-Dir go-Cmp-Acc hope-Pst-Dec .
+my idea-Top your idea-from different-Decl .
+I-TOP yesterday this spot-ACC ten meter-extent-ACC dig.out-P
+John-Top Mary-Nom home-Dir go-Cmp hope-Pst-Dec .
+book borrow go-PAST KES tomorrow bring-ing come-FUT-POL-DEC .
+student-Nom book-Nom three-volumes-Nom need-Dec .
+teenager-pl-nom most Michael Jackson-acc like .
+radio-Nom broke-Past-if communication-Nom impossible-Decl .
+she-Nom very intelligent-be-Pres .
+father-HNom money-Acc son-Dat give-Hon-Pst-Dec .
+son-Dat father-HNom money-Acc give-Hon-Pst-Dec .
+cousin-Acc aunt-Top sometimes go-Cmp expect-Pres-Dec .
+flower-Nom yellow-Decl .
+Tom-Top America-Acc two-time-Acc visit-Pst-Dec .
+he-Nom us-Plur-Dat that fact-Acc pay.attention-Cmp request-Pst-Dec .
+he-Nom water-Acc freeze-Prog-Pre-Dec .
+very intelligent-be-Pres .
+Anyone why resign-CI-not-Past-Q ?
+man-Top social-Nom not .
+Swuni-Nom milk-Acc boil-Cau-Pre-Dec .
+the child-Plu-Nom string-Acc catch-E-pull-Nml-Top pull-Pst-Dcl .
+stone-NOM hill bottom-to 2 times-NOM rolled .
+Because he-NOM I-DAT so say-PAST-DCL .
+father-HNom son-Dat money-Acc give-Hon-Pst-Dec .
+the child-Plu-Nom string-Acc catch-E-try-Nml-Top try-Pst-Dcl .
+room-Nom bright-Dec .
+that man-Nom commander Cop-Decl .
+eat-KI-TOP John-NOM apple-ACC eat-PAST-DECL .
+Chelswu-Nom apple-Acc eat-aux-connect be-Pres-Decl .
+Nom peanuts-Acc buy-eat-Past-Decl .
+John-Nom person-Plur-Dat war-Acc suggest-Pst-Dec .
+chelswu-Nom doctor-Nom become-Past-Decl .
+Chelswu-Nom apple-Acc eat-Pres-Dec .
+box-Top heavy-CI not-Decl .
+John-Top home-Dir go-Cmp-Acc very muchwant-Pst-Dec .
+John-NOM Mary-ACC hand-ACC hit-PST-IND .
+John-Nom Mary-Dat go-Cmp suggest-Pst-Dec .
+John-Gen English-Gen study
+Student-Plur-Nom several-hour-Nom be.happy-Pst-Dec .
+ball-Acc Cwuni-Nom quick catch-Pres .
+Chelswu-Nom new clothes-Acc wear-Past-Dec
+John-Top home-Dir go-Cmp-Acc want-Pst-Dec .
+frequently Chelswu-Nom apple-Acc eat-Pres-Decl .
+man-Top social Cop-CI not .
+he-Nom vigorously water-Acc freeze-Past-Dec .
+book-Nom one hour-for-Nom read-Cmp PasAux-Pst-Dec .
+intelligence-Nom many source-from originate-Pres-Decl .
+Chelswu-Nom that book-Acc read-Cmp-Top do-Pst-Dec .
+book-Nom one hour-for-Acc read-Pass-Pst-Dec .
+chelswu-Top fool-nom not-Decl .
+John-nom apple-acc three-cl-ssik divide-pst-decl .
+John-Top Mary-Nom home-Dir go-Cmp very.much hope-Pst-Dec .
+I Â­Gen live-Ret-N hometown
+Chelswu-Nom leaves-Acc sweep-E clean-Past-Decl .
+that student-TOP actually Japan-from come-MOD person-COP-DECL .
+Chelswu-Nom early arrive-Nominalizer-Nom difficult .
+I-nom Minho-acc genius-cop-comp think .
+cereal-ACC eat-PST-DEC Mary-NOM .
+I-Nom picture-Acc draw-Cmp-Acc try-if
+John-Nom Mary-Gen hair-Acc wash-Cau-Past-Dec .
+headquarter-Nom database-Acc maintain-Pres-Decl .
+he-Nom 1-hour-in water-Acc freeze-Past-Dec .
+mother-Nom son-Dat lullaby-Acc sing-PF-give-Past-Dec
+John-Top home-Dir go-Cmp want-Pst-Dec .
+fireman-DAT-NOM winter wind-NOM fear .
+Chelswu-Nom book-Acc three hour-during-Acc read-Pst-Dec .
+linguistics-NOM employment-NOM difficult .
+John-TOP Seoul Station-to-ACC arrival-do-PST-DECL
+I-Nom Chelswu-Nom new clothes-Acc wear-Com do-Past-Dec
+Mother-HNom child-Dat book-Acc read-Cmp persuade-Hon-Pst-Dec .
+that box-Top very big .
+chelswu-Nom car-Nom have-Decl .
+You-Top who-Acc love-Q ?
+John-top she-nom cry-rel-imprf kes-acc comforted .
+John-Gen Mary-with-Gen talk .
+Swuni-Nom one hour-for-Acc run-Pst-Dec .
+chelswu-Top doctor Cop-Decl .
+aunt-Nom cousin-Acc sometimes put.to.sleep-Pst-Dec .
+quality-NOM good-KI-CT do-but too expensive-POLITE .
+John-Top Mary-Nom home-Dir go-Cmp-Acc very.much hope-Pst-Dec .
+book-Nom one hour-for-Acc read-Cmp PasAux-Pst-Dec .
 man two cl-nom suitcase three cl ssik-acc carry-pst-dec .
-professor-nom me-acc book-ac read-com do-past-dec .
-this problem-top that problem-as same .
-i-top that one-nom leave-com do-past-dec .
-john-nom mary-dat bill-nom come-fut-thing-cmp suggest-pst-dec .
-i-top kimchi-acc neg-cannot eat-cmp negaux-pst-dec .
-chelswu-top each-gen child-nom homework-acc do-comp persuaded .
-i-top mary-to quickly come-la-comp order-past-dec .
-lamp-nom room-acc bright-cau-pre-dec .
-commander-nom intelligence-activity-acc order-pres-decl .
-indeed who prt cut grass ?
-yesterday rabe prt buy-act rice
-buy-act the bread that woman
-indeed cut grass rabe
-but neg pst-have time they .
-past-buy-pass-rabe the chicken
+professor-Nom me-Acc book-Ac read-Com do-Past-Dec .
+this problem-Top that problem-as same .
+I-Top that one-Nom leave-Com do-Past-Dec .
+John-Nom Mary-Dat Bill-Nom come-Fut-thing-Cmp suggest-Pst-Dec .
+I-Top kimchi-Acc Neg-cannot eat-Cmp NegAux-Pst-Dec .
+Chelswu-TOP each-GEN child-NOM homework-ACC do-COMP persuaded .
+I-Top Mary-to quickly come-la-Comp order-Past-Dec .
+lamp-Nom room-Acc bright-Cau-Pre-Dec .
+commander-Nom intelligence-activity-Acc order-Pres-Decl .
+indeed who PRT cut grass ?
+yesterday Rabe PRT buy-ACT rice
+buy-ACT the bread that woman
+indeed cut grass Rabe
+but NEG PST-have time they .
+PAST-buy-PASS-Rabe the chicken
 past-act-help them past-rec-act-send packages we-incl
-emph buy-pass the child the airplane
-past-rec-act-steal-rabbit white art vao and art velo
+EMPH buy-PASS the child the airplane
+past-rec-act-steal-rabbit white art Vao and art Velo
 past-rec-act-seen and past-rec-act-greet we-excl
-neg began laugh past-prep the story he .
+NEG began laugh PAST-PREP the story he .
 fight hard those nom-rec-act-say as nom-act-steal those
-who prt should visit-act acc-rabe ?
-because not read-tf the students that book that
-there under the bed prt hide-circ the child the key
-rasoa prt laugh-act
+who PRT should visit-ACT ACC-Rabe ?
+because not read-TF the students that book that
+there under the bed PRT hide-CIRC the child the key
+Rasoa PRT laugh-ACT
 read the book all the child
-ask-act 1sg-nom hoe who focus buy-act the chicken
-buy-pass-rasoa the bread
-where foc wash-cf-rasoa-gen clothes every'day ?
-intend-act read-pass-1sg this book this .
-pres-active-live in that house 1pl-excl-nom
-think-pass-rabe that look-for the child rasoa
+ask-ACT 1SG-NOM HOE who FOCUS buy-ACT the chicken
+buy-PASS-Rasoa the bread
+Where Foc wash-CF-Rasoa-gen clothes every'day ?
+intend-ACT read-PASS-1SG this book this .
+PRES-ACTIVE-live in that house 1PL-EXCL-NOM
+think-PASS-Rabe that look-for the child Rasoa
 pres-act-think the soldier-s as defeat-thm the enemy-gen we-incl
-pres-act-say acc-rasoa as past-steal-rice ravelo
-where prt buy-act the bread rasoa ?
-pres-act-chitchat with-drabe rasoa
+pres-act-say acc-Rasoa as past-steal-rice Ravelo
+where PRT buy-ACT the bread Rasoa ?
+pres-act-chitchat with-dRabe Rasoa
 pres-buy the book there on the table the child .
-where the what prt buy-pass-2sg ?
-what prt buy-pass-rasoa ?
-the person who chases acc-rabe
-should who prt visit-act acc-rabe ?
+where the what PRT buy-PASS-2SG ?
+what PRT buy-PASS-Rasoa ?
+the person who chases acc-Rabe
+should who PRT visit-ACT ACC-Rabe ?
 the good past-rec-act-do-circ-us1pl-incl-gen
-pres-act-agree fut-wash-pass the child .
-intend wash-pass-rasoa the clothes
-pres-act-offer rice to the guest rabe
-pres-act-wash hand rasoa
-good fut recall-thm the mutual-trust-circ-of the malagasy of-yore
-yesterday rasoa prt cut grass
+PRES-ACT-agree FUT-wash-PASS the child .
+intend wash-PASS-Rasoa the clothes
+pres-act-offer rice to the guest Rabe
+pres-act-wash hand Rasoa
+good fut recall-thm the mutual-trust-circ-of the Malagasy of-yore
+yesterday Rasoa PRT cut grass
 past-act-desire fut-rec-act-send book we-excl
-who prt buy-act the bread ?
-there acc-market always rakoto .
-past-rec-borrow-money three-times rabe and ravao
+who PRT buy-ACT the bread ?
+there ACC-market always Rakoto .
+past-rec-borrow-money three-times Rabe and Ravao
 play there in-house the boys and the girls
-think rabe that look-for the child rasoa
-try-act kill-pass-rasoa the chicken .
-pres-act-look-at him i
+think Rabe that look-for the child Rasoa
+try-ACT kill-PASS-Rasoa the chicken .
+pres-act-look-at him I
 pres-act-run there at-hills the cows
 pres-rec-act-think as defeat-thm the enemy-gen the soldiers
-began knock this door this rabe twice .
-began neg laugh past-prep the story npi he .
+began knock this door this Rabe twice .
+began NEG laugh PAST-PREP the story NPI he .
 the student-s rel rec-chase
-intend wash the clothes rasoa
-not read-tf the students that book that
-rabe focus buy-act the chicken
-the woman hoped-1sg-gen as built-cf-rabe-gen house
-when rabe prt buy-act the rice ?
-pulls the hair the child'art soa art vao
-who prt neg eat the rice ?
-the zeal past-af-work-cf-rabe-gen
-begin wash the clothes rasoa
-pres-act-buy the chicken rabe .
-buy-act the bread there at-market rasoa
+intend wash the clothes Rasoa
+Not read-TF the students that book that
+Rabe FOCUS buy-ACT the chicken
+the woman hoped-1sg-gen as built-CF-Rabe-gen house
+when Rabe PRT buy-ACT the rice ?
+pulls the hair the child'art Soa art Vao
+who PRT NEG eat the rice ?
+the zeal past-AF-work-CF-Rabe-gen
+begin wash the clothes Rasoa
+PRES-ACT-buy the chicken Rabe .
+buy-ACT the bread there at-market Rasoa
 the books past-desire-thm-1-pl-excl-gen fut-rec-act-send-circ
-stop-act neg eat-pass-rabe the sugar .
+stop-ACT NEG eat-PASS-Rabe the sugar .
 past-act-defend the child-3gen and the spouse-3gen 3nom dem-pl
 began yesterday laugh all the children .
 pres-buy it the child .
-pres-rec-act-kick three-times rabe and ravao
-pres-rec-act-chitchat rabe and rasoa
-try-act kill-pass-rasoa the chicken .
-begin wash-pass-rasoa the clothes
-begin-circ drive the car rabe .
-buy-act the bread yesterday rasoa
+pres-rec-act-kick three-times Rabe and Ravao
+pres-rec-act-chitchat Rabe and Rasoa
+try-ACT kill-PASS-Rasoa the chicken .
+begin wash-PASS-Rasoa the clothes
+begin-CIRC drive the car Rabe .
+buy-ACT the bread yesterday Rasoa
 past-act-see and past-act-greet 3acc dem-pl 1-sg-nom
-not read-tf the students ? that book that ?
-when rasoa prt harvest rice and rabe prt cut grass ?
-where rasoa prt buy-act bread ?
-rasoa topic kiss acc-rabe
-past-act-try past-act-kill the chicken rabe .
-pres-rec-act-give money child rasoa and ravelo
-pres-act-sit next-to-rasoa rabe
-should who prt visit acc-rakoto ?
+Not read-TF the students ? that book that ?
+when Rasoa PRT harvest rice and Rabe PRT cut grass ?
+where Rasoa PRT buy-ACT bread ?
+Rasoa TOPIC kiss ACC-Rabe
+PAST-ACT-try PAST-ACT-kill the chicken Rabe .
+pres-rec-act-give money child Rasoa and Ravelo
+pres-act-sit next-to-Rasoa Rabe
+should who PRT visit ACC-Rakoto ?
 saw the woman the student .
-past-kill-pass-rasoa the chicken .
-respect who-acc the mother-3sg ?
-past-rec-act-say as past-steal-rice rasoa and ravelo
-neg-be-pres i prog know .
-1s-gen favourite old dog
+PAST-kill-PASS-Rasoa the chicken .
+respect who-ACC the mother-3SG ?
+past-rec-act-say as past-steal-rice Rasoa and Ravelo
+NEG-be-PRES I PROG know .
+1S-GEN favourite old dog
 came the man to-3pl 3sgf see-nonfin her
-be-fut-3sg gwyn neg prog sleep .
-be-fut-3sg gwyn prog sleep .
-saw g {l}-3-fem cat fem .
-be-pres-2sg you-sg prog see sioned the days here ?
+be-FUT-3SG Gwyn NEG PROG sleep .
+be-FUT-3SG Gwyn PROG sleep .
+saw G {L}-3-fem cat fem .
+be-PRES-2SG you-SG PROG see Sioned the days here ?
 did the man buy car .
 saw-1s 1s and-1s brother 1pl self .
-was the woman prog buy-vn bike .
-be where is john in london
-is he perf wake-inf .
-know-pres-1sg i neg be-fut-3sg sioned neg prog work tonight .
-cup big green chinese
-do-3sg-past john see-vn dragon .
-dog big black dafydd
-this is the site best possible .
-be-pres-1sg i neg neg prog worry .
+was the woman PROG buy-VN bike .
+be where is John in London
+is he PERF wake-INF .
+know-PRES-1SG I NEG be-FUT-3SG Sioned NEG PROG work tonight .
+cup big green Chinese
+do-3SG-PAST John See-VN dragon .
+dog big black Dafydd
+This is the site best possible .
+be-PRES-1SG I NEG NEG PROG worry .
 his destruction of-the town
-car red new ieuan
+car red new Ieuan
 the sneak little interfering
-the parties smaller other-pl
+the parties smaller other-PL
 the girl little quiet this
-slept-3s he neg .
+slept-3S he NEG .
 without owe-nonfin anything to-him
-neg-be-pres-3sg gwyn neg prog sleep .
-see-3pl-past they the girl .
-was a prog convince e to go-nonfin home
-adaptation welsh new of play thomas middleton
-be-pres-3sg sioned without arrive .
+NEG-be-PRES-3SG Gwyn NEG PROG sleep .
+see-3PL-PAST they the girl .
+was A prog convince E to go-nonfin home
+adaptation Welsh new of play Thomas Middleton
+be-PRES-3SG Sioned without arrive .
 described the driver the accident .
-know-pres-1sg i neg be-fut-3sg sioned prog work tonight .
-and tracks the horse prt saw-impf-3s .
-where be-past-2sg you-sg last-night ?
-neg-be-pres-3sg sioned neg perf arrive .
-is a prog endeavor to finish-nonfin his work
-expect-past-3sg megan to sioned neg with go home .
-neg-be-pres-3sg sioned neg without arrive .
+know-PRES-1SG I NEG be-FUT-3SG Sioned PROG work tonight .
+and tracks the horse PRT saw-IMPF-3S .
+where be-PAST-2SG you-SG last-night ?
+NEG-be-PRES-3SG Sioned NEG PERF arrive .
+is A prog endeavor to finish-nonfin his work
+expect-PAST-3SG Megan to Sioned NEG with go home .
+NEG-be-PRES-3SG Sioned NEG without arrive .
 seats round red soft
-said steffan to nia paint-vn the picture .
-songs new great other-pl
+said Steffan to Nia paint-VN the picture .
+songs new great other-PL
 poet young promising
 killed the dragon the man .
 here-is the book that read.1 the story in-it
-what see-past-2sg you-sg ?
+what see-PAST-2SG you-SG ?
 the boy who was a' reading
-try-past-3sg gwyn neg neg with answer the question .
+try-PAST-3SG Gwyn NEG NEG with answer the question .
 read-past-3sg the children the book
-the three party other-sg these-pl
+the three party other-SG these-PL
 son ptc be-born-pret-impers to-her
-will the romans destroy our city .
-be-pres-1s i neg perf sleep-inf dim .
-expect-past-3sg megan to sioned go home .
-and-there house leaves-loc sit-ger .
-maria tortillas make-term-sub 3sg.nnom.pl-eat-pst .
-sandra-nnom.sg and joel-nnom.sg -1sg marker-pl give-pst .
-john this.way think.prs house-nnom.sg buy-desid-go.sg.prs .
-john sing-pst maría and dance-pst .
-i house-fut .
-john what eat-pst ?
-each teacher-pl book-pl buy-pst .
-he john-dat det.acc corn-acc give-perf
-john yesterday sing-pst and tomorrow dance-intt .
-those little cats already-emph red-full-perf
+will the Romans destroy our city .
+be-PRES-1S I NEG PERF sleep-INF DIM .
+expect-PAST-3SG Megan to Sioned go home .
+And-there house leaves-LOC sit-GER .
+Maria tortillas make-TERM-SUB 3SG.NNOM.PL-eat-PST .
+Sandra-NNOM.SG and Joel-NNOM.SG -1SG marker-PL give-PST .
+John this.way think.PRS house-NNOM.SG buy-DESID-go.SG.PRS .
+John sing-PST MarÃ­a and dance-PST .
+I house-FUT .
+John what eat-PST ?
+Each teacher-PL book-PL buy-PST .
+he John-DAT Det.ACC corn-ACC give-PERF
+John yesterday sing-PST and tomorrow dance-INTT .
+Those little cats already-EMPH RED-full-PERF
 this bird might do-bad-omen somehow .
-1sg church-loc sing-pst john-nnom.sg-com .
-1sg.poss wife dog-pl like.prs .
-he john-acc det.acc corn-acc give(food)-perf .
-again 3sg-circle-adv go-ppl and back-loc 3nnom.sg-urinate-pst .
-now and-again those snake-pl here 3pl.obl-search:prs .
-forty peso daily-clit.1sg 1sg-earn now here .
-he det.acc horse-acc house-acc see-cause-perf .
-john torim-loc and vicam-loc work.prs .
-john sing-pst and mary and peter dance-pst .
-peo-nom goyo-acc yesterday horse-acc steal-prfv-say-pres .
-because 3sgp not happy john sleep-des .
-1sg machete-pl and knife-pl put.up.pl.obj-pst .
-1sg man-nnom.sg get.up.nnom.sg-pst and child-nnom.sg get.up.sg-pst .
-det.pl child-pl and det.sg teacher there go.pl-pst .
-you-pl neg thus do-fut .
-the.pl little dog-pl very red-full
-john see.prs and hear.prs .
-what-loc 3pl work.prs ?
-horse and donkey very red-big-pl .
-how-q-1p do-fut ?
-1sg pig-nnom.sg grasp-pst and cat-nnom.sg .
-ruben school-loc book-pl leave-go.pst .
-his mother-poss house-dir arrive.sg-pst and there sweep-incep-pst .
-1sg.poss horse much.more fat round and active.. .
-and-1sg not someone-pl 1sg.obl come.pl.pst even .
-1sg john-nnom.sg-com church-loc sing-pst .
-1sg mary-com center-dir go-pst .
-and-3nnom.sg-dir lay.down.pst 3nnom.sg-look.prs little dog .
-3sg sing.prs and Ø dance.prs .
-paulina young-nnom.sg see-pst and tall-pst .
-det-pl teacher-pl book-pl buy-pst .
-john sleep-des because 3sgp not happy .
-yesterday what 2sg do-pst ?
-1sg house-dir monday-verb-when go.pst .
-john yesterday sing-pst maría and tomorrow dance-intt .
-peter something buy.prs and something sell.prs .
-3sg fisherman and 3sg shoemaker .
-who john meet-pst and who maria greet-pst .
-1sg machete-pl put.up.pl.obj-pst
-mary and.more sing-pst peter and dance-pst .
-mary and peter together go.pl-pst .
-1sg diana-nnom.sg see-pst , 3sg.poss father and too .
-man sing.prs and peter and diana dance.prs-3pl .
-ruben school-loc 3nnom.pl-leave-go.pst det.pl book-pl .
-he det.acc horse-acc house-dat see-cause-perf .
-ruben work.prs or mathematics-pl 3refl teach.prs .
-your dog and your cat together-fight.prs .
-diana dog-nnom.sg embrace-sub 3nnom.sg-die-caus-pst .
-again 3sg-circle-adv go-ppl back-loc and 3nnom.sg-urinate-pst .
-john sing-pst then mary and dance-pst .
-what mary buy-pst and .
-the hummingbird there red-hover-perf
-john what eat-pst and ?
-1sg machete-pl and knife-pl put.up.sg.obj-pst .
-1sg man-pl get.up.nnom.pl-pst .
-lizard-pl and gila.monster-pl here rest.prs .
+1SG church-LOC sing-PST John-NNOM.SG-COM .
+1SG.POSS wife dog-PL like.PRS .
+he John-ACC Det.ACC corn-ACC give(food)-PERF .
+again 3SG-circle-ADV go-PPL and back-LOC 3NNOM.SG-urinate-PST .
+Now and-again those snake-PL here 3PL.OBL-search:PRS .
+forty peso daily-CLIT.1SG 1SG-earn now here .
+he Det.ACC horse-ACC house-ACC see-CAUSE-PERF .
+John Torim-LOC and Vicam-LOC work.PRS .
+John sing-PST and Mary and Peter dance-PST .
+Peo-NOM Goyo-ACC yesterday horse-ACC steal-PRFV-SAY-PRES .
+because 3SGP not happy John sleep-DES .
+1SG machete-PL and knife-PL put.up.PL.OBJ-PST .
+1SG man-NNOM.SG get.up.NNOM.SG-PST and child-NNOM.SG get.up.SG-PST .
+DET.PL child-PL and DET.SG teacher there go.PL-PST .
+you-PL NEG thus do-fut .
+The.PL little dog-PL very RED-full
+John see.PRS and hear.PRS .
+What-LOC 3PL work.PRS ?
+Horse and donkey very RED-big-PL .
+how-Q-1P do-FUT ?
+1SG pig-NNOM.SG grasp-PST and cat-NNOM.SG .
+Ruben school-LOC book-PL leave-go.PST .
+his mother-POSS house-DIR arrive.SG-PST and there sweep-INCEP-PST .
+1SG.POSS horse much.more fat round and active.. .
+and-1SG not someone-PL 1SG.OBL come.PL.PST even .
+1SG John-NNOM.SG-COM church-LOC sing-PST .
+1SG Mary-COM center-DIR go-PST .
+And-3NNOM.SG-DIR lay.down.PST 3NNOM.SG-look.PRS little dog .
+3SG sing.PRS and Å˜ dance.PRS .
+Paulina young-NNOM.SG see-PST and tall-PST .
+DET-PL teacher-PL book-PL buy-PST .
+John sleep-DES because 3SGP not happy .
+yesterday what 2SG do-PST ?
+1SG house-DIR Monday-VERB-when go.PST .
+John yesterday sing-PST MarÃ­a and tomorrow dance-INTT .
+Peter something buy.PRS and something sell.PRS .
+3SG fisherman and 3SG shoemaker .
+who John meet-PST and who Maria greet-PST .
+1SG machete-PL put.up.PL.OBJ-PST
+Mary and.more sing-PST Peter and dance-PST .
+Mary and Peter together go.PL-PST .
+1SG Diana-NNOM.SG see-PST , 3SG.POSS father and too .
+Man sing.PRS and Peter and Diana dance.PRS-3PL .
+Ruben school-LOC 3NNOM.PL-leave-go.PST DET.PL book-PL .
+he Det.ACC horse-ACC house-DAT see-CAUSE-PERF .
+Ruben work.PRS or mathematics-PL 3REFL teach.PRS .
+Your dog and your cat together-fight.PRS .
+Diana dog-NNOM.SG embrace-SUB 3NNOM.SG-die-CAUS-PST .
+again 3SG-circle-ADV go-PPL back-LOC and 3NNOM.SG-urinate-PST .
+John sing-PST then Mary and dance-PST .
+What Mary buy-PST and .
+The hummingbird there RED-hover-PERF
+John what eat-PST and ?
+1SG machete-PL and knife-PL put.up.SG.OBJ-PST .
+1SG man-PL get.up.NNOM.PL-PST .
+lizard-PL and gila.monster-PL here rest.PRS .

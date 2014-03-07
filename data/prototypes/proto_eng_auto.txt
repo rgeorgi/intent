@@ -1,42 +1,41 @@
 PRP$	their	his	its
 VBG	being	including	according
-FW	kanji	perestroika	Glasnost
+FW	glasnost	perestroika	kanji
 VBN	expected	based	been
 POS	's	'
-''	''
+''	''	
 VBP	do	are	have
-WDT	whatever	which	Whatever
+WDT	whatever	which
 JJ	new	other	last
-WP	what	who	What
+WP	whom	what	who
 VBZ	is	has	says
-DT	a	the	The
+DT	a	the	an
 #	#
 RP	off	up	out
-$	US$	$	C$
+$	us$	$	c$
 NN	company	%	year
 VBD	had	said	was
 ,	,
 .	!	?	.
-TO	to	na	To
+TO	to	na
 PRP	it	they	he
 RB	n't	also	not
--LRB-	-LRB-	-LCB-
+-LRB-	-lrb-	-lcb-
 :	--	;	:
 NNS	companies	shares	years
-NNP	Mr.	Corp.	U.S.
+NNP	mr.	corp.	u.s.
 ``	`	``
 WRB	how	when	where
-CC	and	or	But
-LS	Third
-RBR	earlier	Earlier	faster
+CC	and	or	but
+RBR	closer	earlier	faster
 CD	billion	million	one
-EX	There	there
+EX	there
 IN	of	for	in
 WP$	whose
 MD	will	could	would
-NNPS	Securities	Soviets	Brothers
--RRB-	-RCB-	-RRB-
+NNPS	soviets	americans	brothers
+-RRB-	-rcb-	-rrb-
 JJS	most	least	largest
 JJR	less	higher	more
 VB	sell	be	make
-UH	Well
+UH	oh

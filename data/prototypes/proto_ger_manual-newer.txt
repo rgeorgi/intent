@@ -1,0 +1,9 @@
+ADV	nicht	hier	noch	immer	als	laut	nie
+NOUN	leute	haare	lied	wagen	kindern	bücher	touristen	fritz	frau	angreiferdat	heute	bratwurst	hans	jeder	peter	karl	buch	gestern	traktor	dom	tor	arzt	brief	joachim	wachen	reim	aufsatz	mann
+ADP	über	weil	daß	von	dass	an
+PRON	ich	ihr	mich	wen	wem	wir	sie	ihm	du	er	sich
+DET	diese	die	der	des	ein	eine	den	das	einen	einem	dem
+.	?	.
+PRT	zu	ausstellte	mit
+VERB	gegeben	versucht	lehrte	wurde	besucht	gesehen	glaubten	gemalt	lesen	gegessen	lassen	verteidigen	gab	bat	glaubt	gelesen	singt	gekauft	öffneten	glauben	ist	werden	zurückgelassen	ankommt	hat	reparieren
+ADJ	leckere	nackt

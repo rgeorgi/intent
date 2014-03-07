@@ -1,9 +1,9 @@
 ADV	nicht	immer	schnell
-NOUN	Buch	Tisch		Wirtschaft
+NOUN	buch	tisch	wirtschaft
 ADP	über	auf	an
 PRT	zu
 DET	die	der	das
-.	?	.	,
+.	?	.	,	"	''
 PRON	sie	ihr	ich	du
 VERB	hat	investieren
 ADJ	schwer	dunkel	langsam
