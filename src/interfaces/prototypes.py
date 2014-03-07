@@ -4,7 +4,6 @@ Created on Aug 31, 2013
 @author: rgeorgi
 '''
 import optparse, sys, os
-from ConfigParser import ConfigParser
 from utils.commandline import require_opt
 from eval.pos_eval import pos_eval
 from utils.systematizing import notify
@@ -13,11 +12,10 @@ from utils.fileutils import remove_safe
 
 def prop():
 	global cp
-	c = ConfigParser()
 	mydir = os.path.abspath(os.path.dirname(__file__))
-	c.read(os.path.join(mydir, 'prototypes.prop'))
+	c = ConfigFile(os.path.join(mydir, 'prototypes.prop'))
 	
-	root = c.get('prototypes', 'root')
+	root = c['root']
 		
 	cp = os.path.join(root, 'bin/')
 # 	jars = glob(root+'/lib/*jar')
@@ -134,9 +132,9 @@ if __name__ == '__main__':
 	
 	eval_file = os.path.join(c['outdir'], os.path.basename(c['test_file']))+'.tagged'
 	
-# 	remove_safe(c['context_model'])
-# 	remove_safe(c['sequence_model'])
-# 	remove_safe(eval_file)
+	remove_safe(c['context_model'])
+	remove_safe(c['sequence_model'])
+	remove_safe(eval_file)
 
 
 	
@@ -149,7 +147,7 @@ if __name__ == '__main__':
 		    					directional = c['directional'],
 		    					reduceType = c['reduceType'])
 	
-# # 	#===========================================================================
+#  	#===========================================================================
 # 	#  Perform the sequence model training.
 # 	#===========================================================================
 	train(c['rawfile'],

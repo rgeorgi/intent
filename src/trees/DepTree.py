@@ -3,13 +3,14 @@ Created on Oct 23, 2013
 
 @author: rgeorgi
 '''
-from ptb import Tree
+from .ptb import Tree
 from utils.SetDict import SetDict
 import sys
-from Edge import Edge
-from Term import Term, TermList
-from EdgeMap import EdgeMap
+from .Edge import Edge
+from .Term import Term, TermList
+from .EdgeMap import EdgeMap
 import re
+from corpora.POSCorpus import POSCorpusInstance, POSToken
 
 
 class DepTree(Tree):
@@ -66,8 +67,14 @@ class DepTree(Tree):
 				parent_node.append(t)
 		
 		return tree_root
-					
-			
+	
+	def to_pos_corpus_instance(self):
+		inst = POSCorpusInstance()
+		for node in self.nodes():
+			token = POSToken(node.label, node.pos)				
+			inst.append(token)
+		return inst
+	
 	def to_snt(self, ordered=True, clean = True):
 		ret_str = ''
 		nodes = self.nodes()
@@ -335,6 +342,9 @@ class DepTree(Tree):
 	
 	def __ne__(self, other):
 		return hash(self) != hash(other)
+	
+	def __nonzero__(self):
+		return True
 	
 	def find_id(self, id, topdown = False):
 		# Start from the root if "topdown" is specified.

@@ -25,6 +25,7 @@ from utils import ConfigFile
 import re
 from eval.EvalException import POSEvalException
 from pos.TagMap import TagMap
+from utils.encodingutils import getencoding
 
 __all__ = []
 __version__ = 0.1
@@ -36,9 +37,9 @@ def pos_eval(goldpath, testpath, delimeter, tagmap=None):
 		raise POSEvalException('Gold Path not set.')
 	if not testpath:
 		raise POSEvalException('Test path not set.')
-	
-	gold_f = file(goldpath, 'r')
-	test_f = file(testpath, 'r')
+			
+	gold_f = open(goldpath, 'r')
+	test_f = open(testpath, 'r')
 	
 	matches = 0
 	tokens = 0
@@ -58,8 +59,8 @@ def pos_eval(goldpath, testpath, delimeter, tagmap=None):
 			
 		# Make sure all the lines are of equal length
 		if len(test_tokens) != len(gold_tokens):
-			print test_tokens
-			print gold_tokens
+			print(test_tokens)
+			print(gold_tokens)
 			raise POSEvalException('lines of unequal length')
 		
 		
@@ -77,7 +78,9 @@ def pos_eval(goldpath, testpath, delimeter, tagmap=None):
 			
 			seen_tags[test_tag] = True			
 			
-			assert test_word == gold_word
+# 			if test_word != gold_word:
+# 				raise POSEvalException('Words %s and %s do not match.' % (test_word, gold_word))
+			
 			
 			if test_tag == gold_tag:
 				matches += 1				
@@ -85,13 +88,13 @@ def pos_eval(goldpath, testpath, delimeter, tagmap=None):
 			
 	tags = seen_tags.keys()
 	
-	print 'Tags: %d' % len(tags)
-	print 'Tokens: %d' % tokens
-	print 'Matches: %d' % matches
-	print 'Sents: %d' % sents
-	print 'Accuracy: %.2f' % (float(matches)*100 / tokens)
+	print('Tags: %d' % len(tags))
+	print('Tokens: %d' % tokens)
+	print('Matches: %d' % matches)
+	print('Sents: %d' % sents)
+	print('Accuracy: %.2f' % (float(matches)*100 / tokens))
 	if tagmap:
-		print 'Remapped Accuracy: %.2f' % (float(remapped_matches)*100/tokens)
+		print('Remapped Accuracy: %.2f' % (float(remapped_matches)*100/tokens))
 				
 
 def main(argv=None):

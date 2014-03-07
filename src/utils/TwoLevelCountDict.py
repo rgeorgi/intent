@@ -3,31 +3,46 @@ Created on Oct 24, 2013
 
 @author: rgeorgi
 '''
-from CountDict import CountDict
+from utils.CountDict import CountDict
+from collections import defaultdict
 
 
-class TwoLevelCountDict():
+class TwoLevelCountDict(defaultdict):
 	def __init__(self):
-		self.dict = {}
+		defaultdict.__init__(self, lambda: CountDict())
+		
 	def add(self, key_a, key_b, value=1):
-		if key_a not in self.dict:
-			newdict = CountDict()
-			newdict.add(key_b, value)
-			self.dict[key_a] = newdict
-		else:
-			self.dict[key_a].add(key_b, value)
+		self[key_a][key_b] += value
 			
-	def keys(self):
-		return self.dict.keys()
-	def __contains__(self, key):
-		return key in self.dict
-	def __getitem__(self, key):
-		return self.dict[key]
-	
-	def __str__(self):
-		return str(self.dict)
-	
+
 	def most_frequent(self, key, num = 1):
-		return self[key].most_frequent(num = num)
+		most_frequent = None
+		biggest_count = 0
+		for key2 in self[key]:
+			count = self[key][key2]
+			if count > biggest_count and count >= num:
+				most_frequent = key2
+				biggest_count = count
+				
+		return most_frequent
+	
+	def total(self, key):
+		count = 0
+		for key2 in self[key]:
+			count += self[key][key2]
+		return count
+			
+	
+	def distribution(self, key):
+		dist_set = set([])
+		
+		total = 0
+		for key2 in self[key].keys():
+			total += self[key][key2]
+		
+		for key2 in self[key]:
+			dist_set.add((key2, self[key][key2] / float(total)))
+			
+		return dist_set
 	
 	

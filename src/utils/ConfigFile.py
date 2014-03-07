@@ -32,7 +32,7 @@ class ConfigFile():
 		
 		self._settings = {}
 		
-		cf = file(path, 'r')
+		cf = open(path, 'r')
 		lines = cf.readlines()
 		for line in lines:
 			content = re.search('(^[^#]*)', line).group(1).strip()
@@ -43,7 +43,7 @@ class ConfigFile():
 				var = var.strip()
 				string = string.strip()
 			except ValueError as ve:
-				sys.stderr.write(content)
+				sys.stderr.write(content+'\n')
 				raise ve
 			
 			

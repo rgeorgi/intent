@@ -5,6 +5,10 @@ Created on Aug 30, 2013
 '''
 import os
 from utils.ListDict import ListDict
+import codecs
+import chardet
+import sys
+from utils.encodingutils import utfread, getencoding
 
 class TagMap():
 	'''
@@ -22,10 +26,13 @@ class TagMap():
 		if path:
 			if not os.path.exists(path):
 				raise Exception('Tag map "%s" does not exist.' % path)
-	
-			f = file(path, 'r')
-			lines = f.readlines()
+				
+			encoding = getencoding(path)
+			f = codecs.open(path, encoding=encoding)
+			data = f.read()
 			f.close()
+			
+			lines = data.split('\n')
 			
 			for line in lines:
 				tags = line.split()

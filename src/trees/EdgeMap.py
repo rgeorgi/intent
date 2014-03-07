@@ -4,8 +4,8 @@ Created on Oct 23, 2013
 @author: rgeorgi
 '''
 import utils.SetDict
-import DepTree
-from Edge import Edge
+import trees.DepTree
+from trees.Edge import Edge
 
 
 class EdgeMap():

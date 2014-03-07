@@ -13,11 +13,38 @@ def raw_writer(path, lines):
 	for line in lines:
 		f.write('%s\n' % line)
 	f.close()
+	
+def mallet_writer(path, lines, delimeter = '/', lowercase = True):
+	f = codecs.open(path, 'w', encoding='utf-8')
+	for line in lines:
+		
+		if lowercase:
+			line = unicode.lower(line)
+		
+		for token in line.split():
+			if len(token.split(delimeter)) == 2:
+				word, tag = token.split(delimeter)
+				f.write('%s %s\n' % (word, tag))
+			else:
+				f.write('%s\n' % token)
+				
+		# Write a blank line in between sentences
+		f.write('\n')
+	f.close()
 
 
 def traintest_split(sentlist, split):
 	train_idx = int(len(sentlist) * (float(split)/100))
 	return (sentlist[:train_idx], sentlist[train_idx:])
+
+def write_mallet(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents, full_file = None, lowercase = True):
+	train, test = traintest_split(all_sents, split)
+	gold_train, gold_test = traintest_split(gold_sents, split)
+	
+	mallet_writer(os.path.join(outdir, testfile), test, lowercase = lowercase)
+	mallet_writer(os.path.join(outdir, trainfile), gold_train, lowercase = lowercase)
+	mallet_writer(os.path.join(outdir, goldfile), gold_test, lowercase = lowercase)
+	
 
 def write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents, full_file = None):
 	# Split the data into train and test.

@@ -14,6 +14,9 @@ from utils.xmlutils import get_child_tags, createTextNode
 from trees.SmultronDepTree import SmultronDepTree
 from trees.DepTree import DepTree
 from xml.dom.minidom import Element, parse, getDOMImplementation
+import chardet
+from utils.encodingutils import getencoding
+import codecs
 
 
 DEBUG = True
@@ -449,7 +452,11 @@ class Alignments():
 		
 		
 	def read_pml(self, path):
-		align_xml = parse(path)
+		
+		encoding = getencoding(path)
+		f = codecs.open(path, encoding=encoding)
+		
+		align_xml = parse(f)
 		body = align_xml.getElementsByTagName('body')[0]
 		sents = get_child_tags(body, 'LM')
 		
@@ -517,8 +524,12 @@ class TreeList(list):
 			self.read_xml(path)
 		super(list)
 		
-	def read_xml(self, pml_path):		
-		pml_doc = parse(pml_path)
+	def read_xml(self, pml_path):
+		encoding = getencoding(pml_path)
+		
+		pml_f = codecs.open(pml_path, encoding=encoding)
+		
+		pml_doc = parse(pml_f)
 		
 		schema = pml_doc.getElementsByTagName('schema')[0]
 		self.schema = schema.getAttribute('href')
@@ -531,8 +542,6 @@ class TreeList(list):
 			
 	def read_ptb(self, ptb_path):
 		ptb_trees = parse_ptb_file(ptb_path)
-		print ptb_trees[1]
-		sys.exit()
 		
 	def find_id(self, id):
 		found = None

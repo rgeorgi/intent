@@ -10,12 +10,16 @@ from utils.ConfigFile import ConfigFile
 from utils.TwoLevelCountDict import TwoLevelCountDict
 from utils.SetDict import SetDict
 import re
+from utils.encodingutils import getencoding
+import codecs
 
 def get_prototypes(tagged_path, proto_out, delimeter, 
 				   ignoretags = [], unambiguous = False,
 				   maxproto = 0):
 	
-	tagged_file = file(tagged_path, 'r')
+	encoding = getencoding(tagged_path)	
+	
+	tagged_file = codecs.open(tagged_path, 'r', encoding=encoding)
 	
 	tag_word_dict = TwoLevelCountDict()
 	word_tag_dict = TwoLevelCountDict()
@@ -27,6 +31,7 @@ def get_prototypes(tagged_path, proto_out, delimeter,
 		for token in tokens:
 			word, pos = re.search('(^.*)%s(.*?)$' % delimeter, token).groups()
 			if pos not in ignoretags:
+				word = word.lower()
 				tag_word_dict.add(pos, word)
 				word_tag_dict.add(word, pos)
 	
@@ -50,11 +55,11 @@ def get_prototypes(tagged_path, proto_out, delimeter,
 			if maxproto and found_words == maxproto:
 				break
 			
-	print '%s Prototypes found.' % numproto
+	print('%s Prototypes found.' % numproto)
 
 			
 	# Now, set up the proto file for writing.
-	proto_file = file(proto_out, 'w')
+	proto_file = open(proto_out, 'w')
 	for tag in proto_dict:
 		proto_file.write(tag)
 		for word in proto_dict[tag]:

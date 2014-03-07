@@ -32,4 +32,4 @@ def createTextNode(content):
 	return doc.createTextNode(content)
 
 def get_child_tags(element, tag):
-	return filter(lambda node: node.localName == tag, element.childNodes)
+	return [node for node in element.childNodes if node.localName == tag]

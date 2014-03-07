@@ -7,6 +7,7 @@ import re
 from nltk.corpus.reader.util import read_sexpr_block
 import nltk.tree
 import sys
+import chardet
 
 
 def break_bracket(bracket_string):
@@ -58,7 +59,8 @@ def break_bracket(bracket_string):
 
 def parse_ptb_file(path, simplify = False, traces = False):
 	
-	ptb_file = file(path, 'r')
+	ptb_file = open(path, 'r')
+
 	block = read_sexpr_block(ptb_file)
 	ptb_trees = []
 	while block:
@@ -124,12 +126,18 @@ class Tree():
 		else:
 			return [self.parent] + self.parent.ancestors()
 		
-	def nodes(self, include_root = False):		
+	def nodes(self, include_root = False, ordered = True):
+		nodes = self.nodes_h(include_root)
+		if ordered:
+			nodes.sort(key = lambda node: node.order)
+		return nodes
+		
+	def nodes_h(self, include_root = False):		
 		nodes = []
 		if self.parent or include_root:
 			nodes.append(self)
 		for child in self.children:
-			nodes += child.nodes()
+			nodes += child.nodes_h()
 			
 		return nodes
 		

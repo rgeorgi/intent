@@ -7,7 +7,6 @@ Created on Oct 14, 2013
 import os, sys, re
 from optparse import OptionParser
 from utils.commandline import require_opt
-import ConfigParser
 from trees.ptb import parse_ptb_string
 from treebanks.common import process_tree, write_files, raw_writer,\
 	traintest_split
@@ -17,6 +16,7 @@ from utils.ConfigFile import ConfigFile
 from utils.systematizing import notify
 from treebanks.TextParser import TextParser
 import nltk
+from corpora.POSCorpus import POSCorpus, POSCorpusInstance, POSToken
 
 class NegraParser(TextParser):
 	
@@ -38,6 +38,7 @@ class NegraParser(TextParser):
 		tagmap = c['tagmap']
 		sentence_limit = c.getint('sentence_limit')
 		trainraw = c['trainraw']
+		minlength = c.getint('minlength')
 			
 		
 		tm = None
@@ -56,23 +57,36 @@ class NegraParser(TextParser):
 		all_sents = []
 		gold_sents = []
 		
+		corpus = POSCorpus()
+		
 		sent_count = 0
 		for negra_string in negra_trees:
+			
+			# Start a corpus instance
+			inst = POSCorpusInstance()
+			
+			
 			negra_tree = nltk.Tree.parse(negra_string)
-			sent_str, gold_str = process_tree(negra_tree, delimeter, maxlength, tm, simplify = True)
-	
-			if sent_str:
-				all_sents.append(sent_str)
-				gold_sents.append(gold_str)
+			
+			if len(negra_tree) < minlength or len(negra_tree) > maxlength:
+				continue
+			
+			for word, pos in negra_tree.pos():
+				token = POSToken(word, pos)
+				inst.append(token)
+			if len(inst):
+				corpus.add(inst)
 				
 				sent_count+=1			
 				if sentence_limit and sent_count == sentence_limit:
 					break
-	
-		write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents)
-		if trainraw:
-			raw_train_sents, raw_test_sents = traintest_split(all_sents, split)
-			raw_writer(trainraw, raw_train_sents)
+			
+		print(outdir, trainfile)
+		corpus.writesplit(trainfile, testfile, split, 'slashtags', delimeter=delimeter, lowercase=True, outdir=outdir)
+# 		write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents)
+# 		if trainraw:
+# 			raw_train_sents, raw_test_sents = traintest_split(all_sents, split)
+# 			raw_writer(trainraw, raw_train_sents)
 			
 		notify()
 	

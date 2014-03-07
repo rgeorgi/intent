@@ -4,21 +4,20 @@ Created on Aug 26, 2013
 @author: rgeorgi
 '''
 import sys
+from collections import defaultdict
 
-class CountDict():
+class CountDict(defaultdict):
 	def __init__(self):
-		self.dict = {}
+		defaultdict.__init__(self, int)
+		
 	def add(self, key, value=1):
 		if key not in self.dict:
 			self.dict[key] = value
 		else:
 			self.dict[key] += value
-	def __contains__(self, key):
-		return key in self.dict
-	def __getitem__(self, key):
-		return self.dict[key]
+
 	def keys(self):
-		return self.dict.keys()
+		return dict.keys(self)
 	
 	def __str__(self):
 		return str(self.dict)
@@ -30,7 +29,7 @@ class CountDict():
 		return reduce(lambda x, y: x+y, values)
 	
 	def most_frequent(self, minimum = 0, num = 1):
-		items = self.dict.items()
+		items = list(self.items())
 		items.sort(key = lambda item: item[1], reverse=True)
 		ret_items = []
 		for item in items:
