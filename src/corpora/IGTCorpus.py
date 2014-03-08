@@ -24,7 +24,7 @@ class IGTCorpus(list):
 		return [inst.get_lang_align_sent() for inst in self]
 	
 	def gloss_heuristic_alignments(self, lowercase=True, stem=True, morph=True):
-		return [inst.gloss_heuristic_alignment(lowercase=lowercase, stem=stem, morph=morph) for inst in self]
+		return [inst.gloss_heuristic_alignment(lowercase=lowercase, stem=stem, morph_on=morph) for inst in self]
 		
 		
 class IGTInstance(list):
@@ -66,7 +66,7 @@ class IGTInstance(list):
 			ret_str += '%s,'%str(kind)
 		return '<IGTInstance %d: %s>' % (self._id, ret_str[:-1])
 	
-	def gloss_heuristic_alignment(self, lowercase=True, remove_punc=True, morph=True, stem=True, deaccent=True):
+	def gloss_heuristic_alignment(self, lowercase=True, remove_punc=True, morph_on=True, stem=True, deaccent=True):
 		
 		# FIXME: Make sure that when there are multiple occurrences of a token, they are aligned left-to-right.
 		
@@ -98,7 +98,7 @@ class IGTInstance(list):
 			#===================================================================
 			# If we didn't find it unmorphed, let's look through the morphemes.
 			#===================================================================
-			if  morph:
+			elif  morph_on:
 				morphs = gloss_token.morphs()
 				
 				# Add the morphs to the token for later debugging
@@ -115,18 +115,30 @@ class IGTInstance(list):
 		return AlignedSent(gloss, trans, aln)
 		
 				
-def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=False, deaccent=False):
+def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=False, deaccent=False, morph_on=True):
 	'''
 	Code to take an item with source and target sequences, and match
 	them left to right as necessary.
+	
+	If there are multiple words that match in both the source and target,
+	we would like to match them from left to right in order.
 	
 	@param item:
 	@param src_sequence:
 	@param tgt_sequence:
 	'''
 	
-	src_indices = src_sequence.search(item, lowercase, stem, deaccent)
-	tgt_indices = tgt_sequence.search(item, lowercase, stem, deaccent)
+	# TODO: Going to not be looking at the target line for the current item in the source
+	#       for the case in which we are searching for a morpheme (and the gloss line has
+	#       been morpheme-split. Come back and re-evaluate if this is really the way I
+	#       want to be doing this?
+	#
+	#       Or, alternatively, do I want to morph the lines being searched on?
+	#       Actually, now that I think of it, I think that's the way I'm going to go...
+	
+	src_indices = src_sequence.search(item, lowercase, stem, deaccent, morph_on)
+	tgt_indices = tgt_sequence.search(item, lowercase, stem, deaccent, morph_on)
+	
 	
 	if src_indices and tgt_indices:
 		
@@ -184,7 +196,7 @@ class IGTTier(list):
 		else:
 			return True
 	
-	def search(self, item, lowercase=False, stem=False, deaccent=False):
+	def search(self, item, lowercase=False, stem=False, deaccent=False, morph_on=True):
 		'''
 		Search for an item in the tier. If it is not found, return None, otherwise
 		return a list of integer indices (can be zero, so use contains to check for equality) 
@@ -200,22 +212,32 @@ class IGTTier(list):
 		for i in range(len(self)):
 			my_item = self[i]
 			
-			# Do a case-insensitive comparison if asked
-			if lowercase:
-				item = item.lower()
-				my_item = my_item.lower()
-		
-			if stem:
-				item = stem_token(item)
-				my_item = stem_token(my_item)
+			# If we're splitting the morphemes, we
+			# want to test whether the item matches any of my
+			# morphemes and not just the selected one.
+			if morph_on:
+				my_items = my_item.morphs()
+			else:
+				my_items = [my_item]
+			
+			for mine in my_items:
 				
-			if deaccent:
-				item = unidecode(item)
-				my_item = unidecode(my_item)
-	
-			# Now, see if the item is there
-			if my_item == item:
-				found.append(i)
+				# Do a case-insensitive comparison if asked
+				if lowercase:
+					item = item.lower()
+					mine = mine.lower()
+			
+				if stem:
+					item = stem_token(item)
+					mine = stem_token(my_item)
+					
+				if deaccent:
+					item = unidecode(item)
+					mine = unidecode(mine)
+					
+				# Now, see if the item is there
+				if item == mine:
+					found.append(i)
 			
 		# If we haven't returned true yet, return false
 		return found
