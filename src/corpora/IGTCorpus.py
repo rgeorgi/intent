@@ -93,15 +93,32 @@ class IGTInstance(list):
 			# TODO: Find a way to match left-to-right just once, and not repeat it for each time.
 			#       perhaps only start from the current instance?
 			
-			matches = trans.search(gloss_token, lowercase, stem, deaccent, morph_on)
-			print(matches)
+			matches = match_multiples(gloss_token, gloss, trans, lowercase, stem, deaccent, morph_on)
+			for a, b in matches:
+				aln.add((a+1,b+1))
+				
+			
 			
 				
 				
 		return AlignedSent(gloss, trans, aln)
 		
-				
-		
+def alltrue(sequence, comparator = lambda x, y: x.morphequals(y)):
+	'''
+	Do an all-ways comparison to make sure everything in the list returns true from the comparator value.
+	
+	@param sequence:
+	@param comparator:
+	@param y:
+	'''
+	ret = True
+	for i in range(len(sequence)):
+		item = sequence[i]
+		for rest in sequence[:i]+sequence[i+1:]:
+			if not comparator(item, rest):
+				ret = False
+	return ret
+
 def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=False, deaccent=False, morph_on=True):
 	'''
 	Code to take an item with source and target sequences, and match
@@ -126,14 +143,29 @@ def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=Fals
 	
 	if src_indices and tgt_indices:
 		
-		# Loop until we are out of indices on one side
-		while src_indices and tgt_indices:
+		# Start by popping the leftmost indices
+		src_index = src_indices.pop(0)		
+		tgt_index = tgt_indices.pop(0)
+		
+		# Loop until we break out
+		while True:
+								
+			# Make sure 
+			if src_sequence[src_index].morphequals(tgt_sequence[tgt_index]):			
+				yield((src_index, tgt_index))
+			else:
+				if len(src_indices) >= 1:
+					src_index = src_indices.pop()
+					continue
+				else:
+					break
 			
-			# Start by popping the leftmost indices
-			src_index = src_indices.pop(0)		
-			tgt_index = tgt_indices.pop(0)
+			if src_indices and tgt_indices:
+				src_index = src_indices.pop()
+				tgt_index = tgt_indices.pop()
+			else:
+				break
 			
-			yield((src_index, tgt_index))
 			
 		
 		# Map our last src index to all the remaining tgt_indices.
@@ -241,7 +273,7 @@ class IGTToken(object):
 			yield Morph(elt, self)
 	
 	def __repr__(self):
-		return '<IGTToken (%d): %s %s>' % (self.idx, self.seq, self.attrs)
+		return '<IGTToken (%s): %s %s>' % (self.idx, self.seq, self.attrs)
 	
 	def __str__(self):
 		return self.seq
@@ -255,7 +287,7 @@ class IGTToken(object):
 		else:
 			return self.seq == o
 		
-	def morphequals(self, o, lowercase = True, stem = True, deaccent = True):
+	def morphequals(self, o, lowercase = True, stem = True, deaccent = True, tokenize_tgt = True, tokenize_src = True):
 		'''
 		This function returns True if any morph contained in this token equals
 		any morph contained in the other token 
@@ -269,18 +301,33 @@ class IGTToken(object):
 		found = False
 		
 		# First, get our own morphs.
-		morphs = self.morphs()
+		if tokenize_src:
+			morphs = self.morphs()
+			
+		# If we're not tokenize ourself, make one single
+		# morph out of ourself. 
+		else:
+			morphs = [Morph(self.seq)]
 
 		for morph in morphs:
 		
 			# If the other object is also a token,
 			# get its morphs as well.
-			if isinstance(o, IGTToken):		
-				o_morphs = o.morphs()
+			if isinstance(o, IGTToken):
+				
+				# Split the target into morphs if we're tokenizing...
+				if tokenize_tgt:
+					o_morphs = o.morphs()
+					
+				# Otherwise make it a single morph.
+				else:
+					o_morphs = [Morph(o.seq)]
+					
 				for o_morph in o_morphs:
 					if string_compare_with_processing(morph.seq, o_morph.seq, lowercase, stem, deaccent):
 						found = True
 						break
+					
 			
 			# If the other object is a morph, just compare it to what we have.
 			elif isinstance(o, Morph):
@@ -393,7 +440,12 @@ class TestTierSearch(unittest.TestCase):
 		t1 = IGTTier.fromString('he Det.ACC horse-ACC house-ACC see-CAUSE-PERF .')
 		t2 = IGTTier.fromString('He showed the horse the house .')
 		
+		t3 = IGTTier.fromString('lizard-PL and gila.monster-PL here rest.PRS .')
+		t4 = IGTTier.fromString('The lizards and the gila monsters are resting here .')
+		
 		o1 = IGTToken('horse')
+		o2 = IGTToken('gila.monster-PL')
+		
 		m1 = Morph('horse')
 		m2 = Morph('the')
 		m3 = Morph('acc')
@@ -402,6 +454,9 @@ class TestTierSearch(unittest.TestCase):
 		self.assertEquals(t1.search(m1, lowercase=False), [2])
 		self.assertEquals(t2.search(m2, lowercase=False), [2,4])
 		self.assertEquals(t1.search(m3, lowercase=True), [1,2,3])
+		
+		self.assertEquals(t4.search(o2, stem=False), [4])
+		self.assertEquals(t3.search(o2, stem=False), [0, 2])
 		
 		
 class TestMatchMultiples(unittest.TestCase):
@@ -415,12 +470,28 @@ class TestMatchMultiples(unittest.TestCase):
 		t5 = IGTTier.fromString('the dog.NOM ran alongside the other dog')
 		t6 = IGTTier.fromString('the dog runs alongside the other dog')
 		
+		t7 = IGTTier.fromString('lizard-PL and gila.monster-PL here rest.PRS .')
+		t8 = IGTTier.fromString('The lizards and the gila monsters are resting here .')
+		
 		o1 = IGTToken('the')
 		o2 = IGTToken('your')
 		o3 = IGTToken('dog.NOM')
+		o4 = IGTToken('gila.monster-PL')
 		
-		self.assertEquals(list(match_multiples(o1, t1, t2, lowercase=True)), [(0,0), (3,3)])
-		self.assertEquals(list(match_multiples(o2, t3, t4)), [(0, 0), (4, 4), (4, 7)])
-		self.assertEquals(list(match_multiples(o3, t5, t6)), [(1, 1), (6, 6)])
-
+		self.assertEquals(set(match_multiples(o1, t1, t2, lowercase=True)), set([(0,0), (3,3)]))
+		self.assertEquals(set(match_multiples(o2, t3, t4)), set([(0, 0), (4, 4), (4, 7)]))
+		self.assertEquals(set(match_multiples(o3, t5, t6)), set([(1, 1), (6, 6)]))
+		
+		self.assertEquals(set(match_multiples(o4, t7, t8)), set([(2, 4)]))
+		
+		
+class TestAllEquals(unittest.TestCase):
+	def runTest(self):
+		o1 = IGTToken('gila.monster-PL')
+		o2 = IGTToken('gila')
+		o3 = IGTToken('lizard-PL')
+		
+		self.assertFalse(alltrue([o1,o2,o3]))
+		self.assertTrue(alltrue([o1,o2]))
+		self.assertTrue(alltrue([o1,o3]))
 		
