@@ -3,22 +3,41 @@ Created on Feb 14, 2014
 
 @author: rgeorgi
 '''
-
-
+import sys
 
 class AlignEval():
-	def __init__(self, aligned_corpus_a, aligned_corpus_b):
+	def __init__(self, aligned_corpus_a, aligned_corpus_b, debug = True):
 		self.matches = 0.
 		self.total_test = 0.
 		self.total_gold = 0.
 		
 		aligned_corpus = zip(aligned_corpus_a, aligned_corpus_b)
+		self._parallel = list(aligned_corpus)		
 
-		for model_sent, gold_sent in aligned_corpus:
+		for model_sent, gold_sent in self._parallel:
+	
 			model_aln = model_sent.aln
 			gold_aln = gold_sent.aln
-		
-		
+			
+			matches = model_aln & gold_aln
+			
+			# For debugging, let's look where we messed up.
+			incorrect_alignments = model_aln - matches
+			missed_alignments = gold_aln - model_aln
+			
+			#===================================================================
+			# Debugging to show where we are missing alignments. 
+			#===================================================================
+			
+			if debug:				
+				if incorrect_alignments:
+					sys.stderr.write('INCORRECT ALIGNMENTS: ')
+					sys.stderr.write(str(model_sent.wordpairs(incorrect_alignments))+'\n')
+				
+				if missed_alignments:
+					sys.stderr.write('MISSED ALIGNMENTS: ')
+					sys.stderr.write(str(model_sent.wordpairs(missed_alignments))+'\n')
+						
 			self.matches += len(model_aln & gold_aln)
 			self.total_test += len(model_aln)
 			self.total_gold += len(gold_aln)
@@ -38,17 +57,4 @@ class AlignEval():
 	def all(self):
 		return '%f,%f,%f,%f' % (self.aer(), self.precision(), self.recall(), self.fmeasure())
 
-
-def aer(aligned_corpus):
-	
-	numerator = 0.
-	denominator = 0.
-	
-	for model_sent, gold_sent in aligned_corpus:
-		model_aln = model_sent.alignment
-		gold_aln = gold_sent.alignment
 		
-		numerator += float(2*len(model_aln& gold_aln))
-		denominator += float(len(model_aln) + len(gold_aln))
-		
-	return 1.0 - numerator / denominator

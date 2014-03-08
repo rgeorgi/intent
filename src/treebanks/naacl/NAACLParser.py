@@ -9,7 +9,7 @@ import argparse
 import re
 import sys
 
-from eval.align_eval import aer, AlignEval
+from eval.align_eval import AlignEval
 
 import pickle
 import os
@@ -56,8 +56,10 @@ class NAACLInstanceText(str):
 			tier = IGTTier(kind=kind)
 			
 			# Now, go through and add the tokens to the tier.
-			for word in line.split():
-				token = IGTToken(word)
+			words = line.split()
+			for word_i in range(len(words)):
+				word = words[word_i]
+				token = IGTToken(seq=word, idx=word_i+1)
 				tier.append(token)
 				
 			# Now add the tier to the instance
@@ -94,15 +96,20 @@ def get_align_indices(question):
 			aligns.append((int(gloss_indices), int(trans_i)))
 	return aligns
 
+#===============================================================================
+#  Classes
+#===============================================================================
+
 class NAACLParser(TextParser):
 	
 	def __init__(self, conf):
 		self.conf = ConfigFile(conf)
 		
 	def get_corpus(self):
-		sents = self.get_sents()
-		ha_sents = heuristic_align_corpus(sents, lowercase=False, remove_punc = True, stem=True)
-		
+		corpus = self.get_sents()
+		alns = corpus.gloss_alignments()
+		ha_alns = corpus.gloss_heuristic_alignments(lowercase=True, morph=True, stem=True)
+				
 		c = self.conf
 		outdir = c['outdir']
 		
@@ -113,37 +120,17 @@ class NAACLParser(TextParser):
 		ha_trans = os.path.join(outdir, 'ha_trans.txt')
 		
 		
-		sents.write(gloss_path, trans_path, aln_path)
-		
-				
-		ha = heuristic_align_corpus(sents, lowercase=True, remove_punc=True, stem=True, morph_on=True)
-		ha2 = heuristic_align_corpus(sents, lowercase=True, remove_punc=True, stem=True, morph_on=True, aln_direction='b')
+		ae = AlignEval(ha_alns, alns, debug=True)
 		
 		
+		print(ae.all())		
 		
-		ha_gloss_f = open(ha_gloss, 'w')
-		ha_trans_f = open(ha_trans, 'w')
-		
-		for asent in ha:
-			for gloss_w, trans_w in asent.aligned_words():
-				ha_gloss_f.write(gloss_w+'\n')
-				ha_trans_f.write(trans_w+'\n')
-		
-		ha_gloss_f.close(), ha_trans_f.close()
-		
-		ae = AlignEval(ha, sents)
-		ae2 = AlignEval(ha2, sents)
-		
-		print(ae.all())
-		print(ae2.all())
 		
 		
 	def get_sents(self):
 		c = self.conf
 		
 		corpus = IGTCorpus()
-		
-		sents = AlignedCorpus()
 		
 		for root in c['roots'].split(','):
 			
@@ -173,9 +160,9 @@ class NAACLParser(TextParser):
 					i.langalign.add((l_i, t_i)) 
 						
 				# TODO: Zero-indexed makes me uncomfortable...
-				sents.append(AlignedSent(i.gloss()[0], i.trans()[0], i.glossalign))
-						
-		return sents
+				corpus.append(i)
+										
+		return corpus
 	
 			
 

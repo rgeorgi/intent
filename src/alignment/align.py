@@ -120,21 +120,6 @@ def heuristic_align(a_sent, lowercase=True, remove_punc = True, stem = True, mor
 	alignments = Alignment()
 	
 
-# 	if aln_direction == 'a':
-# 		
-# 		# Step through each one of the source tokens...
-# 		for src_i in range(len(src_tokens)):
-# 			new_aligns = heur_match(src_i, src_tokens, tgt_tokens)
-# 			for na in new_aligns:
-# 				alignments.add(na)
-# 				
-# 	elif aln_direction == 'b':
-# 		for tgt_i in range(len(tgt_tokens)):
-# 			new_aligns = heur_match(tgt_i, tgt_tokens, src_tokens)
-# 			for na in new_aligns:
-# 				alignments.add(na)
-# 		alignments = alignments.flip()
-				
 
 	if aln_direction == 'a':
 		for src_i in range(len(src_tokens)):
@@ -158,33 +143,7 @@ def heuristic_align(a_sent, lowercase=True, remove_punc = True, stem = True, mor
 						# Otherwise, assign left-to-right
 						alignments.add((src_i+1, tgt_i+1))
 						break
-					
-	elif aln_direction == 'b':
-		for tgt_i in range(len(tgt_tokens)):
-			tgt_token = tgt_tokens[tgt_i]
-			
-			if tgt_token in src_tokens:
-				src_i = src_tokens.index(tgt_token)
-				alignments.add((src_i+1, tgt_i+1))
-				
-			if morph_on:
-				for morph in tgt_token.split('-'):
-					if stem:
-						morph = stem_token(morph)
-					
-					# Take the index that is in line with this one...
-					src_indices = all_indices(morph, src_tokens)
-					for src_i in src_indices:
-						existing_pair = alignments.contains_tgt(tgt_i)
-						
-						# If the target token has already been assigned, skip it
-# 						if alignments.contains_src(src_i):
-# 							continue
-						
-						# Otherwise, assign left-to-right
-						alignments.add((src_i+1, tgt_i+1))
-						break
-			
+
 		
 	
 	return AlignedSent(a_sent.src_tokens, a_sent.tgt_tokens, alignments)

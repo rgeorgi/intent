@@ -34,7 +34,15 @@ class AlignedSent():
 		new_align = map(lambda aln: (aln[1], aln[0]), self.aln)
 		return AlignedSent(self.tgt_tokens, self.src_tokens, Alignment(new_align))
 			
+	def wordpairs(self, ips):
+		return [self.wordpair(ip) for ip in ips]
 			
+	def wordpair(self, ip):
+		'''
+		Return the wordpair corresponding with an alignment pair.
+		@param ip:
+		'''
+		return(self.src_tokens[ip[0]-1], self.tgt_tokens[ip[1]-1])
 		
 	def __str__(self):
 		return '<%s, %s, %s>' % (self.src_tokens, self.tgt_tokens, self.aln)
