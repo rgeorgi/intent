@@ -9,6 +9,8 @@ from alignment.align import stem_token
 from unidecode import unidecode
 import sys
 
+import unittest
+
 class IGTCorpus(list):
 	'''
 	Object that will hold a corpus of IGT instances.
@@ -60,6 +62,8 @@ class IGTInstance(list):
 	def lang(self):
 		return [tier for tier in self if tier.kind == 'lang']
 	
+
+	
 	def __str__(self):
 		ret_str = ''
 		for kind in set([tier.kind for tier in self]):
@@ -88,33 +92,16 @@ class IGTInstance(list):
 						
 			# TODO: Find a way to match left-to-right just once, and not repeat it for each time.
 			#       perhaps only start from the current instance?
-						
-			matches = list(match_multiples(gloss_token, gloss, trans, lowercase, stem, deaccent))
-			if matches:
-				for a, b in matches[:1]:
-					aln.add((a+1,b+1))
-							
 			
-			#===================================================================
-			# If we didn't find it unmorphed, let's look through the morphemes.
-			#===================================================================
-			elif  morph_on:
-				morphs = gloss_token.morphs()
-				
-				# Add the morphs to the token for later debugging
-				gloss_token.set_attr('morphs', morphs)
-				
-				
-				for morph in morphs:
-					matches = list(match_multiples(morph, gloss, trans, lowercase, stem, deaccent))
-					if matches:
-						for a, b in matches:
-							aln.add((a+1, b+1))
+			matches = trans.search(gloss_token, lowercase, stem, deaccent, morph_on)
+			print(matches)
+			
 				
 				
 		return AlignedSent(gloss, trans, aln)
 		
 				
+		
 def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=False, deaccent=False, morph_on=True):
 	'''
 	Code to take an item with source and target sequences, and match
@@ -128,13 +115,10 @@ def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=Fals
 	@param tgt_sequence:
 	'''
 	
-	# TODO: Going to not be looking at the target line for the current item in the source
-	#       for the case in which we are searching for a morpheme (and the gloss line has
-	#       been morpheme-split. Come back and re-evaluate if this is really the way I
-	#       want to be doing this?
-	#
-	#       Or, alternatively, do I want to morph the lines being searched on?
-	#       Actually, now that I think of it, I think that's the way I'm going to go...
+	# TODO: Think more about how I should handle multiple left-to-right alignments
+	#       right now, these are, well, not handled, the search is re-done each time
+	#       a token is encountered. Perhaps instead I should do something like mark
+	#       the visisted tokens, or pop them or something...
 	
 	src_indices = src_sequence.search(item, lowercase, stem, deaccent, morph_on)
 	tgt_indices = tgt_sequence.search(item, lowercase, stem, deaccent, morph_on)
@@ -157,9 +141,7 @@ def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=Fals
 			yield((src_index, tgt_index))
 	else:
 		pass
-		
-		
-		
+	
 		
 class IGTException(Exception):
 	def __init__(self, m = ''):
@@ -170,9 +152,25 @@ class IGTTier(list):
 	Class to hold individual tiers of IGT instances.
 	'''
 	
+	
+	
 	def __init__(self, seq=[], kind = None):
 		self.kind = kind
 		list.__init__(self, seq)
+		
+	@staticmethod
+	def fromString(string):
+		'''
+		
+		Convenience method to create a tier from a string. Helpful for testing.
+		
+		@param string: whitespace separated string to turn into a tier
+		'''
+		tier = IGTTier()
+		for token in string.split():
+			t = IGTToken(token)
+			tier.append(t)
+		return tier
 		
 	def append(self, item):
 		if not isinstance(item, IGTToken):
@@ -183,25 +181,25 @@ class IGTTier(list):
 	def __str__(self):
 		return '<IGTTier kind=%s len=%d>' % (self.kind, len(self))
 	
-	def __contains__(self, item, lowercase=False):		
+	def __contains__(self, item, lowercase=False, deaccent=True, stem=True):		
 		'''
 		Search for an item, and return True/False whether it is contained or not. 
 		
 		@param item:
 		@param lowercase:
 		'''
-		result = self.search(item, lowercase)
+		result = self.search(item, lowercase, deaccent, stem)
 		if result is None:
 			return False
 		else:
 			return True
-	
-	def search(self, item, lowercase=False, stem=False, deaccent=False, morph_on=True):
+
+	def search(self, other, lowercase=False, stem=False, deaccent=False, morph_on=True):
 		'''
-		Search for an item in the tier. If it is not found, return None, otherwise
+		Search for an other in the tier. If it is not found, return None, otherwise
 		return a list of integer indices (can be zero, so use contains to check for equality) 
 		
-		@param item: IGTToken or string to search for
+		@param other: IGTToken or string to search for
 		@param lowercase: Do a case-insensitive comparison or not
 		@param stem: Do stemming
 		@param deaccent: Remove accents for comparison
@@ -210,34 +208,10 @@ class IGTTier(list):
 		found = []
 		
 		for i in range(len(self)):
-			my_item = self[i]
+			my_token = self[i]
 			
-			# If we're splitting the morphemes, we
-			# want to test whether the item matches any of my
-			# morphemes and not just the selected one.
-			if morph_on:
-				my_items = my_item.morphs()
-			else:
-				my_items = [my_item]
-			
-			for mine in my_items:
-				
-				# Do a case-insensitive comparison if asked
-				if lowercase:
-					item = item.lower()
-					mine = mine.lower()
-			
-				if stem:
-					item = stem_token(item)
-					mine = stem_token(my_item)
-					
-				if deaccent:
-					item = unidecode(item)
-					mine = unidecode(mine)
-					
-				# Now, see if the item is there
-				if item == mine:
-					found.append(i)
+			if my_token.morphequals(other, lowercase, stem, deaccent):
+				found.append(i)
 			
 		# If we haven't returned true yet, return false
 		return found
@@ -249,7 +223,8 @@ class IGTTier(list):
 		else:
 			raise IGTException('Tier does not contain item %s' % (item))
 			
-		
+
+
 class IGTToken(object):
 	
 	
@@ -262,7 +237,8 @@ class IGTToken(object):
 		return self.seq.split()
 		
 	def morphs(self):
-		return re.split(r'[-.()]', self.seq)
+		for elt in re.split(r'[-.()]', self.seq):
+			yield Morph(elt, self)
 	
 	def __repr__(self):
 		return '<IGTToken (%d): %s %s>' % (self.idx, self.seq, self.attrs)
@@ -274,10 +250,54 @@ class IGTToken(object):
 		return self.seq.lower()
 	
 	def __eq__(self, o):
-		if not isinstance(o, IGTToken):
-			return self.seq == o
-		else:
+		if isinstance(o, IGTToken):
 			return self.seq == o.seq
+		else:
+			return self.seq == o
+		
+	def morphequals(self, o, lowercase = True, stem = True, deaccent = True):
+		'''
+		This function returns True if any morph contained in this token equals
+		any morph contained in the other token 
+		
+		@param o:
+		@param lowercase:
+		@param stem:
+		@param deaccent:
+		'''
+		# Keep track of whether we've found a match or not.
+		found = False
+		
+		# First, get our own morphs.
+		morphs = self.morphs()
+
+		for morph in morphs:
+		
+			# If the other object is also a token,
+			# get its morphs as well.
+			if isinstance(o, IGTToken):		
+				o_morphs = o.morphs()
+				for o_morph in o_morphs:
+					if string_compare_with_processing(morph.seq, o_morph.seq, lowercase, stem, deaccent):
+						found = True
+						break
+			
+			# If the other object is a morph, just compare it to what we have.
+			elif isinstance(o, Morph):
+				if string_compare_with_processing(morph.seq, o.seq, lowercase, stem, deaccent):
+					found = True
+					break
+				
+			else:
+				raise IGTException('Attempt to morphequals IGTToken with something other than Token or Morph')
+		
+		# Return whether we found a match among the morphs or not.
+		return found
+				
+
+		
+			
+		
 		
 	def set_attr(self, key, value):
 		self.attrs[key] = value
@@ -285,5 +305,122 @@ class IGTToken(object):
 	def get_attr(self, key):
 		return self.attrs[key]
 	
+def string_compare_with_processing(s1, s2, lowercase=True, stem=True, deaccent=True):
+	if lowercase:
+		s1 = s1.lower()
+		s2 = s2.lower()
 		
+	if stem:
+		s1 = stem_token(s1)
+		s2 = stem_token(s2)
+		
+	if deaccent:
+		s1 = unidecode(s1)
+		s2 = unidecode(s2)
+		
+	return s1 == s2
+	
+	
+		
+class Morph:
+	'''
+	This class is what makes up an IGTToken. Should be comparable to a token
+	'''
+	def __init__(self, seq, parent=None):
+		self.parent = parent
+		self.seq = seq
+		
+	def __eq__(self, o):
+		if isinstance(o, Morph):			
+			return self.seq == o.seq
+		else:
+			raise IGTException('Attempt to compare Morph to something other than Morph')
+		
+	def morphequals(self, o, lowercase=True, stem=True, deaccent=True):
+		if isinstance(o, Morph):
+			return self.seq == o.seq
+		elif isinstance(o, IGTToken):
+			return o.morphequals(self)
+		else:
+			raise IGTException('Attempt to morphequals Morph with something other than Morph or IGTToken')
+		
+	
+		
+#===============================================================================
+# Unit tests
+#===============================================================================
+		
+class MorphTestCase(unittest.TestCase):
+	def setUp(self):
+		self.m1 = Morph('the', None)
+		self.m2 = Morph('dog', None)
+		self.m3 = Morph('the', None)
+	def runTest(self):
+		assert self.m1 != self.m2
+		assert self.m1 == self.m3
+		
+class IGTTokenTestCase(unittest.TestCase):
+	def runTest(self):
+		t1 = IGTToken('your')
+		t2 = IGTToken('your')
+		t3 = IGTToken('you-are')
+		t4 = IGTToken('you')
+		t5 = IGTToken('Your')
+		t6 = IGTToken('1SG.You.ARE')
+		
+		assert t1 == t2
+		assert t1 != t3
+		assert t4.morphequals(t3)
+		assert t3.morphequals(t4)
+		assert not t3.morphequals(t1)
+		assert not t5.morphequals(t1, lowercase=False, stem=False)
+		assert t5.morphequals(t1, lowercase=True, stem=False)
+		assert t6.morphequals(t4, lowercase=True, stem=False)
+		
+class MorphTokenCompare(unittest.TestCase):
+	def runTest(self):
+		t1 = IGTToken('THE.horse')
+		m1 = Morph('Horse', t1)
+		
+		self.assertEqual(m1.parent, t1)
+		self.assertTrue(t1.morphequals(m1, lowercase=True, stem=False, deaccent=False))
+		self.assertFalse(t1.morphequals(m1, lowercase=False, stem=False))
+		self.assertRaises(IGTException, lambda: m1.morphequals('string'))
+		self.assertRaises(IGTException, lambda: t1.morphequals('string'))
+		
+class TestTierSearch(unittest.TestCase):
+	def runTest(self):
+		t1 = IGTTier.fromString('he Det.ACC horse-ACC house-ACC see-CAUSE-PERF .')
+		t2 = IGTTier.fromString('He showed the horse the house .')
+		
+		o1 = IGTToken('horse')
+		m1 = Morph('horse')
+		m2 = Morph('the')
+		m3 = Morph('acc')
+		
+		self.assertEquals(t1.search(o1, lowercase=False), [2])
+		self.assertEquals(t1.search(m1, lowercase=False), [2])
+		self.assertEquals(t2.search(m2, lowercase=False), [2,4])
+		self.assertEquals(t1.search(m3, lowercase=True), [1,2,3])
+		
+		
+class TestMatchMultiples(unittest.TestCase):
+	def runTest(self):
+		t1 = IGTTier.fromString('the dog.NOM bit-PST the cat-OBJ')
+		t2 = IGTTier.fromString('the dog Bites The cat')
+		
+		t3 = IGTTier.fromString('your house is on your side of the street')
+		t4 = IGTTier.fromString('your house is on your side of your street')
+		
+		t5 = IGTTier.fromString('the dog.NOM ran alongside the other dog')
+		t6 = IGTTier.fromString('the dog runs alongside the other dog')
+		
+		o1 = IGTToken('the')
+		o2 = IGTToken('your')
+		o3 = IGTToken('dog.NOM')
+		
+		self.assertEquals(list(match_multiples(o1, t1, t2, lowercase=True)), [(0,0), (3,3)])
+		self.assertEquals(list(match_multiples(o2, t3, t4)), [(0, 0), (4, 4), (4, 7)])
+		self.assertEquals(list(match_multiples(o3, t5, t6)), [(1, 1), (6, 6)])
+
 		
