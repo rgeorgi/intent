@@ -14,5 +14,9 @@ s = EnglishStemmer()
 # s = PorterStemmer()
 
 def stem_token(st):
-	return l.lemmatize(s.stem(st), 'v')
+	return s.stem(st)
+# 	return s.stem(st)
 # 	return s.lemmatize(st)
+
+def lemmatize_token(st, pos='v'):
+	return l.lemmatize(st, pos)

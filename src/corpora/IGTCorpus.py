@@ -9,7 +9,8 @@ from unidecode import unidecode
 import sys
 
 import unittest
-from utils.string_utils import stem_token
+from utils.string_utils import stem_token, lemmatize_token
+from igt.grams import sub_grams
 
 class IGTCorpus(list):
 	'''
@@ -369,17 +370,61 @@ class IGTToken(object):
 		return self.attrs[key]
 	
 def string_compare_with_processing(s1, s2, lowercase=True, stem=True, deaccent=True):
+	
+	# Before we do anything, see if we have a match.
+	if s1 == s2:
+		return True
+	
 	if lowercase:
 		s1 = s1.lower()
 		s2 = s2.lower()
 		
-	if stem:
-		s1 = stem_token(s1)
-		s2 = stem_token(s2)
+	# Keep checking...
+	if s1 == s2:
+		return True
 		
 	if deaccent:
 		s1 = unidecode(s1)
 		s2 = unidecode(s2)
+		
+		
+	# Do various types of increasingly aggressive stemming...
+	if stem:
+		stem1 = lemmatize_token(s1)
+		stem2 = lemmatize_token(s2)
+		
+		if stem1 == stem2:
+			return True
+
+		stem1 = stem_token(s1)
+		stem2 = stem_token(s2)
+			
+		if stem1 == stem2:
+			return True
+		
+		stem1 = lemmatize_token(s1, 'a')
+		stem2 = lemmatize_token(s2, 'a')
+			
+		if stem1 == stem2:
+			return True
+	
+		stem1 = lemmatize_token(s1, 'n')
+		stem2 = lemmatize_token(s2, 'n')
+		
+		if stem1 == stem2:
+			return True
+	
+	# We could do the gram stuff here, but it doesn't work too well.
+	# Instead, let's try doing it as a second pass to pick up stil-unaligned
+	# words.
+# 	if True:
+# 		gloss_grams = sub_grams(s1)
+# 		
+# 		if s2.strip() and s2 in gloss_grams:
+# 			print(s2, gloss_grams)
+# 			return True
+					
+		
 		
 	return s1 == s2
 	
