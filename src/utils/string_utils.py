@@ -6,11 +6,13 @@ Created on Mar 8, 2014
 
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.stem.snowball import EnglishStemmer
+from nltk.stem.porter import PorterStemmer
 
 global s
-# s = WordNetLemmatizer()
+l = WordNetLemmatizer()
 s = EnglishStemmer()
+# s = PorterStemmer()
 
 def stem_token(st):
-	return s.stem(st)
+	return l.lemmatize(s.stem(st), 'v')
 # 	return s.lemmatize(st)
