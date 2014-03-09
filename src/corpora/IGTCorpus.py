@@ -82,7 +82,7 @@ class IGTInstance(list):
 			ret_str += '%s,'%str(kind)
 		return '<IGTInstance %d: %s>' % (self._id, ret_str[:-1])
 	
-	def gloss_heuristic_alignment(self, lowercase=True, remove_punc=True, morph_on=True, stem=True, deaccent=True):
+	def gloss_heuristic_alignment(self, **kwargs):
 		
 		# FIXME: Make sure that when there are multiple occurrences of a token, they are aligned left-to-right.
 		
@@ -103,7 +103,7 @@ class IGTInstance(list):
 			# TODO: Find a way to match left-to-right just once, and not repeat it for each time.
 			#       perhaps only start from the current instance?
 			
-			matches = match_multiples(gloss_token, gloss, trans, lowercase, stem, deaccent, morph_on)
+			matches = match_multiples(gloss_token, gloss, trans, **kwargs)
 			for a, b in matches:
 				aln.add((a+1,b+1))
 				
@@ -130,7 +130,7 @@ def alltrue(sequence, comparator = lambda x, y: x == y):
 				ret = False
 	return ret
 
-def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=False, deaccent=False, morph_on=True):
+def match_multiples(item, src_sequence, tgt_sequence, **kwargs):
 	'''
 	Code to take an item with source and target sequences, and match
 	them left to right as necessary.
@@ -148,8 +148,8 @@ def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=Fals
 	#       a token is encountered. Perhaps instead I should do something like mark
 	#       the visisted tokens, or pop them or something...
 	
-	src_indices = src_sequence.search(item, lowercase, stem, deaccent, morph_on)
-	tgt_indices = tgt_sequence.search(item, lowercase, stem, deaccent, morph_on)
+	src_indices = src_sequence.search(item, **kwargs)
+	tgt_indices = tgt_sequence.search(item, **kwargs)
 	
 	
 	if src_indices and tgt_indices:
@@ -162,7 +162,7 @@ def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=Fals
 		while True:
 								
 			# Make sure 
-			if src_sequence[src_index].morphequals(tgt_sequence[tgt_index], lowercase, stem, deaccent, morph_on):			
+			if src_sequence[src_index].morphequals(tgt_sequence[tgt_index], **kwargs):			
 				yield((src_index, tgt_index))
 			else:
 				if len(src_indices) >= 1:
@@ -184,7 +184,7 @@ def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=Fals
 		
 		if len(tgt_indices) >= 1:
 			for tgt_index in tgt_indices:
-				if tgt_sequence[tgt_index].morphequals(src_sequence[src_index], lowercase, stem, deaccent):
+				if tgt_sequence[tgt_index].morphequals(src_sequence[src_index], **kwargs):
 					yield((src_index, tgt_index))
 				
 		# Otherwise, if there are remaining source indices, map them to the last remaining
@@ -192,7 +192,7 @@ def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=Fals
 		
 		if len(src_indices) >= 1:
 			for src_index in src_indices:
-				if src_sequence[src_index].morphequals(tgt_sequence[tgt_index], lowercase, stem, deaccent):
+				if src_sequence[src_index].morphequals(tgt_sequence[tgt_index], **kwargs):
 					yield((src_index, tgt_index))
 	else:
 		pass
@@ -236,20 +236,20 @@ class IGTTier(list):
 	def __str__(self):
 		return '<IGTTier kind=%s len=%d>' % (self.kind, len(self))
 	
-	def __contains__(self, item, lowercase=False, deaccent=True, stem=True):		
+	def __contains__(self, item, **kwargs):		
 		'''
 		Search for an item, and return True/False whether it is contained or not. 
 		
 		@param item:
 		@param lowercase:
 		'''
-		result = self.search(item, lowercase, deaccent, stem)
+		result = self.search(item, **kwargs)
 		if result is None:
 			return False
 		else:
 			return True
 
-	def search(self, other, lowercase=True, stem=True, deaccent=True, tokenize_tgt=True, tokenize_src=True):
+	def search(self, other, **kwargs):
 		'''
 		Search for an other in the tier. If it is not found, return None, otherwise
 		return a list of integer indices (can be zero, so use contains to check for equality) 
@@ -265,7 +265,7 @@ class IGTTier(list):
 		for i in range(len(self)):
 			my_token = self[i]
 			
-			if my_token.morphequals(other, lowercase, stem, tokenize_tgt, tokenize_src):
+			if my_token.morphequals(other, **kwargs):
 				found.append(i)
 			
 		# If we haven't returned true yet, return false
@@ -304,7 +304,7 @@ class IGTToken(object):
 			return self.seq == o
 		
 		
-	def morphequals(self, o, lowercase = True, stem = True, deaccent = True, tokenize_tgt = True, tokenize_src = True):
+	def morphequals(self, o, **kwargs):
 		'''
 		This function returns True if any morph contained in this token equals
 		any morph contained in the other token 
@@ -318,7 +318,7 @@ class IGTToken(object):
 		found = False
 		
 		# First, get our own morphs.
-		if tokenize_src:
+		if kwargs.get('tokenize_src', True):
 			morphs = self.morphs()
 			
 		# If we're not tokenize ourself, make one single
@@ -333,7 +333,7 @@ class IGTToken(object):
 			if isinstance(o, IGTToken):
 				
 				# Split the target into morphs if we're tokenizing...
-				if tokenize_tgt:
+				if kwargs.get('tokenize_tgt', True):
 					o_morphs = o.morphs()
 					
 				# Otherwise make it a single morph.
@@ -341,14 +341,14 @@ class IGTToken(object):
 					o_morphs = [Morph(o.seq)]
 					
 				for o_morph in o_morphs:
-					if string_compare_with_processing(morph.seq, o_morph.seq, lowercase, stem, deaccent):
+					if string_compare_with_processing(morph.seq, o_morph.seq, **kwargs):
 						found = True
 						break
 					
 			
 			# If the other object is a morph, just compare it to what we have.
 			elif isinstance(o, Morph):
-				if string_compare_with_processing(morph.seq, o.seq, lowercase, stem, deaccent):
+				if string_compare_with_processing(morph.seq, o.seq, **kwargs):
 					found = True
 					break
 				
@@ -369,13 +369,13 @@ class IGTToken(object):
 	def get_attr(self, key):
 		return self.attrs[key]
 	
-def string_compare_with_processing(s1, s2, lowercase=True, stem=True, deaccent=True):
+def string_compare_with_processing(s1, s2, **kwargs):
 	
 	# Before we do anything, see if we have a match.
 	if s1 == s2:
 		return True
 	
-	if lowercase:
+	if kwargs.get('lowercase', True):
 		s1 = s1.lower()
 		s2 = s2.lower()
 		
@@ -383,13 +383,13 @@ def string_compare_with_processing(s1, s2, lowercase=True, stem=True, deaccent=T
 	if s1 == s2:
 		return True
 		
-	if deaccent:
+	if kwargs.get('deaccent', True):
 		s1 = unidecode(s1)
 		s2 = unidecode(s2)
 		
 		
 	# Do various types of increasingly aggressive stemming...
-	if stem:
+	if kwargs.get('stem', True):
 		stem1 = lemmatize_token(s1)
 		stem2 = lemmatize_token(s2)
 		
@@ -417,12 +417,12 @@ def string_compare_with_processing(s1, s2, lowercase=True, stem=True, deaccent=T
 	# We could do the gram stuff here, but it doesn't work too well.
 	# Instead, let's try doing it as a second pass to pick up stil-unaligned
 	# words.
-# 	if True:
-# 		gloss_grams = sub_grams(s1)
-# 		
-# 		if s2.strip() and s2 in gloss_grams:
-# 			print(s2, gloss_grams)
-# 			return True
+	if kwargs.get('gloss_on',False):
+		gloss_grams = sub_grams(s1)
+		
+		if s2.strip() and s2 in gloss_grams:
+			print(s2, gloss_grams)
+			return True
 					
 		
 		
@@ -444,11 +444,11 @@ class Morph:
 		else:
 			raise IGTException('Attempt to compare Morph to something other than Morph')
 		
-	def morphequals(self, o, lowercase=True, stem=True, deaccent=True, tokenize_tgt=True, tokenize_src=True):
+	def morphequals(self, o, **kwargs):
 		if isinstance(o, Morph):
 			return self.seq == o.seq
 		elif isinstance(o, IGTToken):
-			return o.morphequals(self, lowercase, stem, deaccent, tokenize_tgt, tokenize_src)
+			return o.morphequals(self, **kwargs)
 		else:
 			raise IGTException('Attempt to morphequals Morph with something other than Morph or IGTToken')
 		
@@ -543,9 +543,14 @@ class TestMatchMultiples(unittest.TestCase):
 		o4 = IGTToken('gila.monster-PL')
 		o5 = IGTToken('something')
 		
+		
+		
 		self.assertEquals(set(match_multiples(o1, t1, t2, lowercase=True)), set([(0,0), (3,3)]))
 		self.assertEquals(set(match_multiples(o2, t3, t4)), set([(0, 0), (4, 4), (4, 7)]))
-		self.assertEquals(set(match_multiples(o3, t5, t6)), set([(1, 1), (6, 6)]))
+		
+		dogmatches = set(match_multiples(o3, t5, t6))
+		
+		self.assertEquals(dogmatches, set([(1, 1), (6, 6)]))
 		
 		# the "gila.monster-PL" should only match to "gila" with stemming off.
 		self.assertEquals(set(match_multiples(o4, t7, t8, stem=False)), set([(2, 4)]))
@@ -567,4 +572,11 @@ class TestAllEquals(unittest.TestCase):
 		self.assertFalse(alltrue([o1,o2,o3], comparator))
 		self.assertTrue(alltrue([o1,o2], comparator))
 		self.assertTrue(alltrue([o1,o3], comparator))
+		
+class AlignContains(unittest.TestCase):
+	def runTest(self):
+		a1 = Alignment([(2, 5), (3, 4), (1, 1), (4, 3)])
+		
+		self.assertTrue(a1.contains_src(2))
+		self.assertTrue(a1.contains_src(4))
 		
