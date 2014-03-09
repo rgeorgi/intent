@@ -187,6 +187,14 @@ def match_multiples(item, src_sequence, tgt_sequence, **kwargs):
 				else:
 					break
 			
+			# FIXME: So, the bug here is in the case where we have multiple matches in the source line,
+			#        but they do not correspond to multiple matches in the target line.
+			#        I'm thinking what I need to do is filter out the source line for things that
+			#        match the source word, yes, but that also match the target word in question. 
+			# 
+			#			1SG machete-PL and knife-PL put.up.PL.OBJ-PST .
+			#			I put up the machetes and the knifes .
+			
 			if src_indices and tgt_indices:
 				src_index = src_indices.pop()
 				tgt_index = tgt_indices.pop()
@@ -301,7 +309,7 @@ class IGTToken(object):
 		return self.seq.split()
 		
 	def morphs(self):
-		for elt in re.split(r'[-.()]', self.seq):
+		for elt in re.split(r'[-.():]', self.seq):
 			yield Morph(elt, self)
 	
 	def __repr__(self):
@@ -573,7 +581,12 @@ class TestMatchMultiples(unittest.TestCase):
 		# the "gila.monster-PL" should only match to "gila" with stemming off.
 		self.assertEquals(set(match_multiples(o4, t7, t8, stem=False)), set([(2, 4)]))
 		
+				
+		t1 = IGTTier.fromString('1SG machete-PL and knife-PL put.up.PL.OBJ-PST .')
+		t2 = IGTTier.fromString('I put up the machetes and the knifes .')
 		
+		o1 = IGTToken('put.up.PL.OBJ-PST')
+		self.assertEquals(set(match_multiples(o1, t1, t2)), set([(4,1),(4,2)]))
 		
 		# The "Something" should align from the target line to both sources.
 		self.assertEquals(set(match_multiples(o5, t10, t9)), set([(1,4),(4,4)]))
