@@ -107,9 +107,25 @@ class IGTInstance(list):
 			for a, b in matches:
 				aln.add((a+1,b+1))
 				
+		
+		#=======================================================================
+		#  Second pass...
+		#
+		# After we've taken a single pass and seen what we could do, let's take a second
+		# pass on the remaining unaligned bits, and see if we can't pick up a few stragglers
+		# with info like grams.
+		#=======================================================================
+		for gloss_i in range(len(gloss)):
+			gloss_token = gloss[gloss_i]
 			
-			
+			# Skip over any previously-aligned tokens
+			if not aln.contains_src(gloss_i+1):
 				
+				kwargs['gloss_on'] = True				
+				matches = match_multiples(gloss_token, gloss, trans, **kwargs)
+				for a, b in matches:
+					aln.add((a+1,b+1))
+						
 		a = AlignedSent(gloss, trans, aln)
 		a.attrs = self.attrs
 		return a
@@ -418,10 +434,12 @@ def string_compare_with_processing(s1, s2, **kwargs):
 	# Instead, let's try doing it as a second pass to pick up stil-unaligned
 	# words.
 	if kwargs.get('gloss_on',False):
-		gloss_grams = sub_grams(s1)
+		gloss_grams_1 = sub_grams(s1)
+		gloss_grams_2 = sub_grams(s2)
 		
-		if s2.strip() and s2 in gloss_grams:
-			print(s2, gloss_grams)
+		if s2.strip() and s2 in gloss_grams_1:
+			return True
+		if s1.strip() and s1 in gloss_grams_2:
 			return True
 					
 		
@@ -572,6 +590,13 @@ class TestAllEquals(unittest.TestCase):
 		self.assertFalse(alltrue([o1,o2,o3], comparator))
 		self.assertTrue(alltrue([o1,o2], comparator))
 		self.assertTrue(alltrue([o1,o3], comparator))
+		
+class AlignGrams(unittest.TestCase):
+	def runTest(self):
+		o1 = IGTToken('I')
+		o2 = IGTToken('1SG')
+		
+		self.assertTrue(o2.morphequals(o1, gloss_on=True, lowercase=True))
 		
 class AlignContains(unittest.TestCase):
 	def runTest(self):

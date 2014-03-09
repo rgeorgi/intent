@@ -4,7 +4,7 @@ Created on Mar 8, 2014
 @author: rgeorgi
 '''
 
-gramdict = {'1sg':'i',
+gramdict = {'1sg':['i','me'],
 		'det':['the'],
 		'3pl':['they'],
 		'3sg':['he','she', 'him', 'her'],
