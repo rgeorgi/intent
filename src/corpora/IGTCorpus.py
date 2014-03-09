@@ -167,6 +167,25 @@ def match_multiples(item, src_sequence, tgt_sequence, **kwargs):
 	src_indices = src_sequence.search(item, **kwargs)
 	tgt_indices = tgt_sequence.search(item, **kwargs)
 	
+	#===========================================================================
+	#  Filter out the matched source items in advance to make sure that they
+	#  actually match one of the target items and not just some other portion
+	#  of the source item.
+	#===========================================================================
+	
+	filtered_src_indices = []	
+	
+	for src_index in src_indices:
+		src_item = src_sequence[src_index]
+		for tgt_index in tgt_indices:
+			tgt_item = tgt_sequence[tgt_index]
+			if src_item.morphequals(tgt_item, **kwargs):
+				if src_index not in filtered_src_indices:
+					filtered_src_indices.append(src_index)
+				
+	src_indices = filtered_src_indices
+	
+	#  -----------------------------------------------------------------------------
 	
 	if src_indices and tgt_indices:
 		
