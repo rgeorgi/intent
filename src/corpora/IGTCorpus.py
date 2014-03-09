@@ -178,9 +178,21 @@ def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=Fals
 			
 			
 		
-		# Map our last src index to all the remaining tgt_indices.
-		for tgt_index in tgt_indices:
-			yield((src_index, tgt_index))
+		# If there is only source index remaining, but multiple target indices,
+		# map this source to all the remaining targets.
+		
+		if len(tgt_indices) >= 1:
+			for tgt_index in tgt_indices:
+				if tgt_sequence[tgt_index].morphequals(src_sequence[src_index], lowercase, stem, deaccent):
+					yield((src_index, tgt_index))
+				
+		# Otherwise, if there are remaining source indices, map them to the last remaining
+		# target index.
+		
+		if len(src_indices) >= 1:
+			for src_index in src_indices:
+				if src_sequence[src_index].morphequals(tgt_sequence[tgt_index], lowercase, stem, deaccent):
+					yield((src_index, tgt_index))
 	else:
 		pass
 	
@@ -289,6 +301,7 @@ class IGTToken(object):
 			return self.seq == o.seq
 		else:
 			return self.seq == o
+		
 		
 	def morphequals(self, o, lowercase = True, stem = True, deaccent = True, tokenize_tgt = True, tokenize_src = True):
 		'''
@@ -476,16 +489,26 @@ class TestMatchMultiples(unittest.TestCase):
 		t7 = IGTTier.fromString('lizard-PL and gila.monster-PL here rest.PRS .')
 		t8 = IGTTier.fromString('The lizards and the gila monsters are resting here .')
 		
+		t10 = IGTTier.fromString('Peter something buy.PRS and something sell.PRS .')
+		t9 = IGTTier.fromString('Pedro buys and sells something .')
+		
 		o1 = IGTToken('the')
 		o2 = IGTToken('your')
 		o3 = IGTToken('dog.NOM')
 		o4 = IGTToken('gila.monster-PL')
+		o5 = IGTToken('something')
 		
 		self.assertEquals(set(match_multiples(o1, t1, t2, lowercase=True)), set([(0,0), (3,3)]))
 		self.assertEquals(set(match_multiples(o2, t3, t4)), set([(0, 0), (4, 4), (4, 7)]))
 		self.assertEquals(set(match_multiples(o3, t5, t6)), set([(1, 1), (6, 6)]))
 		
-		self.assertEquals(set(match_multiples(o4, t7, t8)), set([(2, 4)]))
+		# the "gila.monster-PL" should only match to "gila" with stemming off.
+		self.assertEquals(set(match_multiples(o4, t7, t8, stem=False)), set([(2, 4)]))
+		
+		
+		
+		# The "Something" should align from the target line to both sources.
+		self.assertEquals(set(match_multiples(o5, t10, t9)), set([(1,4),(4,4)]))
 		
 		
 class TestAllEquals(unittest.TestCase):
