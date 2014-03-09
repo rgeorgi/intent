@@ -19,6 +19,11 @@ class AlignEval():
 			model_aln = model_sent.aln
 			gold_aln = gold_sent.aln
 			
+			# Only look for alignments which are non-null...
+			model_aln = set([(src,tgt) for src,tgt in model_aln if src > 0 and tgt > 0])
+			gold_aln = set([(src,tgt) for src,tgt in gold_aln if src > 0 and tgt > 0])
+			#  -----------------------------------------------------------------------------
+			
 			matches = model_aln & gold_aln
 			
 			# For debugging, let's look where we messed up.
@@ -29,7 +34,11 @@ class AlignEval():
 			# Debugging to show where we are missing alignments. 
 			#===================================================================
 			
-			if debug:				
+			if debug:
+				if incorrect_alignments or missed_alignments:
+					sys.stderr.write('-'*80+'\n')
+					sys.stderr.write(model_sent.get_attr('file')+' --- '+str(model_sent.get_attr('id'))+'\n')
+						
 				if incorrect_alignments:
 					sys.stderr.write('INCORRECT ALIGNMENTS: ')
 					sys.stderr.write(str(model_sent.wordpairs(incorrect_alignments))+'\n')

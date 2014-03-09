@@ -25,12 +25,7 @@ def remove_punctuation(s):
 global stemmer 
 stemmer = nltk.stem.snowball.EnglishStemmer()
 
-def stem_token(st):
-	try:
-		return stemmer.stem(st)
-	except UnicodeDecodeError as ude:
-		sys.stderr.write('WARN: Stemming failed. on "%s" \n' % st)
-		return st
+
 
 def morphfilter(m):
 	for elt in m:

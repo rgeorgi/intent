@@ -10,13 +10,7 @@ import re
 import sys
 
 from eval.align_eval import AlignEval
-
-import pickle
 import os
-
-from alignment.Alignment import Alignment, AlignedSent, AlignedCorpus
-from alignment.align import heuristic_align, heuristic_align_corpus
-from corpora.POSCorpus import POSCorpus
 from utils.encodingutils import getencoding
 import codecs
 from corpora.IGTCorpus import IGTCorpus, IGTInstance, IGTTier, IGTToken
@@ -108,7 +102,7 @@ class NAACLParser(TextParser):
 	def get_corpus(self):
 		corpus = self.get_sents()
 		alns = corpus.gloss_alignments()
-		ha_alns = corpus.gloss_heuristic_alignments(lowercase=True, morph=True, stem=True)
+		ha_alns = corpus.gloss_heuristic_alignments(lowercase=True, tokenize=True, stem=True)
 				
 		c = self.conf
 		outdir = c['outdir']
@@ -149,6 +143,9 @@ class NAACLParser(TextParser):
 			
 			for instance in [NAACLInstanceText(i) for i in instances]:
 				i = instance.igt()
+				
+				i.set_attr('file', root)
+				i.set_attr('id', i._id)	
 				
 				ga_indices = instance.glossalign()
 				la_indices = instance.langalign()				

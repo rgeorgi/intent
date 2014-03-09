@@ -5,11 +5,11 @@ Created on Mar 7, 2014
 '''
 from alignment.Alignment import Alignment, AlignedSent
 import re
-from alignment.align import stem_token
 from unidecode import unidecode
 import sys
 
 import unittest
+from utils.string_utils import stem_token
 
 class IGTCorpus(list):
 	'''
@@ -25,8 +25,8 @@ class IGTCorpus(list):
 	def lang_alignments(self):
 		return [inst.get_lang_align_sent() for inst in self]
 	
-	def gloss_heuristic_alignments(self, lowercase=True, stem=True, morph=True):
-		return [inst.gloss_heuristic_alignment(lowercase=lowercase, stem=stem, morph_on=morph) for inst in self]
+	def gloss_heuristic_alignments(self, lowercase=True, stem=True, tokenize=True):
+		return [inst.gloss_heuristic_alignment(lowercase=lowercase, stem=stem, morph_on=tokenize) for inst in self]
 		
 		
 class IGTInstance(list):
@@ -39,14 +39,19 @@ class IGTInstance(list):
 		self.glossalign = Alignment()
 		self.langalign = Alignment()
 		list.__init__(self, seq)
+		self.attrs = {}
 		
 	def get_gloss_align_sent(self):
 		# TODO: Again with the zero-indexing...
-		return AlignedSent(self.gloss()[0], self.trans()[0], self.glossalign)
+		a = AlignedSent(self.gloss()[0], self.trans()[0], self.glossalign)
+		a.attrs = self.attrs
+		return a
 	
 	def get_lang_align_sent(self):
 		# TODO: Guess what...
-		return AlignedSent(self.gloss()[0], self.trans()[0], self.langalign)
+		a = AlignedSent(self.gloss()[0], self.trans()[0], self.langalign)
+		a.attrs = self.attrs
+		return a
 		
 	def append(self, item):
 		if not isinstance(item, IGTTier):
@@ -61,6 +66,12 @@ class IGTInstance(list):
 	
 	def lang(self):
 		return [tier for tier in self if tier.kind == 'lang']
+	
+	def set_attr(self, key, val):
+		self.attrs[key] = val
+		
+	def get_attr(self, key):
+		return self.attrs[key]
 	
 
 	
@@ -82,9 +93,7 @@ class IGTInstance(list):
 		
 		for gloss_i in range(len(gloss)):
 			gloss_token = gloss[gloss_i]
-			
-			gloss_token.set_attr('id', self._id)
-			
+						
 			#===================================================================
 			# Before we even take a look at the morphs, just look at the
 			# token on its own.
@@ -100,10 +109,11 @@ class IGTInstance(list):
 			
 			
 				
-				
-		return AlignedSent(gloss, trans, aln)
+		a = AlignedSent(gloss, trans, aln)
+		a.attrs = self.attrs
+		return a
 		
-def alltrue(sequence, comparator = lambda x, y: x.morphequals(y)):
+def alltrue(sequence, comparator = lambda x, y: x == y):
 	'''
 	Do an all-ways comparison to make sure everything in the list returns true from the comparator value.
 	
@@ -151,7 +161,7 @@ def match_multiples(item, src_sequence, tgt_sequence, lowercase=False, stem=Fals
 		while True:
 								
 			# Make sure 
-			if src_sequence[src_index].morphequals(tgt_sequence[tgt_index]):			
+			if src_sequence[src_index].morphequals(tgt_sequence[tgt_index], lowercase, stem, deaccent, morph_on):			
 				yield((src_index, tgt_index))
 			else:
 				if len(src_indices) >= 1:
@@ -226,7 +236,7 @@ class IGTTier(list):
 		else:
 			return True
 
-	def search(self, other, lowercase=False, stem=False, deaccent=False, morph_on=True):
+	def search(self, other, lowercase=True, stem=True, deaccent=True, tokenize_tgt=True, tokenize_src=True):
 		'''
 		Search for an other in the tier. If it is not found, return None, otherwise
 		return a list of integer indices (can be zero, so use contains to check for equality) 
@@ -242,19 +252,12 @@ class IGTTier(list):
 		for i in range(len(self)):
 			my_token = self[i]
 			
-			if my_token.morphequals(other, lowercase, stem, deaccent):
+			if my_token.morphequals(other, lowercase, stem, tokenize_tgt, tokenize_src):
 				found.append(i)
 			
 		# If we haven't returned true yet, return false
 		return found
-	
-	def index(self, item, lowercase=False):
-		result = self.search(item, lowercase)
-		if result:
-			return result
-		else:
-			raise IGTException('Tier does not contain item %s' % (item))
-			
+
 
 
 class IGTToken(object):
@@ -383,11 +386,11 @@ class Morph:
 		else:
 			raise IGTException('Attempt to compare Morph to something other than Morph')
 		
-	def morphequals(self, o, lowercase=True, stem=True, deaccent=True):
+	def morphequals(self, o, lowercase=True, stem=True, deaccent=True, tokenize_tgt=True, tokenize_src=True):
 		if isinstance(o, Morph):
 			return self.seq == o.seq
 		elif isinstance(o, IGTToken):
-			return o.morphequals(self)
+			return o.morphequals(self, lowercase, stem, deaccent, tokenize_tgt, tokenize_src)
 		else:
 			raise IGTException('Attempt to morphequals Morph with something other than Morph or IGTToken')
 		
@@ -491,7 +494,9 @@ class TestAllEquals(unittest.TestCase):
 		o2 = IGTToken('gila')
 		o3 = IGTToken('lizard-PL')
 		
-		self.assertFalse(alltrue([o1,o2,o3]))
-		self.assertTrue(alltrue([o1,o2]))
-		self.assertTrue(alltrue([o1,o3]))
+		comparator = lambda x, y: x.morphequals(y)
+		
+		self.assertFalse(alltrue([o1,o2,o3], comparator))
+		self.assertTrue(alltrue([o1,o2], comparator))
+		self.assertTrue(alltrue([o1,o3], comparator))
 		

@@ -13,6 +13,7 @@ class AlignedSent():
 		self.src_tokens = src_tokens
 		self.tgt_tokens = tgt_tokens
 		self.aln = aln
+		self.attrs = {}
 		
 		if type(aln) != Alignment:
 			raise AlignmentError('Passed alignment is not of type Alignment')
@@ -52,6 +53,12 @@ class AlignedSent():
 	
 	def tgt_text(self):
 		return ' '.join(self.tgt_tokens)
+	
+	def set_attr(self, key, val):
+		self.attrs[key] = val
+		
+	def get_attr(self, key):
+		return self.attrs[key]
 		
 		
 class AlignedCorpus(list):
