@@ -26,8 +26,8 @@ class IGTCorpus(list):
 	def lang_alignments(self):
 		return [inst.get_lang_align_sent() for inst in self]
 	
-	def gloss_heuristic_alignments(self, lowercase=True, stem=True, tokenize=True):
-		return [inst.gloss_heuristic_alignment(lowercase=lowercase, stem=stem, morph_on=tokenize) for inst in self]
+	def gloss_heuristic_alignments(self, **kwargs):
+		return [inst.gloss_heuristic_alignment(**kwargs) for inst in self]
 		
 		
 class IGTInstance(list):
@@ -115,17 +115,24 @@ class IGTInstance(list):
 		# pass on the remaining unaligned bits, and see if we can't pick up a few stragglers
 		# with info like grams.
 		#=======================================================================
-		for gloss_i in range(len(gloss)):
-			gloss_token = gloss[gloss_i]
-			
-			# Skip over any previously-aligned tokens
-			if not aln.contains_src(gloss_i+1):
+		if kwargs.get('grams_on'):
+			for gloss_i in range(len(gloss)):
+				gloss_token = gloss[gloss_i]
 				
-				kwargs['gloss_on'] = True				
-				matches = match_multiples(gloss_token, gloss, trans, **kwargs)
-				for a, b in matches:
-					aln.add((a+1,b+1))
-						
+				
+				# FIXME: So, it would appear that there is no benefit to skipping previously-aligned
+				# matches after all. It does hurt our precision, but we pick up a lot of recall.
+				# revisit this, though, to see if there's a way to eat our cake and have it too? =) 
+				
+				# Skip over any previously-aligned tokens
+				if True:
+# 				if True or not aln.contains_src(gloss_i+1):
+					
+					kwargs['gloss_on'] = True				
+					matches = match_multiples(gloss_token, gloss, trans, **kwargs)
+					for a, b in matches:
+						aln.add((a+1,b+1))
+							
 		a = AlignedSent(gloss, trans, aln)
 		a.attrs = self.attrs
 		return a
@@ -186,6 +193,12 @@ def match_multiples(item, src_sequence, tgt_sequence, **kwargs):
 	src_indices = filtered_src_indices
 	
 	#  -----------------------------------------------------------------------------
+	# Just for demonstrating what happens when we don't alight left-to-right.
+	if kwargs.get('no_multiples', False):
+		tgt_indices = tgt_indices[0:1]
+	
+		
+	
 	
 	if src_indices and tgt_indices:
 		
@@ -291,6 +304,7 @@ class IGTTier(list):
 			return False
 		else:
 			return True
+	
 
 	def search(self, other, **kwargs):
 		'''

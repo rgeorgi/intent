@@ -102,7 +102,7 @@ class NAACLParser(TextParser):
 	def get_corpus(self):
 		corpus = self.get_sents()
 		alns = corpus.gloss_alignments()
-		ha_alns = corpus.gloss_heuristic_alignments(lowercase=True, tokenize=True, stem=True)
+		ha_alns = corpus.gloss_heuristic_alignments(lowercase=True, stem=True, grams_on=True, tokenize_src=True, tokenize_tgt=True, no_multiples=False)
 				
 		c = self.conf
 		outdir = c['outdir']
