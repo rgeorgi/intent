@@ -113,62 +113,30 @@ class IGTInstance(list):
 		#
 		#=======================================================================
 		
-		gloss_morphs = gloss.morphs()
-		trans_morphs = trans.morphs()
+		if kwargs.get('tokenize', True):
+			gloss_tokens = gloss.morphs()
+			trans_tokens = trans.morphs()
+		else:
+			gloss_tokens = gloss
+			trans_tokens = trans
 		
-		alignments = get_alignments(gloss_morphs, trans_morphs, **kwargs)
+		alignments = get_alignments(gloss_tokens, trans_tokens, **kwargs)
 		
 		for a, b in alignments:
 			aln.add((a, b))
 			
-		kwargs['gloss_on'] = True
-		gloss_alignments = get_alignments(gloss_morphs, trans_morphs, **kwargs)
+			
+		#=======================================================================
+		# Do the gram matching if it's enabled.
+		#=======================================================================
 		
-		for a, b in gloss_alignments:
-			aln.add((a, b))
-# 		
-# 		
-# 		
-# 		for gloss_i in range(len(gloss)):
-# 			gloss_token = gloss[gloss_i]
-# 						
-# 			#===================================================================
-# 			# Before we even take a look at the morphs, just look at the
-# 			# token on its own.
-# 			#===================================================================
-# 						
-# 			# TODO: Find a way to match left-to-right just once, and not repeat it for each time.
-# 			#       perhaps only start from the current instance?
-# 			
-# 			matches = match_multiples(gloss_token, gloss, trans, **kwargs)
-# 			for a, b in matches:
-# 				aln.add((a+1,b+1))
-# 				
-# 		
-# 		#=======================================================================
-# 		#  Second pass...
-# 		#
-# 		# After we've taken a single pass and seen what we could do, let's take a second
-# 		# pass on the remaining unaligned bits, and see if we can't pick up a few stragglers
-# 		# with info like grams.
-# 		#=======================================================================
-# 		if kwargs.get('grams_on'):
-# 			for gloss_i in range(len(gloss)):
-# 				gloss_token = gloss[gloss_i]
-# 				
-# 				
-# 				# FIXME: So, it would appear that there is no benefit to skipping previously-aligned
-# 				# matches after all. It does hurt our precision, but we pick up a lot of recall.
-# 				# revisit this, though, to see if there's a way to eat our cake and have it too? =) 
-# 				
-# 				# Skip over any previously-aligned tokens
-# 				if True:
-# # 				if True or not aln.contains_src(gloss_i+1):
-# 					
-# 					kwargs['gloss_on'] = True				
-# 					matches = match_multiples(gloss_token, gloss, trans, **kwargs)
-# 					for a, b in matches:
-# 						aln.add((a+1,b+1))
+		if kwargs.get('grams_on'):
+			kwargs['gloss_on'] = True
+			gloss_alignments = get_alignments(gloss_tokens, trans_tokens, **kwargs)
+			
+			for a, b in gloss_alignments:
+				aln.add((a, b))
+
 							
 		a = AlignedSent(gloss, trans, aln)
 		a.attrs = self.attrs
@@ -215,7 +183,7 @@ def get_alignments(gloss_morphs, trans_morphs, iteration=1, **kwargs):
 				if trans_align_count == 0:
 					trans_morph.attrs['align_count'] = trans_align_count+1
 					gloss_morph.attrs['align_count'] = gloss_align_count+1
-					alignments.add((gloss_morph.parent.index, trans_morph.parent.index))
+					alignments.add((gloss_morph.index, trans_morph.index))
 					
 					# Stop aligning this gloss token for this iteration.
 					break
@@ -225,7 +193,7 @@ def get_alignments(gloss_morphs, trans_morphs, iteration=1, **kwargs):
 				elif gloss_align_count == 0 and iteration == 2:
 					trans_morph.attrs['align_count'] = trans_align_count+1
 					gloss_morph.attrs['align_count'] = gloss_align_count+1
-					alignments.add((gloss_morph.parent.index, trans_morph.parent.index))
+					alignments.add((gloss_morph.index, trans_morph.index))
 				
 				
 	
@@ -239,105 +207,7 @@ def get_alignments(gloss_morphs, trans_morphs, iteration=1, **kwargs):
 	
 				
 
-def match_multiples(item, src_sequence, tgt_sequence, **kwargs):
-	'''
-	Code to take an item with source and target sequences, and match
-	them left to right as necessary.
-	
-	If there are multiple words that match in both the source and target,
-	we would like to match them from left to right in order.
-	
-	@param item:
-	@param src_sequence:
-	@param tgt_sequence:
-	'''
-	
-	# TODO: Think more about how I should handle multiple left-to-right alignments
-	#       right now, these are, well, not handled, the search is re-done each time
-	#       a token is encountered. Perhaps instead I should do something like mark
-	#       the visisted tokens, or pop them or something...
-	
-	src_indices = src_sequence.search(item, **kwargs)
-	tgt_indices = tgt_sequence.search(item, **kwargs)
-	
-	#===========================================================================
-	#  Filter out the matched source items in advance to make sure that they
-	#  actually match one of the target items and not just some other portion
-	#  of the source item.
-	#===========================================================================
-	
-	filtered_src_indices = []	
-	
-	for src_index in src_indices:
-		src_item = src_sequence[src_index]
-		for tgt_index in tgt_indices:
-			tgt_item = tgt_sequence[tgt_index]
-			if src_item.morphequals(tgt_item, **kwargs):
-				if src_index not in filtered_src_indices:
-					filtered_src_indices.append(src_index)
-				
-	src_indices = filtered_src_indices
-	
-	#  -----------------------------------------------------------------------------
-	# Just for demonstrating what happens when we don't alight left-to-right.
-	if kwargs.get('no_multiples', False):
-		tgt_indices = tgt_indices[0:1]
-	
-		
-	
-	
-	if src_indices and tgt_indices:
-		
-		# Start by popping the leftmost indices
-		src_index = src_indices.pop(0)		
-		tgt_index = tgt_indices.pop(0)
-		
-		# Loop until we break out
-		while True:
-								
-			# Make sure 
-			if src_sequence[src_index].morphequals(tgt_sequence[tgt_index], **kwargs):			
-				yield((src_index, tgt_index))
-			else:
-				if len(src_indices) >= 1:
-					src_index = src_indices.pop()
-					continue
-				else:
-					break
-			
-			# FIXME: So, the bug here is in the case where we have multiple matches in the source line,
-			#        but they do not correspond to multiple matches in the target line.
-			#        I'm thinking what I need to do is filter out the source line for things that
-			#        match the source word, yes, but that also match the target word in question. 
-			# 
-			#			1SG machete-PL and knife-PL put.up.PL.OBJ-PST .
-			#			I put up the machetes and the knifes .
-			
-			if src_indices and tgt_indices:
-				src_index = src_indices.pop()
-				tgt_index = tgt_indices.pop()
-			else:
-				break
-			
-			
-		
-		# If there is only source index remaining, but multiple target indices,
-		# map this source to all the remaining targets.
-		
-		if len(tgt_indices) >= 1:
-			for tgt_index in tgt_indices:
-				if tgt_sequence[tgt_index].morphequals(src_sequence[src_index], **kwargs):
-					yield((src_index, tgt_index))
-				
-		# Otherwise, if there are remaining source indices, map them to the last remaining
-		# target index.
-		
-		if len(src_indices) >= 1:
-			for src_index in src_indices:
-				if src_sequence[src_index].morphequals(tgt_sequence[tgt_index], **kwargs):
-					yield((src_index, tgt_index))
-	else:
-		pass
+
 	
 		
 class IGTException(Exception):
@@ -385,41 +255,6 @@ class IGTTier(list):
 			text = text.lower()
 		return text
 	
-	def __contains__(self, item, **kwargs):		
-		'''
-		Search for an item, and return True/False whether it is contained or not. 
-		
-		@param item:
-		@param lowercase:
-		'''
-		result = self.search(item, **kwargs)
-		if result is None:
-			return False
-		else:
-			return True
-	
-
-	def search(self, other, **kwargs):
-		'''
-		Search for an other in the tier. If it is not found, return None, otherwise
-		return a list of integer indices (can be zero, so use contains to check for equality) 
-		
-		@param other: IGTToken or string to search for
-		@param lowercase: Do a case-insensitive comparison or not
-		@param stem: Do stemming
-		@param deaccent: Remove accents for comparison
-		'''
-		
-		found = []
-		
-		for i in range(len(self)):
-			my_token = self[i]
-			
-			if my_token.morphequals(other, **kwargs):
-				found.append(i)
-			
-		# If we haven't returned true yet, return false
-		return found
 	
 	def morphs(self):
 		'''
@@ -690,99 +525,7 @@ class MorphTokenCompare(unittest.TestCase):
 		self.assertRaises(IGTException, lambda: m1.morphequals('string'))
 		self.assertRaises(IGTException, lambda: t1.morphequals('string'))
 		
-# class TestTierSearch(unittest.TestCase):
-# 	def runTest(self):
-# 		t1 = IGTTier.fromString('he Det.ACC horse-ACC house-ACC see-CAUSE-PERF .')
-# 		t2 = IGTTier.fromString('He showed the horse the house .')
-# 		
-# 		t3 = IGTTier.fromString('lizard-PL and gila.monster-PL here rest.PRS .')
-# 		t4 = IGTTier.fromString('The lizards and the gila monsters are resting here .')
-# 		
-# 		o1 = IGTToken('horse')
-# 		o2 = IGTToken('gila.monster-PL')
-# 		
-# 		m1 = Morph('horse')
-# 		m2 = Morph('the')
-# 		m3 = Morph('acc')
-# 		
-# 		self.assertEquals(t1.search(o1, lowercase=False), [2])
-# 		self.assertEquals(t1.search(m1, lowercase=False), [2])
-# 		self.assertEquals(t2.search(m2, lowercase=False), [2,4])
-# 		self.assertEquals(t1.search(m3, lowercase=True), [1,2,3])
-# 		
-# 		self.assertEquals(t4.search(o2, stem=False), [4])
-# 		self.assertEquals(t3.search(o2, stem=False), [0, 2])
-# 		
-# 		#=======================================================================
-# 		# Testing the taxi driver case...
-# 		#=======================================================================
-# 		
-# 		t0 = IGTTier.fromString('Este taxista     (*me) parece [t estar cansado]')
-# 		t1 = IGTTier.fromString('This taxi-driver to-me seems to-be tired')
-# 		t2 = IGTTier.fromString("b\"	'This taxi driver seems to me to be tired")
-# 		
-# 		o1 = IGTToken('to-me')
-# 		self.assertEquals(t1.search(o1), [2])
-# 		self.assertEquals(t2.search(o1), [5,6,7])
-		
-		
-# class TestMatchMultiples(unittest.TestCase):
-# 	def runTest(self):
-# 		t1 = IGTTier.fromString('the dog.NOM bit-PST the cat-OBJ')
-# 		t2 = IGTTier.fromString('the dog Bites The cat')
-# 		
-# 		t3 = IGTTier.fromString('your house is on your side of the street')
-# 		t4 = IGTTier.fromString('your house is on your side of your street')
-# 		
-# 		t5 = IGTTier.fromString('the dog.NOM ran alongside the other dog')
-# 		t6 = IGTTier.fromString('the dog runs alongside the other dog')
-# 		
-# 		t7 = IGTTier.fromString('lizard-PL and gila.monster-PL here rest.PRS .')
-# 		t8 = IGTTier.fromString('The lizards and the gila monsters are resting here .')
-# 		
-# 		t10 = IGTTier.fromString('Peter something buy.PRS and something sell.PRS .')
-# 		t9 = IGTTier.fromString('Pedro buys and sells something .')
-# 			
-# 		
-# 		
-# 		o1 = IGTToken('the')
-# 		o2 = IGTToken('your')
-# 		o3 = IGTToken('dog.NOM')
-# 		o4 = IGTToken('gila.monster-PL')
-# 		o5 = IGTToken('something')
-# 		
-# 		
-# 		
-# 		self.assertEquals(set(match_multiples(o1, t1, t2, lowercase=True)), set([(0,0), (3,3)]))
-# 		self.assertEquals(set(match_multiples(o2, t3, t4)), set([(0, 0), (4, 4), (4, 7)]))
-# 		
-# 		dogmatches = set(match_multiples(o3, t5, t6))
-# 		
-# 		self.assertEquals(dogmatches, set([(1, 1), (6, 6)]))
-# 		
-# 		# the "gila.monster-PL" should only match to "gila" with stemming off.
-# 		self.assertEquals(set(match_multiples(o4, t7, t8, stem=False)), set([(2, 4)]))
-# 		
-# 				
-# 		t1 = IGTTier.fromString('1SG machete-PL and knife-PL put.up.PL.OBJ-PST .')
-# 		t2 = IGTTier.fromString('I put up the machetes and the knifes .')
-# 		
-# 		o1 = IGTToken('put.up.PL.OBJ-PST')
-# 		self.assertEquals(set(match_multiples(o1, t1, t2)), set([(4,1),(4,2)]))
-# 		
-# 		# The "Something" should align from the target line to both sources.
-# 		self.assertEquals(set(match_multiples(o5, t10, t9)), set([(1,4),(4,4)]))
-# 		
-# 		#=======================================================================
-# 		#  Checking instance from AGGREGATION data
-# 		#=======================================================================
-# 		
-# 		t1 = IGTTier.fromString('This taxi-driver to-me seems to-be tired')
-# 		t2 = IGTTier.fromString("b\"	'This taxi driver seems to me to be tired")
-# 		
-# 		o1 = IGTToken('to-me')
-# 		
-# 		self.assertEquals(set(match_multiples(o1, t1, t2)), set([(2,5),(2,6)]))
+
 		
 		
 class AlignGrams(unittest.TestCase):
