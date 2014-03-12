@@ -35,7 +35,16 @@ class AlignedSent():
 		new_align = map(lambda aln: (aln[1], aln[0]), self.aln)
 		return AlignedSent(self.tgt_tokens, self.src_tokens, Alignment(new_align))
 			
-	def wordpairs(self, ips):
+	def wordpairs(self, ips=None):
+		'''
+		Return the pairs of words referred to by the indices in ips.
+		
+		This is either an aribitrary pair of indices passed as an argument,
+		or the indices contained in the alignment property.
+		@param ips:
+		'''
+		if ips is None:
+			ips = self.aln
 		return [self.wordpair(ip) for ip in ips]
 			
 	def wordpair(self, ip):
@@ -108,6 +117,14 @@ class AlignedCorpus(list):
 				break
 			
 	def read_giza(self, src_path, tgt_path, a3, limit=None):
+		'''
+		Method intended to read a giza A3.final file into an alignment format.
+		
+		@param src_path: path to the source sentences
+		@param tgt_path: path to the target sentences
+		@param a3: path to the giza A3.final file.
+		@param limit: 
+		'''
 		src_f = open(src_path, 'r')
 		tgt_f = open(tgt_path, 'r')
 		aln_f = open(a3, 'r')
