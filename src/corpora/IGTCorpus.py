@@ -9,7 +9,8 @@ from unidecode import unidecode
 import sys
 
 import unittest
-from utils.string_utils import stem_token, lemmatize_token
+from utils.string_utils import stem_token, lemmatize_token, tokenize_string,\
+	Token, morpheme_tokenizer
 from igt.grams import sub_grams
 
 class IGTCorpus(list):
@@ -28,6 +29,7 @@ class IGTCorpus(list):
 	
 	def gloss_heuristic_alignments(self, **kwargs):
 		return [inst.gloss_heuristic_alignment(**kwargs) for inst in self]
+	
 		
 		
 class IGTInstance(list):
@@ -44,13 +46,13 @@ class IGTInstance(list):
 		
 	def get_gloss_align_sent(self):
 		# TODO: Again with the zero-indexing...
-		a = AlignedSent(self.gloss()[0], self.trans()[0], self.glossalign)
+		a = AlignedSent(self.gloss[0], self.trans[0], self.glossalign)
 		a.attrs = self.attrs
 		return a
 	
 	def get_lang_align_sent(self):
 		# TODO: Guess what...
-		a = AlignedSent(self.gloss()[0], self.trans()[0], self.langalign)
+		a = AlignedSent(self.gloss[0], self.trans[0], self.langalign)
 		a.attrs = self.attrs
 		return a
 		
@@ -58,15 +60,24 @@ class IGTInstance(list):
 		if not isinstance(item, IGTTier):
 			raise IGTException('Attempt to append a non-IGTTier instance to an IGTInstance')
 		list.append(self, item)
-		
+	
+	@property	
 	def gloss(self):
 		return [tier for tier in self if tier.kind == 'gloss']
 	
+	@property
 	def trans(self):
 		return [tier for tier in self if tier.kind == 'trans']
 	
+	@property
 	def lang(self):
 		return [tier for tier in self if tier.kind == 'lang']
+		
+	def gloss_text(self, **kwargs):
+		return [tier.text(**kwargs) for tier in self if tier.kind == 'gloss']
+	
+	def trans_text(self, **kwargs):
+		return [tier.text(**kwargs) for tier in self if tier.kind == 'trans']
 	
 	def set_attr(self, key, val):
 		self.attrs[key] = val
@@ -78,60 +89,86 @@ class IGTInstance(list):
 	
 	def __str__(self):
 		ret_str = ''
-		for kind in set([tier.kind for tier in self]):
-			ret_str += '%s,'%str(kind)
-		return '<IGTInstance %d: %s>' % (self._id, ret_str[:-1])
+		for tier in self:
+			ret_str += '%s,'%str(tier)
+		return '<IGTInstance %s: %s>' % (self._id, ret_str[:-1])
 	
 	def gloss_heuristic_alignment(self, **kwargs):
 		
 		# FIXME: Make sure that when there are multiple occurrences of a token, they are aligned left-to-right.
 		
 		# TODO: Again, we're working with zero-indices here... not liking it.
-		gloss = self.gloss()[0]
-		trans = self.trans()[0]
+		gloss = self.gloss[0]
+		trans = self.trans[0]
 		
 		aln = Alignment()
 		
-		for gloss_i in range(len(gloss)):
-			gloss_token = gloss[gloss_i]
-						
-			#===================================================================
-			# Before we even take a look at the morphs, just look at the
-			# token on its own.
-			#===================================================================
-						
-			# TODO: Find a way to match left-to-right just once, and not repeat it for each time.
-			#       perhaps only start from the current instance?
-			
-			matches = match_multiples(gloss_token, gloss, trans, **kwargs)
-			for a, b in matches:
-				aln.add((a+1,b+1))
-				
-		
 		#=======================================================================
-		#  Second pass...
+		#  1) Get the morphs for each of the tiers
 		#
-		# After we've taken a single pass and seen what we could do, let's take a second
-		# pass on the remaining unaligned bits, and see if we can't pick up a few stragglers
-		# with info like grams.
+		#  2) Make a first pass, aligning each morph with the first unaligned
+		#     morph on the other side.
+		#
+		#  3) Make subsequent passes to pick up any tokens not aligned. 
+		#
 		#=======================================================================
-		if kwargs.get('grams_on'):
-			for gloss_i in range(len(gloss)):
-				gloss_token = gloss[gloss_i]
-				
-				
-				# FIXME: So, it would appear that there is no benefit to skipping previously-aligned
-				# matches after all. It does hurt our precision, but we pick up a lot of recall.
-				# revisit this, though, to see if there's a way to eat our cake and have it too? =) 
-				
-				# Skip over any previously-aligned tokens
-				if True:
-# 				if True or not aln.contains_src(gloss_i+1):
-					
-					kwargs['gloss_on'] = True				
-					matches = match_multiples(gloss_token, gloss, trans, **kwargs)
-					for a, b in matches:
-						aln.add((a+1,b+1))
+		
+		gloss_morphs = gloss.morphs()
+		trans_morphs = trans.morphs()
+		
+		alignments = get_alignments(gloss_morphs, trans_morphs, **kwargs)
+		
+		for a, b in alignments:
+			aln.add((a, b))
+			
+		kwargs['gloss_on'] = True
+		gloss_alignments = get_alignments(gloss_morphs, trans_morphs, **kwargs)
+		
+		for a, b in gloss_alignments:
+			aln.add((a, b))
+# 		
+# 		
+# 		
+# 		for gloss_i in range(len(gloss)):
+# 			gloss_token = gloss[gloss_i]
+# 						
+# 			#===================================================================
+# 			# Before we even take a look at the morphs, just look at the
+# 			# token on its own.
+# 			#===================================================================
+# 						
+# 			# TODO: Find a way to match left-to-right just once, and not repeat it for each time.
+# 			#       perhaps only start from the current instance?
+# 			
+# 			matches = match_multiples(gloss_token, gloss, trans, **kwargs)
+# 			for a, b in matches:
+# 				aln.add((a+1,b+1))
+# 				
+# 		
+# 		#=======================================================================
+# 		#  Second pass...
+# 		#
+# 		# After we've taken a single pass and seen what we could do, let's take a second
+# 		# pass on the remaining unaligned bits, and see if we can't pick up a few stragglers
+# 		# with info like grams.
+# 		#=======================================================================
+# 		if kwargs.get('grams_on'):
+# 			for gloss_i in range(len(gloss)):
+# 				gloss_token = gloss[gloss_i]
+# 				
+# 				
+# 				# FIXME: So, it would appear that there is no benefit to skipping previously-aligned
+# 				# matches after all. It does hurt our precision, but we pick up a lot of recall.
+# 				# revisit this, though, to see if there's a way to eat our cake and have it too? =) 
+# 				
+# 				# Skip over any previously-aligned tokens
+# 				if True:
+# # 				if True or not aln.contains_src(gloss_i+1):
+# 					
+# 					kwargs['gloss_on'] = True				
+# 					matches = match_multiples(gloss_token, gloss, trans, **kwargs)
+# 					for a, b in matches:
+# 						aln.add((a+1,b+1))
 							
 		a = AlignedSent(gloss, trans, aln)
 		a.attrs = self.attrs
@@ -152,6 +189,55 @@ def alltrue(sequence, comparator = lambda x, y: x == y):
 			if not comparator(item, rest):
 				ret = False
 	return ret
+
+	
+
+def get_alignments(gloss_morphs, trans_morphs, iteration=1, **kwargs):
+	
+	alignments = set([])
+		
+	# For the second iteration
+	if iteration>1:
+		gloss_morphs = gloss_morphs[::-1]
+		trans_morphs = trans_morphs[::-1]
+	
+	for gloss_morph in gloss_morphs:
+		
+		for trans_morph in trans_morphs:
+			
+			if gloss_morph.morphequals(trans_morph, **kwargs):
+				# Get the alignment count
+				trans_align_count = trans_morph.attrs.get('align_count', 0)
+				gloss_align_count = gloss_morph.attrs.get('align_count', 0)
+				
+				
+				# Only align with tokens 
+				if trans_align_count == 0:
+					trans_morph.attrs['align_count'] = trans_align_count+1
+					gloss_morph.attrs['align_count'] = gloss_align_count+1
+					alignments.add((gloss_morph.parent.index, trans_morph.parent.index))
+					
+					# Stop aligning this gloss token for this iteration.
+					break
+				
+				# If we're on the second pass and the gloss wasn't aligned, align
+				# it to whatever remains.
+				elif gloss_align_count == 0 and iteration == 2:
+					trans_morph.attrs['align_count'] = trans_align_count+1
+					gloss_morph.attrs['align_count'] = gloss_align_count+1
+					alignments.add((gloss_morph.parent.index, trans_morph.parent.index))
+				
+				
+	
+	if iteration == 2:
+		return alignments
+	else:
+		return alignments | get_alignments(gloss_morphs, trans_morphs, iteration+1, **kwargs)
+	
+		
+	
+	
+				
 
 def match_multiples(item, src_sequence, tgt_sequence, **kwargs):
 	'''
@@ -265,21 +351,22 @@ class IGTTier(list):
 	
 	
 	
-	def __init__(self, seq=[], kind = None):
-		self.kind = kind
+	def __init__(self, seq='', **kwargs):
+		self.kind = kwargs.get('kind', None)
 		list.__init__(self, seq)
 		
-	@staticmethod
-	def fromString(string):
+	@classmethod
+	def fromString(cls, string, **kwargs):
 		'''
 		
 		Convenience method to create a tier from a string. Helpful for testing.
 		
 		@param string: whitespace separated string to turn into a tier
 		'''
-		tier = IGTTier()
-		for token in string.split():
-			t = IGTToken(token)
+		tier = cls(**kwargs)
+		
+		for token in tokenize_string(string):
+			t = IGTToken.fromTokn(token)
 			tier.append(t)
 		return tier
 		
@@ -291,6 +378,12 @@ class IGTTier(list):
 			
 	def __str__(self):
 		return '<IGTTier kind=%s len=%d>' % (self.kind, len(self))
+	
+	def text(self, **kwargs):
+		text = ' '.join([token.seq for token in self]).strip()
+		if kwargs.get('lowercase', True):
+			text = text.lower()
+		return text
 	
 	def __contains__(self, item, **kwargs):		
 		'''
@@ -327,29 +420,53 @@ class IGTTier(list):
 			
 		# If we haven't returned true yet, return false
 		return found
-
-
-
-class IGTToken(object):
 	
+	def morphs(self):
+		'''
+		Return the sequence of morphs for this tier.
+		'''
+		ret_list = []
+		for token in self:
+			ret_list.extend(token.morphs())
+		return ret_list
+
+
+class Span(object):
+	def __init__(self, start, stop):
+		self.start = start
+		self.stop = stop
+
+class IGTToken(Token):
 	
-	def __init__(self, seq='', idx=None):
-		self.idx = idx
-		self.seq = seq
-		self.attrs = {}
+	def __init__(self, seq='', parent=None, span=None, index=None):			
+		self._attrs = {}		
+		self.parent = parent
+		Token.__init__(self, seq, span, index)
+		
+	@classmethod
+	def fromTokn(cls, token, parent=None):
+		return cls(seq=token.seq, parent=parent, span=token.span, index=token.index)
 		
 	def split(self):
 		return self.seq.split()
 		
 	def morphs(self):
-		for elt in re.split(r'[-.():]', self.seq):
-			yield Morph(elt, self)
+		morphs = list(tokenize_string(self.seq, morpheme_tokenizer))
+		
+		# If the tokenization yields no tokens, just return the string.
+		if self.seq and len(morphs) == 0:
+			yield Morph(self.seq, parent=self)
+			
+
+		for morph in morphs:
+			yield(Morph.fromToken(morph, parent=self))		
+		
 	
 	def __repr__(self):
-		return '<IGTToken (%s): %s %s>' % (self.idx, self.seq, self.attrs)
+		return '<IGTToken: [%s] %s>' % (self.index, self.seq)
 	
 	def __str__(self):
-		return self.seq
+		return self.__repr__()
 	
 	def lower(self):
 		return self.seq.lower()
@@ -360,6 +477,14 @@ class IGTToken(object):
 		else:
 			return self.seq == o
 		
+	def text(self, **kwargs):
+		text = self.seq
+		if kwargs.get('lowercase', True):
+			text = text.lower()
+		return text
+		
+	def __hash__(self):
+		return id(self)
 		
 	def morphequals(self, o, **kwargs):
 		'''
@@ -489,13 +614,16 @@ def string_compare_with_processing(s1, s2, **kwargs):
 	
 	
 		
-class Morph:
+class Morph(Token):
 	'''
 	This class is what makes up an IGTToken. Should be comparable to a token
 	'''
-	def __init__(self, seq, parent=None):
+	def __init__(self, seq='', span=None, parent=None):
 		self.parent = parent
-		self.seq = seq
+		index = parent.index if parent else None
+		Token.__init__(self, seq, span, index)
+		
+		
 		
 	def __eq__(self, o):
 		if isinstance(o, Morph):			
@@ -505,11 +633,18 @@ class Morph:
 		
 	def morphequals(self, o, **kwargs):
 		if isinstance(o, Morph):
-			return self.seq == o.seq
+			return string_compare_with_processing(self.seq, o.seq, **kwargs)
 		elif isinstance(o, IGTToken):
 			return o.morphequals(self, **kwargs)
 		else:
 			raise IGTException('Attempt to morphequals Morph with something other than Morph or IGTToken')
+		
+	@classmethod
+	def fromToken(cls, token, parent):
+		return cls(token.seq, token.span, parent)
+		
+	def __str__(self):
+		return '<Morph: %s>' % self.seq
 		
 	
 		
@@ -519,9 +654,9 @@ class Morph:
 		
 class MorphTestCase(unittest.TestCase):
 	def setUp(self):
-		self.m1 = Morph('the', None)
-		self.m2 = Morph('dog', None)
-		self.m3 = Morph('the', None)
+		self.m1 = Morph('the')
+		self.m2 = Morph('dog')
+		self.m3 = Morph('the')
 	def runTest(self):
 		assert self.m1 != self.m2
 		assert self.m1 == self.m3
@@ -547,7 +682,7 @@ class IGTTokenTestCase(unittest.TestCase):
 class MorphTokenCompare(unittest.TestCase):
 	def runTest(self):
 		t1 = IGTToken('THE.horse')
-		m1 = Morph('Horse', t1)
+		m1 = Morph('Horse', parent=t1)
 		
 		self.assertEqual(m1.parent, t1)
 		self.assertTrue(t1.morphequals(m1, lowercase=True, stem=False, deaccent=False))
@@ -555,87 +690,100 @@ class MorphTokenCompare(unittest.TestCase):
 		self.assertRaises(IGTException, lambda: m1.morphequals('string'))
 		self.assertRaises(IGTException, lambda: t1.morphequals('string'))
 		
-class TestTierSearch(unittest.TestCase):
-	def runTest(self):
-		t1 = IGTTier.fromString('he Det.ACC horse-ACC house-ACC see-CAUSE-PERF .')
-		t2 = IGTTier.fromString('He showed the horse the house .')
-		
-		t3 = IGTTier.fromString('lizard-PL and gila.monster-PL here rest.PRS .')
-		t4 = IGTTier.fromString('The lizards and the gila monsters are resting here .')
-		
-		o1 = IGTToken('horse')
-		o2 = IGTToken('gila.monster-PL')
-		
-		m1 = Morph('horse')
-		m2 = Morph('the')
-		m3 = Morph('acc')
-		
-		self.assertEquals(t1.search(o1, lowercase=False), [2])
-		self.assertEquals(t1.search(m1, lowercase=False), [2])
-		self.assertEquals(t2.search(m2, lowercase=False), [2,4])
-		self.assertEquals(t1.search(m3, lowercase=True), [1,2,3])
-		
-		self.assertEquals(t4.search(o2, stem=False), [4])
-		self.assertEquals(t3.search(o2, stem=False), [0, 2])
-		
-		
-class TestMatchMultiples(unittest.TestCase):
-	def runTest(self):
-		t1 = IGTTier.fromString('the dog.NOM bit-PST the cat-OBJ')
-		t2 = IGTTier.fromString('the dog Bites The cat')
-		
-		t3 = IGTTier.fromString('your house is on your side of the street')
-		t4 = IGTTier.fromString('your house is on your side of your street')
-		
-		t5 = IGTTier.fromString('the dog.NOM ran alongside the other dog')
-		t6 = IGTTier.fromString('the dog runs alongside the other dog')
-		
-		t7 = IGTTier.fromString('lizard-PL and gila.monster-PL here rest.PRS .')
-		t8 = IGTTier.fromString('The lizards and the gila monsters are resting here .')
-		
-		t10 = IGTTier.fromString('Peter something buy.PRS and something sell.PRS .')
-		t9 = IGTTier.fromString('Pedro buys and sells something .')
-		
-		o1 = IGTToken('the')
-		o2 = IGTToken('your')
-		o3 = IGTToken('dog.NOM')
-		o4 = IGTToken('gila.monster-PL')
-		o5 = IGTToken('something')
+# class TestTierSearch(unittest.TestCase):
+# 	def runTest(self):
+# 		t1 = IGTTier.fromString('he Det.ACC horse-ACC house-ACC see-CAUSE-PERF .')
+# 		t2 = IGTTier.fromString('He showed the horse the house .')
+# 		
+# 		t3 = IGTTier.fromString('lizard-PL and gila.monster-PL here rest.PRS .')
+# 		t4 = IGTTier.fromString('The lizards and the gila monsters are resting here .')
+# 		
+# 		o1 = IGTToken('horse')
+# 		o2 = IGTToken('gila.monster-PL')
+# 		
+# 		m1 = Morph('horse')
+# 		m2 = Morph('the')
+# 		m3 = Morph('acc')
+# 		
+# 		self.assertEquals(t1.search(o1, lowercase=False), [2])
+# 		self.assertEquals(t1.search(m1, lowercase=False), [2])
+# 		self.assertEquals(t2.search(m2, lowercase=False), [2,4])
+# 		self.assertEquals(t1.search(m3, lowercase=True), [1,2,3])
+# 		
+# 		self.assertEquals(t4.search(o2, stem=False), [4])
+# 		self.assertEquals(t3.search(o2, stem=False), [0, 2])
+# 		
+# 		#=======================================================================
+# 		# Testing the taxi driver case...
+# 		#=======================================================================
+# 		
+# 		t0 = IGTTier.fromString('Este taxista     (*me) parece [t estar cansado]')
+# 		t1 = IGTTier.fromString('This taxi-driver to-me seems to-be tired')
+# 		t2 = IGTTier.fromString("b\"	'This taxi driver seems to me to be tired")
+# 		
+# 		o1 = IGTToken('to-me')
+# 		self.assertEquals(t1.search(o1), [2])
+# 		self.assertEquals(t2.search(o1), [5,6,7])
 		
 		
+# class TestMatchMultiples(unittest.TestCase):
+# 	def runTest(self):
+# 		t1 = IGTTier.fromString('the dog.NOM bit-PST the cat-OBJ')
+# 		t2 = IGTTier.fromString('the dog Bites The cat')
+# 		
+# 		t3 = IGTTier.fromString('your house is on your side of the street')
+# 		t4 = IGTTier.fromString('your house is on your side of your street')
+# 		
+# 		t5 = IGTTier.fromString('the dog.NOM ran alongside the other dog')
+# 		t6 = IGTTier.fromString('the dog runs alongside the other dog')
+# 		
+# 		t7 = IGTTier.fromString('lizard-PL and gila.monster-PL here rest.PRS .')
+# 		t8 = IGTTier.fromString('The lizards and the gila monsters are resting here .')
+# 		
+# 		t10 = IGTTier.fromString('Peter something buy.PRS and something sell.PRS .')
+# 		t9 = IGTTier.fromString('Pedro buys and sells something .')
+# 			
+# 		
+# 		
+# 		o1 = IGTToken('the')
+# 		o2 = IGTToken('your')
+# 		o3 = IGTToken('dog.NOM')
+# 		o4 = IGTToken('gila.monster-PL')
+# 		o5 = IGTToken('something')
+# 		
+# 		
+# 		
+# 		self.assertEquals(set(match_multiples(o1, t1, t2, lowercase=True)), set([(0,0), (3,3)]))
+# 		self.assertEquals(set(match_multiples(o2, t3, t4)), set([(0, 0), (4, 4), (4, 7)]))
+# 		
+# 		dogmatches = set(match_multiples(o3, t5, t6))
+# 		
+# 		self.assertEquals(dogmatches, set([(1, 1), (6, 6)]))
+# 		
+# 		# the "gila.monster-PL" should only match to "gila" with stemming off.
+# 		self.assertEquals(set(match_multiples(o4, t7, t8, stem=False)), set([(2, 4)]))
+# 		
+# 				
+# 		t1 = IGTTier.fromString('1SG machete-PL and knife-PL put.up.PL.OBJ-PST .')
+# 		t2 = IGTTier.fromString('I put up the machetes and the knifes .')
+# 		
+# 		o1 = IGTToken('put.up.PL.OBJ-PST')
+# 		self.assertEquals(set(match_multiples(o1, t1, t2)), set([(4,1),(4,2)]))
+# 		
+# 		# The "Something" should align from the target line to both sources.
+# 		self.assertEquals(set(match_multiples(o5, t10, t9)), set([(1,4),(4,4)]))
+# 		
+# 		#=======================================================================
+# 		#  Checking instance from AGGREGATION data
+# 		#=======================================================================
+# 		
+# 		t1 = IGTTier.fromString('This taxi-driver to-me seems to-be tired')
+# 		t2 = IGTTier.fromString("b\"	'This taxi driver seems to me to be tired")
+# 		
+# 		o1 = IGTToken('to-me')
+# 		
+# 		self.assertEquals(set(match_multiples(o1, t1, t2)), set([(2,5),(2,6)]))
 		
-		self.assertEquals(set(match_multiples(o1, t1, t2, lowercase=True)), set([(0,0), (3,3)]))
-		self.assertEquals(set(match_multiples(o2, t3, t4)), set([(0, 0), (4, 4), (4, 7)]))
-		
-		dogmatches = set(match_multiples(o3, t5, t6))
-		
-		self.assertEquals(dogmatches, set([(1, 1), (6, 6)]))
-		
-		# the "gila.monster-PL" should only match to "gila" with stemming off.
-		self.assertEquals(set(match_multiples(o4, t7, t8, stem=False)), set([(2, 4)]))
-		
-				
-		t1 = IGTTier.fromString('1SG machete-PL and knife-PL put.up.PL.OBJ-PST .')
-		t2 = IGTTier.fromString('I put up the machetes and the knifes .')
-		
-		o1 = IGTToken('put.up.PL.OBJ-PST')
-		self.assertEquals(set(match_multiples(o1, t1, t2)), set([(4,1),(4,2)]))
-		
-		# The "Something" should align from the target line to both sources.
-		self.assertEquals(set(match_multiples(o5, t10, t9)), set([(1,4),(4,4)]))
-		
-		
-class TestAllEquals(unittest.TestCase):
-	def runTest(self):
-		o1 = IGTToken('gila.monster-PL')
-		o2 = IGTToken('gila')
-		o3 = IGTToken('lizard-PL')
-		
-		comparator = lambda x, y: x.morphequals(y)
-		
-		self.assertFalse(alltrue([o1,o2,o3], comparator))
-		self.assertTrue(alltrue([o1,o2], comparator))
-		self.assertTrue(alltrue([o1,o3], comparator))
 		
 class AlignGrams(unittest.TestCase):
 	def runTest(self):
@@ -643,6 +791,36 @@ class AlignGrams(unittest.TestCase):
 		o2 = IGTToken('1SG')
 		
 		self.assertTrue(o2.morphequals(o1, gloss_on=True, lowercase=True))
+		
+class getAlignmentsTest(unittest.TestCase):
+	def runTest(self):
+		t1 = IGTTier.fromString('This taxi-driver to-me seems to-be tired')
+		t2 = IGTTier.fromString("b\"	'This taxi driver seems to me to be tired")
+		
+		o1 = IGTToken('to-me')
+		
+		self.assertEquals(get_alignments(t1.morphs(), t2.morphs()), set([(1,2),(2,3),(2,4),(3,6),(3,7),(4,5),(5,8),(5,9),(6,10)]))
+		
+		t3 = IGTTier.fromString('your house is on your side of the street')
+		t4 = IGTTier.fromString('your house is on your side of your street')
+		
+		self.assertEquals(get_alignments(t3.morphs(), t4.morphs()), {(5, 5), (6, 6), (4, 4), (7, 7), (9, 9), (2, 2), (1, 1), (5, 8), (3, 3)})
+		
+		t5 = IGTTier.fromString('the dog.NOM ran alongside the other dog')
+		t6 = IGTTier.fromString('the dog runs alongside the other dog')
+		
+		self.assertEquals(get_alignments(t5.morphs(), t6.morphs()), {(1,1), (2,2), (3,3), (4,4), (5, 5), (6, 6), (7, 7)})
+		
+		t7 = IGTTier.fromString('lizard-PL and gila.monster-PL here rest.PRS .')
+		t8 = IGTTier.fromString('The lizards and the gila monsters are resting here .')
+		
+		self.assertEquals(get_alignments(t7.morphs(), t8.morphs()), {(1,2), (2, 3), (3, 5), (3, 6), (4, 9), (5, 8), (6, 10)})
+		
+		t10 = IGTTier.fromString('Peter something buy.PRS and something sell.PRS .')
+		t9 = IGTTier.fromString('Pedro buys and sells something .')
+		
+		self.assertEquals(get_alignments(t10.morphs(), t9.morphs()), {(2,5), (3,2), (4,3), (5, 5), (6, 4), (7, 6)})
+		
 		
 class AlignContains(unittest.TestCase):
 	def runTest(self):
