@@ -95,8 +95,6 @@ class IGTInstance(list):
 	
 	def gloss_heuristic_alignment(self, **kwargs):
 		
-		# FIXME: Make sure that when there are multiple occurrences of a token, they are aligned left-to-right.
-		
 		# TODO: Again, we're working with zero-indices here... not liking it.
 		gloss = self.gloss[0]
 		trans = self.trans[0]
@@ -160,30 +158,30 @@ def alltrue(sequence, comparator = lambda x, y: x == y):
 
 	
 
-def get_alignments(gloss_morphs, trans_morphs, iteration=1, **kwargs):
+def get_alignments(gloss_tokens, trans_tokens, iteration=1, **kwargs):
 	
 	alignments = set([])
 		
 	# For the second iteration
 	if iteration>1:
-		gloss_morphs = gloss_morphs[::-1]
-		trans_morphs = trans_morphs[::-1]
+		gloss_tokens = gloss_tokens[::-1]
+		trans_tokens = trans_tokens[::-1]
 	
-	for gloss_morph in gloss_morphs:
+	for gloss_token in gloss_tokens:
 		
-		for trans_morph in trans_morphs:
+		for trans_token in trans_tokens:
 			
-			if gloss_morph.morphequals(trans_morph, **kwargs):
+			if gloss_token.morphequals(trans_token, **kwargs):
 				# Get the alignment count
-				trans_align_count = trans_morph.attrs.get('align_count', 0)
-				gloss_align_count = gloss_morph.attrs.get('align_count', 0)
+				trans_align_count = trans_token.attrs.get('align_count', 0)
+				gloss_align_count = gloss_token.attrs.get('align_count', 0)
 				
 				
 				# Only align with tokens 
-				if trans_align_count == 0:
-					trans_morph.attrs['align_count'] = trans_align_count+1
-					gloss_morph.attrs['align_count'] = gloss_align_count+1
-					alignments.add((gloss_morph.index, trans_morph.index))
+				if trans_align_count == 0 or kwargs.get('no_multiples', False):
+					trans_token.attrs['align_count'] = trans_align_count+1
+					gloss_token.attrs['align_count'] = gloss_align_count+1
+					alignments.add((gloss_token.index, trans_token.index))
 					
 					# Stop aligning this gloss token for this iteration.
 					break
@@ -191,16 +189,16 @@ def get_alignments(gloss_morphs, trans_morphs, iteration=1, **kwargs):
 				# If we're on the second pass and the gloss wasn't aligned, align
 				# it to whatever remains.
 				elif gloss_align_count == 0 and iteration == 2:
-					trans_morph.attrs['align_count'] = trans_align_count+1
-					gloss_morph.attrs['align_count'] = gloss_align_count+1
-					alignments.add((gloss_morph.index, trans_morph.index))
+					trans_token.attrs['align_count'] = trans_align_count+1
+					gloss_token.attrs['align_count'] = gloss_align_count+1
+					alignments.add((gloss_token.index, trans_token.index))
 				
 				
 	
-	if iteration == 2:
+	if iteration == 2 or kwargs.get('no_multiples', False):
 		return alignments
 	else:
-		return alignments | get_alignments(gloss_morphs, trans_morphs, iteration+1, **kwargs)
+		return alignments | get_alignments(gloss_tokens, trans_tokens, iteration+1, **kwargs)
 	
 		
 	
@@ -325,60 +323,11 @@ class IGTToken(Token):
 		'''
 		This function returns True if any morph contained in this token equals
 		any morph contained in the other token 
-		
-		@param o:
-		@param lowercase:
-		@param stem:
-		@param deaccent:
+			
 		'''
-		# Keep track of whether we've found a match or not.
-		found = False
-		
-		# First, get our own morphs.
-		if kwargs.get('tokenize_src', True):
-			morphs = self.morphs()
-			
-		# If we're not tokenize ourself, make one single
-		# morph out of ourself. 
-		else:
-			morphs = [Morph(self.seq)]
-
-		for morph in morphs:
-		
-			# If the other object is also a token,
-			# get its morphs as well.
-			if isinstance(o, IGTToken):
+		return string_compare_with_processing(self.seq, o.seq, **kwargs)
 				
-				# Split the target into morphs if we're tokenizing...
-				if kwargs.get('tokenize_tgt', True):
-					o_morphs = o.morphs()
-					
-				# Otherwise make it a single morph.
-				else:
-					o_morphs = [Morph(o.seq)]
-					
-				for o_morph in o_morphs:
-					if string_compare_with_processing(morph.seq, o_morph.seq, **kwargs):
-						found = True
-						break
-					
-			
-			# If the other object is a morph, just compare it to what we have.
-			elif isinstance(o, Morph):
-				if string_compare_with_processing(morph.seq, o.seq, **kwargs):
-					found = True
-					break
 				
-			else:
-				raise IGTException('Attempt to morphequals IGTToken with something other than Token or Morph')
-		
-		# Return whether we found a match among the morphs or not.
-		return found
-				
-
-		
-			
-		
 		
 	def set_attr(self, key, value):
 		self.attrs[key] = value
@@ -387,6 +336,12 @@ class IGTToken(Token):
 		return self.attrs[key]
 	
 def string_compare_with_processing(s1, s2, **kwargs):
+	'''
+	Given two strings, do all the various processing tricks to decide if they match or not.
+	
+	@param s1: First string to compare
+	@param s2: Second string to compare
+	'''
 	
 	# Before we do anything, see if we have a match.
 	if s1 == s2:
@@ -467,12 +422,7 @@ class Morph(Token):
 			raise IGTException('Attempt to compare Morph to something other than Morph')
 		
 	def morphequals(self, o, **kwargs):
-		if isinstance(o, Morph):
-			return string_compare_with_processing(self.seq, o.seq, **kwargs)
-		elif isinstance(o, IGTToken):
-			return o.morphequals(self, **kwargs)
-		else:
-			raise IGTException('Attempt to morphequals Morph with something other than Morph or IGTToken')
+		return string_compare_with_processing(self.seq, o.seq, **kwargs)
 		
 	@classmethod
 	def fromToken(cls, token, parent):

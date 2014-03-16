@@ -6,10 +6,11 @@ Created on Feb 14, 2014
 import sys
 
 class AlignEval():
-	def __init__(self, aligned_corpus_a, aligned_corpus_b, debug = True):
+	def __init__(self, aligned_corpus_a, aligned_corpus_b, debug = False, filter=None):
 		self.matches = 0.
 		self.total_test = 0.
 		self.total_gold = 0.
+		self._instances = 0
 		
 		aligned_corpus = zip(aligned_corpus_a, aligned_corpus_b)
 		self._parallel = list(aligned_corpus)		
@@ -18,6 +19,12 @@ class AlignEval():
 	
 			model_aln = model_sent.aln
 			gold_aln = gold_sent.aln
+			
+			# So we can filter by lang
+			if filter and filter[0] in model_sent.attrs and model_sent.attrs[filter[0]] != filter[1]:
+				continue
+			
+			self._instances += 1
 			
 			# Only look for alignments which are non-null...
 			model_aln = set([(src,tgt) for src,tgt in model_aln if src > 0 and tgt > 0])
@@ -59,7 +66,11 @@ class AlignEval():
 	
 	def recall(self):
 		return self.matches / self.total_gold
-	
+		
+	@property
+	def instances(self):
+		return self._instances
+		
 	def fmeasure(self):
 		return 2*(self.precision()*self.recall())/(self.precision()+self.recall())
 	

@@ -157,6 +157,8 @@ class AlignedCorpus(list):
 		i = 0
 		for src_line, tgt_line, aln in lines:
 			a_sent = AlignedSent(src_line.split(), tgt_line.split(), aln)
+			a_sent.attrs['file'] = a3
+			a_sent.attrs['id'] = None
 			self.append(a_sent)
 			i+=1
 			if limit and i == limit:

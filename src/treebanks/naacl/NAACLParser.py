@@ -14,6 +14,7 @@ import os
 from utils.encodingutils import getencoding
 import codecs
 from corpora.IGTCorpus import IGTCorpus, IGTInstance, IGTTier, IGTToken
+import pickle
 
 class NAACLInstanceText(str):
 	def __init__(self, seq=''):
@@ -53,7 +54,7 @@ class NAACLInstanceText(str):
 			words = line.split()
 			for word_i in range(len(words)):
 				word = words[word_i]
-				token = IGTToken(seq=word, idx=word_i+1)
+				token = IGTToken(seq=word, index=word_i+1)
 				tier.append(token)
 				
 			# Now add the tier to the instance
@@ -96,75 +97,80 @@ def get_align_indices(question):
 
 class NAACLParser(TextParser):
 	
-	def __init__(self, conf):
-		self.conf = ConfigFile(conf)
+	def __init__(self):
+		self._corpus = IGTCorpus()
 		
-	def get_corpus(self):
-		corpus = self.get_sents()
-		alns = corpus.gloss_alignments()
-		ha_alns = corpus.gloss_heuristic_alignments(lowercase=True, stem=True, grams_on=True, tokenize_src=True, tokenize_tgt=True, no_multiples=False)
+		
+	@property
+	def corpus(self):
+		if hasattr(self,'_corpus'):
+			return self._corpus
+		else:
+			self.get_corpus()
+			return self.corpus
 				
-		c = self.conf
-		outdir = c['outdir']
+	@property
+	def alignments(self):
+		return self.corpus.gloss_alignments()
 		
-		gloss_path = os.path.join(outdir, 'naacl_gloss.txt')
-		trans_path = os.path.join(outdir, 'naacl_trans.txt')
-		aln_path = os.path.join(outdir, 'naacl_aln.txt')
-		ha_gloss = os.path.join(outdir, 'ha_gloss.txt')
-		ha_trans = os.path.join(outdir, 'ha_trans.txt')
+	@property
+	def heuristic_alignments(self):
+		if hasattr(self, '_ha_alns'):
+			return self._ha_alns
+		else:
+			self._ha_alns = self.corpus.gloss_heuristic_alignments()
+			return self.heuristic_alignments
 		
-		
-		ae = AlignEval(ha_alns, alns, debug=True)
-		
-		
-		print(ae.all())		
-		
-		
-		
-	def get_sents(self):
-		c = self.conf
-		
-		corpus = IGTCorpus()
-		
-		for root in c['roots'].split(','):
+
+	def parse_files(self, filelist):				
+		for root in filelist:
+			self.parse_file(root)
 			
-			encoding = getencoding(root.strip())			
-			
-			f = codecs.open(root.strip(), encoding=encoding)
-			data = f.read()
-			f.close()
+	def parse_file(self, root):
 		
+		corpus = self.corpus
+		
+		encoding = getencoding(root.strip())			
+		
+		f = codecs.open(root.strip(), encoding=encoding)
+		data = f.read()
+		f.close()
+	
+		
+		#===================================================================
+		# Search for the gloss alignment and parse it.
+		#===================================================================
+		
+		instances = re.findall('#+\nIgt_id[\s\S]+?Q6:', data)
+		
+		for instance in [NAACLInstanceText(i) for i in instances]:
+			i = instance.igt()
 			
-			#===================================================================
-			# Search for the gloss alignment and parse it.
-			#===================================================================
+			lang = os.path.basename(os.path.dirname(root))[:3]
+
+			i.set_attr('file', root)
+			i.set_attr('id', i._id)
+			i.set_attr('lang', lang)	
 			
-			instances = re.findall('#+\nIgt_id[\s\S]+?Q6:', data)
+			ga_indices = instance.glossalign()
+			la_indices = instance.langalign()				
 			
-			for instance in [NAACLInstanceText(i) for i in instances]:
-				i = instance.igt()
+			for g_i, t_i in ga_indices:
+				i.glossalign.add((g_i, t_i))
 				
-				i.set_attr('file', root)
-				i.set_attr('id', i._id)	
-				
-				ga_indices = instance.glossalign()
-				la_indices = instance.langalign()				
-				
-				for g_i, t_i in ga_indices:
-					i.glossalign.add((g_i, t_i))
+			for l_i, g_i in la_indices:
+				i.langalign.add((l_i, t_i)) 
 					
-				for l_i, g_i in la_indices:
-					i.langalign.add((l_i, t_i)) 
-						
-				# TODO: Zero-indexed makes me uncomfortable...
-				corpus.append(i)
-										
-		return corpus
+			# TODO: Zero-indexed makes me uncomfortable...
+			corpus.append(i)
+				
 	
 			
 
 				
-				
+	#===========================================================================
+	#  MAIN FUNCTION
+	#===========================================================================
 			
 
 
@@ -174,7 +180,74 @@ if __name__ == '__main__':
 	
 	args = p.parse_args()
 	
-	np = NAACLParser(args.c)
+	# Get the configuration file
+	c = ConfigFile(args.c)
 	
-	np.get_corpus()
+	#===========================================================================
+	# Get the files to process and where to put the output. 
+	#===========================================================================
+	naacl_files = c['roots'].split(',')
+	outdir = c['outdir']	
 	
+
+	#=======================================================================
+	# Create the naacl parser and get the corpus.
+	#=======================================================================
+	np = NAACLParser()
+	np.parse_files(naacl_files)	
+	
+	ha_alns = np.heuristic_alignments
+	alns = np.alignments
+	
+	gloss_path = os.path.join(outdir, 'naacl_gloss.txt')
+	trans_path = os.path.join(outdir, 'naacl_trans.txt')
+	aln_path = os.path.join(outdir, 'naacl_aln.txt')
+	ha_gloss = os.path.join(outdir, 'ha_gloss.txt')
+	ha_trans = os.path.join(outdir, 'ha_trans.txt')
+	
+	
+	gloss_f = open(gloss_path, 'w')
+	trans_f = open(trans_path, 'w')
+	ha_g_f = open(ha_gloss, 'w')
+	ha_t_f = open(ha_trans, 'w')
+	
+	#===========================================================================
+	# Get the alignments for each language
+	#===========================================================================
+	
+	ae = AlignEval(ha_alns, alns, debug=False)
+	ger = AlignEval(ha_alns, alns, debug=False, filter=('lang', 'ger'))
+	kkn = AlignEval(ha_alns, alns, debug=False, filter=('lang', 'kkn'))
+	wls = AlignEval(ha_alns, alns, debug=False, filter=('lang', 'wls'))
+	gli = AlignEval(ha_alns, alns, debug=False, filter=('lang', 'gli'))
+	hua = AlignEval(ha_alns, alns, debug=False, filter=('lang', 'hua'))
+	mex = AlignEval(ha_alns, alns, debug=False, filter=('lang', 'mex'))
+	yaq = AlignEval(ha_alns, alns, debug=False, filter=('lang', 'yaq'))
+	
+	print('ALL ' + ae.all(), ae.instances)
+	print('Ger ' + ger.all(), ger.instances)
+	print('Kor ' + kkn.all(), kkn.instances)
+	print('Wls ' + wls.all(), wls.instances)
+	print('Gli ' + gli.all(), gli.instances)
+	print('Hua ' + hua.all(), hua.instances)
+	print('Mex ' + mex.all(), mex.instances)
+	print('Yaq ' + yaq.all(), yaq.instances)
+	
+	#===========================================================================
+	# 
+	#===========================================================================
+	for inst in np.corpus:
+		
+		gloss_f.write(inst.gloss_text()[0]+'\n')
+		trans_f.write(inst.trans_text()[0]+'\n')
+		
+	for aln in ha_alns:
+		for gloss, trans in aln.wordpairs():
+			ha_g_f.write(gloss.text()+'\n')
+			ha_t_f.write(trans.text()+'\n')
+			
+		
+			
+			
+	
+		

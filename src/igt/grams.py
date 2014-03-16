@@ -11,7 +11,7 @@ gramdict = {'1sg':['i','me'],
 		'3sgf':['she','her'],
 		'2sg':['you'],
 		'3sgp':['he'],
-		'poss':['his','her','my'],
+		'poss':['his','her','my', 'their'],
 		'neg':["n't",'not'],
 		'2pl':['you']}
 
