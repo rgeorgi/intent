@@ -45,14 +45,12 @@ class IGTInstance(list):
 		self.attrs = {}
 		
 	def get_gloss_align_sent(self):
-		# TODO: Again with the zero-indexing...
-		a = AlignedSent(self.gloss[0], self.trans[0], self.glossalign)
+		a = AlignedSent(self.gloss, self.trans, self.glossalign)
 		a.attrs = self.attrs
 		return a
 	
 	def get_lang_align_sent(self):
-		# TODO: Guess what...
-		a = AlignedSent(self.gloss[0], self.trans[0], self.langalign)
+		a = AlignedSent(self.gloss, self.trans, self.langalign)
 		a.attrs = self.attrs
 		return a
 		
@@ -63,21 +61,23 @@ class IGTInstance(list):
 	
 	@property	
 	def gloss(self):
-		return [tier for tier in self if tier.kind == 'gloss']
+		return [tier for tier in self if tier.kind == 'gloss'][0]
 	
 	@property
 	def trans(self):
-		return [tier for tier in self if tier.kind == 'trans']
+		return [tier for tier in self if tier.kind == 'trans'][0]
 	
 	@property
 	def lang(self):
-		return [tier for tier in self if tier.kind == 'lang']
+		return [tier for tier in self if tier.kind == 'lang'][0]
 		
-	def gloss_text(self, **kwargs):
-		return [tier.text(**kwargs) for tier in self if tier.kind == 'gloss']
+	@property
+	def gloss_texts(self, **kwargs):
+		return self.gloss.text(**kwargs)	
 	
-	def trans_text(self, **kwargs):
-		return [tier.text(**kwargs) for tier in self if tier.kind == 'trans']
+	@property
+	def trans_texts(self, **kwargs):
+		return self.trans.text(**kwargs)
 	
 	def set_attr(self, key, val):
 		self.attrs[key] = val
@@ -94,10 +94,16 @@ class IGTInstance(list):
 		return '<IGTInstance %s: %s>' % (self._id, ret_str[:-1])
 	
 	def gloss_heuristic_alignment(self, **kwargs):
+		if hasattr(self, '_gha'):
+			return self._gha
+		else:
+			return self.gloss_heuristic_alignment_h(**kwargs)
+	
+	def gloss_heuristic_alignment_h(self, **kwargs):
 		
 		# TODO: Again, we're working with zero-indices here... not liking it.
-		gloss = self.gloss[0]
-		trans = self.trans[0]
+		gloss = self.gloss
+		trans = self.trans
 		
 		aln = Alignment()
 		
@@ -128,7 +134,7 @@ class IGTInstance(list):
 		# Do the gram matching if it's enabled.
 		#=======================================================================
 		
-		if kwargs.get('grams_on'):
+		if kwargs.get('grams_on', True):
 			kwargs['gloss_on'] = True
 			gloss_alignments = get_alignments(gloss_tokens, trans_tokens, **kwargs)
 			
@@ -138,6 +144,7 @@ class IGTInstance(list):
 							
 		a = AlignedSent(gloss, trans, aln)
 		a.attrs = self.attrs
+		self._gha = a
 		return a
 		
 def alltrue(sequence, comparator = lambda x, y: x == y):
@@ -254,13 +261,13 @@ class IGTTier(list):
 		return text
 	
 	
-	def morphs(self):
+	def morphs(self, **kwargs):
 		'''
 		Return the sequence of morphs for this tier.
 		'''
 		ret_list = []
 		for token in self:
-			ret_list.extend(token.morphs())
+			ret_list.extend(token.morphs(**kwargs))
 		return ret_list
 
 
@@ -283,7 +290,13 @@ class IGTToken(Token):
 	def split(self):
 		return self.seq.split()
 		
-	def morphs(self):
+	def morphs(self, **kwargs):
+		for morph in self.morphed_tokens():
+			if kwargs.get('lowercase'):
+				morph = Morph(morph.seq.lower(), morph.span, morph.parent)
+			yield morph
+		
+	def morphed_tokens(self):
 		morphs = list(tokenize_string(self.seq, morpheme_tokenizer))
 		
 		# If the tokenization yields no tokens, just return the string.

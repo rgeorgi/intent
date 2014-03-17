@@ -23,7 +23,7 @@ class AlignedSent():
 			if src_i - 1 >= len(self.src_tokens):
 				raise AlignmentError('Source index %d is too high for %s'  % (src_i, self.src_tokens))
 			if tgt_i - 1 >= len(self.tgt_tokens):
-				raise AlignmentError('Target index %d is too high' % tgt_i)			
+				raise AlignmentError('Target index %d is too high for sentence %s' % (tgt_i, self.tgt_tokens))	
 			
 	def aligned_words(self):
 		words = set([])
@@ -34,6 +34,9 @@ class AlignedSent():
 	def flipped(self):
 		new_align = map(lambda aln: (aln[1], aln[0]), self.aln)
 		return AlignedSent(self.tgt_tokens, self.src_tokens, Alignment(new_align))
+			
+	def pairs(self, src=None, tgt=None):
+		return [aln for aln in self.aln if (src and src==aln[0]) or (tgt and tgt==aln[1]) ]
 			
 	def wordpairs(self, ips=None):
 		'''
@@ -92,12 +95,19 @@ class AlignedCorpus(list):
 		src_f.close(), tgt_f.close(), aln_f.close()
 		
 	def read(self, src_path, tgt_path, aln_path, limit=None):
+		'''
+		Read in the morph:gloss:aln alignment format
+		
+		@param src_path: Source sents
+		@param tgt_path: Target sents
+		@param aln_path: Alignment filename
+		@param limit: Sentence limit
+		'''
 		src_f = open(src_path, 'r')
 		tgt_f = open(tgt_path, 'r')
 		aln_f = open(aln_path, 'r')
 		
-		
-		
+				
 		src_lines = src_f.readlines()
 		tgt_lines = tgt_f.readlines()
 		aln_lines = aln_f.readlines()
@@ -109,8 +119,27 @@ class AlignedCorpus(list):
 		for src_line, tgt_line, aln_line in lines:
 			src_tokens = src_line.split()
 			tgt_tokens = tgt_line.split()
-			alignments = eval('['+aln_line+']')
+			
+			
+			alignments = []
+			#===================================================================
+			# Read the aligment data
+			#
+			# The gloss-with-morph data will be read in "morph:gloss:aln" format.
+			#===================================================================			
+			aln_tokens = aln_line.split()
+			
+			
+			for aln_token in aln_tokens:
+				morph_index, gloss_index, aln_indices = aln_token.split(':')
+				aln_indices = [int(aln) for aln in aln_indices.split(',') if aln.strip()]
+								
+				
+				for aln_index in aln_indices:
+					alignments.append((int(morph_index), aln_index))									
+			
 			a_sent = AlignedSent(src_tokens, tgt_tokens, Alignment(alignments))
+			print(a_sent)
 			self.append(a_sent)
 			i+= 1
 			if limit and i == limit:
@@ -144,7 +173,7 @@ class AlignedCorpus(list):
 		for aln in alns:	
 			alignment = Alignment()
 			elts = re.findall('\(\{([^\)]+)\}\)', aln)
-			for i in range(len(elts)):
+			for i in range(1,len(elts)):
 				elt = elts[i]
 				indices = map(lambda ind: int(ind), elt.split())
 				for index in indices:

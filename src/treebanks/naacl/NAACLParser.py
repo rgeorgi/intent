@@ -193,24 +193,20 @@ if __name__ == '__main__':
 	#=======================================================================
 	# Create the naacl parser and get the corpus.
 	#=======================================================================
-	np = NAACLParser()
-	np.parse_files(naacl_files)	
+	pkl = True
 	
+	if not pkl:
+		np = NAACLParser()
+		np.parse_files(naacl_files)
+	else:
+	 	np = pickle.load(open('np.pkl', 'rb'))
+		
 	ha_alns = np.heuristic_alignments
 	alns = np.alignments
 	
-	gloss_path = os.path.join(outdir, 'naacl_gloss.txt')
-	trans_path = os.path.join(outdir, 'naacl_trans.txt')
-	aln_path = os.path.join(outdir, 'naacl_aln.txt')
-	ha_gloss = os.path.join(outdir, 'ha_gloss.txt')
-	ha_trans = os.path.join(outdir, 'ha_trans.txt')
-	
-	
-	gloss_f = open(gloss_path, 'w')
-	trans_f = open(trans_path, 'w')
-	ha_g_f = open(ha_gloss, 'w')
-	ha_t_f = open(ha_trans, 'w')
-	
+	if not pkl:
+		pickle.dump(np, open('np.pkl', 'wb'))
+
 	#===========================================================================
 	# Get the alignments for each language
 	#===========================================================================
@@ -234,16 +230,61 @@ if __name__ == '__main__':
 	print('Yaq ' + yaq.all(), yaq.instances)
 	
 	#===========================================================================
-	# 
+	# Write out files
 	#===========================================================================
+	
+	gloss_path = os.path.join(outdir, 'naacl_gloss.txt')
+	trans_path = os.path.join(outdir, 'naacl_trans.txt')
+	aln_path = os.path.join(outdir, 'naacl_aln.txt')
+	ha_gloss = os.path.join(outdir, 'ha_gloss.txt')
+	ha_trans = os.path.join(outdir, 'ha_trans.txt')
+	
+	# Create files...
+	gloss_f = open(gloss_path, 'w')
+	trans_f = open(trans_path, 'w')
+	
+	aln_f = open(aln_path, 'w')
+	
+	ha_g_f = open(ha_gloss, 'w')
+	ha_t_f = open(ha_trans, 'w')
+	
+	#===========================================================================
+	# Writing out the instances
+	#===========================================================================
+	
 	for inst in np.corpus:
+		gloss_tier = inst.gloss
+		trans_tier = inst.trans
+		aln = inst.gloss_heuristic_alignment()
 		
-		gloss_f.write(inst.gloss_text()[0]+'\n')
-		trans_f.write(inst.trans_text()[0]+'\n')
+		#=======================================================================
+		# For the alignment, we want to write the gloss index, the parent
+		# word's index, and the target word to which both align.
+		#=======================================================================
+		
+		gloss_morphs = [g for g in gloss_tier.morphs(lowercase=True)]
+		for g in range(len(gloss_morphs)):
+			gloss_morph = gloss_morphs[g]
+			gloss_index = gloss_morph.index
+			
+			tgt_indices = [str(aln[1]) for aln in aln.pairs(src=gloss_index)]
+			aln_f.write('%s:%s:%s ' % (g+1, gloss_index, ','.join(tgt_indices)))
+			
+		
+		gloss_f.write(' '.join([g.seq for g in gloss_morphs]) +'\n')
+		trans_f.write(' '.join([t.seq.lower() for t in trans_tier]) + '\n')
+		
+			
+			
+		# Write newline
+		aln_f.write('\n')
+		
+
 		
 	for aln in ha_alns:
 		for gloss, trans in aln.wordpairs():
-			ha_g_f.write(gloss.text()+'\n')
+			gloss_morphs = [m.seq for m in gloss.morphs(lowercase=True)]
+			ha_g_f.write(' '.join(gloss_morphs)+'\n')
 			ha_t_f.write(trans.text()+'\n')
 			
 		
