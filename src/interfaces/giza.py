@@ -93,7 +93,7 @@ def run_giza(e_file, f_file, giza_bin, out_prefix, aln_path):
 	giza_ac = AlignedCorpus()
 	giza_ac.read_giza(e_file, f_file, out_prefix+'.A3.final')
 	
-	ger = AlignEval(giza_ac, gold_ac, debug=True)
+	ger = AlignEval(giza_ac, gold_ac, debug=False)
 	print(ger.all())
 	
 	

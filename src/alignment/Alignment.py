@@ -131,15 +131,14 @@ class AlignedCorpus(list):
 			
 			
 			for aln_token in aln_tokens:
-				morph_index, gloss_index, aln_indices = aln_token.split(':')
+				src_index, aln_indices = aln_token.split(':')
 				aln_indices = [int(aln) for aln in aln_indices.split(',') if aln.strip()]
 								
 				
 				for aln_index in aln_indices:
-					alignments.append((int(morph_index), aln_index))									
+					alignments.append((int(src_index), aln_index))									
 			
 			a_sent = AlignedSent(src_tokens, tgt_tokens, Alignment(alignments))
-			print(a_sent)
 			self.append(a_sent)
 			i+= 1
 			if limit and i == limit:
@@ -173,6 +172,8 @@ class AlignedCorpus(list):
 		for aln in alns:	
 			alignment = Alignment()
 			elts = re.findall('\(\{([^\)]+)\}\)', aln)
+			
+			# Starting from 1 means we skip the NULL alignments.
 			for i in range(1,len(elts)):
 				elt = elts[i]
 				indices = map(lambda ind: int(ind), elt.split())

@@ -165,6 +165,52 @@ class NAACLParser(TextParser):
 			corpus.append(i)
 				
 	
+	def write_files(self, gloss_f, trans_f, aln_f, ha_g_f, ha_t_f, morphs=False):
+		#===========================================================================
+		# Writing out the instances
+		#===========================================================================
+	
+		for inst in self.corpus:
+			gloss_tier = inst.gloss
+			trans_tier = inst.trans
+			aln = inst.gloss_heuristic_alignment()
+			
+			#=======================================================================
+			# For the alignment, we want to write the gloss index, the parent
+			# word's index, and the target word to which both align.
+			#=======================================================================
+			
+			if morphs:
+				src_tokens = [g for g in gloss_tier.morphs(lowercase=True)]
+			else:
+				src_tokens = [g for g in gloss_tier]
+			
+			for g in range(len(src_tokens)):
+				gloss_token = src_tokens[g]
+				gloss_index = gloss_token.index
+				
+				tgt_indices = [str(aln[1]) for aln in aln.pairs(src=gloss_index)]
+				aln_f.write('%s:%s ' % (g+1, ','.join(tgt_indices)))
+				
+			
+			gloss_f.write(' '.join([g.seq.lower() for g in src_tokens]) +'\n')
+			trans_f.write(' '.join([t.seq.lower() for t in trans_tier]) + '\n')
+			
+			# Write newline
+			aln_f.write('\n')
+			
+	
+			
+		for aln in ha_alns:
+			for gloss, trans in aln.wordpairs():
+				gloss_morphs = [m.seq for m in gloss.morphs(lowercase=True)]
+				ha_g_f.write(' '.join(gloss_morphs)+'\n')
+				ha_t_f.write(trans.text()+'\n')
+				
+				# Write out additional glosses:
+				for g_m in gloss_morphs:
+					ha_g_f.write(g_m+'\n')
+					ha_t_f.write(trans.text()+'\n')
 			
 
 				
@@ -248,45 +294,7 @@ if __name__ == '__main__':
 	ha_g_f = open(ha_gloss, 'w')
 	ha_t_f = open(ha_trans, 'w')
 	
-	#===========================================================================
-	# Writing out the instances
-	#===========================================================================
-	
-	for inst in np.corpus:
-		gloss_tier = inst.gloss
-		trans_tier = inst.trans
-		aln = inst.gloss_heuristic_alignment()
-		
-		#=======================================================================
-		# For the alignment, we want to write the gloss index, the parent
-		# word's index, and the target word to which both align.
-		#=======================================================================
-		
-		gloss_morphs = [g for g in gloss_tier.morphs(lowercase=True)]
-		for g in range(len(gloss_morphs)):
-			gloss_morph = gloss_morphs[g]
-			gloss_index = gloss_morph.index
-			
-			tgt_indices = [str(aln[1]) for aln in aln.pairs(src=gloss_index)]
-			aln_f.write('%s:%s:%s ' % (g+1, gloss_index, ','.join(tgt_indices)))
-			
-		
-		gloss_f.write(' '.join([g.seq for g in gloss_morphs]) +'\n')
-		trans_f.write(' '.join([t.seq.lower() for t in trans_tier]) + '\n')
-		
-			
-			
-		# Write newline
-		aln_f.write('\n')
-		
-
-		
-	for aln in ha_alns:
-		for gloss, trans in aln.wordpairs():
-			gloss_morphs = [m.seq for m in gloss.morphs(lowercase=True)]
-			ha_g_f.write(' '.join(gloss_morphs)+'\n')
-			ha_t_f.write(trans.text()+'\n')
-			
+	np.write_files(gloss_f, trans_f, aln_f, ha_g_f, ha_t_f, morphs=True)
 		
 			
 			
