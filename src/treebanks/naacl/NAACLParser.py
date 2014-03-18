@@ -190,7 +190,7 @@ class NAACLParser(TextParser):
 				gloss_index = gloss_token.index
 				
 				tgt_indices = [str(aln[1]) for aln in aln.pairs(src=gloss_index)]
-				aln_f.write('%s:%s ' % (g+1, ','.join(tgt_indices)))
+				aln_f.write('%s:%s:%s ' % (g+1,gloss_index, ','.join(tgt_indices)))
 				
 			
 			gloss_f.write(' '.join([g.seq.lower() for g in src_tokens]) +'\n')
@@ -294,7 +294,7 @@ if __name__ == '__main__':
 	ha_g_f = open(ha_gloss, 'w')
 	ha_t_f = open(ha_trans, 'w')
 	
-	np.write_files(gloss_f, trans_f, aln_f, ha_g_f, ha_t_f, morphs=True)
+	np.write_files(gloss_f, trans_f, aln_f, ha_g_f, ha_t_f, morphs=False)
 		
 			
 			

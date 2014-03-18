@@ -4,6 +4,7 @@ Created on Feb 14, 2014
 @author: rgeorgi
 '''
 import sys
+from alignment.Alignment import MorphAlign, Alignment
 
 class AlignEval():
 	def __init__(self, aligned_corpus_a, aligned_corpus_b, debug = False, filter=None, reverse=False):
@@ -31,9 +32,20 @@ class AlignEval():
 				model_aln = model_aln.flip()
 			
 			# Only look for alignments which are non-null...
-			model_aln = set([(src,tgt) for src,tgt in model_aln if src > 0 and tgt > 0])
-			gold_aln = set([(src,tgt) for src,tgt in gold_aln if src > 0 and tgt > 0])
+			model_aln = model_aln.nonzeros()
+			gold_aln = gold_aln.nonzeros()
 			#  -----------------------------------------------------------------------------
+			
+			#===================================================================
+			# If we're dealing with morph alignments in the gold...
+			#===================================================================
+			
+			if isinstance(gold_aln, MorphAlign):
+				print(model_aln)
+				print(gold_aln)
+				model_aln = gold_aln.remap(model_aln)
+				gold_aln = gold_aln.GlossAlign
+				
 			
 			matches = model_aln & gold_aln
 			

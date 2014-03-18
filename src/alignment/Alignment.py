@@ -15,11 +15,11 @@ class AlignedSent():
 		self.aln = aln
 		self.attrs = {}
 		
-		if type(aln) != Alignment:
+		if not isinstance(aln, Alignment):
 			raise AlignmentError('Passed alignment is not of type Alignment')
 		
 		for a in self.aln:
-			src_i, tgt_i = a
+			src_i, tgt_i = a[0],a[-1]
 			if src_i - 1 >= len(self.src_tokens):
 				raise AlignmentError('Source index %d is too high for %s'  % (src_i, self.src_tokens))
 			if tgt_i - 1 >= len(self.tgt_tokens):
@@ -32,8 +32,7 @@ class AlignedSent():
 		return words
 			
 	def flipped(self):
-		new_align = map(lambda aln: (aln[1], aln[0]), self.aln)
-		return AlignedSent(self.tgt_tokens, self.src_tokens, Alignment(new_align))
+		return AlignedSent(self.tgt_tokens, self.src_tokens, self.aln.flip())
 			
 	def pairs(self, src=None, tgt=None):
 		return [aln for aln in self.aln if (src and src==aln[0]) or (tgt and tgt==aln[1]) ]
@@ -131,24 +130,18 @@ class AlignedCorpus(list):
 			src_tokens = src_line.split()
 			tgt_tokens = tgt_line.split()
 			
-			alignments = []
 			#===================================================================
 			# Read the aligment data
 			#
 			# The gloss-with-morph data will be read in "morph:gloss:aln" format.
 			#===================================================================			
 			aln_tokens = aln_line.split()
-			
+			m_a = MorphAlign()
 			
 			for aln_token in aln_tokens:
-				src_index, aln_indices = aln_token.split(':')
-				aln_indices = [int(aln) for aln in aln_indices.split(',') if aln.strip()]
-								
-				
-				for aln_index in aln_indices:
-					alignments.append((int(src_index), aln_index))									
-			
-			a_sent = AlignedSent(src_tokens, tgt_tokens, Alignment(alignments))
+				m_a.add_str(aln_token)
+
+			a_sent = AlignedSent(src_tokens, tgt_tokens, m_a)
 			self.append(a_sent)
 			
 			i+= 1
@@ -250,6 +243,13 @@ def combine_sents(s1, s2, method='intersect'):
 		raise AlignmentError('Unknown combining method')
 	
 def refined_combine(s1, s2):
+	'''
+	
+	Implements the "refined" alignment algorithm from Och & Ney 2003
+	
+	@param s1:
+	@param s2:
+	'''
 	A_1 = s1.aln
 	A_2 = s2.aln.flip()
 	
@@ -270,11 +270,11 @@ def refined_combine(s1, s2):
 		#     (i-1, j), (1+1, j) or a vertical neighbor
 		#     (i, j-1), (i,j+1) that is already in A
 		#
-		#  2) The set A | {(i,j)} does not contain alignments
-		#     with BOTH horizontal and vertical neighbors.
 		horizontal = {(i-1,j),(i+1,j)} & A
 		vertical = {(i,j-1),(i,j+1)} & A
 		
+		#  2) The set A | {(i,j)} does not contain alignments
+		#     with BOTH horizontal and vertical neighbors.
 		if horizontal and vertical:
 			continue
 		else:
@@ -293,6 +293,7 @@ class AlignmentError(Exception):
 		self.value = value
 	def __str__(self):
 		return repr(self.value)
+
 
 #===============================================================================
 # Alignment Class
@@ -315,33 +316,73 @@ class Alignment(set):
 		return ret_str[:-2]
 		
 	def contains_tgt(self, key):
-		contains = False
-		for pair in self:
-			src, tgt = pair
-			if tgt == key:
-				return pair
-		return contains
+		return bool([tgt for src,tgt in self if tgt==key])
 	
 	def contains_src(self, key):
-		contains = False
-		for pair in self:
-			src, tgt = pair
-			if src == key:
-				return pair
-		return contains 
+		return bool([src for src,tgt in self if src==key])
 	
 	def __sub__(self, o):
-		return Alignment(set.__sub__(self, o))
+		return self.__class__(set.__sub__(self, o))
 	
 	def __or__(self, o):
-		return Alignment(set.__or__(self, o))
+		return self.__class__(set.__or__(self, o))
 	
 	def __and__(self, o):
-		return Alignment(set.__and__(self, o))
+		return self.__class__(set.__and__(self, o))
 	
 	def flip(self):
-		a = Alignment()
-		for pair in self:
-			a.add((pair[1], pair[0]))
-		return a
+		return self.__class__([(b,a) for a,b in self])
+	
+	def nonzeros(self):
+		nz = [elt for elt in self if elt[0] > 0 and elt[-1] > 0]		
+		return self.__class__(nz)
+	
+	@property
+	def src(self):
+		return self[0]
+	
+	@property
+	def tgt(self):
+		return self[-1]
+
+	
+#===============================================================================
+# MorphAlign Class
+#===============================================================================
+class MorphAlign(Alignment):
+	'''
+	Special subclass of alignment that holds not only src and tgt indices, but also
+	a remapped middle index
+	'''
+	def __init__(self, iter=[]):
+		self._remapping = {}
+		Alignment.__init__(self, iter)
+		
+	def add(self, item):
+		Alignment.add(self, item)
+		self._remapping[item[0]] = item[1]
+		
+	def flip(self):
+		return MorphAlign([(c,b,a) for a,b,c in self])
+		
+	def add_str(self, string):
+		src,parent,tgts = string.split(':')
+		for tgt in tgts.split(','):
+			self.add((int(src),int(parent),int(tgt)))
+			
+	@property
+	def GlossAlign(self):
+		return Alignment((aln[1],aln[-1]) for aln in self)
+	
+	@property
+	def MorphAlign(self):
+		return Alignment((aln[0], aln[-1]) for aln in self)
+		
+	def remap(self, aln):
+		return Alignment((self.remapping.get(elt[0], elt[0]), elt[-1]) for elt in aln)
+				
+	@property
+	def remapping(self):
+		return self._remapping
+
 		
