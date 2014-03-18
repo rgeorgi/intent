@@ -125,12 +125,12 @@ def run_giza(e_file, f_file, giza_bin, out_prefix, aln_path):
 	union_ae = AlignEval(union, gold_ac, debug=False)
 	refined_ae = AlignEval(refined, gold_ac, debug=False)
 	
-	
-	print(g_t_ae.all())
-	print(t_g_ae.all())
-	print(i_ae.all())
-	print(union_ae.all())
-	print(refined_ae.all())
+	print('System,AER,Precision,Recall,F-Measure,Matches,Gold,Test')
+	print(r'Gloss $\rightarrow$ Trans,%s'%g_t_ae.all())
+	print(r'Trans $\rightarrow$ Gloss,%s'%t_g_ae.all())
+	print(r'Intersection,%s'%i_ae.all())
+	print(r'Union,%s'%union_ae.all())
+	print(r'Refined,%s'%refined_ae.all())
 	
 	
 	
