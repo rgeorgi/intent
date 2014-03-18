@@ -71,7 +71,7 @@ class ConfigFile():
 		if k in self._settings:
 			return self._settings[k]
 		else:
-			return None
+			raise ConfigFileException('Invalid Key for Conf File')
 
 	def set_defaults(self, dict):
 		for key in dict:

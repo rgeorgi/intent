@@ -6,7 +6,7 @@ Created on Feb 14, 2014
 import sys
 
 class AlignEval():
-	def __init__(self, aligned_corpus_a, aligned_corpus_b, debug = False, filter=None):
+	def __init__(self, aligned_corpus_a, aligned_corpus_b, debug = False, filter=None, reverse=False):
 		self.matches = 0.
 		self.total_test = 0.
 		self.total_gold = 0.
@@ -14,7 +14,7 @@ class AlignEval():
 		
 		aligned_corpus = zip(aligned_corpus_a, aligned_corpus_b)
 		self._parallel = list(aligned_corpus)		
-
+		
 		for model_sent, gold_sent in self._parallel:
 	
 			model_aln = model_sent.aln
@@ -27,7 +27,13 @@ class AlignEval():
 			self._instances += 1
 			
 			# Only look for alignments which are non-null...
-			model_aln = set([(src,tgt) for src,tgt in model_aln if src > 0 and tgt > 0])
+			if not reverse:
+				model_aln = set([(src,tgt) for src,tgt in model_aln if src > 0 and tgt > 0])
+				
+			# Also, reverse the order of source and target for reversed alignments.
+			else:
+				model_aln = set([(src,tgt) for tgt,src in model_aln if src > 0 and tgt > 0])
+				
 			gold_aln = set([(src,tgt) for src,tgt in gold_aln if src > 0 and tgt > 0])
 			#  -----------------------------------------------------------------------------
 			
@@ -75,6 +81,6 @@ class AlignEval():
 		return 2*(self.precision()*self.recall())/(self.precision()+self.recall())
 	
 	def all(self):
-		return '%f,%f,%f,%f' % (self.aer(), self.precision(), self.recall(), self.fmeasure())
+		return '%f,%f,%f,%f,%d,%d,%d' % (self.aer(), self.precision(), self.recall(), self.fmeasure(), self.matches, self.total_gold, self.total_test)
 
 		

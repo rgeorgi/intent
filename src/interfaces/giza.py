@@ -8,7 +8,7 @@ import os, sys, re, argparse
 from utils import ConfigFile
 import glob
 from alignment.Alignment import AlignedCorpus
-from eval.align_eval import AlignEval
+from eval.AlignEval import AlignEval
 
 def junk_helper(ls, dir, s):
 	return ls.extend(glob.glob(dir + s))
@@ -17,6 +17,7 @@ def junk_helper(ls, dir, s):
 def remove_junk(prefix):
 	jl = []	
 	junk_helper(jl, prefix, '*d3*')
+	junk_helper(jl, prefix, '*D_4*')
 	junk_helper(jl, prefix, '*d4*')
 	junk_helper(jl, prefix, '*perp')
 	junk_helper(jl, prefix, '*vcb')
@@ -41,6 +42,7 @@ def run_giza(e_file, f_file, giza_bin, out_prefix, aln_path):
 	# Start with plain2snt
 	plain2snt = os.path.join(giza_bin, 'plain2snt.out')
 	os.system(plain2snt + ' ' + e_file + ' ' + f_file)
+	os.system(plain2snt + ' ' + f_file + ' ' + e_file)
 	
 	
 	#===========================================================================
@@ -55,15 +57,20 @@ def run_giza(e_file, f_file, giza_bin, out_prefix, aln_path):
 	e_vcb = os.path.join(dir, e_base+'.vcb')
 	f_vcb = os.path.join(dir, f_base+'.vcb')
 	
-	corp = os.path.join(dir, e_base+'_'+f_base+'.snt')
+	g_t_corp = os.path.join(dir, e_base+'_'+f_base+'.snt')
+	t_g_corp = os.path.join(dir, f_base+'_'+e_base+'.snt')
 	
-	cooc = os.path.join(dir, e_base+'_'+f_base+'.cooc')
+	g_t_cooc = os.path.join(dir, e_base+'_'+f_base+'.cooc')
+	t_g_cooc = os.path.join(dir, f_base+'_'+e_base+'.cooc')
+	
+	g_t_prefix = out_prefix+'_g_t'
+	t_g_prefix = out_prefix+'_t_g'
 	
 	#------------------------------------------------------------------------------ 
 	
 	
-	e_cats = os.path.join(dir, e_base+'.cats')
-	f_cats = os.path.join(dir, f_base+'.cats')
+# 	e_cats = os.path.join(dir, e_base+'.cats')
+# 	f_cats = os.path.join(dir, f_base+'.cats')
 	
 	# Now, let's get the other files.
 # 	mkcls = os.path.join(giza_bin, 'mkcls')
@@ -75,13 +82,22 @@ def run_giza(e_file, f_file, giza_bin, out_prefix, aln_path):
 	
 	# Now make the coocurrence file
 	snt2cooc = os.path.join(giza_bin, 'snt2cooc.out')
-	cmd = snt2cooc + ' ' + e_vcb + ' ' + f_vcb + ' ' + corp + ' > ' + cooc
+	cmd = snt2cooc + ' ' + e_vcb + ' ' + f_vcb + ' ' + g_t_corp + ' > ' + g_t_cooc
 	sys.stderr.write(cmd+'\n')
 	os.system(cmd)
 	
-	# Now run giza
+	cmd = snt2cooc + ' ' + f_vcb + ' ' + e_vcb + ' ' + t_g_corp + ' > ' + t_g_cooc
+	sys.stderr.write(cmd+'\n')
+	os.system(cmd)
+	
+	# Now run giza	
 	giza = os.path.join(giza_bin, 'GIZA++')
-	cmd = giza + ' -o %s -S %s -T %s -C %s -CoocurrenceFile %s' % (out_prefix, e_vcb, f_vcb, corp, cooc)
+	cmd = giza + ' -o %s -S %s -T %s -C %s -CoocurrenceFile %s' % (g_t_prefix, e_vcb, f_vcb, g_t_corp, g_t_cooc)
+	sys.stderr.write(cmd+'\n')
+	os.system(cmd)
+	
+	# Run in opposite direction
+	cmd = giza + ' -o %s -S %s -T %s -C %s -CoocurrenceFile %s' % (t_g_prefix, f_vcb, e_vcb, t_g_corp, t_g_cooc)
 	sys.stderr.write(cmd+'\n')
 	os.system(cmd)
 	
@@ -90,11 +106,17 @@ def run_giza(e_file, f_file, giza_bin, out_prefix, aln_path):
 	gold_ac = AlignedCorpus()
 	gold_ac.read(e_file, f_file, aln_path)
 	
-	giza_ac = AlignedCorpus()
-	giza_ac.read_giza(e_file, f_file, out_prefix+'.A3.final')
+	g_t_giza_ac = AlignedCorpus()
+	g_t_giza_ac.read_giza(e_file, f_file, g_t_prefix+'.A3.final')
 	
-	ger = AlignEval(giza_ac, gold_ac, debug=False)
-	print(ger.all())
+	t_g_giza_ac = AlignedCorpus()
+	t_g_giza_ac.read_giza(f_file, e_file, t_g_prefix+'.A3.final')
+	
+	g_t_ae = AlignEval(g_t_giza_ac, gold_ac, debug=False)
+	t_g_ae = AlignEval(t_g_giza_ac, gold_ac, debug=False, reverse=True)
+	
+	print(g_t_ae.all())
+	print(t_g_ae.all())
 	
 	
 	

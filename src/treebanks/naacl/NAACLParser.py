@@ -9,7 +9,7 @@ import argparse
 import re
 import sys
 
-from eval.align_eval import AlignEval
+from eval.AlignEval import AlignEval
 import os
 from utils.encodingutils import getencoding
 import codecs
@@ -173,7 +173,7 @@ class NAACLParser(TextParser):
 		for inst in self.corpus:
 			gloss_tier = inst.gloss
 			trans_tier = inst.trans
-			aln = inst.gloss_heuristic_alignment()
+			aln = inst.gloss_alignments()
 			
 			#=======================================================================
 			# For the alignment, we want to write the gloss index, the parent
@@ -208,9 +208,9 @@ class NAACLParser(TextParser):
 				ha_t_f.write(trans.text()+'\n')
 				
 				# Write out additional glosses:
-				for g_m in gloss_morphs:
-					ha_g_f.write(g_m+'\n')
-					ha_t_f.write(trans.text()+'\n')
+# 				for g_m in gloss_morphs:
+# 					ha_g_f.write(g_m+'\n')
+# 					ha_t_f.write(trans.text()+'\n')
 			
 
 				

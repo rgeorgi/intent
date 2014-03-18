@@ -49,7 +49,8 @@ class AlignedSent():
 		if ips is None:
 			ips = self.aln
 		return [self.wordpair(ip) for ip in ips]
-			
+	
+				
 	def wordpair(self, ip):
 		'''
 		Return the wordpair corresponding with an alignment pair.
@@ -120,7 +121,6 @@ class AlignedCorpus(list):
 			src_tokens = src_line.split()
 			tgt_tokens = tgt_line.split()
 			
-			
 			alignments = []
 			#===================================================================
 			# Read the aligment data
@@ -140,6 +140,7 @@ class AlignedCorpus(list):
 			
 			a_sent = AlignedSent(src_tokens, tgt_tokens, Alignment(alignments))
 			self.append(a_sent)
+			
 			i+= 1
 			if limit and i == limit:
 				break
@@ -169,12 +170,12 @@ class AlignedCorpus(list):
 		# Do all the parsing of the A3.final file.
 		 
 		alns = re.findall('NULL.*', aln_lines, flags=re.M)
-		for aln in alns:	
+		for aln in alns:
 			alignment = Alignment()
-			elts = re.findall('\(\{([^\)]+)\}\)', aln)
+			elts = re.findall('\(\{([0-9\s]+)\}\)', aln)
 			
 			# Starting from 1 means we skip the NULL alignments.
-			for i in range(1,len(elts)):
+			for i in range(0,len(elts)):
 				elt = elts[i]
 				indices = map(lambda ind: int(ind), elt.split())
 				for index in indices:
@@ -195,8 +196,24 @@ class AlignedCorpus(list):
 				break
 			
 			
-		
+#===============================================================================
+# Combine Alignments
+#===============================================================================
 
+def union(a1, a2):
+	return a1 | a2
+
+def intersection(a1, a2):
+	return a1 & a2
+
+def refined(a1, a2, src_indices, tgt_indices):
+	seed = a1 & a2
+	
+	a1_only = a1 - seed
+	a2_only = a2 - seed
+	
+	
+	
 
 class AlignmentError(Exception):
 	def __init__(self, value):
@@ -204,7 +221,14 @@ class AlignmentError(Exception):
 	def __str__(self):
 		return repr(self.value)
 
+#===============================================================================
+# Alignment Class
+#===============================================================================
+
 class Alignment(set):
+	'''
+	Simply, a set of (src_index, tgt_index) pairs in a set.
+	'''
 	
 	def __init__(self, iter=[]):
 		super(Alignment).__init__(Alignment)
@@ -217,8 +241,6 @@ class Alignment(set):
 			ret_str += str(elt)+', '
 		return ret_str[:-2]
 		
-	
-	
 	def contains_tgt(self, key):
 		contains = False
 		for pair in self:

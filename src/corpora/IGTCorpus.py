@@ -22,7 +22,7 @@ class IGTCorpus(list):
 		list.__init__(self, seq)
 
 	def gloss_alignments(self):
-		return [inst.get_gloss_align_sent() for inst in self]
+		return [inst.gloss_alignments() for inst in self]
 
 	def lang_alignments(self):
 		return [inst.get_lang_align_sent() for inst in self]
@@ -44,7 +44,7 @@ class IGTInstance(list):
 		list.__init__(self, seq)
 		self.attrs = {}
 		
-	def get_gloss_align_sent(self):
+	def gloss_alignments(self):
 		a = AlignedSent(self.gloss, self.trans, self.glossalign)
 		a.attrs = self.attrs
 		return a
