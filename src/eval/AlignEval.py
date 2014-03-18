@@ -26,14 +26,12 @@ class AlignEval():
 			
 			self._instances += 1
 			
+			
+			if reverse:
+				model_aln = model_aln.flip()
+			
 			# Only look for alignments which are non-null...
-			if not reverse:
-				model_aln = set([(src,tgt) for src,tgt in model_aln if src > 0 and tgt > 0])
-				
-			# Also, reverse the order of source and target for reversed alignments.
-			else:
-				model_aln = set([(src,tgt) for tgt,src in model_aln if src > 0 and tgt > 0])
-				
+			model_aln = set([(src,tgt) for src,tgt in model_aln if src > 0 and tgt > 0])
 			gold_aln = set([(src,tgt) for src,tgt in gold_aln if src > 0 and tgt > 0])
 			#  -----------------------------------------------------------------------------
 			

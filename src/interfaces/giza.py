@@ -7,7 +7,7 @@ Created on Feb 14, 2014
 import os, sys, re, argparse
 from utils import ConfigFile
 import glob
-from alignment.Alignment import AlignedCorpus
+from alignment.Alignment import AlignedCorpus, combine_corpora
 from eval.AlignEval import AlignEval
 
 def junk_helper(ls, dir, s):
@@ -68,6 +68,7 @@ def run_giza(e_file, f_file, giza_bin, out_prefix, aln_path):
 	
 	#------------------------------------------------------------------------------ 
 	
+	run = True
 	
 # 	e_cats = os.path.join(dir, e_base+'.cats')
 # 	f_cats = os.path.join(dir, f_base+'.cats')
@@ -80,26 +81,28 @@ def run_giza(e_file, f_file, giza_bin, out_prefix, aln_path):
 # 	os.system(cmd_e)
 # 	os.system(cmd_f)
 	
-	# Now make the coocurrence file
-	snt2cooc = os.path.join(giza_bin, 'snt2cooc.out')
-	cmd = snt2cooc + ' ' + e_vcb + ' ' + f_vcb + ' ' + g_t_corp + ' > ' + g_t_cooc
-	sys.stderr.write(cmd+'\n')
-	os.system(cmd)
+	if run:
 	
-	cmd = snt2cooc + ' ' + f_vcb + ' ' + e_vcb + ' ' + t_g_corp + ' > ' + t_g_cooc
-	sys.stderr.write(cmd+'\n')
-	os.system(cmd)
-	
-	# Now run giza	
-	giza = os.path.join(giza_bin, 'GIZA++')
-	cmd = giza + ' -o %s -S %s -T %s -C %s -CoocurrenceFile %s' % (g_t_prefix, e_vcb, f_vcb, g_t_corp, g_t_cooc)
-	sys.stderr.write(cmd+'\n')
-	os.system(cmd)
-	
-	# Run in opposite direction
-	cmd = giza + ' -o %s -S %s -T %s -C %s -CoocurrenceFile %s' % (t_g_prefix, f_vcb, e_vcb, t_g_corp, t_g_cooc)
-	sys.stderr.write(cmd+'\n')
-	os.system(cmd)
+		# Now make the coocurrence file
+		snt2cooc = os.path.join(giza_bin, 'snt2cooc.out')
+		cmd = snt2cooc + ' ' + e_vcb + ' ' + f_vcb + ' ' + g_t_corp + ' > ' + g_t_cooc
+		sys.stderr.write(cmd+'\n')
+		os.system(cmd)
+		
+		cmd = snt2cooc + ' ' + f_vcb + ' ' + e_vcb + ' ' + t_g_corp + ' > ' + t_g_cooc
+		sys.stderr.write(cmd+'\n')
+		os.system(cmd)
+		
+		# Now run giza	
+		giza = os.path.join(giza_bin, 'GIZA++')
+		cmd = giza + ' -o %s -S %s -T %s -C %s -CoocurrenceFile %s' % (g_t_prefix, e_vcb, f_vcb, g_t_corp, g_t_cooc)
+		sys.stderr.write(cmd+'\n')
+		os.system(cmd)
+		
+		# Run in opposite direction
+		cmd = giza + ' -o %s -S %s -T %s -C %s -CoocurrenceFile %s' % (t_g_prefix, f_vcb, e_vcb, t_g_corp, t_g_cooc)
+		sys.stderr.write(cmd+'\n')
+		os.system(cmd)
 	
 	remove_junk(c['outdir'])
 	
@@ -112,11 +115,22 @@ def run_giza(e_file, f_file, giza_bin, out_prefix, aln_path):
 	t_g_giza_ac = AlignedCorpus()
 	t_g_giza_ac.read_giza(f_file, e_file, t_g_prefix+'.A3.final')
 	
+	intersected = combine_corpora(g_t_giza_ac, t_g_giza_ac, method='intersect')
+	union = combine_corpora(g_t_giza_ac, t_g_giza_ac, method='union')
+	refined = combine_corpora(g_t_giza_ac, t_g_giza_ac, method='refined')
+	
 	g_t_ae = AlignEval(g_t_giza_ac, gold_ac, debug=False)
 	t_g_ae = AlignEval(t_g_giza_ac, gold_ac, debug=False, reverse=True)
+	i_ae = AlignEval(intersected, gold_ac, debug=False)
+	union_ae = AlignEval(union, gold_ac, debug=False)
+	refined_ae = AlignEval(refined, gold_ac, debug=False)
+	
 	
 	print(g_t_ae.all())
 	print(t_g_ae.all())
+	print(i_ae.all())
+	print(union_ae.all())
+	print(refined_ae.all())
 	
 	
 	

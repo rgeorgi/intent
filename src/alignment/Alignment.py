@@ -61,9 +61,11 @@ class AlignedSent():
 	def __str__(self):
 		return '<%s, %s, %s>' % (self.src_tokens, self.tgt_tokens, self.aln)
 	
+	@property
 	def src_text(self):
 		return ' '.join(self.src_tokens)
 	
+	@property
 	def tgt_text(self):
 		return ' '.join(self.tgt_tokens)
 	
@@ -72,6 +74,14 @@ class AlignedSent():
 		
 	def get_attr(self, key):
 		return self.attrs[key]
+	
+	@property
+	def srclen(self):
+		return len(self.src_tokens)
+	
+	@property
+	def tgtlen(self):
+		return len(self.tgt_tokens)
 		
 		
 class AlignedCorpus(list):
@@ -145,6 +155,8 @@ class AlignedCorpus(list):
 			if limit and i == limit:
 				break
 			
+
+			
 	def read_giza(self, src_path, tgt_path, a3, limit=None):
 		'''
 		Method intended to read a giza A3.final file into an alignment format.
@@ -197,20 +209,81 @@ class AlignedCorpus(list):
 			
 			
 #===============================================================================
-# Combine Alignments
+# Combine AlignedSents
 #===============================================================================
 
 def union(a1, a2):
 	return a1 | a2
 
-def intersection(a1, a2):
-	return a1 & a2
-
-def refined(a1, a2, src_indices, tgt_indices):
-	seed = a1 & a2
+def combine_corpora(a1, a2, method='intersect'):
 	
-	a1_only = a1 - seed
-	a2_only = a2 - seed
+	# Do some error checking
+	if not isinstance(a1, AlignedCorpus) or not isinstance(a2, AlignedCorpus):
+		raise AlignmentError('Attempt to intersect non-aligned corpus')
+	elif len(a1) != len(a2):
+		raise AlignmentError('Length of aligned corpora are mismatched')
+	
+	i_ac = AlignedCorpus()
+	
+	for a1_sent, a2_sent in zip(a1, a2):
+		i_snt = combine_sents(a1_sent, a2_sent, method=method)
+		i_ac.append(i_snt)
+	return i_ac
+	
+	
+def combine_sents(s1, s2, method='intersect'):
+	if not isinstance(s1, AlignedSent) or not isinstance(s2, AlignedSent):
+		raise AlignmentError('Attempt to intersect non-AlignedSents')
+	elif s1.srclen != s2.tgtlen:
+		raise AlignmentError('Length of sources do not match')
+	elif s1.tgtlen != s2.srclen:
+		raise AlignmentError('Length of targets do not match')
+	
+	if method == 'intersect':
+		# Actually take the intersection
+		return AlignedSent(s1.src_tokens, s1.tgt_tokens, s1.aln & s2.aln.flip())
+	elif method == 'union':
+		return AlignedSent(s1.src_tokens, s1.tgt_tokens, s1.aln | s2.aln.flip())
+	elif method == 'refined':
+		return refined_combine(s1, s2)
+	else:
+		raise AlignmentError('Unknown combining method')
+	
+def refined_combine(s1, s2):
+	A_1 = s1.aln
+	A_2 = s2.aln.flip()
+	
+	A = A_1 & A_2
+	
+	remaining = (A_1 | A_2) - A
+	while remaining:
+		i, j = remaining.pop()
+		
+		# ...if neither f_j or e_i has an alignment in A..
+		if not(A.contains_src(i) or A.contains_tgt(j)):
+			A.add((i,j))
+			continue
+			
+		# ...or if:
+		#
+		#  1) The alignment (i, j) has a horizontal neighbor
+		#     (i-1, j), (1+1, j) or a vertical neighbor
+		#     (i, j-1), (i,j+1) that is already in A
+		#
+		#  2) The set A | {(i,j)} does not contain alignments
+		#     with BOTH horizontal and vertical neighbors.
+		horizontal = {(i-1,j),(i+1,j)} & A
+		vertical = {(i,j-1),(i,j+1)} & A
+		
+		if horizontal and vertical:
+			continue
+		else:
+			A.add((i,j))
+			
+		
+	return AlignedSent(s1.src_tokens, s1.tgt_tokens, A)
+	
+	
 	
 	
 	
@@ -256,6 +329,15 @@ class Alignment(set):
 			if src == key:
 				return pair
 		return contains 
+	
+	def __sub__(self, o):
+		return Alignment(set.__sub__(self, o))
+	
+	def __or__(self, o):
+		return Alignment(set.__or__(self, o))
+	
+	def __and__(self, o):
+		return Alignment(set.__and__(self, o))
 	
 	def flip(self):
 		a = Alignment()
