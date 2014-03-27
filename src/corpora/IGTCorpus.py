@@ -93,6 +93,24 @@ class IGTInstance(list):
 			ret_str += '%s,'%str(tier)
 		return '<IGTInstance %s: %s>' % (self._id, ret_str[:-1])
 	
+	def lang_heuristic_alignment(self, **kwargs):
+		ga = self.gloss_heuristic_alignment(**kwargs).aln
+		la = self.langalign
+		
+		#=======================================================================
+		# If we don't have a language-gloss alignment, assume 1:1, otherwise
+		# raise an exception.
+		#=======================================================================
+		if not la:
+			if len(self.gloss) != len(self.lang):
+				raise IGTAlignmentException('Language line and gloss line not the same length at %s' % self._id)
+			else:
+				return AlignedSent(self.lang, self.trans, ga)
+
+	@property
+	def id(self):
+		return self._id
+	
 	def gloss_heuristic_alignment(self, **kwargs):
 		if hasattr(self, '_gha'):
 			return self._gha
@@ -213,11 +231,14 @@ def get_alignments(gloss_tokens, trans_tokens, iteration=1, **kwargs):
 				
 
 
-	
+
 		
 class IGTException(Exception):
 	def __init__(self, m = ''):
 		Exception.__init__(self, m)
+		
+class IGTAlignmentException(IGTException):
+	pass
 		
 class IGTTier(list):
 	'''

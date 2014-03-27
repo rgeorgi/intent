@@ -6,6 +6,8 @@ Created on Mar 6, 2014
 import os
 import codecs
 import chardet
+from utils.Token import Token
+
 
 class POSCorpus(list):
 	'''
@@ -96,11 +98,12 @@ class POSCorpus(list):
 			test.write(test_path, format, delimeter, outdir, lowercase)
 
 	
-class POSToken:
-	def __init__(self, form, label = None):
-				
+class POSToken(Token):
+	def __init__(self, form, label = None, index=None, span=None):				
 		self.form = form
 		self.label = label
+		self.index = index
+		Token.__init__(self, form, span, index)
 			
 class POSCorpusException(Exception):
 	def __init__(self, msg = None):
@@ -124,14 +127,16 @@ class POSCorpusInstance(list):
 		
 		for my_token, o_token in zipped:
 			if my_token.label == o_token.label:
-				count+=1
+				count+=1				
 		return count
 			
 	def append(self, token):
 		if not isinstance(token, POSToken):
 			raise POSCorpusException('Attempting to add non-token to POSCorpusInstance')
 		else:
+			if not token.index: token.index = len(self)+1
 			list.append(self, token)
+			
 			
 	def __str__(self):
 		return '<POSCorpusInstance: %s>' % self.slashtags()
@@ -153,6 +158,7 @@ class POSCorpusInstance(list):
 				form = token.form.lower()
 			ret_str += '%s/%s ' % (form, token.label)
 		return ret_str.strip()
+	
 	
 	def mallet(self, lowercase=True):
 		ret_str = ''

@@ -8,22 +8,37 @@ from treebanks.xigt.XigtParser import XigtParser
 import argparse
 from utils.ConfigFile import ConfigFile
 import pickle
-import codecs
-import chardet
 from igt.igtutils import clean_lang_string, clean_trans_string,\
 	clean_gloss_string
-from corpora.IGTCorpus import IGTInstance, IGTTier
+from corpora.IGTCorpus import IGTInstance, IGTTier, IGTAlignmentException
 import os
 import sys
 from utils.string_utils import morpheme_tokenizer, tokenize_string
+from nltk.tag.stanford import POSTagger
+from interfaces import stanford_tagger
+from nltk.tag.util import str2tuple
+from alignment.Alignment import Alignment, AlignedSent
 
 #===============================================================================
 # XIGT Processing
 #===============================================================================
 
-def process_xigt(xigt_path, outdir, prefix=''):
+def process_xigt(**kwargs):
 	
-	pkl = True
+	xigt_path = kwargs.get('xigt_file')
+	outdir = kwargs.get('outdir')
+	prefix = kwargs.get('prefix')
+	
+	proj_path = kwargs.get('proj_file')
+	
+	os.makedirs(outdir, exist_ok=True)
+	
+	if proj_path:
+		proj_file = open(os.path.join(outdir, proj_path), 'w')
+	
+	pos_model = kwargs.get('pos_model')
+	
+	pkl = False
 	
 	if not pkl:
 		xp = XigtParser()
@@ -36,6 +51,8 @@ def process_xigt(xigt_path, outdir, prefix=''):
 	#===========================================================================
 	# Open up the files
 	#===========================================================================
+	
+	os.makedirs(outdir, exist_ok=True)
 	
 	gloss_path = '%sgloss.txt'%prefix
 	trans_path = '%strans.txt'%prefix
@@ -76,21 +93,53 @@ def process_xigt(xigt_path, outdir, prefix=''):
 			raw_gloss_f.write(rawgloss+'\n')
 			raw_trans_f.write(rawtrans+'\n')
 					
-			if True:
+			if False:
 				gloss = ' '.join([t.seq for t in tokenize_string(gloss, tokenizer=morpheme_tokenizer)])
 # 				trans = ' '.join([t.seq for t in tokenize_string(trans, tokenizer=morpheme_tokenizer)])
 			gloss_f.write(gloss+'\n')
 			trans_f.write(trans+'\n')
+			
+			gloss_f.flush()
+			trans_f.flush()
 		#=======================================================================
 		# Make a new instance
 		#=======================================================================
 		
-		newinst = IGTInstance()
+		newinst = IGTInstance(id=i.id)
 		newlang = IGTTier.fromString(lang, kind='lang')
 		newgloss = IGTTier.fromString(gloss, kind='gloss')
 		newtrans = IGTTier.fromString(trans, kind='trans')
 		
 		newinst.extend([newlang, newgloss, newtrans])
+		
+		try:
+			lha = newinst.lang_heuristic_alignment()
+			trans_tags = stanford_tagger.tag([s.seq for s in newinst.trans], pos_model)
+			tags = ([str2tuple(t[1])[1] for t in trans_tags])
+			
+			tagged_lang = AlignedSent(newlang, tags, lha.aln)
+			
+			langtagged = []
+			
+			for i, word in enumerate(tagged_lang.src):
+				tags = tagged_lang.src_to_tgt_words(i+1)
+				if not tags:
+					tag = 'UNK'
+				else:
+					tag = tags[0]
+					
+				langtagged.append('%s/%s' % (word.seq, tag))
+				
+			proj_file.write(' '.join(langtagged)+'\n')
+			proj_file.flush()
+				
+				
+				
+			
+		except IGTAlignmentException as e:
+			print(e)
+		except UnicodeEncodeError as e:
+			print(e)
 		
 		#=======================================================================
 		# Get the gloss/translation alignment
@@ -124,5 +173,5 @@ if __name__ == '__main__':
 	
 	c = ConfigFile(args.conf)
 	
-	process_xigt(c['xigt_file'], c['outdir'], c['prefix'])
+	process_xigt(**c)
 		

@@ -6,6 +6,7 @@ Created on Oct 24, 2013
 import os
 import re
 import sys
+import glob
 
 def remove_safe(path):
 	if os.path.exists(path):
@@ -34,3 +35,9 @@ def matching_files(dirpath, pattern, recursive=False):
 			ret_list.extend(matching_files(dir, pattern, recursive))
 	
 	return ret_list
+
+def globlist(globlist):
+	retlist = []
+	for globpattern in globlist:
+		retlist.extend(glob.glob(globpattern))
+	return retlist

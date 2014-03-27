@@ -1,0 +1,1 @@
+from nltk.tag.stanford import POSTagger 

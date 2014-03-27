@@ -70,8 +70,7 @@ class NAACLInstanceText(str):
 	def langalign(self):
 		q4 = re.search('Q4:.*?\n([\S\s]+?)#+ Q4:', self).group(1)
 		return get_align_indices(q4)
-	
-	
+		
 	def igttext(self):
 		return re.search('(Igt_id[\s\S]+?)#+ Q1', self).group(1)
 
@@ -239,7 +238,7 @@ if __name__ == '__main__':
 	#=======================================================================
 	# Create the naacl parser and get the corpus.
 	#=======================================================================
-	pkl = True
+	pkl = False
 	
 	if not pkl:
 		np = NAACLParser()
@@ -279,22 +278,25 @@ if __name__ == '__main__':
 	# Write out files
 	#===========================================================================
 	
-	gloss_path = os.path.join(outdir, 'naacl_gloss.txt')
-	trans_path = os.path.join(outdir, 'naacl_trans.txt')
-	aln_path = os.path.join(outdir, 'naacl_aln.txt')
-	ha_gloss = os.path.join(outdir, 'ha_gloss.txt')
-	ha_trans = os.path.join(outdir, 'ha_trans.txt')
+	corp = np.corpus
 	
-	# Create files...
-	gloss_f = open(gloss_path, 'w')
-	trans_f = open(trans_path, 'w')
 	
-	aln_f = open(aln_path, 'w')
-	
-	ha_g_f = open(ha_gloss, 'w')
-	ha_t_f = open(ha_trans, 'w')
-	
-	np.write_files(gloss_f, trans_f, aln_f, ha_g_f, ha_t_f, morphs=False)
+# 	gloss_path = os.path.join(outdir, 'naacl_gloss.txt')
+# 	trans_path = os.path.join(outdir, 'naacl_trans.txt')
+# 	aln_path = os.path.join(outdir, 'naacl_aln.txt')
+# 	ha_gloss = os.path.join(outdir, 'ha_gloss.txt')
+# 	ha_trans = os.path.join(outdir, 'ha_trans.txt')
+# 	
+# 	# Create files...
+# 	gloss_f = open(gloss_path, 'w')
+# 	trans_f = open(trans_path, 'w')
+# 	
+# 	aln_f = open(aln_path, 'w')
+# 	
+# 	ha_g_f = open(ha_gloss, 'w')
+# 	ha_t_f = open(ha_trans, 'w')
+# 	
+# 	np.write_files(gloss_f, trans_f, aln_f, ha_g_f, ha_t_f, morphs=False)
 		
 			
 			

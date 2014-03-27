@@ -11,25 +11,35 @@ from utils.systematizing import notify
 from utils.ConfigFile import ConfigFile
 from eval.pos_eval import pos_eval
 import time
+from nltk.tag.stanford import POSTagger
 
 
 def jar():
-	global stanford_jar
+	global stanford_jar, model
 	mydir = os.path.abspath(os.path.dirname(__file__))
-	c = ConfigFile(os.path.join(mydir, 'stanford_tagger.prop'))	
+	c = ConfigFile(os.path.join(mydir, 'stanford_tagger.prop'))
+	
+	javahome = c['javahome']
+	os.environ['JAVAHOME'] = javahome	
 	stanford_jar = c['jar']
+	model = c['eng_model']
 	
 
 def train(train_file, model_path, delimeter = '/'):
 	global stanford_jar
-	os.system('java -Xmx300m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (stanford_jar, model_path, train_file, delimeter))
+	os.system('java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (stanford_jar, model_path, train_file, delimeter))
 
 def test(test_file, model_path, out_file, delimeter):
 	global stanford_jar
-	cmd = 'java -Xmx300m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s -outputFormat slashTags -outputFile %s' % (stanford_jar, model_path, test_file, delimeter, out_file)
+	cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s -outputFormat slashTags -outputFile %s' % (stanford_jar, model_path, test_file, delimeter, out_file)
 	sys.stderr.write(cmd)
 	os.system(cmd)
 	
+def tag(string, model):
+	jar()
+	global stanford_jar
+	pt = POSTagger(model, stanford_jar)
+	return pt.tag(string)
 	
 
 if __name__ == '__main__':

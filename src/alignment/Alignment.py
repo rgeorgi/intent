@@ -81,6 +81,27 @@ class AlignedSent():
 	@property
 	def tgtlen(self):
 		return len(self.tgt_tokens)
+	
+	@property
+	def src(self):
+		return self.src_tokens
+	
+	@property
+	def tgt(self):
+		return self.tgt_tokens
+	
+	def src_to_tgt(self, i):
+		return [t for s, t in self.aln if s == i]
+	
+	def tgt_to_src(self, i):
+		return [s for s, t in self.aln if t == i]
+	
+	def src_to_tgt_words(self, i):
+		return [self.tgt[t-1] for s, t in self.aln if s == i]
+	
+	def tgt_to_src_words(self, i):
+		return [self.src[i-1] for s, t in self.aln if t == i]
+		
 		
 		
 class AlignedCorpus(list):
@@ -379,6 +400,12 @@ class MorphAlign(Alignment):
 		return Alignment((aln[0], aln[-1]) for aln in self)
 		
 	def remap(self, aln):
+		'''
+		Given another alignment, return a new alignment where its indices are either
+		either remapped to an entry in the remapping, or returned as-is. 
+		
+		@param aln: Alignment to remap.
+		'''
 		return Alignment((self.remapping.get(elt[0], elt[0]), elt[-1]) for elt in aln)
 				
 	@property

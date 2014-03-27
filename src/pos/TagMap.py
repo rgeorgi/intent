@@ -8,7 +8,7 @@ from utils.ListDict import ListDict
 import codecs
 import chardet
 import sys
-from utils.encodingutils import utfread, getencoding
+from utils.encodingutils import getencoding
 
 class TagMap():
 	'''
@@ -49,6 +49,12 @@ class TagMap():
 					
 	def __getitem__(self, key):
 		return self.old_to_new[key]
+	
+	def get(self, key, default=None):
+		if key in self.old_to_new:
+			return self[key]
+		else:
+			return default
 					
 	def __str__(self):
 		out_str = ''

@@ -46,21 +46,20 @@ def write_mallet(outdir, split, testfile, trainfile, goldfile, all_sents, gold_s
 	mallet_writer(os.path.join(outdir, goldfile), gold_test, lowercase = lowercase)
 	
 
-def write_files(outdir, split, testfile, trainfile, goldfile, all_sents, gold_sents, full_file = None):
-	# Split the data into train and test.
-	train, test = traintest_split(all_sents, split)
-	gold_train, gold_test = traintest_split(gold_sents, split)
+def write_files(outdir, split, testfile, testtagged, trainfile, traintagged, all_sents, gold_sents):
+	# Split the data into train_raw and test_raw.
+	train_raw, test_raw = traintest_split(all_sents, split)
+	train_tagged, test_tagged = traintest_split(gold_sents, split)
 	
-	raw_writer(os.path.join(outdir, testfile), test)
-	raw_writer(os.path.join(outdir, trainfile), gold_train)
-	raw_writer(os.path.join(outdir, goldfile), gold_test)
+	raw_writer(os.path.join(outdir, testfile), test_raw)
+	raw_writer(os.path.join(outdir, trainfile), train_raw)
 	
-	if full_file:
-		raw_writer(os.path.join(outdir, full_file), all_sents)
+	raw_writer(os.path.join(outdir, testtagged), test_tagged)
+	raw_writer(os.path.join(outdir, traintagged), train_tagged)
+	
+	
 
-	
-
-def process_tree(t, delimeter, maxlength = 0, tm = None, simplify = False, keep_traces = False):
+def process_tree(t, delimeter, maxlength = 0, tm = None, simplify = False, keep_traces = False, lowercase=False):
 	treepos = t.pos()
 	
 	if maxlength and (len(treepos) > maxlength):
@@ -76,6 +75,8 @@ def process_tree(t, delimeter, maxlength = 0, tm = None, simplify = False, keep_
 			if not pos.strip() or re.match('(?:-NONE-)|^\*', pos.strip()):
 				continue
 			
+			if lowercase:
+				word = word.lower()
 			# Add the token to the sentences
 			sent_str += '%s ' % word		
 			if tm:

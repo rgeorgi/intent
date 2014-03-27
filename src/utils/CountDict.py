@@ -4,7 +4,8 @@ Created on Aug 26, 2013
 @author: rgeorgi
 '''
 import sys
-from collections import defaultdict
+from _collections import defaultdict
+from _functools import reduce
 
 class CountDict(defaultdict):
 	def __init__(self):

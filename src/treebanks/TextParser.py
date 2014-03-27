@@ -12,9 +12,10 @@ class TextParser(object):
 	def parse(self):
 		pass
 
-	def __init__(self, conf):
+	def __init__(self):
 		'''
 		Constructor
 		'''
-		self.conf = conf
 		
+class ParserException(Exception):
+	pass

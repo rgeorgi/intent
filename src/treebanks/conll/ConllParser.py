@@ -6,9 +6,22 @@ Created on Jan 31, 2014
 from treebanks.TextParser import TextParser
 from utils.ConfigFile import ConfigFile
 import argparse
-from transliteration import *
 import os
 import sys
+from corpora.POSCorpus import POSCorpus, POSToken, POSCorpusInstance
+
+def sent_count(path):
+	f = open(path, 'r')
+	sent_count = 0
+	
+	state = 'out'
+	for line in f:
+		if state == 'out' and line.strip():
+			state = 'in'
+			sent_count += 1
+		elif not line.strip():
+			state = 'out'
+	return sent_count
 
 class ConllParser(TextParser):
 	'''
@@ -16,80 +29,93 @@ class ConllParser(TextParser):
 	'''
 	
 	
-	def parse(self):
-		c = ConfigFile(self.conf)
+	def parse_file(self, **kwargs):
 		
-		root = c['root']
-		outdir = c['outdir']
-		testfile = c['testfile']
-		trainfile = c['trainfile']
-		goldfile = c['goldfile']
-		split = float(c['trainsplit'])
-		maxlength = c['maxLength']
-		rawfile = c['rawfile']
-		delimeter = c['delimeter']
-		translit = eval(c['translit'])
-		limit = int(c['sentence_limit'])
+		root = kwargs.get('root')
+			
+		outdir = kwargs.get('outdir')
+		testfile = kwargs.get('testfile')
+		trainfile = kwargs.get('trainfile')
+		goldfile = kwargs.get('goldfile')
+		split = int(kwargs.get('trainsplit', 90))
+		maxlength = kwargs.get('maxlength')
+		rawfile = kwargs.get('rawfile')
+		delimeter = kwargs.get('delimeter', '/')
+						
 		
-		f = file(root, 'r')
 		
-		gold_sent = ''
-		raw_sent = ''
+		num_sents = sent_count(root)
+		limit = kwargs.get('sentence_limit', num_sents)
+
+		f = open(root, 'r')
 		
-		raw_sents = []
-		gold_sents = []
-		test_sents = []
-		
-		train_f = file(os.path.join(outdir, trainfile), 'w')		
-		gold_f = file(os.path.join(outdir, goldfile), 'w')
-		test_f = file(os.path.join(outdir, testfile), 'w')
-		raw_f = file(os.path.join(outdir, rawfile), 'w')
+		os.makedirs(outdir, exist_ok=True)
 		
 		if split:
 			splitnum = int(limit * split / 100)
 		else:
 			splitnum = 0
 		
-		raw_out = raw_f
-		tagged_out = train_f		
+		if splitnum != 0:
+			
+			train_f = open(os.path.join(outdir, trainfile), 'w')		
+			raw_f = open(os.path.join(outdir, rawfile), 'w')
+			untagged_out = raw_f
+			tagged_out = train_f		
+
+		
+			
+		written = 0
+		
+		# Keep data in the corpus
+		corpus = POSCorpus()
+		
+		#=======================================================================
+		# Iterate through the lines in the CONLL file.
+		#=======================================================================
 		
 		i = 0
+		inst = POSCorpusInstance()
 		for line in f:
 			
-			if i == splitnum:
-				raw_out.close(), tagged_out.close()
-				
-				raw_out = test_f
-				tagged_out = gold_f		
+			#===========================================================
+			# Once we've run through all the testing instances, start
+			# writing to the training instances.
+			#===========================================================
+			if i == splitnum:				
+				untagged_out = open(os.path.join(outdir, testfile), 'w')
+				tagged_out = open(os.path.join(outdir, goldfile), 'w')
 			
-			line.split()
+			#===================================================================
+			# If it's not a blank line, add it to the current instance.
+			#===================================================================
 			
-			if not line.strip() and gold_sent:
-				raw_sents.append(raw_sent.strip())
-				gold_sents.append(gold_sent.strip())
-				
-				tagged_out.write(gold_sent.strip()+'\n')
-				raw_out.write(raw_sent.strip()+'\n')				
-								
-				i+= 1
-				gold_sent = ''
-				raw_sent = ''
-				if i > limit:
-					break
+			if line.strip():
+				index, form, lemma, cpos, postag, feats, head, deprel, phead, pdeprel = line.split()
+				t = POSToken(form, cpos, int(index))
+				t.finepos = postag
+				inst.append(t)
 
-			elif line.strip():
-				id, form, lemma, cpostag, postag, feats, head, deprel, phead, pdeprel = line.split()
-				if translit:
-					form = translit.translit(form).lower()
+			else:				
+				if len(inst) > 0:
+					corpus.append(inst)
+					untagged_out.write(inst.raw(lowercase=True)+'\n')
+					tagged_out.write(inst.slashtags(delimeter, lowercase=True)+'\n')
+					written += 1
+				i+=1
 					
-				gold_sent += '%s%s%s ' % (form, delimeter, cpostag)
-				raw_sent += '%s ' % form
+				inst = POSCorpusInstance()
+			
+			if written > limit:
+				break
+
 				
 			
-			
+		
 							
-		raw_out.close(), tagged_out.close()
-		sys.stdout.write('%d sents written' % len(gold_sents))
+		untagged_out.close(), tagged_out.close()
+		sys.stdout.write('%d sents written\n' % (len(corpus)))
+		return corpus		
 			
 					
 					
@@ -102,5 +128,21 @@ if __name__ == '__main__':
 	
 	args = p.parse_args()
 	
-	cp = ConllParser(args.conf)
-	cp.parse()
+	c = ConfigFile(args.conf)
+	
+
+	
+	if c.get('train_root') and c.get('test_root'):
+		cp = ConllParser()
+		c['root'] = c.get('train_root')
+		c['trainsplit'] = 100
+		corp = cp.parse_file(**c)
+		
+		cp = ConllParser()
+		c['root'] = c.get('test_root')
+		c['trainsplit'] = 0
+		corp = cp.parse_file(**c)
+		
+	elif c.get('root'):
+		cp = ConllParser()
+		corp = cp.parse_file(**c)

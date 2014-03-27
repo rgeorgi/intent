@@ -68,7 +68,7 @@ def run_giza(e_file, f_file, giza_bin, out_prefix, aln_path):
 	
 	#------------------------------------------------------------------------------ 
 	
-	run = False
+	run = True
 	
 # 	e_cats = os.path.join(dir, e_base+'.cats')
 # 	f_cats = os.path.join(dir, f_base+'.cats')

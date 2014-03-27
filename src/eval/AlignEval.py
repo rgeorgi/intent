@@ -41,9 +41,10 @@ class AlignEval():
 			#===================================================================
 			
 			if isinstance(gold_aln, MorphAlign):
-				print(model_aln)
-				print(gold_aln)
+				# Remap the model alignment to use the 
+				# gloss indices found in the gold alignment.
 				model_aln = gold_aln.remap(model_aln)
+				
 				gold_aln = gold_aln.GlossAlign
 				
 			
@@ -75,20 +76,32 @@ class AlignEval():
 			self.total_gold += len(gold_aln)
 			
 	def aer(self):
-		return 1.0 - 2*self.matches/(self.total_test + self.total_gold)
+		if not self.total_gold:
+			return 0
+		else:
+			return 1.0 - 2*self.matches/(self.total_test + self.total_gold)
 	
 	def precision(self):
-		return self.matches / self.total_test
+		if not self.total_test:
+			return 0
+		else:
+			return self.matches / self.total_test
 	
 	def recall(self):
-		return self.matches / self.total_gold
+		try:
+			return self.matches / self.total_gold
+		except ZeroDivisionError:
+			return 0
 		
 	@property
 	def instances(self):
 		return self._instances
 		
 	def fmeasure(self):
-		return 2*(self.precision()*self.recall())/(self.precision()+self.recall())
+		try:
+			return 2*(self.precision()*self.recall())/(self.precision()+self.recall())
+		except ZeroDivisionError:
+			return 0
 	
 	def all(self):
 		return '%f,%f,%f,%f,%d,%d,%d' % (self.aer(), self.precision(), self.recall(), self.fmeasure(), self.matches, self.total_gold, self.total_test)

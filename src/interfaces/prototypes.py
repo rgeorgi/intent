@@ -11,11 +11,14 @@ from utils.ConfigFile import ConfigFile
 from utils.fileutils import remove_safe
 
 def prop():
-	global cp
+	global cp, matlab
 	mydir = os.path.abspath(os.path.dirname(__file__))
 	c = ConfigFile(os.path.join(mydir, 'prototypes.prop'))
 	
 	root = c['root']
+	matlab = c['matlab']
+	
+	sys.path.append(matlab)
 		
 	cp = os.path.join(root, 'bin/')
 # 	jars = glob(root+'/lib/*jar')
@@ -25,9 +28,10 @@ def prop():
 
 def context(rawfile, modelfile, appendDistance = True, contextWindow = 2, directional = True, reduceType = 'RAND_PROJ'):
 	prop()
-	global cp
+	global cp, matlab
 # 	conf = '/Users/rgeorgi/Dropbox/code/eclipse/prototype-sequence/conf/orig_test.conf'
-	cmd = 'java -server -mx1200m -cp %s edu.berkeley.nlp.prototype.simmodel.WordContextSimilarity ' % cp
+	os.system('export PATH=$PATH:%s'%matlab)
+	cmd = 'PATH=$PATH:%s && java -server -mx1200m -cp %s edu.berkeley.nlp.prototype.simmodel.WordContextSimilarity ' % (matlab, cp)
 	cmd += ' -dataRoot %s' % os.path.dirname(rawfile)
 	cmd += ' -prefix %s' % os.path.basename(os.path.splitext(rawfile)[0])
 	cmd += ' -outfile %s' % os.path.abspath(modelfile)
@@ -55,7 +59,7 @@ def train(rawfile, protofile, context_model, sequence_model,  minIters = 10, num
 	cmd += ' -protoFile %s' % protofile
 	cmd += ' -minIters %s' % minIters
 	cmd += ' -numIters %s' % numIters
-	cmd += ' -simModelPath %s' % os.path.abspath(context_model)
+# 	cmd += ' -simModelPath %s' % os.path.abspath(context_model)
 	cmd += ' -numSimilarWords 3'
 	cmd += ' -simThreshold 0.35'
 	cmd += ' -sigmaSquared 0.5'
@@ -127,6 +131,7 @@ if __name__ == '__main__':
 		sys.exit(0)
 		
 	c = ConfigFile(opts.conf)
+	
 	c.set_defaults({'minIters':0, 'numIters':100, 'order':1})
 	sanity_check(c)
 	

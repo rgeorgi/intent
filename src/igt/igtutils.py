@@ -22,9 +22,11 @@ def surrounding_quotes_and_parens(ret_str):
 def split_punctuation(ret_str):
 	return re.sub(r'(\w+)([.?!,])+', r'\1 \2', ret_str).strip()
 
-def remove_final_punctuation(ret_str):
-	ret_str = re.sub(r'(\w+)([.?!,])+\s', r'\1 ', ret_str).strip()
-	return re.sub(r'(\w+)([.?!,])+$', r'\1 ', ret_str).strip()
+def remove_external_punctuation(ret_str):
+	ret_str = re.sub(r'(\w+)([.?!,¿])+\s', r'\1 ', ret_str).strip()
+	ret_str = re.sub(r'(?:^|\s)([.?!,¿]+)(\w+)', r'\2', ret_str).strip()
+	return re.sub(r'(\w+)([.?!,¿])+$', r'\1 ', ret_str).strip()
+
 
 def rejoin_letter(ret_str, letter='t', direction='right'):
 	'''
@@ -63,7 +65,7 @@ def clean_gloss_string(ret_str):
 	ret_str = rejoin_letter(ret_str, 'h', 'left')
 	
 	# Remove word-final punctuation
-	ret_str = remove_final_punctuation(ret_str)
+	ret_str = remove_external_punctuation(ret_str)
 	
 	return ret_str
 
@@ -72,7 +74,7 @@ def clean_trans_string(string):
 	ret_str = re.sub('^b["\']', '', string).strip()
 	
 	# Remove word-final punctuation:
-	ret_str = remove_final_punctuation(ret_str)
+	ret_str = remove_external_punctuation(ret_str)
 	
 	# Remove surrounding quotes and parentheticals
 	ret_str = surrounding_quotes_and_parens(ret_str)
@@ -109,7 +111,7 @@ def clean_lang_string(ret_str):
 	ret_str = re.sub('[\[\]\(\)]', '', ret_str).strip()
 	
 	# Split punctuation
-	ret_str = remove_final_punctuation(ret_str)
+	ret_str = remove_external_punctuation(ret_str)
 	
 
 	return ret_str
