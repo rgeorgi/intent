@@ -3,6 +3,10 @@ Created on Mar 21, 2014
 
 @author: rgeorgi
 '''
+from utils.string_utils import string_compare_with_processing
+
+class TokenException(Exception):
+	pass
 
 class Token(object):
 
@@ -42,3 +46,16 @@ class Token(object):
 		self._seq = seq
 		self.index = index
 		self._attrs = {}
+		
+	def morphequals(self, o, **kwargs):
+		if not isinstance(o, Token):
+			raise TokenException('Attempt to compare {0} to non-{0}'.format(self.__class__.__name__))
+		else:
+			return string_compare_with_processing(self.seq, o.seq, **kwargs)
+		
+class POSToken(Token):
+	def __init__(self, form, label = None, index=None, span=None):				
+		self.form = form
+		self.label = label
+		self.index = index
+		Token.__init__(self, form, span, index)

@@ -98,12 +98,7 @@ class POSCorpus(list):
 			test.write(test_path, format, delimeter, outdir, lowercase)
 
 	
-class POSToken(Token):
-	def __init__(self, form, label = None, index=None, span=None):				
-		self.form = form
-		self.label = label
-		self.index = index
-		Token.__init__(self, form, span, index)
+
 			
 class POSCorpusException(Exception):
 	def __init__(self, msg = None):

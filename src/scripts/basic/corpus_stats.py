@@ -2,6 +2,11 @@
 Created on Mar 21, 2014
 
 @author: rgeorgi
+
+Scripts for gathering general information on the various POS corpora being used. 
+
+Basic analysis such as word types, number of types of POS tag, and the percentage
+that each make up of things.
 '''
 
 import argparse
@@ -46,6 +51,9 @@ def gather_stats(filelist, tagged):
 			print(',,', end='')
 		print('%s,%d,%d,%.2f,%0.2f' % (tag, tagcounts, typetagcounts, percent_tokens, percent_types))
 	
+#===============================================================================
+# MAIN
+#===============================================================================
 
 if __name__ == '__main__':
 	p = argparse.ArgumentParser()

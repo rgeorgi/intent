@@ -133,8 +133,6 @@ def process_xigt(**kwargs):
 			proj_file.write(' '.join(langtagged)+'\n')
 			proj_file.flush()
 				
-				
-				
 			
 		except IGTAlignmentException as e:
 			print(e)
@@ -152,15 +150,6 @@ def process_xigt(**kwargs):
 			ha_trans_f.write(target_token.seq+'\n')
 			
 		
-						
-			
-			
-			
-		
-		
-
-		
-
 #===============================================================================
 # MAIN FUNC
 #===============================================================================

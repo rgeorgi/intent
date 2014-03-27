@@ -5,13 +5,13 @@ Created on Mar 7, 2014
 '''
 from alignment.Alignment import Alignment, AlignedSent
 import re
-from unidecode import unidecode
 import sys
 
 import unittest
-from utils.string_utils import stem_token, lemmatize_token, tokenize_string,\
-	Token, morpheme_tokenizer
-from igt.grams import sub_grams
+from utils.Token import Token, TokenException
+from utils.string_utils import string_compare_with_processing
+from utils.token_utils import tokenize_string, morpheme_tokenizer
+
 
 class IGTCorpus(list):
 	'''
@@ -352,89 +352,14 @@ class IGTToken(Token):
 		
 	def __hash__(self):
 		return id(self)
-		
-	def morphequals(self, o, **kwargs):
-		'''
-		This function returns True if any morph contained in this token equals
-		any morph contained in the other token 
-			
-		'''
-		return string_compare_with_processing(self.seq, o.seq, **kwargs)
-				
-				
-		
+
 	def set_attr(self, key, value):
 		self.attrs[key] = value
 		
 	def get_attr(self, key):
 		return self.attrs[key]
 	
-def string_compare_with_processing(s1, s2, **kwargs):
-	'''
-	Given two strings, do all the various processing tricks to decide if they match or not.
-	
-	@param s1: First string to compare
-	@param s2: Second string to compare
-	'''
-	
-	# Before we do anything, see if we have a match.
-	if s1 == s2:
-		return True
-	
-	if kwargs.get('lowercase', True):
-		s1 = s1.lower()
-		s2 = s2.lower()
-		
-	# Keep checking...
-	if s1 == s2:
-		return True
-		
-	if kwargs.get('deaccent', True):
-		s1 = unidecode(s1)
-		s2 = unidecode(s2)
-		
-		
-	# Do various types of increasingly aggressive stemming...
-	if kwargs.get('stem', True):
-		stem1 = lemmatize_token(s1)
-		stem2 = lemmatize_token(s2)
-		
-		if stem1 == stem2:
-			return True
 
-		stem1 = stem_token(s1)
-		stem2 = stem_token(s2)
-			
-		if stem1 == stem2:
-			return True
-		
-		stem1 = lemmatize_token(s1, 'a')
-		stem2 = lemmatize_token(s2, 'a')
-			
-		if stem1 == stem2:
-			return True
-	
-		stem1 = lemmatize_token(s1, 'n')
-		stem2 = lemmatize_token(s2, 'n')
-		
-		if stem1 == stem2:
-			return True
-	
-	# We could do the gram stuff here, but it doesn't work too well.
-	# Instead, let's try doing it as a second pass to pick up stil-unaligned
-	# words.
-	if kwargs.get('gloss_on',False):
-		gloss_grams_1 = sub_grams(s1)
-		gloss_grams_2 = sub_grams(s2)
-		
-		if s2.strip() and s2 in gloss_grams_1:
-			return True
-		if s1.strip() and s1 in gloss_grams_2:
-			return True
-					
-		
-		
-	return s1 == s2
 	
 	
 		
@@ -454,9 +379,6 @@ class Morph(Token):
 			return self.seq == o.seq
 		else:
 			raise IGTException('Attempt to compare Morph to something other than Morph')
-		
-	def morphequals(self, o, **kwargs):
-		return string_compare_with_processing(self.seq, o.seq, **kwargs)
 		
 	@classmethod
 	def fromToken(cls, token, parent):
@@ -487,16 +409,25 @@ class IGTTokenTestCase(unittest.TestCase):
 		t3 = IGTToken('you-are')
 		t4 = IGTToken('you')
 		t5 = IGTToken('Your')
-		t6 = IGTToken('1SG.You.ARE')
+		t6 = IGTToken('1SG.You.ARE')		
 		
-		assert t1 == t2
-		assert t1 != t3
-		assert t4.morphequals(t3)
-		assert t3.morphequals(t4)
-		assert not t3.morphequals(t1)
-		assert not t5.morphequals(t1, lowercase=False, stem=False)
-		assert t5.morphequals(t1, lowercase=True, stem=False)
-		assert t6.morphequals(t4, lowercase=True, stem=False)
+		self.assertEqual(t1, t2)
+		self.assertNotEqual(t1, t3)
+		
+		self.assertFalse(t4.morphequals(t3))
+		self.assertFalse(t3.morphequals(t4))
+		self.assertFalse(t3.morphequals(t1))
+		self.assertFalse(t5.morphequals(t1, lowercase=False, stem=False))
+		self.assertTrue(t5.morphequals(t1, lowercase=True, stem=False))
+		self.assertFalse(t6.morphequals(t4, lowercase=True, stem=False))
+		
+		#=======================================================================
+		# Test stemming
+		#=======================================================================
+		t1 = IGTToken('passed')
+		t2 = IGTToken('Pass')
+		
+		self.assertTrue(t1.morphequals(t2, lowercase=True, stem=True))
 		
 class MorphTokenCompare(unittest.TestCase):
 	def runTest(self):
@@ -504,13 +435,10 @@ class MorphTokenCompare(unittest.TestCase):
 		m1 = Morph('Horse', parent=t1)
 		
 		self.assertEqual(m1.parent, t1)
-		self.assertTrue(t1.morphequals(m1, lowercase=True, stem=False, deaccent=False))
+		self.assertFalse(t1.morphequals(m1, lowercase=True, stem=False, deaccent=False))
 		self.assertFalse(t1.morphequals(m1, lowercase=False, stem=False))
-		self.assertRaises(IGTException, lambda: m1.morphequals('string'))
-		self.assertRaises(IGTException, lambda: t1.morphequals('string'))
-		
-
-		
+		self.assertRaises(TokenException, lambda: m1.morphequals('string'))
+		self.assertRaises(TokenException, lambda: t1.morphequals('string'))		
 		
 class AlignGrams(unittest.TestCase):
 	def runTest(self):
