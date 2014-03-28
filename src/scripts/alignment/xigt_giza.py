@@ -12,12 +12,10 @@ from igt.igtutils import clean_lang_string, clean_trans_string,\
 	clean_gloss_string
 from corpora.IGTCorpus import IGTInstance, IGTTier, IGTAlignmentException
 import os
-import sys
-from utils.string_utils import morpheme_tokenizer, tokenize_string
-from nltk.tag.stanford import POSTagger
 from interfaces import stanford_tagger
 from nltk.tag.util import str2tuple
-from alignment.Alignment import Alignment, AlignedSent
+from utils.Token import morpheme_tokenizer, tokenize_string
+from alignment.Alignment import AlignedSent
 
 #===============================================================================
 # XIGT Processing

@@ -7,6 +7,9 @@ Created on Feb 21, 2014
 import collections
 import sys
 import re
+import unittest
+from utils.Token import tokenize_string
+
 
 class AlignedSent():
 	def __init__(self, src_tokens, tgt_tokens, aln):
@@ -91,10 +94,18 @@ class AlignedSent():
 		return self.tgt_tokens
 	
 	def src_to_tgt(self, i):
-		return [t for s, t in self.aln if s == i]
+		indices = [t for s, t in self.aln if s == i]
+		if indices:
+			return indices
+		else:
+			return [0]
 	
 	def tgt_to_src(self, i):
-		return [s for s, t in self.aln if t == i]
+		indices = [s for s, t in self.aln if t == i]
+		if indices:
+			return indices
+		else:
+			return [0]
 	
 	def src_to_tgt_words(self, i):
 		return [self.tgt[t-1] for s, t in self.aln if s == i]
@@ -102,6 +113,26 @@ class AlignedSent():
 	def tgt_to_src_words(self, i):
 		return [self.src[i-1] for s, t in self.aln if t == i]
 		
+	def serialize_src(self):
+		return ' '.join(self.serialize_src_h())
+		
+	def serialize_src_h(self):
+		morphcount = 0
+		for i, t in enumerate(self.src):
+			
+			# Get the tgt tokens that align with this token...
+			tgt_indices = self.src_to_tgt(i+1)
+			
+			for morph in t.morphs():
+				morphcount += 1
+				
+				# Align each morph to each target pair...
+				for tgt_index in tgt_indices:
+					yield '%s:%s:%s' % (morphcount, i+1, tgt_index)
+					# Yield the morph_index:parent_index:tgt_index
+					
+				
+			
 		
 		
 class AlignedCorpus(list):
@@ -358,13 +389,9 @@ class Alignment(set):
 		nz = [elt for elt in self if elt[0] > 0 and elt[-1] > 0]		
 		return self.__class__(nz)
 	
-	@property
-	def src(self):
-		return self[0]
+	def serialize_src(self):
+		return ' '.join([':'.join([str(b) for b in a]) for a in self])
 	
-	@property
-	def tgt(self):
-		return self[-1]
 
 	
 #===============================================================================
@@ -416,3 +443,29 @@ class MorphAlign(Alignment):
 # Unit tests
 #===============================================================================
 
+class AlignedSentOutputCase(unittest.TestCase):
+	def runTest(self):
+		s1 = tokenize_string('This is a test sentence')
+		s2 = tokenize_string('test sentence this is')
+		a = Alignment([(1,3),(2,4),(4,1),(5,2)])
+		
+		a_sent = AlignedSent(s1, s2, a)
+		
+		print(a_sent.serialize_src())
+
+class AlignmentTest(unittest.TestCase):
+	def runTest(self):
+		a1 = Alignment([(1,3),(2,4),(4,1),(5,2)])
+		a2 = Alignment([(5,2),(4,1),(2,4),(1,3)])
+		a3 = Alignment([(4,2),(3,1),(2,4),(1,3),(5,1)])
+		
+		self.assertEqual(a1,a2)
+		self.assertTrue(a1.contains_src(1))
+		self.assertNotEqual(a1, a3)
+		self.assertNotEqual(a2,a3)
+		self.assertTrue(a1.contains_src(5))
+		self.assertTrue(a1.contains_tgt(3))
+		self.assertFalse(a1.contains_tgt(5))
+		self.assertFalse(a1.contains_src(3))
+		
+		print(a3.serialize())

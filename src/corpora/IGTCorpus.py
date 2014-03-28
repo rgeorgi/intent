@@ -8,9 +8,10 @@ import re
 import sys
 
 import unittest
-from utils.Token import Token, TokenException
+from utils.Token import Token, TokenException, Morph, tokenize_string,\
+	morpheme_tokenizer
 from utils.string_utils import string_compare_with_processing
-from utils.token_utils import tokenize_string, morpheme_tokenizer
+
 
 
 class IGTCorpus(list):
@@ -304,6 +305,7 @@ class IGTToken(Token):
 		self.parent = parent
 		Token.__init__(self, seq, span, index)
 		
+		
 	@classmethod
 	def fromTokn(cls, token, parent=None):
 		return cls(seq=token.seq, parent=parent, span=token.span, index=token.index)
@@ -337,12 +339,6 @@ class IGTToken(Token):
 	
 	def lower(self):
 		return self.seq.lower()
-	
-	def __eq__(self, o):
-		if isinstance(o, IGTToken):
-			return self.seq == o.seq
-		else:
-			return self.seq == o
 		
 	def text(self, **kwargs):
 		text = self.seq
@@ -363,29 +359,7 @@ class IGTToken(Token):
 	
 	
 		
-class Morph(Token):
-	'''
-	This class is what makes up an IGTToken. Should be comparable to a token
-	'''
-	def __init__(self, seq='', span=None, parent=None):
-		self.parent = parent
-		index = parent.index if parent else None
-		Token.__init__(self, seq, span, index)
-		
-		
-		
-	def __eq__(self, o):
-		if isinstance(o, Morph):			
-			return self.seq == o.seq
-		else:
-			raise IGTException('Attempt to compare Morph to something other than Morph')
-		
-	@classmethod
-	def fromToken(cls, token, parent):
-		return cls(token.seq, token.span, parent)
-		
-	def __str__(self):
-		return '<Morph: %s>' % self.seq
+
 		
 	
 		
@@ -394,13 +368,14 @@ class Morph(Token):
 #===============================================================================
 		
 class MorphTestCase(unittest.TestCase):
-	def setUp(self):
-		self.m1 = Morph('the')
-		self.m2 = Morph('dog')
-		self.m3 = Morph('the')
+
 	def runTest(self):
-		assert self.m1 != self.m2
-		assert self.m1 == self.m3
+		m1 = Morph('the')
+		m2 = Morph('dog')
+		m3 = Morph('the')
+		
+		self.assertTrue(m1.morphequals(m3))
+		self.assertFalse(m2.morphequals(m1))
 		
 class IGTTokenTestCase(unittest.TestCase):
 	def runTest(self):
