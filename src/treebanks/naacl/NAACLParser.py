@@ -62,9 +62,9 @@ class NAACLInstanceText(str):
 			
 		return i
 				
-	def glossalign(self):
+	def glossalign(self, debug=False):
 		q5 = re.search('Q5:.*?\n([\S\s]+?)#+ Q5:', self).group(1)
-		return get_align_indices(q5)
+		return get_align_indices(q5, debug=debug)
 		
 	
 	def langalign(self):
@@ -74,20 +74,46 @@ class NAACLInstanceText(str):
 	def igttext(self):
 		return re.search('(Igt_id[\s\S]+?)#+ Q1', self).group(1)
 
+	def transtags(self):
+		q2 = re.search('Q2:.*?\n([\S\s]+)#+ Q2', self).group(1)
+		print(q2)
+		sys.exit()
+	
 #===============================================================================
 #  Helper functions
 #===============================================================================
 
-def get_align_indices(question):
+def get_align_indices(question, debug=False):
 	aligns = []
-	for gloss_indices, trans_indices in re.findall('(\S+) (\S+) #', question):
+	
+	leading_space = False
+	
+	for gloss_indices, trans_indices, words in re.findall('(\S+) (\S+) #(.*)', question):
 		# Skip morphemes (for now)
 		if '.' in gloss_indices:
-			continue
+			continue				
 		
 		# Otherwise, deal with multiple alignments.
 		for trans_i in trans_indices.split(','):
-			aligns.append((int(gloss_indices), int(trans_i)))
+			
+			gloss_i = int(gloss_indices)
+			trans_i = int(trans_i)
+			
+			# Although if for some stupid reason, if there is a leading space
+			# in the sentence, it counts it. So let's mark that, not
+			# count the leading space, and subtract 1 from the other indices.
+			
+			if not len(words.strip().split()) > 1:
+				leading_space = True
+				continue
+				
+			if leading_space:
+				gloss_i -=1
+				trans_i -=1
+			
+			if gloss_i >= 0 and trans_i >=0:			
+				aligns.append((gloss_i, trans_i))
+			
 	return aligns
 
 #===============================================================================
@@ -150,18 +176,23 @@ class NAACLParser(TextParser):
 			i.set_attr('file', root)
 			i.set_attr('id', i._id)
 			i.set_attr('lang', lang)	
-			
-			ga_indices = instance.glossalign()
+						
+			ga_indices = instance.glossalign(debug=i._id)
 			la_indices = instance.langalign()				
 			
+
 			for g_i, t_i in ga_indices:
 				i.glossalign.add((g_i, t_i))
+				
+	
 				
 			for l_i, g_i in la_indices:
 				i.langalign.add((l_i, t_i)) 
 					
 			# TODO: Zero-indexed makes me uncomfortable...
 			corpus.append(i)
+			
+# 			instance.transtags()
 				
 	
 	def write_files(self, gloss_f, trans_f, aln_f, ha_g_f, ha_t_f, morphs=False):
@@ -190,7 +221,7 @@ class NAACLParser(TextParser):
 				
 				tgt_indices = [str(aln[1]) for aln in aln.pairs(src=gloss_index)]
 				aln_f.write('%s:%s:%s ' % (g+1,gloss_index, ','.join(tgt_indices)))
-				
+			
 			
 			gloss_f.write(' '.join([g.seq.lower() for g in src_tokens]) +'\n')
 			trans_f.write(' '.join([t.seq.lower() for t in trans_tier]) + '\n')
@@ -244,7 +275,7 @@ if __name__ == '__main__':
 		np = NAACLParser()
 		np.parse_files(naacl_files)
 	else:
-	 	np = pickle.load(open('np.pkl', 'rb'))
+		np = pickle.load(open('np.pkl', 'rb'))
 		
 	ha_alns = np.heuristic_alignments
 	alns = np.alignments

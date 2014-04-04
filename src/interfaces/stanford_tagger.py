@@ -11,19 +11,51 @@ from utils.systematizing import notify
 from utils.ConfigFile import ConfigFile
 from eval.pos_eval import pos_eval
 import time
-from nltk.tag.stanford import POSTagger
+import subprocess as sub
+from utils.Token import tag_tokenizer, tokenize_string
 
+#===============================================================================
+# Set up the stanford tagger to run via stdin.
+#===============================================================================
 
 def jar():
-	global stanford_jar, model
+	global stanford_jar
 	mydir = os.path.abspath(os.path.dirname(__file__))
 	c = ConfigFile(os.path.join(mydir, 'stanford_tagger.prop'))
 	
 	javahome = c['javahome']
 	os.environ['JAVAHOME'] = javahome	
 	stanford_jar = c['jar']
-	model = c['eng_model']
 	
+
+class StanfordPOSTagger(object):
+	def __init__(self, model):	
+		jar()
+		self.st = sub.Popen(['java', 
+							'-cp', stanford_jar,
+							'edu.stanford.nlp.tagger.maxent.MaxentTagger',
+							'-model', model, 
+							'-tokenize', 'false'],
+						
+				stdout=sub.PIPE, stdin=sub.PIPE, stderr=sys.stderr)
+
+	def tag(self, string):
+		self.st.stdin.write(bytes(string+'\r\n', encoding='utf-8'))
+		self.st.stdin.flush()
+		content = self.st.stdout.readline()
+		
+		# Advance past the newline
+		self.st.stdout.readline()
+		
+		content = content.decode(encoding='utf-8')
+		return tokenize_string(content.strip(), tokenizer=tag_tokenizer)
+	
+	def close(self):
+		self.st.kill()
+	
+#===============================================================================
+# Functions to call for testing and training.
+#===============================================================================
 
 def train(train_file, model_path, delimeter = '/'):
 	global stanford_jar

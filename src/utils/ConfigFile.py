@@ -13,7 +13,9 @@ Also automatically attempts to parses lines into python types (lists, integers).
 '''
 import re
 import sys
-from _abcoll import MutableMapping
+from _abcoll import Mapping, MutableMapping
+
+
 
 
 class ConfigFileException(Exception):
@@ -61,7 +63,8 @@ class ConfigFile(MutableMapping):
 					
 			# Try to parse the right-hand side into the appropriate element.
 			try:
-				string = eval(string)
+# 				string = eval(string)
+				pass
 			except:
 				pass
 			try:

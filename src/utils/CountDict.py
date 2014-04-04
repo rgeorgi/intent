@@ -12,18 +12,16 @@ class CountDict(defaultdict):
 		defaultdict.__init__(self, int)
 		
 	def add(self, key, value=1):
-		if key not in self.dict:
-			self.dict[key] = value
-		else:
-			self.dict[key] += value
+		self[key] += value
 
 	def keys(self):
 		return dict.keys(self)
 	
 	def __str__(self):
-		return str(self.dict)
+		return defaultdict.__str__(self)
+	
 	def __repr__(self):
-		return str(self)
+		return defaultdict.__repr__(self)
 	
 	def total(self):
 		values = self.dict.values()

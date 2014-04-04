@@ -46,6 +46,7 @@ class IGTInstance(list):
 		self.attrs = {}
 		
 	def gloss_alignments(self):
+		print(self.id)
 		a = AlignedSent(self.gloss, self.trans, self.glossalign)
 		a.attrs = self.attrs
 		return a

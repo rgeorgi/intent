@@ -126,8 +126,8 @@ def morpheme_tokenizer(st):
 	for match in re.finditer('[^\s\-\.:/\(\)]+', st):
 		yield Token(match.group(0), span=Span((match.start(), match.end())))
 
-def tag_tokenizer(st):
-	for match in re.finditer('(\S+)/(\S+)', st, re.UNICODE):
+def tag_tokenizer(st, delimeter='/'):
+	for match in re.finditer('(\S+){}(\S+)'.format(delimeter), st, re.UNICODE):
 		yield POSToken(match.group(1), label=match.group(2), span=Span((match.start(), match.end())))
 
 def tokenize_string(st, tokenizer=whitespace_tokenizer):

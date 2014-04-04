@@ -10,6 +10,8 @@ import re
 # Sub-tasks of cleaning
 #===============================================================================
 
+punc_re = '[.?!,\xc2]'
+
 def grammaticality(string):
 	# Now, remove leading grammaticality markers
 	return re.sub('^[\*\?]+', '', string).strip()
@@ -23,9 +25,13 @@ def split_punctuation(ret_str):
 	return re.sub(r'(\w+)([.?!,])+', r'\1 \2', ret_str).strip()
 
 def remove_external_punctuation(ret_str):
-	ret_str = re.sub(r'(\w+)([.?!,¿])+\s', r'\1 ', ret_str).strip()
-	ret_str = re.sub(r'(?:^|\s)([.?!,¿]+)(\w+)', r'\2', ret_str).strip()
-	return re.sub(r'(\w+)([.?!,¿])+$', r'\1 ', ret_str).strip()
+	ret_str = re.sub(r'(\w+)({})+\s'.format(punc_re), r'\1 ', ret_str).strip()
+	ret_str = re.sub(r'(?:^|\s)({}+)(\w+)'.format(punc_re), r'\2', ret_str).strip()
+	return re.sub(r'(\w+)([{}])+$'.format(punc_re), r'\1 ', ret_str).strip()
+
+def remove_solo_punctuation(ret_str):
+	ret_str = re.sub('\s*{}+\s*'.format(punc_re), '', ret_str)
+	return ret_str
 
 
 def rejoin_letter(ret_str, letter='t', direction='right'):
@@ -75,6 +81,9 @@ def clean_trans_string(string):
 	
 	# Remove word-final punctuation:
 	ret_str = remove_external_punctuation(ret_str)
+	
+	# Remove solo punctuation
+	ret_str = remove_solo_punctuation(ret_str)
 	
 	# Remove surrounding quotes and parentheticals
 	ret_str = surrounding_quotes_and_parens(ret_str)

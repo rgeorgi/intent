@@ -16,6 +16,8 @@ from interfaces import stanford_tagger
 from nltk.tag.util import str2tuple
 from utils.Token import morpheme_tokenizer, tokenize_string
 from alignment.Alignment import AlignedSent
+from interfaces.stanford_tagger import StanfordPOSTagger
+import sys
 
 #===============================================================================
 # XIGT Processing
@@ -29,7 +31,10 @@ def process_xigt(**kwargs):
 	
 	proj_path = kwargs.get('proj_file')
 	
-	os.makedirs(outdir, exist_ok=True)
+	try:
+		os.makedirs(outdir)
+	except OSError:
+		pass
 	
 	if proj_path:
 		proj_file = open(os.path.join(outdir, proj_path), 'w')
@@ -50,7 +55,10 @@ def process_xigt(**kwargs):
 	# Open up the files
 	#===========================================================================
 	
-	os.makedirs(outdir, exist_ok=True)
+	try:
+		os.makedirs(outdir)
+	except OSError:
+		pass
 	
 	gloss_path = '%sgloss.txt'%prefix
 	trans_path = '%strans.txt'%prefix
@@ -61,6 +69,10 @@ def process_xigt(**kwargs):
 	ha_gloss = '%sha_gloss.txt'%prefix
 	ha_trans = '%sha_trans.txt'%prefix
 	
+	grams_path = '%s_grams.vector'%prefix
+	
+	unaligned_path = '%sunaligned.txt' % prefix
+	
 	ha_gloss_f = open(os.path.join(outdir, ha_gloss), 'w')
 	ha_trans_f = open(os.path.join(outdir, ha_trans), 'w')
 	
@@ -69,6 +81,22 @@ def process_xigt(**kwargs):
 	
 	raw_gloss_f = open(os.path.join(outdir, rawgloss_path), 'w')
 	raw_trans_f = open(os.path.join(outdir, rawtrans_path), 'w')
+	
+	grams_f = open(os.path.join(outdir, grams_path), 'w')
+	
+	unaligned_f = open(os.path.join(outdir, unaligned_path), 'w')
+	
+	#===========================================================================
+	# Keep track of how many sentences were skipped vs. processed
+	#===========================================================================
+	
+	skipped_instances = 0
+	aligned_instances = 0
+	
+	unaligned_tokens = 0
+	aligned_tokens = 0
+	
+	pt = StanfordPOSTagger(model=pos_model)
 	
 	for i in corpus:
 		
@@ -110,32 +138,82 @@ def process_xigt(**kwargs):
 		
 		newinst.extend([newlang, newgloss, newtrans])
 		
+		unaligned_gloss = []
+		unaligned_trans = []
+		
+		
 		try:
 			lha = newinst.lang_heuristic_alignment()
-			trans_tags = stanford_tagger.tag([s.seq for s in newinst.trans], pos_model)
-			tags = ([str2tuple(t[1])[1] for t in trans_tags])
+			gha = newinst.gloss_heuristic_alignment()
+			
+			trans_tags = pt.tag(newtrans.text())
+			
+			tags = [t.label for t in trans_tags]
 			
 			tagged_lang = AlignedSent(newlang, tags, lha.aln)
+			tagged_gloss = AlignedSent(newgloss, tags, gha.aln)
 			
 			langtagged = []
+			
+			#===================================================================
+			# Dump out the tagged glosses
+			#===================================================================
+			for i, g_word in enumerate(tagged_gloss.src):
+				tags = tagged_gloss.src_to_tgt_words(i+1)
+				for tag in tags:
+					grams_f.write('%s ' % tag)
+					for morph in tokenize_string(g_word.seq, morpheme_tokenizer):
+						grams_f.write('%s:1 ' % (morph.seq))
+					grams_f.write('\n')
+					
+			
+			#===================================================================
+			# Identify the unknown words
+			#===================================================================
 			
 			for i, word in enumerate(tagged_lang.src):
 				tags = tagged_lang.src_to_tgt_words(i+1)
 				if not tags:
 					tag = 'UNK'
+					unaligned_tokens += 1					
 				else:
+					aligned_tokens += 1
 					tag = tags[0]
 					
 				langtagged.append('%s/%s' % (word.seq, tag))
 				
+			#===================================================================
+			# Count the unaligned gloss stuff
+			#===================================================================
+			unaligned_gloss = list(gha.unaligned_src_words())
+			unaligned_trans = list(gha.unaligned_tgt_words())
+				
 			proj_file.write(' '.join(langtagged)+'\n')
 			proj_file.flush()
-				
+			
+			aligned_instances += 1
 			
 		except IGTAlignmentException as e:
 			print(e)
+			skipped_instances += 1
 		except UnicodeEncodeError as e:
 			print(e)
+			skipped_instances += 1
+		
+		#=======================================================================
+		# Dump out the unaligned stuff
+		#=======================================================================
+		
+		
+		
+		if unaligned_gloss:
+			unaligned_f.write('*'*30+'\n')
+			unaligned_f.write(rawlang+'\n'+rawgloss+'\n'+rawtrans+'\n\n')
+			unaligned_f.write(lang+'\n'+gloss+'\n'+trans+'\n\n')
+			unaligned_f.write('-'*10+'\n')
+			unaligned_f.write(' '.join(['%s-%s' %(t.seq, t.index) for t in unaligned_gloss])+'\n')
+			unaligned_f.write(' '.join(['%s-%s' %(t.seq, t.index) for t in unaligned_trans])+'\n\n')
+			unaligned_f.flush()
 		
 		#=======================================================================
 		# Get the gloss/translation alignment
@@ -148,6 +226,11 @@ def process_xigt(**kwargs):
 			ha_trans_f.write(target_token.seq+'\n')
 			
 		
+	sys.stderr.write('%d instances aligned\n'%aligned_instances)
+	sys.stderr.write('%d instances skipped\n'%skipped_instances)
+	sys.stderr.write('%d tokens unaligned\n'%unaligned_tokens)
+	sys.stderr.write('%d tokens aligned\n'%aligned_tokens)
+	
 #===============================================================================
 # MAIN FUNC
 #===============================================================================

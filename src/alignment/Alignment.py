@@ -10,8 +10,16 @@ import re
 import unittest
 from utils.Token import tokenize_string
 
+#===============================================================================
+# Aligned Sent Class
+#===============================================================================
 
 class AlignedSent():
+	'''
+	AlignedSent
+	
+	Contains source and target tokens, and an alignment between the two.
+	'''
 	def __init__(self, src_tokens, tgt_tokens, aln):
 		self.src_tokens = src_tokens
 		self.tgt_tokens = tgt_tokens
@@ -33,6 +41,24 @@ class AlignedSent():
 		for src_i, tgt_i in self.aln:
 			words.add((self.src_tokens[src_i-1], self.tgt_tokens[tgt_i-1]))
 		return words
+			
+	def unaligned_src_indices(self):
+		for i, t in enumerate(self.src):
+			if not self.pairs(src=i+1):
+				yield i
+				
+	def unaligned_tgt_indices(self):
+		for i, t in enumerate(self.tgt):
+			if not self.pairs(tgt=i+1):
+				yield i
+				
+	def unaligned_src_words(self):
+		for i in self.unaligned_src_indices():
+			yield self.src[i]
+			
+	def unaligned_tgt_words(self):
+		for i in self.unaligned_tgt_indices():
+			yield self.tgt[i]
 			
 	def flipped(self):
 		return AlignedSent(self.tgt_tokens, self.src_tokens, self.aln.flip())
