@@ -6,7 +6,7 @@ Created on Mar 6, 2014
 import os
 import codecs
 import chardet
-from utils.Token import Token
+from utils.Token import Token, POSToken
 
 
 class POSCorpus(list):

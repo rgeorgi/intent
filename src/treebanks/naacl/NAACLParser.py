@@ -15,6 +15,11 @@ from utils.encodingutils import getencoding
 import codecs
 from corpora.IGTCorpus import IGTCorpus, IGTInstance, IGTTier, IGTToken
 import pickle
+import nltk
+from pos.TagMap import TagMap
+from utils.Token import morpheme_tokenizer, tokenize_string
+from interfaces.mallet_maxent import MalletMaxent
+from alignment.Alignment import AlignedSent
 
 class NAACLInstanceText(str):
 	def __init__(self, seq=''):
@@ -74,10 +79,20 @@ class NAACLInstanceText(str):
 	def igttext(self):
 		return re.search('(Igt_id[\s\S]+?)#+ Q1', self).group(1)
 
-	def transtags(self):
+	def transtags(self, tagmap=None):
 		q2 = re.search('Q2:.*?\n([\S\s]+)#+ Q2', self).group(1)
-		print(q2)
-		sys.exit()
+		treestring = q2.split('\n')[0]
+		
+		t = nltk.tree.Tree.parse(treestring)
+		pos = t.pos()
+		
+		
+		if tagmap:
+			pos = [(w, tagmap.get(p)) for w, p in pos]
+		
+		return pos
+
+				
 	
 #===============================================================================
 #  Helper functions
@@ -147,11 +162,11 @@ class NAACLParser(TextParser):
 			return self.heuristic_alignments
 		
 
-	def parse_files(self, filelist):				
+	def parse_files(self, filelist, **kwargs):				
 		for root in filelist:
-			self.parse_file(root)
+			self.parse_file(root, **kwargs)
 			
-	def parse_file(self, root):
+	def parse_file(self, root, **kwargs):
 		
 		corpus = self.corpus
 		
@@ -161,6 +176,7 @@ class NAACLParser(TextParser):
 		data = f.read()
 		f.close()
 	
+		#c = MalletMaxent('/Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/all/xigt_grams.maxent')
 		
 		#===================================================================
 		# Search for the gloss alignment and parse it.
@@ -192,7 +208,45 @@ class NAACLParser(TextParser):
 			# TODO: Zero-indexed makes me uncomfortable...
 			corpus.append(i)
 			
-# 			instance.transtags()
+			dump_feats = kwargs.get('dump_feats', None)
+			if dump_feats is not None:
+			
+				tm = TagMap('/Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/prototypes/universal_mapping_eng.txt')
+				tags = instance.transtags(tagmap=tm)
+				#TODO: This is hardcoded...
+				dump_feats[i.id] = tags
+				
+			tag_f = kwargs.get('tag_f', None)
+			if tag_f is not None:
+				tags = tag_f.get(i.id)
+				if tags:					
+					glosstags = AlignedSent(i.gloss, tags, i.glossalign)
+					for token, tagpair in glosstags.wordpairs():
+						word, tag = tagpair
+						morphs = tokenize_string(token.seq, morpheme_tokenizer)
+						feat_f = kwargs.get('feat_f')						
+						if len(morphs) > 1:
+							feat_f.write('%s ' % tag)
+							for morph in morphs:
+								morph_s = morph.seq.lower()
+								feat_f.write('%s:1 ' % morph_s)
+							feat_f.write('\n')
+				
+					
+# 				dump_feats.write(' '.join(['%s/%s'%(t, w) for t, w in tags])+'\n')
+# 				glosstags = AlignedSent(i.gloss, [t for w, t in tags], i.glossalign)
+# 				print(glosstags.wordpairs())
+# 				
+# 				for word, tag in tags:
+# 					
+# 					morphs = tokenize_string(word, morpheme_tokenizer)
+# 					if morphs:
+# 						print('%s '%tag,end='')
+# 						for morph in morphs:
+# 							morph_s = morph.seq.lower()
+# 							print('%s:1' % morph_s, end=' ')
+# 						print()
+					
 				
 	
 	def write_files(self, gloss_f, trans_f, aln_f, ha_g_f, ha_t_f, morphs=False):
@@ -271,9 +325,20 @@ if __name__ == '__main__':
 	#=======================================================================
 	pkl = False
 	
+	dump_path = os.path.join(outdir, 'tagged_words.pkl')
+	feat_path = os.path.join(outdir, 'feats_morphs.txt')
+	#dump_f = {}
+	
+	feat_f = open(feat_path, 'w')
+	
+	#mc = MalletMaxent()
+	
+	tag_f = pickle.load(open(dump_path, 'rb'))
+				
 	if not pkl:
 		np = NAACLParser()
-		np.parse_files(naacl_files)
+		np.parse_files(naacl_files, tag_f=tag_f, feat_f=feat_f)
+		#pickle.dump(dump_f, open(dump_path, 'wb'))
 	else:
 		np = pickle.load(open('np.pkl', 'rb'))
 		

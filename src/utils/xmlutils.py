@@ -33,3 +33,24 @@ def createTextNode(content):
 
 def get_child_tags(element, tag):
 	return [node for node in element.childNodes if node.localName == tag]
+
+def getIntAttr(element, tag):
+	attr = element.getAttribute(tag)
+	if attr:
+		return int(attr)
+	else:
+		return None
+
+def get_ref(element, tag):
+	return element.getAttribute(tag)[13:-1]
+
+def find_tag(element, tag, max_depth = 0, depth = 0):
+	if not element.hasChildNodes() or max_depth and depth > max_depth:
+		return []
+	else:
+		nodes = []
+		for childnode in element.childNodes:
+			if re.search(tag, str(childnode.localName)):
+				nodes.append(childnode)
+			nodes += find_tag(childnode, tag, max_depth=max_depth, depth=depth+1)
+		return nodes

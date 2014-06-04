@@ -123,7 +123,7 @@ def whitespace_tokenizer(st):
 		yield Token(match.group(0), Span((match.start(), match.end())))
 
 def morpheme_tokenizer(st):
-	for match in re.finditer('[^\s\-\.:/\(\)]+', st):
+	for match in re.finditer('[^\s\-\.:/\(\)=]+', st):
 		yield Token(match.group(0), span=Span((match.start(), match.end())))
 
 def tag_tokenizer(st, delimeter='/'):
