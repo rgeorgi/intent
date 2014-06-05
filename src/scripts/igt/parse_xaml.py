@@ -34,7 +34,6 @@ if __name__ == '__main__':
 	kwargs = vars(args)
 	
 	kwargs['tag_out'] = open(tagger_output, 'w')
-	kwargs['ltag_out'] = open(ltagger_output, 'w')
 	kwargs['class_out'] = open(classifier_output, 'w')
 	
 	#===========================================================================

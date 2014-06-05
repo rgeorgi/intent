@@ -62,6 +62,10 @@ class XamlParser(object):
 		# Original filename
 		prefix = os.path.splitext(fp)[0]
 		
+		outdir = kwargs.get('outdir')
+		ltagger_output = os.path.join(outdir, os.path.basename(prefix)+'_tagger.txt')
+		kwargs['ltag_out'] = open(ltagger_output, 'w')
+		
 				
 		#=======================================================================
 		#  FILTERING AND WRITING
@@ -86,6 +90,9 @@ def write_gram(gram, pos, **kwargs):
 	type = kwargs.get('type')
 	output = kwargs.get('output', sys.stdout)
 	
+	# Previous tag info
+	prev_gram = kwargs.get('prev_gram')
+	prev_2_gram = kwargs.get('prev_2_gram')
 	
 	if kwargs.get('lowercase'):
 		gram = gram.lower()
@@ -97,7 +104,24 @@ def write_gram(gram, pos, **kwargs):
 	if type == 'classifier':
 		output.write(pos)
 		
-		for token in tokenize_string(gram, morpheme_tokenizer):
+		# Get the morphemes
+		morphs = tokenize_string(gram, morpheme_tokenizer)
+		
+		#=======================================================================
+		# Add previous gram features
+		#=======================================================================
+		if prev_gram:
+			for token in tokenize_string(prev_gram, morpheme_tokenizer):
+				output.write('\tprev-gram-%s:1' % token.seq.lower())
+				
+		if prev_2_gram:
+			for token in tokenize_string(prev_2_gram, morpheme_tokenizer):
+				output.write('\tprev-2-gram-%s:1' % token.seq.lower())
+		
+		# Add a feature that is the number of morphemes.		
+# 		output.write('\t%d-morphs:1' % len(morphs))
+		
+		for token in morphs:
 			output.write('\t%s:1' % token.seq)
 
 		output.write('\n')
@@ -166,20 +190,19 @@ class GramOutputFilter(XamlRefActionFilter):
 		self.tagger_grams_written = False
 		self.ltagger_line = False
 		
+		self.gloss_queue = []
+		self.lang_queue = []
+		
 	
 	def posHandler(self, postext, pos, typeref, **kwargs):
 		# Write out glosses			
 		if typeref == 'G':
 			if postext and postext.strip():
-				write_gram(postext, pos, type='classifier', output=self.kwargs.get('class_out'), **self.kwargs)
-				write_gram(postext, pos, type='tagger', output=self.kwargs.get('tag_out'), **self.kwargs)
-				
-				# And set the state that tagger grams were written
-				self.tagger_grams_written = True
+				self.gloss_queue.append((postext, pos))				
 				
 		elif typeref == 'L':
-			write_gram(postext, pos, type='tagger', output=self.kwargs.get('ltag_out'), **self.kwargs)
-			self.ltagger_line = True
+			if postext and postext.strip():
+				self.lang_queue.append((postext, pos))			
 			
 			
 					
@@ -189,18 +212,35 @@ class GramOutputFilter(XamlRefActionFilter):
 		# If we are leaving an instance, clear the backrefs.
 		if name == 'Igt':
 			self.textref = {}
-			if self.tagger_grams_written:
-				self.tagger_grams_written = False
-				self.kwargs.get('tag_out').write('\n')
-				self.kwargs.get('tag_out').flush()
-				
-			if self.ltagger_line:
-				self.kwargs.get('ltag_out').write('\n')
-				self.kwargs.get('ltag_out').flush()
-				self.ltagger_line = False
 			
+			#===================================================================
+			# Write out the gloss tags
+			#===================================================================
+			if self.gloss_queue:
+				
+				# Write out the gloss line
+				for pos, postext in self.gloss_queue:
+					write_gram(pos, postext, output=self.kwargs.get('class_out'), type='classifier', **self.kwargs)
+					write_gram(pos, postext, output=self.kwargs.get('tag_out'), type='tagger', **self.kwargs)
+				
+				self.kwargs.get('tag_out').write('\n')
+				
+			#===================================================================
+			# Write out the lang line tags
+			#===================================================================
+			if self.lang_queue:
+				for pos, postext in self.lang_queue:
+					write_gram(pos, postext, output=self.kwargs.get('ltag_out'), type='tagger', **self.kwargs)
+				self.kwargs.get('ltag_out').write('\n')
+				
+			self.gloss_queue = []
+			self.lang_queue = []
+					
 		XMLFilterBase.endElement(self, name)
 		
+#===============================================================================
+# Do some cleaning of the XML elements.
+#===============================================================================
 class XMLCleaner(XMLFilterBase):
 	def __init__(self, upstream):
 		XMLFilterBase.__init__(self, upstream)
@@ -212,11 +252,19 @@ class XMLCleaner(XMLFilterBase):
 
 		XMLFilterBase.startElement(self, name, newAttrs)
 		
+		
+#===============================================================================
+# Write the XML out to a file.
+#===============================================================================
 class XMLWriter(XMLFilterBase):
 	def __init__(self, upstream, fp):
 		XMLFilterBase.__init__(self, upstream)
 		self._cont_handler = XMLGenerator(open(fp, 'w'), encoding='utf-8')
 		
+		
+#===============================================================================
+# The filter that selects which instances are useful.
+#===============================================================================
 class LGTFilter(XMLFilterBase):
 	'''
 	Class that filters out IGT instances based on certain
