@@ -62,17 +62,47 @@ class XamlParser(object):
 		# Original filename
 		prefix = os.path.splitext(fp)[0]
 		
-		downstream_handler = XMLGenerator(open(prefix+'-filtered.xml', 'w'))
-		filter_handler = LGTFilter(parser, downstream_handler)
-		filter_handler.parse(fp)
+		
+		
+		# Next, create a filter handler that runs the L, G, T filter on the
+		# input, and hands it to the 
+		
+		filter_handler = LGTFilter(parser)
+		output_handler = GramOutputFilter(parser)
+		
+		writer_handler = XMLWriter(filter_handler, prefix+'-filtered.xml')
+		
+		writer_handler.parse(fp)
+# 		output_handler.parse(fp)
 
-
+class GramOutputFilter(XMLFilterBase):
+	def __init__(self, upstream, output=sys.stdout):
+		XMLFilterBase.__init__(self, upstream)
+		self._output = output
+		
+	def startElement(self, name, attrs):
+		self._cont_handler.startElement(name, attrs)
+	
+	def endElement(self, name):
+		self._cont_handler.endElement(name)
+		
+class XMLWriter(XMLFilterBase):
+	def __init__(self, upstream, fp):
+		XMLFilterBase.__init__(self, upstream)
+		self._cont_handler = XMLGenerator(open(fp, 'w'))
 		
 class LGTFilter(XMLFilterBase):
+	'''
+	Class that filters out IGT instances based on certain
+	qualifications:
 	
-	def __init__(self, upstream, downstream):
+	1)  If they do not contain corruption
+	2)  If they contain L, G, and T lines
+	3)  No more than 3 instances per DocID.
+	'''
+	
+	def __init__(self, upstream):
 		XMLFilterBase.__init__(self, upstream)
-		self._downstream = downstream
 		
 		# Queue Variables 
 		self.queue = []
@@ -103,7 +133,7 @@ class LGTFilter(XMLFilterBase):
 			if tt != 'odin-txt':
 				self.tiers.add(tt[0])
 			
-		self.queue.append(lambda: self._downstream.startElement(name, attrs))
+		self.queue.append(lambda: self._cont_handler.startElement(name, attrs))
 		
 		#=======================================================================
 		# Set the "in_igt" flag if we are inside an igt instance.
@@ -120,7 +150,7 @@ class LGTFilter(XMLFilterBase):
 		
 		
 	def characters(self, content):
-		self.queue.append(lambda: self._downstream.characters(content))
+		self.queue.append(lambda: self._cont_handler.characters(content))
 		
 	def endElement(self, name):		
 		
@@ -154,7 +184,7 @@ class LGTFilter(XMLFilterBase):
 			if not self.skip:
 				for f in self.queue:
 					f()
-				self._downstream.endElement(name)
+				self._cont_handler.endElement(name)
 
 			#===================================================================
 			# Now, reset the filter.
@@ -169,13 +199,13 @@ class LGTFilter(XMLFilterBase):
 		# queue the event.
 		#=======================================================================
 		elif self.in_igt:
-			self.queue.append(lambda: self._downstream.endElement(name))
+			self.queue.append(lambda: self._cont_handler.endElement(name))
 			
 		#=======================================================================
 		# Process as normal if we are not inside an IGT element.
 		#=======================================================================
 		elif not self.in_igt:
-			self._downstream.endElement(name)
+			self._cont_handler.endElement(name)
 			
 		
 			
