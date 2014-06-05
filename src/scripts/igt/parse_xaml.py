@@ -9,6 +9,7 @@ from argparse import ArgumentParser
 from glob import glob
 import os
 import sys
+import xml.sax
 
 if __name__ == '__main__':
 	p = ArgumentParser()
