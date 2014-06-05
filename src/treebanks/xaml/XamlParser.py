@@ -7,7 +7,8 @@ Created on Apr 30, 2014
 from xml.dom import minidom
 from utils.xmlutils import get_child_tags, find_tag, getIntAttr, get_ref
 import sys
-from utils.Token import Tokenization, Token, morpheme_tokenizer, tokenize_string
+from utils.Token import Tokenization, Token, morpheme_tokenizer, tokenize_string,\
+	POSToken
 from corpora.IGTCorpus import IGTTier, IGTToken, Span
 from tokenize import tokenize
 import re
@@ -86,19 +87,27 @@ class XamlParser(object):
 		
 		output_handler.parse(fp)
 
-def write_gram(gram, pos, **kwargs):
+def write_gram(token, **kwargs):
 	type = kwargs.get('type')
 	output = kwargs.get('output', sys.stdout)
 	
 	# Previous tag info
 	prev_gram = kwargs.get('prev_gram')
 	next_gram = kwargs.get('next_gram')
-	
-	if kwargs.get('lowercase'):
-		gram = gram.lower()
+
+	#===========================================================================
+	# Break apart the token...
+	#===========================================================================
+	gram = token.seq
+	pos = token.label
+
+	# Lowercase if asked for	
+	lower = kwargs.get('lowercase', True)
+	gram = gram.lower() if gram else gram
 		
-	if kwargs.get('strip', True):
-		gram = re.sub('\s*', '', gram)
+	# Strip if asked for
+	strip = kwargs.get('strip', True)
+	gram = re.sub('\s*', '', gram) if strip else gram
 	
 	# Output the grams for a classifier
 	if type == 'classifier':
@@ -108,19 +117,58 @@ def write_gram(gram, pos, **kwargs):
 		morphs = tokenize_string(gram, morpheme_tokenizer)
 		
 		#=======================================================================
+		# Is there a number
+		#=======================================================================
+		if re.search('[0-9]', gram) and True:
+			output.write('\thas-number:1')
+			
+		#=======================================================================
+		# Suffix
+		#=======================================================================
+		if True:
+			output.write('\tgram-suffix-%s:1' % gram[-3:])
+			
+		#=======================================================================
+		# Prefix
+		#=======================================================================
+		if True:
+			output.write('\tgram-prefix-%s:1' % gram[:3].replace(':','-'))
+			
+		#=======================================================================
+		# Number of morphs
+		#=======================================================================		
+		if True:
+			output.write('\t%d-morphs:1' % len(morphs))
+		
+		#=======================================================================
 		# Add previous gram features
 		#=======================================================================
 		if kwargs.get('context-feats', True):
+			
+			#===================================================================
+			# Previous gram
+			#===================================================================
 			if prev_gram:
+				prev_gram = prev_gram.seq
+				prev_gram = prev_gram.lower() if lower else prev_gram
+				prev_gram = re.sub('\s*', '', prev_gram) if strip else prev_gram
+						
+				# And then tokenize...
 				for token in tokenize_string(prev_gram, morpheme_tokenizer):
-					output.write('\tprev-gram-%s:1' % token.seq.lower())
+					output.write('\tprev-gram-%s:1' % token.seq)
 					
+			#===================================================================
+			# Next gram
+			#===================================================================
 			if next_gram:
+				next_gram = next_gram.seq
+				next_gram = next_gram.lower() if lower else next_gram
+				next_gram = re.sub('\s*', '', next_gram) if strip else next_gram
+				
 				for token in tokenize_string(next_gram, morpheme_tokenizer):
-					output.write('\tnext-gram-%s:1' % token.seq.lower())
+					output.write('\tnext-gram-%s:1' % token.seq)
 		
-		# Add a feature that is the number of morphemes.		
-# 		output.write('\t%d-morphs:1' % len(morphs))
+
 		
 		for token in morphs:
 			output.write('\t%s:1' % token.seq)
@@ -142,6 +190,16 @@ class XamlRefActionFilter(XMLFilterBase):
 		
 		self.kwargs = kwargs
 		
+		#=======================================================================
+		# Segment Tier States
+		#=======================================================================
+		self.partnum = 0
+		
+		# Alignment Counters
+		self.in_alnpart = False
+		self.alnsrc = None
+		self.aln_parts = []
+		
 	def startElement(self, name, attrs):
 		
 		# Cache the  text contents.
@@ -156,29 +214,73 @@ class XamlRefActionFilter(XMLFilterBase):
 			backref = attrs['SourceTier'][13:-1]
 			type = self.typeref[backref][0]
 			text = attrs['Text']
-			self.textref[uid] = text
+			
+			self.partnum += 1
+			
+			s = Span(int(attrs['FromChar']), int(attrs['ToChar']))
+			
+			t = POSToken(text, index=self.partnum, span=s)
+			
+			self.textref[uid] = t
 			self.typeref[uid] = type
 			
 		# POS Tier
 		if name == 'TagPart':
 			pos = attrs['Text']
 			backref = attrs['Source'][13:-1]
-			postext = self.textref.get(backref)
-			typeref = self.typeref.get(backref)
+			postoken = self.textref.get(backref)
 			
-			self.posHandler(postext, pos, typeref, **self.kwargs)
+			if postoken:
+				postoken.label = pos
+				
+				typeref = self.typeref.get(backref)
+				
+				self.posHandler(postoken, typeref, **self.kwargs)
+					
+		if name == 'AlignPart':
+			a_src = attrs['Source'][13:-1]			
+			self.alnsrc = a_src
+		
+		if name == 'x:Reference':
+			self.in_alnpart = True
 					
 		XMLFilterBase.startElement(self, name, attrs)
 		
+	def characters(self, content):
+		if self.in_alnpart:
+			self.aln_parts.append(content)
+		
+		XMLFilterBase.characters(self, content)
 	
 	def endElement(self, name):
 		# If we are leaving an instance, clear the backrefs.
 		if name == 'Igt':
 			self.textref = {}
+			self.partnum = 0
+			
+		if name == 'AlignPart':
+			self.alnHandler(self.alnsrc, self.aln_parts)
+			self.aln_parts = []
+			self.alnsrc = None
+			
+		if name == 'x:Reference':
+			self.in_alnpart = False
 			
 		XMLFilterBase.endElement(self, name)
 		
-	def posHandler(self, postext, pos, typeref, **kwargs):
+	def alnHandler(self, src, tgts):
+		srcRep = self.textref.get(src)
+		if srcRep:
+			print(srcRep.index, end=':')
+			
+		for tgt in tgts:
+			tgtRep = self.textref.get(tgt)
+			if tgtRep:
+				print(tgtRep.index, end=',')
+		print()
+		
+		
+	def posHandler(self, postext, typeref, **kwargs):
 		pass
 
 #===============================================================================
@@ -195,15 +297,17 @@ class GramOutputFilter(XamlRefActionFilter):
 		self.lang_queue = []
 		
 	
-	def posHandler(self, postext, pos, typeref, **kwargs):
-		# Write out glosses			
+	def posHandler(self, postoken, typeref, **kwargs):
+		
+		postext = postoken.seq
+			
 		if typeref == 'G':
 			if postext and postext.strip():
-				self.gloss_queue.append((postext, pos))				
+				self.gloss_queue.append(postoken)				
 				
 		elif typeref == 'L':
 			if postext and postext.strip():
-				self.lang_queue.append((postext, pos))			
+				self.lang_queue.append(postoken)			
 			
 			
 					
@@ -220,19 +324,18 @@ class GramOutputFilter(XamlRefActionFilter):
 			if self.gloss_queue:
 				
 				# Write out the gloss line
-				for i, pospair in enumerate(self.gloss_queue):
-					postext, pos = pospair
+				for i, postoken in enumerate(self.gloss_queue):
 					
 					prev_gram = None
 					if i-1 >= 0:
-						prev_gram = self.gloss_queue[i-1][0]
+						prev_gram = self.gloss_queue[i-1]
 					
 					next_gram = None
 					if i+1 < len(self.gloss_queue):
-						next_gram = self.gloss_queue[i+1][0]
+						next_gram = self.gloss_queue[i+1]
 					
-					write_gram(postext, pos, output=self.kwargs.get('class_out'), prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
-					write_gram(postext, pos, output=self.kwargs.get('tag_out'), type='tagger', **self.kwargs)
+					write_gram(postoken, output=self.kwargs.get('class_out'), prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
+					write_gram(postoken, output=self.kwargs.get('tag_out'), type='tagger', **self.kwargs)
 				
 				self.kwargs.get('tag_out').write('\n')
 				
@@ -240,14 +343,14 @@ class GramOutputFilter(XamlRefActionFilter):
 			# Write out the lang line tags
 			#===================================================================
 			if self.lang_queue:
-				for pos, postext in self.lang_queue:
-					write_gram(pos, postext, output=self.kwargs.get('ltag_out'), type='tagger', **self.kwargs)
+				for postoken in self.lang_queue:
+					write_gram(postoken, output=self.kwargs.get('ltag_out'), type='tagger', **self.kwargs)
 				self.kwargs.get('ltag_out').write('\n')
 				
 			self.gloss_queue = []
 			self.lang_queue = []
 					
-		XMLFilterBase.endElement(self, name)
+		XamlRefActionFilter.endElement(self, name)
 		
 #===============================================================================
 # Do some cleaning of the XML elements.
