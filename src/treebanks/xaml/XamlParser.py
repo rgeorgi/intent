@@ -92,7 +92,7 @@ def write_gram(gram, pos, **kwargs):
 	
 	# Previous tag info
 	prev_gram = kwargs.get('prev_gram')
-	prev_2_gram = kwargs.get('prev_2_gram')
+	next_gram = kwargs.get('next_gram')
 	
 	if kwargs.get('lowercase'):
 		gram = gram.lower()
@@ -110,13 +110,14 @@ def write_gram(gram, pos, **kwargs):
 		#=======================================================================
 		# Add previous gram features
 		#=======================================================================
-		if prev_gram:
-			for token in tokenize_string(prev_gram, morpheme_tokenizer):
-				output.write('\tprev-gram-%s:1' % token.seq.lower())
-				
-		if prev_2_gram:
-			for token in tokenize_string(prev_2_gram, morpheme_tokenizer):
-				output.write('\tprev-2-gram-%s:1' % token.seq.lower())
+		if kwargs.get('context-feats', True):
+			if prev_gram:
+				for token in tokenize_string(prev_gram, morpheme_tokenizer):
+					output.write('\tprev-gram-%s:1' % token.seq.lower())
+					
+			if next_gram:
+				for token in tokenize_string(next_gram, morpheme_tokenizer):
+					output.write('\tnext-gram-%s:1' % token.seq.lower())
 		
 		# Add a feature that is the number of morphemes.		
 # 		output.write('\t%d-morphs:1' % len(morphs))
@@ -219,9 +220,19 @@ class GramOutputFilter(XamlRefActionFilter):
 			if self.gloss_queue:
 				
 				# Write out the gloss line
-				for pos, postext in self.gloss_queue:
-					write_gram(pos, postext, output=self.kwargs.get('class_out'), type='classifier', **self.kwargs)
-					write_gram(pos, postext, output=self.kwargs.get('tag_out'), type='tagger', **self.kwargs)
+				for i, pospair in enumerate(self.gloss_queue):
+					postext, pos = pospair
+					
+					prev_gram = None
+					if i-1 >= 0:
+						prev_gram = self.gloss_queue[i-1][0]
+					
+					next_gram = None
+					if i+1 < len(self.gloss_queue):
+						next_gram = self.gloss_queue[i+1][0]
+					
+					write_gram(postext, pos, output=self.kwargs.get('class_out'), prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
+					write_gram(postext, pos, output=self.kwargs.get('tag_out'), type='tagger', **self.kwargs)
 				
 				self.kwargs.get('tag_out').write('\n')
 				
