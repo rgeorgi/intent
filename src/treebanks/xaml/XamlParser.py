@@ -12,7 +12,7 @@ from corpora.IGTCorpus import IGTTier, IGTToken, Span
 from tokenize import tokenize
 import re
 import xml.sax
-from xml.sax.saxutils import XMLFilterBase, XMLGenerator
+from xml.sax.saxutils import XMLFilterBase, XMLGenerator, unescape
 import os
 
 class XAMLElement(object):
@@ -53,43 +53,169 @@ class XAMLData(object):
 		return str(self.name)
 		
 class XamlParser(object):
-	def __init__(self):
+	def __init__(self, **kwargs):
 		pass
 	
-	def parse(self, fp):
+	def parse(self, fp, **kwargs):
 		parser = xml.sax.make_parser()
 		
 		# Original filename
 		prefix = os.path.splitext(fp)[0]
 		
+				
+		#=======================================================================
+		#  FILTERING AND WRITING
+		#=======================================================================
 		
 		
-		# Next, create a filter handler that runs the L, G, T filter on the
-		# input, and hands it to the 
-		
+		# 1) Filter out the instances for annotation.
 		filter_handler = LGTFilter(parser)
-		output_handler = GramOutputFilter(parser)
 		
-		writer_handler = XMLWriter(filter_handler, prefix+'-filtered.xml')
+		# 2) Output the gram information for classifiers and taggers.
+		output_handler = GramOutputFilter(filter_handler, **kwargs)
 		
-		writer_handler.parse(fp)
-# 		output_handler.parse(fp)
+		# 3) Clean the XML of escape characters.
+		output_handler = XMLCleaner(output_handler)
+		
+		# 4) Write the XML output to file.
+		#output_handler = XMLWriter(output_handler, prefix+'-filtered.xml')
+		
+		output_handler.parse(fp)
 
-class GramOutputFilter(XMLFilterBase):
-	def __init__(self, upstream, output=sys.stdout):
+def write_gram(gram, pos, **kwargs):
+	type = kwargs.get('type')
+	output = kwargs.get('output', sys.stdout)
+	
+	
+	if kwargs.get('lowercase'):
+		gram = gram.lower()
+		
+	if kwargs.get('strip', True):
+		gram = re.sub('\s*', '', gram)
+	
+	# Output the grams for a classifier
+	if type == 'classifier':
+		output.write(pos)
+		
+		for token in tokenize_string(gram, morpheme_tokenizer):
+			output.write('\t%s:1' % token.seq)
+
+		output.write('\n')
+		
+	if type == 'tagger':
+		output.write('%s/%s ' % (gram, pos))
+
+#===============================================================================
+# Class for parsing the XAML Text References
+#===============================================================================
+class XamlRefActionFilter(XMLFilterBase):
+	def __init__(self, upstream, **kwargs):
 		XMLFilterBase.__init__(self, upstream)
-		self._output = output
+		
+		self.textref = {}
+		self.typeref = {}
+		
+		self.kwargs = kwargs
 		
 	def startElement(self, name, attrs):
-		self._cont_handler.startElement(name, attrs)
+		
+		# Cache the  text contents.
+		if name == 'TextTier' and attrs.get('Text'):
+			uid = attrs['Name']
+			self.textref[uid] = attrs['Text']
+			self.typeref[uid] = attrs['TierType']
+			
+		# SegPart commands
+		if name == 'SegPart':
+			uid = attrs['Name']
+			backref = attrs['SourceTier'][13:-1]
+			type = self.typeref[backref][0]
+			text = attrs['Text']
+			self.textref[uid] = text
+			self.typeref[uid] = type
+			
+		# POS Tier
+		if name == 'TagPart':
+			pos = attrs['Text']
+			backref = attrs['Source'][13:-1]
+			postext = self.textref.get(backref)
+			typeref = self.typeref.get(backref)
+			
+			self.posHandler(postext, pos, typeref, **self.kwargs)
+					
+		XMLFilterBase.startElement(self, name, attrs)
+		
 	
 	def endElement(self, name):
-		self._cont_handler.endElement(name)
+		# If we are leaving an instance, clear the backrefs.
+		if name == 'Igt':
+			self.textref = {}
+			
+		XMLFilterBase.endElement(self, name)
+		
+	def posHandler(self, postext, pos, typeref, **kwargs):
+		pass
+
+#===============================================================================
+# Output the grams
+#===============================================================================
+class GramOutputFilter(XamlRefActionFilter):
+	def __init__(self, upstream, **kwargs):
+		XamlRefActionFilter.__init__(self, upstream, **kwargs)
+		
+		self.tagger_grams_written = False
+		self.ltagger_line = False
+		
+	
+	def posHandler(self, postext, pos, typeref, **kwargs):
+		# Write out glosses			
+		if typeref == 'G':
+			if postext and postext.strip():
+				write_gram(postext, pos, type='classifier', output=self.kwargs.get('class_out'), **self.kwargs)
+				write_gram(postext, pos, type='tagger', output=self.kwargs.get('tag_out'), **self.kwargs)
+				
+				# And set the state that tagger grams were written
+				self.tagger_grams_written = True
+				
+		elif typeref == 'L':
+			write_gram(postext, pos, type='tagger', output=self.kwargs.get('ltag_out'), **self.kwargs)
+			self.ltagger_line = True
+			
+			
+					
+		
+	
+	def endElement(self, name):
+		# If we are leaving an instance, clear the backrefs.
+		if name == 'Igt':
+			self.textref = {}
+			if self.tagger_grams_written:
+				self.tagger_grams_written = False
+				self.kwargs.get('tag_out').write('\n')
+				self.kwargs.get('tag_out').flush()
+				
+			if self.ltagger_line:
+				self.kwargs.get('ltag_out').write('\n')
+				self.kwargs.get('ltag_out').flush()
+				self.ltagger_line = False
+			
+		XMLFilterBase.endElement(self, name)
+		
+class XMLCleaner(XMLFilterBase):
+	def __init__(self, upstream):
+		XMLFilterBase.__init__(self, upstream)
+		
+	def startElement(self, name, attrs):
+		newAttrs = {}
+		for attr in attrs.keys():
+			newAttrs[attr] = unescape(attrs[attr])
+
+		XMLFilterBase.startElement(self, name, newAttrs)
 		
 class XMLWriter(XMLFilterBase):
 	def __init__(self, upstream, fp):
 		XMLFilterBase.__init__(self, upstream)
-		self._cont_handler = XMLGenerator(open(fp, 'w'))
+		self._cont_handler = XMLGenerator(open(fp, 'w'), encoding='utf-8')
 		
 class LGTFilter(XMLFilterBase):
 	'''
@@ -118,6 +244,7 @@ class LGTFilter(XMLFilterBase):
 	
 	
 	def startElement(self, name, attrs):
+		
 		if name == 'TextTier':
 			tt = attrs['TierType']
 			
@@ -133,7 +260,6 @@ class LGTFilter(XMLFilterBase):
 			if tt != 'odin-txt':
 				self.tiers.add(tt[0])
 			
-		self.queue.append(lambda: self._cont_handler.startElement(name, attrs))
 		
 		#=======================================================================
 		# Set the "in_igt" flag if we are inside an igt instance.
@@ -146,7 +272,16 @@ class LGTFilter(XMLFilterBase):
 			self.cur_docid = attrs['DocId']
 			
 			if self.last_docid != self.cur_docid:
-				self.cur_docid_count = 0	
+				self.cur_docid_count = 0
+				
+		#=======================================================================
+		# 
+		#=======================================================================
+		if self.in_igt:
+			self.queue.append(lambda: self._cont_handler.startElement(name, attrs))
+		else:
+			self._cont_handler.startElement(name, attrs)
+		
 		
 		
 	def characters(self, content):
