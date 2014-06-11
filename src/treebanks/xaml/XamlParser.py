@@ -30,7 +30,7 @@ class XamlParser(object):
 		
 		outdir = kwargs.get('outdir')
 		ltagger_output = os.path.join(outdir, os.path.basename(prefix)+'_tagger.txt')
-		kwargs['ltag_out'] = open(ltagger_output, 'w')
+		kwargs['ltag_out'] = ltagger_output
 		
 				
 		#=======================================================================
@@ -39,7 +39,8 @@ class XamlParser(object):
 		
 		
 		# 1) Filter out the instances for annotation.
-		output_handler = LGTFilter(parser)
+		output_handler = parser
+		output_handler = LGTFilter(output_handler)
 		
 		# 2) Output the gram information for classifiers and taggers.
 		output_handler = GramOutputFilter(output_handler, **kwargs)
@@ -48,9 +49,9 @@ class XamlParser(object):
 		output_handler = XMLCleaner(output_handler)
 		
 		# 4) Write the XML output to file.
-		#output_handler = XMLWriter(output_handler, prefix+'-filtered.xml')
+# 		output_handler = XMLWriter(output_handler, os.path.join(outdir, os.path.basename(prefix))+'-filtered.xml')
 		
-		output_handler = InstanceCounterFilter(output_handler)
+# 		output_handler = InstanceCounterFilter(output_handler)
 		
 		output_handler.parse(fp)
 
@@ -189,6 +190,7 @@ class XamlRefActionFilter(XMLFilterBase):
 		if name == 'SegPart':
 			uid = attrs['Name']
 			backref = attrs['SourceTier'][13:-1]
+
 			type = self.typeref[backref][0]
 			text = attrs['Text']
 			
@@ -272,21 +274,29 @@ class XamlRefActionFilter(XMLFilterBase):
 
 class InstanceCounterFilter(XamlRefActionFilter):
 	
-	def __init__(self, parent=None):
+	def __init__(self, upstream, **kwargs):
 		self.instances = 0
 		self.gloss_tokens = 0
 		self.gloss_tags = 0
 		self.lang_tokens = 0
 		self.lang_tags = 0
-		XMLFilterBase.__init__(self, parent=parent)
+		
+		self.was_tagged = False
+		self.was_segmented = False
+		
+		XamlRefActionFilter.__init__(self, upstream, **kwargs)
 		
 	def endElement(self, name):
-		
+		if name == 'IgtCorpus':
+			print(self.instances)
+			
+		if name == 'Igt':
+			self.instances += 1
+
+			
 		XamlRefActionFilter.endElement(self, name)
 		
-	def endDocument(self):
-		print(self.instances)
-		XMLFilterBase.endDocument(self)
+
 
 #===============================================================================
 # Output the grams
@@ -298,6 +308,18 @@ class GramOutputFilter(XamlRefActionFilter):
 		self.tagger_grams_written = False
 		self.ltagger_line = False
 		
+		#=======================================================================
+		# Open the language-specific tagger output for writing.
+		#=======================================================================
+		if self.kwargs.get('ltag_out'):
+			ltag_out = open(self.kwargs.get('ltag_out'), 'w')
+			
+		# And set it to the variables
+		self.ltag_out = ltag_out
+		
+		#=======================================================================
+		# Here are the queued portions to write out
+		#=======================================================================
 		self.gloss_queue = []
 		self.lang_queue = []
 		self.trans_queue = []
@@ -369,8 +391,6 @@ class GramOutputFilter(XamlRefActionFilter):
 						tgts = heur_aln.src_to_tgt(i+1)
 						aln_labels = [self.trans_queue[tgt-1].label for tgt in tgts]
 
-							
-					
 					prev_gram = None
 					if i-1 >= 0:
 						prev_gram = self.gloss_queue[i-1]
@@ -379,8 +399,6 @@ class GramOutputFilter(XamlRefActionFilter):
 					if i+1 < len(self.gloss_queue):
 						next_gram = self.gloss_queue[i+1]
 						
-					
-					
 					write_gram(postoken, output=self.kwargs.get('class_out'), aln_labels=aln_labels, prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
 					write_gram(postoken, output=self.kwargs.get('tag_out'), type='tagger', **self.kwargs)
 				
@@ -391,8 +409,8 @@ class GramOutputFilter(XamlRefActionFilter):
 			#===================================================================
 			if self.lang_queue:
 				for postoken in self.lang_queue:
-					write_gram(postoken, output=self.kwargs.get('ltag_out'), type='tagger', **self.kwargs)
-				self.kwargs.get('ltag_out').write('\n')
+					write_gram(postoken, output=self.ltag_out, type='tagger', **self.kwargs)
+				self.ltag_out.write('\n')
 				
 			self.gloss_queue = []
 			self.lang_queue = []
@@ -419,9 +437,36 @@ class XMLCleaner(XMLFilterBase):
 # Write the XML out to a file.
 #===============================================================================
 class XMLWriter(XMLFilterBase):
+	'''
+	Class to simply output the current XML to a file.
+	'''
 	def __init__(self, upstream, fp):
 		XMLFilterBase.__init__(self, upstream)
-		self._cont_handler = XMLGenerator(open(fp, 'w'), encoding='utf-8')
+		self.output = XMLGenerator(open(fp, 'w'), encoding='utf-8')
+		
+	def startDocument(self):
+		self.output.startDocument()
+		XMLFilterBase.startDocument(self)
+		
+	def startElement(self, name, attrs):
+		self.output.startElement(name, attrs)
+		XMLFilterBase.startElement(self, name, attrs)
+		
+	def characters(self, content):
+		self.output.characters(content)
+		XMLFilterBase.characters(self, content)
+		
+	def endDocument(self):
+		self.output.endDocument()
+		XMLFilterBase.endDocument(self)
+		
+	def endElement(self, name):
+		self.output.endElement(name)
+		XMLFilterBase.endElement(self, name)
+		
+	def processingInstruction(self, target, data):
+		self.output.processingInstruction(target, data)
+		XMLFilterBase.processingInstruction(self, target, data)
 		
 		
 #===============================================================================
