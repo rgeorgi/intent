@@ -16,42 +16,7 @@ import xml.sax
 from xml.sax.saxutils import XMLFilterBase, XMLGenerator, unescape
 import os
 
-class XAMLElement(object):
-	def __init__(self, name, text, type=None):
-		self.name = name
-		self.text = text
-		self.type = type
-		
-	def __getitem__(self, idx):
-		return self.text.__getitem__(idx)
 
-
-class XAMLData(object):
-	def __init__(self):
-		self.docid = None
-		self.lines = None
-		self.name = None
-		
-		self.lang = None
-		self.gloss = None
-		self.trans = None
-		
-		self.gloss_pos = None
-		
-		
-	def __setitem__(self, k, v):
-		self._dict[k] = v
-	def __getitem__(self, k):
-		return self._dict[k]
-	
-	def has_segs(self):
-		return self.lang and self.gloss and self.trans
-	
-	def has_pos(self):
-		return self.gloss_pos
-	
-	def __hash__(self):
-		return str(self.name)
 		
 class XamlParser(object):
 	def __init__(self, **kwargs):
@@ -316,6 +281,7 @@ class InstanceCounterFilter(XamlRefActionFilter):
 		XMLFilterBase.__init__(self, parent=parent)
 		
 	def endElement(self, name):
+		
 		XamlRefActionFilter.endElement(self, name)
 		
 	def endDocument(self):
