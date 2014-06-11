@@ -9,7 +9,7 @@ from utils.xmlutils import get_child_tags, find_tag, getIntAttr, get_ref
 import sys
 from utils.Token import Tokenization, Token, morpheme_tokenizer, tokenize_string,\
 	POSToken
-from corpora.IGTCorpus import IGTTier, IGTToken, Span
+from corpora.IGTCorpus import IGTTier, IGTToken, Span, IGTInstance
 from tokenize import tokenize
 import re
 import xml.sax
@@ -74,16 +74,18 @@ class XamlParser(object):
 		
 		
 		# 1) Filter out the instances for annotation.
-		filter_handler = LGTFilter(parser)
+		output_handler = LGTFilter(parser)
 		
 		# 2) Output the gram information for classifiers and taggers.
-		output_handler = GramOutputFilter(filter_handler, **kwargs)
+		output_handler = GramOutputFilter(output_handler, **kwargs)
 		
 		# 3) Clean the XML of escape characters.
 		output_handler = XMLCleaner(output_handler)
 		
 		# 4) Write the XML output to file.
 		#output_handler = XMLWriter(output_handler, prefix+'-filtered.xml')
+		
+		output_handler = InstanceCounterFilter(output_handler)
 		
 		output_handler.parse(fp)
 
@@ -94,6 +96,9 @@ def write_gram(token, **kwargs):
 	# Previous tag info
 	prev_gram = kwargs.get('prev_gram')
 	next_gram = kwargs.get('next_gram')
+	
+	# Get heuristic alignment
+	aln_labels = kwargs.get('aln_labels', [])
 
 	#===========================================================================
 	# Break apart the token...
@@ -119,8 +124,15 @@ def write_gram(token, **kwargs):
 		#=======================================================================
 		# Is there a number
 		#=======================================================================
-		if re.search('[0-9]', gram) and True:
+		if re.search('[0-9]', gram) and False:
 			output.write('\thas-number:1')
+			
+		#=======================================================================
+		# What labels is it aligned with
+		#=======================================================================
+		if False:
+			for aln_label in aln_labels:
+				output.write('\taln-label-%s:1' % aln_label)
 			
 		#=======================================================================
 		# Suffix
@@ -137,7 +149,7 @@ def write_gram(token, **kwargs):
 		#=======================================================================
 		# Number of morphs
 		#=======================================================================		
-		if True:
+		if False:
 			output.write('\t%d-morphs:1' % len(morphs))
 		
 		#=======================================================================
@@ -148,7 +160,7 @@ def write_gram(token, **kwargs):
 			#===================================================================
 			# Previous gram
 			#===================================================================
-			if prev_gram:
+			if prev_gram and True:
 				prev_gram = prev_gram.seq
 				prev_gram = prev_gram.lower() if lower else prev_gram
 				prev_gram = re.sub('\s*', '', prev_gram) if strip else prev_gram
@@ -160,7 +172,7 @@ def write_gram(token, **kwargs):
 			#===================================================================
 			# Next gram
 			#===================================================================
-			if next_gram:
+			if next_gram and False:
 				next_gram = next_gram.seq
 				next_gram = next_gram.lower() if lower else next_gram
 				next_gram = re.sub('\s*', '', next_gram) if strip else next_gram
@@ -224,6 +236,8 @@ class XamlRefActionFilter(XMLFilterBase):
 			self.textref[uid] = t
 			self.typeref[uid] = type
 			
+			self.segHandler(t, type, **self.kwargs)
+			
 		# POS Tier
 		if name == 'TagPart':
 			pos = attrs['Text']
@@ -256,6 +270,8 @@ class XamlRefActionFilter(XMLFilterBase):
 		# If we are leaving an instance, clear the backrefs.
 		if name == 'Igt':
 			self.textref = {}
+			
+		if name == 'SegTier':
 			self.partnum = 0
 			
 		if name == 'AlignPart':
@@ -271,17 +287,40 @@ class XamlRefActionFilter(XMLFilterBase):
 	def alnHandler(self, src, tgts):
 		srcRep = self.textref.get(src)
 		if srcRep:
-			print(srcRep.index, end=':')
+			pass
 			
 		for tgt in tgts:
 			tgtRep = self.textref.get(tgt)
 			if tgtRep:
-				print(tgtRep.index, end=',')
-		print()
+				pass
 		
 		
-	def posHandler(self, postext, typeref, **kwargs):
+	def segHandler(self, seg, typeref, **kwargs):
 		pass
+		
+	def posHandler(self, postoken, typeref, **kwargs):
+		pass
+
+#===============================================================================
+# Count various things
+#===============================================================================
+
+class InstanceCounterFilter(XamlRefActionFilter):
+	
+	def __init__(self, parent=None):
+		self.instances = 0
+		self.gloss_tokens = 0
+		self.gloss_tags = 0
+		self.lang_tokens = 0
+		self.lang_tags = 0
+		XMLFilterBase.__init__(self, parent=parent)
+		
+	def endElement(self, name):
+		XamlRefActionFilter.endElement(self, name)
+		
+	def endDocument(self):
+		print(self.instances)
+		XMLFilterBase.endDocument(self)
 
 #===============================================================================
 # Output the grams
@@ -295,6 +334,7 @@ class GramOutputFilter(XamlRefActionFilter):
 		
 		self.gloss_queue = []
 		self.lang_queue = []
+		self.trans_queue = []
 		
 	
 	def posHandler(self, postoken, typeref, **kwargs):
@@ -307,16 +347,45 @@ class GramOutputFilter(XamlRefActionFilter):
 				
 		elif typeref == 'L':
 			if postext and postext.strip():
-				self.lang_queue.append(postoken)			
+				self.lang_queue.append(postoken)
+				
+		elif typeref == 'T':
+			if postext and postext.strip():
+				self.trans_queue.append(postoken)	
 			
 			
-					
+	def segHandler(self, postoken, typeref, **kwargs):
+		pass
+		
+		
 		
 	
 	def endElement(self, name):
 		# If we are leaving an instance, clear the backrefs.
 		if name == 'Igt':
 			self.textref = {}
+			
+			#===================================================================
+			# Create an IGT instance
+			#===================================================================
+			
+			heur_aln = None
+			if self.lang_queue and self.gloss_queue and self.trans_queue:
+				i = IGTInstance()
+				
+				# Create lang tier
+				lang = IGTTier(seq=self.lang_queue, kind='lang')
+				i.append(lang)
+				
+				gloss = IGTTier(seq=self.gloss_queue, kind='gloss')
+				i.append(gloss)
+				
+				trans = IGTTier(seq=self.trans_queue, kind='trans')
+				i.append(trans)
+				
+				heur_aln = i.gloss_heuristic_alignment()
+				
+			
 			
 			#===================================================================
 			# Write out the gloss tags
@@ -326,6 +395,16 @@ class GramOutputFilter(XamlRefActionFilter):
 				# Write out the gloss line
 				for i, postoken in enumerate(self.gloss_queue):
 					
+					aln_labels = []
+					#===========================================================
+					# Grab pos tags from the translation tags if possible
+					#===========================================================
+					if heur_aln:
+						tgts = heur_aln.src_to_tgt(i+1)
+						aln_labels = [self.trans_queue[tgt-1].label for tgt in tgts]
+
+							
+					
 					prev_gram = None
 					if i-1 >= 0:
 						prev_gram = self.gloss_queue[i-1]
@@ -333,8 +412,10 @@ class GramOutputFilter(XamlRefActionFilter):
 					next_gram = None
 					if i+1 < len(self.gloss_queue):
 						next_gram = self.gloss_queue[i+1]
+						
 					
-					write_gram(postoken, output=self.kwargs.get('class_out'), prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
+					
+					write_gram(postoken, output=self.kwargs.get('class_out'), aln_labels=aln_labels, prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
 					write_gram(postoken, output=self.kwargs.get('tag_out'), type='tagger', **self.kwargs)
 				
 				self.kwargs.get('tag_out').write('\n')
@@ -349,6 +430,7 @@ class GramOutputFilter(XamlRefActionFilter):
 				
 			self.gloss_queue = []
 			self.lang_queue = []
+			self.trans_queue = []
 					
 		XamlRefActionFilter.endElement(self, name)
 		
