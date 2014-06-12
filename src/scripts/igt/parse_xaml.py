@@ -32,16 +32,16 @@ if __name__ == '__main__':
 	
 	
 	kwargs = vars(args)
-	
-	kwargs['tag_out'] = open(tagger_output, 'w')
-	kwargs['class_out'] = open(classifier_output, 'w')
+		
+	kwargs['tag_out'] = tagger_output
+	kwargs['class_out'] = classifier_output
 	
 	#===========================================================================
 	# Now parse the files
 	#===========================================================================
 	
-	xp = XamlParser.XamlParser()
+	xp = XamlParser.XamlParser(**kwargs)
 	for dir in args.dir:
 		xml_files = glob(os.path.join(dir, args.pattern))
-		for x_f in xml_files:				
+		for x_f in xml_files:
 			xp.parse(x_f, **kwargs)

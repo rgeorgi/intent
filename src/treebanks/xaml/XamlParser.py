@@ -15,15 +15,20 @@ import re
 import xml.sax
 from xml.sax.saxutils import XMLFilterBase, XMLGenerator, unescape
 import os
+from _collections import defaultdict
 
 
 		
 class XamlParser(object):
 	def __init__(self, **kwargs):
-		pass
+		self.tag_out = open(kwargs.get('tag_out'), 'a')
+		self.class_out = open(kwargs.get('class_out'), 'a')
+		
 	
 	def parse(self, fp, **kwargs):
 		parser = xml.sax.make_parser()
+		
+		kwargs['cur_file'] = fp
 		
 		# Original filename
 		prefix = os.path.splitext(fp)[0]
@@ -31,6 +36,10 @@ class XamlParser(object):
 		outdir = kwargs.get('outdir')
 		ltagger_output = os.path.join(outdir, os.path.basename(prefix)+'_tagger.txt')
 		kwargs['ltag_out'] = ltagger_output
+		
+		#=======================================================================
+		# Get the output file
+		#=======================================================================
 		
 				
 		#=======================================================================
@@ -43,15 +52,15 @@ class XamlParser(object):
 		output_handler = LGTFilter(output_handler)
 		
 		# 2) Output the gram information for classifiers and taggers.
-		output_handler = GramOutputFilter(output_handler, **kwargs)
+		#output_handler = GramOutputFilter(output_handler, **kwargs)
 		
 		# 3) Clean the XML of escape characters.
-		output_handler = XMLCleaner(output_handler)
+		output_handler = XMLCleaner(output_handler, **kwargs)
 		
 		# 4) Write the XML output to file.
 # 		output_handler = XMLWriter(output_handler, os.path.join(outdir, os.path.basename(prefix))+'-filtered.xml')
 		
-# 		output_handler = InstanceCounterFilter(output_handler)
+		output_handler = InstanceCounterFilter(output_handler, **kwargs)
 		
 		output_handler.parse(fp)
 
@@ -186,6 +195,9 @@ class XamlRefActionFilter(XMLFilterBase):
 			self.textref[uid] = attrs['Text']
 			self.typeref[uid] = attrs['TierType']
 			
+		if name == 'Igt':
+			self.igtHandler(name, attrs, **self.kwargs)
+			
 		# SegPart commands
 		if name == 'SegPart':
 			uid = attrs['Name']
@@ -261,6 +273,8 @@ class XamlRefActionFilter(XMLFilterBase):
 			if tgtRep:
 				pass
 		
+	def igtHandler(self, name, attrs, **kwargs):
+		pass
 		
 	def segHandler(self, seg, typeref, **kwargs):
 		pass
@@ -275,26 +289,82 @@ class XamlRefActionFilter(XMLFilterBase):
 class InstanceCounterFilter(XamlRefActionFilter):
 	
 	def __init__(self, upstream, **kwargs):
-		self.instances = 0
-		self.gloss_tokens = 0
-		self.gloss_tags = 0
-		self.lang_tokens = 0
-		self.lang_tags = 0
+		self.cur_file = kwargs.get('cur_file')
 		
-		self.was_tagged = False
-		self.was_segmented = False
+		#=======================================================================
+		# Last tagged or segmented counters
+		#=======================================================================
+		self.was_tagged = {}
+		self.was_segmented = {}
+		#  ---------------------------------------------------------------------
+		
+		self.counts = defaultdict(int)
+		self.counts['docids'] = defaultdict(int)
+		self.counts['annotated_docids'] = defaultdict(int)
+		
 		
 		XamlRefActionFilter.__init__(self, upstream, **kwargs)
 		
 	def endElement(self, name):
+		#=======================================================================
+		# Print the output at the document end
+		#=======================================================================
 		if name == 'IgtCorpus':
-			print(self.instances)
+			self.countprinter()
 			
 		if name == 'Igt':
-			self.instances += 1
+			self.counts['instances'] += 1
+			self.counts['tagged_instances'] += 1 if self.was_tagged else 0
+			self.counts['segmented_instances'] += 1 if self.was_segmented else 0
+			
+			if self.was_tagged:
+				self.counts['annotated_docids'][self.cur_docid] += 1
+			self.counts['docids'][self.cur_docid] += 1
+			
+			self.was_tagged = {}
+			self.was_segmented = {}			
 
 			
 		XamlRefActionFilter.endElement(self, name)
+		
+	
+		
+	def countprinter(self):
+		print(os.path.basename(self.cur_file), end='\t')
+		print(len(self.counts['docids'].keys()), end=',')
+		print(len(self.counts['annotated_docids'].keys()), end=',')
+		
+		keys = ['instances','segmented_instances', 'tagged_instances', 'lang_tokens', 'gloss_tokens', 'lang_tags', 'gloss_tags']
+		for i, key in enumerate(keys):
+			print(self.counts[key],end=',' if i < len(keys)-1 else '\n')
+		
+	def posHandler(self, postoken, typeref, **kwargs):
+		if typeref == 'G':
+			self.counts['gloss_tags'] += 1			
+		elif typeref == 'L':
+			self.counts['lang_tags'] += 1
+			
+		# Add what type of this was tagged.
+		self.was_tagged[typeref] = True
+			
+		XamlRefActionFilter.posHandler(self, postoken, typeref, **kwargs)
+		
+	# Handle new igt instances...
+	def igtHandler(self, name, attrs, **kwargs):
+		docid = attrs['DocId']
+		self.cur_docid = docid
+		
+		XamlRefActionFilter.igtHandler(self, name, attrs, **kwargs)
+		
+	def segHandler(self, seg, typeref, **kwargs):
+		if typeref == 'G':
+			self.counts['gloss_tokens'] += 1
+		elif typeref == 'L':
+			self.counts['lang_tokens'] += 1
+			
+		self.was_segmented[typeref] = True
+		
+		XamlRefActionFilter.segHandler(self, seg, typeref, **kwargs)
 		
 
 
@@ -399,8 +469,8 @@ class GramOutputFilter(XamlRefActionFilter):
 					if i+1 < len(self.gloss_queue):
 						next_gram = self.gloss_queue[i+1]
 						
-					write_gram(postoken, output=self.kwargs.get('class_out'), aln_labels=aln_labels, prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
-					write_gram(postoken, output=self.kwargs.get('tag_out'), type='tagger', **self.kwargs)
+					write_gram(postoken, output=self.class_out, aln_labels=aln_labels, prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
+					write_gram(postoken, output=self.tag_out, type='tagger', **self.kwargs)
 				
 				self.kwargs.get('tag_out').write('\n')
 				
@@ -422,7 +492,7 @@ class GramOutputFilter(XamlRefActionFilter):
 # Do some cleaning of the XML elements.
 #===============================================================================
 class XMLCleaner(XMLFilterBase):
-	def __init__(self, upstream):
+	def __init__(self, upstream, **kwargs):
 		XMLFilterBase.__init__(self, upstream)
 		
 	def startElement(self, name, attrs):
