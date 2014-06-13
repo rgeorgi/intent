@@ -17,6 +17,7 @@ from xml.sax.saxutils import XMLFilterBase, XMLGenerator, unescape
 import os
 from _collections import defaultdict
 import logging
+from alignment.Alignment import AlignedSent, Alignment
 
 
 		
@@ -117,7 +118,7 @@ def write_gram(token, **kwargs):
 		#=======================================================================
 		# Suffix
 		#=======================================================================
-		if True:
+		if False:
 			output.write('\tgram-suffix-3-%s:1' % gram[-3:].replace(':','-'))
 			output.write('\tgram-suffix-2-%s:1' % gram[-2:].replace(':','-'))
 			output.write('\tgram-suffix-1-%s:1' % gram[-3:].replace(':','-'))
@@ -125,7 +126,7 @@ def write_gram(token, **kwargs):
 		#=======================================================================
 		# Prefix
 		#=======================================================================
-		if True:
+		if False:
 			output.write('\tgram-prefix-3-%s:1' % gram[:3].replace(':','-'))
 			output.write('\tgram-prefix-2-%s:1' % gram[:2].replace(':','-'))
 			output.write('\tgram-prefix-1-%s:1' % gram[:1].replace(':','-'))
@@ -213,13 +214,26 @@ class XamlRefActionFilter(XMLFilterBase):
 		self.partnum = 0
 		
 		# Alignment Counters
+		
 		self.in_alnpart = False
 		self.alnsrc = None
 		self.aln_parts = []
 		
+		self.alnsrc_type = None
+		self.alntgt_type = None
+		
+		# This will contain the current alignment
+		self.cur_aln = Alignment()
+		
+		
+	#===========================================================================
+	# Start Element
+	#===========================================================================
+	
 	def startElement(self, name, attrs):
 		
-		# Cache the  text contents.
+		# ((( TEXT )))
+		
 		if name == 'TextTier' and attrs.get('Text'):
 			uid = attrs['Name']
 			self.textref[uid] = attrs['Text']
@@ -228,7 +242,8 @@ class XamlRefActionFilter(XMLFilterBase):
 		if name == 'Igt':
 			self.igtHandler(name, attrs, **self.kwargs)
 			
-		# SegPart commands
+		# ((( SEGMENTATION )))
+		
 		if name == 'SegPart':
 			uid = attrs['Name']
 			backref = attrs['SourceTier'][13:-1]
@@ -247,7 +262,8 @@ class XamlRefActionFilter(XMLFilterBase):
 			
 			self.segHandler(t, type, **self.kwargs)
 			
-		# POS Tier
+		# ((( POS TIER )))
+		
 		if name == 'TagPart':
 			pos = attrs['Text']
 			backref = attrs['Source'][13:-1]
@@ -260,21 +276,32 @@ class XamlRefActionFilter(XMLFilterBase):
 				
 				self.posHandler(postoken, typeref, **self.kwargs)
 					
+		# ((( ALIGNMENT )))
+		
 		if name == 'AlignPart':
 			a_src = attrs['Source'][13:-1]			
 			self.alnsrc = a_src
 		
-		if name == 'x:Reference':
+		if name == 'AlignPart.AlignedParts':
 			self.in_alnpart = True
-					
+			
+		# ((( Parent Handler )))					
 		XMLFilterBase.startElement(self, name, attrs)
 		
+	#===========================================================================
+	#  Characters
+	#===========================================================================
 	def characters(self, content):
+		# If the characters are alignment references, add them.
 		if self.in_alnpart:
 			self.aln_parts.append(content)
 		
 		XMLFilterBase.characters(self, content)
 	
+	
+	#===========================================================================
+	# endElement
+	#===========================================================================
 	def endElement(self, name):
 		# If we are leaving an instance, clear the backrefs.
 		if name == 'Igt':
@@ -284,24 +311,47 @@ class XamlRefActionFilter(XMLFilterBase):
 			self.partnum = 0
 			
 		if name == 'AlignPart':
-			self.alnHandler(self.alnsrc, self.aln_parts)
+			self.alnPartHandler(self.alnsrc, self.aln_parts)
 			self.aln_parts = []
 			self.alnsrc = None
 			
-		if name == 'x:Reference':
+		if name == 'AlignmentTier':
+			self.alnHandler(self.cur_aln, self.alnsrc_type, self.alntgt_type)
+			self.alnsrc_type = None
+			self.alntgt_type = None
+			self.cur_aln = Alignment()
+			
+		if name == 'AlignPart.AlignedParts':
+			# When we exit the aligned parts
 			self.in_alnpart = False
 			
 		XMLFilterBase.endElement(self, name)
 		
-	def alnHandler(self, src, tgts):
+	#===========================================================================
+	#  HANDLERS
+	#===========================================================================
+		
+	def alnHandler(self, aln, src_type, tgt_type):
+		pass
+		
+	def alnPartHandler(self, src, tgts):
 		srcRep = self.textref.get(src)
+		srcType = self.typeref.get(src)
+		
+		# Only continue on if we have a valid reference to go with.
 		if srcRep:
-			pass
+			self.alnsrc_type = srcType
 			
-		for tgt in tgts:
-			tgtRep = self.textref.get(tgt)
-			if tgtRep:
-				pass
+			# Now, iterate through the targets
+			for tgt in tgts:
+				tgtRep = self.textref.get(tgt)
+				tgtType = self.typeref.get(tgt)
+				
+				# Only look at this target if we have a valid reference
+				if tgtRep:
+					self.alntgt_type = tgtType
+					self.cur_aln.add((srcRep.index, tgtRep.index))
+					
 		
 	def igtHandler(self, name, attrs, **kwargs):
 		pass
@@ -334,6 +384,10 @@ class InstanceCounterFilter(XamlRefActionFilter):
 		
 		
 		XamlRefActionFilter.__init__(self, upstream, **kwargs)
+	
+	#===========================================================================
+	# EndElement
+	#===========================================================================
 		
 	def endElement(self, name):
 		#=======================================================================
@@ -471,7 +525,7 @@ class GramOutputFilter(XamlRefActionFilter):
 				trans = IGTTier(seq=self.trans_queue, kind='trans')
 				i.append(trans)
 				
-				#heur_aln = i.gloss_heuristic_alignment()
+				heur_aln = i.gloss_heuristic_alignment()
 				
 			
 			
