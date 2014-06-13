@@ -37,6 +37,12 @@ class CountDict(object):
 	def __contains__(self, k):
 		return self._dict.__contains__(k)
 		
+	def __len__(self):
+		return self._dict.__len__()
+		
+	def __delitem__(self, k):
+		self._dict.__delitem__(k)
+		
 	def keys(self):
 		return self._dict.keys()
 	

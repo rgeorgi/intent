@@ -75,6 +75,9 @@ class TwoLevelCountDict(object):
 	def keys(self):
 		return self._dict.keys()
 	
+	def __len__(self):
+		return self._dict.__len__()
+	
 	
 	
 	
