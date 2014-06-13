@@ -6,7 +6,8 @@ Created on Mar 6, 2014
 import os
 import codecs
 import chardet
-from utils.Token import Token, POSToken
+from utils.Token import Token, POSToken, tokenize_string, whitespace_tokenizer,\
+	tag_tokenizer
 
 
 class POSCorpus(list):
@@ -96,6 +97,25 @@ class POSCorpus(list):
 			train.write(train_path, format, delimeter, outdir, lowercase)
 		if test_path and len(test):
 			test.write(test_path, format, delimeter, outdir, lowercase)
+			
+	def read(self, fp, **kwargs):
+		f = open(fp, 'r')
+		
+		delimeter = kwargs.get('delimeter', '/')
+		
+		for line in f:
+			split_tokens = tokenize_string(line, tag_tokenizer)
+			self.read_handler(split_tokens)
+			
+		self.read_complete()
+			
+	def read_handler(self, tokens):
+		pass
+	
+	def read_complete(self):
+		pass
+	
+
 
 	
 
