@@ -7,25 +7,43 @@ import sys
 from _collections import defaultdict
 from _functools import reduce
 
-class CountDict(defaultdict):
+class CountDict(object):
 	def __init__(self):
-		defaultdict.__init__(self, int)
+		self._dict = defaultdict(int)		
 		
 	def add(self, key, value=1):
 		self[key] += value
-
-	def keys(self):
-		return dict.keys(self)
 	
 	def __str__(self):
-		return defaultdict.__str__(self)
+		return self._dict.__str__()
 	
 	def __repr__(self):
-		return defaultdict.__repr__(self)
+		return self._dict.__repr__()
 	
 	def total(self):
 		values = self.dict.values()
 		return reduce(lambda x, y: x+y, values)
+			
+	#===========================================================================
+	#  Stuff that should be inheritable
+	#===========================================================================
+			
+	def __getitem__(self, k):
+		return self._dict.__getitem__(k)
+	
+	def __setitem__(self, k, v):
+		self._dict.__setitem__(k, v)
+	
+	def __contains__(self, k):
+		return self._dict.__contains__(k)
+		
+	def keys(self):
+		return self._dict.keys()
+	
+	def items(self):
+		return self._dict.items()
+	
+	#  -----------------------------------------------------------------------------
 			
 	
 	def most_frequent(self, minimum = 0, num = 1):

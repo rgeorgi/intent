@@ -6,18 +6,23 @@ Created on Oct 24, 2013
 from utils.CountDict import CountDict
 from collections import defaultdict
 import re
+import pickle
+import sys
+from functools import partial
 
 
-class TwoLevelCountDict(defaultdict):
+class TwoLevelCountDict(object):
 	def __init__(self):
-		defaultdict.__init__(self, lambda: CountDict())
+		self._dict = defaultdict(CountDict)
 		
 	def add(self, key_a, key_b, value=1):
 		self[key_a][key_b] += value
 			
 	def top_n(self, key, n=1, min_num = 1, key2_re = None):
 		s = sorted(self[key].items(), reverse=True, key=lambda x: x[1])
-		s = [i for i in s if re.search(key2_re, i[0])]
+		if key2_re:
+			s = [i for i in s if re.search(key2_re, i[0])]
+			
 		return s[0:n]
 
 	def most_frequent(self, key, num = 1, key2_re = None):
@@ -50,5 +55,26 @@ class TwoLevelCountDict(defaultdict):
 			dist_set.add((key2, self[key][key2] / float(total)))
 			
 		return dist_set
+	
+	#===========================================================================
+	# Stuff that should've been inherited
+	#===========================================================================
+	
+	def __str__(self):
+		return self._dict.__str__()
+	
+	def __getitem__(self, k):
+		return self._dict.__getitem__(k)
+	
+	def __setitem__(self, k, v):
+		self._dict.__setitem__(k, v)
+		
+	def __contains__(self, k):
+		return self._dict.__contains__(k)
+		
+	def keys(self):
+		return self._dict.keys()
+	
+	
 	
 	
