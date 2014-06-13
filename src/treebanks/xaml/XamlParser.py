@@ -17,7 +17,8 @@ from xml.sax.saxutils import XMLFilterBase, XMLGenerator, unescape
 import os
 from _collections import defaultdict
 import logging
-from alignment.Alignment import AlignedSent, Alignment
+from alignment.Alignment import AlignedSent, Alignment, AlignedCorpus
+from eval.AlignEval import AlignEval
 
 
 		
@@ -225,6 +226,9 @@ class XamlRefActionFilter(XMLFilterBase):
 		# This will contain the current alignment
 		self.cur_aln = Alignment()
 		
+		self.lg_aln = None
+		self.gt_aln = None
+		
 		
 	#===========================================================================
 	# Start Element
@@ -305,7 +309,7 @@ class XamlRefActionFilter(XMLFilterBase):
 	def endElement(self, name):
 		# If we are leaving an instance, clear the backrefs.
 		if name == 'Igt':
-			self.textref = {}
+			self.endIGT()
 			
 		if name == 'SegTier':
 			self.partnum = 0
@@ -328,11 +332,23 @@ class XamlRefActionFilter(XMLFilterBase):
 		XMLFilterBase.endElement(self, name)
 		
 	#===========================================================================
-	#  HANDLERS
+	# STANDARD HANDLERS
+	#===========================================================================
+	
+	def endIGT(self):
+		self.textref = {}
+		
+	#===========================================================================
+	#  EXTENDED HANDLERS
 	#===========================================================================
 		
 	def alnHandler(self, aln, src_type, tgt_type):
-		pass
+		if src_type == 'G' and tgt_type == 'T':
+			self.gt_aln = aln
+		elif src_type == 'L' and tgt_type == 'G':
+			self.lg_aln = aln
+		else:
+			logging.warn('Unexpected alignment type: "%s-%s" found.' % (src_type, tgt_type))
 		
 	def alnPartHandler(self, src, tgts):
 		srcRep = self.textref.get(src)
@@ -462,6 +478,11 @@ class GramOutputFilter(XamlRefActionFilter):
 		self.tagger_grams_written = False
 		self.ltagger_line = False
 		
+		
+		# Create an aligned corpus to compare alignments...
+		self.heur_aln_corpus = AlignedCorpus()
+		self.gold_aln_corpus = AlignedCorpus()
+		
 		#=======================================================================
 		# Open the language-specific tagger output for writing.
 		#=======================================================================
@@ -500,79 +521,94 @@ class GramOutputFilter(XamlRefActionFilter):
 		pass
 		
 		
-		
 	
-	def endElement(self, name):
-		# If we are leaving an instance, clear the backrefs.
-		if name == 'Igt':
-			self.textref = {}
+	#===========================================================================
+	# When an IGT Instance ENDS
+	#===========================================================================
+	def endIGT(self):
+		
+		#===================================================================
+		# Create an IGT instance
+		#===================================================================
+		
+		heur_aln = None
+		if self.lang_queue and self.gloss_queue and self.trans_queue:
+			i = IGTInstance()
 			
-			#===================================================================
-			# Create an IGT instance
-			#===================================================================
+			# Create lang tier
+			lang = IGTTier(seq=self.lang_queue, kind='lang')
+			i.append(lang)
 			
-			heur_aln = None
-			if self.lang_queue and self.gloss_queue and self.trans_queue:
-				i = IGTInstance()
-				
-				# Create lang tier
-				lang = IGTTier(seq=self.lang_queue, kind='lang')
-				i.append(lang)
-				
-				gloss = IGTTier(seq=self.gloss_queue, kind='gloss')
-				i.append(gloss)
-				
-				trans = IGTTier(seq=self.trans_queue, kind='trans')
-				i.append(trans)
-				
-				heur_aln = i.gloss_heuristic_alignment()
-				
+			gloss = IGTTier(seq=self.gloss_queue, kind='gloss')
+			i.append(gloss)
+			
+			trans = IGTTier(seq=self.trans_queue, kind='trans')
+			i.append(trans)
+			
+			heur_aln = i.gloss_heuristic_alignment()
 			
 			
-			#===================================================================
-			# Write out the gloss tags
-			#===================================================================
-			if self.gloss_queue:
+			# Add debug line
+			logging.debug('Adding alignment for %s' % trans.text())
+			
+			heur_aln_sent = AlignedSent(gloss, trans, heur_aln.aln)
+			gold_aln_sent = AlignedSent(gloss, trans, self.gt_aln)
+			
+			self.gold_aln_corpus.append(gold_aln_sent)
+			self.heur_aln_corpus.append(heur_aln_sent)
+			
+			
+		
+		
+		#===================================================================
+		# Write out the gloss tags
+		#===================================================================
+		if self.gloss_queue:
+			
+			# Write out the gloss line
+			for i, postoken in enumerate(self.gloss_queue):
 				
-				# Write out the gloss line
-				for i, postoken in enumerate(self.gloss_queue):
-					
-					aln_labels = []
-					#===========================================================
-					# Grab pos tags from the translation tags if possible
-					#===========================================================
-					if heur_aln:
-						tgts = heur_aln.src_to_tgt(i+1)
-						aln_labels = [self.trans_queue[tgt-1].label for tgt in tgts]
+				aln_labels = []
+				#===========================================================
+				# Grab pos tags from the translation tags if possible
+				#===========================================================
+				if heur_aln:
+					tgts = heur_aln.src_to_tgt(i+1)
+					aln_labels = [self.trans_queue[tgt-1].label for tgt in tgts]
 
-					prev_gram = None
-					if i-1 >= 0:
-						prev_gram = self.gloss_queue[i-1]
+				prev_gram = None
+				if i-1 >= 0:
+					prev_gram = self.gloss_queue[i-1]
+				
+				next_gram = None
+				if i+1 < len(self.gloss_queue):
+					next_gram = self.gloss_queue[i+1]
 					
-					next_gram = None
-					if i+1 < len(self.gloss_queue):
-						next_gram = self.gloss_queue[i+1]
-						
-					write_gram(postoken, output=self.kwargs['class_f'], aln_labels=aln_labels, prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
-					write_gram(postoken, output=self.kwargs['tag_f'], type='tagger', **self.kwargs)
-				
-				self.kwargs.get('tag_f').write('\n')
-				
-			#===================================================================
-			# Write out the lang line tags
-			#===================================================================
-			if self.lang_queue:
-				for postoken in self.lang_queue:
-					# Skip "X" tags
-					if postoken.label != 'X':
-						write_gram(postoken, output=self.ltag_out, type='tagger', **self.kwargs)
-				self.ltag_out.write('\n')
-				
-			self.gloss_queue = []
-			self.lang_queue = []
-			self.trans_queue = []
+				write_gram(postoken, output=self.kwargs['class_f'], aln_labels=aln_labels, prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
+				write_gram(postoken, output=self.kwargs['tag_f'], type='tagger', **self.kwargs)
+			
+			self.kwargs.get('tag_f').write('\n')
+			
+		#===================================================================
+		# Write out the lang line tags
+		#===================================================================
+		if self.lang_queue:
+			for postoken in self.lang_queue:
+				# Skip "X" tags
+				if postoken.label != 'X':
+					write_gram(postoken, output=self.ltag_out, type='tagger', **self.kwargs)
+			self.ltag_out.write('\n')
+			
+		self.gloss_queue = []
+		self.lang_queue = []
+		self.trans_queue = []
 					
-		XamlRefActionFilter.endElement(self, name)
+		XamlRefActionFilter.endIGT(self)
+		
+	def endDocument(self):
+		ae = AlignEval(self.heur_aln_corpus, self.gold_aln_corpus)
+		print(ae.all())
+		XamlRefActionFilter.endDocument(self)
 		
 #===============================================================================
 # Do some cleaning of the XML elements.
