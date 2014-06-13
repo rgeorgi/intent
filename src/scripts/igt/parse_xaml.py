@@ -9,14 +9,20 @@ from argparse import ArgumentParser
 from glob import glob
 import os
 import sys
-import xml.sax
+from utils.commandline import existsdir, existsfile
+import pickle
+from collections import defaultdict
+
+import shelve
+from utils.TwoLevelCountDict import TwoLevelCountDict
 
 if __name__ == '__main__':
 	p = ArgumentParser()
-	p.add_argument('dir', metavar='DIR', nargs='+')
-	p.add_argument('-o', '--outdir', default=os.getcwd())
+	p.add_argument('dir', metavar='DIR', nargs='+', type=existsdir)
+	p.add_argument('-o', '--outdir', default=os.getcwd(), type=existsdir)
 	p.add_argument('--pattern', default='[a-z][a-z][a-z].xml')
 	p.add_argument('--lowercase', action='store_true', default=False)
+	p.add_argument('--posdict', dest='posdict', type=existsfile)
 	
 	args = p.parse_args()
 	
@@ -30,8 +36,10 @@ if __name__ == '__main__':
 	
 	classifier_output = os.path.join(args.outdir, 'gloss_feats.txt')
 	
-	
 	kwargs = vars(args)
+	
+	if args.posdict:
+		kwargs['posdict'] = pickle.load(open(args.posdict, 'rb'))
 		
 	kwargs['tag_out'] = tagger_output
 	kwargs['class_out'] = classifier_output
@@ -41,6 +49,10 @@ if __name__ == '__main__':
 	#===========================================================================
 	
 	xp = XamlParser.XamlParser(**kwargs)
+	
+	kwargs['tag_f'] = open(kwargs.get('tag_out'), 'w')
+	kwargs['class_f'] = open(kwargs.get('class_out'), 'w')
+	
 	for dir in args.dir:
 		xml_files = glob(os.path.join(dir, args.pattern))
 		for x_f in xml_files:

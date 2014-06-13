@@ -21,8 +21,8 @@ from _collections import defaultdict
 		
 class XamlParser(object):
 	def __init__(self, **kwargs):
-		self.tag_out = open(kwargs.get('tag_out'), 'a')
-		self.class_out = open(kwargs.get('class_out'), 'a')
+		kwargs['tag_f'] = open(kwargs.get('tag_out'), 'a')
+		kwargs['class_f'] = open(kwargs.get('class_out'), 'a')
 		
 	
 	def parse(self, fp, **kwargs):
@@ -52,7 +52,7 @@ class XamlParser(object):
 		output_handler = LGTFilter(output_handler)
 		
 		# 2) Output the gram information for classifiers and taggers.
-		#output_handler = GramOutputFilter(output_handler, **kwargs)
+		output_handler = GramOutputFilter(output_handler, **kwargs)
 		
 		# 3) Clean the XML of escape characters.
 		output_handler = XMLCleaner(output_handler, **kwargs)
@@ -68,6 +68,8 @@ def write_gram(token, **kwargs):
 	type = kwargs.get('type')
 	output = kwargs.get('output', sys.stdout)
 	
+	posdict = kwargs.get('posdict')
+		
 	# Previous tag info
 	prev_gram = kwargs.get('prev_gram')
 	next_gram = kwargs.get('next_gram')
@@ -93,7 +95,9 @@ def write_gram(token, **kwargs):
 	if type == 'classifier':
 		output.write(pos)
 		
+		#=======================================================================
 		# Get the morphemes
+		#=======================================================================
 		morphs = tokenize_string(gram, morpheme_tokenizer)
 		
 		#=======================================================================
@@ -112,13 +116,13 @@ def write_gram(token, **kwargs):
 		#=======================================================================
 		# Suffix
 		#=======================================================================
-		if True:
+		if False:
 			output.write('\tgram-suffix-%s:1' % gram[-3:])
 			
 		#=======================================================================
 		# Prefix
 		#=======================================================================
-		if True:
+		if False:
 			output.write('\tgram-prefix-%s:1' % gram[:3].replace(':','-'))
 			
 		#=======================================================================
@@ -130,7 +134,7 @@ def write_gram(token, **kwargs):
 		#=======================================================================
 		# Add previous gram features
 		#=======================================================================
-		if kwargs.get('context-feats', True):
+		if kwargs.get('context-feats', False):
 			
 			#===================================================================
 			# Previous gram
@@ -155,10 +159,26 @@ def write_gram(token, **kwargs):
 				for token in tokenize_string(next_gram, morpheme_tokenizer):
 					output.write('\tnext-gram-%s:1' % token.seq)
 		
-
+		#=======================================================================
+		# Iterate through the morphs
+		#=======================================================================
 		
 		for token in morphs:
+			#===================================================================
+			# Just write the morph
+			#===================================================================
 			output.write('\t%s:1' % token.seq)
+			
+			#===================================================================
+			# If the morph resembles a word in our dictionary, give it
+			# a predicted tag
+			#===================================================================
+			if token.seq in posdict and False:
+				top_tags = posdict.top_n(token.seq)
+				output.write('\ttop-dict-word-%s:1' % top_tags[0][0])
+				if len(top_tags) > 1:
+					output.write('\tnext-dict-word-%s:1' % top_tags[1][0])
+				
 
 		output.write('\n')
 		
@@ -441,7 +461,7 @@ class GramOutputFilter(XamlRefActionFilter):
 				trans = IGTTier(seq=self.trans_queue, kind='trans')
 				i.append(trans)
 				
-				heur_aln = i.gloss_heuristic_alignment()
+				#heur_aln = i.gloss_heuristic_alignment()
 				
 			
 			
@@ -469,10 +489,10 @@ class GramOutputFilter(XamlRefActionFilter):
 					if i+1 < len(self.gloss_queue):
 						next_gram = self.gloss_queue[i+1]
 						
-					write_gram(postoken, output=self.class_out, aln_labels=aln_labels, prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
-					write_gram(postoken, output=self.tag_out, type='tagger', **self.kwargs)
+					write_gram(postoken, output=self.kwargs['class_f'], aln_labels=aln_labels, prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
+					write_gram(postoken, output=self.kwargs['tag_f'], type='tagger', **self.kwargs)
 				
-				self.kwargs.get('tag_out').write('\n')
+				self.kwargs.get('tag_f').write('\n')
 				
 			#===================================================================
 			# Write out the lang line tags
