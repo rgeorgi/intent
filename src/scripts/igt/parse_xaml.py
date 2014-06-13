@@ -15,6 +15,7 @@ from collections import defaultdict
 
 import shelve
 from utils.TwoLevelCountDict import TwoLevelCountDict
+import logging
 
 if __name__ == '__main__':
 	p = ArgumentParser()
@@ -23,8 +24,16 @@ if __name__ == '__main__':
 	p.add_argument('--pattern', default='[a-z][a-z][a-z].xml')
 	p.add_argument('--lowercase', action='store_true', default=False)
 	p.add_argument('--posdict', dest='posdict', type=existsfile)
+	p.add_argument('--log', action="store_true")
 	
 	args = p.parse_args()
+	
+	#===========================================================================
+	# Logging
+	#===========================================================================
+	if args.log:
+		pass
+		#logging.basicConfig(level=logging.DEBUG)
 	
 	#===========================================================================
 	# Set up the output paths for the gram stuff.

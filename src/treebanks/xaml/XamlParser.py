@@ -16,6 +16,7 @@ import xml.sax
 from xml.sax.saxutils import XMLFilterBase, XMLGenerator, unescape
 import os
 from _collections import defaultdict
+import logging
 
 
 		
@@ -109,21 +110,25 @@ def write_gram(token, **kwargs):
 		#=======================================================================
 		# What labels is it aligned with
 		#=======================================================================
-		if False:
+		if True:
 			for aln_label in aln_labels:
 				output.write('\taln-label-%s:1' % aln_label)
 			
 		#=======================================================================
 		# Suffix
 		#=======================================================================
-		if False:
-			output.write('\tgram-suffix-%s:1' % gram[-3:])
+		if True:
+			output.write('\tgram-suffix-3-%s:1' % gram[-3:].replace(':','-'))
+			output.write('\tgram-suffix-2-%s:1' % gram[-2:].replace(':','-'))
+			output.write('\tgram-suffix-1-%s:1' % gram[-3:].replace(':','-'))
 			
 		#=======================================================================
 		# Prefix
 		#=======================================================================
-		if False:
-			output.write('\tgram-prefix-%s:1' % gram[:3].replace(':','-'))
+		if True:
+			output.write('\tgram-prefix-3-%s:1' % gram[:3].replace(':','-'))
+			output.write('\tgram-prefix-2-%s:1' % gram[:2].replace(':','-'))
+			output.write('\tgram-prefix-1-%s:1' % gram[:1].replace(':','-'))
 			
 		#=======================================================================
 		# Number of morphs
@@ -134,7 +139,7 @@ def write_gram(token, **kwargs):
 		#=======================================================================
 		# Add previous gram features
 		#=======================================================================
-		if kwargs.get('context-feats', False):
+		if kwargs.get('context-feats', True):
 			
 			#===================================================================
 			# Previous gram
@@ -173,8 +178,13 @@ def write_gram(token, **kwargs):
 			# If the morph resembles a word in our dictionary, give it
 			# a predicted tag
 			#===================================================================
-			if token.seq in posdict and False:
+			if token.seq in posdict and True:
+				
 				top_tags = posdict.top_n(token.seq)
+				best = top_tags[0][0]
+				if best != pos:
+					logging.debug('%s TAGGED as %s NOT %s' % (gram, pos, best))
+				
 				output.write('\ttop-dict-word-%s:1' % top_tags[0][0])
 				if len(top_tags) > 1:
 					output.write('\tnext-dict-word-%s:1' % top_tags[1][0])
@@ -499,7 +509,9 @@ class GramOutputFilter(XamlRefActionFilter):
 			#===================================================================
 			if self.lang_queue:
 				for postoken in self.lang_queue:
-					write_gram(postoken, output=self.ltag_out, type='tagger', **self.kwargs)
+					# Skip "X" tags
+					if postoken.label != 'X':
+						write_gram(postoken, output=self.ltag_out, type='tagger', **self.kwargs)
 				self.ltag_out.write('\n')
 				
 			self.gloss_queue = []
