@@ -14,7 +14,7 @@ import re
 def setup():
 	global mallet
 	mydir = os.path.abspath(os.path.dirname(__file__))
-	c = ConfigFile(os.path.join(mydir, 'mallet_maxent.prop'))
+	c = ConfigFile(os.path.join(mydir, 'mallet.prop'))
 	
 	mallet = c['mallet']
 
