@@ -204,7 +204,7 @@ class XamlRefActionFilter(XMLFilterBase):
 		self.textref = {}
 		self.typeref = {}
 		
-		self.kwargs = kwargs
+		self.kwargs = ArgPasser(kwargs)
 		
 		#=======================================================================
 		# Segment Tier States
@@ -554,7 +554,12 @@ class GramOutputFilter(XamlRefActionFilter):
 			self.gold_aln_corpus.append(gold_aln_sent)
 			self.heur_aln_corpus.append(heur_aln_sent)
 			
-			#heur_aln = gold_aln_sent
+			#===================================================================
+			# Which alignment type to use; the manual one (gold) or the 
+			# automatic one (heur)
+			#===================================================================
+			if self.kwargs.get('feat_align_type', 'heur') == 'gold':
+				heur_aln = gold_aln_sent
 			
 			
 		
