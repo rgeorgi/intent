@@ -72,7 +72,7 @@ class MalletMaxentInfo(MalletTool):
 			#===================================================================
 			# Sort by either best or worst feats
 			#===================================================================
-			feat_items = sorted(feats.items(), key=lambda feat: feat[1], reverse=False)
+			feat_items = sorted(feats.items(), key=lambda feat: feat[1], reverse=True)
 			
 			for feat, score in feat_items[:10]:
 				print(feat, score)

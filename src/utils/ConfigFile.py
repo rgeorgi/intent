@@ -13,9 +13,10 @@ Also automatically attempts to parses lines into python types (lists, integers).
 '''
 import re
 import sys
-from _abcoll import Mapping, MutableMapping
-
-
+from utils.argutils import ArgPasser
+from unittest.case import TestCase
+from tempfile import NamedTemporaryFile
+import os
 
 
 class ConfigFileException(Exception):
@@ -31,16 +32,16 @@ class SetConflict(ConfigFileException):
 	def __init__(self, m = None):
 		ConfigFileException.__init__(self, m)
 
-class ConfigFile(MutableMapping):
+class ConfigFile(ArgPasser):
 	def __init__(self, path):
-		
-		self._settings = {}
-		
+				
 		cf = open(path, 'rb')
 		lines = cf.readlines()
 		for line in lines:
 			line = line.decode('unicode_escape')
 			content = re.search('(^[^#]*)', line).group(1).strip()
+			
+			# Skip blank or commented lines
 			if not content:
 				continue
 			try:
@@ -51,68 +52,73 @@ class ConfigFile(MutableMapping):
 				sys.stderr.write(content+'\n')
 				raise ve
 			
-			
+
 			
 			# Go ahead and replace all backreferences...
 			refs = re.findall('"?(\$\w+)"?', string)
 			for ref in refs:
 				refname = ref[1:]
-				if refname in self._settings:
-					string = string.replace(ref, self._settings[refname])
-			string = string.replace('"', '')
+				if refname in self:
+					string = string.replace(ref, self[refname])
 					
-			# Try to parse the right-hand side into the appropriate element.
-			try:
-# 				string = eval(string)
-				pass
-			except:
-				pass
-			try:
-				string = int(string)
-			except:
-				pass
+			string = string.replace('"', '')
 			
-			self._settings[var] = string
-
-	def __getitem__(self, k):
-		if k in self._settings:
-			return self._settings[k]
-		else:
-			return None
+			#===================================================================
+			# Attempt to evaluate the strings.
+			#===================================================================
+			try:
+				string = eval(string)
+			except Exception as e:
+				pass
+					
+			self[var] = string
 		
-	def __setitem__(self, k, v):
-		self.settings[k] = v
-		
-	def __iter__(self):
-		return self.settings.__iter__()
-	
-	def __len__(self):
-		return len(self.settings)
 
 	def set_defaults(self, dict):
 		for key in dict:
 			self.set(key, dict[key], overwrite = False)
 
-	def __delitem__(self, k):
-		self.settings.__delitem__(k)
-				
-	def set(self, key, value, overwrite = False):
-		if overwrite or key not in self._settings:
-			self._settings[key] = value
+
+#===============================================================================
+# Test Cases
+#===============================================================================
+
+class ConfigFileTests(TestCase):
+	
+	def setUp(self):
+		self.nt = NamedTemporaryFile('w', delete=False)
+		self.nt.write('''
+# This is a test config file.
+a = True
+b = 0
+c = 1
+d = False
+
+e = "quoted string"
+f = $e "also this"
+
+		''')
+		self.nt.close()
+		self.cf = ConfigFile(self.nt.name)
 		
-	def getint(self, k):
-		if k not in self._settings:
-			raise NoOptionException(k)
-		else:
-			return int(self[k])
+	def tearDown(self):
+		os.remove(self.nt.name)
 		
-	def get(self, k, default=None):
-		if k not in self._settings:
-			return default
-		else:
-			return self._settings[k]
 		
-	@property
-	def settings(self):
-		return self._settings
-			
+	def testBool(self):
+		cf = self.cf
+		
+		self.assertIs(cf['a'], True)
+		self.assertIs(cf['d'], False)
+		self.assertIs(cf['b'], 0)
+		
+		self.assertFalse(cf['b'])
+		self.assertFalse(cf['d'])
+		
+		self.assertTrue(cf['a'])
+		self.assertTrue(cf['c'])
+		
+	def testRefs(self):
+		cf = self.cf
+		self.assertEqual(cf['e'], "quoted string")
+		self.assertEqual(cf['f'], "quoted string also this")

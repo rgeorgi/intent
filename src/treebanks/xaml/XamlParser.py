@@ -4,29 +4,24 @@ Created on Apr 30, 2014
 @author: rgeorgi
 '''
 
-from xml.dom import minidom
-from utils.xmlutils import get_child_tags, find_tag, getIntAttr, get_ref
-import sys
-from utils.Token import Tokenization, Token, morpheme_tokenizer, tokenize_string,\
-	POSToken
-from corpora.IGTCorpus import IGTTier, IGTToken, Span, IGTInstance
-from tokenize import tokenize
-import re
+import sys, os, re
+from utils.Token import morpheme_tokenizer, tokenize_string, POSToken
+from corpora.IGTCorpus import IGTTier, Span, IGTInstance
 import xml.sax
 from xml.sax.saxutils import XMLFilterBase, XMLGenerator, unescape
-import os
-from _collections import defaultdict
+from collections import defaultdict
 import logging
 from alignment.Alignment import AlignedSent, Alignment, AlignedCorpus
 from eval.AlignEval import AlignEval
+from utils.argutils import ArgPasser
 
-
+MODULE_LOGGER = logging.getLogger(__name__)
+ALIGN_LOGGER = logging.getLogger('alignment')
 		
 class XamlParser(object):
 	def __init__(self, **kwargs):
-		kwargs['tag_f'] = open(kwargs.get('tag_out'), 'a')
-		kwargs['class_f'] = open(kwargs.get('class_out'), 'a')
-		
+		kwargs['tag_f'] = open(kwargs.get('tag_out'), 'a', encoding='utf-8')
+		kwargs['class_f'] = open(kwargs.get('class_out'), 'a', encoding='utf-8')
 	
 	def parse(self, fp, **kwargs):
 		parser = xml.sax.make_parser()
@@ -39,7 +34,7 @@ class XamlParser(object):
 		outdir = kwargs.get('outdir')
 		ltagger_output = os.path.join(outdir, os.path.basename(prefix)+'_tagger.txt')
 		kwargs['ltag_out'] = ltagger_output
-		
+				
 		#=======================================================================
 		# Get the output file
 		#=======================================================================
@@ -68,10 +63,14 @@ class XamlParser(object):
 		output_handler.parse(fp)
 
 def write_gram(token, **kwargs):
+	
+	# Re-cast the kwargs as an argpasser.
+	kwargs = ArgPasser(kwargs)
+	
 	type = kwargs.get('type')
 	output = kwargs.get('output', sys.stdout)
 	
-	posdict = kwargs.get('posdict')
+	posdict = kwargs.get('posdict')	
 		
 	# Previous tag info
 	prev_gram = kwargs.get('prev_gram')
@@ -87,11 +86,11 @@ def write_gram(token, **kwargs):
 	pos = token.label
 
 	# Lowercase if asked for	
-	lower = kwargs.get('lowercase', True)
+	lower = kwargs.get('lowercase', True, bool)
 	gram = gram.lower() if gram else gram
 		
 	# Strip if asked for
-	strip = kwargs.get('strip', True)
+	strip = kwargs.get('strip', True, bool)
 	gram = re.sub('\s*', '', gram) if strip else gram
 	
 	# Output the grams for a classifier
@@ -106,20 +105,20 @@ def write_gram(token, **kwargs):
 		#=======================================================================
 		# Is there a number
 		#=======================================================================
-		if re.search('[0-9]', gram) and False:
+		if re.search('[0-9]', gram) and kwargs.get('feat_has_number', False, bool):
 			output.write('\thas-number:1')
 			
 		#=======================================================================
 		# What labels is it aligned with
 		#=======================================================================
-		if True:
+		if kwargs.get('feat_align', False, bool):
 			for aln_label in aln_labels:
 				output.write('\taln-label-%s:1' % aln_label)
 			
 		#=======================================================================
 		# Suffix
 		#=======================================================================
-		if False:
+		if kwargs.get('feat_suffix', False, bool):
 			output.write('\tgram-suffix-3-%s:1' % gram[-3:].replace(':','-'))
 			output.write('\tgram-suffix-2-%s:1' % gram[-2:].replace(':','-'))
 			output.write('\tgram-suffix-1-%s:1' % gram[-3:].replace(':','-'))
@@ -127,7 +126,7 @@ def write_gram(token, **kwargs):
 		#=======================================================================
 		# Prefix
 		#=======================================================================
-		if False:
+		if kwargs.get('feat_prefix', False, bool):
 			output.write('\tgram-prefix-3-%s:1' % gram[:3].replace(':','-'))
 			output.write('\tgram-prefix-2-%s:1' % gram[:2].replace(':','-'))
 			output.write('\tgram-prefix-1-%s:1' % gram[:1].replace(':','-'))
@@ -135,36 +134,32 @@ def write_gram(token, **kwargs):
 		#=======================================================================
 		# Number of morphs
 		#=======================================================================		
-		if False:
+		if kwargs.get('feat_morph_num', False, bool):
 			output.write('\t%d-morphs:1' % len(morphs))
+	
 		
-		#=======================================================================
-		# Add previous gram features
-		#=======================================================================
-		if kwargs.get('context-feats', True):
-			
-			#===================================================================
-			# Previous gram
-			#===================================================================
-			if prev_gram and True:
-				prev_gram = prev_gram.seq
-				prev_gram = prev_gram.lower() if lower else prev_gram
-				prev_gram = re.sub('\s*', '', prev_gram) if strip else prev_gram
-						
-				# And then tokenize...
-				for token in tokenize_string(prev_gram, morpheme_tokenizer):
-					output.write('\tprev-gram-%s:1' % token.seq)
+		#===================================================================
+		# Previous gram
+		#===================================================================
+		if prev_gram and kwargs.get('feat_prev_gram', False, bool):
+			prev_gram = prev_gram.seq
+			prev_gram = prev_gram.lower() if lower else prev_gram
+			prev_gram = re.sub('\s*', '', prev_gram) if strip else prev_gram
 					
-			#===================================================================
-			# Next gram
-			#===================================================================
-			if next_gram and False:
-				next_gram = next_gram.seq
-				next_gram = next_gram.lower() if lower else next_gram
-				next_gram = re.sub('\s*', '', next_gram) if strip else next_gram
+			# And then tokenize...
+			for token in tokenize_string(prev_gram, morpheme_tokenizer):
+				output.write('\tprev-gram-%s:1' % token.seq)
 				
-				for token in tokenize_string(next_gram, morpheme_tokenizer):
-					output.write('\tnext-gram-%s:1' % token.seq)
+		#===================================================================
+		# Next gram
+		#===================================================================
+		if next_gram and kwargs.get('feat_next_gram', False, bool):
+			next_gram = next_gram.seq
+			next_gram = next_gram.lower() if lower else next_gram
+			next_gram = re.sub('\s*', '', next_gram) if strip else next_gram
+			
+			for token in tokenize_string(next_gram, morpheme_tokenizer):
+				output.write('\tnext-gram-%s:1' % token.seq)
 		
 		#=======================================================================
 		# Iterate through the morphs
@@ -174,18 +169,20 @@ def write_gram(token, **kwargs):
 			#===================================================================
 			# Just write the morph
 			#===================================================================
-			output.write('\t%s:1' % token.seq)
+			if kwargs.get('feat_basic', True, bool):
+				output.write('\t%s:1' % token.seq)
 			
 			#===================================================================
 			# If the morph resembles a word in our dictionary, give it
 			# a predicted tag
 			#===================================================================
-			if token.seq in posdict and True:
+			
+			if token.seq in posdict and kwargs.get('feat_dict', False, bool):
 				
 				top_tags = posdict.top_n(token.seq)
 				best = top_tags[0][0]
 				if best != pos:
-					logging.debug('%s TAGGED as %s NOT %s' % (gram, pos, best))
+					MODULE_LOGGER.debug('%s TAGGED as %s NOT %s' % (gram, pos, best))
 				
 				output.write('\ttop-dict-word-%s:1' % top_tags[0][0])
 				if len(top_tags) > 1:
@@ -193,7 +190,7 @@ def write_gram(token, **kwargs):
 				
 
 		output.write('\n')
-		
+				
 	if type == 'tagger':
 		output.write('%s/%s ' % (gram, pos))
 
@@ -348,7 +345,7 @@ class XamlRefActionFilter(XMLFilterBase):
 		elif src_type == 'L' and tgt_type == 'G':
 			self.lg_aln = aln
 		else:
-			logging.warn('Unexpected alignment type: "%s-%s" found.' % (src_type, tgt_type))
+			MODULE_LOGGER.warn('Unexpected alignment type: "%s-%s" found.' % (src_type, tgt_type))
 		
 	def alnPartHandler(self, src, tgts):
 		srcRep = self.textref.get(src)
@@ -487,7 +484,7 @@ class GramOutputFilter(XamlRefActionFilter):
 		# Open the language-specific tagger output for writing.
 		#=======================================================================
 		if self.kwargs.get('ltag_out'):
-			ltag_out = open(self.kwargs.get('ltag_out'), 'w')
+			ltag_out = open(self.kwargs.get('ltag_out'), 'w', encoding='utf-8')
 			
 		# And set it to the variables
 		self.ltag_out = ltag_out
@@ -549,13 +546,15 @@ class GramOutputFilter(XamlRefActionFilter):
 			
 			
 			# Add debug line
-			logging.debug('Adding alignment for %s' % trans.text())
+			MODULE_LOGGER.debug('Adding alignment for %s' % trans.text())
 			
 			heur_aln_sent = AlignedSent(gloss, trans, heur_aln.aln)
 			gold_aln_sent = AlignedSent(gloss, trans, self.gt_aln)
 			
 			self.gold_aln_corpus.append(gold_aln_sent)
 			self.heur_aln_corpus.append(heur_aln_sent)
+			
+			#heur_aln = gold_aln_sent
 			
 			
 		
@@ -607,7 +606,7 @@ class GramOutputFilter(XamlRefActionFilter):
 		
 	def endDocument(self):
 		ae = AlignEval(self.heur_aln_corpus, self.gold_aln_corpus)
-		print(ae.all())
+		ALIGN_LOGGER.info(ae.all())
 		XamlRefActionFilter.endDocument(self)
 		
 #===============================================================================
@@ -617,6 +616,7 @@ class XMLCleaner(XMLFilterBase):
 	def __init__(self, upstream, **kwargs):
 		XMLFilterBase.__init__(self, upstream)
 		
+				
 	def startElement(self, name, attrs):
 		newAttrs = {}
 		for attr in attrs.keys():
