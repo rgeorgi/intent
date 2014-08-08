@@ -8,7 +8,7 @@ import collections
 import sys
 import re
 import unittest
-from utils.Token import tokenize_string
+from utils.token import tokenize_string
 
 #===============================================================================
 # Aligned Sent Class

@@ -6,13 +6,13 @@ Created on Oct 22, 2013
 
 import os, sys
 from optparse import OptionParser
-from utils.commandline import require_opt
+from utils.argutils import require_opt
 from utils.systematizing import notify
 from utils.ConfigFile import ConfigFile
 from eval.pos_eval import pos_eval
 import time
 import subprocess as sub
-from utils.Token import tag_tokenizer, tokenize_string
+from utils.token import tag_tokenizer, tokenize_string
 
 #===============================================================================
 # Set up the stanford tagger to run via stdin.
@@ -39,7 +39,15 @@ class StanfordPOSTagger(object):
 						
 				stdout=sub.PIPE, stdin=sub.PIPE, stderr=sys.stderr)
 
-	def tag(self, string):
+	def tag_tokenization(self, tokenization, **kwargs):
+		return self.tag(tokenization.text(), **kwargs)
+
+	def tag(self, string, **kwargs):
+		
+		# Lowercase if asked for
+		if kwargs.get('lowercase', True):
+			string = string.lower()
+				
 		self.st.stdin.write(bytes(string+'\r\n', encoding='utf-8'))
 		self.st.stdin.flush()
 		content = self.st.stdout.readline()
@@ -70,7 +78,7 @@ def test(test_file, model_path, out_file, delimeter):
 def tag(string, model):
 	jar()
 	global stanford_jar
-	pt = POSTagger(model, stanford_jar)
+	pt = StanfordPOSTagger(model, stanford_jar)
 	return pt.tag(string)
 	
 

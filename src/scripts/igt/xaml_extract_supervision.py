@@ -46,24 +46,25 @@ if __name__ == '__main__':
 	
 	classifier_output = os.path.join(outdir, 'gloss_feats.txt')
 	
-	kwargs = c
-	
-	if c.get('posdict'):		
-		kwargs['posdict'] = pickle.load(open(c.get('posdict'), 'rb'))
 		
-	kwargs['tag_out'] = tagger_output
-	kwargs['class_out'] = classifier_output
+	if c.get('posdict'):		
+		c['posdict'] = pickle.load(open(c.get('posdict'), 'rb'))
+		
+	c['tag_out'] = tagger_output
+	c['class_out'] = classifier_output
 	
 	#===========================================================================
 	# Now parse the files
 	#===========================================================================
 	
-	xp = XamlParser.XamlParser(**kwargs)
+	xp = XamlParser.XamlParser(**c)
+	
+	
 
-	kwargs['tag_f'] = open(kwargs.get('tag_out'), 'w', encoding='utf-8')
-	kwargs['class_f'] = open(kwargs.get('class_out'), 'w', encoding='utf-8')
-
+	c['tag_f'] = open(c.get('tag_out'), 'w', encoding='utf-8')
+	c['class_f'] = open(c.get('class_out'), 'w', encoding='utf-8')
+	
 	xml_files = glob(os.path.join(c.get('input_dir'), c.get('pattern', default='*.xml')))
 
 	for x_f in xml_files:
-		xp.parse(x_f, **kwargs)
+		xp.parse(x_f, **c)

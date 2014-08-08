@@ -5,7 +5,8 @@ Created on Apr 30, 2014
 '''
 
 import sys, os, re
-from utils.Token import morpheme_tokenizer, tokenize_string, POSToken
+from utils.token import morpheme_tokenizer, tokenize_string, POSToken,\
+	Tokenization
 from corpora.IGTCorpus import IGTTier, Span, IGTInstance
 import xml.sax
 from xml.sax.saxutils import XMLFilterBase, XMLGenerator, unescape
@@ -13,37 +14,64 @@ from collections import defaultdict
 import logging
 from alignment.Alignment import AlignedSent, Alignment, AlignedCorpus
 from eval.AlignEval import AlignEval
-from utils.argutils import ArgPasser
+from utils.argutils import ArgPasser, existsfile
+from interfaces.stanford_tagger import StanfordPOSTagger
+from utils.token import GoldTagPOSToken
 
 MODULE_LOGGER = logging.getLogger(__name__)
 ALIGN_LOGGER = logging.getLogger('alignment')
-		
+
+#===============================================================================
+# 
+#===============================================================================
+
 class XamlParser(object):
 	def __init__(self, **kwargs):
+		
 		kwargs['tag_f'] = open(kwargs.get('tag_out'), 'a', encoding='utf-8')
 		kwargs['class_f'] = open(kwargs.get('class_out'), 'a', encoding='utf-8')
+		
+		#===========================================================================
+		# POS Tagger Model 
+		#===========================================================================
+		
+		self.tagger = None
+		if kwargs.get('tagger_model'):
+			self.tagger = StanfordPOSTagger(kwargs.get('tagger_model'))
+	
+	#===========================================================================
+	# Do the parsing of the XML
+	#===========================================================================
 	
 	def parse(self, fp, **kwargs):
+		# Cast as an argpasser for convenience
+		kwargs = ArgPasser(kwargs)
+		
+		# Initialize a base SAX parser
 		parser = xml.sax.make_parser()
 		
+		# Add the current file name to the arguments.
 		kwargs['cur_file'] = fp
+		
+		# Pass the tagger in the arguments if we have one.
+		kwargs['stanford_tagger'] = self.tagger
 		
 		# Original filename
 		prefix = os.path.splitext(fp)[0]
 		
 		outdir = kwargs.get('outdir')
+		
+		#=======================================================================
+		# For each of the separate language files, create their own POS tagged
+		# entries for testing.
+		#=======================================================================
 		ltagger_output = os.path.join(outdir, os.path.basename(prefix)+'_tagger.txt')
 		kwargs['ltag_out'] = ltagger_output
-				
-		#=======================================================================
-		# Get the output file
-		#=======================================================================
 		
 				
 		#=======================================================================
 		#  FILTERING AND WRITING
 		#=======================================================================
-		
 		
 		# 1) Filter out the instances for annotation.
 		output_handler = parser
@@ -61,6 +89,10 @@ class XamlParser(object):
 		output_handler = InstanceCounterFilter(output_handler, **kwargs)
 		
 		output_handler.parse(fp)
+
+#===============================================================================
+# Write Gram
+#===============================================================================
 
 def write_gram(token, **kwargs):
 	
@@ -83,18 +115,15 @@ def write_gram(token, **kwargs):
 	# Break apart the token...
 	#===========================================================================
 	gram = token.seq
-	pos = token.label
+		
+	pos = token.goldlabel
 
 	# Lowercase if asked for	
 	lower = kwargs.get('lowercase', True, bool)
 	gram = gram.lower() if gram else gram
 		
-	# Strip if asked for
-	strip = kwargs.get('strip', True, bool)
-	gram = re.sub('\s*', '', gram) if strip else gram
-	
 	# Output the grams for a classifier
-	if type == 'classifier':
+	if type == 'classifier' and pos:
 		output.write(pos)
 		
 		#=======================================================================
@@ -144,7 +173,6 @@ def write_gram(token, **kwargs):
 		if prev_gram and kwargs.get('feat_prev_gram', False, bool):
 			prev_gram = prev_gram.seq
 			prev_gram = prev_gram.lower() if lower else prev_gram
-			prev_gram = re.sub('\s*', '', prev_gram) if strip else prev_gram
 					
 			# And then tokenize...
 			for token in tokenize_string(prev_gram, morpheme_tokenizer):
@@ -156,7 +184,6 @@ def write_gram(token, **kwargs):
 		if next_gram and kwargs.get('feat_next_gram', False, bool):
 			next_gram = next_gram.seq
 			next_gram = next_gram.lower() if lower else next_gram
-			next_gram = re.sub('\s*', '', next_gram) if strip else next_gram
 			
 			for token in tokenize_string(next_gram, morpheme_tokenizer):
 				output.write('\tnext-gram-%s:1' % token.seq)
@@ -226,6 +253,18 @@ class XamlRefActionFilter(XMLFilterBase):
 		self.lg_aln = None
 		self.gt_aln = None
 		
+		#=======================================================================
+		# What has been done to the instance
+		#=======================================================================
+		self.langTags = False
+		self.langSegs = False
+		
+		self.glossTags = False
+		self.glossSegs = False
+		
+		self.transTags = False
+		self.transSegs = False
+		
 		
 	#===========================================================================
 	# Start Element
@@ -249,33 +288,42 @@ class XamlRefActionFilter(XMLFilterBase):
 			uid = attrs['Name']
 			backref = attrs['SourceTier'][13:-1]
 
-			type = self.typeref[backref][0]
+			tiertype = self.typeref[backref][0]
+			
+			# The actual text of the segment
 			text = attrs['Text']
+
+			# Strip the spaces from inside a token if asked...			
+			strip = self.kwargs.get('strip', True, bool)
+			text = re.sub('\s*', '', text) if strip else text
+
 			
 			self.partnum += 1
 			
 			s = Span(int(attrs['FromChar']), int(attrs['ToChar']))
 			
-			t = POSToken(text, index=self.partnum, span=s)
+			t = GoldTagPOSToken(text, index=self.partnum, span=s)
 			
 			self.textref[uid] = t
-			self.typeref[uid] = type
+			self.typeref[uid] = tiertype
 			
-			self.segHandler(t, type, **self.kwargs)
+			# Call the segment handler -----------------------------------------
+			self.segHandler(t, tiertype, **self.kwargs)
 			
 		# ((( POS TIER )))
 		
 		if name == 'TagPart':
 			pos = attrs['Text']
 			backref = attrs['Source'][13:-1]
-			postoken = self.textref.get(backref)
+			token = self.textref.get(backref)
 			
-			if postoken:
-				postoken.label = pos
+			# Only try to deal with a tagging if it refers back to a valid element. 			
+			if token:
+				token.goldlabel = pos
 				
 				typeref = self.typeref.get(backref)
 				
-				self.posHandler(postoken, typeref, **self.kwargs)
+				self.posHandler(token, typeref, **self.kwargs)
 					
 		# ((( ALIGNMENT )))
 		
@@ -335,6 +383,19 @@ class XamlRefActionFilter(XMLFilterBase):
 	def endIGT(self):
 		self.textref = {}
 		
+		self.langSegs = False
+		self.langTags = False
+		
+		self.glossSegs = False
+		self.glossTags = False
+		
+		self.transSegs = False
+		self.transTags = False
+		
+		self.cur_aln = Alignment()
+		self.gt_aln = Alignment()
+		self.lg_aln = Alignment()
+		
 	#===========================================================================
 	#  EXTENDED HANDLERS
 	#===========================================================================
@@ -370,10 +431,22 @@ class XamlRefActionFilter(XMLFilterBase):
 		pass
 		
 	def segHandler(self, seg, typeref, **kwargs):
-		pass
+		if typeref == 'G':
+			self.glossSegs = True
+		elif typeref == 'L':
+			self.langSegs = True
+		elif typeref == 'T':
+			self.transSegs = True
+		
 		
 	def posHandler(self, postoken, typeref, **kwargs):
-		pass
+		if typeref == 'G':
+			self.glossTags = True
+		elif typeref == 'L':
+			self.langTags = True
+		elif typeref == 'T':
+			self.transTags = True
+		
 
 #===============================================================================
 # Count various things
@@ -458,6 +531,8 @@ class InstanceCounterFilter(XamlRefActionFilter):
 			self.counts['gloss_tokens'] += 1
 		elif typeref == 'L':
 			self.counts['lang_tokens'] += 1
+		elif typeref == 'T':
+			self.counts['trans_tokens'] += 1
 			
 		self.was_segmented[typeref] = True
 		
@@ -492,30 +567,34 @@ class GramOutputFilter(XamlRefActionFilter):
 		#=======================================================================
 		# Here are the queued portions to write out
 		#=======================================================================
-		self.gloss_queue = []
-		self.lang_queue = []
-		self.trans_queue = []
+		self.gloss_queue = Tokenization()
+		self.lang_queue = Tokenization()
+		self.trans_queue = Tokenization()
 		
 	
-	def posHandler(self, postoken, typeref, **kwargs):
+	def posHandler(self, postoken, typeref, **kwargs):		
+		pass
+			
+			
+	def segHandler(self, seg, typeref, **kwargs):
 		
-		postext = postoken.seq
+		self.isSegmented = True
+		
+		postext = seg.seq
 			
 		if typeref == 'G':
 			if postext and postext.strip():
-				self.gloss_queue.append(postoken)				
+				self.gloss_queue.append(seg)				
 				
 		elif typeref == 'L':
 			if postext and postext.strip():
-				self.lang_queue.append(postoken)
+				self.lang_queue.append(seg)
 				
 		elif typeref == 'T':
 			if postext and postext.strip():
-				self.trans_queue.append(postoken)	
-			
-			
-	def segHandler(self, postoken, typeref, **kwargs):
-		pass
+				self.trans_queue.append(seg)	
+				
+		XamlRefActionFilter.segHandler(self, seg, typeref, **kwargs)
 		
 		
 	
@@ -524,12 +603,31 @@ class GramOutputFilter(XamlRefActionFilter):
 	#===========================================================================
 	def endIGT(self):
 		
+		#=======================================================================
+		# POS Tag the translation line
+		#=======================================================================
+		tagged_trans = None
+		if self.transSegs:
+			#text = ' '.join([t.seq for t in self.trans_segs])
+			
+			# If the stanford tagger is defined, use it for POS tags instead.
+			if self.kwargs.get('stanford_tagger'):
+				tagger = self.kwargs.get('stanford_tagger')
+				MODULE_LOGGER.debug('Tagging "%s"' % self.trans_queue.text())
+				tagged_sent = tagger.tag_tokenization(self.trans_queue, **self.kwargs)
+				
+				# Assign the 
+				for i, token in enumerate(tagged_sent):
+					self.trans_queue[i].taglabel = token.label
+				
+			
+				
 		#===================================================================
 		# Create an IGT instance
 		#===================================================================
 		
 		heur_aln = None
-		if self.lang_queue and self.gloss_queue and self.trans_queue:
+		if self.langSegs and self.glossSegs and self.transSegs:
 			i = IGTInstance()
 			
 			# Create lang tier
@@ -560,25 +658,32 @@ class GramOutputFilter(XamlRefActionFilter):
 			#===================================================================
 			if self.kwargs.get('feat_align_type', 'heur') == 'gold':
 				heur_aln = gold_aln_sent
-			
-			
 		
 		
 		#===================================================================
-		# Write out the gloss tags
+		# Write out the gloss tags ---
 		#===================================================================
-		if self.gloss_queue:
+		if self.glossSegs:
 			
-			# Write out the gloss line
-			for i, postoken in enumerate(self.gloss_queue):
+			# Write out the gloss line ---------------------------------------
+			for i, token in enumerate(self.gloss_queue):
 				
 				aln_labels = []
 				#===========================================================
-				# Grab pos tags from the translation tags if possible
+				# Grab pos tags from the translation tags if possible ---
 				#===========================================================
 				if heur_aln:
 					tgts = heur_aln.src_to_tgt(i+1)
-					aln_labels = [self.trans_queue[tgt-1].label for tgt in tgts]
+					
+					# Switch between gold or tagged POS tags -------------------
+					
+					if self.kwargs.get('feat_align_tags', 'tags') == 'gold':
+						l = lambda t: t.goldlabel
+					else:
+						l = lambda t: t.taglabel
+						
+					# Now get the alignment labels of the correct type
+					aln_labels = [l(self.trans_queue[tgt-1]) for tgt in tgts]
 
 				prev_gram = None
 				if i-1 >= 0:
@@ -587,25 +692,28 @@ class GramOutputFilter(XamlRefActionFilter):
 				next_gram = None
 				if i+1 < len(self.gloss_queue):
 					next_gram = self.gloss_queue[i+1]
-					
-				write_gram(postoken, output=self.kwargs['class_f'], aln_labels=aln_labels, prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
-				write_gram(postoken, output=self.kwargs['tag_f'], type='tagger', **self.kwargs)
+										
+				write_gram(token, output=self.kwargs['class_f'], aln_labels=aln_labels, prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
+				write_gram(token, output=self.kwargs['tag_f'], type='tagger', **self.kwargs)
 			
 			self.kwargs.get('tag_f').write('\n')
 			
-		#===================================================================
-		# Write out the lang line tags
-		#===================================================================
+		# Write out lang line tags ---------------------------------------------
+
 		if self.lang_queue:
-			for postoken in self.lang_queue:
+			for token in self.lang_queue:
 				# Skip "X" tags
-				if postoken.label != 'X':
-					write_gram(postoken, output=self.ltag_out, type='tagger', **self.kwargs)
+				if token.goldlabel != 'X':
+					write_gram(token, output=self.ltag_out, type='tagger', **self.kwargs)
 			self.ltag_out.write('\n')
 			
-		self.gloss_queue = []
-		self.lang_queue = []
-		self.trans_queue = []
+		# Reset the counters ---------------------------------------------------
+			
+		self.gloss_queue = Tokenization()
+		self.lang_queue = Tokenization()
+		self.trans_queue = Tokenization()
+		
+		# Parent Call ----------------------------------------------------------
 					
 		XamlRefActionFilter.endIGT(self)
 		

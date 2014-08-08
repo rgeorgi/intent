@@ -88,11 +88,18 @@ class Token(object):
 #===============================================================================
 
 class POSToken(Token):
-	def __init__(self, form, label = None, index=None, span=None):				
-		self.form = form
+	def __init__(self, seq, label = None, index=None, span=None, parent=None):	
+		self.form = seq
 		self.label = label
 		self.index = index
-		Token.__init__(self, form, span, index)
+		Token.__init__(self, seq, span, index, parent)
+		
+class GoldTagPOSToken(Token):
+	def __init__(self, seq='', taglabel = None, goldlabel = None, span=None, index=None, parent=None):
+		self.taglabel = taglabel
+		self.goldlabel = goldlabel
+		Token.__init__(self, seq, index=index, span=span, parent=parent)
+
 		
 #===============================================================================
 # Morph
@@ -151,7 +158,10 @@ class Tokenization(list):
 	'''
 	def __init__(self, seq=[], original=''):
 		self.original = original
-		list.__init__(self, seq)	
+		list.__init__(self, seq)
+		
+	def text(self):
+		return ' '.join([t.seq for t in self])
 
 class Span(object):
 	'''

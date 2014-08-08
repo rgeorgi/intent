@@ -8,7 +8,7 @@ import re
 import sys
 
 import unittest
-from utils.Token import Token, TokenException, Morph, tokenize_string,\
+from utils.token import Token, TokenException, Morph, tokenize_string,\
 	morpheme_tokenizer
 from utils.string_utils import string_compare_with_processing
 
