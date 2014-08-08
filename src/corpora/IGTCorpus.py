@@ -11,8 +11,11 @@ import unittest
 from utils.token import Token, TokenException, Morph, tokenize_string,\
 	morpheme_tokenizer
 from utils.string_utils import string_compare_with_processing
+from igt.igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
+	clean_trans_string
 
-
+class IGTParseException(Exception):
+	super(Exception)
 
 class IGTCorpus(list):
 	'''
@@ -31,6 +34,26 @@ class IGTCorpus(list):
 	def gloss_heuristic_alignments(self, **kwargs):
 		return [inst.gloss_heuristic_alignment(**kwargs) for inst in self]
 	
+	@classmethod
+	def from_text(cls, textfile, **kwargs):
+		# Create a new corpus
+		corpus = cls()
+		
+		# Open the textfile, and read the contentx.
+		f = open(textfile, 'r', encoding='utf-8')
+		data = f.read()
+		f.close()
+		
+		# Find all the text lines
+		inst_txts = re.findall('doc_id=[\s\S]+?\n\n', data)
+		for inst_txt in inst_txts:
+			try:
+				i = IGTInstance.from_string(inst_txt, **kwargs)
+				print(i.gloss_heuristic_alignment())
+			except IGTParseException as e:
+				pass
+		
+	
 		
 		
 class IGTInstance(list):
@@ -44,6 +67,64 @@ class IGTInstance(list):
 		self.langalign = Alignment()
 		list.__init__(self, seq)
 		self.attrs = {}
+		
+	@classmethod
+	def from_string(cls, string, **kwargs):
+		'''
+		Method to parse and create an IGT instance from text.
+		
+		@param cls:
+		@param string:
+		'''
+		# Start by looking for the doc_id
+		txtid = re.search('doc_id=([0-9\s]+)', string).group(1)
+		inst = cls(id = txtid)
+		
+		# Now, find all the lines
+		lines = re.findall('line=([0-9]+)\stag=(\S+):(.*)\n', string)
+		
+		# Merge all the lang lines into one
+		lang_lines = [line[2] for line in lines if 'L' in line[1]]				
+		gloss_lines = [line[2] for line in lines if 'G' in line[1]]
+		trans_lines = [line[2] for line in lines if 'T' in line[1]]
+		
+		
+		if kwargs.get('merge', True):
+			lang_line = merge_lines(lang_lines)
+			gloss_line = merge_lines(gloss_lines)
+			trans_line = merge_lines(trans_lines)
+		else:
+			lang_line = lang_lines[0]
+			gloss_line = gloss_lines[0]
+			trans_line = trans_lines[0]
+			
+		#=======================================================================
+		# Raise an exception if corruption
+		#=======================================================================
+		if kwargs.get('corruption_exception', False):
+			if len(lang_lines) > 2 or len(gloss_lines) > 2 or len(trans_lines) > 2:
+				raise IGTParseException
+			
+		lang_line = clean_lang_string(lang_line)
+		gloss_line = clean_gloss_string(gloss_line)
+		trans_line = clean_trans_string(trans_line)
+		
+		#=======================================================================
+		# Make sure that the gloss and language line align
+		#=======================================================================
+		lang_t = IGTTier.fromString(lang_line, kind='lang')
+		gloss_t = IGTTier.fromString(gloss_line, kind='gloss')
+		trans_t = IGTTier.fromString(trans_line, kind='trans')
+		
+		if len(lang_t) != len(gloss_t):
+			raise IGTParseException
+		
+		inst.append(lang_t)
+		inst.append(gloss_t)
+		inst.append(trans_t)
+		return inst
+		
+		
 		
 	def gloss_alignments(self):
 		print(self.id)

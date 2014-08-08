@@ -4,7 +4,7 @@ Created on Mar 11, 2014
 @author: rgeorgi
 '''
 
-import re
+import sys, re
 
 #===============================================================================
 # Sub-tasks of cleaning
@@ -60,6 +60,87 @@ def remove_numbering(ret_str):
 	ret_str = remove_parenthetical_numbering(ret_str)
 	ret_str = remove_period_numbering(ret_str)
 	return ret_str
+
+def merge_lines(linelist):
+	'''
+	Given two lines, merge characters that fall into blank space on
+	the other line.
+	
+	@param linelist:
+	'''
+	
+	newline = ''
+	blank_spans = []
+	for line in linelist:
+		
+		# If this is the first line, just make it the newline
+		if not newline:
+			newline = line[:]
+			
+			# Find all the blanks in the newline
+			blanks = re.finditer('\s+', newline)
+			for blank in blanks:
+				blank_spans.append(blank.span())
+							
+		# If there is already a newline, look at the non-blank
+		# parts of this line and insert them.
+		else:
+			nonblanks = re.finditer('\S+', line)
+			for nonblank in nonblanks:
+				nonblank_start, nonblank_stop = nonblank.span()
+				nonblank_txt = nonblank.group(0)
+
+				#===============================================================
+				# If the nonblank occurs after the end of the original line..
+				#===============================================================
+				if nonblank_start >= len(newline):						
+					oldline = newline[:]
+					newline = ''
+					
+					for i in range(len(line)):
+						if i < nonblank_start and i < len(oldline):
+							newline += oldline[i]
+						elif i < nonblank_start and i >= len(oldline):
+							newline += ' '
+						else:
+							newline += line[i]
+					continue
+				
+				#===============================================================
+				# Otherwise, look to see if it can fit inside a blank space.
+				#===============================================================
+
+				fits = False
+				for blank_start, blank_stop in blank_spans:
+					if nonblank_start >= blank_start and nonblank_stop <= blank_stop:
+						fits = True
+						break
+						
+				if fits:
+					# Actually merge the strings
+					oldline = newline[:] # Copy the old string
+					newline = ''
+					
+					for i in range(len(oldline)):
+						if i >= nonblank_start and i < nonblank_stop:
+							newline += nonblank_txt[i-nonblank_start]
+						else:
+							newline += oldline[i]
+				
+
+								
+				
+				
+		
+					# Find all the blanks in the newline
+					blank_spans = []
+					blanks = re.finditer('\s+', newline)
+					for blank in blanks:
+						blank_spans.append(blank.span())
+			
+	return newline
+	
+	
 
 #===============================================================================
 # Different tiers of cleaning

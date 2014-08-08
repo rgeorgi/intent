@@ -787,7 +787,7 @@ class LGTFilter(XMLFilterBase):
 	3)  No more than 3 instances per DocID.
 	'''
 	
-	def __init__(self, upstream):
+	def __init__(self, upstream, **kwargs):
 		XMLFilterBase.__init__(self, upstream)
 		
 		# Queue Variables 
@@ -801,6 +801,9 @@ class LGTFilter(XMLFilterBase):
 		self.skip = False
 		
 		self.in_igt = False
+		
+		# Set the maximum number of instances per docID
+		self.docid_limit = kwargs.get('docid_limit', 3)
 	
 	
 	def startElement(self, name, attrs):
@@ -868,9 +871,10 @@ class LGTFilter(XMLFilterBase):
 				self.cur_docid_count += 1
 			
 			#===================================================================
-			# Limit the number of allowed instances per docid to 3
+			# Limit the number of allowed instances per docid to the docid_limit
+			# (defaults to 3)
 			#===================================================================
-			if self.cur_docid_count >= 3:
+			if self.cur_docid_count >= self.docid_limit:
 				self.skip = True
 			
 			#===================================================================

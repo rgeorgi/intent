@@ -47,7 +47,7 @@ if __name__ == '__main__':
 	classifier_output = os.path.join(outdir, 'gloss_feats.txt')
 	
 		
-	if c.get('posdict'):		
+	if c.get('posdict'):
 		c['posdict'] = pickle.load(open(c.get('posdict'), 'rb'))
 		
 	c['tag_out'] = tagger_output
