@@ -38,8 +38,8 @@ def pos_eval(goldpath, testpath, delimeter, tagmap=None):
 	if not testpath:
 		raise POSEvalException('Test path not set.')
 			
-	gold_f = open(goldpath, 'r')
-	test_f = open(testpath, 'r')
+	gold_f = open(goldpath, 'r', encoding='utf-8')
+	test_f = open(testpath, 'r', encoding='utf-8')
 	
 	matches = 0
 	tokens = 0
@@ -55,7 +55,7 @@ def pos_eval(goldpath, testpath, delimeter, tagmap=None):
 	
 	for test, gold in zip(test_lines, gold_lines):
 		test_tokens = test.split()
-		gold_tokens = gold.split()		
+		gold_tokens = gold.split()
 			
 		# Make sure all the lines are of equal length
 		if len(test_tokens) != len(gold_tokens):

@@ -16,12 +16,12 @@ class TreeTests(unittest.TestCase):
 		t = Tree.parse(tree_282)
 # 		
 # 	def test_wsj(self):
-# 		wsj = '/Users/rgeorgi/Documents/Work/treebanks/LDC95T07'
+# 		wsj = '/Users/rgeorgi/Documents/Work/ingestion/LDC95T07'
 # 		
 # 		print BracketParseCorpusReader(wsj, '.*[0-9][2-9][0-9]{2}.*\.mrg').tagged_sents()[0]
 		
 	def test_fileparse(self):
-		wsj = '/Users/rgeorgi/Documents/Work/treebanks/LDC95T07/RAW/combined/wsj/02/wsj_0200.mrg'
+		wsj = '/Users/rgeorgi/Documents/Work/ingestion/LDC95T07/RAW/combined/wsj/02/wsj_0200.mrg'
 		parse_ptb_file(wsj)
 
 tree_282 = '''( (S 

@@ -3,7 +3,7 @@ Created on Feb 14, 2014
 
 @author: rgeorgi
 '''
-from treebanks.TextParser import TextParser
+from ingestion.TextParser import TextParser, ParserException
 from utils.ConfigFile import ConfigFile
 import argparse
 import re
@@ -17,14 +17,56 @@ from corpora.IGTCorpus import IGTCorpus, IGTInstance, IGTTier, IGTToken
 import pickle
 import nltk
 from pos.TagMap import TagMap
-from utils.Token import morpheme_tokenizer, tokenize_string
+from utils.token import morpheme_tokenizer, tokenize_string
 from interfaces.mallet_maxent import MalletMaxent
 from alignment.Alignment import AlignedSent
+from utils.argutils import existsfile, ArgPasser
+
+class NAACLParserException(ParserException):
+	pass
 
 class NAACLInstanceText(str):
-	def __init__(self, seq=''):
-		str.__init__(self, seq)
+	
+	def __new__(self, content):
+		return str.__new__(self, content)
+			
+	def get_lines(self):
+		'''
+		Get the IGT text and return the lines, with the
+		assumed types.
+		'''
+		text = self.igttext()
+		lines = text.split('\n')
 		
+		linedict = {}
+		
+		for linenum in range(1, len(lines)):
+			line = lines[linenum]
+			
+			# If it's a blank line, continue...
+			if not line.strip():
+				continue
+			
+			# If it's the first line, it's the
+			# language line.
+			if linenum == 1:
+				kind = 'lang'
+			if linenum == 2:
+				# If there are more than three lines
+				# (including the first info line)
+				# then this should be the gloss.
+				if len(lines) > 3:
+					kind = 'gloss'
+					
+				# Otherwise, there is no gloss and 
+				# we will assume this is trans already.
+				elif len(lines) == 3:
+					kind = 'trans'
+			if linenum >= 3:
+				kind = 'trans'
+				
+			
+			
 	def igt(self):		
 		'''
 		Create an IGTInstance out of the igt data. Note that this does not include
@@ -46,8 +88,14 @@ class NAACLInstanceText(str):
 			if linenum == 1:
 				kind = 'lang'
 			if linenum == 2:
+				# If there are more than three lines
+				# (including the first info line)
+				# then this should be the gloss.
 				if len(lines) > 3:
 					kind = 'gloss'
+					
+				# Otherwise, there is no gloss and 
+				# we will assume this is trans already.
 				elif len(lines) == 3:
 					kind = 'trans'
 			if linenum >= 3:
@@ -80,6 +128,12 @@ class NAACLInstanceText(str):
 		return re.search('(Igt_id[\s\S]+?)#+ Q1', self).group(1)
 
 	def transtags(self, tagmap=None):
+		'''
+		Return the tags fo the translation line, mapping them
+		using the specified tagmap if requested.
+		@param tagmap: TagMap object that maps finer-grained,
+						language-specific tags to the courser, universal tags.
+		'''
 		q2 = re.search('Q2:.*?\n([\S\s]+)#+ Q2', self).group(1)
 		treestring = q2.split('\n')[0]
 		
@@ -88,7 +142,7 @@ class NAACLInstanceText(str):
 		
 		
 		if tagmap:
-			pos = [(w, tagmap.get(p)) for w, p in pos]
+			pos = [(w, tagmap[p]) for w, p in pos]
 		
 		return pos
 
@@ -161,9 +215,18 @@ class NAACLParser(TextParser):
 			self._ha_alns = self.corpus.gloss_heuristic_alignments()
 			return self.heuristic_alignments
 		
-
+	#===========================================================================
+	# Parse the NAACL files.
+	#===========================================================================
 	def parse_files(self, filelist, **kwargs):				
 		for root in filelist:
+			
+			# If there's a problem finding the file that we're meant
+			# to be parsing, throw a parser exception.
+			if not os.path.exists(root.strip()):
+				raise NAACLParserException('File "%s" not found' % root)
+			
+			# If we didn't hit the exception, keep going.
 			self.parse_file(root, **kwargs)
 			
 	def parse_file(self, root, **kwargs):
@@ -176,8 +239,6 @@ class NAACLParser(TextParser):
 		data = f.read()
 		f.close()
 	
-		#c = MalletMaxent('/Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/all/xigt_grams.maxent')
-		
 		#===================================================================
 		# Search for the gloss alignment and parse it.
 		#===================================================================
@@ -185,8 +246,11 @@ class NAACLParser(TextParser):
 		instances = re.findall('#+\nIgt_id[\s\S]+?Q6:', data)
 		
 		for instance in [NAACLInstanceText(i) for i in instances]:
+			
+			# Construct the internal IGT instance
 			i = instance.igt()
 			
+			# get the language name
 			lang = os.path.basename(os.path.dirname(root))[:3]
 
 			i.set_attr('file', root)
@@ -200,52 +264,45 @@ class NAACLParser(TextParser):
 			for g_i, t_i in ga_indices:
 				i.glossalign.add((g_i, t_i))
 				
-	
-				
 			for l_i, g_i in la_indices:
-				i.langalign.add((l_i, t_i)) 
+				i.langalign.add((l_i, g_i)) 
 					
 			# TODO: Zero-indexed makes me uncomfortable...
 			corpus.append(i)
 			
-			dump_feats = kwargs.get('dump_feats', None)
-			if dump_feats is not None:
+			#===================================================================
+			# Start handling tags
+			#===================================================================
+			if kwargs.get('tagmap'):
+				tm = TagMap(kwargs.get('tagmap'))			
+				tags = [pair[1] for pair in instance.transtags(tagmap=tm)]
+			else:
+				tags = [pair[1] for pair in instance.transtags()]
 			
-				tm = TagMap('/Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/prototypes/universal_mapping_eng.txt')
-				tags = instance.transtags(tagmap=tm)
-				#TODO: This is hardcoded...
-				dump_feats[i.id] = tags
-				
+			#===================================================================
+			# Output tags if the conf file specifies an output path.
+			#===================================================================
 			tag_f = kwargs.get('tag_f', None)
-			if tag_f is not None:
-				tags = tag_f.get(i.id)
-				if tags:					
-					glosstags = AlignedSent(i.gloss, tags, i.glossalign)
-					for token, tagpair in glosstags.wordpairs():
-						word, tag = tagpair
-						morphs = tokenize_string(token.seq, morpheme_tokenizer)
-						feat_f = kwargs.get('feat_f')						
-						if len(morphs) > 1:
-							feat_f.write('%s ' % tag)
-							for morph in morphs:
-								morph_s = morph.seq.lower()
-								feat_f.write('%s:1 ' % morph_s)
-							feat_f.write('\n')
+			
+			
+			
+			if tags and tag_f is not None:
+				# Now, do the projection specified in the alignment...
+				
+				# Get the alignment for the language line to the
+				# translation line, and use the translation line's tags.
+				langtags = AlignedSent(i.lang, tags, i.lang_to_trans_align())
+
+				for token in langtags.src:
+					word = token.seq
+					tags = langtags.src_to_tgt_words(token.index)
+					tag = tags[0] if tags else 'UNK'
+					tag_f.write('%s/%s ' % (word, tag))
+				tag_f.write('\n')
+				
+				
 				
 					
-# 				dump_feats.write(' '.join(['%s/%s'%(t, w) for t, w in tags])+'\n')
-# 				glosstags = AlignedSent(i.gloss, [t for w, t in tags], i.glossalign)
-# 				print(glosstags.wordpairs())
-# 				
-# 				for word, tag in tags:
-# 					
-# 					morphs = tokenize_string(word, morpheme_tokenizer)
-# 					if morphs:
-# 						print('%s '%tag,end='')
-# 						for morph in morphs:
-# 							morph_s = morph.seq.lower()
-# 							print('%s:1' % morph_s, end=' ')
-# 						print()
 					
 				
 	
@@ -306,17 +363,18 @@ class NAACLParser(TextParser):
 
 if __name__ == '__main__':
 	p = argparse.ArgumentParser()
-	p.add_argument('c', metavar='CONF')
+	p.add_argument('-c', metavar='CONF', type=existsfile)
 	
 	args = p.parse_args()
 	
 	# Get the configuration file
 	c = ConfigFile(args.c)
+	c = ArgPasser(c)
 	
 	#===========================================================================
 	# Get the files to process and where to put the output. 
 	#===========================================================================
-	naacl_files = c['roots'].split(',')
+	naacl_files = [f.strip() for f in c['roots'].split(',')]
 	outdir = c['outdir']	
 	
 
@@ -325,22 +383,16 @@ if __name__ == '__main__':
 	#=======================================================================
 	pkl = False
 	
-	dump_path = os.path.join(outdir, 'tagged_words.pkl')
-	feat_path = os.path.join(outdir, 'feats_morphs.txt')
-	#dump_f = {}
+	# Put in the args a file to output tags if requested,
+	# otherwise specify none.
+	tag_out = c.get('tagout', None)	
+	c['tag_f'] = open(tag_out, 'w', encoding='utf-8') if tag_out else None
 	
-	feat_f = open(feat_path, 'w')
-	
-	#mc = MalletMaxent()
-	
-	tag_f = pickle.load(open(dump_path, 'rb'))
-				
-	if not pkl:
-		np = NAACLParser()
-		np.parse_files(naacl_files, tag_f=tag_f, feat_f=feat_f)
-		#pickle.dump(dump_f, open(dump_path, 'wb'))
-	else:
-		np = pickle.load(open('np.pkl', 'rb'))
+	np = NAACLParser()
+	np.parse_files(naacl_files, **c)
+
+	if tag_out:
+		c['tag_f'].close()
 		
 	ha_alns = np.heuristic_alignments
 	alns = np.alignments

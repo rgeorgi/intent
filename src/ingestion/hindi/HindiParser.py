@@ -5,14 +5,12 @@ Created on Oct 14, 2013
 '''
 
 import os, sys, re
-from optparse import OptionParser
-from utils.commandline import require_opt
-import ConfigParser
+from argparse import ArgumentParser
 
-from treebanks.common import process_tree, write_files
+from ingestion.common import process_tree, write_files
 from pos.TagMap import TagMap
 import codecs
-from treebanks.TextParser import TextParser
+from ingestion.TextParser import TextParser
 from utils.ConfigFile import ConfigFile
 
 
@@ -102,19 +100,14 @@ if __name__ == '__main__':
 
 
 	# setup option parser
-	parser = OptionParser(version=program_version_string, epilog=program_longdesc, description=program_license)
-	parser.add_option("-c", "--conf", dest="conf", help="set conf file [default: %default]", metavar="FILE")
+	parser = ArgumentParser(version=program_version_string, epilog=program_longdesc, description=program_license)
+	parser.add_argument("-c", "--conf", dest="conf", help="set conf file [default: %default]", metavar="FILE", required=True)
 		
 	# set defaults
 	parser.set_defaults()
 	
 	# process options
-	(opts, args) = parser.parse_args(sys.argv)
-	
-	errors = require_opt(opts.conf, "Please specify the configuration file with -c or --conf", True)
-		
-	if errors:
-		raise Exception("There were errors found in processing.")
+	opts = parser.parse_args(sys.argv)
 	
 	# MAIN BODY #
 	p = HindiParser(opts.conf)

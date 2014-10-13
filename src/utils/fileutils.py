@@ -21,20 +21,24 @@ def matching_files(dirpath, pattern, recursive=False):
 	@param pattern: regular expression to match paths upon
 	@param recursive: whether or not to recurse into the directories.
 	'''
-	paths = os.listdir(dirpath)
-	paths = map(lambda path: os.path.join(dirpath, path), paths)
+	
+	# Get absolute paths for all the current files.
+	paths = [os.path.join(dirpath, p) for p in os.listdir(dirpath)]
+	
 	# Find all the matching paths in the directory.
-	ret_list = filter(lambda f: os.path.isfile(f) and re.match(pattern, os.path.basename(f)), paths)
+	files = [f for f in paths if os.path.isfile(f) and re.match(pattern, os.path.basename(f))]
 
 			
-	dirs = filter(lambda d: os.path.isdir(d), paths)
+	dirs = [d for d in paths if os.path.isdir(d)]
+	
+	
 	
 	
 	if recursive:
 		for dir in dirs:
-			ret_list.extend(matching_files(dir, pattern, recursive))
+			files.extend(matching_files(dir, pattern, recursive))
 	
-	return ret_list
+	return files
 
 def globlist(globlist):
 	retlist = []

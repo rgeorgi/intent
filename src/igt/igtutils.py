@@ -5,6 +5,7 @@ Created on Mar 11, 2014
 '''
 
 import sys, re
+import unittest
 
 #===============================================================================
 # Sub-tasks of cleaning
@@ -33,6 +34,9 @@ def remove_solo_punctuation(ret_str):
 	ret_str = re.sub('\s*{}+\s*'.format(punc_re), '', ret_str)
 	return ret_str
 
+def remove_final_punctuation(ret_str):
+	ret_str = re.sub('{}+$'.format(punc_re), '', ret_str.strip())
+	return ret_str
 
 def rejoin_letter(ret_str, letter='t', direction='right'):
 	'''
@@ -44,7 +48,7 @@ def rejoin_letter(ret_str, letter='t', direction='right'):
 	elif direction == 'left':
 		ret_str = re.sub(r'(\S+)\s+(%s)\s'%letter, r'\1\2 ', ret_str).strip()
 	else:
-		raise Exception('Wrong direction specified!')
+		raise Exception('Invalid direction specified!')
 	return ret_str
 
 def remove_byte_char(ret_str):
@@ -60,6 +64,9 @@ def remove_numbering(ret_str):
 	ret_str = remove_parenthetical_numbering(ret_str)
 	ret_str = remove_period_numbering(ret_str)
 	return ret_str
+
+def collapse_spaces(ret_str):
+	return re.sub('\s+', ' ', ret_str)
 
 def merge_lines(linelist):
 	'''
@@ -154,6 +161,12 @@ def clean_gloss_string(ret_str):
 	# Remove word-final punctuation
 	ret_str = remove_external_punctuation(ret_str)
 	
+	# Collapse spaces
+	ret_str = collapse_spaces(ret_str)
+	
+	# Remove final punctuation
+	ret_str = remove_final_punctuation(ret_str)
+	
 	return ret_str
 
 def clean_trans_string(string):
@@ -185,6 +198,9 @@ def clean_trans_string(string):
 	# Remove leading numbering
 	ret_str = remove_numbering(ret_str)
 	
+	# Collapse spaces
+	ret_str = collapse_spaces(ret_str)
+	
 	return ret_str
 
 def clean_lang_string(ret_str):
@@ -202,6 +218,42 @@ def clean_lang_string(ret_str):
 	
 	# Split punctuation
 	ret_str = remove_external_punctuation(ret_str)
+	ret_str = split_punctuation(ret_str)
 	
+	# Collapse spaces
+	ret_str = collapse_spaces(ret_str)
+	
+	# Remove final punctuation
+	ret_str = remove_final_punctuation(ret_str)
 
 	return ret_str
+
+#===============================================================================
+# Backoff methods
+#===============================================================================
+
+def hyphenate_infinitive(ret_str):
+	return re.sub('to\s+(\S+)', r'to-\1', ret_str, flags=re.I)
+
+#===============================================================================
+# Test Cases
+#===============================================================================
+
+class TestLangLines(unittest.TestCase):
+	
+	def runTest(self):
+		
+		l1 = '  (38)     Este taxista     (*me) parece [t estar cansado]'
+		l1c = 'Este taxista *me parece t estar cansado'
+		
+		self.assertEqual(clean_lang_string(l1), l1c)
+		
+class TestHyphenate(unittest.TestCase):
+	def runTest(self):
+		h1 = 'the guests wanted to visit the other pavilion'
+		h1f ='the guests wanted to-visit the other pavilion'
+		
+		self.assertEqual(hyphenate_infinitive(h1), h1f)
+		
+		
+		

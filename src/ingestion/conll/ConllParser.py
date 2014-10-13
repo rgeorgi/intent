@@ -11,7 +11,7 @@ import sys
 from corpora.POSCorpus import POSCorpus, POSToken, POSCorpusInstance
 
 def sent_count(path):
-	f = open(path, 'r')
+	f = open(path, 'r', encoding='utf-8')
 	sent_count = 0
 	
 	state = 'out'
@@ -29,25 +29,20 @@ class ConllParser(TextParser):
 	'''
 	
 	
-	def parse_file(self, **kwargs):
-		
-		root = kwargs.get('root')
-			
+	def write_splits(self, corpus, **kwargs):
 		outdir = kwargs.get('outdir')
 		testfile = kwargs.get('testfile')
 		trainfile = kwargs.get('trainfile')
 		goldfile = kwargs.get('goldfile')
 		split = int(kwargs.get('trainsplit', 90))
-		maxlength = kwargs.get('maxlength')
 		rawfile = kwargs.get('rawfile')
 		delimeter = kwargs.get('delimeter', '/')
-						
 		
+		# These should be passed in from parse_file
+		num_sents = kwargs.get('num_sents')
+		limit = kwargs.get('limit')
 		
-		num_sents = sent_count(root)
-		limit = kwargs.get('sentence_limit', num_sents)
-
-		f = open(root, 'r')
+		written = 0
 		
 		os.makedirs(outdir, exist_ok=True)
 		
@@ -61,11 +56,45 @@ class ConllParser(TextParser):
 			train_f = open(os.path.join(outdir, trainfile), 'w')		
 			raw_f = open(os.path.join(outdir, rawfile), 'w')
 			untagged_out = raw_f
-			tagged_out = train_f		
-
-		
+			tagged_out = train_f
 			
-		written = 0
+			
+		for i, inst in enumerate(corpus):
+			#===========================================================
+			# Once we've run through all the testing instances, start
+			# writing to the training instances.
+			#===========================================================
+			if i == splitnum:				
+				untagged_out = open(os.path.join(outdir, testfile), 'w')
+				tagged_out = open(os.path.join(outdir, goldfile), 'w')
+			else:				
+				if len(inst) > 0:
+					untagged_out.write(inst.raw(lowercase=True)+'\n')
+					tagged_out.write(inst.slashtags(delimeter, lowercase=True)+'\n')
+					written += 1
+					i+=1
+		
+				if written > limit:
+					break
+				
+		untagged_out.close(), tagged_out.close()
+		sys.stdout.write('%d sents written\n' % (len(corpus)))
+			
+	
+	def parse_file(self, **kwargs):
+		
+		root = kwargs.get('root')
+			
+		
+		maxlength = kwargs.get('maxlength')
+		
+		
+		num_sents = sent_count(root)
+		limit = kwargs.get('sentence_limit', num_sents)
+
+		f = open(root, 'r', encoding='utf-8')
+		
+		
 		
 		# Keep data in the corpus
 		corpus = POSCorpus()
@@ -77,15 +106,6 @@ class ConllParser(TextParser):
 		i = 0
 		inst = POSCorpusInstance()
 		for line in f:
-			
-			#===========================================================
-			# Once we've run through all the testing instances, start
-			# writing to the training instances.
-			#===========================================================
-			if i == splitnum:				
-				untagged_out = open(os.path.join(outdir, testfile), 'w')
-				tagged_out = open(os.path.join(outdir, goldfile), 'w')
-			
 			#===================================================================
 			# If it's not a blank line, add it to the current instance.
 			#===================================================================
@@ -94,27 +114,14 @@ class ConllParser(TextParser):
 				index, form, lemma, cpos, postag, feats, head, deprel, phead, pdeprel = line.split()
 				t = POSToken(form, cpos, int(index))
 				t.finepos = postag
-				inst.append(t)
-
-			else:				
+				inst.append(t)					
+				
+			else:
 				if len(inst) > 0:
 					corpus.append(inst)
-					untagged_out.write(inst.raw(lowercase=True)+'\n')
-					tagged_out.write(inst.slashtags(delimeter, lowercase=True)+'\n')
-					written += 1
-				i+=1
-					
 				inst = POSCorpusInstance()
-			
-			if written > limit:
-				break
-
-				
-			
-		
 							
-		untagged_out.close(), tagged_out.close()
-		sys.stdout.write('%d sents written\n' % (len(corpus)))
+
 		return corpus		
 			
 					

@@ -3,15 +3,14 @@ Created on Oct 23, 2013
 
 @author: rgeorgi
 '''
-from treebanks.pml.pml import Alignments, TreeList
+from ingestion.pml.pml import Alignments, TreeList
 from argparse import ArgumentParser
 import sys
-from utils.commandline import require_opt
 import os.path
-from treebanks.common import raw_writer, write_files, write_mallet
+from ingestion.common import raw_writer, write_files, write_mallet
 from pos.TagMap import TagMap
 from utils.systematizing import notify
-from treebanks.TextParser import TextParser
+from ingestion.TextParser import TextParser
 from utils.ConfigFile import ConfigFile
 from corpora.POSCorpus import POSCorpus, POSCorpusInstance
 
@@ -140,15 +139,9 @@ class PMLParser(TextParser):
 
 if __name__ == '__main__':
 	p = ArgumentParser()
-	p.add_argument('conf', help='Configuration file')
+	p.add_argument('conf', help='Configuration file', required=True)
 	
 	args = p.parse_args()
-	
-	errors = require_opt(args.conf, 'You must specify a configuration file with -c or --conf', True)
-	
-	if errors:
-		p.print_help()
-		sys.exit()
 	
 	p = PMLParser(args.conf)
 	p.parse()

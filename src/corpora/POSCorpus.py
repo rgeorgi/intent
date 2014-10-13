@@ -6,8 +6,8 @@ Created on Mar 6, 2014
 import os
 import codecs
 import chardet
-from utils.Token import Token, POSToken, tokenize_string, whitespace_tokenizer,\
-	tag_tokenizer
+from utils.token import tokenize_string, tag_tokenizer, POSToken
+
 
 
 class POSCorpus(list):
@@ -59,6 +59,13 @@ class POSCorpus(list):
 		for inst in self:
 			tokens.extend(inst)
 		return tokens
+	
+	def types(self):
+		types = set([])
+		for inst in self:
+			for token in inst:
+				types |= set([token.seq])
+		return types
 	
 	def accuracy(self, other):
 		return self.matches(other) / float(len(self.tokens()))

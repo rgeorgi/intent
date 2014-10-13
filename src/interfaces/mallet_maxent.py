@@ -85,8 +85,11 @@ class MalletMaxent(object):
 		content = content.split()
 		ret_c = Classification(gold=content[0])
 		
-		for i in range(1, len(content[1:]), 2):
+		
+		for i in range(1, len(content), 2):
+		
 			tag = content[i]
+			
 			prob = float(content[i+1])
 			ret_c[tag] = float(prob)
 			

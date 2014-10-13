@@ -19,7 +19,7 @@ def mallet_writer(path, lines, delimeter = '/', lowercase = True):
 	for line in lines:
 		
 		if lowercase:
-			line = unicode.lower(line)
+			line = line.lower()
 		
 		for token in line.split():
 			if len(token.split(delimeter)) == 2:

@@ -66,14 +66,25 @@ class StanfordPOSTagger(object):
 #===============================================================================
 
 def train(train_file, model_path, delimeter = '/'):
+	jar()
 	global stanford_jar
-	os.system('java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (stanford_jar, model_path, train_file, delimeter))
+	cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (stanford_jar, model_path, train_file, delimeter)
+	#sys.stdout.write(cmd+'\n')
+	os.system(cmd)
 
-def test(test_file, model_path, out_file, delimeter):
+def eval(test_file, model_path, delimeter = '/'):
+	jar()
+	global stanford_jar
+	cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s' % (stanford_jar, model_path, test_file, delimeter )
+	#print(cmd)
+	os.system(cmd)
+
+def test(test_file, model_path, out_file, delimeter = '/'):
 	global stanford_jar
 	cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s -outputFormat slashTags -outputFile %s' % (stanford_jar, model_path, test_file, delimeter, out_file)
-	sys.stderr.write(cmd)
+	sys.stderr.write(cmd+'\n')
 	os.system(cmd)
+	
 	
 def tag(string, model):
 	jar()

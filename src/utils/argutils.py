@@ -56,6 +56,11 @@ class ArgPassingException(Exception):
 	pass
 
 class ArgPasser(dict):
+	'''
+	Argpasser is just a drop-in replacement for a **kwarg dict,
+	but allows for things that evaluate to false in the dict
+	to be returned without being replaced by the default.
+	'''
 	
 	def __init__(self, d):
 		super().__init__(d)		
@@ -69,12 +74,10 @@ class ArgPasser(dict):
 		else:
 			val = default 
 			
-		
-		
 			
 		
 		# Parse val as the given type
-		if val and t:
+		if t:
 			try:
 				val = t(val)
 			except Exception as e:

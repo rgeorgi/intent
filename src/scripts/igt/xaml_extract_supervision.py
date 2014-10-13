@@ -4,7 +4,7 @@ Created on Apr 30, 2014
 @author: rgeorgi
 '''
 
-from treebanks.xaml import XamlParser
+from ingestion.xaml import XamlParser
 from argparse import ArgumentParser
 from glob import glob
 import os

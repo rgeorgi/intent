@@ -94,11 +94,19 @@ class POSToken(Token):
 		self.index = index
 		Token.__init__(self, seq, span, index, parent)
 		
+	@classmethod
+	def fromToken(cls, t, label=None, index=None, span=None, parent=None):
+		return cls(t.seq, label, index, span, parent)
+		
 class GoldTagPOSToken(Token):
 	def __init__(self, seq='', taglabel = None, goldlabel = None, span=None, index=None, parent=None):
 		self.taglabel = taglabel
 		self.goldlabel = goldlabel
 		Token.__init__(self, seq, index=index, span=span, parent=parent)
+		
+	@classmethod
+	def fromToken(cls, t, taglabel = None, goldlabel = None):
+		return cls(t.seq, taglabel=taglabel, goldlabel=goldlabel, span=t.span, index=t.index, parent=t.parent)
 
 		
 #===============================================================================

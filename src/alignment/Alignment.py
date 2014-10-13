@@ -91,11 +91,11 @@ class AlignedSent():
 	
 	@property
 	def src_text(self):
-		return ' '.join(self.src_tokens)
+		return ' '.join([s.seq for s in self.src_tokens])
 	
 	@property
 	def tgt_text(self):
-		return ' '.join(self.tgt_tokens)
+		return ' '.join([t.seq for t in self.tgt_tokens])
 	
 	def set_attr(self, key, val):
 		self.attrs[key] = val
@@ -119,6 +119,12 @@ class AlignedSent():
 	def tgt(self):
 		return self.tgt_tokens
 	
+	def get_src(self, i):
+		return self.src_tokens[i-1]
+	
+	def get_tgt(self, i):
+		return self.tgt_tokens[i-1]
+	
 	def src_to_tgt(self, i):
 		indices = [t for s, t in self.aln if s == i]
 		if indices:
@@ -134,10 +140,10 @@ class AlignedSent():
 			return [0]
 	
 	def src_to_tgt_words(self, i):
-		return [self.tgt[t-1] for s, t in self.aln if s == i]
+		return [self.tgt[t-1] for s, t in self.aln if s == i and i > 0]
 	
 	def tgt_to_src_words(self, i):
-		return [self.src[i-1] for s, t in self.aln if t == i]
+		return [self.src[i-1] for s, t in self.aln if t == i and i > 0]
 		
 	def serialize_src(self):
 		return ' '.join(self.serialize_src_h())
@@ -418,6 +424,11 @@ class Alignment(set):
 	def serialize_src(self):
 		return ' '.join([':'.join([str(b) for b in a]) for a in self])
 	
+	def src_to_tgt(self, key):
+		return [tgt for src, tgt in self if src == key]
+	
+	def tgt_to_src(self, key):
+		return [src for src, tgt in self if tgt == key]
 
 	
 #===============================================================================

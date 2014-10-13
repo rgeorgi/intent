@@ -29,7 +29,7 @@ def extract():
 	prop()
 	global cp
 	cmd = 'java -cp %s edu.berkeley.nlp.prototype.pos.TreebankTextExtractor ' % cp
-	cmd += ' -treebankPath /Users/rgeorgi/Documents/Work/treebanks/LDC95T07/'
+	cmd += ' -treebankPath /Users/rgeorgi/Documents/Work/ingestion/LDC95T07/'
 	cmd += ' -startSection 2'
 	cmd += ' -endSection 24'
 	cmd += ' -maxNumSentences 8000'

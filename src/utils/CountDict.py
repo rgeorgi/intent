@@ -51,6 +51,8 @@ class CountDict(object):
 	
 	#  -----------------------------------------------------------------------------
 			
+	def largest(self):
+		return sorted(self.items(), reverse=True, key=lambda k: k[1])[0]
 	
 	def most_frequent(self, minimum = 0, num = 1):
 		'''

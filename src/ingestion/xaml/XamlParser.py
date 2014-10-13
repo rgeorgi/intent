@@ -5,9 +5,6 @@ Created on Apr 30, 2014
 '''
 
 import sys, os, re
-from utils.token import morpheme_tokenizer, tokenize_string, POSToken,\
-	Tokenization
-from corpora.IGTCorpus import IGTTier, Span, IGTInstance
 import xml.sax
 from xml.sax.saxutils import XMLFilterBase, XMLGenerator, unescape
 from collections import defaultdict
@@ -16,10 +13,14 @@ from alignment.Alignment import AlignedSent, Alignment, AlignedCorpus
 from eval.AlignEval import AlignEval
 from utils.argutils import ArgPasser, existsfile
 from interfaces.stanford_tagger import StanfordPOSTagger
-from utils.token import GoldTagPOSToken
+import utils.token
+from corpora.IGTCorpus import IGTInstance, IGTTier, Span
+from igt.grams import write_gram
+from eval.ProjectEval import ProjectEval
 
 MODULE_LOGGER = logging.getLogger(__name__)
 ALIGN_LOGGER = logging.getLogger('alignment')
+
 
 #===============================================================================
 # 
@@ -86,140 +87,12 @@ class XamlParser(object):
 		# 4) Write the XML output to file.
 # 		output_handler = XMLWriter(output_handler, os.path.join(outdir, os.path.basename(prefix))+'-filtered.xml')
 		
+		# 5) Provide counts of various features about the data.
 		output_handler = InstanceCounterFilter(output_handler, **kwargs)
 		
 		output_handler.parse(fp)
 
-#===============================================================================
-# Write Gram
-#===============================================================================
 
-def write_gram(token, **kwargs):
-	
-	# Re-cast the kwargs as an argpasser.
-	kwargs = ArgPasser(kwargs)
-	
-	type = kwargs.get('type')
-	output = kwargs.get('output', sys.stdout)
-	
-	posdict = kwargs.get('posdict')	
-		
-	# Previous tag info
-	prev_gram = kwargs.get('prev_gram')
-	next_gram = kwargs.get('next_gram')
-	
-	# Get heuristic alignment
-	aln_labels = kwargs.get('aln_labels', [])
-
-	#===========================================================================
-	# Break apart the token...
-	#===========================================================================
-	gram = token.seq
-		
-	pos = token.goldlabel
-
-	# Lowercase if asked for	
-	lower = kwargs.get('lowercase', True, bool)
-	gram = gram.lower() if gram else gram
-		
-	# Output the grams for a classifier
-	if type == 'classifier' and pos:
-		output.write(pos)
-		
-		#=======================================================================
-		# Get the morphemes
-		#=======================================================================
-		morphs = tokenize_string(gram, morpheme_tokenizer)
-		
-		#=======================================================================
-		# Is there a number
-		#=======================================================================
-		if re.search('[0-9]', gram) and kwargs.get('feat_has_number', False, bool):
-			output.write('\thas-number:1')
-			
-		#=======================================================================
-		# What labels is it aligned with
-		#=======================================================================
-		if kwargs.get('feat_align', False, bool):
-			for aln_label in aln_labels:
-				output.write('\taln-label-%s:1' % aln_label)
-			
-		#=======================================================================
-		# Suffix
-		#=======================================================================
-		if kwargs.get('feat_suffix', False, bool):
-			output.write('\tgram-suffix-3-%s:1' % gram[-3:].replace(':','-'))
-			output.write('\tgram-suffix-2-%s:1' % gram[-2:].replace(':','-'))
-			output.write('\tgram-suffix-1-%s:1' % gram[-3:].replace(':','-'))
-			
-		#=======================================================================
-		# Prefix
-		#=======================================================================
-		if kwargs.get('feat_prefix', False, bool):
-			output.write('\tgram-prefix-3-%s:1' % gram[:3].replace(':','-'))
-			output.write('\tgram-prefix-2-%s:1' % gram[:2].replace(':','-'))
-			output.write('\tgram-prefix-1-%s:1' % gram[:1].replace(':','-'))
-			
-		#=======================================================================
-		# Number of morphs
-		#=======================================================================		
-		if kwargs.get('feat_morph_num', False, bool):
-			output.write('\t%d-morphs:1' % len(morphs))
-	
-		
-		#===================================================================
-		# Previous gram
-		#===================================================================
-		if prev_gram and kwargs.get('feat_prev_gram', False, bool):
-			prev_gram = prev_gram.seq
-			prev_gram = prev_gram.lower() if lower else prev_gram
-					
-			# And then tokenize...
-			for token in tokenize_string(prev_gram, morpheme_tokenizer):
-				output.write('\tprev-gram-%s:1' % token.seq)
-				
-		#===================================================================
-		# Next gram
-		#===================================================================
-		if next_gram and kwargs.get('feat_next_gram', False, bool):
-			next_gram = next_gram.seq
-			next_gram = next_gram.lower() if lower else next_gram
-			
-			for token in tokenize_string(next_gram, morpheme_tokenizer):
-				output.write('\tnext-gram-%s:1' % token.seq)
-		
-		#=======================================================================
-		# Iterate through the morphs
-		#=======================================================================
-		
-		for token in morphs:
-			#===================================================================
-			# Just write the morph
-			#===================================================================
-			if kwargs.get('feat_basic', True, bool):
-				output.write('\t%s:1' % token.seq)
-			
-			#===================================================================
-			# If the morph resembles a word in our dictionary, give it
-			# a predicted tag
-			#===================================================================
-			
-			if token.seq in posdict and kwargs.get('feat_dict', False, bool):
-				
-				top_tags = posdict.top_n(token.seq)
-				best = top_tags[0][0]
-				if best != pos:
-					MODULE_LOGGER.debug('%s TAGGED as %s NOT %s' % (gram, pos, best))
-				
-				output.write('\ttop-dict-word-%s:1' % top_tags[0][0])
-				if len(top_tags) > 1:
-					output.write('\tnext-dict-word-%s:1' % top_tags[1][0])
-				
-
-		output.write('\n')
-				
-	if type == 'tagger':
-		output.write('%s/%s ' % (gram, pos))
 
 #===============================================================================
 # Class for parsing the XAML Text References
@@ -302,7 +175,7 @@ class XamlRefActionFilter(XMLFilterBase):
 			
 			s = Span(int(attrs['FromChar']), int(attrs['ToChar']))
 			
-			t = GoldTagPOSToken(text, index=self.partnum, span=s)
+			t = utils.token.GoldTagPOSToken(text, index=self.partnum, span=s)
 			
 			self.textref[uid] = t
 			self.typeref[uid] = tiertype
@@ -462,11 +335,17 @@ class InstanceCounterFilter(XamlRefActionFilter):
 		#=======================================================================
 		self.was_tagged = {}
 		self.was_segmented = {}
+		
 		#  ---------------------------------------------------------------------
 		
 		self.counts = defaultdict(int)
 		self.counts['docids'] = defaultdict(int)
 		self.counts['annotated_docids'] = defaultdict(int)
+		
+		# Count of average tags per type
+		self.counts['gloss_types'] = defaultdict(int)
+		self.counts['lang_types'] = defaultdict(int)
+		self.counts['trans_types'] = defaultdict(int)
 		
 		
 		XamlRefActionFilter.__init__(self, upstream, **kwargs)
@@ -501,18 +380,45 @@ class InstanceCounterFilter(XamlRefActionFilter):
 		
 	def countprinter(self):
 		print(os.path.basename(self.cur_file), end='\t')
-		print(len(self.counts['docids'].keys()), end=',')
-		print(len(self.counts['annotated_docids'].keys()), end=',')
-		
-		keys = ['instances','segmented_instances', 'tagged_instances', 'lang_tokens', 'gloss_tokens', 'lang_tags', 'gloss_tags']
+
+		# For every key listed here, print out a CSV.		
+		keys = ['docids', 'annotated_docids', 'instances', 'tagged_instances', 'lang_tags', 'lang_types', 'gloss_tags', 'gloss_types', 'trans_tags', 'trans_types']
 		for i, key in enumerate(keys):
-			print(self.counts[key],end=',' if i < len(keys)-1 else '\n')
+			
+			# Set the print termination character
+			end = ',' if i < len(keys)-1 else '\n'
+			
+			# If we are looking at types, we should calculate
+			# both the raw number of types, and the average tags
+			# per type
+			if 'types' in key:
+				tag_type_count = 0
+				for word in self.counts[key]:
+					tag_type_count += self.counts[key][word]
+				
+				avg_tag_per_type = tag_type_count / len(self.counts[key]) if tag_type_count != 0 else 0.0
+				
+				# First print the count, then the avg
+				print(len(self.counts[key]), end=',')
+				print(tag_type_count, end=end)
+				
+			# If the count is not an int, give its length
+			# instead of its integer value.
+			elif type(self.counts[key]) != int:
+				print(len(self.counts[key]), end=end)
+			else:				
+				print(self.counts[key],end=end)
 		
 	def posHandler(self, postoken, typeref, **kwargs):
 		if typeref == 'G':
-			self.counts['gloss_tags'] += 1			
+			self.counts['gloss_tags'] += 1
+			self.counts['gloss_types'][postoken.seq.lower()] += 1	
 		elif typeref == 'L':
 			self.counts['lang_tags'] += 1
+			self.counts['lang_types'][postoken.seq.lower()] += 1
+		elif typeref == 'T':
+			self.counts['trans_tags'] += 1
+			self.counts['trans_types'][postoken.seq.lower()] += 1
 			
 		# Add what type of this was tagged.
 		self.was_tagged[typeref] = True
@@ -532,7 +438,8 @@ class InstanceCounterFilter(XamlRefActionFilter):
 		elif typeref == 'L':
 			self.counts['lang_tokens'] += 1
 		elif typeref == 'T':
-			self.counts['trans_tokens'] += 1
+			self.counts['trans_tokens'] += 1			
+			
 			
 		self.was_segmented[typeref] = True
 		
@@ -550,6 +457,7 @@ class GramOutputFilter(XamlRefActionFilter):
 		self.tagger_grams_written = False
 		self.ltagger_line = False
 		
+		self.projection_acc = {'match':0,'total':0}
 		
 		# Create an aligned corpus to compare alignments...
 		self.heur_aln_corpus = AlignedCorpus()
@@ -567,9 +475,9 @@ class GramOutputFilter(XamlRefActionFilter):
 		#=======================================================================
 		# Here are the queued portions to write out
 		#=======================================================================
-		self.gloss_queue = Tokenization()
-		self.lang_queue = Tokenization()
-		self.trans_queue = Tokenization()
+		self.gloss_queue = utils.token.Tokenization()
+		self.lang_queue = utils.token.Tokenization()
+		self.trans_queue = utils.token.Tokenization()
 		
 	
 	def posHandler(self, postoken, typeref, **kwargs):		
@@ -709,9 +617,9 @@ class GramOutputFilter(XamlRefActionFilter):
 			
 		# Reset the counters ---------------------------------------------------
 			
-		self.gloss_queue = Tokenization()
-		self.lang_queue = Tokenization()
-		self.trans_queue = Tokenization()
+		self.gloss_queue = utils.token.Tokenization()
+		self.lang_queue = utils.token.Tokenization()
+		self.trans_queue = utils.token.Tokenization()
 		
 		# Parent Call ----------------------------------------------------------
 					
@@ -719,6 +627,11 @@ class GramOutputFilter(XamlRefActionFilter):
 		
 	def endDocument(self):
 		ae = AlignEval(self.heur_aln_corpus, self.gold_aln_corpus)
+		pe_gold = ProjectEval(self.gold_aln_corpus, 'GOLD_ALN')
+		pe_heur = ProjectEval(self.heur_aln_corpus, 'HEUR_ALN')
+		pe_gold.eval()
+		pe_heur.eval()
+		
 		ALIGN_LOGGER.info(ae.all())
 		XamlRefActionFilter.endDocument(self)
 		
@@ -789,6 +702,8 @@ class LGTFilter(XMLFilterBase):
 	
 	def __init__(self, upstream, **kwargs):
 		XMLFilterBase.__init__(self, upstream)
+		
+		self.valtest = True
 		
 		# Queue Variables 
 		self.queue = []
