@@ -11,17 +11,113 @@ from collections import defaultdict
 import logging
 from alignment.Alignment import AlignedSent, Alignment, AlignedCorpus
 from eval.AlignEval import AlignEval
-from utils.argutils import ArgPasser, existsfile
+from utils.argutils import ArgPasser
 from interfaces.stanford_tagger import StanfordPOSTagger
 import utils.token
-from corpora.IGTCorpus import IGTInstance, IGTTier, Span
+from corpora.IGTCorpus import IGTInstance, IGTTier, Span, IGTCorpus
 from igt.grams import write_gram
 from eval.ProjectEval import ProjectEval
+from xml.sax.expatreader import ExpatParser
+
+# Xigt Imports
+
+from igt.rgxigt import RGIgt, RGItem, RGTier, RGCorpus, RGMetadata
+from interfaces.mallet_maxent import MalletMaxent
 
 MODULE_LOGGER = logging.getLogger(__name__)
 ALIGN_LOGGER = logging.getLogger('alignment')
+CLASS_LOGGER = logging.getLogger('classification')
 
 
+class StatefulSAX(ExpatParser):
+	'''
+	This subclasses the default ExpatParser
+	in order to keep global state for variables.
+	This way, filters can be stacked and 
+	still reference what came before
+	'''
+	def __init__(self):
+		ExpatParser.__init__(self)
+		self.vars = {}
+		
+	def __setitem__(self, k, v):
+		self.vars[k] = v
+		
+	def __getitem__(self, k):
+		return self.vars[k]
+	
+	def __delitem__(self, k):
+		del self.vars[k]
+		
+	def get(self, k, default=None):
+		if k in self.vars:
+			return self[k]
+		else:
+			return default
+		
+		
+class InheritingXMLFilterBase(XMLFilterBase):
+	
+	def __init__(self, upstream, **kwargs):
+				
+		if hasattr(upstream, '_stateholder'):
+			self._stateholder = upstream._stateholder
+		else:
+			self._stateholder = upstream
+			
+		XMLFilterBase.__init__(self, upstream)
+		
+		
+	
+	@property
+	def stateholder(self):
+		return self._stateholder
+	
+#===============================================================================
+# 
+#===============================================================================
+
+
+class XamlProcessor(object):
+	'''
+	Abstract class to process XAML documents as requested
+	'''
+	
+	def __init__(self, **kwargs):
+		self.parser = StatefulSAX()
+		self.handler = self.parser
+		self.kwargs = kwargs
+		self.files = []
+		
+	def add_lgt_filter(self):
+		self.handler = LGTFilter(self.handler, **self.kwargs)
+		
+	def add_file(self, path):
+		self.files.append(path)
+		
+		
+	def parse(self, fp):
+		self.handler.parse(fp)
+		
+	def parse_all(self):
+		for f in self.files:
+			self.parse(f)
+		
+	def add_gram_output_filter(self, gram_path):
+		
+		# Open up the specified gram path for writing...
+		f = open(gram_path, 'a', encoding='utf-8')
+		self.kwargs['class_f'] = f
+		
+		self.handler = GramOutputFilter(self.handler, **self.kwargs)
+		
+	def add_igt_corpus_filter(self):
+		self.handler = IgtCorpusBuilderFilter(self.handler, **self.kwargs)
+		
+	def __getitem__(self, k):
+		return self.parser.__getitem__(k)
+		
+		
 #===============================================================================
 # 
 #===============================================================================
@@ -49,7 +145,7 @@ class XamlParser(object):
 		kwargs = ArgPasser(kwargs)
 		
 		# Initialize a base SAX parser
-		parser = xml.sax.make_parser()
+		parser = StatefulSAX()
 		
 		# Add the current file name to the arguments.
 		kwargs['cur_file'] = fp
@@ -78,6 +174,12 @@ class XamlParser(object):
 		output_handler = parser
 		output_handler = LGTFilter(output_handler)
 		
+		# Build the igt corpus, and keep info on the current
+		# instance for downstream filters...
+		output_handler = IgtCorpusBuilderFilter(output_handler, **kwargs)
+		
+		output_handler = XigtBuilderFilter(output_handler, **kwargs)
+		
 		# 2) Output the gram information for classifiers and taggers.
 		output_handler = GramOutputFilter(output_handler, **kwargs)
 		
@@ -94,12 +196,14 @@ class XamlParser(object):
 
 
 
+
+
 #===============================================================================
 # Class for parsing the XAML Text References
 #===============================================================================
-class XamlRefActionFilter(XMLFilterBase):
+class XamlRefActionFilter(InheritingXMLFilterBase):
 	def __init__(self, upstream, **kwargs):
-		XMLFilterBase.__init__(self, upstream)
+		InheritingXMLFilterBase.__init__(self, upstream)
 		
 		self.textref = {}
 		self.typeref = {}
@@ -151,6 +255,11 @@ class XamlRefActionFilter(XMLFilterBase):
 			uid = attrs['Name']
 			self.textref[uid] = attrs['Text']
 			self.typeref[uid] = attrs['TierType']
+			
+			# Store the raw text in the global state for
+			# later...
+			self.stateholder['cur_raw'] = attrs['Text']
+			
 			
 		if name == 'Igt':
 			self.igtHandler(name, attrs, **self.kwargs)
@@ -247,8 +356,17 @@ class XamlRefActionFilter(XMLFilterBase):
 			# When we exit the aligned parts
 			self.in_alnpart = False
 			
+		if name == 'IgtCorpus':
+			self.endCorpus()
+			
 		XMLFilterBase.endElement(self, name)
 		
+	#===========================================================================
+	# END CORPUS
+	#===========================================================================
+	def endCorpus(self):
+		pass
+	
 	#===========================================================================
 	# STANDARD HANDLERS
 	#===========================================================================
@@ -322,12 +440,322 @@ class XamlRefActionFilter(XMLFilterBase):
 		
 
 #===============================================================================
+# Build Xigt Instances
+#===============================================================================
+
+class XigtBuilderFilter(InheritingXMLFilterBase):
+	
+	def startElement(self, name, attrs):		
+		InheritingXMLFilterBase.startElement(self, name, attrs)
+		
+		if name == 'IgtCorpus':
+			self.stateholder['cur_corpus'] = RGCorpus()
+			
+		#=======================================================================
+		# IGT Instances
+		#=======================================================================
+		elif name == 'Igt':
+			
+			# Add the language to the metadata
+			meta = RGMetadata()
+			#langmeta = RGMeta('language', content=attrs['Language'])
+			#meta.content=langmeta
+			
+			
+			# Create a Xigt IGT instance
+			#igtid = '%s-%s' % (attrs['DocId'],attrs['FromLine'])
+			igtid = self.stateholder['cur_corpus'].askIgtId()
+			inst = RGIgt(id=igtid, metadata=meta)
+			
+
+			
+			self.stateholder['cur_xigt'] = inst
+
+			# Create default tiers and add them
+			# to the instance...
+			txttier = RGTier('%s-txt' % igtid, type='odin-raw', igt=inst)			
+						
+			inst.add_list([txttier])
+			
+		#=======================================================================
+		# Text Tiers
+		#=======================================================================
+		elif name == 'TextTier' and attrs.get('TierType') != 'odin-txt' and 'Text' in attrs:
+			
+			# Grab the current instance
+			inst = self.stateholder['cur_xigt']
+			
+			# Grab the text tier...
+			tt = inst.getTier('odin-raw')[0]
+			
+			# Create a container item, where the ID is the 
+			# automatically created ID with LGT+LineNo
+			txtitem = RGItem(id=attrs['TierType'], content=attrs['Text'], tier=tt, type='odin-raw')
+			
+			# Set its UUID attribute to the 'Name' field.
+			txtitem.attributes['uuid'] = attrs['Name']
+
+			tt.add(txtitem)
+			
+		#=======================================================================
+		# Segmentation Tier
+		#=======================================================================
+		elif name == 'SegTier':
+			# Generate a new ID for this tier based on the 
+			newId = self.stateholder['cur_xigt'].askTierId('words')
+						
+			# Initialize a segmentation tier...
+			segtier = RGTier(id=newId, type='words')
+			segtier.attributes['uuid'] = attrs['Name']
+			self.stateholder['cur_seg_tier'] = segtier
+			
+		#=======================================================================
+		# Segmentation Parts
+		#=======================================================================
+		elif name == 'SegPart':
+			
+			srcuuid = attrs['SourceTier'][13:-1]
+			src_obj = self.stateholder['cur_xigt'].findUUID(srcuuid)
+				
+			segtier = self.stateholder['cur_seg_tier']
+				
+			
+			# Now create the segmentation item.
+			segitem = RGItem(type='seg-token', content=attrs['Text'], id=segtier.askItemId())
+			
+			# Add the reference to what this segmentation is referring to 
+			segitem.attributes['content'] = '%s[%s:%s]' % (src_obj.id, attrs['FromChar'], attrs['ToChar'])
+			
+			# Add this item's index
+			segitem.attributes['index'] = segtier.askIndex()
+			
+			# Also add our own UUID to the mix
+			segitem.attributes['uuid'] = attrs['Name']
+			
+			# If we are in a mergepart...
+			if self.stateholder.get('cur_mergepart'):
+				self.stateholder['cur_mergerefs'].append(segitem)
+			else:
+				# Add it to the tier
+				segtier.add(segitem)
+			
+
+				
+			
+		#=======================================================================
+		# POSTagTier
+		#=======================================================================
+		elif name == 'PosTagTier':
+			inst = self.stateholder['cur_xigt']
+			
+			# Grab an ID string from the current instance...
+			newId = inst.askTierId('pos')
+			
+			# Create new postier and store it in memory
+			postier = RGTier(id=newId, type='pos')
+			self.stateholder['cur_pos_tier'] = postier
+			
+		#=======================================================================
+		# POSTagItem
+		#=======================================================================
+		elif name == 'TagPart':
+			# Get the currents state objects...
+			inst = self.stateholder['cur_xigt']			
+			postier = self.stateholder['cur_pos_tier']
+
+			# Grab attributes from the XAML
+			posuuid = attrs['Name']
+			content = attrs['Text']
+
+			# Find the referenced item...						
+			srcuuid = attrs['Source'][13:-1]
+			src_obj = inst.findUUID(srcuuid)
+			
+			# Create the new object
+			positem = RGItem(id=postier.askItemId(), content=content)
+			
+			# Add the UUID to the item
+			positem.attributes['uuid'] = posuuid
+			
+			# Add the reference:
+			positem.attributes['content'] = src_obj.id
+			
+			# Now, add to the tier...
+			postier.add(positem)
+			
+		#=======================================================================
+		# MergePart
+		#=======================================================================
+		elif name == 'MergePart':
+			self.stateholder['cur_mergepart'] = attrs['Name']
+			self.stateholder['cur_mergerefs'] = []
+			
+		#======================================================================
+		# AlignmentTier
+		#======================================================================
+		elif name == 'AlignmentTier':
+			inst = self.stateholder['cur_xigt']
+			
+			# Get the fresh item ID
+			alignid = inst.askTierId('alignment')
+			aligntype = attrs['TierType']
+			alignuuid = attrs['Name']
+			
+			# Create the new tier
+			aligntier = RGTier(id=alignid, type='alignment')
+			aligntier.attributes['uuid'] = alignuuid
+			
+			# Also add what type of alignment...
+			aligntier.attributes['aligntype'] = aligntype
+			
+			# Store it in state
+			self.stateholder['cur_align_tier'] = aligntier
+			
+		#=======================================================================
+		# AlignPart
+		#=======================================================================
+		elif name == 'AlignPart':
+			# Get the source for this alignpart...			
+			self.stateholder['cur_align_src'] = attrs['Source'][13:-1]
+			
+		#=======================================================================
+		# x:reference
+		# These are the targets of the alignparts... 
+		#=======================================================================
+			
+			
+			
+			
+	
+	#===========================================================================
+	# END ELEMENT
+	#===========================================================================
+	def endElement(self, name):
+		InheritingXMLFilterBase.endElement(self, name)
+		
+		#=======================================================================
+		# Igt Instance
+		#=======================================================================
+		if name == 'Igt':
+			self.stateholder['cur_corpus'].add(self.stateholder['cur_xigt'])
+			
+		#=======================================================================
+		# Whole Corpus
+		#=======================================================================
+		elif name == 'IgtCorpus':
+			corp = self.stateholder['cur_corpus']
+			
+			# Remove the UUIDs left over from XAML.
+			corp.delUUIDs()
+			
+			# Dump out the corpus as XIGT 
+			#xigt.codecs.xigtxml.dump(open('test.xml', 'w', encoding='utf-8'), corp, pretty_print=True)
+			# sys.exit()
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		#=======================================================================
+		# SegTier
+		#=======================================================================
+		elif name == 'SegTier':
+			self.stateholder['cur_xigt'].add(self.stateholder['cur_seg_tier'])
+			
+			# Clear our state
+			del self.stateholder['cur_seg_tier']
+			
+		#=======================================================================
+		# PosTier
+		#=======================================================================
+		elif name == 'PosTagTier':
+			self.stateholder['cur_xigt'].add(self.stateholder['cur_pos_tier'])
+			
+			# Clear our state
+			del self.stateholder['cur_pos_tier']
+			
+		#=======================================================================
+		# MergePart
+		#=======================================================================
+		elif name == 'MergePart':
+			refstr = '+'.join([m.attributes['content'] for m in self.stateholder['cur_mergerefs']])
+			txtstr = ''.join([m.content for m in self.stateholder['cur_mergerefs']])
+			
+			mrgid = self.stateholder['cur_seg_tier'].askItemId()
+			
+			mrgitem = RGItem(type='words', content=txtstr, id=mrgid)
+			
+			# Now set the attributes
+			mrgitem.attributes['content'] = refstr
+			mrgitem.attributes['uuid'] = self.stateholder['cur_mergepart']
+			
+			# Get the current segtier and add it.
+			self.stateholder['cur_seg_tier'].add(mrgitem)
+			
+			# Now, reset our state			
+			del self.stateholder['cur_mergepart']
+			del self.stateholder['cur_mergerefs']
+			
+		#=======================================================================
+		# AlignPart
+		#=======================================================================
+		elif name == 'AlignPart':
+			del self.stateholder['cur_align_src']		
+			
+			
+		#=======================================================================
+		# AlignmentTier
+		#=======================================================================
+		elif name == 'AlignmentTier':
+			alntier = self.stateholder['cur_align_tier']
+			self.stateholder['cur_xigt'].add(alntier)
+			
+			# Clear the state
+			del self.stateholder['cur_align_tier']
+			
+	#===========================================================================
+	# Characters
+	#===========================================================================
+	def characters(self, content):
+		InheritingXMLFilterBase.characters(self, content)
+		
+		# If we have a cur_aln_src, that means we are in
+		# an alignment part.
+		if content.strip() and self.stateholder.get('cur_align_src'):
+			inst = self.stateholder.get('cur_xigt')
+			alntier = self.stateholder.get('cur_align_tier')
+			alnsrc = self.stateholder.get('cur_align_src')
+			alntgt = content.strip()
+			
+			srcobj = inst.findUUID(alnsrc)
+			tgtobj = inst.findUUID(alntgt)
+			
+			if srcobj and tgtobj:
+				alnid = alntier.askItemId()
+				alnitem = RGItem(id=alnid, type='aln')
+				
+				# Add the source and target attribtues...
+				alnitem.attributes['src'] = srcobj.id
+				alnitem.attributes['tgt'] = tgtobj.id
+				
+				# Add it to the tier...
+				alntier.add(alnitem)
+			
+		
+
+#===============================================================================
 # Count various things
 #===============================================================================
 
 class InstanceCounterFilter(XamlRefActionFilter):
 	
 	def __init__(self, upstream, **kwargs):
+		XamlRefActionFilter.__init__(self, upstream, **kwargs)
+		
 		self.cur_file = kwargs.get('cur_file')
 		
 		#=======================================================================
@@ -348,7 +776,7 @@ class InstanceCounterFilter(XamlRefActionFilter):
 		self.counts['trans_types'] = defaultdict(int)
 		
 		
-		XamlRefActionFilter.__init__(self, upstream, **kwargs)
+		
 	
 	#===========================================================================
 	# EndElement
@@ -361,6 +789,7 @@ class InstanceCounterFilter(XamlRefActionFilter):
 		if name == 'IgtCorpus':
 			self.countprinter()
 			
+		
 		if name == 'Igt':
 			self.counts['instances'] += 1
 			self.counts['tagged_instances'] += 1 if self.was_tagged else 0
@@ -371,7 +800,7 @@ class InstanceCounterFilter(XamlRefActionFilter):
 			self.counts['docids'][self.cur_docid] += 1
 			
 			self.was_tagged = {}
-			self.was_segmented = {}			
+			self.was_segmented = {}
 
 			
 		XamlRefActionFilter.endElement(self, name)
@@ -445,32 +874,17 @@ class InstanceCounterFilter(XamlRefActionFilter):
 		
 		XamlRefActionFilter.segHandler(self, seg, typeref, **kwargs)
 		
-
-
+		
+		
 #===============================================================================
-# Output the grams
+# This filter will build an IGT corpus and store it in the global parser.
 #===============================================================================
-class GramOutputFilter(XamlRefActionFilter):
+
+class IgtCorpusBuilderFilter(XamlRefActionFilter):
+	
+	# Initialize, and create a new corpus in memory.
 	def __init__(self, upstream, **kwargs):
-		XamlRefActionFilter.__init__(self, upstream, **kwargs)
-		
-		self.tagger_grams_written = False
-		self.ltagger_line = False
-		
-		self.projection_acc = {'match':0,'total':0}
-		
-		# Create an aligned corpus to compare alignments...
-		self.heur_aln_corpus = AlignedCorpus()
-		self.gold_aln_corpus = AlignedCorpus()
-		
-		#=======================================================================
-		# Open the language-specific tagger output for writing.
-		#=======================================================================
-		if self.kwargs.get('ltag_out'):
-			ltag_out = open(self.kwargs.get('ltag_out'), 'w', encoding='utf-8')
-			
-		# And set it to the variables
-		self.ltag_out = ltag_out
+		XamlRefActionFilter.__init__(self, upstream)
 		
 		#=======================================================================
 		# Here are the queued portions to write out
@@ -479,11 +893,42 @@ class GramOutputFilter(XamlRefActionFilter):
 		self.lang_queue = utils.token.Tokenization()
 		self.trans_queue = utils.token.Tokenization()
 		
-	
-	def posHandler(self, postoken, typeref, **kwargs):		
-		pass
-			
-			
+		self.stateholder['igt_corpus'] = IGTCorpus()
+		
+	# When starting a new igt instance...
+	def igtHandler(self, name, attrs, **kwargs):
+		XamlRefActionFilter.igtHandler(self, name, attrs, **kwargs)
+		
+		
+		idstr = '%s-%s-%s' % (attrs['DocId'], attrs['FromLine'], attrs['ToLine'])
+		self.stateholder['cur_instance'] = IGTInstance(id=idstr)
+		
+	def endIGT(self):
+		
+		# Get the instance from the global scope.
+		i = self.stateholder['cur_instance']
+		
+		# Convert the queues to tiers
+		lang = IGTTier(content=self.lang_queue, type='lang')
+		i.add(lang)
+		
+		gloss = IGTTier(content=self.gloss_queue, type='gloss')
+		i.add(gloss)
+		
+		trans = IGTTier(content=self.trans_queue, type='trans')
+		i.add(trans)
+		
+		# Add this instance to the corpus
+		self.stateholder['igt_corpus'].add(i)
+				
+				
+		self.gloss_queue = utils.token.Tokenization()
+		self.lang_queue = utils.token.Tokenization()
+		self.trans_queue = utils.token.Tokenization()
+		XamlRefActionFilter.endIGT(self)
+		
+		
+	# Add segments to the various queues...
 	def segHandler(self, seg, typeref, **kwargs):
 		
 		self.isSegmented = True
@@ -504,6 +949,41 @@ class GramOutputFilter(XamlRefActionFilter):
 				
 		XamlRefActionFilter.segHandler(self, seg, typeref, **kwargs)
 		
+	
+	def endCorpus(self):
+		XamlRefActionFilter.endCorpus(self)
+		
+		
+
+#===============================================================================
+# Output the grams
+#===============================================================================
+class GramOutputFilter(XamlRefActionFilter):
+	def __init__(self, upstream, **kwargs):
+		XamlRefActionFilter.__init__(self, upstream, **kwargs)
+		
+		self.tagger_grams_written = False
+		self.ltagger_line = False
+		
+		self.projection_acc = {'match':0,'total':0}
+		
+		# Create an aligned corpus to compare alignments...
+		self.heur_aln_corpus = AlignedCorpus()
+		self.gold_aln_corpus = AlignedCorpus()
+		
+		#=======================================================================
+		# Open the language-specific tagger output for writing.
+		#=======================================================================
+		ltag_out = None
+		if self.kwargs.get('ltag_out'):
+			ltag_out = open(self.kwargs.get('ltag_out'), 'w', encoding='utf-8')
+			
+		# And set it to the variables
+		self.ltag_out = ltag_out
+		
+		# Add the classifier stat stuff
+		self.stateholder['class_matches'] = 0
+		self.stateholder['class_compares'] = 0
 		
 	
 	#===========================================================================
@@ -511,51 +991,44 @@ class GramOutputFilter(XamlRefActionFilter):
 	#===========================================================================
 	def endIGT(self):
 		
+		inst = self.stateholder['cur_instance']
+		
 		#=======================================================================
 		# POS Tag the translation line
 		#=======================================================================
-		tagged_trans = None
-		if self.transSegs:
+
+		if inst.trans:
 			#text = ' '.join([t.seq for t in self.trans_segs])
 			
 			# If the stanford tagger is defined, use it for POS tags instead.
 			if self.kwargs.get('stanford_tagger'):
 				tagger = self.kwargs.get('stanford_tagger')
-				MODULE_LOGGER.debug('Tagging "%s"' % self.trans_queue.text())
-				tagged_sent = tagger.tag_tokenization(self.trans_queue, **self.kwargs)
+				MODULE_LOGGER.debug('Tagging "%s"' % inst.trans.text())
+				tagged_sent = tagger.tag_tokenization(inst.trans, **self.kwargs)
+				
 				
 				# Assign the 
 				for i, token in enumerate(tagged_sent):
-					self.trans_queue[i].taglabel = token.label
-				
-			
-				
+					inst.trans[i].taglabel = token.label
+					
+
 		#===================================================================
-		# Create an IGT instance
+		# Get the alignments from the IGT Instance
 		#===================================================================
 		
 		heur_aln = None
-		if self.langSegs and self.glossSegs and self.transSegs:
-			i = IGTInstance()
+		
+		if inst.lang and inst.gloss and inst.trans:
 			
-			# Create lang tier
-			lang = IGTTier(seq=self.lang_queue, kind='lang')
-			i.append(lang)
 			
-			gloss = IGTTier(seq=self.gloss_queue, kind='gloss')
-			i.append(gloss)
-			
-			trans = IGTTier(seq=self.trans_queue, kind='trans')
-			i.append(trans)
-			
-			heur_aln = i.gloss_heuristic_alignment()
-			
+			heur_aln = inst.gloss_heuristic_alignment(**self.kwargs)
 			
 			# Add debug line
-			MODULE_LOGGER.debug('Adding alignment for %s' % trans.text())
+			MODULE_LOGGER.debug('Adding alignment for %s' % inst.trans.text())
 			
-			heur_aln_sent = AlignedSent(gloss, trans, heur_aln.aln)
-			gold_aln_sent = AlignedSent(gloss, trans, self.gt_aln)
+			heur_aln_sent = AlignedSent(inst.gloss, inst.trans, heur_aln.aln)
+			gold_aln_sent = AlignedSent(inst.gloss, inst.trans, self.gt_aln)
+			
 			
 			self.gold_aln_corpus.append(gold_aln_sent)
 			self.heur_aln_corpus.append(heur_aln_sent)
@@ -574,7 +1047,7 @@ class GramOutputFilter(XamlRefActionFilter):
 		if self.glossSegs:
 			
 			# Write out the gloss line ---------------------------------------
-			for i, token in enumerate(self.gloss_queue):
+			for i, token in enumerate(inst.gloss):
 				
 				aln_labels = []
 				#===========================================================
@@ -591,35 +1064,65 @@ class GramOutputFilter(XamlRefActionFilter):
 						l = lambda t: t.taglabel
 						
 					# Now get the alignment labels of the correct type
-					aln_labels = [l(self.trans_queue[tgt-1]) for tgt in tgts]
+					aln_labels = [l(inst.trans[tgt-1]) for tgt in tgts]
 
 				prev_gram = None
 				if i-1 >= 0:
-					prev_gram = self.gloss_queue[i-1]
+					prev_gram = inst.gloss[i-1]
 				
 				next_gram = None
-				if i+1 < len(self.gloss_queue):
-					next_gram = self.gloss_queue[i+1]
+				if i+1 < len(inst.gloss):
+					next_gram = inst.gloss[i+1]
 										
 				write_gram(token, output=self.kwargs['class_f'], aln_labels=aln_labels, prev_gram=prev_gram, next_gram=next_gram, type='classifier', **self.kwargs)
-				write_gram(token, output=self.kwargs['tag_f'], type='tagger', **self.kwargs)
+				
+				if self.kwargs.get('tag_f'):
+					write_gram(token, output=self.kwargs['tag_f'], type='tagger', **self.kwargs)
 			
-			self.kwargs.get('tag_f').write('\n')
+			if self.kwargs.get('tag_f'):
+				self.kwargs.get('tag_f').write('\n')
 			
 		# Write out lang line tags ---------------------------------------------
 
-		if self.lang_queue:
-			for token in self.lang_queue:
-				# Skip "X" tags
-				if token.goldlabel != 'X':
+		if inst.lang:
+			for token in inst.lang:
+				
+				# Skip "JUNK" tags
+				if token.goldlabel != 'JUNK' and token.goldlabel != 'X':
 					write_gram(token, output=self.ltag_out, type='tagger', **self.kwargs)
-			self.ltag_out.write('\n')
 			
-		# Reset the counters ---------------------------------------------------
+			if self.ltag_out:
+				self.ltag_out.write('\n')
+		
+		# Compare language line tags to what the classifier produces... --------
+		if inst.gloss:
+			classifier = self.kwargs.get('classifier')
 			
-		self.gloss_queue = utils.token.Tokenization()
-		self.lang_queue = utils.token.Tokenization()
-		self.trans_queue = utils.token.Tokenization()
+			self.kwargs['prev_gram'] = None
+			self.kwargs['next_gram'] = None
+			
+			for i, g_token in enumerate(inst.gloss):
+				
+				# Set the previous/next grams based on our current position...
+				if i+1 < len(inst.gloss):
+					self.kwargs['next_gram'] = inst.gloss[i+1]
+				if i-1 > 0:
+					self.kwargs['prev_gram'] = inst.gloss[i-1]
+				
+				
+				tag = classifier.classify_token(g_token, **self.kwargs).largest()[0]
+				
+				if tag == g_token.goldlabel:
+					self.stateholder['class_matches'] += 1
+				
+				self.stateholder['class_compares'] += 1
+				
+			# Now clear these arguments...
+			del self.kwargs['prev_gram']
+			del self.kwargs['next_gram']
+
+				
+			
 		
 		# Parent Call ----------------------------------------------------------
 					
@@ -633,14 +1136,15 @@ class GramOutputFilter(XamlRefActionFilter):
 		pe_heur.eval()
 		
 		ALIGN_LOGGER.info(ae.all())
+		CLASS_LOGGER.info('%d,%d' % (self.stateholder['class_matches'],self.stateholder['class_compares']))
 		XamlRefActionFilter.endDocument(self)
 		
 #===============================================================================
 # Do some cleaning of the XML elements.
 #===============================================================================
-class XMLCleaner(XMLFilterBase):
+class XMLCleaner(InheritingXMLFilterBase):
 	def __init__(self, upstream, **kwargs):
-		XMLFilterBase.__init__(self, upstream)
+		InheritingXMLFilterBase.__init__(self, upstream)
 		
 				
 	def startElement(self, name, attrs):
@@ -650,11 +1154,11 @@ class XMLCleaner(XMLFilterBase):
 
 		XMLFilterBase.startElement(self, name, newAttrs)
 		
-		
+
 #===============================================================================
 # Write the XML out to a file.
 #===============================================================================
-class XMLWriter(XMLFilterBase):
+class XMLWriter(InheritingXMLFilterBase):
 	'''
 	Class to simply output the current XML to a file.
 	'''
@@ -690,7 +1194,7 @@ class XMLWriter(XMLFilterBase):
 #===============================================================================
 # The filter that selects which instances are useful.
 #===============================================================================
-class LGTFilter(XMLFilterBase):
+class LGTFilter(InheritingXMLFilterBase):
 	'''
 	Class that filters out IGT instances based on certain
 	qualifications:
@@ -701,7 +1205,7 @@ class LGTFilter(XMLFilterBase):
 	'''
 	
 	def __init__(self, upstream, **kwargs):
-		XMLFilterBase.__init__(self, upstream)
+		InheritingXMLFilterBase.__init__(self, upstream)
 		
 		self.valtest = True
 		
@@ -718,8 +1222,8 @@ class LGTFilter(XMLFilterBase):
 		self.in_igt = False
 		
 		# Set the maximum number of instances per docID
-		self.docid_limit = kwargs.get('docid_limit', 3)
-	
+		self.docid_limit = kwargs.get('docid_limit', None)
+		
 	
 	def startElement(self, name, attrs):
 		
@@ -789,7 +1293,7 @@ class LGTFilter(XMLFilterBase):
 			# Limit the number of allowed instances per docid to the docid_limit
 			# (defaults to 3)
 			#===================================================================
-			if self.cur_docid_count >= self.docid_limit:
+			if self.docid_limit and self.cur_docid_count >= self.docid_limit:
 				self.skip = True
 			
 			#===================================================================

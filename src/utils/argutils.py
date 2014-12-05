@@ -48,6 +48,14 @@ def existsdir(path):
 	else:
 		return path
 	
+def writefile(path, mode='w', encoding='utf-8'):
+	try:
+		f = open(path, mode, encoding=encoding)
+	except Exception as e:
+		raise e
+	
+	return f
+	
 #===============================================================================
 # ArgPasser
 #===============================================================================

@@ -64,16 +64,33 @@ def write_gram(token, **kwargs):
 	# Lowercase if asked for	
 	lower = kwargs.get('lowercase', True, bool)
 	gram = gram.lower() if gram else gram
-		
+	
+	
+	#===========================================================================
+	# Do some cleaning on the gram....
+	#===========================================================================
+	
+	# Only take the first of two slashed grams
+	gram = re.sub('(.*)?/(.*)', r'\1', gram)
+	
+	# Remove leading and trailing stuff
+	gram = re.sub('(\S)[\-=:\[\(\]\)/\*]', r'\1', gram)
+	gram = re.sub('[\-=:\[\(\]\)/\*](\S)', r'\1', gram) 
+	
+	#===========================================================================
+	
 	# Output the grams for a classifier
+	#
+	# NOTE! Only tokens that have an ASSIGNED pos tag will be written out this way! 
 	if type == 'classifier' and pos:
 		output.write(pos)
 		
 		#=======================================================================
 		# Get the morphemes
 		#=======================================================================
-		morphs = utils.token.tokenize_string(gram, utils.token.morpheme_tokenizer)
 		
+		morphs = utils.token.tokenize_string(gram, utils.token.morpheme_tokenizer)
+				
 		#=======================================================================
 		# Is there a number
 		#=======================================================================
@@ -90,15 +107,15 @@ def write_gram(token, **kwargs):
 		#=======================================================================
 		# Suffix
 		#=======================================================================
-		if kwargs.get('feat_suffix', False, bool):
+		if kwargs.get('feat_suffix', True, bool):
 			output.write('\tgram-suffix-3-%s:1' % gram[-3:].replace(':','-'))
 			output.write('\tgram-suffix-2-%s:1' % gram[-2:].replace(':','-'))
-			output.write('\tgram-suffix-1-%s:1' % gram[-3:].replace(':','-'))
+			output.write('\tgram-suffix-1-%s:1' % gram[-1:].replace(':','-'))
 			
 		#=======================================================================
 		# Prefix
 		#=======================================================================
-		if kwargs.get('feat_prefix', False, bool):
+		if kwargs.get('feat_prefix', True, bool):
 			output.write('\tgram-prefix-3-%s:1' % gram[:3].replace(':','-'))
 			output.write('\tgram-prefix-2-%s:1' % gram[:2].replace(':','-'))
 			output.write('\tgram-prefix-1-%s:1' % gram[:1].replace(':','-'))
@@ -120,13 +137,17 @@ def write_gram(token, **kwargs):
 			# And then tokenize...
 			for token in utils.token.tokenize_string(prev_gram, utils.token.morpheme_tokenizer):
 				
-				if kwargs.get('feat_prev_gram', False, bool):
+				if kwargs.get('feat_prev_gram', True, bool):
 					output.write('\tprev-gram-%s:1' % token.seq)
 								
 				# Add prev dictionary tag
-				if kwargs.get('feat_prev_gram_dict', False, bool) and token.seq in posdict:
+				if kwargs.get('feat_prev_gram_dict', True, bool) and token.seq in posdict:
 					prev_tags = posdict.top_n(token.seq)
 					output.write('\tprev-gram-dict-tag-%s:1' % prev_tags[0][0])
+					
+		# Write a "**NONE**" for prev or next...
+		elif kwargs.get('feat_prev_gram', True, bool):
+			output.write('\tprev-gram-**NONE**:1')
 					
 		#===================================================================
 		# Next gram
@@ -140,12 +161,15 @@ def write_gram(token, **kwargs):
 			# Gram itself
 			#===================================================================
 			
-				if kwargs.get('feat_next_gram', False, bool):				
+				if kwargs.get('feat_next_gram', True, bool):				
 					output.write('\tnext-gram-%s:1' % token.seq)
 				
-				if kwargs.get('feat_next_gram_dict', False, bool) and token.seq in posdict:
+				if kwargs.get('feat_next_gram_dict', True, bool) and token.seq in posdict:
 					next_tags = posdict.top_n(token.seq)
 					output.write('\tnext-gram-dict-tag-%s:1' % next_tags[0][0])
+					
+		elif kwargs.get('feat_next_gram', True, bool):
+			output.write('\tnext-gram-**NONE**:1')
 		
 		#=======================================================================
 		# Iterate through the morphs
@@ -155,7 +179,7 @@ def write_gram(token, **kwargs):
 			#===================================================================
 			# Just write the morph
 			#===================================================================
-			if kwargs.get('feat_basic', False, bool):
+			if kwargs.get('feat_basic', True, bool):
 				output.write('\t%s:1' % token.seq)
 			
 			#===================================================================
@@ -163,7 +187,7 @@ def write_gram(token, **kwargs):
 			# a predicted tag
 			#===================================================================
 			
-			if token.seq in posdict and kwargs.get('feat_dict', False, bool):
+			if token.seq in posdict and kwargs.get('feat_dict', True, bool):
 				
 				top_tags = posdict.top_n(token.seq)
 				best = top_tags[0][0]
@@ -177,5 +201,9 @@ def write_gram(token, **kwargs):
 
 		output.write('\n')
 				
-	if type == 'tagger':
+	#===========================================================================
+	# If writing the gram out for the tagger... 
+	#===========================================================================
+	
+	if type == 'tagger' and kwargs.get('tag_f'):
 		output.write('%s/%s ' % (gram, pos))

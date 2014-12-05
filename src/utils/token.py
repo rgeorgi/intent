@@ -5,22 +5,36 @@ Created on Mar 21, 2014
 '''
 from utils.string_utils import string_compare_with_processing
 import re
+from xigt.core import Item
+from collections import OrderedDict
 
 #===============================================================================
 # Main Token Class
 #===============================================================================
 
-class Token(object):
+class Token(Item):
 
-	def __init__(self, seq='', span=None, index=None, parent=None):
-		self.span = span
-		self._seq = seq
-		self._index = index
-		self.parent = parent
-		self._attrs = {}
+	def __init__(self, content, **kwargs):
+		
+		# Essentially manually override the xigt
+		# constructor.		
+		self.id = kwargs.get('id')
+		self.type = kwargs.get('type')
+		self.attributes = kwargs.get('attributes') or OrderedDict()
+		self._content = content
+		self._parent = kwargs.get('tier')
+
+		# Add span info		
+		if 'span' in kwargs:
+			self.attributes['span'] = kwargs.get('span')
+		
+		# Add index info
+		if 'index' in kwargs:
+			self.attributes['index'] = kwargs.get('index')	
+		
 
 	def __str__(self):
-		return '<%s %s>' % (self.seq, self.span)
+		return '<%s %s>' % (self.__class__.__name__, self.content)
 	
 	def __repr__(self):
 		return str(self)
@@ -35,30 +49,26 @@ class Token(object):
 	
 	@property
 	def attrs(self):
-		return self._attrs
+		return self.attributes
 		
 	@attrs.getter
 	def attrs(self):
-		return self._attrs
+		return self.attributes
 	
 	@property
 	def seq(self):
-		return self._seq
+		return self.content
 	
 	@property
 	def index(self):
-		return self._index
-	
-	@index.getter
-	def index(self):
-		return self._index
+		return self.attributes.get('index')
 	
 	@index.setter
 	def index(self, value):
-		self._index = value
+		self.attributes['index'] = value
 		
 	def __eq__(self, o):
-		return isinstance(o, Token) and o.seq == self.seq and self.index == o.index
+		return o.seq == self.seq and self.index == o.index
 		
 	def morphs(self, **kwargs):
 		for morph in self.morphed_tokens():
@@ -88,25 +98,54 @@ class Token(object):
 #===============================================================================
 
 class POSToken(Token):
-	def __init__(self, seq, label = None, index=None, span=None, parent=None):	
-		self.form = seq
-		self.label = label
-		self.index = index
-		Token.__init__(self, seq, span, index, parent)
+	def __init__(self, content, **kwargs):
+		Token.__init__(self, content, **kwargs)
+		if 'label' in kwargs:
+			self.label = kwargs.get('label')
+			
 		
+		
+		
+	@property
+	def label(self):
+		return self.attributes.get('label')
+	
+	@label.setter
+	def label(self, v):
+		if v:
+			self.attributes['label'] = v
+	
+	
 	@classmethod
-	def fromToken(cls, t, label=None, index=None, span=None, parent=None):
-		return cls(t.seq, label, index, span, parent)
+	def fromToken(cls, t, **kwargs):
+		return cls(t.seq, **kwargs)
+		
 		
 class GoldTagPOSToken(Token):
-	def __init__(self, seq='', taglabel = None, goldlabel = None, span=None, index=None, parent=None):
-		self.taglabel = taglabel
-		self.goldlabel = goldlabel
-		Token.__init__(self, seq, index=index, span=span, parent=parent)
+	def __init__(self, content, **kwargs):
+		Token.__init__(self, content, **kwargs)
+		self.taglabel = kwargs.get('taglabel')
+		self.goldlabel = kwargs.get('goldlabel')
 		
 	@classmethod
 	def fromToken(cls, t, taglabel = None, goldlabel = None):
 		return cls(t.seq, taglabel=taglabel, goldlabel=goldlabel, span=t.span, index=t.index, parent=t.parent)
+	
+	@property
+	def taglabel(self):
+		return self.attributes.get('taglabel')
+	
+	@taglabel.setter
+	def taglabel(self, v):
+		self.attributes['taglabel'] = v
+	
+	@property	
+	def goldlabel(self):
+		return self.attributes.get('goldlabel')
+	
+	@goldlabel.setter
+	def goldlabel(self, v):
+		self.attributes['goldlabel'] = v
 
 		
 #===============================================================================
@@ -119,7 +158,7 @@ class Morph(Token):
 	'''
 	def __init__(self, seq='', span=None, parent=None):
 		index = parent.index if parent else None
-		Token.__init__(self, seq, span, index, parent)
+		Token.__init__(self, content=seq, span=span, index=index, tier=parent)
 		
 		
 	@classmethod
@@ -135,11 +174,14 @@ class Morph(Token):
 		
 def whitespace_tokenizer(st):
 	for match in re.finditer('\S+', st, re.UNICODE):
-		yield Token(match.group(0), Span((match.start(), match.end())))
+		yield Token(match.group(0), span=Span((match.start(), match.end())))
 
 def morpheme_tokenizer(st):
-	for match in re.finditer('[^\s\-\.:/\(\)=]+', st):
-		yield Token(match.group(0), span=Span((match.start(), match.end())))
+	pieces = re.split('[\s\-\.:/\(\)=]+', st)
+	matches = [p for p in pieces if p.strip()]
+
+	for match in matches:
+		yield Token(match)
 
 def tag_tokenizer(st, delimeter='/'):
 	for match in re.finditer('(\S+){}(\S+)'.format(delimeter), st, re.UNICODE):

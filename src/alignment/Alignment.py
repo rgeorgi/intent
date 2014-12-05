@@ -164,7 +164,6 @@ class AlignedSent():
 					# Yield the morph_index:parent_index:tgt_index
 					
 				
-			
 		
 		
 class AlignedCorpus(list):
@@ -243,9 +242,9 @@ class AlignedCorpus(list):
 		@param a3: path to the giza A3.final file.
 		@param limit: 
 		'''
-		src_f = open(src_path, 'r')
-		tgt_f = open(tgt_path, 'r')
-		aln_f = open(a3, 'r')
+		src_f = open(src_path, 'r', encoding='utf-8')
+		tgt_f = open(tgt_path, 'r', encoding='utf-8')
+		aln_f = open(a3, 'r', encoding='utf-8')
 		
 		src_lines = src_f.readlines()
 		tgt_lines = tgt_f.readlines()
@@ -488,7 +487,7 @@ class AlignedSentOutputCase(unittest.TestCase):
 		
 		a_sent = AlignedSent(s1, s2, a)
 		
-		print(a_sent.serialize_src())
+		
 
 class AlignmentTest(unittest.TestCase):
 	def runTest(self):
@@ -505,4 +504,3 @@ class AlignmentTest(unittest.TestCase):
 		self.assertFalse(a1.contains_tgt(5))
 		self.assertFalse(a1.contains_src(3))
 		
-		print(a3.serialize())

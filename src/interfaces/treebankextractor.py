@@ -6,7 +6,7 @@ Created on Aug 31, 2013
 import optparse, sys, os
 from ConfigParser import ConfigParser
 from utils.commandline import require_opt
-from eval.pos_eval import pos_eval
+from eval.pos_eval import slashtags_eval
 from utils.systematizing import notify
 from utils.ConfigFile import ConfigFile
 from utils.fileutils import remove_safe

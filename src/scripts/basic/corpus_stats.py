@@ -15,8 +15,10 @@ from utils.fileutils import globlist
 from utils.StatDict import StatDict
 from utils.token import tokenize_string, tag_tokenizer
 from _collections import defaultdict
+from utils.argutils import writefile
+import sys
 
-def gather_stats(filelist, tagged):
+def gather_stats(filelist, tagged, log_file = sys.stdout, csv=False):
 	
 	# Count of each unique word and its count.
 	wordCount = StatDict()
@@ -31,9 +33,13 @@ def gather_stats(filelist, tagged):
 	# Count of each unique tag and the word types associated with it.
 	tagtypes = defaultdict(set)
 	
+	# Count the number of lines
+	lines = 0
+	
 	for filename in filelist:
 		f = open(filename, 'r', encoding='utf-8')
 		for line in f:
+			lines += 1
 			tokens = tokenize_string(line, tokenizer=tag_tokenizer)
 			for token in tokens:
 				
@@ -55,30 +61,39 @@ def gather_stats(filelist, tagged):
 		type_sum += len(tagtypes[word])
 		
 	tag_per_type_avg = type_sum / len(tagtypes)
- 
 
-	print('Total Tokens : %d' % wordCount.total)
-	print('Total Types  : %d' % len(wordCount))
-	print('Avg Tags/Type: %.2f' % tag_per_type_avg)
+	#===========================================================================
+	# Get the stats we want to return
+	#===========================================================================
 
+	total_tokens = wordCount.total
+	total_types = len(wordCount)
+	
+	if not csv:
+		log_file.write('Sentences    : %d\n' % lines)
+		log_file.write('Total Tokens : %d\n' % total_tokens)
+		log_file.write('Total Types  : %d\n' % total_types)
+		log_file.write('Avg Tags/Type: %.2f\n' % tag_per_type_avg)
+	else:
+		log_file.write('sents,tokens,types,tags-per-type\n')
+		log_file.write('%s,%s,%s,%.2f\n' % (lines, total_tokens, total_types, tag_per_type_avg))
+
+	
+	log_file.write('\n'* 2 + '='*80 + '\n')
+	
+	labels = list(tagCount.keys())
+	labels = sorted(labels)
+	
+	
+	log_file.write('tag, tag_counts, types_per_tag, percent_of_tokens, percent_of_types\n')
+	for i, tag in enumerate(labels):
+		tagcounts = tagCount[tag]
+		typetagcounts = typetags[tag]
 		
-# 	print('Tokens,Types,POS,Tokens,Types,%Tokens,%Types')		
-# 	print(wordCount.total, end=",")
-# 	print(len(wordCount), end=",")
-# 	
-# 	
-# 	labels = list(tagCount.keys())
-# 	labels = sorted(labels)
-# 	for i, tag in enumerate(labels):
-# 		tagcounts = tagCount[tag]
-# 		typetagcounts = typetags[tag]
-# 		
-# 		percent_tokens = float(tagcounts) / wordCount.total * 100
-# 		percent_types = float(typetagcounts) / len(wordCount)* 100	
-# 		
-# 		if i > 0:
-# 			print(',,', end='')
-# 		print('%s,%d,%d,%.2f,%0.2f' % (tag, tagcounts, typetagcounts, percent_tokens, percent_types))
+		percent_tokens = float(tagcounts) / wordCount.total * 100
+		percent_types = float(typetagcounts) / len(wordCount)* 100	
+		
+		log_file.write('%s,%d,%d,%.2f,%0.2f\n' % (tag, tagcounts, typetagcounts, percent_tokens, percent_types))
 	
 #===============================================================================
 # MAIN
@@ -88,7 +103,9 @@ if __name__ == '__main__':
 	p = argparse.ArgumentParser()
 	p.add_argument('file', nargs='+')
 	p.add_argument('--tagged', default=True)
+	p.add_argument('--log', default=sys.stdout, type=writefile)
+	p.add_argument('--csv', action='store_true', default=True)
 	
 	args = p.parse_args()
 	
-	gather_stats(args.file, args.tagged)
+	gather_stats(args.file, args.tagged, log_file = args.log, csv=args.csv)

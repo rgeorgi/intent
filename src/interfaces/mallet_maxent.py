@@ -10,6 +10,15 @@ import sys
 from classify.Classification import Classification
 from utils.TwoLevelCountDict import TwoLevelCountDict
 import re
+from _io import StringIO
+import igt
+from utils.token import GoldTagPOSToken
+
+class ClassifierException(Exception):
+	pass
+
+class EmptyStringException(ClassifierException):
+	pass
 
 def setup():
 	global mallet
@@ -67,33 +76,53 @@ class MalletMaxent(object):
 			print('\t'.join(['%s:%.4f' % (w,p) for w,p in top_10]))
 				
 				
+	def classify_token(self, token, **kwargs):
 		
+		token = GoldTagPOSToken.fromToken(token, goldlabel='NONE')
 		
+		sio = StringIO()
+		igt.grams.write_gram(token, type='classifier', output=sio, **kwargs)
+		c_token = sio.getvalue().strip()
+		sio.close()
+		
+				
+		result = self.classify(c_token)
+		
+		return result
+		
+				
 		
 	def classify(self, string):
-		self.c.stdin.write(bytes(string+'\r\n\r\n', encoding='utf-8'))
-		self.c.stdin.flush()
-		if self._first:
-			content = self.c.stdout.readline()
-			self._first = False
+		if not string.strip():
+			raise EmptyStringException('Empty string passed into classify.') 
 		else:
-			self.c.stdout.readline()
-			content = self.c.stdout.readline()
+			self.c.stdin.write(bytes(string+'\r\n\r\n', encoding='utf-8'))
+			self.c.stdin.flush()
 			
-		content = content.decode(encoding='utf-8')
-		
-		content = content.split()
-		ret_c = Classification(gold=content[0])
-		
-		
-		for i in range(1, len(content), 2):
-		
-			tag = content[i]
+					
+			if self._first:
+				content = self.c.stdout.readline()
+				self._first = False
+			else:
+				self.c.stdout.readline()
+				content = self.c.stdout.readline()
+				
+			content = content.decode(encoding='utf-8')
 			
-			prob = float(content[i+1])
-			ret_c[tag] = float(prob)
+			content = content.split()
+			ret_c = Classification(gold=content[0])
 			
-		return ret_c
+			
+			#print(string, content)
+			
+			for i in range(1, len(content), 2):
+			
+				tag = content[i]
+				
+				prob = float(content[i+1])
+				ret_c[tag] = float(prob)
+				
+			return ret_c
 		
 		
 		

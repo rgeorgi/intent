@@ -32,6 +32,8 @@ class ProjectEval(object):
 		auto_matches = 0
 		auto_compares = 0
 		
+		lang_tokens = 0
+		
 		# For each aligned sentence in the corpus
 		for aligned_sent in self.corpus:
 			
@@ -63,6 +65,9 @@ class ProjectEval(object):
 						gold_matches += 1
 				
 					gold_compares += 1
+
+			# Count the number of lang tokens here
+			lang_tokens += len(aligned_sent.tgt_tokens)
 					
-		ALIGN_LOGGER.log(logging.INFO,'%s%d,%d,%d,%d' % (self.name, auto_matches, auto_compares, gold_matches, gold_compares))
+		ALIGN_LOGGER.log(logging.INFO,'%s%d,%d,%d,%d,%d' % (self.name, auto_matches, auto_compares, gold_matches, gold_compares, lang_tokens))
 				

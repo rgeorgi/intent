@@ -6,6 +6,7 @@ Created on Mar 11, 2014
 
 import sys, re
 import unittest
+import string
 
 #===============================================================================
 # Sub-tasks of cleaning
@@ -15,7 +16,7 @@ punc_re = '[.?!,\xc2]'
 
 def grammaticality(string):
 	# Now, remove leading grammaticality markers
-	return re.sub('^[\*\?]+', '', string).strip()
+	return re.sub('[#\*\?]+', '', string).strip()
 
 def surrounding_quotes_and_parens(ret_str):
 	ret_str = re.sub('^[\'"`\[\(]+', '', ret_str).strip()
@@ -29,6 +30,9 @@ def remove_external_punctuation(ret_str):
 	ret_str = re.sub(r'(\w+)({})+\s'.format(punc_re), r'\1 ', ret_str).strip()
 	ret_str = re.sub(r'(?:^|\s)({}+)(\w+)'.format(punc_re), r'\2', ret_str).strip()
 	return re.sub(r'(\w+)([{}])+$'.format(punc_re), r'\1 ', ret_str).strip()
+
+def remove_elipses(ret_str):
+	return re.sub('\.\s*\.\s*\.', '', ret_str)
 
 def remove_solo_punctuation(ret_str):
 	ret_str = re.sub('\s*{}+\s*'.format(punc_re), '', ret_str)
@@ -60,10 +64,20 @@ def remove_parenthetical_numbering(ret_str):
 def remove_period_numbering(ret_str):
 	return re.sub('^\S+\s*[.)]', '', ret_str).strip()
 
+def remove_leading_numbers(ret_str):
+	return re.sub('^[0-9]+', '', ret_str).strip()
+
 def remove_numbering(ret_str):
 	ret_str = remove_parenthetical_numbering(ret_str)
 	ret_str = remove_period_numbering(ret_str)
+	ret_str = remove_leading_numbers(ret_str)
 	return ret_str
+
+def remove_hyphens(ret_str):
+	return re.sub('[\-\=]', '', ret_str)
+
+def remove_leading_punctuation(ret_str):
+	return re.sub('^[%s]+' % string.punctuation, '', ret_str)
 
 def collapse_spaces(ret_str):
 	return re.sub('\s+', ' ', ret_str)
@@ -154,6 +168,10 @@ def merge_lines(linelist):
 #===============================================================================
 
 def clean_gloss_string(ret_str):
+	
+	# Remove ellipses
+	#ret_str = remove_elipses(ret_str) 
+	
 	# Rejoin letters
 	ret_str = rejoin_letter(ret_str, 't', 'right')
 	ret_str = rejoin_letter(ret_str, 'h', 'left')
@@ -166,6 +184,9 @@ def clean_gloss_string(ret_str):
 	
 	# Remove final punctuation
 	ret_str = remove_final_punctuation(ret_str)
+	
+	# Remove illegal chars
+	ret_str = re.sub('#', '', ret_str)
 	
 	return ret_str
 
@@ -204,6 +225,7 @@ def clean_trans_string(string):
 	return ret_str
 
 def clean_lang_string(ret_str):
+	
 	# Remove leading byte string
 	ret_str = remove_byte_char(ret_str)
 	
@@ -225,6 +247,9 @@ def clean_lang_string(ret_str):
 	
 	# Remove final punctuation
 	ret_str = remove_final_punctuation(ret_str)
+	
+	
+	ret_str = remove_hyphens(ret_str)
 
 	return ret_str
 

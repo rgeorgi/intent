@@ -21,8 +21,11 @@ class CountDict(object):
 		return self._dict.__repr__()
 	
 	def total(self):
-		values = self.dict.values()
-		return reduce(lambda x, y: x+y, values)
+		values = self._dict.values()
+		total = 0
+		for v in values:
+			total += v
+		return total
 			
 	#===========================================================================
 	#  Stuff that should be inheritable

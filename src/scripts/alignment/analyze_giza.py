@@ -52,7 +52,7 @@ def analyze_giza(source, target, st, ts, output):
 
 			
 def outputstream(arg):
-	f = open(arg, 'w')
+	f = open(arg, 'w', encoding='utf-8')
 	return f
 
 if __name__ == '__main__':

@@ -7,7 +7,7 @@ from interfaces.MalletMaxentTrainer import MalletMaxentTrainer
 from utils.ConfigFile import ConfigFile
 import glob
 import os
-from treebanks.xaml.XamlParser import XamlParser
+from ingestion.xaml.XamlParser import XamlParser
 from utils.argutils import ArgPasser
 import pickle
 from collections import OrderedDict
@@ -123,7 +123,7 @@ if __name__ == '__main__':
 	m = MalletMaxentTrainer()
 	c['maxent_model'] = m
 	
-	#ablation(**c)
+	ablation(**c)
 
-	c['feat_align'] = True
-	print(test_feature(**c))
+	#c['feat_align'] = True
+	#print(test_feature(**c))

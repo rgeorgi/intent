@@ -13,6 +13,7 @@ import pickle
 
 import logging
 from utils.ConfigFile import ConfigFile
+from interfaces.mallet_maxent import MalletMaxent
 
 if __name__ == '__main__':
 	p = ArgumentParser()
@@ -22,6 +23,10 @@ if __name__ == '__main__':
 	args = p.parse_args()
 	
 	c = ConfigFile(args.conf)
+	
+	# If we have a classifier, add it to the kwargs... -------------------------
+	if c.get('classifier_path'):
+		c['classifier'] = MalletMaxent(c.get('classifier_path'))
 	
 	#===========================================================================
 	# Logging

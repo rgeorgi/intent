@@ -5,30 +5,104 @@ Created on Apr 30, 2014
 
 @author: rgeorgi
 '''
-from corpora.IGTCorpus import IGTCorpus
+from corpora.IGTCorpus import IGTCorpus, IGTProjectionException,\
+	IGTGlossLangLengthException
 from interfaces.mallet_maxent import MalletMaxent
 import pickle
+from argparse import ArgumentParser
+from utils.argutils import existsfile
+from utils.ConfigFile import ConfigFile
+from interfaces.stanford_tagger import StanfordPOSTagger
 
-c = IGTCorpus.from_text('/Users/rgeorgi/Dropbox/code/eclipse/aggregation/data/odin/train/deu.txt',
-					merge=False)
-classifier = MalletMaxent('/Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/models/gloss_classifier.maxent')
+import logging
+import os
+import sys
 
-tagger_out = open('/Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/glosses/deu-classified_tagger.txt', 'w', encoding='utf-8') 
-posdict = pickle.load(open('/Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/models/posdict.pickle', 'rb'))
+projection_logger = logging.getLogger('projection')
+classification_logger = logging.getLogger('classification')
 
 
-for inst in c:
+if __name__ == '__main__':
+	p = ArgumentParser()
+	p.add_argument('-c', '--conf', required=True, type=existsfile)
 	
-	sequence = inst.lang_line_classifications(classifier, posdict=posdict, 
-											feat_dict=True,
-											feat_next_gram=True,
-											feat_prev_gram=True,
-											feat_prefix=True,
-											feat_suffix=True)
+	args = p.parse_args()
 	
-	# Now, for all of our tokens, let's do some data gathering.
+	c = ConfigFile(args.conf)
 	
-	for token in sequence:
-		tagger_out.write('%s/%s ' % (token.seq, token.label))
+	# Build the corpus...
+	corp = IGTCorpus.from_text(c.get('txt_path', t=existsfile),
+					merge=True)
+
+	posdict = pickle.load(open(c.get('posdict', t=existsfile), 'rb'))
+
+	# Get the output path for the slashtags...
+	outpath = c.get('out_path')
+	os.makedirs(os.path.dirname(outpath), exist_ok=True)
+
+	# The output in slashtags format...
+	tagger_out = open(outpath, 'w', encoding='utf-8')
+
+	if c.get('tagging_method') == 'projection':
+		spt = StanfordPOSTagger(c.get('eng_tagger'))
+	else:
+		# Load the classifier...
+		classifier = MalletMaxent(c.get('classifier', t=existsfile))
+		
+
+	i = 0
+	skipped = 0
+
+	for inst in corp:
+		
+		if i % 10 == 0:
+			print('Processing instance %d...' % i)
+		
+		i+=1
+		sequence = []
+		
+		
+		
+		#=======================================================================
+		# Try the projection method for labeling the corpus if specified...
+		#======================================================================
+		if c.get('tagging_method') == 'projection':
+		
+			try:
+				sequence = inst.lang_line_projections(spt, posdict=posdict, error_on_nonproject=c.get('skip_proj_errors', t=bool))
+			except IGTProjectionException as igtpe:
+				projection_logger.warning('There was an error in projection: %s' % igtpe)
+				skipped += 1
+				continue
+			except IGTGlossLangLengthException as e:
+				skipped +=1
+				continue
+				
+		
+		#=======================================================================
+		# Otherwise, use the classification approach.
+		#=======================================================================
+		else:
+			try:
+				sequence = inst.lang_line_classifications(classifier, posdict=posdict, 
+													feat_dict=True,
+													feat_next_gram=True,
+													feat_prev_gram=True,
+													feat_prefix=True,
+													feat_suffix=True)
+			except IGTGlossLangLengthException as e:
+				#classification_logger.warning('Gloss and language lines did not match up for: %s' % inst.text())
+				skipped += 1
+				continue
+				
 	
-tagger_out.close()
+		
+		if sequence:
+			for token in sequence:
+				tagger_out.write('%s/%s ' % (token.seq, token.label))
+			
+			tagger_out.write('\n')
+			
+	print('%d skipped ' % skipped)
+		
+	tagger_out.close()

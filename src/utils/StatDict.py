@@ -3,7 +3,7 @@ Created on Mar 21, 2014
 
 @author: rgeorgi
 '''
-from _collections import defaultdict
+from collections import defaultdict
 
 class StatDict(defaultdict):
 	'''

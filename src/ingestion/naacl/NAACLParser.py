@@ -101,7 +101,7 @@ class NAACLInstanceText(str):
 			if linenum >= 3:
 				kind = 'trans'
 				
-			tier = IGTTier(kind=kind)
+			tier = IGTTier(type=kind)
 			
 			# Now, go through and add the tokens to the tier.
 			words = line.split()

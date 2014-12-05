@@ -7,6 +7,7 @@ import os
 import codecs
 import chardet
 from utils.token import tokenize_string, tag_tokenizer, POSToken
+import re
 
 
 
@@ -104,20 +105,83 @@ class POSCorpus(list):
 			train.write(train_path, format, delimeter, outdir, lowercase)
 		if test_path and len(test):
 			test.write(test_path, format, delimeter, outdir, lowercase)
-			
-	def read(self, fp, **kwargs):
-		f = open(fp, 'r')
+		
+	@classmethod	
+	def read_slashtags(cls, fp, **kwargs):
+		'''
+		
+		@param cls: My class
+		@param fp: File path to the slashtagged file to read in.
+		
+		'''
+		f = open(fp, 'r', encoding='utf-8')
 		
 		delimeter = kwargs.get('delimeter', '/')
 		
+		c = cls()
+		
 		for line in f:
 			split_tokens = tokenize_string(line, tag_tokenizer)
-			self.read_handler(split_tokens)
 			
-		self.read_complete()
+			inst = c.token_handler(split_tokens)
+			if inst:
+				c.append(inst)
 			
-	def read_handler(self, tokens):
-		pass
+		c.read_complete()
+		return c
+			
+			
+	@classmethod
+	def read_simpletagger(cls, fp, **kwargs):
+		'''
+		Simpletagger format is used by Mallet and consists
+		of one token per line, with its features listed first
+		and then its label listed last.
+		
+		@param cls:
+		@param fp:
+		'''
+		f = open(fp, 'r', encoding='utf-8')
+		data = f.read()
+		f.close()
+		
+		# Get all the sents from the simpletagger file.
+		sents = re.findall('[\s\S]+?\n\n', data)
+		
+		c = cls()
+		
+		for sent in sents:
+			lines = sent.strip().split('\n')
+			postokens = []
+			for line in lines:
+				tokens = line.split()
+				label = tokens[-1]
+				
+				# With the convention used in this code,
+				# a word in ST format will have a feature:
+				# word-_____
+				form_re = re.search('word-(\S+)', line)
+				if form_re:
+					form = form_re.group(1)
+				else:
+					form = '**NONE**'
+				
+				pt = POSToken(form, label=label)
+				postokens.append(pt)
+			inst = c.token_handler(postokens)
+			if inst:
+				c.append(inst)
+		return c
+			
+			
+				
+	
+	def token_handler(self, tokens):
+		inst = POSCorpusInstance()
+		for token in tokens:
+			inst.append(token)
+		return inst
+			
 	
 	def read_complete(self):
 		pass
@@ -175,9 +239,9 @@ class POSCorpusInstance(list):
 	def slashtags(self, delimeter = '/', lowercase=True):
 		ret_str = ''
 		for token in self:
-			form = token.form
+			form = token.seq
 			if lowercase:
-				form = token.form.lower()
+				form = token.seq.lower()
 			ret_str += '%s/%s ' % (form, token.label)
 		return ret_str.strip()
 	

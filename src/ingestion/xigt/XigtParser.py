@@ -25,9 +25,9 @@ def process_instance(xigt_inst, corpus):
 			i = IGTInstance(id=xigt_inst.id)
 			
 			
-			l = IGTTier.fromString(lang[0], kind='lang')
-			g = IGTTier.fromString(glosses[0], kind='gloss')
-			t = IGTTier.fromString(trans[0], kind='trans')
+			l = IGTTier.fromString(lang[0], type='lang')
+			g = IGTTier.fromString(glosses[0], type='gloss')
+			t = IGTTier.fromString(trans[0], type='trans')
 
 			i.append(l)
 			i.append(g)

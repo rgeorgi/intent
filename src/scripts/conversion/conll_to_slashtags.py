@@ -5,7 +5,7 @@ Created on Sep 12, 2014
 '''
 import argparse
 import os
-from treebanks.conll.ConllParser import ConllParser
+from ingestion.conll.ConllParser import ConllParser
 from corpora.POSCorpus import POSCorpus
 
 def conll_to_slashtags(infiles, outpath):
@@ -16,6 +16,10 @@ def conll_to_slashtags(infiles, outpath):
 		main_c.extend(c)
 	
 	st = c.slashtags('/', lowercase=True)
+	
+	# Create the containing path if it doesn't already exist
+	os.makedirs(os.path.dirname(outpath), exist_ok=True)
+	
 	of = open(outpath, 'w', encoding='utf-8')
 	of.write(st)
 	of.close()

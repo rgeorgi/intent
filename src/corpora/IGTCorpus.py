@@ -9,37 +9,65 @@ import sys
 
 import unittest
 from utils.token import Token, TokenException, Morph, tokenize_string,\
-	morpheme_tokenizer, GoldTagPOSToken, whitespace_tokenizer, POSToken
+	morpheme_tokenizer, GoldTagPOSToken, whitespace_tokenizer, POSToken,\
+	Tokenization
 from igt.igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
 	clean_trans_string, hyphenate_infinitive
-from _io import StringIO
+from io import StringIO
 from igt.grams import write_gram
-from _collections import defaultdict
-import xigt
+from xigt.core import Tier, XigtMixin
+from collections import OrderedDict
+import uuid
+from corpora.POSCorpus import POSCorpus, POSCorpusInstance
+from igt.rgxigt import RGIgt, RGCorpus
 
 
-class IGTParseException(Exception):
-	def __init__(self, msg=''): 
-		super(Exception)
+
+class IGTException(Exception):
+	pass
+
+class IGTParseException(IGTException):
+	pass
 	
 class IGTGlossLangLengthException(IGTParseException):
-	
-	def __init__(self, msg=''):
-		super(IGTParseException)
+	pass
+		
+class IGTAlignmentException(IGTException):
+	pass
 
-class IGTCorpus(list):
+class IGTProjectionException(IGTException):
+	pass
+
+class IGTCorpus(RGCorpus):
 	'''
 	Object that will hold a corpus of IGT instances.
 	'''
 
-	def __init__(self, seq = []):
-		list.__init__(self, seq)
+	def __init__(self, **kwargs):
+		XigtMixin.__init__(self)
+		self.id = kwargs.get('id')
+		self.attributes = kwargs.get('attributes') or OrderedDict()
+		self.metadata = kwargs.get('metadata')
+		self.add_list(kwargs.get('igts'))
 
 	def gloss_alignments(self):
 		return [inst.gloss_alignments() for inst in self]
 
 	def lang_alignments(self):
-		return [inst.get_lang_align_sent() for inst in self]
+		return [inst.lang_to_trans_sent() for inst in self]
+	
+	def classifier_pos_corpus(self, classifier, **kwargs):
+		pc = POSCorpus()
+		for inst in self:
+			try:
+				sent = inst.lang_line_classifications(classifier, **kwargs)
+				if len(sent):
+					pc.add(POSCorpusInstance(sent))
+			except:
+				continue
+		return pc
+	
+	
 	
 	def gloss_heuristic_alignments(self, **kwargs):
 		return [inst.gloss_heuristic_alignment(**kwargs) for inst in self]
@@ -59,9 +87,10 @@ class IGTCorpus(list):
 		for inst_txt in inst_txts:
 			try:
 				i = IGTInstance.from_string(inst_txt, **kwargs)
-				corpus.append(i)
+				corpus.add(i)
 			except IGTParseException as e:
-				pass
+				sys.stderr.write(str(e))
+				continue
 			
 		return corpus
 		
@@ -70,28 +99,57 @@ class IGTCorpus(list):
 # IGT Instance Class
 #===============================================================================
 		
-class IGTInstance(list):
+class IGTInstance(RGIgt):
 	'''
 	Container class for an IGT instance and all the dealings that will go on inside it.
 	'''
 	
-	def __init__(self, seq=[], id = None):
-		self._id = id
-		self.glossalign = Alignment()
-		self.langalign = Alignment()
-		list.__init__(self, seq)
-		self.attrs = {}
-	
+		
 	#===========================================================================
 	# Convert Instance to XIGT
 	#===========================================================================
 	
-	def to_xigt(self):
+	def __init__(self, **kwargs):
+		# Start with the basics..
+		XigtMixin.__init__(self)
 		
-		# Initialize new IGT instance...
-		xi = xigt.Igt()
-		for tier in [self.lang(), self.gloss(), self.trans()]:
-			xi.add(tier.to_xigt())
+		# Either use a provided id or generated one
+		self.id = kwargs.get('id') or uuid.uuid4()
+		
+		self.type = kwargs.get('type')
+		self.attributes = kwargs.get('attributes') or OrderedDict()
+		self.metadata = kwargs.get('metadata')
+		self.add_list(kwargs.get('tiers'))
+		self._parent = kwargs.get('corpus')
+		
+
+	# GlossAlign ---------------------------------------------------------------
+
+	@property
+	def glossalign(self):
+		if not hasattr(self, '_ga'):
+			self._ga = self.gloss_heuristic_alignment().aln
+		return self._ga
+	
+	@glossalign.setter
+	def glossalign(self, v):
+		self._ga = v
+	
+	# LangAlign ----------------------------------------------------------------
+	
+	@property
+	def langalign(self):
+		if not hasattr(self, '_la'):
+			self._la = self.glossalign
+		return self._la
+	
+	@langalign.setter
+	def langalign(self, v):
+		self._la = v
+	
+	
+	#===========================================================================
+
 	
 	@classmethod
 	def from_lines(cls, l, g, t, **kwargs):
@@ -122,21 +180,22 @@ class IGTInstance(list):
 		#=======================================================================
 		# Make sure that the gloss and language line align
 		#=======================================================================
-		lang_t = IGTTier.fromString(lang_line, kind='lang')
-		gloss_t = IGTTier.fromString(gloss_line, kind='gloss')
-		trans_t = IGTTier.fromString(trans_line, kind='trans')
+		lang_t = IGTTier.fromString(lang_line, type='lang')
+		gloss_t = IGTTier.fromString(gloss_line, type='gloss')
+		trans_t = IGTTier.fromString(trans_line, type='trans')
 		
 		# If the gloss line has more tokens, see if
 		# any are unhyphenated infinitives (e.g. to-visit)
 		if len(gloss_t) > len(lang_t) and kwargs.get('infinitive_repair', True):
 			gloss_line = hyphenate_infinitive(gloss_line)
-			gloss_t = IGTTier.fromString(gloss_line, kind='gloss')
+			gloss_t = IGTTier.fromString(gloss_line, type='gloss')
 		
 		# Raise an exception if, after everything, 
 		# the lang and gloss lines do not have the
 		# same number of tokens.
-		if len(lang_t) != len(gloss_t):			
-			raise IGTGlossLangLengthException('%s\n%s\n%s\n' % (lang_line, gloss_line, trans_line))
+		if len(lang_t) != len(gloss_t):
+			pass			
+			#raise IGTGlossLangLengthException('LENGTH OF LINES IS NOT EQUAL:\n%s\n%s\n%s\n' % (lang_line, gloss_line, trans_line))
 		
 		inst.append(lang_t)
 		inst.append(gloss_t)
@@ -167,29 +226,121 @@ class IGTInstance(list):
 		return cls.from_lines(l,g,t,**kwargs)
 		
 		
+	def lang_line_projections(self, tagger, **kwargs):
+		
+		
+		# Throw an exception if we don't have a translation line to project from.
+		if not self.trans:
+			raise IGTProjectionException('IGT %s does not contain a translation line to project from.' % str(self))
+	
+		# Also, throw an exception if we don't have 1-to-1	
+		if len(self.gloss) != len(self.lang):
+			raise IGTGlossLangLengthException('The length of the gloss line and language line are not equal. Alignment not guaranteed.')
+	
+		
+		# Get the language line to translation line alignment...
+		aln = self.langalign
+		
+		# Initialize a new POS Corpus instance to hold the projected tags...
+		result_tokens = POSCorpusInstance()
+		
+		trans_tags = tagger.tag(self.trans_texts())
+		
+		
+		for lang_token in self.lang:
+			tgt_indices = aln.src_to_tgt(lang_token.index)
+			
+			# Don't forget to subtract the one, since the "index" attribute
+			# is counting by one...
+			
+			# If we have supplied a dictionary, look that up first...
+			dict_tags = []
+			if kwargs.get('posdict'):
+				pd = kwargs.get('posdict')
+				
+				# Get the aligned translation words...
+				trans_words = [self.trans[i-1].seq for i in tgt_indices]
+				
+				# And see which of them are in the dictionary...			
+				dict_tags = [pd[w].most_frequent()[0] for w in trans_words if pd[w]]
+				
+				
+			
+			
+			# Get the projected tags....
+			lang_tags = [trans_tags[i-1].label for i in tgt_indices]
+			
+			label = None
+			if dict_tags:
+				label = dict_tags[0]
+			elif lang_tags:
+				label = lang_tags[0]
+			
+			if not label:
+				if kwargs.get('error_on_nonproject'):				
+					raise IGTProjectionException('Projection for word "%s" not possible' % lang_token.seq)
+				else:
+					label = 'X'
+						
+			pt = POSToken(lang_token.seq, label=label)
+			result_tokens.append(pt)
+			
+		return result_tokens
+			
+		
+		# Initialize a POS tagger to tag the translation line...
+		
 		
 		
 	def lang_line_classifications(self, classifier, **kwargs):
 		
 		token_sequence = []
 		
+		# If the length of the gloss and language lines
+		# does not match, skip it.
+				
+		if len(self.gloss) != len(self.lang):
+			raise IGTGlossLangLengthException('The length of the gloss line and language line are not equal. Alignment not guaranteed.')
+		
+		kwargs['prev_gram'] = None
+		kwargs['next_gram'] = None
+		
 		for i, gloss_token in enumerate(self.gloss):
-			gloss_token = GoldTagPOSToken.fromToken(gloss_token, goldlabel='NONE')
-			#print(gloss_token)
-			sio = StringIO()
-			write_gram(gloss_token, type='classifier', output=sio, **kwargs)
 			
-			c_token = sio.getvalue().strip()
-			sio.close()
-						
-			result = classifier.classify(c_token)
-			best=result.largest()
+			# -- 0) Before we even get started, go ahead and assign the tag 
+			#       as PUNC if it clearly is.
+			if i >= len(self.lang):
+				continue
+					
+					
+					
+			lang_token = self.lang[i]
 			
+			#===================================================================
+			# Make sure to set up the next and previous tokens for the classifier
+			# if they are requested...
+			#===================================================================
+			if i+1 < len(self.gloss):
+				kwargs['next_gram'] = self.gloss[i+1]
+			if i-1 >= 0:
+				kwargs['prev_gram'] = self.gloss[i-1]
+			
+			if re.match('^[\.,\?\-!/\(\)\*\+\:\'\"«\`\{\}\]\[]+$', lang_token.seq):
+				pos = 'PUNC'
+			else:
+			
+				# -- 1) Start by creating a token that holds no gold label and the 
+				#       content form the gold tag.
+				gloss_token = GoldTagPOSToken.fromToken(gloss_token, goldlabel='NONE')
+				result = classifier.classify_token(gloss_token, **kwargs)
+				
+				best = result.largest()
+				pos = best[0]
+		
 			#===================================================================
 			# Assign the classified gloss tokens to the language tokens.
 			#===================================================================
-			lang_token = self.lang[i]
-			pos = best[0]
+			
 			c_token = POSToken(lang_token.seq, label=pos, index=i+1)
 			token_sequence.append(c_token)
 			
@@ -208,14 +359,15 @@ class IGTInstance(list):
 		a.attrs = self.attrs
 		return a
 	
-	def lang_to_trans_align(self):
+	
+	def lang_to_trans_align(self, **kwargs):
 		'''
 		Given the alignment of lang to gloss and
 		gloss to trans, return the alignment of
 		lang to trans.
 		'''
 		new_align = []
-		
+				
 		# For each lang_index, gloss_index in the 
 		# lang alignment, find what tran_indexes
 		# the gloss index is aligned to, and 
@@ -230,27 +382,31 @@ class IGTInstance(list):
 		# Now return our new alignment.
 		return Alignment(new_align)
 	
-	def get_lang_align_sent(self):
-		a = AlignedSent(self.gloss, self.trans, self.langalign)
-		a.attrs = self.attrs
+	def lang_to_trans_sent(self):
+		'''
+		Return the aligned sentence pair of language line to translation line
+		'''
+		a = AlignedSent(self.lang, self.trans, self.langalign)
 		return a
-		
+	
 	def append(self, item):
-		if not isinstance(item, IGTTier):
-			raise IGTException('Attempt to append a non-IGTTier instance to an IGTInstance')
-		list.append(self, item)
+		RGIgt.add(self, item)	
+	#def append(self, item):
+	#	if not isinstance(item, IGTTier):
+	#		raise IGTException('Attempt to append a non-IGTTier instance to an IGTInstance')
+	#	list.append(self, item)
 	
 	@property	
 	def gloss(self):
-		return [tier for tier in self if tier.kind == 'gloss'][0]
+		return [tier for tier in self if tier.type == 'gloss'][0]
 	
 	@property
 	def trans(self):
-		return [tier for tier in self if tier.kind == 'trans'][0]
+		return [tier for tier in self if tier.type == 'trans'][0]
 	
 	@property
 	def lang(self):
-		return [tier for tier in self if tier.kind == 'lang'][0]
+		return [tier for tier in self if tier.type == 'lang'][0]
 		
 	def lang_texts(self, **kwargs):
 		return self.lang.text(**kwargs)
@@ -267,13 +423,12 @@ class IGTInstance(list):
 	def get_attr(self, key):
 		return self.attrs[key]
 	
-
 	
 	def __str__(self):
 		ret_str = ''
 		for tier in self:
 			ret_str += '%s,'%str(tier)
-		return '<IGTInstance %s: %s>' % (self._id, ret_str[:-1])
+		return '<IGTInstance %s: %s>' % (self.id, ret_str[:-1])
 	
 	def lang_gold_alignment(self, **kwargs):
 		ga = self.glossalign
@@ -281,7 +436,7 @@ class IGTInstance(list):
 		
 		#=======================================================================
 		# If we don't have a language-gloss alignment, assume 1:1, otherwise
-		# raise an exception.
+		# raise an exception if the lines are of unequal length.
 		#=======================================================================
 		if not la:
 			if len(self.gloss) != len(self.lang):
@@ -308,9 +463,6 @@ class IGTInstance(list):
 			else:
 				return AlignedSent(self.lang, self.trans, ga)
 
-	@property
-	def id(self):
-		return self._id
 	
 	def gloss_heuristic_alignment(self, **kwargs):
 		if hasattr(self, '_gha'):
@@ -362,7 +514,7 @@ class IGTInstance(list):
 
 							
 		a = AlignedSent(gloss, trans, aln)
-		a.attrs = self.attrs
+		a.attrs = self.attributes
 		self._gha = a
 		return a
 		
@@ -434,24 +586,30 @@ def get_alignments(gloss_tokens, trans_tokens, iteration=1, **kwargs):
 
 
 		
-class IGTException(Exception):
-	def __init__(self, m = ''):
-		Exception.__init__(self, m)
+
 		
-class IGTAlignmentException(IGTException):
-	pass
-		
-class IGTTier(list):
+class IGTTier(Tier):
 	'''
 	Class to hold individual tiers of IGT instances.
 	'''
 	
-	
-	
-	def __init__(self, seq='', **kwargs):
-		self.kind = kwargs.get('kind', None)
-		list.__init__(self, seq)
+	def __init__(self, **kwargs):
+		XigtMixin.__init__(self)
+		self.id = kwargs.get('id')
+		self.type = kwargs.get('type')
+		self.attributes = kwargs.get('attributes') or OrderedDict()
+		self.metadata = kwargs.get('metadata')
+		self.add_list(kwargs.get('items'))
+		self._parent = kwargs.get('igt')
 		
+		# If we specify content, save this as our string...
+		if 'content' in kwargs:
+			content = kwargs.get('content')
+			assert type(content) == Tokenization, type(content)
+			for t in content:
+				self.add(t)
+		
+	
 	@classmethod
 	def fromString(cls, string, **kwargs):
 		'''
@@ -471,10 +629,10 @@ class IGTTier(list):
 		if not isinstance(item, IGTToken):
 			raise IGTException('Attempt to add non-IGTToken to IGTTier')
 		else:
-			list.append(self, item)
+			Tier.add(self, item)
 			
 	def __str__(self):
-		return '<IGTTier kind=%s len=%d>' % (self.kind, len(self))
+		return '<IGTTier type=%s len=%d>' % (self.type, len(self))
 	
 	def text(self, **kwargs):
 		text = ' '.join([token.seq for token in self]).strip()
@@ -491,27 +649,44 @@ class IGTTier(list):
 		for token in self:
 			ret_list.extend(token.morphs(**kwargs))
 		return ret_list
+	
+	# Length
+	def __len__(self):
+		return len(self._list)
+	
+	
+	def __setitem__(self, k, v):
+		self._list[k] = v
 
 
 class Span(object):
 	def __init__(self, start, stop):
 		self.start = start
 		self.stop = stop
+		
+	def __str__(self):
+		return ('%s,%s' % (self.start, self.stop))
 
 class IGTToken(Token):
 	
-	def __init__(self, seq='', parent=None, span=None, index=None):			
-		self._attrs = {}		
-		self.parent = parent
-		Token.__init__(self, seq, span, index)
+	def __init__(self, content, **kwargs):
 		
+		Token.__init__(self, content, **kwargs)
+		
+		# Set the index for this token in its attributes.
+		if 'index' in kwargs:
+			self.attributes['index'] = kwargs.get('index')
+
+		# Set the span info for this token in the keyword args.		
+		if 'span' in kwargs:
+			self.attributes['span'] = kwargs.get('span')
 		
 	@classmethod
 	def fromTokn(cls, token, parent=None):
-		return cls(seq=token.seq, parent=parent, span=token.span, index=token.index)
+		return cls(content=token.seq, parent=parent, span=token.span, index=token.index)
 		
 	def split(self):
-		return self.seq.split()
+		return self.content.split()
 		
 	def morphs(self, **kwargs):
 		for morph in self.morphed_tokens():
@@ -520,7 +695,7 @@ class IGTToken(Token):
 			yield morph
 		
 	def morphed_tokens(self):
-		morphs = list(tokenize_string(self.seq, morpheme_tokenizer))
+		morphs = list(tokenize_string(self.content, morpheme_tokenizer))
 		
 		# If the tokenization yields no tokens, just return the string.
 		if self.seq and len(morphs) == 0:
@@ -548,13 +723,6 @@ class IGTToken(Token):
 		
 	def __hash__(self):
 		return id(self)
-
-	def set_attr(self, key, value):
-		self.attrs[key] = value
-		
-	def get_attr(self, key):
-		return self.attrs[key]
-	
 
 	
 	
@@ -648,6 +816,7 @@ class getAlignmentsTest(unittest.TestCase):
 		
 		t10 = IGTTier.fromString('Peter something buy.PRS and something sell.PRS .')
 		t9 = IGTTier.fromString('Pedro buys and sells something .')
+		
 		
 		self.assertEquals(get_alignments(t10.morphs(), t9.morphs()), {(2,5), (3,2), (4,3), (5, 5), (6, 4), (7, 6)})
 		
