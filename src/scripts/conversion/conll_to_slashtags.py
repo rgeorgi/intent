@@ -9,6 +9,11 @@ from ingestion.conll.ConllParser import ConllParser
 from corpora.POSCorpus import POSCorpus
 
 def conll_to_slashtags(infiles, outpath):
+	'''
+	This will 
+	@param infiles: A list of CONLL pathnames to convert.
+	@param outpath: A single output pathname for the slashtags.
+	'''
 	main_c = POSCorpus()
 	for f in infiles:
 		cp = ConllParser()

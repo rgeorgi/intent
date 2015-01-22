@@ -13,13 +13,11 @@ from utils.token import Token, TokenException, Morph, tokenize_string,\
 	Tokenization
 from igt.igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
 	clean_trans_string, hyphenate_infinitive
-from io import StringIO
-from igt.grams import write_gram
 from xigt.core import Tier, XigtMixin
 from collections import OrderedDict
 import uuid
 from corpora.POSCorpus import POSCorpus, POSCorpusInstance
-from igt.rgxigt import RGIgt, RGCorpus
+from igt.rgxigt import RGIgt, RGCorpus, NoODINRawException, RGTier, RGItem
 
 
 
@@ -66,7 +64,6 @@ class IGTCorpus(RGCorpus):
 			except:
 				continue
 		return pc
-	
 	
 	
 	def gloss_heuristic_alignments(self, **kwargs):
@@ -121,6 +118,8 @@ class IGTInstance(RGIgt):
 		self.metadata = kwargs.get('metadata')
 		self.add_list(kwargs.get('tiers'))
 		self._parent = kwargs.get('corpus')
+		
+	
 		
 
 	# GlossAlign ---------------------------------------------------------------
@@ -325,7 +324,7 @@ class IGTInstance(RGIgt):
 			if i-1 >= 0:
 				kwargs['prev_gram'] = self.gloss[i-1]
 			
-			if re.match('^[\.,\?\-!/\(\)\*\+\:\'\"«\`\{\}\]\[]+$', lang_token.seq):
+			if re.match('^[\.,\?\-!/\(\)\*\+\:\'\"\`\{\}\]\[]+$', lang_token.seq):
 				pos = 'PUNC'
 			else:
 			
@@ -396,17 +395,153 @@ class IGTInstance(RGIgt):
 	#		raise IGTException('Attempt to append a non-IGTTier instance to an IGTInstance')
 	#	list.append(self, item)
 	
-	@property	
+	#===========================================================================
+	# Create the odin-clean tier if it does not exist.
+	#===========================================================================
+	
+	@property
+	def clean(self, merge=True):
+		'''
+		If the "odin-clean" tier exists, return it. Otherwise, create it.
+		'''
+		
+		# The clean tier we are looking for must be of "odin" type, with a "normalized" state attribute
+		clean_tier = [tier for tier in self if tier.type == 'odin' and tier.attributes['state'] == 'normalized']
+		
+		# If such a tier exists, return it. Otherwise, create it.
+		if clean_tier:
+			return clean_tier[0]
+		
+		else:
+			# First, look for the raw tier.
+			raw_tier = [tier for tier in self if tier.type == 'odin' and tier.attributes['state'] == 'raw']
+			
+			# Raise an exception if no raw tier was available.
+			if not raw_tier:
+				raise NoODINRawException('No raw tier found.')
+			else:
+				raw_tier = raw_tier[0]
+			
+			# Otherwise, clean up the raw tier...
+
+			raw_l_s = [i for i in raw_tier if 'L' in i.attributes['tag']]
+			raw_g_s = [i for i in raw_tier if 'G' in i.attributes['tag']]
+			raw_t_s = [i for i in raw_tier if 'T' in i.attributes['tag']]
+			
+			# Create the tier that will hold the normalized bits.
+			normal_tier = RGTier(id='n', igt=raw_tier.igt, type='odin', attributes={'state':'normalized', 'alignment':raw_tier.id})
+			
+			# Initialize the new items...
+			l_norm = RGItem(id='n1', alignment=raw_l_s[0].id, tier=normal_tier, attributes={'tag':'L'})
+			g_norm = RGItem(id='n2', alignment=raw_g_s[0].id, tier=normal_tier, attributes={'tag':'G'})
+			t_norm = RGItem(id='n3', alignment=raw_t_s[0].id, tier=normal_tier, attributes={'tag':'T'})
+			
+			
+			
+			# Either merge the lines to create single lines, or just take
+			# the first...
+			
+			if merge:
+				l_cont = merge_lines([l.get_content() for l in raw_l_s])
+				g_cont = merge_lines([g.get_content() for g in raw_g_s])
+				t_cont = merge_lines([t.get_content() for t in raw_t_s])
+
+			else:
+				l_cont = raw_l_s[0]
+				g_cont = raw_g_s[0]
+				t_cont = raw_t_s[0]
+				
+			# Now clean the various strings....
+			l_cont = clean_lang_string(l_cont)
+			g_cont = clean_gloss_string(g_cont)
+			t_cont = clean_trans_string(t_cont)
+				
+			# Set the item's text to the cleaned result....
+			l_norm.text = l_cont
+			g_norm.text = g_cont
+			t_norm.text = t_cont
+			
+			# Add the normalized lines to the tier...
+			normal_tier.add_list([l_norm, g_norm, t_norm])			
+
+			# Now, add the normalized tier to ourselves...				
+			self.add(normal_tier)
+			return normal_tier
+			
+	
+	#  -----------------------------------------------------------------------------
+	
+	def obtain_phrase_and_words_tiers(self, orig_tag, phrase_name, phrase_letter, words_name, words_letter):
+		'''
+		Starting with an original "line" from the ODIN text, make it into a XIGT
+		phrase tier and segmented words tier.
+		
+		@param orig_tag:  One of 'T', 'G', or 'L'
+		@param phrase_tier: The type of the tier used for the phrase.
+		@param phrase_letter: The letter used for the id of the tier.
+		@param words_name: The type of the tier used for the words.
+		@param words_letter: The letter used for the id of the words tier.
+		'''
+
+		
+		# -- 1) Retrieve the normalized tier, and create it if it does not exist.
+		c = self.clean
+		
+		# -- 2) Retrieve the original line from the clean tier.
+		line = [l for l in c if orig_tag in l.attributes['tag']][0]
+				
+		# -- 3) If the phrase tier already exists, get it.
+		phrase_tier = [tier for tier in self if tier.type == phrase_name]
+		if phrase_tier:
+			phrase_tier = phrase_tier[0]
+			
+		# -- 4) If such a phrase tier does not exist, create it.
+		else:
+			phrase_tier = RGTier(id=phrase_letter, type=phrase_name, attributes={'content':c.id})
+			phrase_item = RGItem(id='%s0' % phrase_letter, type='phrase', content=line.id)
+			phrase_tier.add(phrase_item)
+			self.add(phrase_tier)
+							
+		# -- 5) Finally, get the words tier if it exists. Otherwise, create it.
+		words_tier = [tier for tier in self if tier.type == words_name]
+		if words_tier:
+			return words_tier[0]
+		else:
+			words_tier = WordsTier(id=words_letter, type=words_name, attributes={'segmentation':phrase_tier.id})
+			
+			# Just grab the first phrase off the phrases tier. This will usually be the only
+			# one, or the automated one we created.
+			p1 = phrase_tier[0]
+			
+			# Tokenize the line, and create the items...
+			for t in tokenize_string(p1.get_content()):
+				word_item = RGItem(id = '%s%d' % (words_letter, t.index), type='word', text=t.content)
+				word_item.attributes = {'segmentation':'%s[%d:%d]' % (phrase_tier.id, t.start, t.stop),
+										'index':str(t.index)}
+				word_item.start = t.start
+				word_item.stop = t.stop
+				word_item.index = t.index
+				words_tier.add(word_item)
+				
+			# -- 6) Add the created translation-word tier to the instance
+			self.add(words_tier)
+			
+			# -- 7) Finally, return the translation word tier.
+			return words_tier
+		
+	
+	@property
 	def gloss(self):
-		return [tier for tier in self if tier.type == 'gloss'][0]
+		return self.obtain_phrase_and_words_tiers('G', 'glosses', 'g', 'gloss-words', 'gw')
 	
 	@property
 	def trans(self):
-		return [tier for tier in self if tier.type == 'trans'][0]
-	
+		return self.obtain_phrase_and_words_tiers('T', 'translations', 't', 'translation-words', 'tw')
+		
 	@property
 	def lang(self):
-		return [tier for tier in self if tier.type == 'lang'][0]
+		return self.obtain_phrase_and_words_tiers('L', 'phrases', 'p', 'words', 'w')
+
 		
 	def lang_texts(self, **kwargs):
 		return self.lang.text(**kwargs)
@@ -464,15 +599,47 @@ class IGTInstance(RGIgt):
 				return AlignedSent(self.lang, self.trans, ga)
 
 	
+	def add_alignment(self, aln, **kwargs):
+		'''
+		Helper function to insert a given alignment into
+		the xigt representation.
+		'''
+		
+		self.gloss.alignment = self.trans.id
+		
+		
+		# Only add this info if we haven't already performed the alignment.
+		if not hasattr(self, '_aligned'):
+			
+			# Iterate through each gloss and translation word...
+			for gw, tw in aln.aligned_words():
+				
+				# If this gloss has previously been aligned with a translation
+				# word, add another after a comma, otherwise make it the first.
+				if 'alignment' in gw.attributes:
+					gw.alignment += ','+tw.id
+				else:
+					gw.alignment = tw.id
+				
+		self._aligned = True
+				
+	
 	def gloss_heuristic_alignment(self, **kwargs):
+		'''
+		Function to return an AlignedSent object containing the gloss,
+		translation, and their Alignment.
+		'''
 		if hasattr(self, '_gha'):
-			return self._gha
+			gha = self._gha
 		else:
-			return self.gloss_heuristic_alignment_h(**kwargs)
+			gha = self.gloss_heuristic_alignment_h(**kwargs)
+			
+		self.add_alignment(gha, **kwargs)
+		return gha
 	
 	def gloss_heuristic_alignment_h(self, **kwargs):
 		
-		# TODO: Again, we're working with zero-indices here... not liking it.
+		
 		gloss = self.gloss
 		trans = self.trans
 		
@@ -489,12 +656,12 @@ class IGTInstance(RGIgt):
 		#=======================================================================
 		
 		if kwargs.get('tokenize', True):
-			gloss_tokens = gloss.morphs()
-			trans_tokens = trans.morphs()
+			gloss_tokens = list(gloss.morphs())
+			trans_tokens = list(trans.morphs())
 		else:
 			gloss_tokens = gloss
 			trans_tokens = trans
-		
+
 		alignments = get_alignments(gloss_tokens, trans_tokens, **kwargs)
 		
 		for a, b in alignments:
@@ -517,23 +684,29 @@ class IGTInstance(RGIgt):
 		a.attrs = self.attributes
 		self._gha = a
 		return a
-		
-def alltrue(sequence, comparator = lambda x, y: x == y):
-	'''
-	Do an all-ways comparison to make sure everything in the list returns true from the comparator value.
 	
-	@param sequence:
-	@param comparator:
-	@param y:
-	'''
-	ret = True
-	for i in range(len(sequence)):
-		item = sequence[i]
-		for rest in sequence[:i]+sequence[i+1:]:
-			if not comparator(item, rest):
-				ret = False
-	return ret
+#===========================================================================
+# Subclass the RGTier to use for tiers that are specifically intended to
+# contain "words"
+#===========================================================================
+class WordsTier(RGTier):
 
+	def morphs(self):
+		for item in self:
+			m_list = tokenize_string(item.get_content(), morpheme_tokenizer)
+			
+			for m in m_list:
+				# Adjust the start-stop indices of the morpheme.
+				m.start = m.start + item.start
+				m.stop = m.stop + item.start
+				
+				yield Morph.fromToken(m, item)
+				
+	def __len__(self):
+		return len(self._list)
+				
+			
+	
 	
 
 def get_alignments(gloss_tokens, trans_tokens, iteration=1, **kwargs):
@@ -580,27 +753,16 @@ def get_alignments(gloss_tokens, trans_tokens, iteration=1, **kwargs):
 	
 		
 	
-	
-				
-
-
 
 		
-
-		
-class IGTTier(Tier):
+class IGTTier(RGTier):
 	'''
-	Class to hold individual tiers of IGT instances.
+	This class is what was originally described as a "Tier" -- a collection of tokens 
 	'''
 	
 	def __init__(self, **kwargs):
-		XigtMixin.__init__(self)
-		self.id = kwargs.get('id')
-		self.type = kwargs.get('type')
-		self.attributes = kwargs.get('attributes') or OrderedDict()
-		self.metadata = kwargs.get('metadata')
-		self.add_list(kwargs.get('items'))
-		self._parent = kwargs.get('igt')
+		RGTier.__init__(self, **kwargs)
+		
 		
 		# If we specify content, save this as our string...
 		if 'content' in kwargs:
@@ -621,7 +783,7 @@ class IGTTier(Tier):
 		tier = cls(**kwargs)
 		
 		for token in tokenize_string(string, tokenizer=whitespace_tokenizer):
-			t = IGTToken.fromTokn(token)
+			t = IGTToken.fromToken(token)
 			tier.append(t)
 		return tier
 		
@@ -657,6 +819,8 @@ class IGTTier(Tier):
 	
 	def __setitem__(self, k, v):
 		self._list[k] = v
+		
+		
 
 
 class Span(object):
@@ -667,41 +831,37 @@ class Span(object):
 	def __str__(self):
 		return ('%s,%s' % (self.start, self.stop))
 
-class IGTToken(Token):
+class IGTToken(RGItem, Token):
 	
 	def __init__(self, content, **kwargs):
-		
+		RGItem.__init__(self, content=content)
 		Token.__init__(self, content, **kwargs)
 		
-		# Set the index for this token in its attributes.
-		if 'index' in kwargs:
-			self.attributes['index'] = kwargs.get('index')
-
-		# Set the span info for this token in the keyword args.		
-		if 'span' in kwargs:
-			self.attributes['span'] = kwargs.get('span')
+		self.attributes['index'] = kwargs.get('index')
+		
 		
 	@classmethod
-	def fromTokn(cls, token, parent=None):
-		return cls(content=token.seq, parent=parent, span=token.span, index=token.index)
+	def fromToken(cls, token, parent=None):
+		return cls(content=token.seq, parent=parent, start=token.start, stop=token.stop, index=token.index)
 		
 	def split(self):
-		return self.content.split()
+		return self.get_content.split()
 		
 	def morphs(self, **kwargs):
+
 		for morph in self.morphed_tokens():
 			if kwargs.get('lowercase'):
 				morph = Morph(morph.seq.lower(), morph.span, morph.parent)
 			yield morph
 		
 	def morphed_tokens(self):
-		morphs = list(tokenize_string(self.content, morpheme_tokenizer))
+		morphs = list(tokenize_string(self.get_content(), morpheme_tokenizer))
 		
 		# If the tokenization yields no tokens, just return the string.
-		if self.seq and len(morphs) == 0:
-			yield Morph(self.seq, parent=self)
+		if self.get_content() and len(morphs) == 0:
+			yield Morph(self.get_content(), parent=self)
 			
-
+		
 		for morph in morphs:
 			yield(Morph.fromToken(morph, parent=self))		
 		

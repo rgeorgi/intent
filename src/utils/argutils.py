@@ -16,7 +16,9 @@ def require_opt(option, msg, must_exist = False, must_exist_msg = 'The file "%s"
 		errors = True
 	return errors
 
-
+#===============================================================================
+# Exceptions
+#===============================================================================
 class CommandLineException(Exception):
 	pass
 
@@ -26,13 +28,26 @@ class FileNotExistsException(CommandLineException):
 class DirNotExistsException(CommandLineException):
 	pass
 
+#===============================================================================
+# Argparse Types
+#===============================================================================
+
 def exists(path):
+	'''
+	Type for passing to argparse to verify that the argument is an extant path.
+	'''
 	if not os.path.exists(path):
 		raise CommandLineException('Path "%s" does not exist' % path)
 	else:
 		return path
 
 def existsfile(path):
+	'''
+	Type for passing to argparse to verify that the argument both:
+	
+	- Is a file
+	- Exists on the filesystem
+	'''
 	if not os.path.exists(path):
 		raise CommandLineException('File "%s" does not exist.' % path)
 	elif not os.path.isfile(path):
@@ -41,6 +56,12 @@ def existsfile(path):
 		return path
 	
 def existsdir(path):
+	'''
+	Type for passing to argparse to verify that the argument both:
+	
+	- Is a directory
+	- Exists on the filesystem
+	'''
 	if not os.path.exists(path):
 		raise CommandLineException('Directory "%s" does not exist.' % path)
 	if not os.path.isdir(path):
@@ -49,6 +70,11 @@ def existsdir(path):
 		return path
 	
 def writefile(path, mode='w', encoding='utf-8'):
+	dir = os.path.dirname(path)
+
+	if dir and not os.path.exists(dir): 
+		os.makedirs(dir, exist_ok=True)
+
 	try:
 		f = open(path, mode, encoding=encoding)
 	except Exception as e:
@@ -65,7 +91,7 @@ class ArgPassingException(Exception):
 
 class ArgPasser(dict):
 	'''
-	Argpasser is just a drop-in replacement for a **kwarg dict,
+	Argpasser is just a drop-in replacement for a \*\*kwarg dict,
 	but allows for things that evaluate to false in the dict
 	to be returned without being replaced by the default.
 	'''
@@ -74,6 +100,18 @@ class ArgPasser(dict):
 		super().__init__(d)		
 	
 	def get(self, k, default=None, t=None):
+		'''
+		Using the key *k*, attempt to retrieve the value from the
+		dictionary. A default replacement is available, and a "type"
+		argument which can be applied to verify the argument is of the
+		right type.
+		
+		**k**       -- the key
+		
+		**default** -- what to return if *k* was not found in the dict
+		
+		**t**       -- the type function to apply to the retrieved argument.   
+		'''
 
 		# Only replace with default if the key is actually
 		# not in the mapping, not just evaluates to nothing.

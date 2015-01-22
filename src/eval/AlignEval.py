@@ -76,6 +76,9 @@ class AlignEval():
 			self.total_gold += len(gold_aln)
 			
 	def aer(self):
+		'''
+		Return the Average Error Rate (AER).
+		'''
 		if not self.total_gold:
 			return 0
 		else:

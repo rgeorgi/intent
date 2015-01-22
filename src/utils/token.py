@@ -7,34 +7,31 @@ from utils.string_utils import string_compare_with_processing
 import re
 from xigt.core import Item
 from collections import OrderedDict
+from igt.rgxigt import RGItem
+import sys
 
 #===============================================================================
 # Main Token Class
 #===============================================================================
 
-class Token(Item):
+class Token(object):
 
 	def __init__(self, content, **kwargs):
 		
-		# Essentially manually override the xigt
-		# constructor.		
-		self.id = kwargs.get('id')
-		self.type = kwargs.get('type')
-		self.attributes = kwargs.get('attributes') or OrderedDict()
-		self._content = content
-		self._parent = kwargs.get('tier')
 
-		# Add span info		
-		if 'span' in kwargs:
-			self.attributes['span'] = kwargs.get('span')
+
+		self.content = content
+		self.start = kwargs.get('start')
+		self.stop = kwargs.get('stop')
+		self.index = kwargs.get('index')
+		self.attributes = {}
+		self._parent = kwargs.get('parent')
 		
-		# Add index info
-		if 'index' in kwargs:
-			self.attributes['index'] = kwargs.get('index')	
+		
 		
 
 	def __str__(self):
-		return '<%s %s>' % (self.__class__.__name__, self.content)
+		return '<%s %s [%d:%d]>' % (self.__class__.__name__, self.content, self.start, self.stop)
 	
 	def __repr__(self):
 		return str(self)
@@ -59,16 +56,9 @@ class Token(Item):
 	def seq(self):
 		return self.content
 	
-	@property
-	def index(self):
-		return self.attributes.get('index')
-	
-	@index.setter
-	def index(self, value):
-		self.attributes['index'] = value
 		
 	def __eq__(self, o):
-		return o.seq == self.seq and self.index == o.index
+		return o and o.content == self.content and self.index == o.index
 		
 	def morphs(self, **kwargs):
 		for morph in self.morphed_tokens():
@@ -156,14 +146,14 @@ class Morph(Token):
 	'''
 	This class is what makes up an IGTToken. Should be comparable to a token
 	'''
-	def __init__(self, seq='', span=None, parent=None):
+	def __init__(self, seq='', start=None, stop=None, parent=None):
 		index = parent.index if parent else None
-		Token.__init__(self, content=seq, span=span, index=index, tier=parent)
+		Token.__init__(self, content=seq, start=start, stop=stop, index=index, parent=parent, tier=parent)
 		
 		
 	@classmethod
 	def fromToken(cls, token, parent):
-		return cls(token.seq, token.span, parent)
+		return cls(token.seq, start=token.start, stop=token.stop, parent=parent)
 		
 	def __str__(self):
 		return '<Morph: %s>' % self.seq
@@ -173,23 +163,26 @@ class Morph(Token):
 #===============================================================================
 		
 def whitespace_tokenizer(st):
+	i = 1
 	for match in re.finditer('\S+', st, re.UNICODE):
-		yield Token(match.group(0), span=Span((match.start(), match.end())))
+		yield Token(match.group(0), start=match.start(), stop=match.end(), index=i)
+		i += 1
 
 def morpheme_tokenizer(st):
-	pieces = re.split('[\s\-\.:/\(\)=]+', st)
-	matches = [p for p in pieces if p.strip()]
 
-	for match in matches:
-		yield Token(match)
+	pieces = re.finditer('[^\s\-\.:/\(\)=]+', st)
+	
+	for match in pieces:
+		if match.group().strip():
+			yield Token(match.group(0), start=match.start(), stop=match.end())
 
 def tag_tokenizer(st, delimeter='/'):
 	for match in re.finditer('(\S+){}(\S+)'.format(delimeter), st, re.UNICODE):
-		yield POSToken(match.group(1), label=match.group(2), span=Span((match.start(), match.end())))
+		yield POSToken(match.group(1), label=match.group(2), start=match.start(), stop=match.end())
 
 def tokenize_string(st, tokenizer=whitespace_tokenizer):
 	tokens = Tokenization()
-	iter = tokenizer(st) 
+	iter = tokenizer(st)
 	
 	i = 0
 	for token in iter:
