@@ -13,7 +13,7 @@ from utils.token import Token, TokenException, Morph, tokenize_string,\
 	Tokenization
 from igt.igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
 	clean_trans_string, hyphenate_infinitive
-from xigt.core import Tier, XigtMixin
+from xigt.core import Tier, XigtMixin, resolve_alignment_expression
 from collections import OrderedDict
 import uuid
 from corpora.POSCorpus import POSCorpus, POSCorpusInstance
@@ -493,7 +493,7 @@ class IGTInstance(RGIgt):
 		# -- 3) If the phrase tier already exists, get it.
 		phrase_tier = [tier for tier in self if tier.type == phrase_name]
 		if phrase_tier:
-			phrase_tier = phrase_tier[0]
+			phrase_tier = RGTier.fromTier(phrase_tier[0])
 			
 		# -- 4) If such a phrase tier does not exist, create it.
 		else:
@@ -505,7 +505,7 @@ class IGTInstance(RGIgt):
 		# -- 5) Finally, get the words tier if it exists. Otherwise, create it.
 		words_tier = [tier for tier in self if tier.type == words_name]
 		if words_tier:
-			return words_tier[0]
+			return WordsTier.fromTier(words_tier[0])
 		else:
 			words_tier = WordsTier(id=words_letter, type=words_name, attributes={'segmentation':phrase_tier.id})
 			
@@ -696,6 +696,7 @@ class WordsTier(RGTier):
 			m_list = tokenize_string(item.get_content(), morpheme_tokenizer)
 			
 			for m in m_list:
+
 				# Adjust the start-stop indices of the morpheme.
 				m.start = m.start + item.start
 				m.stop = m.stop + item.start

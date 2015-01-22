@@ -5,6 +5,8 @@ Subclassing of the xigt package to add a few convenience methods.
 '''
 import xigt.core
 from xigt.core import Metadata, Meta
+import sys
+import re
 
 #===============================================================================
 # Exceptions
@@ -82,6 +84,17 @@ class RGItem(xigt.core.Item):
 		self.start = kwargs.get('start')
 		self.stop = kwargs.get('stop')
 		self.index = kwargs.get('index')
+		
+	@classmethod
+	def fromItem(cls, i, start=None, stop=None, index=-1):
+		
+		if i.segmentation:
+			start, stop = [int(s) for s in re.search('\[([0-9]+):([0-9]+)\]', i.segmentation).groups()]
+			
+		
+		return cls(id=i.id, type=i.type, alignment=i.alignment, content=i.content,
+					segmentation=i.segmentation, attributes=i.attributes, text=i.text,
+					tier=i.tier, index=int(i.attributes.get('index', index)), start=start, stop=stop)
 	
 	def findUUID(self, uu):
 		retlist = []
@@ -94,6 +107,15 @@ class RGItem(xigt.core.Item):
 			del self.attributes['uuid']
 
 class RGTier(xigt.core.Tier):
+	
+	@classmethod
+	def fromTier(cls, t):
+		
+		items = [RGItem.fromItem(i) for i in t.items]
+		
+		return cls(id=t.id, type=t.type, alignment=t.alignment, content=t.content,
+					segmentation=t.segmentation, attributes=t.attributes, metadata=t.metadata,
+					items=items, igt=t.igt)
 
 	def findUUID(self, uu):
 		retlist = []
