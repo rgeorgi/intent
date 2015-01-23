@@ -306,6 +306,8 @@ class IGTInstance(RGIgt):
 		
 		for i, gloss_token in enumerate(self.gloss):
 			
+			gloss_token = gloss_token.lower()
+			
 			# -- 0) Before we even get started, go ahead and assign the tag 
 			#       as PUNC if it clearly is.
 			if i >= len(self.lang):
@@ -324,7 +326,7 @@ class IGTInstance(RGIgt):
 			if i-1 >= 0:
 				kwargs['prev_gram'] = self.gloss[i-1]
 			
-			if re.match('^[\.,\?\-!/\(\)\*\+\:\'\"\`\{\}\]\[]+$', lang_token.seq):
+			if re.match('^[\.,\?\-!/\(\)\*\+\:\'\"\`\{\}\]\[]+$', lang_token.get_content()):
 				pos = 'PUNC'
 			else:
 			
@@ -340,13 +342,32 @@ class IGTInstance(RGIgt):
 			# Assign the classified gloss tokens to the language tokens.
 			#===================================================================
 			
-			c_token = POSToken(lang_token.seq, label=pos, index=i+1)
+			c_token = POSToken(lang_token.get_content(), label=pos, index=i+1)
 			token_sequence.append(c_token)
 			
 			#===================================================================
 			
+		# Add the pos tags to the xigt representation if we haven't already.
+		self.add_pos_tags(self.lang, token_sequence)
+			
 		return token_sequence
 	
+	def add_pos_tags(self, tier, pos_tags):
+		
+		# Start by creating a POS tier and blowing the old one away if it exists.
+		pos_tier = RGTier(id=('%s-pos' % tier.id),
+							alignment=tier.id, type='pos')
+		
+		i = 0
+		for lw, pt in zip(tier, pos_tags):
+			pos_item = RGItem(id=('%s%d' % (pos_tier.id, i)), 
+								alignment=lw.id,
+								text=pt.label)			
+			i += 1
+			pos_tier.add(pos_item)
+			
+		self.add(pos_tier)
+							
 			
 	def text(self):
 		return '%s\n%s\n%s' % (self.lang_texts(), self.gloss_texts(), self.trans_texts())

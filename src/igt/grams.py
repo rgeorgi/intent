@@ -65,7 +65,6 @@ def write_gram(token, **kwargs):
 	lower = kwargs.get('lowercase', True, bool)
 	gram = gram.lower() if gram else gram
 	
-	
 	#===========================================================================
 	# Do some cleaning on the gram....
 	#===========================================================================
@@ -74,8 +73,8 @@ def write_gram(token, **kwargs):
 	gram = re.sub('(.*)?/(.*)', r'\1', gram)
 	
 	# Remove leading and trailing stuff
-	gram = re.sub('(\S)[\-=:\[\(\]\)/\*]', r'\1', gram)
-	gram = re.sub('[\-=:\[\(\]\)/\*](\S)', r'\1', gram) 
+	gram = re.sub('^(\S+)[\-=:\[\(\]\)/\*]$', r'\1', gram)
+	gram = re.sub('^[\-=:\[\(\]\)/\*](\S+)$', r'\1', gram)
 	
 	#===========================================================================
 	
@@ -90,6 +89,7 @@ def write_gram(token, **kwargs):
 		#=======================================================================
 		
 		morphs = utils.token.tokenize_string(gram, utils.token.morpheme_tokenizer)
+		
 				
 		#=======================================================================
 		# Is there a number
@@ -131,7 +131,7 @@ def write_gram(token, **kwargs):
 		# Previous gram
 		#===================================================================
 		if prev_gram:
-			prev_gram = prev_gram.seq
+			prev_gram = prev_gram.get_content()
 			prev_gram = prev_gram.lower() if lower else prev_gram
 					
 			# And then tokenize...
@@ -153,7 +153,7 @@ def write_gram(token, **kwargs):
 		# Next gram
 		#===================================================================
 		if next_gram:
-			next_gram_seq = next_gram.seq
+			next_gram_seq = next_gram.get_content()
 			next_gram_seq = next_gram_seq.lower() if lower else next_gram_seq
 			for token in utils.token.tokenize_string(next_gram_seq, utils.token.morpheme_tokenizer):
 				

@@ -105,6 +105,11 @@ class RGItem(xigt.core.Item):
 	def delUUIDs(self):
 		if 'uuid' in self.attributes:
 			del self.attributes['uuid']
+			
+	def lower(self):
+		ri = RGItem.fromItem(self)
+		ri.content = ri.get_content().lower()
+		return ri
 
 class RGTier(xigt.core.Tier):
 	
@@ -137,6 +142,7 @@ class RGTier(xigt.core.Tier):
 	
 	def askIndex(self):
 		return len(self.items)+1
+	
 	
 class RGMetadata(Metadata):
 	pass

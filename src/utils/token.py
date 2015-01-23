@@ -31,7 +31,7 @@ class Token(object):
 		
 
 	def __str__(self):
-		return '<%s %s [%d:%d]>' % (self.__class__.__name__, self.content, self.start, self.stop)
+		return '<%s %s [%s:%s]>' % (self.__class__.__name__, self.content, self.start, self.stop)
 	
 	def __repr__(self):
 		return str(self)
@@ -56,6 +56,8 @@ class Token(object):
 	def seq(self):
 		return self.content
 	
+	def get_content(self):
+		return self.content
 		
 	def __eq__(self, o):
 		return o and o.content == self.content and self.index == o.index
@@ -94,7 +96,8 @@ class POSToken(Token):
 			self.label = kwargs.get('label')
 			
 		
-		
+	def __str__(self):
+		return '<%s %s [%s]>' % (self.__class__.__name__, self.content, self.label)
 		
 	@property
 	def label(self):
@@ -119,7 +122,7 @@ class GoldTagPOSToken(Token):
 		
 	@classmethod
 	def fromToken(cls, t, taglabel = None, goldlabel = None):
-		return cls(t.seq, taglabel=taglabel, goldlabel=goldlabel, span=t.span, index=t.index, parent=t.parent)
+		return cls(t.get_content(), taglabel=taglabel, goldlabel=goldlabel, index=t.index, start=t.start, stop=t.stop, parent=t._parent)
 	
 	@property
 	def taglabel(self):
