@@ -13,10 +13,10 @@ Also automatically attempts to parses lines into python types (lists, integers).
 '''
 import re
 import sys
-from utils.argutils import ArgPasser
 from unittest.case import TestCase
 from tempfile import NamedTemporaryFile
 import os
+from .argpasser import ArgPasser
 
 
 class ConfigFileException(Exception):
@@ -34,7 +34,6 @@ class SetConflict(ConfigFileException):
 
 class ConfigFile(ArgPasser):
 	def __init__(self, path):
-				
 		cf = open(path, 'rb')
 		lines = cf.readlines()
 		for line in lines:

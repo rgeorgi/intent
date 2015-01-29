@@ -32,7 +32,7 @@ if __name__ == '__main__':
 	
 	# Build the corpus...
 	corp = IGTCorpus.from_text(c.get('txt_path', t=existsfile),
-					merge=True)
+					merge=True, mode='full')
 
 	posdict = pickle.load(open(c.get('posdict', t=existsfile), 'rb'))
 
@@ -69,7 +69,7 @@ if __name__ == '__main__':
 		if c.get('tagging_method') == 'projection':
 		
 			try:
-				sequence = inst.lang_line_projections(spt, posdict=posdict, error_on_nonproject=c.get('skip_proj_errors', t=bool))
+				sequence = inst.lang_line_projections(spt, posdict=posdict, lowercase=True, error_on_nonproject=c.get('skip_proj_errors', t=bool))
 			except IGTProjectionException as igtpe:
 				projection_logger.warning('There was an error in projection: %s' % igtpe)
 				skipped += 1
@@ -89,7 +89,8 @@ if __name__ == '__main__':
 													feat_next_gram=True,
 													feat_prev_gram=True,
 													feat_prefix=True,
-													feat_suffix=True)
+													feat_suffix=True,
+													lowercase=True)
 			except IGTGlossLangLengthException as e:
 				#classification_logger.warning('Gloss and language lines did not match up for: %s' % inst.text())
 				skipped += 1

@@ -230,7 +230,7 @@ class POSCorpusInstance(list):
 	def raw(self, lowercase=True):
 		ret_str = ''
 		for token in self:
-			form = token.form
+			form = token.get_content()
 			if lowercase:
 				form = form.lower()
 			ret_str += form+' '

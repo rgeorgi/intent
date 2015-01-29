@@ -18,6 +18,8 @@ from collections import OrderedDict
 import uuid
 from corpora.POSCorpus import POSCorpus, POSCorpusInstance
 from igt.rgxigt import RGIgt, RGCorpus, NoODINRawException, RGTier, RGItem
+from xigt.codecs import xigtxml
+from build.lib.xigt.core import Metadata
 
 
 
@@ -42,11 +44,9 @@ class IGTCorpus(RGCorpus):
 	'''
 
 	def __init__(self, **kwargs):
-		XigtMixin.__init__(self)
-		self.id = kwargs.get('id')
-		self.attributes = kwargs.get('attributes') or OrderedDict()
-		self.metadata = kwargs.get('metadata')
-		self.add_list(kwargs.get('igts'))
+		RGCorpus.__init__(self, id=kwargs.get('id'), attributes=kwargs.get('attributes'),
+								igts=kwargs.get('igts'))
+		
 
 	def gloss_alignments(self):
 		return [inst.gloss_alignments() for inst in self]
@@ -106,18 +106,13 @@ class IGTInstance(RGIgt):
 	# Convert Instance to XIGT
 	#===========================================================================
 	
-	def __init__(self, **kwargs):
+	def __init__(self, id=None, type=None, alignment=None, content=None, segmentation=None, attributes=None):
 		# Start with the basics..
-		XigtMixin.__init__(self)
+		RGIgt.__init__(self, id, type, alignment, content, segmentation, attributes)
 		
 		# Either use a provided id or generated one
-		self.id = kwargs.get('id') or uuid.uuid4()
+		self.id = id or str(uuid.uuid4())
 		
-		self.type = kwargs.get('type')
-		self.attributes = kwargs.get('attributes') or OrderedDict()
-		self.metadata = kwargs.get('metadata')
-		self.add_list(kwargs.get('tiers'))
-		self._parent = kwargs.get('corpus')
 		
 	
 		
@@ -156,51 +151,29 @@ class IGTInstance(RGIgt):
 		instid = kwargs.get('id', None)
 		inst = cls(id = instid)
 		
-		if kwargs.get('merge', True):
-			lang_line = merge_lines(l)
-			gloss_line = merge_lines(g)
-			trans_line = merge_lines(t)
-		else:
-			lang_line = l[0] if l else ''
-			gloss_line = g[0] if g else ''
-			trans_line = t[0] if t else ''
+		#=======================================================================
+		# Start by creating the raw odin 
+		#=======================================================================
+		
+		raw_tier = LinesTier(type='odin', attributes={'state':'raw'}, id='r')
+		
+		i = 0
+		
+		for l_txt in l:
+			raw_tier.add_line(l_txt, 'L')
 			
-		#=======================================================================
-		# Raise an exception if corruption
-		#=======================================================================
-		if kwargs.get('corruption_exception', False):
-			if len(l) > 2 or len(g) > 2 or len(t) > 2:
-				raise IGTParseException
+		for g_txt in g:
+			raw_tier.add_line(g_txt, 'G')
+
+		for t_txt in t:
+			raw_tier.add_line(t_txt, 'T')
 			
-		lang_line = clean_lang_string(lang_line.lower())
-		gloss_line = clean_gloss_string(gloss_line.lower())
-		trans_line = clean_trans_string(trans_line.lower())
+		# Add the raw tier.
+		inst.add(raw_tier)
 		
-		#=======================================================================
-		# Make sure that the gloss and language line align
-		#=======================================================================
-		lang_t = IGTTier.fromString(lang_line, type='lang')
-		gloss_t = IGTTier.fromString(gloss_line, type='gloss')
-		trans_t = IGTTier.fromString(trans_line, type='trans')
-		
-		# If the gloss line has more tokens, see if
-		# any are unhyphenated infinitives (e.g. to-visit)
-		if len(gloss_t) > len(lang_t) and kwargs.get('infinitive_repair', True):
-			gloss_line = hyphenate_infinitive(gloss_line)
-			gloss_t = IGTTier.fromString(gloss_line, type='gloss')
-		
-		# Raise an exception if, after everything, 
-		# the lang and gloss lines do not have the
-		# same number of tokens.
-		if len(lang_t) != len(gloss_t):
-			pass			
-			#raise IGTGlossLangLengthException('LENGTH OF LINES IS NOT EQUAL:\n%s\n%s\n%s\n' % (lang_line, gloss_line, trans_line))
-		
-		inst.append(lang_t)
-		inst.append(gloss_t)
-		inst.append(trans_t)
+		# Now, we can produce the cleaned tier.
+		inst.clean
 		return inst
-		
 	
 	@classmethod
 	def from_string(cls, string, **kwargs):
@@ -258,7 +231,7 @@ class IGTInstance(RGIgt):
 				pd = kwargs.get('posdict')
 				
 				# Get the aligned translation words...
-				trans_words = [self.trans[i-1].seq for i in tgt_indices]
+				trans_words = [self.trans[i-1].get_content() for i in tgt_indices]
 				
 				# And see which of them are in the dictionary...			
 				dict_tags = [pd[w].most_frequent()[0] for w in trans_words if pd[w]]
@@ -277,11 +250,11 @@ class IGTInstance(RGIgt):
 			
 			if not label:
 				if kwargs.get('error_on_nonproject'):				
-					raise IGTProjectionException('Projection for word "%s" not possible' % lang_token.seq)
+					raise IGTProjectionException('Projection for word "%s" not possible' % lang_token.get_content())
 				else:
 					label = 'X'
 						
-			pt = POSToken(lang_token.seq, label=label)
+			pt = POSToken(lang_token.get_content(), label=label)
 			result_tokens.append(pt)
 			
 		return result_tokens
@@ -326,6 +299,7 @@ class IGTInstance(RGIgt):
 			if i-1 >= 0:
 				kwargs['prev_gram'] = self.gloss[i-1]
 			
+			print(lang_token.get_content())
 			if re.match('^[\.,\?\-!/\(\)\*\+\:\'\"\`\{\}\]\[]+$', lang_token.get_content()):
 				pos = 'PUNC'
 			else:
@@ -341,8 +315,12 @@ class IGTInstance(RGIgt):
 			#===================================================================
 			# Assign the classified gloss tokens to the language tokens.
 			#===================================================================
+			lt_content = lang_token.get_content()
 			
-			c_token = POSToken(lang_token.get_content(), label=pos, index=i+1)
+			if kwargs.get('lowercase'):
+				lt_content = lt_content.lower()
+			
+			c_token = POSToken(lt_content, label=pos, index=i+1)
 			token_sequence.append(c_token)
 			
 			#===================================================================
@@ -448,6 +426,14 @@ class IGTInstance(RGIgt):
 			raw_l_s = [i for i in raw_tier if 'L' in i.attributes['tag']]
 			raw_g_s = [i for i in raw_tier if 'G' in i.attributes['tag']]
 			raw_t_s = [i for i in raw_tier if 'T' in i.attributes['tag']]
+			
+			# Execute errors if a given line is not found...
+			if not raw_t_s:
+				raise IGTParseException('No translation line found!')
+			if not raw_g_s:
+				raise IGTParseException('No gloss line found!')
+			if not raw_l_s:
+				raise IGTParseException('No language line found!')
 			
 			# Create the tier that will hold the normalized bits.
 			normal_tier = RGTier(id='n', igt=raw_tier.igt, type='odin', attributes={'state':'normalized', 'alignment':raw_tier.id})
@@ -706,28 +692,7 @@ class IGTInstance(RGIgt):
 		self._gha = a
 		return a
 	
-#===========================================================================
-# Subclass the RGTier to use for tiers that are specifically intended to
-# contain "words"
-#===========================================================================
-class WordsTier(RGTier):
 
-	def morphs(self):
-		for item in self:
-			m_list = tokenize_string(item.get_content(), morpheme_tokenizer)
-			
-			for m in m_list:
-
-				# Adjust the start-stop indices of the morpheme.
-				m.start = m.start + item.start
-				m.stop = m.stop + item.start
-				
-				yield Morph.fromToken(m, item)
-				
-	def __len__(self):
-		return len(self._list)
-				
-			
 	
 	
 
@@ -842,9 +807,6 @@ class IGTTier(RGTier):
 	def __setitem__(self, k, v):
 		self._list[k] = v
 		
-		
-
-
 class Span(object):
 	def __init__(self, start, stop):
 		self.start = start
@@ -907,10 +869,44 @@ class IGTToken(RGItem, Token):
 		return id(self)
 
 	
-	
+#===============================================================================
+# Subclasses of Tiers
+#===============================================================================
 		
+#===========================================================================
+# Subclass the RGTier to use for tiers that are specifically intended to
+# contain "words"
+#===========================================================================
+class WordsTier(RGTier):
 
-		
+	def morphs(self):
+		for item in self:
+			m_list = tokenize_string(item.get_content(), morpheme_tokenizer)
+			
+			for m in m_list:
+
+				# Adjust the start-stop indices of the morpheme.
+				m.start = m.start + item.start
+				m.stop = m.stop + item.start
+				
+				yield Morph.fromToken(m, item)
+				
+	def text(self):
+		words = [i.get_content() for i in self]
+		return ' '.join(words)
+			
+				
+	def __len__(self):
+		return len(self._list)
+				
+#===============================================================================
+# LinesTier
+#===============================================================================
+class LinesTier(IGTTier):
+	
+	def add_line(self, txt, tag):
+		item = RGItem(id='r%d' % (len(self) + 1), attributes={'tag':tag}, text=txt)
+		self.add(item)
 	
 		
 #===============================================================================

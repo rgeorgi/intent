@@ -4,10 +4,10 @@ Created on Mar 8, 2014
 @author: rgeorgi
 '''
 import sys
-from utils.argutils import ArgPasser
 import re
 import logging
 import utils.token
+from utils.argpasser import ArgPasser
 
 
 #===============================================================================

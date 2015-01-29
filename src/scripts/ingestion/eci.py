@@ -4,7 +4,7 @@ Created on Oct 2, 2014
 @author: rgeorgi
 '''
 from argparse import ArgumentParser
-from utils.argutils import existsfile, ArgPasser
+from utils.argutils import existsfile
 from ingestion.eci.eci import ECITextParser
 from utils.ConfigFile import ConfigFile
 

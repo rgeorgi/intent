@@ -116,6 +116,8 @@ def poseval(eval_sents, gold_sents, out_f = sys.stdout, csv=True, ansi=False, gr
 	if greedy_n_to_1:
 		c.greedy_n_to_1()
 		eval_print_helper(out_f, 'GREEDY N-to-1', c, ansi, csv)
+		
+	return c.accuracy()
 
 			
 def eval_print_helper(out_f, title, c, ansi, csv):

@@ -32,7 +32,6 @@ class RGCorpus(xigt.core.XigtCorpus):
 	def __len__(self):
 		return len(self._list)
 	
-	
 
 class RGIgt(xigt.core.Igt):
 
