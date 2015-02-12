@@ -42,7 +42,7 @@ class RGIgt(xigt.core.Igt):
 		
 		@param cls: The subclass constructor.
 		@param o: The original XIGT object.
-		'''
+		'''				
 		return cls(id=o.id, type=o.type, attributes=o.attributes, metadata=o.metadata, tiers=o.tiers, corpus=o.corpus)
 
 	def getTier(self, type):
@@ -130,6 +130,16 @@ class RGTier(xigt.core.Tier):
 			
 		return retlist
 	
+	def findAttr(self, key, value):
+		found = None
+		
+		for item in self:
+			if item.attributes[key] == value:
+				found = item
+				break
+			
+		return found
+	
 	def delUUIDs(self):
 		if 'uuid' in self.attributes:
 			del self.attributes['uuid']
@@ -137,7 +147,7 @@ class RGTier(xigt.core.Tier):
 			i.delUUIDs()
 	
 	def askItemId(self):
-		return '%s-%d' % (self.id, self.askIndex())
+		return '%s%d' % (self.id, self.askIndex())
 	
 	def askIndex(self):
 		return len(self.items)+1

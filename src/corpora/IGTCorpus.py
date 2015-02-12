@@ -106,9 +106,12 @@ class IGTInstance(RGIgt):
 	# Convert Instance to XIGT
 	#===========================================================================
 	
-	def __init__(self, id=None, type=None, alignment=None, content=None, segmentation=None, attributes=None):
+	def __init__(self, id=None, type=None, attributes=None, corpus=None, tiers=None, metadata=None):
 		# Start with the basics..
-		RGIgt.__init__(self, id, type, alignment, content, segmentation, attributes)
+		RGIgt.__init__(self, id=id, type=type,
+						attributes=attributes,
+						tiers=tiers, metadata=metadata,
+						corpus=corpus)
 		
 		# Either use a provided id or generated one
 		self.id = id or str(uuid.uuid4())
@@ -618,16 +621,24 @@ class IGTInstance(RGIgt):
 		# Only add this info if we haven't already performed the alignment.
 		if not hasattr(self, '_aligned'):
 			
+			ga_tier = RGTier(id='ga', type='bilingual-alignments', attributes={'source':self.gloss.id, 'target':self.trans.id})
+						
 			# Iterate through each gloss and translation word...
 			for gw, tw in aln.aligned_words():
 				
-				# If this gloss has previously been aligned with a translation
-				# word, add another after a comma, otherwise make it the first.
-				if 'alignment' in gw.attributes:
-					gw.alignment += ','+tw.id
+				aln_item = ga_tier.findAttr('source', gw.id)
+				if not aln_item:
+					aln_item = RGItem(id=ga_tier.askItemId(), attributes={'source':gw.id})
+					
+				if 'target' in aln_item.attributes:
+					aln_item.attributes['target'] += ','+tw.id
 				else:
-					gw.alignment = tw.id
-				
+					aln_item.attributes['target'] = tw.id
+					
+				ga_tier.add(aln_item)
+									
+			self.add(ga_tier)
+			
 		self._aligned = True
 				
 	
