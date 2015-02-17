@@ -20,6 +20,7 @@ from corpora.POSCorpus import POSCorpus, POSCorpusInstance
 from igt.rgxigt import RGIgt, RGCorpus, NoODINRawException, RGTier, RGItem
 from xigt.codecs import xigtxml
 from build.lib.xigt.core import Metadata
+from interfaces.giza import GizaAligner
 
 
 
@@ -27,6 +28,15 @@ class IGTException(Exception):
 	pass
 
 class IGTParseException(IGTException):
+	pass
+
+class IGTParseExceptionLang(IGTParseException):
+	pass
+
+class IGTParseExceptionGloss(IGTParseException):
+	pass
+
+class IGTParseExceptionTrans(IGTParseException):
 	pass
 	
 class IGTGlossLangLengthException(IGTParseException):
@@ -125,7 +135,11 @@ class IGTInstance(RGIgt):
 	@property
 	def glossalign(self):
 		if not hasattr(self, '_ga'):
-			self._ga = self.gloss_heuristic_alignment().aln
+			#self._ga = self.gloss_heuristic_alignment().aln
+			ga = GizaAligner.load('/Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/align/odin',
+								'/Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/align/odin_g.txt',
+								'/Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/align/odin_t.txt')									
+			self._ga = self.giza_alignment(ga).aln
 		return self._ga
 	
 	@glossalign.setter
@@ -432,11 +446,11 @@ class IGTInstance(RGIgt):
 			
 			# Execute errors if a given line is not found...
 			if not raw_t_s:
-				raise IGTParseException('No translation line found!')
+				raise IGTParseExceptionTrans('No translation line found!')
 			if not raw_g_s:
-				raise IGTParseException('No gloss line found!')
+				raise IGTParseExceptionGloss('No gloss line found!')
 			if not raw_l_s:
-				raise IGTParseException('No language line found!')
+				raise IGTParseExceptionLang('No language line found!')
 			
 			# Create the tier that will hold the normalized bits.
 			normal_tier = RGTier(id='n', igt=raw_tier.igt, type='odin', attributes={'state':'normalized', 'alignment':raw_tier.id})
@@ -654,6 +668,14 @@ class IGTInstance(RGIgt):
 			
 		self.add_alignment(gha, **kwargs)
 		return gha
+	
+	def giza_alignment(self, ga, **kwargs):
+		asent = ga.force_align(self.gloss.text(), self.trans.text())
+		if not asent:
+			raise IGTAlignmentException('GIZA did not produce an alignment')
+		else:
+			return asent[0]
+		
 	
 	def gloss_heuristic_alignment_h(self, **kwargs):
 		

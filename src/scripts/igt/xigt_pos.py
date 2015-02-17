@@ -31,7 +31,7 @@ def xigt_process(xigt_corpus, classifier, posdict, out_xml):
 		
 		c = interfaces.mallet_maxent.MalletMaxent(classifier)
 		pos_tokens = igt.lang_line_classifications(c, lowercase=True, posdict=posdict)
-
+		
 		# -- 3) Add this new instance to the output.
 		new_corp.add(igt)
 	

@@ -9,7 +9,8 @@ import argparse
 from utils.argutils import configfile, writefile
 from utils.fileutils import matching_files
 import re
-import sys
+
+import utils.setup_env
 
 def extract_lang(dir, lang, outfile):
 	

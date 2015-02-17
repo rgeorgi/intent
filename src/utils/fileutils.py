@@ -8,9 +8,18 @@ import re
 import sys
 import glob
 
+def swapext(path, ext):
+	return os.path.splitext(path)[0]+ext
+
 def remove_safe(path):
 	if os.path.exists(path):
 		os.remove(path)
+		
+def dir_above(path, n=1):
+	while n>0:
+		path = os.path.dirname(path)
+		n -=1
+	return path
 		
 def matching_files(dirpath, pattern, recursive=False):
 	'''

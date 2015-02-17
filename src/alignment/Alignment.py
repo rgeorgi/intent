@@ -8,7 +8,7 @@ import collections
 import sys
 import re
 import unittest
-from utils.token import tokenize_string
+from utils.token import tokenize_string, whitespace_tokenizer
 
 #===============================================================================
 # Aligned Sent Class
@@ -163,6 +163,32 @@ class AlignedSent():
 					yield '%s:%s:%s' % (morphcount, i+1, tgt_index)
 					# Yield the morph_index:parent_index:tgt_index
 					
+	@classmethod
+	def from_giza_lines(cls, tgt, aln):
+		src_tokens = tokenize_string(tgt, whitespace_tokenizer)
+		tgt_tokens = []
+		a = Alignment()
+		
+		alignments = re.findall('(\S+) \(\{(.*?)\}\)', aln)
+		
+		for i, aln_pair in enumerate(alignments):
+			# Start after the NULL alignment (skip the 0 index)
+			if i == 0:
+				continue
+			
+			word, indices = aln_pair
+			indices = [int(i) for i in indices.split()]
+			
+			# Add the current word...
+			tgt_tokens.append(word)
+			
+			for tgt_i in indices:
+				a.add((tgt_i, i))
+				
+			
+		aln_sent = cls(src_tokens, tgt_tokens, a)
+		return aln_sent
+		
 				
 		
 		
@@ -196,9 +222,9 @@ class AlignedCorpus(list):
 		@param aln_path: Alignment filename
 		@param limit: Sentence limit
 		'''
-		src_f = open(src_path, 'r')
-		tgt_f = open(tgt_path, 'r')
-		aln_f = open(aln_path, 'r')
+		src_f = open(src_path, 'r', encoding='utf-8')
+		tgt_f = open(tgt_path, 'r', encoding='utf-8')
+		aln_f = open(aln_path, 'r', encoding='utf-8')
 		
 				
 		src_lines = src_f.readlines()
@@ -232,7 +258,7 @@ class AlignedCorpus(list):
 				break
 			
 
-			
+
 	def read_giza(self, src_path, tgt_path, a3, limit=None):
 		'''
 		Method intended to read a giza A3.final file into an alignment format.

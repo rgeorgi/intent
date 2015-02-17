@@ -6,7 +6,7 @@ Created on Apr 30, 2014
 @author: rgeorgi
 '''
 from corpora.IGTCorpus import IGTCorpus, IGTProjectionException,\
-	IGTGlossLangLengthException
+	IGTGlossLangLengthException, IGTAlignmentException
 from interfaces.mallet_maxent import MalletMaxent
 import pickle
 from argparse import ArgumentParser
@@ -75,6 +75,9 @@ if __name__ == '__main__':
 				skipped += 1
 				continue
 			except IGTGlossLangLengthException as e:
+				skipped +=1
+				continue
+			except IGTAlignmentException as iae:
 				skipped +=1
 				continue
 				
