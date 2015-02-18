@@ -172,12 +172,16 @@ def whitespace_tokenizer(st):
 		i += 1
 
 def morpheme_tokenizer(st):
+	'''
+	Tokenize a string splitting it on typical morpheme boundaries: [ - . : = ( ) ]
+	@param st:
+	'''
 
 	pieces = re.finditer('[^\s\-\.:/\(\)=]+', st)
 	
 	for match in pieces:
 		if match.group().strip():
-			yield Token(match.group(0), start=match.start(), stop=match.end())
+			yield Morph(match.group(0), start=match.start(), stop=match.end())
 
 def tag_tokenizer(st, delimeter='/'):
 	for match in re.finditer('(\S+){}(\S+)'.format(delimeter), st, re.UNICODE):
