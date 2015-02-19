@@ -8,44 +8,41 @@ import unittest
 from unittest.case import TestCase
 from igt.rgxigt import RGTier
 from utils.token import tokenize_string, morpheme_tokenizer,\
-	whitespace_tokenizer
+	whitespace_tokenizer, tokenize_item
 from alignment.Alignment import Alignment
 
 class MorphAlignException(Exception):
 	pass
 
-class Sentence(list):
+class Sentence(RGTier):
 	'''
 	Set of words, which may have sub-word morpheme-level components. 
 	'''
 	
-	def __init__(self, seq=[]):
-		list.__init__(self, seq)
+	def __init__(self, items=[], **kwargs):
+		RGTier.__init__(self, items=items, **kwargs)
 		
 	@classmethod
 	def from_string(cls, string):
 		return cls(tokenize_string(string, whitespace_tokenizer))
 	
-	def text(self):
-		return ' '.join(self)
-	
-	def lower(self):
-		return [i.lower() for i in self]
-	
 	def morphs(self):
 		'''
 		Return a list of all the morphs in this sentence.
 		'''
-		sent_morphs = []
+		sent_morphs = Sentence(type='morphs')
 		
 		last_index = 1
 		for word in self:
 
-			morphs = tokenize_string(word.content, morpheme_tokenizer)
+			morphs = tokenize_item(word, morpheme_tokenizer)
 			for morph in morphs:
 				morph.index = last_index
 				morph.parent = word
-				sent_morphs.append(morph)
+				
+				
+				morph.id = word.tier.id+'m'+str(last_index)
+				sent_morphs.add(morph)
 				
 				last_index += 1
 				

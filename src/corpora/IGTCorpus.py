@@ -12,14 +12,13 @@ from utils.token import Token, TokenException, Morph, tokenize_string,\
 	morpheme_tokenizer, GoldTagPOSToken, whitespace_tokenizer, POSToken,\
 	Tokenization
 from igt.igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
-	clean_trans_string, hyphenate_infinitive
-from xigt.core import Tier, XigtMixin, resolve_alignment_expression
-from collections import OrderedDict
+	clean_trans_string
 import uuid
 from corpora.POSCorpus import POSCorpus, POSCorpusInstance
-from igt.rgxigt import RGIgt, RGCorpus, NoODINRawException, RGTier, RGItem
-from xigt.codecs import xigtxml
-from build.lib.xigt.core import Metadata
+import igt.rgxigt as rgx
+
+from utils.setup_env import c
+from alignment.morphalign import Sentence
 from interfaces.giza import GizaAligner
 
 
@@ -48,13 +47,13 @@ class IGTAlignmentException(IGTException):
 class IGTProjectionException(IGTException):
 	pass
 
-class IGTCorpus(RGCorpus):
+class IGTCorpus(rgx.RGCorpus):
 	'''
 	Object that will hold a corpus of IGT instances.
 	'''
 
 	def __init__(self, **kwargs):
-		RGCorpus.__init__(self, id=kwargs.get('id'), attributes=kwargs.get('attributes'),
+		rgx.RGCorpus.__init__(self, id=kwargs.get('id'), attributes=kwargs.get('attributes'),
 								igts=kwargs.get('igts'))
 		
 
@@ -81,6 +80,9 @@ class IGTCorpus(RGCorpus):
 	
 	@classmethod
 	def from_text(cls, textfile, **kwargs):
+		'''
+		Read in a standard-format ODIN document of textfiles and create a corpus from it.
+		'''
 		# Create a new corpus
 		corpus = cls()
 		
@@ -100,13 +102,47 @@ class IGTCorpus(RGCorpus):
 				continue
 			
 		return corpus
+	
+	
+	def giza_align_g_t(self):
+		'''
+		Produce alignments between gloss and translation lines using giza, and the 
+		saved model defined in env.conf.
+		'''
+		ga = GizaAligner.load(c['g_t_prefix'], c['g_path'], c['t_path'])
+		
+		g_sents = []
+		t_sents = []
+		
+		for igt in self:
+			i = IGTInstance.fromXigt(igt)
+			
+			# Initialize the whole-word sentence...
+			g_s = Sentence.fromTier(i.gloss)
+			t_s = Sentence.fromTier(i.trans)
+			
+			# Now, get the morphs from the sentence...
+			g_m = g_s.morphs()
+			t_m = t_s.morphs()
+			
+			# Now, add this to a list...
+			g_sents.append(g_m.text().lower())
+			t_sents.append(t_m.text().lower())
+		
+		# Run giza to align the sentences...
+		a_sents = ga.force_align(g_sents, t_sents)	
+		
+		# Now, assign the alignments
+		for igt, a_sent in zip(self.igts, a_sents):
+			print(igt)
+			
 		
 	
 #===============================================================================
 # IGT Instance Class
 #===============================================================================
 		
-class IGTInstance(RGIgt):
+class IGTInstance(rgx.RGIgt):
 	'''
 	Container class for an IGT instance and all the dealings that will go on inside it.
 	'''
@@ -118,7 +154,7 @@ class IGTInstance(RGIgt):
 	
 	def __init__(self, id=None, type=None, attributes=None, corpus=None, tiers=None, metadata=None):
 		# Start with the basics..
-		RGIgt.__init__(self, id=id, type=type,
+		rgx.RGIgt.__init__(self, id=id, type=type,
 						attributes=attributes,
 						tiers=tiers, metadata=metadata,
 						corpus=corpus)
@@ -135,11 +171,9 @@ class IGTInstance(RGIgt):
 	@property
 	def glossalign(self):
 		if not hasattr(self, '_ga'):
-			#self._ga = self.gloss_heuristic_alignment().aln
-			ga = GizaAligner.load('/Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/align/odin',
-								'/Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/align/odin_g.txt',
-								'/Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/align/odin_t.txt')									
-			self._ga = self.giza_alignment(ga).aln
+			self._ga = self.gloss_heuristic_alignment().aln
+			#ga = GizaAligner.load(c['g_path'], c['t_path'], c['g_t_prefix'])
+			#self._ga = self.giza_alignment(ga).aln
 		return self._ga
 	
 	@glossalign.setter
@@ -350,12 +384,12 @@ class IGTInstance(RGIgt):
 	def add_pos_tags(self, tier, pos_tags):
 		
 		# Start by creating a POS tier and blowing the old one away if it exists.
-		pos_tier = RGTier(id=('%s-pos' % tier.id),
+		pos_tier = rgx.RGTier(id=('%s-pos' % tier.id),
 							alignment=tier.id, type='pos')
 		
 		i = 0
 		for lw, pt in zip(tier, pos_tags):
-			pos_item = RGItem(id=('%s%d' % (pos_tier.id, i)), 
+			pos_item = rgx.RGItem(id=('%s%d' % (pos_tier.id, i)), 
 								alignment=lw.id,
 								text=pt.label)			
 			i += 1
@@ -405,7 +439,7 @@ class IGTInstance(RGIgt):
 		return a
 	
 	def append(self, item):
-		RGIgt.add(self, item)	
+		rgx.RGIgt.add(self, item)	
 	#def append(self, item):
 	#	if not isinstance(item, IGTTier):
 	#		raise IGTException('Attempt to append a non-IGTTier instance to an IGTInstance')
@@ -434,7 +468,7 @@ class IGTInstance(RGIgt):
 			
 			# Raise an exception if no raw tier was available.
 			if not raw_tier:
-				raise NoODINRawException('No raw tier found.')
+				raise rgx.NoODINRawException('No raw tier found.')
 			else:
 				raw_tier = raw_tier[0]
 			
@@ -453,12 +487,12 @@ class IGTInstance(RGIgt):
 				raise IGTParseExceptionLang('No language line found!')
 			
 			# Create the tier that will hold the normalized bits.
-			normal_tier = RGTier(id='n', igt=raw_tier.igt, type='odin', attributes={'state':'normalized', 'alignment':raw_tier.id})
+			normal_tier = rgx.RGTier(id='n', igt=raw_tier.igt, type='odin', attributes={'state':'normalized', 'alignment':raw_tier.id})
 			
 			# Initialize the new items...
-			l_norm = RGItem(id='n1', alignment=raw_l_s[0].id, tier=normal_tier, attributes={'tag':'L'})
-			g_norm = RGItem(id='n2', alignment=raw_g_s[0].id, tier=normal_tier, attributes={'tag':'G'})
-			t_norm = RGItem(id='n3', alignment=raw_t_s[0].id, tier=normal_tier, attributes={'tag':'T'})
+			l_norm = rgx.RGItem(id='n1', alignment=raw_l_s[0].id, tier=normal_tier, attributes={'tag':'L'})
+			g_norm = rgx.RGItem(id='n2', alignment=raw_g_s[0].id, tier=normal_tier, attributes={'tag':'G'})
+			t_norm = rgx.RGItem(id='n3', alignment=raw_t_s[0].id, tier=normal_tier, attributes={'tag':'T'})
 			
 			
 			
@@ -517,12 +551,12 @@ class IGTInstance(RGIgt):
 		# -- 3) If the phrase tier already exists, get it.
 		phrase_tier = [tier for tier in self if tier.type == phrase_name]
 		if phrase_tier:
-			phrase_tier = RGTier.fromTier(phrase_tier[0])
+			phrase_tier = rgx.RGTier.fromTier(phrase_tier[0])
 			
 		# -- 4) If such a phrase tier does not exist, create it.
 		else:
-			phrase_tier = RGTier(id=phrase_letter, type=phrase_name, attributes={'content':c.id})
-			phrase_item = RGItem(id='%s0' % phrase_letter, type='phrase', content=line.id)
+			phrase_tier = rgx.RGTier(id=phrase_letter, type=phrase_name, attributes={'content':c.id})
+			phrase_item = rgx.RGItem(id='%s0' % phrase_letter, type='phrase', content=line.id)
 			phrase_tier.add(phrase_item)
 			self.add(phrase_tier)
 							
@@ -539,7 +573,7 @@ class IGTInstance(RGIgt):
 			
 			# Tokenize the line, and create the items...
 			for t in tokenize_string(p1.get_content()):
-				word_item = RGItem(id = '%s%d' % (words_letter, t.index), type='word', text=t.content)
+				word_item = rgx.RGItem(id = '%s%d' % (words_letter, t.index), type='word', text=t.content, tier=words_tier.id)				
 				word_item.attributes = {'segmentation':'%s[%d:%d]' % (phrase_tier.id, t.start, t.stop),
 										'index':str(t.index)}
 				word_item.start = t.start
@@ -635,14 +669,14 @@ class IGTInstance(RGIgt):
 		# Only add this info if we haven't already performed the alignment.
 		if not hasattr(self, '_aligned'):
 			
-			ga_tier = RGTier(id='ga', type='bilingual-alignments', attributes={'source':self.gloss.id, 'target':self.trans.id})
+			ga_tier = rgx.RGTier(id='ga', type='bilingual-alignments', attributes={'source':self.gloss.id, 'target':self.trans.id})
 						
 			# Iterate through each gloss and translation word...
 			for gw, tw in aln.aligned_words():
 				
 				aln_item = ga_tier.findAttr('source', gw.id)
 				if not aln_item:
-					aln_item = RGItem(id=ga_tier.askItemId(), attributes={'source':gw.id})
+					aln_item = rgx.RGItem(id=ga_tier.askItemId(), attributes={'source':gw.id})
 					
 				if 'target' in aln_item.attributes:
 					aln_item.attributes['target'] += ','+tw.id
@@ -775,13 +809,13 @@ def get_alignments(gloss_tokens, trans_tokens, iteration=1, **kwargs):
 	
 
 		
-class IGTTier(RGTier):
+class IGTTier(rgx.RGTier):
 	'''
 	This class is what was originally described as a "Tier" -- a collection of tokens 
 	'''
 	
 	def __init__(self, **kwargs):
-		RGTier.__init__(self, **kwargs)
+		rgx.RGTier.__init__(self, **kwargs)
 		
 		
 		# If we specify content, save this as our string...
@@ -811,7 +845,7 @@ class IGTTier(RGTier):
 		if not isinstance(item, IGTToken):
 			raise IGTException('Attempt to add non-IGTToken to IGTTier')
 		else:
-			Tier.add(self, item)
+			rgx.RGTier.add(self, item)
 			
 	def __str__(self):
 		return '<IGTTier type=%s len=%d>' % (self.type, len(self))
@@ -848,10 +882,10 @@ class Span(object):
 	def __str__(self):
 		return ('%s,%s' % (self.start, self.stop))
 
-class IGTToken(RGItem, Token):
+class IGTToken(rgx.RGItem, Token):
 	
 	def __init__(self, content, **kwargs):
-		RGItem.__init__(self, content=content)
+		rgx.RGItem.__init__(self, content=content)
 		Token.__init__(self, content, **kwargs)
 		
 		self.attributes['index'] = kwargs.get('index')
@@ -910,7 +944,7 @@ class IGTToken(RGItem, Token):
 # Subclass the RGTier to use for tiers that are specifically intended to
 # contain "words"
 #===========================================================================
-class WordsTier(RGTier):
+class WordsTier(rgx.RGTier):
 
 	def morphs(self):
 		for item in self:
@@ -938,7 +972,7 @@ class WordsTier(RGTier):
 class LinesTier(IGTTier):
 	
 	def add_line(self, txt, tag):
-		item = RGItem(id='r%d' % (len(self) + 1), attributes={'tag':tag}, text=txt)
+		item = rgx.RGItem(id='r%d' % (len(self) + 1), attributes={'tag':tag}, text=txt)
 		self.add(item)
 	
 		

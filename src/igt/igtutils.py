@@ -249,7 +249,7 @@ def clean_lang_string(ret_str):
 	ret_str = remove_final_punctuation(ret_str)
 	
 	
-	ret_str = remove_hyphens(ret_str)
+	#ret_str = remove_hyphens(ret_str)
 
 	return ret_str
 

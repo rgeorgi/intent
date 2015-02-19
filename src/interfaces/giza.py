@@ -289,29 +289,23 @@ class GizaFiles(object):
 	
 	# Read the aligned file here...
 	def aligned_sents(self):
-		a_list = self.a3
+		a_f = open(self.a3merged, 'r', encoding='utf-8')
+		lines = a_f.readlines()
+		a_f.close()
 		
-		linedict = {}
+		a_sents = []
 		
-		
-		for a in a_list:
-			a_f = open(a, 'r', encoding='utf-8')
-			lines = a_f.readlines()
-			a_f.close()
+		while lines:
+			top = lines.pop(0)
+			tgt = lines.pop(0)
+			aln = lines.pop(0)
 			
-			while lines:
-				top = lines.pop(0)
-				tgt = lines.pop(0)
-				aln = lines.pop(0)
-				
-				idx = int(re.search('\(([0-9]+)\)', top).group(1))
-				
-				linedict[idx] = AlignedSent.from_giza_lines(tgt, aln)
-				
+			idx = int(re.search('\(([0-9]+)\)', top).group(1))
+			
+			a_sents.append(AlignedSent.from_giza_lines(tgt, aln))
+			
 
-		sents = sorted(linedict.items(), key = lambda i: i[0])
-		sents = [l[1] for l in sents]
-		return sents
+		return a_sents
 				
 
 class VocabWord(object):
@@ -464,8 +458,7 @@ class GizaAligner(object):
 			
 		g_f.close(), t_f.close()
 		
-		prefix = os.path.join(tempdir, 'temp')
-		#shutil.rmtree(tempdir)
+		prefix = os.path.join(tempdir, 'temp')		
 		
 		return self.resume(prefix, g_path, t_path)
 		

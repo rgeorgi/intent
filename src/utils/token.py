@@ -187,6 +187,10 @@ def tag_tokenizer(st, delimeter='/'):
 	for match in re.finditer('(\S+){}(\S+)'.format(delimeter), st, re.UNICODE):
 		yield POSToken(match.group(1), label=match.group(2), start=match.start(), stop=match.end())
 
+def tokenize_item(it, tokenizer=whitespace_tokenizer):
+	tokens = tokenize_string(it.get_content(), tokenizer)
+	return tokens
+
 def tokenize_string(st, tokenizer=whitespace_tokenizer):
 	tokens = Tokenization()
 	iter = tokenizer(st)

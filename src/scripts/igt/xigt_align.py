@@ -2,9 +2,9 @@
 
 from xigt.codecs import xigtxml
 import argparse
-from corpora.IGTCorpus import IGTInstance
+from corpora.IGTCorpus import IGTInstance, IGTCorpus
 import sys
-from igt.rgxigt import RGCorpus
+from igt.rgxigt import RGCorpus, rgencode
 from utils.argutils import existsfile, CommandLineException, writefile
 
 def xigt_process(xigt_corpus, out_xml):
@@ -13,6 +13,10 @@ def xigt_process(xigt_corpus, out_xml):
 	
 	@param xigt_corpus:
 	'''
+	
+	xigt_corpus.giza_align_g_t()
+	
+	raise Exception
 	
 	# Initialize a new corpus...
 	new_corp = RGCorpus()
@@ -45,5 +49,7 @@ if __name__ == '__main__':
 		p.print_help()
 		sys.exit(1)
 	
-	xigt_corpus = xigtxml.load(args.xml)
+	xigt_corpus = RGCorpus.load(args.xml)
+	print(rgencode(xigt_corpus[0]))
+	sys.exit()
 	xigt_process(xigt_corpus, args.out)
