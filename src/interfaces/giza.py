@@ -460,7 +460,9 @@ class GizaAligner(object):
 		
 		prefix = os.path.join(tempdir, 'temp')		
 		
-		return self.resume(prefix, g_path, t_path)
+		aln = self.resume(prefix, g_path, t_path)
+		shutil.rmtree(tempdir)
+		return aln
 		
 		
 		
