@@ -14,17 +14,14 @@ def xigt_process(xigt_corpus, out_xml):
 	@param xigt_corpus:
 	'''
 	
-	xigt_corpus.giza_align_g_t()
-	
+	xigt_corpus.giza_align()
+
 	raise Exception
-	
-	# Initialize a new corpus...
-	new_corp = RGCorpus()
-	
+		
 	for inst in xigt_corpus.igts:
 		# -- 1) Convert the IGT Instance from the default XIGT format
 		#       to the internal subclass.
-		igt = IGTInstance.fromXigt(inst)
+
 		
 		# -- 2) Next, obtain the heuristic alignment.
 		gha = igt.gloss_heuristic_alignment()
@@ -50,6 +47,8 @@ if __name__ == '__main__':
 		sys.exit(1)
 	
 	xigt_corpus = RGCorpus.load(args.xml)
+	
 	print(rgencode(xigt_corpus[0]))
 	sys.exit()
+	
 	xigt_process(xigt_corpus, args.out)

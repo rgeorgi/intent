@@ -5,7 +5,7 @@ Subclassing of the xigt package to add a few convenience methods.
 '''
 import xigt.core
 from xigt.core import Metadata, Meta, Tier, Item, Igt,\
-	get_alignment_expression_ids
+	get_alignment_expression_ids, XigtCorpus
 import sys
 import re
 from xigt.codecs import xigtxml
@@ -17,6 +17,9 @@ from igt.igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
 
 import utils.token
 from collections import defaultdict
+import interfaces.giza
+from utils.setup_env import c
+from xigt.codecs.xigttxt import encode_xigtcorpus
 
 
 #===============================================================================
@@ -73,6 +76,23 @@ class RGCorpus(xigt.core.XigtCorpus):
 			
 		return xc
 	
+	def giza_align(self):
+		'''
+		Perform giza alignments on the gloss and translation
+		lines.
+		'''
+		
+		g_sents = [i.glosses.text().lower() for i in self]
+		t_sents = [i.trans.text().lower() for i in self]
+		
+		ga = interfaces.giza.GizaAligner.load(c['g_t_prefix'], c['g_path'], c['t_path'])
+		
+		print(ga.force_align(g_sents, t_sents)[0].aln)
+		
+		
+		
+		
+	
 #===============================================================================
 # IGT Class
 #===============================================================================
@@ -119,7 +139,7 @@ class RGIgt(xigt.core.Igt):
 	
 	def raw_tier(self):
 		'''
-		Raw tier
+		Retrieve the raw ODIN tier, otherwise raise an exception.
 		'''
 		raw_tier = [t for t in self if t.type == 'odin' and t.attributes['state'] == 'raw']
 		if not raw_tier:
@@ -243,13 +263,13 @@ class RGIgt(xigt.core.Igt):
 		self.morphemes
 		
 		# And do word-to-word alignment if it's not already done.
-		if not self.lang.alignment:
-			self.lang.word_align(self.gloss) 
+		if not self.gloss.alignment:
+			self.gloss.word_align(self.lang) 
 			
 		# Finally, do morpheme-to-morpheme alignment between gloss
 		# and language if it's not already done...
-		if not self.morphemes.alignment:
-			self.morphemes.morph_align(self.glosses)
+		if not self.glosses.alignment:
+			self.glosses.gloss_align(self.morphemes)
 		
 	@property
 	def glosses(self):
@@ -305,6 +325,7 @@ class RGIgt(xigt.core.Igt):
 		phrase_tier = [tier for tier in self if tier.type == phrase_name]
 		if phrase_tier:
 			phrase_tier = phrase_tier[0]
+			phrase_tier.__class__ = RGPhraseTier
 			
 		# -- 4) If such a phrase tier does not exist, create it.
 		else:
@@ -317,6 +338,8 @@ class RGIgt(xigt.core.Igt):
 		# -- 5) Finally, get the words tier if it exists.
 		words_tier = [tier for tier in self if tier.type == words_name]
 		if words_tier:
+			wt = words_tier[0]
+			wt.__class__ = RGWordTier
 			return words_tier[0]
 		
 		# -- 6) ...otherwise, create it.
@@ -330,6 +353,9 @@ class RGIgt(xigt.core.Igt):
 			return words_tier
 		
 	def findId(self, id):
+		'''
+		Recursively search for a given ID through the tier and its items. 
+		'''
 		if self.id == id:
 			return self
 		else:
@@ -502,10 +528,23 @@ class RGTier(xigt.core.Tier):
 		return len(self.items)+1
 	
 	def text(self):
-		tls = [i.get_content() for i in self]
-		return ' '.join(tls)
+		'''
+		Return a whitespace-delimeted string consisting of the
+		elements of this tier.
+		'''
+		return ' '.join(self.tokens())
+	
+	def tokens(self):
+		'''
+		Return a list of the content of this tier.
+		'''
+		return [i.get_content() for i in self]
 	
 	def findId(self, id):
+		'''
+		Recursively search for a given ID in this tier and its
+		items. 
+		'''
 		if self.id == id:
 			return self
 		else:
@@ -575,27 +614,36 @@ class RGMorphTier(RGTokenTier):
 	'''
 	Tier type that contains morphemes.
 	'''	
-	def morph_align(self, mt):
+	def gloss_align(self, mt):
+		'''
+		Align glosses with the morpheme tier.
+		@param mt:
+		'''
 
-		# Keep track of how many morphs
-		# are aligned with a given word
-		# on the other side...		
-		num_aligned = defaultdict(list)
-		for other_m in mt:
-			other_m.__class__ = RGMorph
-			num_aligned[other_m.word.id].append(other_m)
+		
+
+		# Let's count up how many morphemes there are
+		# for each word on the translation line...
+		lang_word_dict = defaultdict(list)
+		for m in mt:
+			m.__class__ = RGMorph
 			
-		# Now, iterate over our morphs
+			# Add this morpheme to the dictionary, so we can keep
+			# count of how many morphemes align to a given word.
+			lang_word_dict[m.word.id].append(m)
+			
+			
+		# Now, iterate over our morphs.
 		for m in self:
 			m.__class__ = RGMorph
 			
-			# First, start by going back to the word that this morph
-			# was aligned with.
+			# Find our parent word, and it's
+			# alignment.
 			w = m.word
-						
+			other_w_id = w.alignment
+			
 			# Next, let's see what unaligned morphs there are
-			other_w = self.igt.findId(w.alignment)
-			other_w_list = num_aligned[other_w.id]
+			other_w_list = lang_word_dict[other_w_id]
 			
 			# If there's only one morph left, align with that.
 			if len(other_w_list) == 1:
@@ -632,6 +680,8 @@ def rgencode(o):
 		return encode_item(o)
 	elif isinstance(o, Igt):
 		return encode_igt(o)
+	elif isinstance(o, XigtCorpus):
+		return encode_xigtcorpus(o)
 
 #===============================================================================
 # Unit Tests

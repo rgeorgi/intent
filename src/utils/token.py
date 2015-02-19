@@ -7,7 +7,6 @@ from utils.string_utils import string_compare_with_processing
 import re
 from xigt.core import Item
 from collections import OrderedDict
-from igt.rgxigt import RGItem
 import sys
 
 #===============================================================================
