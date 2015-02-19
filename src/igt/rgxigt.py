@@ -11,7 +11,7 @@ import re
 from xigt.codecs import xigtxml
 from unittest.case import TestCase
 from uuid import uuid4
-from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt
+from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xigtcorpus
 from igt.igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
 	clean_trans_string
 
@@ -19,7 +19,6 @@ import utils.token
 from collections import defaultdict
 import interfaces.giza
 from utils.setup_env import c
-from xigt.codecs.xigttxt import encode_xigtcorpus
 
 
 #===============================================================================
@@ -63,6 +62,7 @@ class RGCorpus(xigt.core.XigtCorpus):
 	@classmethod
 	def load(cls, path):
 		xc = xigtxml.load(path)
+		
 		xc.__class__ = RGCorpus
 		
 		# Now, convert all the IGT instances to RGIgt instances.
@@ -98,6 +98,17 @@ class RGCorpus(xigt.core.XigtCorpus):
 #===============================================================================
 
 class RGIgt(xigt.core.Igt):
+
+	def __init__(self, **kwargs):
+		super().__init__()
+		
+		# Add a default, blank metadata tier.
+		mdt = RGMetadata(type='xigt-meta')
+		self.add(mdt)
+		
+		# Also, by default, glosses and translations are in English.
+		l = RGMeta(type='language', attributes={'name':'english', 'iso-639-3':'eng','tiers':'glosses translations'})
+		mdt.add(l)
 
 	@classmethod
 	def fromXigt(cls, o, **kwargs):
@@ -173,9 +184,17 @@ class RGIgt(xigt.core.Igt):
 			if not raw_l_s:
 				raise NoLangLineException('No language line found in instance "%s"' % self.id)
 			
-			# Now, create the normalized tier...
+			
+			
+			# Now, create the normalized and clean tiers...
+			clean_tier = RGLineTier(id = 'c', type='odin',
+									 attributes={'state':'clean', 'alignment':raw_tier.id})
+			
+			# TODO: this
 			normal_tier = RGLineTier(id = 'n', type='odin',
-									 attributes={'state':'normalized', 'alignment':raw_tier.id})
+									 attributes={'state':'normalized', 'alignment':clean_tier.id})
+			
+			
 			
 			# Initialize the new lines...
 			l_norm = RGLine(id='n1', alignment=raw_l_s[0].id, tier=normal_tier, attributes={'tag':'L'})
@@ -217,11 +236,13 @@ class RGIgt(xigt.core.Igt):
 			self.add(normal_tier)
 			return normal_tier
 			
+			
 	@classmethod
 	def fromString(cls, string):
 		'''
 		Method to parse and create an IGT instance from odin-style text.
 		'''
+		
 		# Start by looking for the doc_id, and the line range.
 		doc_re = re.search('doc_id=([0-9]+)\s([0-9]+)\s([0-9]+)\s(.*)\n', string)
 		docid, lnstart, lnstop, tagtypes = doc_re.groups()
@@ -681,7 +702,7 @@ def rgencode(o):
 	elif isinstance(o, Igt):
 		return encode_igt(o)
 	elif isinstance(o, XigtCorpus):
-		return encode_xigtcorpus(o)
+		return ''.join(encode_xigtcorpus(o))
 
 #===============================================================================
 # Unit Tests
