@@ -4,7 +4,6 @@ Created on Apr 4, 2014
 @author: rgeorgi
 '''
 import os
-from utils.ConfigFile import ConfigFile
 import subprocess as sub
 import sys
 from classify.Classification import Classification
@@ -13,6 +12,7 @@ import re
 from _io import StringIO
 import igt
 from utils.token import GoldTagPOSToken
+from utils.setup_env import c
 
 class ClassifierException(Exception):
 	pass
@@ -20,20 +20,15 @@ class ClassifierException(Exception):
 class EmptyStringException(ClassifierException):
 	pass
 
-def setup():
-	global mallet
-	mydir = os.path.abspath(os.path.dirname(__file__))
-	c = ConfigFile(os.path.join(mydir, 'mallet.prop'))
-	
-	mallet = c['mallet']
 
 class MalletMaxent(object):
 	
 	def __init__(self, model):
 		self._model = model
-		setup()
-		mallet_bin = os.path.join(os.path.join(mallet, 'bin'), 'mallet')
 		
+		mallet = c['mallet']
+		
+		mallet_bin = os.path.join(os.path.join(mallet, 'bin'), 'mallet')
 		
 		self.c = sub.Popen([mallet_bin, 
 							'classify-file',
@@ -47,6 +42,7 @@ class MalletMaxent(object):
 		'''
 		Print the feature statistics for the given model. (Assumes MaxEnt)
 		'''
+		mallet = c['mallet']
 		info_bin = os.path.join(os.path.join(mallet, 'bin'), 'classifier2info')
 		info_p = sub.Popen([info_bin, '--classifier', self._model],
 							stdout=sub.PIPE, stdin=sub.PIPE, stderr=sub.PIPE)
@@ -75,7 +71,27 @@ class MalletMaxent(object):
 			top_10 = feats.top_n(cur_class, n=10, key2_re='^nom')
 			print('\t'.join(['%s:%.4f' % (w,p) for w,p in top_10]))
 				
-				
+	def classify_string(self, s, **kwargs):
+		'''
+		Run the classifier on a string, breaking it apart as necessary.
+		
+		:param s: String to classify
+		:type s: str
+		'''
+
+		token = GoldTagPOSToken(s, goldlabel="NONE")
+		
+		sio = StringIO()
+		
+		# TODO: Fix the behavior of write_gram such that we can just do it from a string.
+		igt.grams.write_gram(token, type='classifier', output=sio, **kwargs)
+		
+		c_token = sio.getvalue().strip()
+		sio.close()
+		
+		result = self.classify(c_token)
+		return result 
+	
 	def classify_token(self, token, **kwargs):
 		
 		token = GoldTagPOSToken.fromToken(token, goldlabel='NONE')

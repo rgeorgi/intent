@@ -21,6 +21,8 @@ import interfaces.giza
 from utils.setup_env import c
 from unittest.suite import TestSuite
 from alignment.Alignment import Alignment
+from interfaces.mallet_maxent import MalletMaxent
+import pickle
 
 
 #===============================================================================
@@ -482,6 +484,13 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		'''
 		Specify the source tier and target tier, and create a bilingual alignment tier
 		between the two, using the indices specified by the Alignment aln.
+				
+		:param src_tier: The tier that will be the source for bilingual alignments.
+		:type src_tier: RGTier
+		:param tgt_tier: The tier that will be the target for bilingual alignments.
+		:type tgt_tier: RGTier
+		:param aln: The alignment to be added
+		:type aln: Alignment
 		'''
 		# Remove the previous alignment, if it exists.
 		prev_ba_tier = self.find(attributes={'source':src_tier.id, 'target':tgt_tier.id})
@@ -556,6 +565,44 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		if pos_tier:
 			pos_tier.__class__ = RGTokenTier
 			return pos_tier.tokens()
+		
+	def classify_gloss_pos(self, classifier, **kwargs):
+		'''
+		
+		:param classifier: the active mallet classifier to classify this language line.
+		:type classifier: MalletMaxent
+		'''
+		
+		kwargs['prev_gram'] = None
+		kwargs['next_gram'] = None
+		
+		tags = []
+		
+		# Iterate over the gloss tokens...
+		for i, gloss_token in enumerate(self.gloss.tokens()):
+			
+			# lowercase the token...
+			gloss_token = gloss_token.lower()
+			
+			#===================================================================
+			# Make sure to set up the next and previous tokens for the classifier
+			# if they are requested...
+			#===================================================================
+			if i+1 < len(self.gloss):
+				kwargs['next_gram'] = self.gloss.tokens()[i+1]
+			if i-1 >= 0:
+				kwargs['prev_gram'] = self.gloss.tokens()[i-1]
+				
+			# The classifier returns a Classification object which has all the weights...
+			# obtain the highest weight.
+			result = classifier.classify_string(gloss_token, **kwargs)
+			
+			best = result.largest()
+			
+			# Return the POS tags
+			tags.append(best[0])
+			
+		return tags
 		
 
 #===============================================================================
@@ -1064,10 +1111,19 @@ line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
 line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
 line=961 tag=T:     `I made the child eat rice.\''''
 		self.igt = RGIgt.fromString(self.txt)
+		self.tags = ['PRON', 'NOUN', 'NOUN', 'VERB']
 	
-	def xigt_add_pos_tags_test(self):
-		tags = ['PRON', 'NOUN', 'NOUN', 'VERB']
-		self.igt.add_pos_tags('gw', tags)
+	def test_add_pos_tags(self):
 		
-		self.assertEquals(self.igt.get_pos_tags('gw'), tags)
+		self.igt.add_pos_tags('gw', self.tags)
+		
+		self.assertEquals(self.igt.get_pos_tags('gw'), self.tags)
+		
+	def test_classify_pos_tags(self):
+		pos_dict = pickle.load(open(c['pos_dict'], 'rb'))
+		tags = self.igt.classify_gloss_pos(MalletMaxent(c['classifier_model']), posdict=pos_dict)
+		
+		self.assertEqual(tags, self.tags)
+		
+		
 	

@@ -131,7 +131,6 @@ def write_gram(token, **kwargs):
 		# Previous gram
 		#===================================================================
 		if prev_gram:
-			prev_gram = prev_gram.get_content()
 			prev_gram = prev_gram.lower() if lower else prev_gram
 					
 			# And then tokenize...
@@ -153,9 +152,8 @@ def write_gram(token, **kwargs):
 		# Next gram
 		#===================================================================
 		if next_gram:
-			next_gram_seq = next_gram.get_content()
-			next_gram_seq = next_gram_seq.lower() if lower else next_gram_seq
-			for token in utils.token.tokenize_string(next_gram_seq, utils.token.morpheme_tokenizer):
+			next_gram = next_gram.lower() if lower else next_gram
+			for token in utils.token.tokenize_string(next_gram, utils.token.morpheme_tokenizer):
 				
 			#===================================================================
 			# Gram itself
