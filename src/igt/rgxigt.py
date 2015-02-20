@@ -5,7 +5,7 @@ Subclassing of the xigt package to add a few convenience methods.
 '''
 import xigt.core
 from xigt.core import Metadata, Meta, Tier, Item, Igt,\
-	get_alignment_expression_ids, XigtCorpus
+	get_alignment_expression_ids, XigtCorpus, XigtAttributeMixin
 import sys
 import re
 from xigt.codecs import xigtxml
@@ -52,14 +52,36 @@ class GlossLangAlignException(RGXigtException):
 # Mixins
 #===============================================================================
 
-class RecursiveFindMixin(object):
+class FindMixin():
+	'''
+	Extension of the recursive search for non-iterable elements.
+	'''
+	
+	def find_self(self, id=None, attributes=None, type = None):
+		
+		id_match = id is None or (self.id == id)
+		type_match = type is None or (self.type == type)
+		attr_match = attributes is None or (set(attributes.items()).issubset(set(self.attributes.items())))
+		
+		# At least ONE thing must be specified
+		assert any([id, attributes, type])
+		
+		if id_match and type_match and attr_match:
+			return self
+		else:
+			return None
+		
+	def find(self, id=None, attributes=None, type=None):
+		return self.find_self(id, attributes, type)
+
+class RecursiveFindMixin(FindMixin):
 	'''
 	Enable recursive search on items that have iterable elements and attributes.
 	
 	WARNING: This stops on the first match.
 	'''
 	
-	def find(self, id=None, attributes=None):
+	def find(self, id=None, attributes=None, type=None):
 		'''
 		Generic find function for non-iterable elements.
 		:param id: id of an element to find, or None to search by attribute.
@@ -67,34 +89,19 @@ class RecursiveFindMixin(object):
 		:param attributes: key:value pairs that are an inclusive subset of those found in the desired item.
 		:type attributes: dict
 		'''
-		if id and self.id == id:
+		if self.find_self(id,attributes,type):
 			return self
-		
-		# Otherwise, if the attribute pairs are
-		# a subset of the ones for this thing...
-		elif attributes and set(attributes.items()).issubset(set(self.attributes.items())):
-			return self
-		
 		else:
 			found = None
 			for child in self:
-				found = child.find(id=id, attributes=attributes)
+				found = child.find(id=id, attributes=attributes, type=type)
 				if found:
 					break
 			return found
 				
-class FindMixin(object):
-	'''
-	Extension of the recursive search for non-iterable elements.
-	'''
-	
-	def find(self, id=None, attributes=None):
-		if id and self.id == id:
-			return self
-		elif attributes and set(attributes.items()).issubset(set(self.attributes.items())):
-			return self
-		else:
-			return None
+
+		
+		
 #===============================================================================
 
 class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
@@ -219,11 +226,11 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		'''
 		Retrieve the raw ODIN tier, otherwise raise an exception.
 		'''
-		raw_tier = [t for t in self if t.type == 'odin' and t.attributes['state'] == 'raw']
+		raw_tier = self.find(id='r')
 		if not raw_tier:
 			raise NoODINRawException('No raw tier found.')
 		else:
-			return raw_tier[0]
+			return raw_tier
 	
 	def clean_tier(self, merge=True):
 		'''
@@ -238,7 +245,6 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		else:
 			# Otherwise, we will make our own:
 			raw_tier = self.raw_tier()
-			print(raw_tier)
 			
 			raw_l_s = [i for i in raw_tier if 'L' in i.attributes['tag']]
 			raw_g_s = [i for i in raw_tier if 'G' in i.attributes['tag']]
@@ -411,10 +417,10 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		line = [l for l in c if orig_tag in l.attributes['tag']][0]
 				
 		# -- 2) If the phrase tier already exists, get it.
-		phrase_tier = [tier for tier in self if tier.type == phrase_name]
+		phrase_tier = self.find(id = phrase_letter)
 		if phrase_tier:
-			phrase_tier = phrase_tier[0]
 			phrase_tier.__class__ = RGPhraseTier
+
 			
 		# -- 4) If such a phrase tier does not exist, create it.
 		else:
@@ -425,15 +431,16 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			
 							
 		# -- 5) Finally, get the words tier if it exists.
-		words_tier = [tier for tier in self if tier.type == words_name]
+		words_tier = self.find(id = words_letter)
 		if words_tier:
-			wt = words_tier[0]
-			wt.__class__ = RGWordTier
-			return words_tier[0]
+			words_tier.__class__ = RGWordTier
+			return words_tier
 		
 		# -- 6) ...otherwise, create it.
 		else:
-			words_tier = phrase_tier[0].words_tier(words_name, words_letter)
+			phrase = phrase_tier[0]
+			phrase.__class__ = RGPhrase
+			words_tier = phrase.words_tier(words_name, words_letter)
 				
 			# -- 6) Add the created translation-word tier to the instance
 			self.add(words_tier)
@@ -478,11 +485,8 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		'''
 		# Remove the previous alignment, if it exists.
 		prev_ba_tier = self.find(attributes={'source':src_tier.id, 'target':tgt_tier.id})
-		if prev_ba_tier:	
-			del self.tiers[prev_ba_tier.index]
-			self.refresh_index()
-		
-		
+		if prev_ba_tier:
+			prev_ba_tier.delete()
 		
 		# Just to make things neater, let's sort the alignment by src index.
 		aln = sorted(aln, key = lambda x: x[0])
@@ -502,9 +506,56 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		self.add(ba_tier)
 			
 			
+	#===========================================================================
+	# Now for some of the POS stuff
+	#===========================================================================
+	def add_pos_tags(self, tier_id, tags):
+		'''
+		Assign a list of pos tags to the tier specified by tier_id. The number of tags
+		must match the number of items in the tier.
+		
+		:param tier_id: The id for the tier
+		:type tier_id: str
+		:param tags: A list of POS tag strings
+		:type tags: [str]
+		'''
+		
+		# Determine the id of this new tier...
+		new_id = tier_id+'-pos'
+		
+		# Delete that tier if it exists...
+		if self.find(new_id): self.find(new_id).delete()
+		
+		# Find the tier that we are adding tags to.
+		tier = self.find(id=tier_id)
+		
+		# We assume that the 
+		assert len(tier) == len(tags)
+		
+		# Create the POS tier
+		pt = RGTokenTier(type='pos', id=tier_id+'-pos', alignment=tier_id)
+		self.add(pt)
+		
+		# Go through the words and add the tags.
+		for w, tag in zip(tier.items, tags):
+			p = RGToken(id=pt.askItemId(), alignment=w.id, text=tag)
+			pt.add(p)			
 			
-			
-			
+	def get_pos_tags(self, tier_id):
+		'''
+		Retrieve the pos tags if they exist for the given tier id...
+		
+		:param tier_id: Id for the tier to find tags for
+		:type tier_id: str
+		'''
+		
+		pos_tier = self.find(attributes={'alignment':tier_id}, type='pos')
+		
+		
+		
+		if pos_tier:
+			pos_tier.__class__ = RGTokenTier
+			return pos_tier.tokens()
 		
 
 #===============================================================================
@@ -516,15 +567,12 @@ class RGItem(xigt.core.Item, FindMixin):
 	Subclass of the xigt core "Item."
 	'''
 	
-	def __init__(self, id=None, type=None,
-				alignment=None, segmentation=None,
-				attributes=None,
-				content=None, text=None, tier=None, **kwargs):
-		xigt.core.Item.__init__(self, id, type, alignment, content, segmentation, attributes, text, tier)
+	def __init__(self, index=None, **kwargs):
+		super().__init__(**kwargs)
 		
 		self.start = kwargs.get('start')
 		self.stop = kwargs.get('stop')
-		self.index = kwargs.get('index')
+		self.index = index
 		
 	@classmethod
 	def fromItem(cls, i, start=None, stop=None, index=-1):
@@ -607,8 +655,8 @@ class RGMorph(RGToken):
 			id = get_alignment_expression_ids(self.content)[0]
 		elif self.segmentation:
 			id = get_alignment_expression_ids(self.segmentation)[0]
-
-		word = self.tier.igt.find(id=id)
+		
+		word = self.tier.igt.find(id=id)		
 		word.__class__ = RGWord
 		return word
 			
@@ -703,7 +751,19 @@ class RGTier(xigt.core.Tier, RecursiveFindMixin):
 
 	@property
 	def index(self):
+		'''
+		Return the integer index (from zero) of this element in its
+		parent tier.
+		'''
 		return self.igt.tiers.index(self)
+	
+	def delete(self):
+		'''
+		Remove this tier from its parent, and refresh 
+		the index to notify the instance of its removal.
+		'''
+		del self.igt.tiers[self.index]
+		self.igt.refresh_index()
 	
 #===============================================================================
 # Bilingual Alignment Tier
@@ -833,6 +893,7 @@ class RGWordTier(RGTokenTier):
 		'''
 		Given another word tier, attempt to align it word by word.
 		'''
+
 		if len(self) != len(wt):
 			raise GlossLangAlignException('Gloss and language lines could not be auto-aligned for igt "%s"' % self.igt.id)
 		else:
@@ -910,6 +971,9 @@ class RGMeta(Meta):
 #===============================================================================
 # Encode
 #===============================================================================
+def rgp(o):
+	print(rgencode(o))
+
 def rgencode(o):
 	if isinstance(o, Tier):
 		return encode_tier(o)
@@ -978,3 +1042,32 @@ line=961 tag=T:     `I made the child eat rice.\''''
 		self.igt.set_bilingual_alignment(self.igt.trans, self.igt.glosses, a)
 		
 		self.assertEqual(a, self.igt.get_trans_gloss_alignment())
+		
+class XigtParseTest(TestCase):
+	'''
+	Testcase to make sure we can load from XIGT objects.
+	'''
+	def setUp(self):
+		self.xc = RGCorpus.load(c['xigt_ex'])
+		
+	def xigt_load_test(self):
+		pass
+
+class POSTestCase(TestCase):
+	
+	def setUp(self):
+		self.txt = '''doc_id=38 275 277 L G T
+stage3_lang_chosen: korean (kor)
+lang_code: korean (kor) || seoul (kor) || japanese (jpn) || inuit (ike) || french (fra) || malayalam (mal)
+note: lang_chosen_idx=0
+line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
+line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
+line=961 tag=T:     `I made the child eat rice.\''''
+		self.igt = RGIgt.fromString(self.txt)
+	
+	def xigt_add_pos_tags_test(self):
+		tags = ['PRON', 'NOUN', 'NOUN', 'VERB']
+		self.igt.add_pos_tags('gw', tags)
+		
+		self.assertEquals(self.igt.get_pos_tags('gw'), tags)
+	
