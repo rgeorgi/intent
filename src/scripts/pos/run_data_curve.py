@@ -11,6 +11,21 @@ import os
 from interfaces.stanford_tagger import StanfordPOSTagger
 from interfaces import stanford_tagger
 from eval import pos_eval
+from multiprocessing.pool import Pool
+
+def sub_run(sub_train_path, sub_model_path, raw_test_path, sub_tag_path, test_corpus, sub_corpus):
+	print('run')
+	# Next, train the parser.
+	stanford_tagger.train(sub_train_path, sub_model_path)
+	
+	# Now, run it.
+	stanford_tagger.test(raw_test_path, sub_model_path, sub_tag_path)
+	
+	# Load the result of the tagging...
+	result_corpus = POSCorpus.read_slashtags(sub_tag_path)
+	
+	acc = pos_eval.poseval(result_corpus, test_corpus)
+	return (len(sub_corpus), acc)
 
 
 def full_run(c):
@@ -28,14 +43,16 @@ def full_run(c):
 	raw_test_name = 'test_data.txt'
 	raw_test_path = os.path.join(curve_dir, raw_test_name)
 	
-	# Also, define where we will store the curve points.
-	curve_points = 'curve_data.txt'
-	curve_f = open(os.path.join(curve_dir, curve_points), 'w')
+
 	
 	test_corpus.write(raw_test_name, 'raw', outdir=curve_dir)
 	
 	# Now, let's add 100 sentences at a time until we max out.
 	sent_limit = 0
+	p = Pool(4)
+	
+	results = {}
+	
 	while sent_limit < len(train_corpus):
 		
 		# Adding 100 to the limit, starting from zero, means
@@ -47,32 +64,28 @@ def full_run(c):
 		sub_train_path = os.path.join(curve_dir, '%d_train.txt' % actual_limit)
 		sub_model_path = os.path.join(curve_dir, '%d_train.model' % actual_limit)
 		sub_tag_path =   os.path.join(curve_dir, '%d_tagged.txt' % actual_limit)
-		sub_result_path = os.path.join(curve_dir, '%d_result.txt' % actual_limit)
 		
-		
-		# Now, let's write out the subset.
-		sub_corpus.write(os.path.basename(sub_train_path), 'slashtags', outdir=curve_dir)
-		
-		# Next, train the parser.
-		stanford_tagger.train(sub_train_path, sub_model_path)
-		
-		# Now, run it.
-		stanford_tagger.test(raw_test_path, sub_model_path, sub_tag_path)
-		
-		# Load the result of the tagging...
-		result_corpus = POSCorpus.read_slashtags(sub_tag_path)
-		
-		acc = pos_eval.poseval(result_corpus, test_corpus)
-		curve_f.write('%d,%.2f\n' % (len(sub_corpus), acc))
-		curve_f.flush()
+		p.apply_async(sub_run, args=[sub_train_path, sub_model_path,
+							raw_test_path, sub_tag_path, 
+							test_corpus, sub_corpus], 
+					callback=lambda x: results.update({x[0]:x[1]}))
+	
 		
 
 		# Now, increase the sentence limit
 		sent_limit += step_increment
-		
-	curve_f.close()
-		
 	
+	p.close()
+	p.join()
+		
+	# Also, define where we will store the curve points.
+	curve_points = 'curve_data.txt'
+	curve_f = open(os.path.join(curve_dir, curve_points), 'w')
+	
+	for size, acc in sorted(results.items(), key=lambda x: x[0]):
+		curve_f.write('%d,%.2f\n' % (size, acc))
+	
+	curve_f.close()
 
 if __name__ == '__main__':
 	p = argparse.ArgumentParser()
