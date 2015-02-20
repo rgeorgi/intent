@@ -7,7 +7,8 @@ Created on Feb 14, 2014
 import os, sys, re, argparse
 from utils import ConfigFile
 import glob
-from alignment.Alignment import AlignedCorpus, combine_corpora, AlignedSent
+from alignment.Alignment import AlignedCorpus, combine_corpora, AlignedSent,\
+	Alignment
 from eval.AlignEval import AlignEval
 from utils.setup_env import c
 from utils.fileutils import swapext, matching_files, remove_safe
@@ -16,6 +17,7 @@ from tempfile import mkdtemp
 import shutil
 from collections import defaultdict
 import time
+from unittest.case import TestCase
 
 class GizaAlignmentException(Exception):
 	pass
@@ -414,6 +416,9 @@ class Vocab(object):
 	def load(cls, path):
 		'''
 		Create a vocab object from a path.
+		
+		:param path: Path to the .vcb file to load
+		:type path: filepath
 		'''
 		v = cls()
 		f = open(path, 'r', encoding='utf-8')
@@ -447,12 +452,61 @@ class Vocab(object):
 		
 
 class GizaAligner(object):
+	'''
+	A class to run GIZA
+	'''
 	
-	def __init__(self):
-		pass
-
-	
+	def train(self, prefix, e, f):
+		'''
+		Train the giza word alignments on the provided text files.
+		
+		:param prefix: Prefix for where the giza output files will be stored.
+		:type prefix: path+prefix
+		:param e: Path to the "e" file
+		:type e: path
+		:param f: Path to the "f" 
+		:type f: path
+		'''
+		self.tf = GizaFiles(prefix, e, f)
+		tf = self.tf
+				
+		self.tf.txt_to_snt(ev = Vocab(), fv = Vocab())
+		
+		# Now, do the aligning...
+		exe = c['mgiza']
+				
+		
+		elts = [exe,
+				'-o', tf.prefix,
+				'-S', tf.e_vcb,
+				'-T', tf.f_vcb,
+				'-C', tf.ef_snt,
+				'-CoocurrenceFile', tf.ef_cooc,
+				'-hmmiterations', '5',
+				'-model4iterations', '0']
+		cmd = ' '.join(elts)
+		os.system(cmd)
+		
+		tf.clean()
+		
+		return [a.aln for a in tf.aligned_sents()]
+		
 	def force_align(self, e_snts, f_snts):
+		return self.temp_align(e_snts, f_snts, self.resume)
+
+	def temp_train(self, e_snts, f_snts):
+		return self.temp_align(e_snts, f_snts, self.train)
+		
+	def temp_align(self, e_snts, f_snts, func):
+		'''
+		
+		:param e_snts: e sentences
+		:type e_snts: [str]
+		:param f_snts: f sentences
+		:type f_snts: [str]
+		:param func: The function to use on the data, either training from scratch or resuming.
+		:type func: method
+		'''
 		tempdir = mkdtemp()
 		
 		g_path = os.path.join(tempdir, 'g.txt')
@@ -469,15 +523,12 @@ class GizaAligner(object):
 		g_f.close(), t_f.close()
 		
 		prefix = os.path.join(tempdir, 'temp')		
-		
-		aln = self.resume(prefix, g_path, t_path)
+
+		aln = func(prefix, g_path, t_path)
 		shutil.rmtree(tempdir)
 		return aln
 		
 		
-		
-		
-
 	def resume(self, prefix, new_e, new_f):
 		'''
 		"Force" align a new set of data using the old
@@ -505,8 +556,6 @@ class GizaAligner(object):
 		
 		# Write out
 		new_gf.txt_to_snt(ev = old_ev, fv = old_fv)
-		#new_gf.txt_to_snt()
-				
 
 		exe = c['mgiza']
 		
@@ -550,191 +599,49 @@ class GizaAligner(object):
 		return ga
 		
 	
-	def train(self, prefix, e, f):
-		'''
-		Train the giza word alignments on the provided text files.
-		
-		:param prefix: Prefix for where the giza output files will be stored.
-		:type prefix: path+prefix
-		:param e: Path to the "e" file
-		:type e: path
-		:param f: Path to the "f" 
-		:type f: path
-		'''
-		self.tf = GizaFiles(prefix, e, f)
-		tf = self.tf
-				
-		self.tf.txt_to_snt(ev = Vocab(), fv = Vocab())
-		
-		# Now, do the aligning...
-		exe = c['mgiza']
-				
-		
-		elts = [exe,
-				'-o', tf.prefix,
-				'-S', tf.e_vcb,
-				'-T', tf.f_vcb,
-				'-C', tf.ef_snt,
-				'-CoocurrenceFile', tf.ef_cooc,
-				'-hmmiterations', '5',
-				'-model4iterations', '0']
-		cmd = ' '.join(elts)
-		os.system(cmd)
+
 		
 		# After training, return the aligned sentences:
 
-		
-		
-		
-	def plain2snt(self, gf):
-		exe = c['plain2snt']				
-		os.system('%s "%s" "%s" -vcb1 "%s" -vcb2 "%s" -snt1 "%s" -snt2 "%s"' % (exe, gf.e, gf.f, gf.e_vcb, gf.f_vcb, gf.ef_snt, gf.fe_snt))
-		
-	def snt2cooc(self, gf):
-		
-		exe = c['snt2cooc']
-		
-		cmd1 = '%s "%s" "%s" "%s" "%s"' % (exe, gf.ef_cooc, gf.e_vcb, gf.f_vcb, gf.ef_snt)	
-		cmd2 = '%s "%s" "%s" "%s" "%s"' % (exe, gf.fe_cooc, gf.f_vcb, gf.e_vcb, gf.fe_snt)	
-		os.system(cmd1)
-		os.system(cmd2)
-			
-	
 
-def junk_helper(ls, dir, s):
-	return ls.extend(glob.glob(dir + s))
+# 	
+# 	intersected = combine_corpora(g_t_giza_ac, t_g_giza_ac, method='intersect')
+# 	union = combine_corpora(g_t_giza_ac, t_g_giza_ac, method='union')
+# 	refined = combine_corpora(g_t_giza_ac, t_g_giza_ac, method='refined')
+# 	
+# 	g_t_ae = AlignEval(g_t_giza_ac, gold_ac, debug=False)
+# 	t_g_ae = AlignEval(t_g_giza_ac, gold_ac, debug=False, reverse=True)
+# 	i_ae = AlignEval(intersected, gold_ac, debug=False)
+# 	union_ae = AlignEval(union, gold_ac, debug=False)
+# 	refined_ae = AlignEval(refined, gold_ac, debug=False)
+# 	
+# 	print('System,AER,Precision,Recall,F-Measure,Matches,Gold,Test')
+# 	print(r'Gloss $\rightarrow$ Trans,%s'%g_t_ae.all())
+# 	print(r'Trans $\rightarrow$ Gloss,%s'%t_g_ae.all())
+# 	print(r'Intersection,%s'%i_ae.all())
+# 	print(r'Union,%s'%union_ae.all())
+# 	print(r'Refined,%s'%refined_ae.all())
+	
+	
+#===============================================================================
+# Unit Tests
+#===============================================================================
 
-
-def remove_junk(prefix):
-	jl = []	
-	junk_helper(jl, prefix, '*d3*')
-	junk_helper(jl, prefix, '*D_4*')
-	junk_helper(jl, prefix, '*d4*')
-	junk_helper(jl, prefix, '*perp')
-	junk_helper(jl, prefix, '*vcb')
-	junk_helper(jl, prefix, '*cooc')
-	junk_helper(jl, prefix, '*t3*')
-	junk_helper(jl, prefix, '*p0_3*l')
-	junk_helper(jl, prefix, '*gizacfg')
-	junk_helper(jl, prefix, '*Decoder.config')
-	junk_helper(jl, prefix, '*snt')
-	junk_helper(jl, prefix, '*aa3.final')
-	junk_helper(jl, prefix, '*a3.final*')
-	junk_helper(jl, prefix, '*A3.final*')
-	junk_helper(jl, prefix, '*n3.final')
+class TestTrain(TestCase):
 	
-	
-	for ji in jl:		
-		remove_safe(ji)
-	
-						
-
-def run_giza(e_file, f_file, giza_bin, out_prefix, aln_path):
-	
-	#------------------------------------------------------------------------------ 
-	# Start with plain2snt
-	plain2snt = os.path.join(giza_bin, 'plain2snt.out')
-	os.system(plain2snt + ' ' + e_file + ' ' + f_file)
-	os.system(plain2snt + ' ' + f_file + ' ' + e_file)
-	
-	
-	#===========================================================================
-	# Define all the files 
-	#===========================================================================
-	
-	e_base = os.path.splitext(os.path.basename(e_file))[0]
-	f_base = os.path.splitext(os.path.basename(f_file))[0]
-	
-	dir = os.path.dirname(e_file)
-	
-	e_vcb = os.path.join(dir, e_base+'.vcb')
-	f_vcb = os.path.join(dir, f_base+'.vcb')
-	
-	g_t_corp = os.path.join(dir, e_base+'_'+f_base+'.snt')
-	t_g_corp = os.path.join(dir, f_base+'_'+e_base+'.snt')
-	
-	g_t_cooc = os.path.join(dir, e_base+'_'+f_base+'.cooc')
-	t_g_cooc = os.path.join(dir, f_base+'_'+e_base+'.cooc')
-	
-	g_t_prefix = out_prefix+'_g_t'
-	t_g_prefix = out_prefix+'_t_g'
-	
-	#------------------------------------------------------------------------------ 
-	
-	run = False
-	
-# 	e_cats = os.path.join(dir, e_base+'.cats')
-# 	f_cats = os.path.join(dir, f_base+'.cats')
-	
-	# Now, let's get the other files.
-# 	mkcls = os.path.join(giza_bin, 'mkcls')
-# 	cmd_e = mkcls + ' -c12 -n1 -p%s -V%s' % (e_file, e_cats)
-# 	cmd_f = mkcls + ' -c12 -n1 -p%s -V%s' % (f_file, f_cats)
-# 
-# 	os.system(cmd_e)
-# 	os.system(cmd_f)
-	
-	if run:
-	
-		# Now make the coocurrence file
-		snt2cooc = os.path.join(giza_bin, 'snt2cooc.out')
-		cmd = snt2cooc + ' ' + e_vcb + ' ' + f_vcb + ' ' + g_t_corp + ' > ' + g_t_cooc
-		sys.stderr.write(cmd+'\n')
-		os.system(cmd)
+	def test_giza_train_toy(self):
+		ga = GizaAligner()
 		
-		cmd = snt2cooc + ' ' + f_vcb + ' ' + e_vcb + ' ' + t_g_corp + ' > ' + t_g_cooc
-		sys.stderr.write(cmd+'\n')
-		os.system(cmd)
+		e_snts = ['the house is blue',
+				   'my dog is in the house',
+				   'the house is big',
+				   'house']
 		
-		# Now run giza	
-		giza = os.path.join(giza_bin, 'GIZA++')
-		cmd = giza + ' -o %s -S %s -T %s -C %s -CoocurrenceFile %s' % (g_t_prefix, e_vcb, f_vcb, g_t_corp, g_t_cooc)
-		sys.stderr.write(cmd+'\n')
-		os.system(cmd)
+		f_snts = ['das haus ist blau',
+					'meine hund ist in dem haus',
+					'das haus ist gross',
+					'haus']
 		
-		# Run in opposite direction
-		cmd = giza + ' -o %s -S %s -T %s -C %s -CoocurrenceFile %s' % (t_g_prefix, f_vcb, e_vcb, t_g_corp, t_g_cooc)
-		sys.stderr.write(cmd+'\n')
-		os.system(cmd)
-	
-	remove_junk(c['outdir'])
-	
-	gold_ac = AlignedCorpus()
-	gold_ac.read(e_file, f_file, aln_path)
-	
-	g_t_giza_ac = AlignedCorpus()
-	g_t_giza_ac.read_giza(e_file, f_file, g_t_prefix+'.A3.final')
-	
-	t_g_giza_ac = AlignedCorpus()
-	t_g_giza_ac.read_giza(f_file, e_file, t_g_prefix+'.A3.final')
-	
-	intersected = combine_corpora(g_t_giza_ac, t_g_giza_ac, method='intersect')
-	union = combine_corpora(g_t_giza_ac, t_g_giza_ac, method='union')
-	refined = combine_corpora(g_t_giza_ac, t_g_giza_ac, method='refined')
-	
-	g_t_ae = AlignEval(g_t_giza_ac, gold_ac, debug=False)
-	t_g_ae = AlignEval(t_g_giza_ac, gold_ac, debug=False, reverse=True)
-	i_ae = AlignEval(intersected, gold_ac, debug=False)
-	union_ae = AlignEval(union, gold_ac, debug=False)
-	refined_ae = AlignEval(refined, gold_ac, debug=False)
-	
-	print('System,AER,Precision,Recall,F-Measure,Matches,Gold,Test')
-	print(r'Gloss $\rightarrow$ Trans,%s'%g_t_ae.all())
-	print(r'Trans $\rightarrow$ Gloss,%s'%t_g_ae.all())
-	print(r'Intersection,%s'%i_ae.all())
-	print(r'Union,%s'%union_ae.all())
-	print(r'Refined,%s'%refined_ae.all())
-	
-	
-	
-
-if __name__ == '__main__':
-	p = argparse.ArgumentParser()
-	p.add_argument('c', metavar='CONFIG')
-	
-	args = p.parse_args()
-	
-	c = ConfigFile.ConfigFile(args.c)
-	
-	run_giza(c['e_file'], c['f_file'], c['giza_bin'], c['outprefix'], c['aln_file'])
+		a_snts = ga.temp_train(e_snts, f_snts)
+		self.assertEqual(a_snts[0], Alignment([(1,1),(2,2),(3,3),(4,4)]))
 	
