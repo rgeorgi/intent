@@ -535,23 +535,38 @@ class GizaAligner(object):
 	
 	@classmethod
 	def load(cls, prefix, e, f):
+		'''
+		Load a stored giza alignment file to resume
+				
+		:param prefix: Prefix for the non-text files
+		:type prefix: path+base
+		:param e: Path to the "e" file
+		:type e: path
+		:param f: Path to the "f" file
+		:type f: path
+		'''
 		ga = cls()
 		ga.tf = GizaFiles(prefix, e, f)
 		return ga
 		
 	
 	def train(self, prefix, e, f):
+		'''
+		Train the giza word alignments on the provided text files.
+		
+		:param prefix: Prefix for where the giza output files will be stored.
+		:type prefix: path+prefix
+		:param e: Path to the "e" file
+		:type e: path
+		:param f: Path to the "f" 
+		:type f: path
+		'''
 		self.tf = GizaFiles(prefix, e, f)
 		tf = self.tf
 				
-		#self.plain2snt(tf)
-		#self.snt2cooc(tf)
-		#sys.exit()
-
 		self.tf.txt_to_snt(ev = Vocab(), fv = Vocab())
-		#sys.exit()
 		
-		# Now, finally do the aligning...
+		# Now, do the aligning...
 		exe = c['mgiza']
 				
 		
@@ -566,7 +581,9 @@ class GizaAligner(object):
 		cmd = ' '.join(elts)
 		os.system(cmd)
 		
-		# Finally, 
+		# After training, return the aligned sentences:
+
+		
 		
 		
 	def plain2snt(self, gf):

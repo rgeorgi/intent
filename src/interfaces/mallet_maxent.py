@@ -10,7 +10,7 @@ from classify.Classification import Classification
 from utils.TwoLevelCountDict import TwoLevelCountDict
 import re
 from _io import StringIO
-import igt
+import igt.grams
 from utils.token import GoldTagPOSToken
 from utils.setup_env import c
 

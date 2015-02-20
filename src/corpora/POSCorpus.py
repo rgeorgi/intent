@@ -5,7 +5,6 @@ Created on Mar 6, 2014
 '''
 import os
 import codecs
-import chardet
 from utils.token import tokenize_string, tag_tokenizer, POSToken
 import re
 

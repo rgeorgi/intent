@@ -7,7 +7,8 @@ Created on Mar 8, 2014
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.stem.snowball import EnglishStemmer
 from nltk.stem.porter import PorterStemmer
-from igt.grams import sub_grams
+import igt
+
 
 
 
@@ -77,8 +78,8 @@ def string_compare_with_processing(s1, s2, **kwargs):
 	# Instead, let's try doing it as a second pass to pick up stil-unaligned
 	# words.
 	if kwargs.get('gloss_on',False):
-		gloss_grams_1 = sub_grams(s1)
-		gloss_grams_2 = sub_grams(s2)
+		gloss_grams_1 = igt.grams.sub_grams(s1)
+		gloss_grams_2 = igt.grams.sub_grams(s2)
 		
 		if s2.strip() and s2 in gloss_grams_1:
 			return True

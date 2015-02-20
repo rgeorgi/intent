@@ -4,12 +4,6 @@ Created on Aug 30, 2013
 @author: rgeorgi
 '''
 import os
-from utils.ListDict import ListDict
-import codecs
-import chardet
-import sys
-from utils.encodingutils import getencoding
-from collections import defaultdict
 
 class TagMapException(Exception):
 	pass

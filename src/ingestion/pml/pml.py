@@ -14,8 +14,6 @@ from utils.xmlutils import get_child_tags, createTextNode
 from trees.SmultronDepTree import SmultronDepTree
 from trees.DepTree import DepTree
 from xml.dom.minidom import Element, parse, getDOMImplementation
-import chardet
-from utils.encodingutils import getencoding
 import codecs
 
 

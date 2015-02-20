@@ -15,7 +15,7 @@ from interfaces.stanford_tagger import StanfordPOSTagger
 import logging
 import os
 import sys
-from igt.rgxigt import RGCorpus
+from igt.rgxigt import RGCorpus, rgp
 
 projection_logger = logging.getLogger('projection')
 classification_logger = logging.getLogger('classification')
@@ -51,6 +51,18 @@ if __name__ == '__main__':
 
 	i = 0
 	skipped = 0
+	
+	# If the tagging method is projection, we need to align the corpus.
+	if c.get('tagging_method') == 'projection':
+
+		# If the alignment method is giza, use giza to align the
+		# gloss and translation.
+		if c.get('alignment_method', 'heur') == 'giza':
+			# Align the gloss and translation lines 
+			corp.giza_align_g_t()
+
+		else:
+			corp.heur_align()
 
 	for inst in corp:
 		

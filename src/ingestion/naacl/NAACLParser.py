@@ -11,7 +11,6 @@ import sys
 
 from eval.AlignEval import AlignEval
 import os
-from utils.encodingutils import getencoding
 import codecs
 from corpora.IGTCorpus import IGTCorpus, IGTInstance, IGTTier, IGTToken
 import pickle
@@ -20,7 +19,8 @@ from pos.TagMap import TagMap
 from utils.token import morpheme_tokenizer, tokenize_string
 from interfaces.mallet_maxent import MalletMaxent
 from alignment.Alignment import AlignedSent
-from utils.argutils import existsfile, ArgPasser
+from utils.argutils import existsfile
+from utils.argpasser import ArgPasser
 
 class NAACLParserException(ParserException):
 	pass
@@ -233,9 +233,7 @@ class NAACLParser(TextParser):
 		
 		corpus = self.corpus
 		
-		encoding = getencoding(root.strip())			
-		
-		f = codecs.open(root.strip(), encoding=encoding)
+		f = codecs.open(root.strip(), encoding='utf-8')
 		data = f.read()
 		f.close()
 	

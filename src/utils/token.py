@@ -5,9 +5,6 @@ Created on Mar 21, 2014
 '''
 from utils.string_utils import string_compare_with_processing
 import re
-from xigt.core import Item
-from collections import OrderedDict
-import sys
 
 #===============================================================================
 # Main Token Class
@@ -17,8 +14,6 @@ class Token(object):
 
 	def __init__(self, content, **kwargs):
 		
-
-
 		self.content = content
 		self.start = kwargs.get('start')
 		self.stop = kwargs.get('stop')
@@ -26,18 +21,19 @@ class Token(object):
 		self.attributes = {}
 		self._parent = kwargs.get('parent')
 		
-		
-		
 
 	def __str__(self):
-		return '<%s %s [%s:%s]>' % (self.__class__.__name__, self.content, self.start, self.stop)
+		return self.content
 	
 	def __repr__(self):
-		return str(self)
+		return '<%s %s>' % (self.__class__.__name__, self.content)
 	
 	@property
 	def parent(self):
 		return self._parent
+	
+	def lower(self):
+		return str(self).lower()
 	
 	@parent.setter
 	def parent(self, v):
@@ -59,7 +55,7 @@ class Token(object):
 		return self.content
 		
 	def __eq__(self, o):
-		return o and o.content == self.content and self.index == o.index
+		return str(self) == str(o)
 		
 	def morphs(self, **kwargs):
 		for morph in self.morphed_tokens():
@@ -79,10 +75,7 @@ class Token(object):
 			yield(Morph.fromToken(morph, parent=self))	
 		
 	def morphequals(self, o, **kwargs):
-		if not isinstance(o, Token):
-			raise TokenException('Attempt to compare {0} to non-{0}'.format(self.__class__.__name__))
-		else:
-			return string_compare_with_processing(self.seq, o.seq, **kwargs)
+		return string_compare_with_processing(self.seq, o.seq, **kwargs)
 		
 #===============================================================================
 # POSToken

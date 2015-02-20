@@ -6,8 +6,6 @@ Created on Sep 6, 2013
 import re
 from nltk.corpus.reader.util import read_sexpr_block
 import nltk.tree
-import sys
-import chardet
 
 
 def break_bracket(bracket_string):

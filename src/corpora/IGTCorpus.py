@@ -118,8 +118,8 @@ class IGTCorpus(rgx.RGCorpus):
 			i = IGTInstance.fromXigt(igt)
 			
 			# Initialize the whole-word sentence...
-			g_s = Sentence.fromTier(i.gloss)
-			t_s = Sentence.fromTier(i.trans)
+			g_s = Sentence(i.gloss)
+			t_s = Sentence(i.trans)
 			
 			# Now, get the morphs from the sentence...
 			g_m = g_s.morphs()
@@ -551,7 +551,7 @@ class IGTInstance(rgx.RGIgt):
 		# -- 3) If the phrase tier already exists, get it.
 		phrase_tier = [tier for tier in self if tier.type == phrase_name]
 		if phrase_tier:
-			phrase_tier = rgx.RGTier.fromTier(phrase_tier[0])
+			phrase_tier = rgx.RGTier(phrase_tier[0])
 			
 		# -- 4) If such a phrase tier does not exist, create it.
 		else:
@@ -736,7 +736,7 @@ class IGTInstance(rgx.RGIgt):
 			gloss_tokens = gloss
 			trans_tokens = trans
 
-		alignments = get_alignments(gloss_tokens, trans_tokens, **kwargs)
+		alignments = heur_alignments(gloss_tokens, trans_tokens, **kwargs)
 		
 		for a, b in alignments:
 			aln.add((a, b))
@@ -748,7 +748,7 @@ class IGTInstance(rgx.RGIgt):
 		
 		if kwargs.get('grams_on', True):
 			kwargs['gloss_on'] = True
-			gloss_alignments = get_alignments(gloss_tokens, trans_tokens, **kwargs)
+			gloss_alignments = heur_alignments(gloss_tokens, trans_tokens, **kwargs)
 			
 			for a, b in gloss_alignments:
 				aln.add((a, b))
@@ -763,7 +763,7 @@ class IGTInstance(rgx.RGIgt):
 	
 	
 
-def get_alignments(gloss_tokens, trans_tokens, iteration=1, **kwargs):
+def heur_alignments(gloss_tokens, trans_tokens, iteration=1, **kwargs):
 	
 	alignments = set([])
 		
@@ -803,7 +803,7 @@ def get_alignments(gloss_tokens, trans_tokens, iteration=1, **kwargs):
 	if iteration == 2 or kwargs.get('no_multiples', False):
 		return alignments
 	else:
-		return alignments | get_alignments(gloss_tokens, trans_tokens, iteration+1, **kwargs)
+		return alignments | heur_alignments(gloss_tokens, trans_tokens, iteration+1, **kwargs)
 	
 		
 	
@@ -1042,28 +1042,28 @@ class getAlignmentsTest(unittest.TestCase):
 		
 		o1 = IGTToken('to-me')
 		
-		self.assertEquals(get_alignments(t1.morphs(), t2.morphs()), set([(1,2),(2,3),(2,4),(3,6),(3,7),(4,5),(5,8),(5,9),(6,10)]))
+		self.assertEquals(heur_alignments(t1.morphs(), t2.morphs()), set([(1,2),(2,3),(2,4),(3,6),(3,7),(4,5),(5,8),(5,9),(6,10)]))
 		
 		t3 = IGTTier.fromString('your house is on your side of the street')
 		t4 = IGTTier.fromString('your house is on your side of your street')
 		
-		self.assertEquals(get_alignments(t3.morphs(), t4.morphs()), {(5, 5), (6, 6), (4, 4), (7, 7), (9, 9), (2, 2), (1, 1), (5, 8), (3, 3)})
+		self.assertEquals(heur_alignments(t3.morphs(), t4.morphs()), {(5, 5), (6, 6), (4, 4), (7, 7), (9, 9), (2, 2), (1, 1), (5, 8), (3, 3)})
 		
 		t5 = IGTTier.fromString('the dog.NOM ran alongside the other dog')
 		t6 = IGTTier.fromString('the dog runs alongside the other dog')
 		
-		self.assertEquals(get_alignments(t5.morphs(), t6.morphs()), {(1,1), (2,2), (3,3), (4,4), (5, 5), (6, 6), (7, 7)})
+		self.assertEquals(heur_alignments(t5.morphs(), t6.morphs()), {(1,1), (2,2), (3,3), (4,4), (5, 5), (6, 6), (7, 7)})
 		
 		t7 = IGTTier.fromString('lizard-PL and gila.monster-PL here rest.PRS .')
 		t8 = IGTTier.fromString('The lizards and the gila monsters are resting here .')
 		
-		self.assertEquals(get_alignments(t7.morphs(), t8.morphs()), {(1,2), (2, 3), (3, 5), (3, 6), (4, 9), (5, 8), (6, 10)})
+		self.assertEquals(heur_alignments(t7.morphs(), t8.morphs()), {(1,2), (2, 3), (3, 5), (3, 6), (4, 9), (5, 8), (6, 10)})
 		
 		t10 = IGTTier.fromString('Peter something buy.PRS and something sell.PRS .')
 		t9 = IGTTier.fromString('Pedro buys and sells something .')
 		
 		
-		self.assertEquals(get_alignments(t10.morphs(), t9.morphs()), {(2,5), (3,2), (4,3), (5, 5), (6, 4), (7, 6)})
+		self.assertEquals(heur_alignments(t10.morphs(), t9.morphs()), {(2,5), (3,2), (4,3), (5, 5), (6, 4), (7, 6)})
 		
 		
 class AlignContains(unittest.TestCase):

@@ -5,8 +5,7 @@ Subclassing of the xigt package to add a few convenience methods.
 '''
 import xigt.core
 from xigt.core import Metadata, Meta, Tier, Item, Igt,\
-	get_alignment_expression_ids, XigtCorpus, XigtAttributeMixin
-import sys
+	get_alignment_expression_ids, XigtCorpus
 import re
 from xigt.codecs import xigtxml
 from unittest.case import TestCase
@@ -20,11 +19,18 @@ from collections import defaultdict
 import interfaces.giza
 from utils.setup_env import c
 from unittest.suite import TestSuite
-from alignment.Alignment import Alignment
+from alignment.Alignment import Alignment, heur_alignments
 from interfaces.mallet_maxent import MalletMaxent
 import pickle
 from interfaces.stanford_tagger import StanfordPOSTagger
+from logging import getLogger
+import logging
+from utils.token import Token
 
+#===============================================================================
+# Logging
+#===============================================================================
+PARSELOG = getLogger('textparse')
 
 #===============================================================================
 # Exceptions
@@ -118,8 +124,9 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 	def __len__(self):
 		return len(self._list)
 	
+	
 	@classmethod
-	def from_txt(cls, path):
+	def from_txt(cls, path, require_trans = True):
 		'''
 		Read in a odin-style textfile to create the xigt corpus.
 		 
@@ -136,9 +143,34 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		
 		# Read all the text lines
 		inst_txts = re.findall('doc_id=[\s\S]+?\n\n', data)
+		
+		parsed = 0
 		for inst_txt in inst_txts:
-			i = RGIgt.fromString(inst_txt, corpus=xc)
-			xc.add(i)
+			
+			if parsed % 250 == 0:
+				logging.warning('Instance %d...' % parsed)
+			
+			try:
+				i = RGIgt.fromString(inst_txt, corpus=xc)
+				
+				# Also check optional requirements passed in
+				trans_constraint = (not require_trans) or i.trans
+				
+				# If the constraints are satisfied, add it to the corpus.
+				if trans_constraint:
+					xc.add(i)
+			except GlossLangAlignException as glae:
+				PARSELOG.debug(glae)
+			except NoGlossLineException as ngle:
+				PARSELOG.debug(ngle)
+			except NoLangLineException as nlle:
+				PARSELOG.debug(nlle)
+			except NoTransLineException as ntle:
+				PARSELOG.debug(ntle)
+			
+			
+			parsed += 1
+				
 			
 		# Return the corpus
 		return xc
@@ -164,7 +196,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 			
 		return xc
 	
-	def giza_align(self):
+	def giza_align_t_g(self):
 		'''
 		Perform giza alignments on the gloss and translation
 		lines.
@@ -188,7 +220,26 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		for g_t_asent, igt in zip(g_t_asents, self):
 			t_g_aln = g_t_asent.aln.flip()
 			igt.set_bilingual_alignment(igt.trans, igt.glosses, t_g_aln)
+			
+	def giza_align_l_t(self):
+		'''
+		Perform giza alignments directly from language to translation lines, for comparison
 		
+		:rtype: Alignment
+		'''
+		
+		l_sents = [i.lang.text().lower() for i in self]
+		t_sents = [i.trans.text().lower() for i in self]
+		
+		
+		
+			
+	def heur_align(self):
+		'''
+		Perform heuristic alignment between the gloss and translation.
+		'''
+		for igt in self:
+			g_heur_aln = igt.heur_align()
 		
 		
 		
@@ -371,18 +422,11 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		inst.add(rt)
 		
 		# --- 4) Do the enriching if necessary
-		try:
-			inst.enrich_instance()
-		except GlossLangAlignException as glae:
-			sys.stderr.write('Could not get gloss/lang alignment for IGT instance "%s"\n' % inst.id)
-		except NoGlossLineException as ngle:
-			sys.stderr.write('No gloss line available for IGT instance "%s"\n' % inst.id)
-		except NoLangLineException as nlle:
-			sys.stderr.write('No lang line available for IGT instance "%s"\n' % inst.id)
+		inst.basic_processing()
 		
 		return inst
 		
-	def enrich_instance(self):
+	def basic_processing(self):
 		# Create the clean tier
 		self.clean_tier()
 		self.normal_tier()
@@ -409,7 +453,9 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 		# And do word-to-word alignment if it's not already done.
 		if not self.gloss.alignment:
-			self.gloss.word_align(self.lang) 
+			self.gloss.word_align(self.lang)
+		
+	def enrich_instance(self):
 			
 		# Finally, do morpheme-to-morpheme alignment between gloss
 		# and language if it's not already done...
@@ -523,6 +569,10 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		'''
 		return self.get_bilingual_alignment(self.trans.id, self.glosses.id)
 		
+	#===========================================================================
+	# ALIGNMENT STUFF
+	#===========================================================================
+		
 	def get_bilingual_alignment(self, src_id, tgt_id):
 		'''
 		Retrieve the bilingual alignment (assuming that the source tier is
@@ -580,6 +630,27 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			
 		self.add(ba_tier)
 			
+	def heur_align(self, **kwargs):
+		'''
+		Heuristically align the gloss and translation lines of this instance.
+		'''
+		
+		# If given the "tokenize" option, use the tokens
+		# split at the morpheme level
+		
+		if kwargs.get('tokenize', True):
+			gloss_tokens = self.glosses.tokens()
+		else:
+			gloss_tokens = self.gloss.tokens()
+			
+		trans_tokens = self.trans.tokens()
+		
+		aln = heur_alignments(gloss_tokens, trans_tokens, **kwargs).flip()
+		
+		# Now, add these alignments as bilingual alignments...
+		self.set_bilingual_alignment(self.trans, self.glosses, aln)
+		
+		
 			
 	#===========================================================================
 	# Now for some of the POS stuff
@@ -867,13 +938,13 @@ class RGTier(xigt.core.Tier, RecursiveFindMixin):
 		Return a whitespace-delimeted string consisting of the
 		elements of this tier.
 		'''
-		return ' '.join(self.tokens())
+		return ' '.join([str(i) for i in self.tokens()])
 	
 	def tokens(self):
 		'''
 		Return a list of the content of this tier.
 		'''
-		return [i.get_content() for i in self]
+		return [Token(i.get_content(), index=i.index) for i in self]
 
 	@property
 	def index(self):
@@ -1178,6 +1249,22 @@ class XigtParseTest(TestCase):
 		
 	def xigt_load_test(self):
 		pass
+	
+	def giza_align_test(self):
+		self.xc.giza_align_t_g()
+		giza_aln = self.xc[0].get_trans_gloss_alignment()
+		
+		giza_a = Alignment([(3, 2), (2, 8), (5, 7), (4, 3), (1, 1), (6, 5)])
+		
+		self.assertEquals(giza_a, giza_aln)
+		
+	def heur_align_test(self):
+		self.xc.heur_align()
+		aln = self.xc[0].get_trans_gloss_alignment()
+		a = Alignment([(5, 7), (6, 5), (1, 1), (4, 3)])
+		self.assertEquals(a, aln)
+		
+	
 
 class POSTestCase(TestCase):
 	
@@ -1208,4 +1295,6 @@ line=961 tag=T:     `I made the child eat rice.\''''
 	def test_tag_trans_line(self):
 		tagger = StanfordPOSTagger(c['stanford_tagger_trans'])
 		self.igt.tag_trans_pos(tagger)
+		
+
 	

@@ -5,12 +5,10 @@ Created on Oct 22, 2013
 '''
 from optparse import OptionParser
 import sys
-from utils.commandline import require_opt
 from utils.ConfigFile import ConfigFile
 from utils.TwoLevelCountDict import TwoLevelCountDict
 from utils.SetDict import SetDict
 import re
-from utils.encodingutils import getencoding
 import codecs
 
 def get_prototypes(tagged_path, proto_out, delimeter, 

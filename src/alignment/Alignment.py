@@ -531,6 +531,58 @@ class MorphAlign(Alignment):
 	def remapping(self):
 		return self._remapping
 
+def heur_alignments(gloss_tokens, trans_tokens, iteration=1, **kwargs):
+	'''
+	Obtain heuristic alignments between gloss and translation tokens
+	
+	:param gloss_tokens: The gloss tokens
+	:type gloss_tokens: [Token]
+	:param trans_tokens: The trans tokens
+	:type trans_tokens: [Token]
+	:param iteration: Number of iterations looking for matches
+	:type iteration: int
+	'''
+	
+	alignments = Alignment()
+		
+	# For the second iteration
+	if iteration>1:
+		gloss_tokens = gloss_tokens[::-1]
+		trans_tokens = trans_tokens[::-1]
+	
+	for gloss_token in gloss_tokens:
+		
+		for trans_token in trans_tokens:
+			
+			if gloss_token.morphequals(trans_token, **kwargs):
+				# Get the alignment count
+				trans_align_count = trans_token.attrs.get('align_count', 0)
+				gloss_align_count = gloss_token.attrs.get('align_count', 0)
+				
+				
+				# Only align with tokens 
+				if trans_align_count == 0 or kwargs.get('no_multiples', False):
+					trans_token.attrs['align_count'] = trans_align_count+1
+					gloss_token.attrs['align_count'] = gloss_align_count+1
+					alignments.add((gloss_token.index, trans_token.index))
+					
+					# Stop aligning this gloss token for this iteration.
+					break
+				
+				# If we're on the second pass and the gloss wasn't aligned, align
+				# it to whatever remains.
+				elif gloss_align_count == 0 and iteration == 2:
+					trans_token.attrs['align_count'] = trans_align_count+1
+					gloss_token.attrs['align_count'] = gloss_align_count+1
+					alignments.add((gloss_token.index, trans_token.index))
+				
+				
+	
+	if iteration == 2 or kwargs.get('no_multiples', False):
+		return alignments
+	else:
+		return alignments | heur_alignments(gloss_tokens, trans_tokens, iteration+1, **kwargs)
+
 #===============================================================================
 # Unit tests
 #===============================================================================

@@ -14,7 +14,7 @@ def xigt_process(xigt_corpus, out_xml):
 	@param xigt_corpus:
 	'''
 	
-	xigt_corpus.giza_align()
+	xigt_corpus.giza_align_g_t()
 	xigtxml.dump(out_xml, xigt_corpus)
 					
 

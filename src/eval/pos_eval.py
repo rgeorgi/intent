@@ -24,10 +24,6 @@ from argparse import ArgumentParser
 from utils import ConfigFile
 import re
 from eval.EvalException import POSEvalException, EvalException
-from pos.TagMap import TagMap
-from utils.encodingutils import getencoding
-from utils.CountDict import CountDict
-from utils.StatDict import StatDict
 from utils.TwoLevelCountDict import TwoLevelCountDict, POSEvalDict
 from corpora.POSCorpus import POSCorpus
 
