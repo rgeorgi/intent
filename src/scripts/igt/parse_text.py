@@ -5,8 +5,6 @@ Created on Apr 30, 2014
 
 @author: rgeorgi
 '''
-from corpora.IGTCorpus import IGTCorpus, IGTProjectionException,\
-	IGTGlossLangLengthException, IGTAlignmentException
 from interfaces.mallet_maxent import MalletMaxent
 import pickle
 from argparse import ArgumentParser
@@ -17,6 +15,7 @@ from interfaces.stanford_tagger import StanfordPOSTagger
 import logging
 import os
 import sys
+from igt.rgxigt import RGCorpus
 
 projection_logger = logging.getLogger('projection')
 classification_logger = logging.getLogger('classification')
@@ -31,8 +30,8 @@ if __name__ == '__main__':
 	c = ConfigFile(args.conf)
 	
 	# Build the corpus...
-	corp = IGTCorpus.from_text(c.get('txt_path', t=existsfile),
-					merge=True, mode='full')
+	corp = RGCorpus.from_txt(c.get('txt_path', t=existsfile))
+
 
 	posdict = pickle.load(open(c.get('posdict', t=existsfile), 'rb'))
 

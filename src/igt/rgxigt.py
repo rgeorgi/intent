@@ -119,6 +119,31 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		return len(self._list)
 	
 	@classmethod
+	def from_txt(cls, path):
+		'''
+		Read in a odin-style textfile to create the xigt corpus.
+		 
+		:param path: Path to the text file
+		:type path: str
+		'''
+		# Initialize the corpus
+		xc = cls()
+		
+		# Open the textfile and read the contents...
+		f = open(path, 'r', encoding='utf-8')
+		data = f.read()
+		f.close()
+		
+		# Read all the text lines
+		inst_txts = re.findall('doc_id=[\s\S]+?\n\n', data)
+		for inst_txt in inst_txts:
+			i = RGIgt.fromString(inst_txt, corpus=xc)
+			xc.add(i)
+			
+		# Return the corpus
+		return xc
+	
+	@classmethod
 	def load(cls, path):
 		xc = xigtxml.load(path)
 		
@@ -175,7 +200,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 
 	def __init__(self, **kwargs):
-		super().__init__()
+		super().__init__(**kwargs)
 		
 		# Add a default bit of metadata...
 		self.metadata = [RGMetadata(type='xigt-meta', 
@@ -235,97 +260,100 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		else:
 			return raw_tier
 	
-	def clean_tier(self, merge=True):
+	def clean_tier(self):
 		'''
 		If the clean odin tier exists, return it. Otherwise, create it.
 		'''
 		
 		# If a clean tier already exists, return it.
-		clean_tier = [t for t in self.tiers if t.type == 'odin' and t.attributes['state'] == 'normalized']
+		clean_tier = self.find(type='odin', attributes={'state':'clean'})
 		if clean_tier:
-			return clean_tier[0]
+			return clean_tier
 		
 		else:
 			# Otherwise, we will make our own:
 			raw_tier = self.raw_tier()
 			
-			raw_l_s = [i for i in raw_tier if 'L' in i.attributes['tag']]
-			raw_g_s = [i for i in raw_tier if 'G' in i.attributes['tag']]
-			raw_t_s = [i for i in raw_tier if 'T' in i.attributes['tag']]
-			
-			# Execute errors if a given line is not found...
-			if not raw_t_s:
-				raise NoTransLineException('No translation line found in instance "%s"' % self.id)
-			if not raw_g_s:
-				raise NoGlossLineException('No gloss line found in instance "%s"' % self.id)
-			if not raw_l_s:
-				raise NoLangLineException('No language line found in instance "%s"' % self.id)
-			
-			
-			
 			# Now, create the normalized and clean tiers...
 			clean_tier = RGLineTier(id = 'c', type='odin',
 									 attributes={'state':'clean', 'alignment':raw_tier.id})
+
+			# Create the clean tier...			
+			for raw in raw_tier:
+				clean_tier.add(RGLine(id=clean_tier.askItemId(), alignment=raw.id, tier=clean_tier, attributes={'tag':raw.attributes['tag']},
+										text=raw.text))
+			self.add(clean_tier)
+			return clean_tier
 			
-			# TODO: this
-			normal_tier = RGLineTier(id = 'n', type='odin',
-									 attributes={'state':'normalized', 'alignment':clean_tier.id})
+	def add_normal_line(self, normal_tier, tag, cleaning_func, merge=True):
+		'''
+		Grab the raw lines and add a normalized line, if one with that tag exists. 
+		
+		:param tier:
+		:type tier:
+		:param tag:
+		:type tag:
+		'''
+		raw_tier = self.raw_tier()
+		raw_lines = [i for i in raw_tier if tag in i.attributes['tag']]
+		
+		# If there are raw lines to work with...
+		if raw_lines:
+			norm_line = RGLine(id=normal_tier.askItemId(), alignment=raw_lines[0].id, tier=normal_tier, attributes={'tag':tag})
 			
-			
-			
-			# Initialize the new lines...
-			l_norm = RGLine(id='n1', alignment=raw_l_s[0].id, tier=normal_tier, attributes={'tag':'L'})
-			g_norm = RGLine(id='n2', alignment=raw_g_s[0].id, tier=normal_tier, attributes={'tag':'G'})
-			t_norm = RGLine(id='n3', alignment=raw_t_s[0].id, tier=normal_tier, attributes={'tag':'T'})
-			
-			# Either merge the lines to create single lines, or just take
-			# the first...
-				
+			# Set the content dependent upon whether we are merging or just taking the first line
 			if merge:
-				l_cont = merge_lines([l.get_content() for l in raw_l_s])
-				g_cont = merge_lines([g.get_content() for g in raw_g_s])
-				t_cont = merge_lines([t.get_content() for t in raw_t_s])
+				norm_cont = merge_lines([l.get_content() for l in raw_lines])
 				
-				# Make sure the alignment is updated if we do merge lines.
-				l_norm.alignment = ','.join([l.id for l in raw_l_s])
-				g_norm.alignment = ','.join([g.id for g in raw_g_s])
-				t_norm.alignment = ','.join([t.id for t in raw_t_s])
-	
+				# Update the alignment if we do merge...
+				norm_line.alignment = ','.join([l.id for l in raw_lines])
 			else:
-				l_cont = raw_l_s[0]
-				g_cont = raw_g_s[0]
-				t_cont = raw_t_s[0]
+				# Otherwise, just take the first line.
+				norm_cont = raw_lines[0].get_content()
 				
-			# Now clean the various strings....
-			l_cont = clean_lang_string(l_cont)
-			g_cont = clean_gloss_string(g_cont)
-			t_cont = clean_trans_string(t_cont)
-				
-			# Set the item's text to the cleaned result....
-			l_norm.text = l_cont
-			g_norm.text = g_cont
-			t_norm.text = t_cont
 			
-			# Add the normalized lines to the tier...
-			normal_tier.add_list([l_norm, g_norm, t_norm])			
-	
-			# Now, add the normalized tier to ourselves...				
-			self.add(normal_tier)
-			return normal_tier
+			# Finally, clean the content accordingly...
+			norm_cont = cleaning_func(norm_cont)
+			norm_line.text = norm_cont
+			normal_tier.add(norm_line)
+		
+			
+	def normal_tier(self, merge = True):
+			# If a clean tier already exists, return it.
+			normal_tier = self.find(type='odin', attributes={'state':'normalized'})
+			if normal_tier:
+				return normal_tier
+			else:
+				raw_tier = self.raw_tier()
+				clean_tier = self.clean_tier()
+				
+				normal_tier = RGLineTier(id = 'n', type='odin',
+										 attributes={'state':'normalized', 'alignment':clean_tier.id})
+				
+				self.add_normal_line(normal_tier, 'L', clean_lang_string, merge)
+				self.add_normal_line(normal_tier, 'G', clean_gloss_string, merge)
+				self.add_normal_line(normal_tier, 'T', clean_trans_string, merge)
+				
+				self.add(normal_tier)
+				return normal_tier
 			
 			
 	@classmethod
-	def fromString(cls, string):
+	def fromString(cls, string, corpus = None):
 		'''
 		Method to parse and create an IGT instance from odin-style text.
 		'''
 		
 		# Start by looking for the doc_id, and the line range.
-		doc_re = re.search('doc_id=([0-9]+)\s([0-9]+)\s([0-9]+)\s(.*)\n', string)
+		doc_re = re.search('doc_id=(\S+)\s([0-9]+)\s([0-9]+)\s(.*)\n', string)
 		docid, lnstart, lnstop, tagtypes = doc_re.groups()
 		
+		if corpus:
+			id = corpus.askIgtId()
+		else:
+			id = str(uuid4())
 		
-		inst = cls(id = str(uuid4()), attributes={'doc-id':docid, 
+		inst = cls(id = id, attributes={'doc-id':docid, 
 											'line-range':'%s %s' % (lnstart, lnstop),
 											'tag-types':tagtypes})
 		
@@ -343,18 +371,37 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		inst.add(rt)
 		
 		# --- 4) Do the enriching if necessary
-		inst.enrich_instance()
+		try:
+			inst.enrich_instance()
+		except GlossLangAlignException as glae:
+			sys.stderr.write('Could not get gloss/lang alignment for IGT instance "%s"\n' % inst.id)
+		except NoGlossLineException as ngle:
+			sys.stderr.write('No gloss line available for IGT instance "%s"\n' % inst.id)
+		except NoLangLineException as nlle:
+			sys.stderr.write('No lang line available for IGT instance "%s"\n' % inst.id)
 		
 		return inst
 		
 	def enrich_instance(self):
 		# Create the clean tier
 		self.clean_tier()
+		self.normal_tier()
 		
 		# Create the word and phrase tiers...
-		self.trans
-		self.gloss
-		self.lang
+		try:
+			self.trans
+		except TextParseException:
+			pass
+		
+		try:
+			self.gloss
+		except TextParseException:
+			pass
+		
+		try:
+			self.lang
+		except TextParseException:
+			pass
 		
 		# Create the morpheme tiers...
 		self.glosses
@@ -393,15 +440,27 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 	@property
 	def gloss(self):
-		return self.obtain_phrase_and_words_tiers('G', 'gloss-phrases', 'g', 'gloss-words', 'gw')
+		gt = self.obtain_phrase_and_words_tiers('G', 'gloss-phrases', 'g', 'gloss-words', 'gw')
+		if not gt:
+			raise NoGlossLineException('No gloss line available for igt "%s"' % self.id)
+		else:
+			return gt
 	
 	@property
 	def trans(self):
-		return self.obtain_phrase_and_words_tiers('T', 'translations', 't', 'translation-words', 'tw')
+		tt = self.obtain_phrase_and_words_tiers('T', 'translations', 't', 'translation-words', 'tw')		
+		if not tt:
+			raise NoTransLineException('No trans line available for igt "%s"' % self.id)
+		else:
+			return tt
 		
 	@property
 	def lang(self):
-		return self.obtain_phrase_and_words_tiers('L', 'phrases', 'p', 'words', 'w')	
+		lt = self.obtain_phrase_and_words_tiers('L', 'phrases', 'p', 'words', 'w')
+		if not lt:
+			raise NoLangLineException('No lang line available for igt "%s"' % self.id)
+		else:
+			return lt
 			
 	def obtain_phrase_and_words_tiers(self, orig_tag, phrase_name, phrase_letter, words_name, words_letter):
 		'''
@@ -414,42 +473,48 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		@param words_name: The type of the tier used for the words.
 		@param words_letter: The letter used for the id of the words tier.
 		'''
-		c = self.clean_tier()
 		
-		# -- 1) Retrieve the original line from the clean tier.
-		line = [l for l in c if orig_tag in l.attributes['tag']][0]
-				
-		# -- 2) If the phrase tier already exists, get it.
-		phrase_tier = self.find(id = phrase_letter)
-		if phrase_tier:
-			phrase_tier.__class__ = RGPhraseTier
-
-			
-		# -- 4) If such a phrase tier does not exist, create it.
-		else:
-			phrase_tier = RGPhraseTier(id=phrase_letter, type=phrase_name, attributes={'content':c.id}, igt=self)
-			phrase_item = RGPhrase(id='%s1' % phrase_letter, content=line.id, tier=phrase_tier)
-			phrase_tier.add(phrase_item)
-			self.add(phrase_tier)
-			
-							
-		# -- 5) Finally, get the words tier if it exists.
-		words_tier = self.find(id = words_letter)
-		if words_tier:
-			words_tier.__class__ = RGWordTier
-			return words_tier
+		# Make sure we've run the normalization...
+		c = self.normal_tier()
 		
-		# -- 6) ...otherwise, create it.
+		# If we still don't have a normalized line, throw an exception...
+		line = c.find(attributes={'tag':orig_tag})
+		if not line:
+			return None
+		
 		else:
-			phrase = phrase_tier[0]
-			phrase.__class__ = RGPhrase
-			words_tier = phrase.words_tier(words_name, words_letter)
-				
-			# -- 6) Add the created translation-word tier to the instance
-			self.add(words_tier)
 			
-			# -- 7) Finally, return the translation word tier.
-			return words_tier
+			# -- 2) If the phrase tier already exists, get it.
+			phrase_tier = self.find(id = phrase_letter)
+			if phrase_tier:
+				phrase_tier.__class__ = RGPhraseTier
+	
+				
+			# -- 4) If such a phrase tier does not exist, create it.
+			else:
+				phrase_tier = RGPhraseTier(id=phrase_letter, type=phrase_name, attributes={'content':c.id}, igt=self)
+				phrase_item = RGPhrase(id='%s1' % phrase_letter, content=line.id, tier=phrase_tier)
+				phrase_tier.add(phrase_item)
+				self.add(phrase_tier)
+				
+								
+			# -- 5) Finally, get the words tier if it exists.
+			words_tier = self.find(id = words_letter)
+			if words_tier:
+				words_tier.__class__ = RGWordTier
+				return words_tier
+			
+			# -- 6) ...otherwise, create it.
+			else:
+				phrase = phrase_tier[0]
+				phrase.__class__ = RGPhrase
+				words_tier = phrase.words_tier(words_name, words_letter)
+					
+				# -- 6) Add the created translation-word tier to the instance
+				self.add(words_tier)
+				
+				# -- 7) Finally, return the translation word tier.
+				return words_tier
 		
 	def get_trans_gloss_alignment(self):
 		'''
