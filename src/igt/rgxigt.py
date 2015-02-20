@@ -19,6 +19,8 @@ import utils.token
 from collections import defaultdict
 import interfaces.giza
 from utils.setup_env import c
+from unittest.suite import TestSuite
+from alignment.Alignment import Alignment
 
 
 #===============================================================================
@@ -47,8 +49,48 @@ class GlossLangAlignException(RGXigtException):
 	pass
 
 #===============================================================================
+# Mixins
+#===============================================================================
 
-class RGCorpus(xigt.core.XigtCorpus):
+class RecursiveFindMixin(object):
+	'''
+	Enable recursive search on items that have iterable elements and attributes.
+	
+	WARNING: This stops on the first match.
+	'''
+	
+	def find(self, id=None, attributes=None):
+		if id and self.id == id:
+			return self
+		
+		# Otherwise, if the attribute pairs are
+		# a subset of the ones for this thing...
+		elif attributes and set(attributes.items()).issubset(set(self.attributes.items())):
+			return self
+		
+		else:
+			found = None
+			for child in self:
+				found = child.find(id=id, attributes=attributes)
+				if found:
+					break
+			return found
+				
+class FindMixin(object):
+	'''
+	Extension of the recursive search for non-iterable elements.
+	'''
+	
+	def find(self, id=None, attributes=None):
+		if id and self.id == id:
+			return self
+		elif attributes and set(attributes.items()).issubset(set(self.attributes.items())):
+			return self
+		else:
+			return None
+#===============================================================================
+
+class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 	def delUUIDs(self):
 		for i in self.igts:
 			i.delUUIDs()
@@ -71,6 +113,10 @@ class RGCorpus(xigt.core.XigtCorpus):
 			
 			for tier in igt.tiers:
 				tier.__class__ = RGTier
+				
+				for i, item in enumerate(tier):
+					tier.__class__ = RGItem
+					tier.index = i+1
 				
 			igt.enrich_instance()
 			
@@ -97,18 +143,20 @@ class RGCorpus(xigt.core.XigtCorpus):
 # IGT Class
 #===============================================================================
 
-class RGIgt(xigt.core.Igt):
+class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 
 	def __init__(self, **kwargs):
 		super().__init__()
 		
-		# Add a default, blank metadata tier.
-		mdt = RGMetadata(type='xigt-meta')
-		self.add(mdt)
-		
-		# Also, by default, glosses and translations are in English.
-		l = RGMeta(type='language', attributes={'name':'english', 'iso-639-3':'eng','tiers':'glosses translations'})
-		mdt.add(l)
+		# Add a default bit of metadata...
+		self.metadata = [RGMetadata(type='xigt-meta', 
+								text=[RGMeta(type='language', 
+											 attributes={'name':'english', 
+														'iso-639-3':'eng',
+														'tiers':'glosses translations'}
+											)])]
+
+		#self.metadata = mdt
 
 	@classmethod
 	def fromXigt(cls, o, **kwargs):
@@ -373,25 +421,71 @@ class RGIgt(xigt.core.Igt):
 			# -- 7) Finally, return the translation word tier.
 			return words_tier
 		
-	def findId(self, id):
+	def get_trans_gloss_alignment(self):
 		'''
-		Recursively search for a given ID through the tier and its items. 
+		Convenience method for getting the trans-word to gloss-morpheme
+		bilingual alignment.
 		'''
-		if self.id == id:
-			return self
-		else:
-			found = None
-			for tier in self:
-				found = tier.findId(id)
-				if found:
-					break
-			return found
+		return self.get_bilingual_alignment(self.trans.id, self.glosses.id)
+		
+	def get_bilingual_alignment(self, src_id, tgt_id):
+		'''
+		Retrieve the bilingual alignment (assuming that the source tier is
+		the translation words and that the target tier is the gloss morphemes.)
+		'''
+		# TODO: Make the search for bilingual alignments dynamic
+		ba_tier = self.find(attributes={'source':src_id, 'target':tgt_id})
+		ba_tier.__class__ = RGBilingualAlignmentTier
+		
+		a = Alignment()
+		# Now, iterate through the alignment tier
+		for ba in ba_tier:
+			src_item = self.find(id=ba.source)
+			
+			# There may be multiple targets, so get all the ids
+			# and find them...
+			tgt_ids = get_alignment_expression_ids(ba.target)
+			for tgt in tgt_ids:
+				tgt_item = self.find(id=tgt)
+				a.add((src_item.index, tgt_item.index))
+				
+		return a
+		
+	def set_bilingual_alignment(self, src_tier, tgt_tier, aln):
+		'''
+		Specify the source tier and target tier, and create a bilingual alignment tier
+		between the two, using the indices specified by the Alignment aln.
+		'''
+				
+		
+		# Just to make things neater, let's sort the alignment by src index.
+		aln = sorted(aln, key = lambda x: x[0])
+		
+		# Start by creating the alignment tier.
+		#
+		# TODO: Make this dynamic, allowing for multiple alignment tiers
+		#       from different sources. 
+		ba_tier = RGBilingualAlignmentTier(id = 'a', source = src_tier.id, target = tgt_tier.id)
+				
+		for src_i, tgt_i in aln:
+			src_token = src_tier[src_i-1]
+			tgt_token = tgt_tier[tgt_i-1]
+			
+			ba_tier.add_pair(src_token.id, tgt_token.id)
+			
+		self.add(ba_tier)
+			
+			
+			
+			
+			
+		
 
 #===============================================================================
 # Items
 #===============================================================================
 		
-class RGItem(xigt.core.Item):
+class RGItem(xigt.core.Item, FindMixin):
 	'''
 	Subclass of the xigt core "Item."
 	'''
@@ -427,11 +521,6 @@ class RGItem(xigt.core.Item):
 		if 'uuid' in self.attributes:
 			del self.attributes['uuid']
 			
-	def findId(self, id):
-		if self.id == id:
-			return self
-		else:
-			return None
 			
 
 class RGLine(RGItem):
@@ -493,20 +582,53 @@ class RGMorph(RGToken):
 		elif self.segmentation:
 			id = get_alignment_expression_ids(self.segmentation)[0]
 
-		word = self.tier.igt.findId(id)
+		word = self.tier.igt.find(id=id)
 		word.__class__ = RGWord
 		return word
 			
 			
 		
+class RGBilingualAlignment(RGItem):
+	'''
+	Item to hold a bilingual alignment.
+	'''
+	def __init__(self, source=None, target=None, **kwargs):
+		super().__init__(**kwargs)
 		
+		if source:
+			self.attributes['source'] = source
+		if target:
+			self.attributes['target'] = target
+			
+	def add_tgt(self, tgt):
+		if self.attributes['target']:
+			self.attributes['target'] += ','+tgt
+		else:
+			self.attributes['target'] = tgt
+			
+		
+	@property	
+	def source(self):
+		if 'source' in self.attributes:
+			return self.attributes['source']
+		else:
+			return None
+		
+	@property
+	def target(self):
+		if 'target' in self.attributes:
+			return self.attributes['target']
+		else:
+			return None
+			
+	
 	
 
 #===============================================================================
 # Tiers
 #===============================================================================
 
-class RGTier(xigt.core.Tier):
+class RGTier(xigt.core.Tier, RecursiveFindMixin):
 	
 	@classmethod
 	def fromTier(cls, t):
@@ -525,6 +647,15 @@ class RGTier(xigt.core.Tier):
 			retlist.extend(i.findUUID(uu))
 			
 		return retlist
+	
+	def add(self, obj):
+		'''
+		Override the default add method to place indices on
+		elements.
+		'''
+		obj.index = len(self)+1
+		xigt.core.Tier.add(self, obj)
+		
 	
 	def findAttr(self, key, value):
 		found = None
@@ -560,22 +691,47 @@ class RGTier(xigt.core.Tier):
 		Return a list of the content of this tier.
 		'''
 		return [i.get_content() for i in self]
+
 	
-	def findId(self, id):
+#===============================================================================
+# Bilingual Alignment Tier
+#===============================================================================
+class RGBilingualAlignmentTier(RGTier):
+	'''
+	Special tier type for handling bilingual alignments.
+	'''
+	def __init__(self, source=None, target=None, **kwargs):
+		super().__init__(type='bilingual-alignments', **kwargs)
+		
+		if source:
+			self.attributes['source'] = source
+		
+		if target:
+			self.attributes['target'] = target
+	
+		
+			
+	def add_pair(self, src, tgt):
 		'''
-		Recursively search for a given ID in this tier and its
-		items. 
+		Add a (src,tgt) pair of ids to the tier if they are not already there,
+		otherwise add the tgt on to the src. (We are operating on the paradigm
+		here that the source can specify multiple target ids, but only one srcid
+		per item).
 		'''
-		if self.id == id:
-			return self
+		i = self.find(attributes={'source':src, 'target':tgt})
+		
+		# If the source is not found, add
+		# a new item.
+		if not i:
+			 ba = RGBilingualAlignment(id=self.askItemId(), source=src, target=tgt)
+			 self.add(ba)
+			 
+		# If the source is already here, add the target to its
+		# target refs.
 		else:
-			found = None
-			for item in self:
-				item.__class__ = RGItem
-				found = item.findId(id)
-				if found:
-					break
-			return found
+			i.attributes['target'] += ',' + tgt
+		
+	
 	
 
 class RGLineTier(RGTier):
@@ -592,6 +748,53 @@ class RGTokenTier(RGTier):
 	'''
 	Tier type that can be considered to contain tokens.
 	'''
+	
+	def get_aligned_tokens(self):
+		'''
+		Function to return the alignment indices between this tier and another
+		it is aligned with.
+		'''
+		
+		a = Alignment()
+		for item in self:
+			ia = item.alignment
+			if ia:
+				aligned_w = self.igt.find(id=ia)
+				a.add((item.index, aligned_w.index))
+		return a
+	
+	def set_aligned_tokens(self, tgt_tier, aln, aln_method=None):
+		'''
+		Given an alignment, set the alignments correspondingly.
+		
+		NOTE: This function should only be used for the alignment="" attribute, which is
+			  reserved for aligning items of the same supertype. (e.g. morphemes and glosses)
+			  and SHOULD NOT be used for aligning, say, gloss morphs to the translation line.
+		'''
+		# First, set our alignment target to the provided
+		# tier.
+		self.alignment = tgt_tier.id
+		
+		# Set the alignment method if we have it specified.
+		#self.attributes['']
+		self.metadata = [RGMetadata(type='xigt-meta',attributes={'alignment-method':'giza'},text=[RGMeta(type='alignment-method', attributes={'alignment-method':'giza'})])]
+		
+		# Also, blow away any previous alignments.
+		for item in self:
+			del item.attributes['alignment']
+				
+		
+		# Next, select the items from our tier (src) and tgt tier (tgt)
+		# and align them.
+		for src_i, tgt_i in aln:
+			# Get the tokens (note that the indexing is from 1
+			# when using alignments, as per GIZA standards)
+			src_token = self[src_i-1]
+			tgt_token = tgt_tier[tgt_i-1]
+			
+			src_token.alignment = tgt_token.id
+			
+		
 	
 	
 class RGWordTier(RGTokenTier):
@@ -674,6 +877,7 @@ class RGMorphTier(RGTokenTier):
 			elif len(other_w_list) > 1:
 				other_m = other_w_list.pop(0)
 				m.alignment = other_m.id
+				
 			
 		
 						
@@ -708,11 +912,14 @@ def rgencode(o):
 # Unit Tests
 #===============================================================================
 
+
+		
+		
+
 class TextParseTest(TestCase):
 	
-	def runTest(self):
-		
-		i = '''doc_id=38 275 277 L G T
+	def setUp(self):
+		self.txt = '''doc_id=38 275 277 L G T
 stage3_lang_chosen: korean (kor)
 lang_code: korean (kor) || seoul (kor) || japanese (jpn) || inuit (ike) || french (fra) || malayalam (mal)
 note: lang_chosen_idx=0
@@ -720,6 +927,42 @@ line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
 line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
 line=961 tag=T:     `I made the child eat rice.\''''
 		
-		igt = RGIgt.fromString(i)
-		self.assertEqual(igt.gloss.text(), 'I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec')
-		print(rgencode(igt))
+		self.igt = RGIgt.fromString(self.txt)
+		 
+	
+	def line_test(self):
+		'''
+		Test that lines are rendered correctly.
+		'''
+		self.assertEqual(self.igt.gloss.text(), 'I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec')
+		self.assertEqual(self.igt.trans.text(), 'I made the child eat rice')
+		
+	def glosses_test(self):
+		'''
+		Test that the glosses are rendered correctly.
+		'''
+		self.assertEqual(self.igt.glosses.text(), 'I Nom child Dat rice Acc eat Caus Pst Dec')
+		
+	def word_align_test(self):
+		'''
+		Test that the gloss has been automatically aligned at the word level correctly.
+		'''
+		at = self.igt.gloss.get_aligned_tokens()
+		self.assertEqual(at, Alignment([(1,1),(2,2),(3,3),(4,4)]))
+		
+	def set_align_test(self):
+		'''
+		Check setting alignment attributes between tiers.
+		'''
+		self.igt.gloss.set_aligned_tokens(self.igt.lang, Alignment([(1,1),(2,2)]))
+		self.assertEqual(self.igt.gloss.get_aligned_tokens(), Alignment([(1,1),(2,2)]))
+		
+	def set_bilingual_align_test(self):
+		'''
+		Set the bilingual alignment manually, and ensure that it is read back correctly.
+		'''
+		
+		a = Alignment([(1,1),(1,2),(2,8),(4,3),(5,7),(6,5)])
+		self.igt.set_bilingual_alignment(self.igt.trans, self.igt.glosses, a)
+		
+		self.assertEqual(a, self.igt.get_trans_gloss_alignment())
