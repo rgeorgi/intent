@@ -12,9 +12,10 @@ from interfaces.stanford_tagger import StanfordPOSTagger
 from interfaces import stanford_tagger
 from eval import pos_eval
 from multiprocessing.pool import Pool
+from glob import glob
+from utils.ConfigFile import ConfigFile
 
 def sub_run(sub_train_path, sub_model_path, raw_test_path, sub_tag_path, test_corpus, sub_corpus):
-	print('run')
 	# Next, train the parser.
 	stanford_tagger.train(sub_train_path, sub_model_path)
 	
@@ -49,7 +50,7 @@ def full_run(c):
 	
 	# Now, let's add 100 sentences at a time until we max out.
 	sent_limit = 0
-	p = Pool(4)
+	p = Pool(8)
 	
 	results = {}
 	
@@ -64,7 +65,9 @@ def full_run(c):
 		sub_train_path = os.path.join(curve_dir, '%d_train.txt' % actual_limit)
 		sub_model_path = os.path.join(curve_dir, '%d_train.model' % actual_limit)
 		sub_tag_path =   os.path.join(curve_dir, '%d_tagged.txt' % actual_limit)
-		
+
+		sub_corpus.write(os.path.basename(sub_train_path), 'slashtags', outdir=curve_dir)
+
 		p.apply_async(sub_run, args=[sub_train_path, sub_model_path,
 							raw_test_path, sub_tag_path, 
 							test_corpus, sub_corpus], 
@@ -89,8 +92,11 @@ def full_run(c):
 
 if __name__ == '__main__':
 	p = argparse.ArgumentParser()
-	p.add_argument('-c', '--conf', type=configfile, required=True)
+	p.add_argument('-c', '--conf', required=True)
 	
 	args = p.parse_args()
 	
-	full_run(args.conf)
+	confs = glob(args.conf)
+	for conf in confs:
+		full_run(ConfigFile(conf))
+	

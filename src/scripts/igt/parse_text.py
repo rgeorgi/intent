@@ -12,10 +12,13 @@ from utils.argutils import existsfile
 from utils.ConfigFile import ConfigFile
 from interfaces.stanford_tagger import StanfordPOSTagger
 
+from utils.setup_env import c as e
+
 import logging
 import os
 import sys
 from igt.rgxigt import RGCorpus, rgp
+from glob import glob
 
 projection_logger = logging.getLogger('projection')
 classification_logger = logging.getLogger('classification')
@@ -32,7 +35,7 @@ def parse_text(c):
 	corp = RGCorpus.from_txt(c.get('txt_path', t=existsfile), require_trans = require_trans)
 
 	# 2) load the pos dict to help classify the gloss line ---------------------
-	posdict = pickle.load(open(c.get('posdict', t=existsfile), 'rb'))
+	posdict = pickle.load(open(e.get('pos_dict', t=existsfile), 'rb'))
 
 	# 3) Get the output path for the slashtags... -------------------------------
 	outpath = c.get('out_path')
@@ -42,10 +45,10 @@ def parse_text(c):
 
 	# 4) Initialize tagger/classifier ---
 	if c.get('tagging_method') == 'projection':
-		spt = StanfordPOSTagger(c.get('eng_tagger'))
+		spt = StanfordPOSTagger(e.get('stanford_tagger_trans'))
 	else:
 		# Load the classifier...
-		classifier = MalletMaxent(c.get('classifier', t=existsfile))
+		classifier = MalletMaxent(e.get('classifier_model', t=existsfile))
 		
 
 	i = 0
@@ -57,8 +60,8 @@ def parse_text(c):
 	if c.get('tagging_method') == 'projection':
 		# If the alignment method is giza, use giza to align the
 		# gloss and translation.
-		if c.get('alignment_method', 'heur') == 'giza':
-			corp.giza_align_g_t()
+		if c.get('alignment_method', 'giza') == 'giza':
+			corp.giza_align_t_g()
 
 		# Otherwise, perform heuristic alignment.		
 		else:
@@ -123,11 +126,13 @@ def parse_text(c):
 
 if __name__ == '__main__':
 	p = ArgumentParser()
-	p.add_argument('-c', '--conf', required=True, type=existsfile)
+	p.add_argument('-c', '--conf', required=True)
 	
 	args = p.parse_args()
 	
-	c = ConfigFile(args.conf)
+	confs = glob(args.conf)
 	
-	parse_text(c)
+	for conf in confs:
+		c = ConfigFile(conf)
+		parse_text(c)
 	
