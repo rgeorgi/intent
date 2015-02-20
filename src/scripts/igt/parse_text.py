@@ -20,28 +20,27 @@ from igt.rgxigt import RGCorpus, rgp
 projection_logger = logging.getLogger('projection')
 classification_logger = logging.getLogger('classification')
 
+def parse_text(c):
 
-if __name__ == '__main__':
-	p = ArgumentParser()
-	p.add_argument('-c', '--conf', required=True, type=existsfile)
+	# 1) Build the corpus --------------------------------------------------
+	#corp = pickle.load(open('corp.pkl', 'rb'))
+	# If we are using classification, we do not require a translation line...
+	require_trans = True
+	if c.get('tagging_method') == 'classification':
+		require_trans = False
 	
-	args = p.parse_args()
-	
-	c = ConfigFile(args.conf)
-	
-	# Build the corpus...
-	corp = RGCorpus.from_txt(c.get('txt_path', t=existsfile))
+	corp = RGCorpus.from_txt(c.get('txt_path', t=existsfile), require_trans = require_trans)
 
-
+	# 2) load the pos dict to help classify the gloss line ---------------------
 	posdict = pickle.load(open(c.get('posdict', t=existsfile), 'rb'))
 
-	# Get the output path for the slashtags...
+	# 3) Get the output path for the slashtags... -------------------------------
 	outpath = c.get('out_path')
 	os.makedirs(os.path.dirname(outpath), exist_ok=True)
 
-	# The output in slashtags format...
 	tagger_out = open(outpath, 'w', encoding='utf-8')
 
+	# 4) Initialize tagger/classifier ---
 	if c.get('tagging_method') == 'projection':
 		spt = StanfordPOSTagger(c.get('eng_tagger'))
 	else:
@@ -52,18 +51,23 @@ if __name__ == '__main__':
 	i = 0
 	skipped = 0
 	
-	# If the tagging method is projection, we need to align the corpus.
+	#===========================================================================
+	# 5) Align the corpus for projection ---
+	#===========================================================================
 	if c.get('tagging_method') == 'projection':
-
 		# If the alignment method is giza, use giza to align the
 		# gloss and translation.
 		if c.get('alignment_method', 'heur') == 'giza':
-			# Align the gloss and translation lines 
 			corp.giza_align_g_t()
 
+		# Otherwise, perform heuristic alignment.		
 		else:
 			corp.heur_align()
 
+		
+	#=======================================================================
+	# 6) Iterate over the instances in the corpus ---
+	#=======================================================================
 	for inst in corp:
 		
 		if i % 10 == 0:
@@ -75,40 +79,32 @@ if __name__ == '__main__':
 		
 		
 		#=======================================================================
-		# Try the projection method for labeling the corpus if specified...
+		# a) Try the projection method for labeling the corpus if specified... ---
 		#======================================================================
 		if c.get('tagging_method') == 'projection':
-		
-			try:
-				sequence = inst.lang_line_projections(spt, posdict=posdict, lowercase=True, error_on_nonproject=c.get('skip_proj_errors', t=bool))
-			except IGTProjectionException as igtpe:
-				projection_logger.warning('There was an error in projection: %s' % igtpe)
-				skipped += 1
-				continue
-			except IGTGlossLangLengthException as e:
-				skipped +=1
-				continue
-			except IGTAlignmentException as iae:
-				skipped +=1
-				continue
-				
+			
+			print()
+			print(inst.id)
+			
+			inst.tag_trans_pos(spt)
+			inst.project_trans_to_gloss()
+			inst.project_gloss_to_lang()
+			
 		
 		#=======================================================================
-		# Otherwise, use the classification approach.
+		# b) Otherwise, use the classification approach. ---
 		#=======================================================================
 		else:
-			try:
-				sequence = inst.lang_line_classifications(classifier, posdict=posdict, 
-													feat_dict=True,
-													feat_next_gram=True,
-													feat_prev_gram=True,
-													feat_prefix=True,
-													feat_suffix=True,
-													lowercase=True)
-			except IGTGlossLangLengthException as e:
-				#classification_logger.warning('Gloss and language lines did not match up for: %s' % inst.text())
-				skipped += 1
-				continue
+			inst.classify_gloss_pos(classifier,
+									posdict=posdict,
+									feat_dict=True,
+									feat_prev_gram=True,
+									feat_prefix=True,
+									feat_suffix=True,
+									lowercase=True)
+			inst.project_gloss_to_lang()
+			
+		sequence = inst.get_lang_sequence()
 				
 	
 		
@@ -121,3 +117,15 @@ if __name__ == '__main__':
 	print('%d skipped ' % skipped)
 		
 	tagger_out.close()
+
+
+if __name__ == '__main__':
+	p = ArgumentParser()
+	p.add_argument('-c', '--conf', required=True, type=existsfile)
+	
+	args = p.parse_args()
+	
+	c = ConfigFile(args.conf)
+	
+	parse_text(c)
+	
