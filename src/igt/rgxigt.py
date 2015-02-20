@@ -23,6 +23,7 @@ from unittest.suite import TestSuite
 from alignment.Alignment import Alignment
 from interfaces.mallet_maxent import MalletMaxent
 import pickle
+from interfaces.stanford_tagger import StanfordPOSTagger
 
 
 #===============================================================================
@@ -566,8 +567,21 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			pos_tier.__class__ = RGTokenTier
 			return pos_tier.tokens()
 		
+	def tag_trans_pos(self, tagger, **kwargs):
+		'''
+		Run the stanford tagger on the translation words and return the POS tags.
+		
+		:param tagger: The active POS tagger model.
+		:type tagger: StanfordPOSTagger
+		'''
+		
+		trans_tags = tagger.tag(self.trans.text())
+		return trans_tags
+			
+		
 	def classify_gloss_pos(self, classifier, **kwargs):
 		'''
+		Run the classifier on the gloss words and return the POS tags.
 		
 		:param classifier: the active mallet classifier to classify this language line.
 		:type classifier: MalletMaxent
@@ -1126,4 +1140,7 @@ line=961 tag=T:     `I made the child eat rice.\''''
 		self.assertEqual(tags, self.tags)
 		
 		
+	def test_tag_trans_line(self):
+		tagger = StanfordPOSTagger(c['stanford_tagger_trans'])
+		self.igt.tag_trans_pos(tagger)
 	
