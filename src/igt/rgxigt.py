@@ -60,6 +60,13 @@ class RecursiveFindMixin(object):
 	'''
 	
 	def find(self, id=None, attributes=None):
+		'''
+		Generic find function for non-iterable elements.
+		:param id: id of an element to find, or None to search by attribute.
+		:type id: str
+		:param attributes: key:value pairs that are an inclusive subset of those found in the desired item.
+		:type attributes: dict
+		'''
 		if id and self.id == id:
 			return self
 		
@@ -115,8 +122,8 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 				tier.__class__ = RGTier
 				
 				for i, item in enumerate(tier):
-					tier.__class__ = RGItem
-					tier.index = i+1
+					item.__class__ = RGItem
+					item.index = i+1
 				
 			igt.enrich_instance()
 			
@@ -128,12 +135,24 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		lines.
 		'''
 		
+		# First, make sentences out of the gloss and text lines.
 		g_sents = [i.glosses.text().lower() for i in self]
 		t_sents = [i.trans.text().lower() for i in self]
 		
+		# Next, load up the saved gloss-trans giza alignment model
 		ga = interfaces.giza.GizaAligner.load(c['g_t_prefix'], c['g_path'], c['t_path'])
+
+		# ...and use it to align the gloss line to the translation line.
+		g_t_asents = ga.force_align(g_sents, t_sents)
 		
-		print(ga.force_align(g_sents, t_sents)[0].aln)
+		# Before continuing, make sure that we have the same number of alignments as we do instances.
+		assert len(g_t_asents) == len(self)
+		
+		# Next, iterate through the aligned sentences and assign their alignments
+		# to the instance.
+		for g_t_asent, igt in zip(g_t_asents, self):
+			t_g_aln = g_t_asent.aln.flip()
+			igt.set_bilingual_alignment(igt.trans, igt.glosses, t_g_aln)
 		
 		
 		
@@ -219,6 +238,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		else:
 			# Otherwise, we will make our own:
 			raw_tier = self.raw_tier()
+			print(raw_tier)
 			
 			raw_l_s = [i for i in raw_tier if 'L' in i.attributes['tag']]
 			raw_g_s = [i for i in raw_tier if 'G' in i.attributes['tag']]
@@ -456,7 +476,13 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		Specify the source tier and target tier, and create a bilingual alignment tier
 		between the two, using the indices specified by the Alignment aln.
 		'''
-				
+		# Remove the previous alignment, if it exists.
+		prev_ba_tier = self.find(attributes={'source':src_tier.id, 'target':tgt_tier.id})
+		if prev_ba_tier:	
+			del self.tiers[prev_ba_tier.index]
+			self.refresh_index()
+		
+		
 		
 		# Just to make things neater, let's sort the alignment by src index.
 		aln = sorted(aln, key = lambda x: x[0])
@@ -630,14 +656,6 @@ class RGBilingualAlignment(RGItem):
 
 class RGTier(xigt.core.Tier, RecursiveFindMixin):
 	
-	@classmethod
-	def fromTier(cls, t):
-		
-		items = [RGItem.fromItem(i) for i in t.items]
-		
-		return cls(id=t.id, type=t.type, alignment=t.alignment, content=t.content,
-					segmentation=t.segmentation, attributes=t.attributes, metadata=t.metadata,
-					items=items, igt=t.igt)
 
 	def findUUID(self, uu):
 		retlist = []
@@ -656,17 +674,8 @@ class RGTier(xigt.core.Tier, RecursiveFindMixin):
 		obj.index = len(self)+1
 		xigt.core.Tier.add(self, obj)
 		
-	
-	def findAttr(self, key, value):
-		found = None
+
 		
-		for item in self:
-			if item.attributes[key] == value:
-				found = item
-				break
-			
-		return found
-	
 	def delUUIDs(self):
 		if 'uuid' in self.attributes:
 			del self.attributes['uuid']
@@ -692,6 +701,9 @@ class RGTier(xigt.core.Tier, RecursiveFindMixin):
 		'''
 		return [i.get_content() for i in self]
 
+	@property
+	def index(self):
+		return self.igt.tiers.index(self)
 	
 #===============================================================================
 # Bilingual Alignment Tier

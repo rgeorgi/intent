@@ -165,27 +165,23 @@ class AlignedSent():
 					
 	@classmethod
 	def from_giza_lines(cls, tgt, aln):
-		src_tokens = tokenize_string(tgt, whitespace_tokenizer)
-		tgt_tokens = []
-		a = Alignment()
+		'''
+		Return the target-to-source alignment from the target and aln lines
+		of giza.
+		'''
+		# Start by getting the target tokens from the provided target line
+		tgt_tokens = tokenize_string(tgt, whitespace_tokenizer)
 		
+		# next, read the alignments from the aln line.
+		a = Alignment.from_giza(aln)
+		
+		# Finally, the source tokens are also on the aln line.
 		alignments = re.findall('(\S+) \(\{(.*?)\}\)', aln)
 		
-		for i, aln_pair in enumerate(alignments):
-			# Start after the NULL alignment (skip the 0 index)
-			if i == 0:
-				continue
-			
-			word, indices = aln_pair
-			indices = [int(i) for i in indices.split()]
-			
-			# Add the current word...
-			tgt_tokens.append(word)
-			
-			for tgt_i in indices:
-				a.add((tgt_i, i))
-				
-			
+		# Get the src tokens...
+		src_tokens = [a[0] for a in alignments[1:]]
+		
+		# And create the aln sent.			
 		aln_sent = cls(src_tokens, tgt_tokens, a)
 		return aln_sent
 		
@@ -414,9 +410,7 @@ class Alignment(set):
 	'''
 	
 	def __init__(self, iter=[]):
-		super(Alignment).__init__(Alignment)
-		for i in iter:
-			self.add(i)
+		super().__init__(iter)
 		
 	def __str__(self):
 		ret_str = ''
@@ -426,6 +420,45 @@ class Alignment(set):
 		
 	def contains_tgt(self, key):
 		return bool([tgt for src,tgt in self if tgt==key])
+	
+	@classmethod
+	def from_giza(cls, giza):
+		'''
+		| Given a giza style alignment string, such as:
+		|
+		| ``NULL ({ 3 }) fact ({ }) 1ss ({ 1 }) refl ({ }) wash ({ 2 }) ben ({ 5 4 }) punc ({ }) ne ({ 6 }) shirt ({ 4 })``
+		|
+		...where the integers represent an indexed-from-one reference to the target line, and the
+		words are tokens from the source line, return a (src, tgt) index alignment.
+		
+
+		:param giza: Alignment string as described above.
+		:type giza: str
+		'''
+		# Initialize the alignment.
+		a = cls()
+		
+		patterns = re.findall('\S+\s\(\{(.*?)\}\)', giza)
+		
+		# Skip the first (null) alignment, and iterate over
+		# the remaining indices
+		for i, index_str in enumerate(patterns[1:], start=1):
+			tgt_indices = [int(i) for i in index_str.split()]
+			for tgt_index in tgt_indices:
+				a.add((i, tgt_index))
+				
+		# Return the alignment.
+		return a
+				
+	
+	def flip(self):
+		'''
+		For an alignment of ``{ (a, b) ... (c, d) }`` pairs, return an :py:class:`Alignment` of 
+		``{ (b, a) ... (d, c) }``
+		
+		:rtype: Alignment
+		'''
+		return Alignment([(y, x) for x, y in self])
 	
 	def contains_src(self, key):
 		return bool([src for src,tgt in self if src==key])
@@ -438,9 +471,6 @@ class Alignment(set):
 	
 	def __and__(self, o):
 		return self.__class__(set.__and__(self, o))
-	
-	def flip(self):
-		return self.__class__([(b,a) for a,b in self])
 	
 	def nonzeros(self):
 		nz = [elt for elt in self if elt[0] > 0 and elt[-1] > 0]		
@@ -529,4 +559,22 @@ class AlignmentTest(unittest.TestCase):
 		self.assertTrue(a1.contains_tgt(3))
 		self.assertFalse(a1.contains_tgt(5))
 		self.assertFalse(a1.contains_src(3))
+		
+class GizaAlignmentTest(unittest.TestCase):
+	
+	def setUp(self):
+		self.aln = 'NULL ({ 3 }) fact ({ }) 1ss ({ 1 }) refl ({ }) wash ({ 2 }) ben ({ 5 4 }) punc ({ }) ne ({ 6 }) shirt ({ 4 })'
+		self.tgt = 'i washed the shirt for myself'
+		
+		self.a2 = Alignment([(2,1),(4,2),(5,5),(5,4), (7,6),(8,4)])
+	
+	def test_alignment_reading(self):		
+		a1 = Alignment.from_giza(self.aln)		
+		self.assertEquals(a1, self.a2)
+		
+	def test_alignmentsent_reading(self):
+		
+		a_snt = AlignedSent.from_giza_lines(self.tgt, self.aln)
+		self.assertEquals(a_snt.aln, self.a2)
+
 		

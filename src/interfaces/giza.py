@@ -1,7 +1,7 @@
 '''
 Created on Feb 14, 2014
 
-@author: rgeorgi
+.. codeauthor::Ryan Georgi <rgeorgi@uw.edu>
 '''
 
 import os, sys, re, argparse
@@ -284,11 +284,14 @@ class GizaFiles(object):
 		fe_cooc.dump(self.fe_cooc)
 			
 			
-			
-			
 	
 	# Read the aligned file here...
 	def aligned_sents(self):
+		'''
+		Read in the (merged) A3 file and return the AlignedSents of (src, tgt) alignments.
+		
+		:rtype: list of :py:class:`~alignment.AlignedSent` instances	
+		'''
 		a_f = open(self.a3merged, 'r', encoding='utf-8')
 		lines = a_f.readlines()
 		a_f.close()
@@ -300,8 +303,6 @@ class GizaFiles(object):
 			tgt = lines.pop(0)
 			aln = lines.pop(0)
 			
-			idx = int(re.search('\(([0-9]+)\)', top).group(1))
-			
 			a_sents.append(AlignedSent.from_giza_lines(tgt, aln))
 			
 
@@ -309,7 +310,16 @@ class GizaFiles(object):
 				
 
 class VocabWord(object):
+	'''
+	A simple class to contain words in the vocab and keep track of their ID, while hashing the same as the string that they represent.
+	'''
 	def __init__(self, word, id):
+		'''		
+		:param word: string that the word represents
+		:type word: str
+		:param id: Integer ID to identify the string by
+		:type id: int
+		'''
 		self.id = id
 		self.content = word
 		
@@ -514,10 +524,7 @@ class GizaAligner(object):
 				'-Coocurrencefile', new_gf.ef_cooc]
 		
 		cmd = ' '.join(args)
-		#print(cmd)
-		#sys.exit()
-		
-		#piperunner(cmd)
+
 		os.system(cmd)
 		
 		new_gf.clean()
