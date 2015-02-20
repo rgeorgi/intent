@@ -83,9 +83,6 @@ def parse_text(c):
 		#======================================================================
 		if c.get('tagging_method') == 'projection':
 			
-			print()
-			print(inst.id)
-			
 			inst.tag_trans_pos(spt)
 			inst.project_trans_to_gloss()
 			inst.project_gloss_to_lang()
@@ -104,7 +101,12 @@ def parse_text(c):
 									lowercase=True)
 			inst.project_gloss_to_lang()
 			
+		
 		sequence = inst.get_lang_sequence()
+		
+		if c.get('skip_proj_errors') and len(sequence) != len([i for i in sequence if i.label != 'UNK']):
+			skipped += 1
+			continue 
 				
 	
 		
