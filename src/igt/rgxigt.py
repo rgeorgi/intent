@@ -139,6 +139,12 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		# Open the textfile and read the contents...
 		f = open(path, 'r', encoding='utf-8')
 		data = f.read()
+		
+		# Replace invalid characters...
+		_illegal_xml_chars_RE = re.compile(u'[\x00-\x08\x0b\x0c\x0e-\x1F\uD800-\uDFFF\uFFFE\uFFFF]')
+		data = re.sub(_illegal_xml_chars_RE, ' ', data)
+		
+		
 		f.close()
 		
 		# Read all the text lines
@@ -196,6 +202,17 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 			
 		return xc
 	
+	def require_trans_lines(self):
+		new_igts = []
+		for i in self:
+			try:
+				i.trans
+				new_igts.append(i)
+			except NoTransLineException as ntle:
+				logging.warn('Filtering out igt instance "%s"' % i.id)
+
+		self.igts = new_igts
+	
 	def giza_align_t_g(self):
 		'''
 		Perform giza alignments on the gloss and translation
@@ -248,7 +265,10 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		Perform heuristic alignment between the gloss and translation.
 		'''
 		for igt in self:
-			g_heur_aln = igt.heur_align()
+			try:
+				g_heur_aln = igt.heur_align()
+			except NoTransLineException as ntle:
+				logging.warn(ntle)
 		
 		
 		
@@ -803,6 +823,10 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 	# • POS Tag Projection -----------------------------------------------------
 	def project_trans_to_gloss(self):
+		
+		# Remove the previous tags if they are present...
+		prev_t = self.find(type='pos', id='gw-pos')
+		if prev_t: prev_t.delete()
 		
 		# Get the trans tags...
 		trans_tags = self.get_pos_tags(self.trans.id)

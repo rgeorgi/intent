@@ -82,6 +82,17 @@ def writedir(path):
 
 	
 def writefile(path, mode='w', encoding='utf-8'):
+	'''
+	Ensure that this file is writable in the given path, and return it as an 
+	open file object.
+	
+	:param path: Path to the file to write
+	:type path: filepath
+	:param mode: Write mode
+	:type mode: [ 'w' | 'wb' ]
+	:param encoding: File encoding 
+	:type encoding: encoding
+	'''
 	dir = os.path.dirname(path)
 
 	if dir and not os.path.exists(dir): 
