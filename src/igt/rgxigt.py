@@ -26,6 +26,7 @@ from interfaces.stanford_tagger import StanfordPOSTagger
 from logging import getLogger
 import logging
 from utils.token import Token, POSToken
+import copy
 
 #===============================================================================
 # Logging
@@ -124,6 +125,13 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 	def __len__(self):
 		return len(self._list)
 	
+	def copy(self):
+		new_c = RGCorpus(id=self.id, attributes=copy.deepcopy(self.attributes), metadata=copy.copy(self.metadata), igts=None)
+		
+		for igt in self.igts:
+			new_c.add(igt.copy(parent=new_c))
+			
+		return new_c
 	
 	@classmethod
 	def from_txt(cls, path, require_trans = True):
@@ -331,16 +339,20 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 		return inst
 
-	@classmethod
-	def fromXigt(cls, o, **kwargs):
+	def copy(self, parent = None): 
 		'''
-		Subclass a XIGT object into the child class.
+		Perform a custom deepcopy of ourselves.
+		'''
+		new_i = RGIgt(id = self.id, type=self.type, 
+					attributes = copy.deepcopy(self.attributes),
+					metadata = copy.copy(self.metadata),
+					corpus=parent)
 		
-		@param cls: The subclass constructor.
-		@param o: The original XIGT object.
-		'''
-						
-		return cls(id=o.id, type=o.type, attributes=o.attributes, metadata=o.metadata, tiers=o.tiers, corpus=o.corpus)
+		for tier in self.tiers:
+			new_i.add(tier.copy(parent=new_i))
+			
+		return new_i
+		
 
 	# • Processing of newly created instances ----------------------------------
 
@@ -627,6 +639,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		a = Alignment()
 		# Now, iterate through the alignment tier
 		for ba in ba_tier:
+			ba.__class__ = RGBilingualAlignment
 			src_item = self.find(id=ba.source)
 			
 			# There may be multiple targets, so get all the ids
@@ -906,16 +919,16 @@ class RGItem(xigt.core.Item, FindMixin):
 		self.stop = kwargs.get('stop')
 		self.index = index
 		
-	@classmethod
-	def fromItem(cls, i, start=None, stop=None, index=-1):
+	def copy(self, parent=None):
+		new_item = RGItem(self.id, type=self.type,
+							alignment=copy.copy(self.alignment),
+							content=copy.copy(self.content),
+							segmentation=copy.copy(self.segmentation),
+							attributes=copy.deepcopy(self.attributes),
+							text=copy.copy(self.text),
+							tier=parent)
+		return new_item
 		
-		if i.segmentation:
-			start, stop = [int(s) for s in re.search('\[([0-9]+):([0-9]+)\]', i.segmentation).groups()]
-			
-		
-		return cls(id=i.id, type=i.type, alignment=i.alignment, content=i.content,
-					segmentation=i.segmentation, attributes=i.attributes, text=i.text,
-					tier=i.tier, index=int(i.attributes.get('index', index)), start=start, stop=stop)
 	
 	def findUUID(self, uu):
 		retlist = []
@@ -1036,6 +1049,24 @@ class RGBilingualAlignment(RGItem):
 
 class RGTier(xigt.core.Tier, RecursiveFindMixin):
 	
+	def copy(self, parent=None):
+		'''
+		Perform a deep copy.
+		'''
+		# TODO: make sure there's no reason content or alignment
+		#       should be anything other than strings.
+		new_t = RGTier(id=self.id, type=self.type,
+					alignment=copy.copy(self.alignment),
+					content=copy.copy(self.content),
+					segmentation=copy.copy(self.segmentation),
+					attributes=copy.deepcopy(self.attributes),
+					metadata=copy.copy(self.metadata),
+					items=None, igt=parent)
+		
+		for item in self.items:
+			new_t.add(item.copy(parent=new_t))
+			
+		return new_t
 
 	def findUUID(self, uu):
 		retlist = []

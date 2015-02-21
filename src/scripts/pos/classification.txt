@@ -1,0 +1,2241 @@
+target:/VERB bonjour/NOUN grandmere/VERB je/PRON vous/PRT ai/VERB apporté/VERB
+jean/NOUN prefere/VERB cp/PRON se/ADP casser/VERB une/DET jambe/NOUN cp/NOUN plutot/NOUN que/ADP d'aller/NOUN a/ADP new/NOUN
+oui/NOUN jean/NOUN preferetil/VERB se/PRON casser/VERB une/DET jambe/NOUN plutot/NOUN que/NOUN
+la/DET fille/NOUN que/DET je/PRON suis/VERB sur/NOUN qui/DET arrivera/NOUN la/NOUN premiere/DET `/NOUN
+le/DET livre/NOUN a/VERB eu/VERB été/VERB publié/VERB
+jean/NOUN semble/VERB à/ADP marie/NOUN t/PRT avoir/VERB du/ADP talent/NOUN
+à/ADP marie/NOUN semble/VERB t/NOUN jean/PRT avoir/VERB du/ADP talent/NOUN
+josèphe/NOUN a/VERB écrite/VERB cette/DET lettre/NOUN
+quelle/DET lettre/NOUN josèphe/NOUN atil/VERB écrite/VERB
+la/DET lettre/NOUN que/DET josèphe/NOUN a/VERB écrite/VERB hier/NOUN
+cette/DET lettre/NOUN josèphe/NOUN l'a/VERB écrite/VERB hier/NOUN
+les/DET lettres/NOUN ont/VERB tous/DET été/VERB écrites/VERB
+je/PRON ferai/NOUN manger/VERB les/DET gâteaux/NOUN à/ADP jean/NOUN
+mes/NOUN amis/NOUN feront/VERB manger/VERB tous/DET de/ADP la/DET salade/NOUN à/ADP ce/DET garçon/NOUN
+jean/NOUN fera/NOUN comparer/VERB cette/DET sonatine/NOUN à/ADP paul/NOUN à/ADP une/DET symphonie/NOUN
+jean/NOUN y/ADP fera/NOUN comparer/VERB cette/DET sonatine/NOUN à/ADP paul/NOUN
+jean/NOUN lui/ADP y/ADP fera/NOUN comparer/VERB cette/DET sonatine/NOUN
+jean/NOUN y/DET fera/NOUN mettre/VERB ce/DET livre/NOUN à/ADP pierre/NOUN
+jean/NOUN lui/ADP y/DET fera/NOUN mettre/VERB ce/DET livre/NOUN
+jean/NOUN a/VERB fait/VERB obtenir/VERB un/DET permis/NOUN à/ADP ses/NOUN amis/NOUN de/ADP cette/DET administration/NOUN
+jean/NOUN en/NOUN a/VERB fait/VERB obtenir/VERB un/DET permis/NOUN à/ADP ses/NOUN amis/NOUN
+jean/NOUN leur/ADP en/NOUN a/VERB fait/VERB obtenir/VERB un/DET permis/NOUN
+celà/DET y/NOUN a/VERB fait/NOUN toucher/VERB les/DET rideaux/NOUN
+celà/DET les/DET y/ADP a/VERB fait/NOUN toucher/VERB
+jean/NOUN l'/NOUN y/ADP fera/NOUN comparer/VERB à/ADP paul/NOUN
+paul/NOUN lui/ADP fera/NOUN porter/NOUN ces/DET livres/NOUN à/ADP sa/NOUN femme/NOUN
+la/DET table/NOUN qu'/DET il/NOUN a/VERB faite/VERB repeindre/VERB à/ADP marc/NOUN
+la/DET petite/NOUN fille/VERB qu'/DET il/NOUN a/VERB faite/NOUN rire/VERB
+cette/DET petite/NOUN fille/NOUN paul/NOUN l'/NOUN a/VERB faite/NOUN rire/VERB
+pauline/NOUN les/DET a/VERB fait/VERB lire/VERB aux/ADP étudiants/NOUN
+nous/NOUN serons/DET heureux/VERB
+anne/VERB fut/NOUN triste/NOUN
+anne/NOUN traversa/NOUN la/DET rue/NOUN
+anne/NOUN traversait/NOUN la/DET rue/NOUN
+quand/NOUN elle/PRON vit/NOUN georges/VERB anne/NOUN traversa/NOUN la/DET rue/NOUN
+quand/NOUN elle/PRON vit/NOUN georges/VERB anne/NOUN traversait/NOUN la/DET rue/NOUN
+anne/VERB fut/NOUN triste/NOUN
+soudain/VERB jeanne/NOUN sut/NOUN la/DET r´/NOUN onse/NOUN
+jeanne/NOUN d'arc/VERB fut/VERB une/DET sainte/NOUN
+la/DET machine/NOUN fonctionna/VERB en/ADP cinq/NOUN minutes/NOUN
+anne/NOUN ´/VERB ivit/DET une/NOUN lettre/ADP en/VERB une/NOUN demiheure/NOUN
+anne/NOUN jouait/VERB du/DET piano/NOUN pendant/NOUN deux/NOUN heures/NOUN
+anne/NOUN ´/VERB ivait/DET une/NOUN lettre/ADP en/VERB une/NOUN demiheure/NOUN
+karin/NOUN attrapa/VERB un/DET contravention/NOUN elle/PRON brulait/PRON un/DET feu/PRON rouge/VERB
+karin/NOUN attrapa/VERB un/DET contravention/NOUN elle/PRON avait/VERB brul´/PRON un/DET feu/PRON rouge/VERB
+karin/VERB brulait/VERB un/VERB feu/DET rouge/PRON quand/VERB elle/NOUN apercut/PRON un/ADV gendarme/DET de/NOUN l'autre/VERB
+julie/NOUN entra/NOUN a/DET la/DET derni`/NOUN e/NOUN minute/PRON elle/VERB portait/DET un/NOUN suberbe/VERB manteau/NOUN
+julie/NOUN alluma/NOUN la/ADP lampe/DET il/NOUN faisait/PRON tr`/VERB clair/NOUN dans/VERB la/ADP pi`/DET maintenant/NOUN
+jean/NOUN tomba/NOUN max/NOUN le/VERB poussa/PRON
+le/DET singe´s'´/NOUN happa/NOUN nous/NOUN ne/NOUN le/ADV retrouv^mes/NOUN plus/PRON car/NOUN il/NOUN disparut/PRON dans/VERB
+le/DET singe/NOUN s'´´happa/NOUN nous/NOUN ne/NOUN le/ADV retrouv^mes/NOUN plus/PRON car/NOUN il/NOUN disparut/PRON aussit^/VERB
+depuis/NOUN quelque/DET temps/NOUN jean/NOUN courait/PRON apr`/NOUN pauline/NOUN il/PRON ne/ADV l'attrapait/NOUN pas/ADV
+depuis/NOUN le/DET d´ebut/NOUN de/ADP l'ann´/DET pauline/NOUN ´/NOUN it/VERB une/DET ´/NOUN assidue/NOUN elle/PRON
+jean/NOUN est/VERB convoqué/VERB par/VERB le/DET patron/NOUN et/CONJ critiqué/NOUN par/VERB ses/PRON collègues/NOUN
+f/VERB jean/VERB est/VERB convoqué/VERB par/NOUN marie/CONJ et/NOUN amoureux/NOUN d'elle/PRON
+f/NOUN a/NOUN fidèle/VERB il/PRON l'est/ADP à/NOUN ses/NOUN amis/NOUN plus/DET qu'à/ADP ses/NOUN convictions/NOUN politiques/NOUN
+f/NOUN b/ADP allé/DET aux/NOUN etatsunis/PRON il/VERB l'/PRON est//VERB allé/PRON il/VERB l'/PRON est/ADP aux/DET etatsunis/NOUN
+paul/NOUN soit/VERB est/NOUN allé/NOUN chez/ADP marie/NOUN soit/VERB rentré/NOUN chez/VERB lui/NOUN
+f/NOUN a/NOUN paul/NOUN écrivait/ADP des/NOUN lettres/NOUN à/NOUN sa/NOUN mère/NOUN et/NOUN des/NOUN nouvelles/ADP fantastiques/NOUN
+aussi/NOUN fidèle/NOUN que/NOUN paul/NOUN soit/NOUN à/ADP ses/NOUN amis/NOUN
+le/DET livre/NOUN est/NOUN à/ADP jean/NOUN
+jean/NOUN a/VERB le/DET livre/NOUN
+jean/NOUN a/VERB repeint/VERB trios/NUM chaises/NOUN
+combien/NOUN de/ADP chaises/NOUN astu/VERB repeint/repeintes/PRON
+jean/NOUN a/VERB les/PRON repeint/repeintes/PRON
+quelles/DET chaises/NOUN astu/VERB dit/dites/VERB qu'il/DET a/VERB
+il/PRON mouraitait/NOUN il/PRON mourutut/NOUN
+il/PRON mouraitut/NOUN il/PRON mourutait/NOUN
+les/DET bouteilles/NOUN se/PRON sont/DET bris´/VERB
+les/DET bouteilles/NOUN ont/VERB bris´/VERB
+souvent/NOUN paraître/ADP triste/NOUN pendant/NOUN son/VERB voyage/NOUN de/ADP noce/VERB
+heide/PRON ne/NOUN mange/NOUN pas/ADV mange/NOUN de/ADP bammy/VERB en/ADP suisse/NOUN
+si/NOUN tu/PRON n'as/VERB pas/ADV déjà/ADV mangé/NOUN tu/PRON peux/NOUN le/NOUN prendre/PRON
+si/NOUN tu/PRON n'as/VERB déjà/ADV pas/ADV mangé/NOUN tu/PRON peux/NOUN le/NOUN prendre/PRON
+elle/PRON a/VERB fait/NOUN manger/VERB du/DET pain/NOUN rassis/ADJ à/ADP abdou/NOUN
+elle/PRON a/VERB fait/NOUN a/VERB mangé/PRON du/DET pain/NOUN rassis/ADJ à/ADP abdou/NOUN
+elle/PRON a/VERB laissé/NOUN abdou/NOUN manger/VERB le/DET gâteau/NOUN
+elle/PRON a/VERB laissé/NOUN manger/VERB le/DET gâteau/NOUN à/ADP abdou/NOUN
+elle/PRON le/PRON lui/PRON a/VERB fait/NOUN manger/VERB
+elle/PRON lui//PRON l'/PRON a/VERB fait/NOUN le/PRON manger/VERB
+elle/PRON l'/PRON a/VERB laissé/NOUN le/PRON manger/VERB
+elle/PRON le/PRON l'/PRON a/VERB laissé/NOUN manger/PRON
+les/DET petites/NOUN sont/VERB restées/NOUN avec/NOUN abdou/NOUN
+le/DET petit/NOUN est/VERB resté/NOUN avec/VERB abdou/NOUN
+les/DET deux/NOUN femmes/NOUN ont/VERB été/VERB admises/DET dans/ADP une/DET clinique/NOUN
+le/DET blessé/NOUN a/VERB été/VERB admis/DET dans/ADP un/DET hôpital/NOUN
+indo/PRON a/VERB remis/NOUN les/DET clés/NOUN dans/ADP son/PRON tiroir/NOUN
+indo/PRON a/VERB remis/NOUN le/DET sac/NOUN dans/ADP son/PRON tiroir/NOUN
+indo/NOUN les/PRON a/VERB remises/NOUN dans/ADP son/PRON tiroir/NOUN
+indo/NOUN l'/PRON a/VERB remis/NOUN dans/NOUN son/PRON tiroir/NOUN
+préparer/NOUN un/DET plat/NOUN pris/NOUN tout/DET son/PRON temps/NOUN à/DET jeanne/NOUN
+ainsi/DET s'amusaient/DET bien/VERB cette/NOUN nuit/DET modf/NOUN
+lors/DET la/DET royne/NOUN fist/NOUN santré/NOUN appeller/ADP
+et/CONJ a/DET ce/DET parolles/VERB le/DET roy/NOUN demanda/VERB quelz/DET prieres/PRON ilz/DET faisonient/NOUN
+il/PRON achète/VERB des/DET jouets/NOUN aux/ADP petitsfils/NOUN de/ADP ses/PRON petitsfils/NOUN
+subject/NOUN and/VERB object/NOUN control/ADP with/NOUN declarative/VERB verbs/ADV french/ADJ
+je/PRON pars/VERB
+partir/VERB
+je/PRON mange/VERB
+manger/VERB
+voilà/NOUN une/DET preuve/NOUN d'/ADP intelligence/NOUN
+la/PRON voilà/NOUN
+abélardi/NOUN sa/PRON mère/NOUN l'i/PRON aimait/VERB trop/ADP
+saj/PRON fille/NOUN je/PRON connais/VERB l'hommei/j/DET qui/NOUN l'a/VERB emmenée/NOUN
+tes/PRON sales/NOUN petits/VERB remarques/PRON sur/NOUN léoni/NOUN ili/PRON ne/ADV les/DET apprécierait/NOUN surement/NOUN pas/ADV
+tu/PRON est/DET partie/VERB sans/NOUN luii/ADP parler/NOUN toi/NOUN à/ADP davei/NOUN
+je/PRON n'ai/ADV pas/NOUN vu/VERB jean/NOUN
+tous/DET les/DET enfants/NOUN ont/VERB vu/VERB ce/DET film/NOUN
+les/DET enfants/NOUN ont/VERB tous/DET vu/VERB ce/DET film/NOUN
+les/DET enfants/NOUN ont/VERB vu/VERB ce/DET film/NOUN tous/DET
+les/DET enfants/NOUN tous/DET ont/VERB vu/VERB ce/DET film/NOUN
+jean/NOUN croit/VERB bill/VERB avoir/ADP menti/VERB
+marie/NOUN connaît/NOUN louis/VERB
+marie/NOUN le/NOUN connaît/NOUN
+jean/NOUN a/VERB peinte/VERB la/DET porte/NOUN
+jean/NOUN l'a/PRON peinte/VERB e/VERB
+je/PRON t'acheterais/VERB un/DET cadeau/NOUN à/ADP pierre/NOUN
+i/PRON want/VERB to/VERB acheter/VERB le/DET lait/NOUN
+i/PRON want/VERB acheter/VERB le/DET lait/NOUN
+avant/VERB veux/NOUN chocolat/NOUN french/NOUN nathalie/NOUN 2;2/NOUN from/NOUN pierce/NOUN 1992/PRON
+sa/PRON famille/NOUN a/VERB cassé/VERB la/DET croûte/NOUN
+son/PRON fils/NOUN fera/NOUN la/DET malade/NOUN
+il/PRON a/VERB fait/NOUN cassé/VERB la/DET croûte/NOUN à/ADP sa/NOUN famille/NOUN
+il/PRON a/VERB fait/NOUN cassé/VERB la/DET croûte/NOUN par/VERB sa/PRON famille/NOUN
+jean/NOUN ne/ADV l'/PRON a/VERB pas/ADV vu/VERB
+il/ce/PRON neige/NOUN
+il/c'est/PRON un/DET livre/NOUN que/DET je/PRON vois/VERB
+un/DET livre/NOUN a/ADP jean/NOUN
+pierrei/NOUN est/VERB fier/VERB de/ADP soii/luii/PRON
+personne/VERB ne/NOUN bavarde/NOUN avec/VERB soi/soimême/marie/PRON
+jean/NOUN a/VERB ouvert/VERB la/DET porte/NOUN
+jean/NOUN l'a/PRON ouverte/VERB french/NOUN
+un/DET livre/NOUN
+ce/NOUN livre/NOUN
+ce/NOUN livreci/NOUN
+ce/NOUN livrelà/NOUN
+le/DET livre/NOUN de/ADP jean/NOUN
+mon/PRON livre/NOUN
+il/PRON a/VERB travaill´/VERB l'ann´/DET durant/NOUN
+quelle/DET chance/NOUN astu/VERB eue/VERB
+les/DET enfants/NOUN ont/VERB chacun/PRON reçu/VERB un/DET ballon/VERB
+les/DET enfants/NOUN ont/VERB beaucoup/DET reçu/NOUN de/ADP ballons/VERB
+les/DET filles/NOUN ont/VERB chacune/PRON reçu/VERB un/DET ballon/VERB
+nous/NOUN les/DET avons/VERB toutes/DET contactées/NOUN
+il/PRON a/VERB beaucoupi/DET acheté/NOUN ei/NOUN de/ADP livres/NOUN
+ils/DET ont/VERB beaucoup/NOUN vu/NOUN de/ADP films/NOUN
+ils/DET ont/VERB beaucoup/NOUN apprécié/NOUN de/ADP films/NOUN
+il/PRON a/VERB beaucoup/DET ri/NOUN
+les/VERB cochons/VERB ont/NOUN beaucoup/VERB croqué/NOUN une/NOUN pomme/NOUN
+les/VERB lutins/VERB ont/NOUN beaucoup/VERB coupé/NOUN une/NOUN banane/VERB bleue/VERB
+les/DET abeilles/NOUN ont/VERB beaucoup/NOUN piqué/NOUN le/DET chat/NOUN
+les/DET cochons/NOUN ont/VERB beaucoup/NOUN croqué/VERB la/DET pomme/NOUN
+les/DET souris/NOUN ont/VERB beaucoup/NOUN mangé/NOUN le/DET fromage/NOUN
+les/DET lutins/NOUN ont/VERB beaucoup/NOUN coupé/NOUN la/DET banane/NOUN
+il/PRON a/VERB /tut//DET acheté/NOUN ses/PRON meubles/NOUN à/NOUN crédit/NOUN
+jean/NOUN semble/VERB ip/PRON lui/PRON avoir/VERB lavé/VERB les/DET cheveux/NOUN
+jan/NOUN hat/VERB beschlossen/VERB ip/VERB luise/PRON die/DET haare/NOUN zu/ADP waschen/NOUN
+french/NOUN y/NOUN a/VERB trois/VERB hommes/VERB dans/NOUN l/NOUN a/NUM sa/NOUN l/ADP l/DET e/NOUN
+je/PRON ne/ADV le/PRON vois/VERB pas/ADV
+jean/NOUN il/PRON mange/VERB
+lui/PRON il/PRON mange/VERB
+jean/NOUN et/CONJ il/il/PRON et/CONJ jean/NOUN partiront/VERB bientôt/NOUN
+qui/NOUN a/VERB fait/VERB cela/DET il/PRON
+il/PRON mange/VERB jean/NOUN
+qui/NOUN atil/VERB parlé/PRON french/VERB
+elmer/NOUN lave/VERB souvent/VERB son/PRON chat/NOUN
+a/NOUN .french/NOUN pas/ADV
+ne/NOUN chantez/NOUN pas/ADV
+french/NOUN
+ne/NOUN le/PRON nissez/NOUN pas/ADV
+ne/ADV cetete/VERB
+le/PRON faites/VERB
+il/PRON ne/ADV cesse/NOUN pas/ADV de/ADP parler/NOUN
+ne/NOUN cessez/NOUN pas/ADV de/ADP parler/NOUN
+ne/NOUN faites/VERB le/PRON pas/ADV
+le/PRON faites/VERB pas/ADV
+tu/PRON n'as/VERB pas/ADV bu/NOUN du/DET caf/NOUN ou/NOUN du/VERB th/DET e/NOUN
+j'exige/PRON que/DET tu/PRON nis/VERB
+vous/PRON choisissez/NOUN un/DET numero/NOUN
+tu/PRON y/VERB vas/DET souvent/NOUN toi/PRON
+jean/NOUN lui/NOUN a/VERB ordonn/NOUN de/ADP pro/VERB elle/NOUN chanter/VERB
+jean/NOUN semble/VERB t/ADP avoir/VERB du/ADP talent/NOUN
+jean/NOUN semble/VERB à/ADP marie/NOUN t/PRT avoir/VERB du/ADP talent/NOUN
+a/ADP marie/NOUN semble/VERB t/NOUN jean/PRT avoir/VERB du/ADP talent/NOUN
+a/ADP qui/NOUN estce/VERB que/DET jean/NOUN semble/VERB avoir/ADP du/ADP talent/NOUN
+embrasse/NOUN ra/PRON
+je/PRON ferai/NOUN manger/VERB les/DET pommes/NOUN à/PRON jean/NOUN
+il/PRON a/VERB mangé/VERB du/VERB pain/NOUN
+il/PRON a/VERB mangé/VERB le/DET pain/NOUN
+pierre/NOUN a/VERB interdit/VERB à/ADP marie/NOUN de/ADP partir/VERB
+pierre/NOUN a/VERB empêché/VERB marie/NOUN de/ADP partir/VERB
+pierre/NOUN l'a/PRON interdit/VERB à/ADP marie/NOUN
+pierre/NOUN en/PRON a/VERB empêché/VERB marie/NOUN
+je/PRON aime/VERB marie/NOUN
+marie/NOUN a/VERB obéi/VERB à/PRON pierre/NOUN
+pierre/NOUN a/VERB été/VERB obéi/NOUN par/VERB marie/NOUN
+marie/NOUN lui/PRON a/VERB donné/VERB une/DET pomme/DET
+marie/NOUN lui/PRON a/VERB caché/VERB la/DET verité/NOUN
+marie/NOUN a/VERB obéi/ADP au/ADP capitaine/NOUN
+le/DET capitaine/NOUN a/VERB été/VERB obéi/NOUN
+marie/NOUN offirira/VERB des/DET bonbons/NOUN à/PRON pierre/NOUN
+marie/NOUN lui/PRON pince/VERB les/DET fesses/NOUN
+marie/NOUN t'aime/PRON
+je/PRON ferai/NOUN manger/VERB les/DET pommes/NOUN à/PRON jean/NOUN
+il/PRON est/VERB arrivé/DET un/DET homme/NOUN
+il/PRON a/VERB chanté/NOUN un/DET homme/NOUN
+il/PRON est/VERB malade/ADJ un/DET homme/NOUN
+il/PRON est/VERB un/DET élève/NOUN un/DET écoliter/NOUN
+marie/NOUN t'aime/PRON
+je/PRON ferai/NOUN manger/VERB les/DET pommes/NOUN à/PRON
+je/PRON ferai/NOUN manger/VERB les/DET pommes/NOUN par/NOUN
+la/DET photo/NOUN de/ADP chaquei/PRON photographe/NOUN de/ADP sai/PRON ville/NOUN préférée/ADP
+la/DET police/NOUN d'/ADP assurance/NOUN je/PRON l'/PRON ai/VERB pris/e/NOUN
+je/PRON l'/PRON ai/VERB pris/e/NOUN
+j'/PRON ai/VERB pris/e/NOUN une/DET police/NOUN d'/ADP assurance/NOUN
+elle/PRON s'/PRON est/VERB coupé/coupée/VERB la/DET main/NOUN
+je/PRON suiscontent/contente/VERB french/VERB
+je/PRON me/PRON demande/NOUN quand/NOUN mangera/VERB marie/NOUN sa/PRON pomme/NOUN
+je/PRON me/PRON demande/NOUN quand/NOUN mangera/VERB marie/NOUN sa/PRON pomme/NOUN
+l'homme/DET qui/NOUN je/PRON connais/NOUN
+l'homme/DET que/NOUN je/PRON connais/NOUN
+on/NOUN dit/VERB qu'il/DET pleut/VERB
+on/NOUN ne/ADV sait/NOUN jamais/NOUN
+il/PRON est/VERB entré/VERB un/DET roi/NOUN
+il/PRON est/VERB entré/VERB le/DET roi/NOUN
+il/PRON est/VERB entré/VERB la/DET fille/NOUN du/ADP roi/NOUN
+il/PRON est/VERB entré/VERB la/DET fille/NOUN d'un/DET roi/NOUN
+un/DET ancien/NOUN roi/NOUN
+un/DET roi/NOUN ancien/NOUN
+une/DET autre/NOUN éducation/NOUN
+une/DET éducation/NOUN autre/NOUN
+une/DET certaine/NOUN nouvelle/ADV
+une/DET nouvelle/NOUN certaine/NOUN
+la/DET première/NOUN cause/NOUN
+la/DET cause/NOUN première/NOUN
+un/DET jeune/NOUN ministre/NOUN
+un/DET ministre/NOUN jeune/PRON
+heureux/VERB poète/NOUN
+poète/NOUN heureux/VERB
+vieil/ADJ ami/NOUN
+ami/NOUN vieux/ADJ
+pauvre/NOUN homme/NOUN
+homme/NOUN pauvre/NOUN
+triste/NOUN robe/NOUN
+robe/NOUN triste/NOUN
+un/DET pauvre/NOUN pays/NOUN riche/PRON
+un/DET riche/NOUN pays/NOUN pauvre/NOUN
+une/DET route/NOUN mauvaise/VERB
+un/DET hombre/NOUN muy/ADV pobre/NOUN
+un/DET muy/NOUN pobre/NOUN hombre/NOUN
+ne/NOUN pas/ADP être/NOUN heureux/VERB est/VERB une/VERB condition/DET pour/NOUN écrire/NOUN des/VERB romans/NOUN
+ne/NOUN pas/ADV regarder/ADP la/NOUN télévision/NOUN consolide/NOUN l'ésprit/VERB critique/NOUN
+ppde/ADP dpla/DET nptable/NOUN
+marie/NOUN a/VERB fait/NOUN pleurer/VERB l'enfant/DET
+marie/NOUN a/VERB fait/VERB manger/VERB la/DET pomme/NOUN à/ADP jean/NOUN
+marie/NOUN l'a/VERB fait/VERB pleurer/NOUN
+marie/NOUN lui/ADP a/VERB fait/VERB manger/VERB la/DET pomme/NOUN
+marie/NOUN la/PRON lui/ADP a/VERB faite/VERB manger/VERB
+marie/NOUN a/VERB fait/VERB la/NOUN lui/ADP manger/VERB
+marie/NOUN a/VERB vu/VERB jean/NOUN manger/VERB la/DET pomme/NOUN
+marie/NOUN l'a/VERB vu/VERB la/PRON manger/VERB
+marie/NOUN le/NOUN l'a/PRON vue/VERB manger/VERB
+marie/NOUN la/PRON l'a/VERB vue/VERB manger/VERB
+jean/NOUN s'est/PRON fait/VERB rasé/VERB par/VERB marie/NOUN
+nous/NOUN serons/DET heureux/VERB
+anne/VERB fut/NOUN triste/NOUN
+anne/VERB etait/NOUN triste/NOUN
+anne/NOUN traversa/NOUN la/DET rue/NOUN
+anne/NOUN traversait/NOUN la/DET rue/NOUN
+georges/VERB annonc/NOUN sa/PRON resignation/PRON anne/VERB fut/NOUN triste/NOUN
+georges/VERB annonc/NOUN sa/PRON resignation/PRON anne/VERB etait/NOUN triste/NOUN
+quand/NOUN elle/PRON vit/NOUN georges/VERB anne/NOUN traversa/NOUN la/DET rue/NOUN
+quand/NOUN elle/PRON vit/NOUN georges/VERB anne/NOUN traversait/NOUN la/DET rue/NOUN
+anne/VERB etait/NOUN triste/NOUN
+anne/VERB fut/NOUN triste/NOUN
+anne/VERB etait/NOUN malade/ADJ
+anne/NOUN ecrivit/VERB une/DET lettre/NOUN
+soudain/NOUN jeanne/NOUN sut/NOUN la/DET reponse/NOUN
+jeanne/NOUN d'arc/VERB fut/VERB une/DET sainte/NOUN
+la/DET machine/NOUN fonctionna/VERB en/ADP cinq/NOUN minutes/NOUN
+jeanne/NOUN ecrivait/VERB une/DET lettre/NOUN
+jeanne/NOUN ecrivit/VERB une/DET lettre/NOUN
+anne/NOUN joua/VERB du/DET piano/NOUN pendant/NOUN deux/NOUN heures/NOUN
+anne/NOUN jouait/VERB du/DET piano/NOUN pendant/NOUN deux/NOUN heures/NOUN
+pierre/NOUN entra/VERB marie/NOUN telephona/NOUN
+pierre/NOUN entra/VERB marie/NOUN telephonait/NOUN
+karin/NOUN attrapa/VERB une/DET contravention/NOUN elle/PRON roulait/VERB trop/NOUN vite/NOUN
+karin/NOUN attrapa/VERB un/DET contravention/NOUN elle/PRON brulait/PRON un/DET feu/PRON rouge/VERB
+karin/NOUN attrapa/VERB une/DET contravention/NOUN elle/PRON avait/VERB roule/VERB trop/ADP vite/NOUN
+karin/NOUN attrapa/VERB un/DET contravention/NOUN elle/PRON avait/VERB brule/PRON un/DET feu/PRON rouge/VERB
+julie/NOUN entra/NOUN a/DET la/DET derniere/NOUN minute/NOUN elle/PRON portait/VERB un/DET suberbe/NOUN manteau/VERB rouge/NOUN
+julie/NOUN rentra/NOUN le/ADP soleil/DET lui/NOUN brulait/VERB les/PRON epaules/NOUN
+jean/NOUN tomba/NOUN max/NOUN le/VERB poussa/PRON
+pauline/NOUN entra/NOUN dans/DET la/NOUN piece/PRON elle/NOUN s'assit/NOUN dans/ADP un/DET coin/NOUN
+pendant/NOUN 10/NOUN ans/NOUN hudson/NOUN examina/NOUN la/DET planete/NOUN rouge/NOUN il/PRON decouvrit/NOUN
+jean/NOUN joua/VERB un/DET match/NOUN formidable/VERB il/PRON marqua/VERB le/DET premier/NOUN but/VERB
+paul/NOUN s'enerva/VERB ses/VERB invites/NOUN ne/PRON venaient/NOUN pas/ADV d'ailleurs/NOUN ils/ADP ne/NOUN vinrent/DET pas/ADV paul/NOUN
+depuis/NOUN le/DET debut/NOUN de/ADP l'annee/DET pauline/NOUN etait/NOUN une/VERB etudiante/DET assidue/NOUN elle/NOUN ne/NOUN man/ADV
+paul/NOUN s'enerva/VERB ses/VERB invites/NOUN ne/PRON venaient/NOUN pas/ADV d'ailleurs/NOUN ils/ADV ne/ADP vinrent/NOUN pas/DET il/ADV
+a/DET la/NOUN course/VERB donne/DET une/NOUN grande/DET soif/ADP jean/NOUN donne/VERB a/ADP jean/NOUN
+c/DET la/NOUN course/VERB donne/PRON .vraiment/DET soif/ADP a/NOUN jean/VERB donne/ADP jean/NOUN
+ne/ADP pas/NOUN souvent/NOUN lire/VERB les/DET journaux/NOUN ./NOUN ./NOUN
+il/PRON a/VERB consult/VERB beaucoup/NOUN de/ADP livres/NOUN
+^/NOUN pas/ADV heureux/VERB est/VERB une/DET condition/NOUN pour/NOUN ecrire/PRON des/VERB romans/NOUN
+ne/ADV pas/ADP lire/VERB souvent/NOUN joyce/NOUN est/VERB comprehensible/VERB
+ne/ADV pas/NOUN souvent/ADP lire/VERB joyce/NOUN est/VERB comprensible/VERB
+marie/NOUN s'est/PRON coupée/coupé/VERB
+marie/NOUN s'est/PRON coupé/coupée/VERB les/DET cheveux/NOUN
+trois/NUM journalistes/NOUN sont/DET arrêtés/DET
+trois/NUM journalistes/NOUN sont/DET arrêtés/DET
+on/PRON va/VERB lui/DET mettre/VERB le/DET bébé/NOUN dans/ADP les/DET bras/NOUN
+on/PRON va/VERB te/NOUN mettre/VERB dans/ADP ses/DET bras/NOUN
+louis/VERB {l'est/NOUN //VERB le/PRON devient/VERB //NOUN le/PRON reste},/VERB tr`/NOUN fid`ele/NOUN
+louis/VERB est/VERB triste/NOUN et/CONJ en/ADP col`/DET
+jean/NOUN se/PRON fera/NOUN pincer/NOUN à/ADP marie/NOUN
+marc/NOUN m'a/PRON fait/NOUN raccompagner/VERB à/ADP jacques/NOUN
+pierre/NOUN lui/PRON a/VERB donné/VERB un/DET livre/NOUN
+pierre/NOUN s'/PRON est/NOUN donné/VERB un/DET livre/NOUN
+l'homme/DET avec/NOUN lequel/NOUN je/NOUN crois/PRON qu'a/VERB soupé/DET marie/VERB
+matrix/DET whinsitu/NOUN french/NOUN
+il/PRON admire/VERB toujours/ADV qui/VERB
+combien/NOUN de/ADP véhicules/NOUN atil/NOUN conduit/PRON __/VERB
+anne/NOUN ´etait/VERB triste/NOUN
+anne/NOUN fut/VERB triste/NOUN
+jeanne/NOUN savait/VERB la/DET reponse/NOUN
+sudain/NOUN jeanne/NOUN sut/VERB la/DET reponse/NOUN
+hier/NOUN anne/NOUN fut/VERB triste/NOUN
+j'ai/PRON joué/VERB avec/VERB ilku:ra/DET
+il/PRON va/VERB beaucoup/NOUN lire/VERB de/VERB livres/NOUN //NOUN il/PRON a/VERB beaucoup/NOUN lu/VERB de/VERB livres/NOUN
+french/PRON j'ai/VERB le/DET mot/NOUN sur/ADP la/DET langue/NOUN
+french/PRON il/VERB dit/DET cela/NOUN avec/DET la/NOUN bouche/VERB mais/DET le/NOUN céur/ADV n'y/DET touche/ADP
+french/NOUN aveu/VERB du/NOUN bout/DET des/VERB lèvres/VERB
+où/NOUN croistu/DET que/PRON vont/DET se/NOUN cacher/PRON les/VERB chats/DET french/NOUN
+un/NOUN livre/NOUN et/CONJ un/NOUN cahier/VERB neufs/DET
+b7/NOUN un/NOUN savoir/CONJ et/NOUN un/VERB habileté/NOUN merveilleux/NOUN
+marie/NOUN lave/VERB marie/NOUN
+marie/NOUN se/PRON lave/NOUN
+jean/NOUN fait/NOUN se/PRON laver/NOUN marie/NOUN
+french/VERB gapping/NOUN grevisse/NOUN 1986:§260/CONJ son/PRON fils/NOUN
+je/PRON crois/VERB jean/NOUN être/VERB le/DET plus/NOUN intelligent/NOUN de/ADP tous/DET
+j'/PRON ai/VERB vu/NOUN elle/PRON
+je/PRON l'/VERB ai/VERB vu/VERB
+qui/NOUN il/PRON est/VERB venu/VERB
+les/DET cheveux/NOUN sont/NOUN ca/DET ¸/DET
+les/DET cheveux/NOUN c'/VERB est/PRON ca/VERB ¸/DET
+comment/NOUN crocro/NOUN a/VERB fait/NOUN pour/ADP apporter/NOUN la/DET surprise/NOUN s'il/NOUN est/PRON can/VERB
+jean/NOUN est/VERB fidèle/NOUN à/ADP ses/NOUN parents/NOUN
+jean/NOUN leur/ADP est/NOUN fidèle/NOUN
+marie/NOUN le/PRON croyait/VERB heureux/VERB
+ces/DET nombreuses/NOUN splendides/NOUN petites/NOUN voitures/NOUN
+la/DET voiture/NOUN de/ADP course/NOUN de/ADP jean/NOUN
+ð/DET le/NOUN tableau/ADP d'aristote/NOUN de/ADP ce/DET collectionneur/NOUN par/VERB rembrandt/PRON
+la/DET photo/NOUN de/ADP jean/NOUN de/ADP la/DET mer/NOUN
+le/DET désir/NOUN de/ADP vengeance/PRON de/ADP jean/NOUN
+le/DET départ/NOUN de/ADP jean/NOUN de/NOUN paris/NOUN
+la/DET promesse/NOUN de/ADP jean/NOUN à/ADP marie/NOUN
+la/DET photo/NOUN de/ADP la/DET mer/NOUN par/VERB jean/NOUN
+la/DET menace/NOUN d'israël/ADP de/NOUN représailles/ADP ok/PRON immédiates/NOUN
+la/DET menace/NOUN par/VERB israël/NOUN d'entreprendre/ADP des/NOUN représailles/PRON
+la/DET photo/NOUN sans/VERB attrait/NOUN de/ADP jean/NOUN sans/VERB attrait/NOUN de/ADP la/DET mer/NOUN
+un/DET tableau/NOUN splendide/NOUN de/ADP 1887/NOUN splendide/NOUN
+la/DET splendide/NOUN photo/NOUN de/ADP jean/NOUN de/ADP la/DET mer/NOUN
+une/DET photo/NOUN de/ADP ma/NOUN mère/NOUN récente/PRON splendide/NOUN
+une/DET photo/NOUN récente/PRON splendide/NOUN de/ADP ma/NOUN mère/NOUN
+la/DET voiture/NOUN rouge/VERB magnifique/NOUN de/ADP jean/NOUN
+la/DET voiture/NOUN rouge/VERB de/ADP jean/NOUN magnifique/américaine/VERB
+la/DET voiture/NOUN de/ADP 1958/NOUN rouge/VERB magnifique/VERB
+pas/ADV manger/VERB la/DET poupée/NOUN
+pas/ADV tomber/NOUN bébé/VERB
+marche/NOUN pas/ADV
+est/NOUN pas/ADV mort/NOUN
+patsy/NOUN est/NOUN pas/ADV làbas/DET
+a/PRON je/ADV n'aime/NOUN personne/NOUN
+marie/NOUN sait/NOUN que/DET travaille/VERB jean/NOUN
+je/PRON me/NOUN demand/NOUN e/NOUN si/NOUN déménagera/NOUN jean/NOUN
+je/PRON ne/ADV sais/NOUN pas/ADV où/NOUN a/VERB jean/NOUN mangé/NOUN
+où/VERB que/DET mangent/VERB les/DET enfants/NOUN
+elle/PRON se/NOUN demande/ADV quand/DET les/VERB mangera/PRON pierre/NOUN
+les/DET pommes/NOUN que/DET mange/NOUN pierre/NOUN viennent/VERB d'/NOUN angleterre/NOUN
+pierre/NOUN mange/NOUN quoi/DET
+que/DET mange/NOUN pierre/NOUN
+le/DET président/NOUN souvent/NOUN voit/VERB marie/NOUN
+jean/NOUN n'aime/VERB pas/ADV marie/NOUN
+avant/VERB que/DET je/PRON ne/ADV sois/VERB arrivé/VERB
+elle/PRON roule/VERB pas/ADV
+il/PRON est/VERB pas/ADV l`/DET
+aller/VERB dedans/VERB moi/NOUN
+pierre/NOUN est/VERB certain/VERB que/DET marie/NOUN est/NOUN partie/VERB
+pierre/NOUN n'est/ADV pas/ADV certain/NOUN que/DET marie/NOUN soit/VERB partie/VERB
+carole/NOUN a/VERB eu/VERB peur/NOUN que/DET sa/PRON mère/NOUN soit/VERB fâchée/DET
+carole/NOUN a/VERB eu/VERB peur/NOUN que/DET sa/PRON mère/NOUN ait/VERB été/VERB fachée/NOUN
+french/NOUN a/VERB mang´/VERB une/DET pomme/NOUN
+jean/NOUN peut/NOUN parler/NOUN anglais/NOUN
+le/DET gar¸/NOUN a/VERB frapp´/VERB le/DET chien/NOUN avec/VERB un/DET baton/NOUN
+la/DET soeur/NOUN de/ADP jean/NOUN
+une/DET fleur/NOUN blanche/NOUN
+jean/NOUN le/VERB voit/VERB
+ce/DET conducteur/NOUN me/ADP semble/VERB etre/VERB fatigue/VERB
+marie/NOUN a/VERB semble/VERB a/ADP jean/NOUN etre/VERB fatiguee/VERB
+marie/NOUN semble/VERB a/ADP jean/NOUN etre/VERB fatiguee/VERB
+jean/NOUN me/NOUN lui/NOUN a/VERB recommande/VERB
+jean/NOUN semble/VERB a/ADP marie/NOUN etre/ADP heureux/VERB
+jean/NOUN lui/ADP semble/NOUN etre/ADP heureux/VERB
+belle/VERB elle/PRON ne/ADV l'a/PRON jamais/NOUN été/VERB
+chanteratil/NOUN et/CONJ dansera/VERB avec/NOUN nous/NOUN
+jean/NOUN est/VERB plus/NOUN riche/PRON que/DET personne/NOUN comparative/NOUN
+c'/PRON est/VERB l'/DET idée/NOUN la/DET plus/NOUN stupide/NOUN que/DET personne/NOUN ait/NOUN eu/VERB superlative/VERB
+jean/NOUN n'/ADV a/VERB dit/VERB que/DET la/DET femme/NOUN d'/ADP aucun/NOUN de/ADP
+personne/ADV est/VERB venu/VERB
+rien/ADV est/VERB arrivé/VERB
+je/PRON fume/VERB pas/ADV
+je/PRON fume/VERB pas/ADV
+je/PRON ne/ADV fume/NOUN
+je/PRON n'/ADV ai/VERB donné/NOUN aucun/NOUN cadeau/NOUN à/ADP tout/NOUN le/DET monde/NOUN
+je/PRON n'/ADV ai/VERB pas/ADV donné/VERB un/DET cadeau/NOUN à/ADP tout/NOUN le/DET monde/NOUN
+je/PRON n'/ADV ai/VERB pas/ADV donné/VERB un/DET cadeau/NOUN à/ADP tout/NOUN le/DET monde/NOUN
+je/PRON le/VERB varrai/NOUN
+tu/PRON as/VERB embrassé/NOUN qui/NOUN
+pierre/NOUN a/VERB demandé/VERB tu/PRON as/VERB embrassé/NOUN qui/NOUN
+jean/NOUN et/CONJ marie/NOUN croient/VERB que/DET pierre/NOUN a/VERB embrassé/NOUN qui/NOUN
+que/NOUN tu/PRON as/VERB vu/VERB qui/NOUN
+il/PRON a/VERB donné/VERB quoi/DET à/ADP qui/NOUN
+marie/NOUN il/PRON lui/PRON a/VERB donné/VERB quoi/DET
+marie/NOUN parle/NOUN souvent/NOUN français/NOUN
+ne/NOUN pas/ADV parler/NOUN français/NOUN
+c'est/DET ma/NOUN livre/NOUN
+paul/NOUN fera/NOUN passer/NOUN son/PRON examen/NOUN `/ADP jean/NOUN
+french/NOUN a/VERB mang´/VERB une/DET pomme/NOUN
+jean/NOUN peut/NOUN parler/NOUN anglais/NOUN
+le/DET gar¸/NOUN a/VERB frapp´/VERB le/DET chien/NOUN avec/VERB un/DET baton/NOUN
+la/DET soeur/NOUN de/ADP jean/NOUN
+une/DET fleur/NOUN blanche/NOUN
+marie/NOUN s'est/PRON coupée/coupé/VERB
+marie/NOUN s'est/PRON coupé/coupée/VERB
+michel/NOUN dormir/VERB
+quand/NOUN j'y/NOUN habitais/NOUN je/VERB me/VERB baignais/NOUN imparfait/NOUN
+j'ai/PRON rencontré/VERB jean/NOUN la/NOUN semaine/DET dernière/NOUN deux/VERB jours/NOUN plus/NOUN tard/NOUN il/PRON était/VERB malade/NOUN
+j'ai/PRON rencontré/VERB jean/NOUN il/NOUN y/DET a/VERB une/DET semaine/NOUN aprèsdemain/DET il/NOUN était/VERB malade/NOUN
+j'ai/PRON rencontré/VERB jean/NOUN il/NOUN y/DET a/VERB une/DET semaine/NOUN dans/ADP deux/NOUN jours/NOUN il/PRON était/VERB malade/NOUN
+j'ai/PRON rencontré/VERB jean/NOUN il/NOUN y/DET a/VERB une/DET semaine/NOUN dans/ADP deux/NOUN jours/NOUN aprèsdemain/NOUN il/PRON serait/VERB malade/NOUN
+enfant/NOUN jouait/VERB dans/ADP la/DET rue/NOUN
+jean/NOUN buvais/VERB bière/NOUN
+donc/NOUN tu/PRON as/VERB introduit/VERB quel/DET homme/NOUN à/ADP quel/DET homme/NOUN
+donc/NOUN quel/DET homme/NOUN as/VERB tu/PRON introduit/VERB à/ADP quel/DET homme/NOUN
+c/DET il/PRON s'est/VERB dénoncé/VERB trois/NUM mille/DET hommes/NOUN ce/DET moisci/NOUN
+je/PRON le/VERB ferai/NOUN courir/PRON
+b/NOUN marie/PRON s'est/VERB décrite/VERB
+a/NOUN jean/PRON s'est/VERB introduit/VERB à/ADP paul/NOUN
+b/NOUN jean/PRON s'est/VERB acheté/VERB une/DET voiture/NOUN
+c/NOUN jean/ADV ne/VERB semble/NOUN intelligent/VERB qu'à/ADP luimême/PRON
+a/DET la/NOUN branche/PRON s'est/VERB cassée/VERB
+b/NOUN jean/PRON s'est/VERB évanoui/VERB
+b/DET le/NOUN crime/PRON s'est/VERB commis/VERB ce/DET matin/NOUN
+b/DET il/PRON s'en/VERB est/VERB lavé/VERB beaucoup/NOUN dans/ADP ces/DET douches/NOUN publiques/NOUN récemment/PRON
+c/DET il/PRON s'en/VERB est/VERB cassé/VERB beaucoup/NOUN dans/ADP ce/DET lavevaisselle/NOUN
+a/NOUN jean/PRON s'est/VERB envoyé/VERB une/DET lettre/NOUN
+paul/NOUN en/VERB mange/NOUN deux/NOUN
+je/PRON les/DET ai/VERB vus/VERB
+paul/NOUN le/PRON connatt/NOUN
+paul/NOUN les/DET a/VERB vus/VERB
+paul/NOUN y/DET est/VERB allé/VERB
+le/DET priz/NOUN lui/ADP a/VERB été/VERB présenté/VERB
+le/DET patron/NOUN en/NOUN a/VERB téléphoné/VERB hier/NOUN
+paul/NOUN la/PRON travaille/VERB avec/NOUN
+il/PRON dormait/VERB
+il/PRON a/VERB été/VERB élu/VERB
+il/PRON finit/VERB bient^t/NOUN
+vous/PRON les/DET mangez/PRON
+je/PRON ne/ADV les/DET en/NOUN tire/VERB pas/ADV
+paul/NOUN en/PRON mange/NOUN deux/NOUN
+que/DET jean/NOUN soit/VERB /est/VERB malade/NOUN de/VERB la/DET tuberculose/NOUN en/ADP 2003/NOUN
+marie/NOUN regrette/VERB que/DET jean/NOUN soit/est/VERB incompétent/VERB
+que/DET tu/PRON sois/VERB prudent/NOUN |sois/NOUN prudent/NOUN
+que/DET vous/PRON soyez/VERB prudents/VERB |soyez/NOUN prudents/NOUN
+tu/PRON vous/PRON admireras/NOUN
+tu/PRON vous/PRON trouveras/NOUN intelligents/NOUN
+tu/PRON voudras/VERB que/DET tu/PRON partes/VERB
+tu/PRON voudras/NOUN partir/ADP
+tu/PRON voudras/VERB que/DET tu/PRON te/PRON rases/NOUN à/DET 7h/NOUN
+tu/PRON voudras/VERB que/DET vous/PRON vous/PRON rasiez/NOUN à/DET 7h/NOUN
+tu/PRON voudras/VERB vous/NOUN raser/ADP à/DET 7h/NOUN
+georgei/NOUN voudrait/NOUN être/ADP élu/VERB
+jean/NOUN accepte/NOUN qu'il/DET parte/PRON en/VERB dernier/VERB
+jean/NOUN ne/NOUN se/NOUN console/NOUN pas/PRON que/DET son/PRON fils/NOUN soit/VERB handicappé/VERB
+si/ADP jean/NOUN était/VERB ici/NOUN nous/NOUN serions/VERB contents/VERB
+si/ADP jean/NOUN soit/VERB ici/VERB nous/NOUN serions/VERB contents/VERB
+si/ADP jean/NOUN rencontre/NOUN une/DET personne/NOUN qui/DET soit/VERB malade/NOUN il/PRON la/PRON réconfortera/VERB
+si/ADP jean/NOUN rencontrait/NOUN une/DET personne/NOUN qui/DET soit/VERB malade/NOUN il/PRON la/PRON réconforterait/NOUN
+jean/NOUN espère/VERB toujours/VERB que/DET marie/NOUN va/VERB venir/VERB
+jean/NOUN désire/VERB toujours/VERB que/DET marie/NOUN vienne/VERB
+jean/NOUN veut/VERB toujours/VERB que/DET marie/NOUN vienne/VERB
+jean/NOUN se/NOUN promène/NOUN alors/NOUN qu'il/PRON pleut/VERB
+jean/NOUN se/NOUN promène/NOUN bien/NOUN qu'il/PRON pleuve/VERB
+les/DET enfants/NOUN tous/DET ont/VERB tous/DET vu/VERB ce/DET film/NOUN tous/NOUN
+les/DET enfants/NOUN l'ont/VERB persuade/VERB de/ADP tous/NOUN acheter/VERB ce/DET livre/NOUN
+jean/NOUN aurait/VERB aime/VERB oser/NOUN rencontrer/NOUN tous/DET les/DET enfant/NOUN
+jean/NOUN aurait/VERB tous/DET aime/VERB oser/VERB les/DET rencontrer/NOUN
+jean/NOUN n'a/NOUN pas/ADV lu/VERB livres/NOUN
+jean/NOUN n'aime/NOUN pas/ADV marie/NOUN
+comprendre/NOUN a/VERB peine/DET l'italien/NOUN apres/NOUN cinq/NOUN ans/ADP d'etude/NOUN denote/NOUN un/DET
+ne/ADV pas/ADP lire/VERB souvent/NOUN joyce/NOUN est/VERB comprehensible/VERB
+ne/ADV pas/NOUN souvent/ADP lire/VERB joyce/NOUN est/VERB comprensible/VERB
+ils/DET la/PRON feront/VERB sans/VERB aucun/NOUN doute/NOUN pleurer/NOUN
+elles/DET feront/NOUN toutes/DET les/DET trois/NOUN soigneusement/NOUN contr^ler/NOUN
+fr/NOUN marie/NOUN le/NOUN fera/NOUN lire/VERB `/PRON jean/CONJ et/NOUN d´chirer/NOUN par/PRON paul/NOUN
+tu/PRON le/PRON donneras/NOUN `/ADP pierre/NOUN
+fr/NOUN nous/PRON l'/VERB avons/NOUN fait/NOUN laver/ADP `amarie/NOUN
+une/DET large/NOUN vallée/NOUN
+une/DET vallée/NOUN large/VERB
+la/DET invasion/NOUN fréquente/NOUN de/ADP jupiter/NOUN
+un/NOUN mal/NOUN
+quel/DET cheval/NOUN
+quels/DET chevaux/VERB
+les/DET trainzont/NOUN du/PRON retard/VERB
+un/DET groz/NOUN arbre/NOUN
+le/DET portrait/NOUN de/ADP chaque/PRON peintre/NOUN étranger/NOUN de/ADP son/PRON enfant/NOUN
+moi/NOUN je/PRON rejette/VERB cette/DET idée/NOUN
+je/PRON lui/PRON fais/NOUN manger/VERB
+il/DET est/VERB arrivé/DET trois/NUM filles/NOUN
+je/PRON ferai/VERB laver/NOUN max/NOUN à/ADP paul/NOUN
+je/PRON ferai/VERB courir/PRON paul/NOUN
+je/PRON le/VERB ferai/NOUN courir/PRON
+je/PRON le/VERB ferai/NOUN laver/NOUN à/ADP paul/NOUN
+je/PRON ferai/VERB se/PRON laver/NOUN paul/NOUN
+jean/NOUN se/PRON considère/NOUN intelligent/NOUN
+il/DET est/VERB arrivé/DET trois/NUM filles/NOUN hier/NOUN soir/ADV
+il/DET s'est/PRON lavé/VERB beaucoup/VERB de/NOUN touristes/NOUN dans/ADP ces/DET douches/NOUN publiques/NOUN récemment/PRON
+il/DET s'est/PRON cassé/VERB beaucoup/VERB de/NOUN verres/VERB dans/ADP ce/DET lavevaisselle/NOUN
+il/DET en/VERB est/VERB arrivé/DET trois/NUM hier/NOUN soir/ADV
+jean/NOUN se/PRON voit/VERB laver/NOUN marie/NOUN
+jean/PRON voit/NOUN marie/VERB se/NOUN laver/NOUN .himself/PRON
+jean/NOUN se/PRON plaît/déplaît/VERB sur/ADP cette/DET photo/NOUN
+jean/NOUN se/PRON dessine/NOUN
+jean/NOUN se/PRON cache/VERB
+le/DET bruit/NOUN //NOUN jean/NOUN a/VERB fâché/VERB pierre/NOUN
+ces/DET problèmes/VERB se/PRON considèrent/NOUN faciles/ADV ici/NOUN
+ils/DET se/PRON voient/VERB
+jean/NOUN souvent/NOUN embrasse/NOUN marie/NOUN
+jean/NOUN ne/NOUN pas/ADV voit/VERB marie/NOUN
+jean/NOUN n'a/NOUN pas/ADV lu/VERB livres/NOUN
+comprendre/NOUN à/VERB peine/DET l'italien/NOUN apres/NOUN cinq/NOUN ans/ADP d'étude/NOUN dénote/NOUN un/DET
+ne/ADV pas/ADP lire/VERB souvent/NOUN joyce/NOUN est/VERB compréhensible/VERB
+ne/ADV pas/NOUN souvent/ADP lire/VERB joyce/NOUN est/VERB comprénsible/VERB
+maman/NOUN manger/VERB daniel/VERB 1;8/PRON french/NOUN
+les/DET dinosaurs/NOUN ont/VERB disparu/NOUN
+les/DET cochons/NOUN mangent/VERB des/DET pommes/NOUN pour/ADP le/DET petit/VERB déjeuner/VERB
+le/NOUN dinosaur/NOUN a/VERB disparu/NOUN
+le/NOUN cochon/NOUN est/VERB un/DET animal/NOUN intelligent/NOUN
+hélène/NOUN porte/VERB toujours/DET jupe/NOUN
+hélène/NOUN porte/NOUN toujours/ADV jupes/NOUN
+tous/DET les/NOUN loups/VERB ont/VERB disparu/NOUN de/NOUN l'europe/NOUN
+la/DET tortue/NOUN loggerhead/NOUN est/VERB rare/VERB
+les/DET tortues/NOUN loggerhead/VERB sont/VERB rares/VERB
+paul/NOUN est/VERB rare/VERB
+les/DET filles/NOUN portent/VERB des/DET jupes/NOUN
+la/DET fille/NOUN porte/VERB une/DET jupe/NOUN
+un/DET dinosaur/NOUN a/VERB disparu/NOUN on/PRON kindlevel/ADP reading/DET can/NOUN only/NOUN
+les/DET dinosaurs/NOUN ont/VERB disparu/NOUN
+une/DET tortue/NOUN mange/VERB des/DET aubergines/NOUN
+les/DET tortues/NOUN mangent/VERB des/DET aubergines/NOUN
+babbage/VERB a/VERB inventé/VERB les/DET ordinateurs/NOUN
+les/DET philatélistes/NOUN font/NOUN collection/NOUN des/DET timbres9/NOUN
+le/NOUN philatéliste/VERB fait/VERB collection/VERB du/DET timbre/NOUN
+le/NOUN singe/NOUN te/PRON regarde/VERB d'un/DET drôle/NOUN oeil/NOUN
+un/DET homme1/NOUN et/NOUN une/DET femme2/NOUN sont/VERB entrés/VERB l'homme1/NOUN s'est/NOUN assis/PRON
+le/NOUN singe/NOUN te/PRON regarde/VERB d'un/DET drôle/NOUN oeil/NOUN
+ce/NOUN singe/NOUN te/PRON regarde/VERB d'un/DET drôle/NOUN oeil/NOUN
+ce/NOUN chien/NOUN dort/VERB mais/VERB ce/NOUN chien/NOUN ne/ADV dort/VERB pas/ADV
+le/NOUN chien/NOUN dort/VERB mais/VERB le/NOUN chien/NOUN ne/ADV dort/VERB pas/ADV
+cet/DET homme/NOUN est/VERB vraiment/ADV ennuyeux/VERB
+la/DET voiture/NOUN d'hélène/NOUN est/VERB dangereuse/VERB le/NOUN volant/NOUN est/VERB tordu/VERB
+la/DET voiture/NOUN d'hélène/NOUN est/VERB dangereuse/VERB ce/NOUN volant/NOUN est/VERB tordu/VERB
+ces/DET pommes/NOUN sont/VERB magnifiques/NOUN
+les/DET colibris/NOUN sont/VERB rares/VERB
+les/DET cochons/NOUN sont/VERB intelligents/DET
+les/DET cochons/NOUN mangent/VERB des/DET pommes/NOUN
+les/DET cochons/NOUN sont/VERB intelligents/DET
+les/DET cochons/NOUN mangent/VERB les/DET pommes/NOUN
+les/DET cochons/NOUN mangent/VERB des/DET pommes/NOUN
+les/DET chats/NOUN détestent/VERB les/DET chiens/NOUN
+les/DET cochons/NOUN mangent/VERB les/DET pommes/NOUN
+les/DET cochons/NOUN mangent/VERB des/DET pommes/NOUN
+des/DET cochons/NOUN sont/VERB intelligents/DET
+les/DET cochons/NOUN sont/VERB intelligents/DET
+de/DET chevaux/NOUN en/ADP bonne/NOUN santé/NOUN peuvent/NOUN tirer/VERB un/DET charrette/NOUN de/ADP trois/NUM tonnes/NOUN
+les/DET grévistes/NOUN ténaces/VERB peuvent/NOUN ruiner/VERB une/DET entreprise4/NOUN
+les/DET diplomats/NOUN doivent/VERB se/PRON montrer/VERB discrètes/DET
+les/DET cochons/NOUN sont/VERB intelligents/DET
+des/DET cochons/NOUN sont/VERB intelligents/DET
+des/DET cochons/NOUN mangent/VERB des/DET pommes/NOUN sous/NOUN la/DET fenêtre/NOUN
+quand/ADV les/DET chats/NOUN naissent/VERB ils/VERB sont/VERB aveugles/VERB
+des/DET grévistes/NOUN ténaces/VERB peuvent/NOUN ruiner/VERB une/DET entreprise/NOUN
+les/DET chats/NOUN peuvent/NOUN avoir/VERB les/DET yeux/VERB jaunes/DET
+les/DET colibris/NOUN peuvent/NOUN aller/VERB en/ADP arrière/VERB en/ADP volant/NOUN
+les/DET pingouis/NOUN peuvent/NOUN rester/VERB sous/NOUN l'eau/NOUN pendant/NOUN plusieurs/PRON minutes/NOUN
+des/DET agents/NOUN de/ADP police/NOUN de/ADP haut/NOUN niveau/NOUN doivent/VERB se/PRON montrer/VERB discrets/NOUN
+les/DET agents/NOUN de/ADP police/NOUN de/ADP haut/NOUN niveau/NOUN doivent/VERB se/PRON montrer/VERB discrets/NOUN
+je/VERB voudrais/VERB un/DET verre/VERB du/DET vin/NOUN
+des/DET oiseaux/VERB chantent/VERB dans/ADP le/NOUN jardin/VERB
+les/DET cochons/NOUN mangent/VERB des/DET pommes/NOUN
+il/PRON parla/VERB
+il/PRON a/VERB parlé/NOUN
+gianni/VERB non/NOUN ha/VERB più/NOUN parlato/NOUN
+gianni/VERB non/NOUN parla/NOUN più/NOUN
+jean/NOUN le/PRON fait/NOUN reveler/VERB le/DET //NOUN au/ADP juge/NOUN
+j'ai/PRON fait/VERB partir/VERB le/DET juge/NOUN
+il/DET restait/VERB un/DET problème/NOUN important/VERB que/DET
+il/DET a/VERB été/VERB mangé/NOUN beaucoup/NOUN de/ADP pommes/NOUN hier/VERB soir/NOUN
+il/DET a/VERB parlé/NOUN beaucoup/NOUN de/ADP ministres/NOUN hier/VERB soir/NOUN
+est/VERB plus/NOUN grand/NOUN que/DET marie/NOUN de/VERB 2/NOUN centimetres/NOUN
+il/PRON a/VERB dansé/VERB une/DET grande/NOUN danse/VERB
+ainsi/NOUN aime/VERB la/DET dame/NOUN l/VERB
+french/PRON a/DET si/NOUN errerent_/NOUN tant/NOUN en/NOUN tele/NOUN maniere/NOUN qu'il/NOUN vindrent/NOUN en/NOUN la/VERB praerie/VERB de/VERB wincestre/NOUN artu/DET
+marie/NOUN est/VERB là/DET qui/NOUN pleure/NOUN comme/VERB une/DET madeleine/NOUN
+c'est/PRON une/DET sacrée/NOUN veste/NOUN que/DET paul/NOUN a/VERB prise/NOUN hier/NOUN
+marcelle/NOUN est/VERB très/ADV fatiguée/ADJ ce/NOUN que/DET marie/NOUN n'est/ADV pas/ADV
+marcelle/NOUN est/VERB arrivée/VERB en/NOUN retard/VERB ce/NOUN qu'elle/DET ne/ADV fait/VERB jamais/NOUN
+marie/NOUN s'est/PRON coupée/coupé/VERB
+marie/NOUN s'est/PRON coupé/coupée/VERB
+jean/NOUN et/CONJ marie/NOUN liront/lira/VERB votre/NOUN livre/NOUN
+et/CONJ paul/NOUN et/CONJ michel/NOUN
+elle/PRON comprend/NOUN mal/VERB tout/NOUN
+les/DET enfants/NOUN venez/NOUN ici/NOUN
+j'ai/PRON vu/VERB le/DET chat/NOUN traverser/NOUN la/DET rue/NOUN
+anne/NOUN ´etait/VERB triste/NOUN
+anne/NOUN fut/VERB triste/NOUN
+jeanne/NOUN savait/VERB la/DET reponse/NOUN
+sudain/NOUN jeanne/NOUN sut/VERB la/DET reponse/NOUN
+hier/NOUN anne/NOUN fut/VERB triste/NOUN
+hier/NOUN jeanne/NOUN sut/VERB la/DET reponse/NOUN
+il/PRON a/VERB les/DET yeux/NOUN bleus/VERB
+entreprise/PRON de/ADP construction/NOUN
+impresa/PRON edile/NOUN
+esprit/NOUN de/ADP competition/NOUN
+spirito/NOUN competitivo/NOUN
+syntactic/ADP functions/DET french:/NOUN frappante/NOUN
+french:que/NOUN cette/DET maison/NOUN te/PRON pla^/VERB no/NOUN elle/PRON ne/ADV me/NOUN pla^/VERB pas/ADV
+french:que/NOUN cette/DET maison/NOUN te/PRON plait/VERB non/NOUN elle/PRON ne/ADV me/NOUN plait/VERB
+il/PRON ferme/VERB les/DET yeux/NOUN
+il/PRON a/VERB perdu/VERB la/DET memoire/NOUN
+parce/VERB qu'il/PRON avait/VERB deja/ADV mange/NOUN il/PRON n'avait/VERB pas/ADV faim/NOUN
+frenchgerman:une/NOUN decision/DET /NOUN einen/DET beschlu/NOUN fassen/NOUN
+qui/NOUN ça/DET //NOUN qui/NOUN ça/DET
+le/DET pauvre/NOUN garçon/NOUN
+bouqui/NOUN la/PRON connat/NOUN
+bouqui/NOUN ne/ADV connat/NOUN pas/ADV bouquinette/NOUN
+je/PRON te/NOUN mettrai/VERB tout/DET en/ADP blanc/NOUN
+il/PRON tait/VERB au/VERB cinema/ADP stfr/NOUN
+bouqui/NOUN la/PRON connat/NOUN
+les/DET enfants/NOUN ont/VERB chacun/PRON reçu/VERB un/DET ballon/VERB
+les/DET enfants/NOUN ont/VERB beaucoup/DET reçu/NOUN de/ADP ballons/VERB
+il/PRON a/VERB acheté/VERB beaucoup/NOUN de/ADP livres/NOUN
+il/PRON a/VERB beaucoup/DET dormi/NOUN
+il/PRON a/VERB beaucoup/DET aimé/VERB ce/DET livre/NOUN
+ils/DET ont/VERB tous/DET beaucoup/DET lu/NOUN de/ADP livres/NOUN
+combieni/NOUN ontelles/VERB beaucoup/DET lu/DET ti/NOUN de/ADP livres/NOUN
+combieni/NOUN ontelles/VERB toutes/DET lu/DET ti/VERB de/ADP livres/NOUN
+combieni/NOUN ontelles/VERB chacune/DET lu/PRON ti/VERB de/ADP livres/NOUN
+paul/NOUN a/VERB beaucoup/DET ri/NOUN
+il/PRON a/VERB /tut//DET acheté/NOUN ses/PRON meubles/NOUN à/NOUN crédit/NOUN
+il/PRON y/DET a/ont/VERB des/ADP chats/NOUN dans/ADP le/DET jardin/NOUN
+essui/VERB glace/NOUN
+french/NOUN il/PRON mange/VERB une/DET pomme/NOUN
+moi/NOUN je/PRON porte/NOUN la/DET table/NOUN
+tu/PRON attends/VERB qui/NOUN
+qui/NOUN attendstu/NOUN
+où/NOUN tu/PRON vas/VERB
+a/PRON elle/VERB a/NOUN tous/PRT semblé/paru/VERB les/VERB avoir/DET lus/DET
+b/VERB il/NOUN veut/NOUN tout/ADP qu'on/NOUN lui/VERB fasse/NOUN `he/NOUN wants/VERB that/DET we/NOUN make/NOUN him/PRON everything'/NOUN
+combien/NOUN astu/VERB ouvert/VERB de/ADP boites/VERB
+combien/NOUN de/ADP boites/NOUN astu/VERB ouvertes/DET
+combien/NOUN de/ADP personnes/VERB ont/VERB rigolé/VERB
+combien/NOUN sont/DET arrivé/DET de/ADP personnes/VERB
+combien/NOUN de/ADP personnes/VERB sont/DET arrivées/DET
+en/ADP combien/NOUN astu/VERB fini/NOUN ta/PRON thèse/DET d'années/NOUN
+en/ADP combien/NOUN d'années/NOUN astu/VERB fini/NOUN ta/PRON thèse/DET
+combien/NOUN astu/VERB donné/VERB de/ADP livres/NOUN à/ADP jean/NOUN
+combien/NOUN de/ADP livres/NOUN astu/VERB donné/NOUN à/ADP jean/NOUN
+a/ADP combien/NOUN astu/VERB donné/VERB un/DET livre/NOUN de/ADP personnes/VERB
+a/ADP combien/NOUN de/ADP personnes/NOUN astu/VERB donné/VERB un/DET livre/NOUN
+a/ADP combien/NOUN astu/VERB souri/NOUN de/ADP personnes/VERB
+a/ADP combien/NOUN de/ADP personnes/NOUN astu/VERB souri/VERB
+combien/NOUN de/ADP maisons/NOUN veuxtu/NOUN acheter/ADP
+combien/NOUN astu/VERB lu/VERB de/ADP mes/NOUN articles/DET
+combien/NOUN de/ADP mes/NOUN articles/DET astu/VERB lus/VERB
+combien/NOUN y/DET atil/NOUN de/ADP centres/NOUN de/ADP la/DET petite/NOUN enfance/NOUN en/ADP ontario/NOUN
+combien/NOUN y/DET atil/NOUN de/ADP polluants/NOUN dans/ADP un/DET béluga/NOUN
+combien/NOUN y/DET atil/NOUN d'atomes/VERB dans/ADP l'univers/DET
+combien/NOUN y/DET atil/VERB de/ADP langues/VERB différentes/NOUN sur/NOUN terre/PRON
+combien/NOUN y/DET atil/NOUN de/ADP chines/NOUN
+combien/NOUN y/DET atil/NOUN de/ADP débris/NOUN en/ADP orbite/VERB autour/NOUN de/ADP la/DET terre/NOUN
+combien/NOUN y/DET atil/NOUN de/ADP fumeurs/NOUN au/ADP canada/NOUN
+combien/NOUN y/DET auratil/NOUN de/VERB coupures/ADP de/VERB billets/ADV en/ADP euros/NOUN
+combien/NOUN y/DET avaitil/NOUN de/ADP robocops/PRON à/ADP genève/NOUN pendant/NOUN le/DET g8/NOUN
+combien/NOUN existetil/NOUN de/ADP types/NOUN de/ADP porphyrie/NOUN
+combien/NOUN astu/VERB lu/VERB de/ADP livres/NOUN
+qu'estce/DET que/DET tu/PRON as/VERB mangé/NOUN
+j'ai/PRON mangé/VERB du/DET poulet/NOUN
+combien/NOUN de/ADP personnes/NOUN pensestu/DET qui/DET
+combien/NOUN de/ADP kilomètres/NOUN croistu/VERB qui/DET
+combien/NOUN d'hommes/NOUN croistu/VERB blancqui/DET seraient/VERB
+combien/NOUN de/ADP personnes/VERB veuxtu/VERB qui/DET
+combien/NOUN de/ADP députés/NOUN croistu/VERB qui/DET
+combien/NOUN de/ADP journaux/NOUN croistu/VERB qui/DET
+combien/NOUN de/ADP livres/NOUN astu/VERB écrit/VERB
+combien/NOUN astu/VERB écrit/NOUN de/ADP livres/NOUN
+combien/NOUN de/ADP livres/NOUN astu/VERB relus/VERB l'été/DET dernier/NOUN
+combien/NOUN astu/VERB relu/PRON de/ADP livres/NOUN l'été/DET dernier/NOUN
+combien/NOUN adopter/NOUN de/ADP rats/NOUN
+combien/NOUN de/ADP rats/NOUN adopter/NOUN
+combien/NOUN un/DET homme/NOUN atil/VERB lu/VERB de/ADP livres/NOUN
+combien/NOUN existetil/NOUN de/ADP types/NOUN de/ADP porphyrie/NOUN
+combien/NOUN listu/PRON de/ADP livres/NOUN pendant/NOUN les/DET vacances/NOUN d'été/NOUN
+combien/NOUN le/DET critique/NOUN atil/VERB apprécié/VERB de/ADP films/NOUN
+combien/NOUN atil/VERB possédé/VERB de/ADP tableaux/NOUN
+combien/NOUN possedez/NOUN vous/PRON de/ADP dvd/NOUN
+combien/NOUN connaistu/NOUN de/ADP langues/VERB
+combien/NOUN préfèrestu/VERB de/ADP gâteaux/NOUN
+y/DET a/VERB jean/NOUN qui/DET possède/NOUN plein/NOUN de/ADP dvd/NOUN
+combien/NOUN de/ADP livres/NOUN un/DET homme/NOUN atil/VERB lu/VERB
+combien/NOUN de/ADP livres/NOUN astu/VERB lu/VERB souvent/NOUN
+combien/NOUN astu/VERB lu/VERB souvent/NOUN de/ADP livres/NOUN
+j'ai/PRON lu/VERB souvent/NOUN des/DET livres/NOUN de/ADP zola/NOUN
+lavemains/NOUN accrochecoeur/NOUN
+il/PRON ne/ADV marche/NOUN pas/ADV
+jean/NOUN est/VERB plus/NOUN grand/VERB que/DET je/PRON ne/VERB le/PRON suis/NOUN
+je/PRON crains/NOUN qu'il/DET ne/ADV pleuve/PRON
+tu/PRON vois/PRON qui/NOUN ce/DET soir/NOUN
+jean/NOUN ne/ADV mange/PRON pas/ADV quoi/DET
+jean/NOUN et/CONJ pierre/NOUN croient/VERB que/DET marie/NOUN a/VERB vu/VERB qui/NOUN
+je/PRON me/PRON demande/NOUN jean/NOUN a/VERB vu/VERB qui/NOUN
+jean/NOUN ne/ADV mange/PRON pas/ADV quoi/DET
+jean/NOUN et/CONJ pierre/NOUN croient/VERB que/DET marie/NOUN a/VERB vu/VERB qui/NOUN
+jean/NOUN a/VERB pensé/DET ip/ADP faire/NOUN quoi/NOUN
+tout/DET le/DET monde/NOUN aime/VERB quoi/DET
+jean/NOUN donne/VERB tous/DET les/DET restes/NOUN à/ADP qui/NOUN
+seulement/ADV jean/NOUN arrive/DET à/ADP faire/NOUN quoi/DET
+même/ADV jean/NOUN arrive/DET à/ADP faire/NOUN quoi/DET
+il/PRON fait/VERB toujours/ADV quoi/DET le/DET dimanche/NOUN
+il/PRON fait/VERB souvent/NOUN quoi/DET le/DET dimanche/NOUN
+jean/NOUN a/VERB dit/VERB quoi/DET
+qui1/NOUN ne/ADV mange/PRON pas/ADV quoi/DET
+qui1/NOUN croit/VERB que/DET marie/NOUN a/VERB vu/VERB qui2/NOUN
+pierre/NOUN ne/ADV veut/NOUN pas/ADV que/DET marie/NOUN fasse/NOUN quoi/DET
+sai/PRON mère/NOUN a/VERB vu/VERB quii/NOUN
+qui1/NOUN se/PRON demande/NOUN qui2/NOUN a/VERB vu/VERB quoi/DET
+il/PRON a/VERB seulement/ADV aimé/VERB le/DET livre/NOUN
+quelqu'un/NOUN a/VERB aimé/VERB tous/DET les/DET garçons/NOUN
+quelqu'un/NOUN a/VERB seulement/ADV aimé/VERB tous/DET les/DET garçons/NOUN
+il/PRON a/VERB seulement/ADV aimé/VERB qui/NOUN
+cp/NOUN combieni/NOUN atil/VERB lu/PRON de/VERB livres/ADP ti/NOUN
+combien/NOUN de/NOUN livresi/ADP atil/NOUN vp/VERB beaucoup/PRON v/DET lus/NOUN ti/VERB
+combieni/NOUN ontils/NOUN vp/VERB tous/DET lu/DET de/VERB livres/ADP ti/NOUN
+je/PRON ai/VERB vu/VERB personne/NOUN
+de/ADP quoi/DET a/VERB parlé/NOUN jean/NOUN
+comment/NOUN a/VERB parlé/NOUN jean/NOUN
+elle/PRON roule/VERB pas/ADV
+le/DET garçon/NOUN qui/NOUN avait/NOUN donné/VERB une/DET fleur/NOUN à/ADP la/DET fille/NOUN
+pourquoi/NOUN jean/NOUN est/VERB il/NOUN venu/NOUN
+pourquoi/NOUN est/VERB il/NOUN venu/NOUN
+pourquoi/NOUN jean/NOUN est/VERB venu/VERB
+jean/NOUN lit/VERB tous/NOUN les/DET soirs/NOUN
+jean/NOUN lisait/VERB tous/NOUN les/DET soirs/NOUN
+jean/NOUN semble/VERB ip/PRON lui/PRON avoir/VERB lavé/VERB les/DET cheveux/NOUN
+overt/DET whmovement:/NOUN qu'at/NOUN il/ADP donné/NOUN à/VERB qui/PRON
+donc/NOUN tu/PRON as/VERB introduit/VERB quel/DET homme/NOUN à/ADP quel/DET homme/NOUN
+donc/NOUN quel/DET homme/NOUN as/VERB tu/PRON introduit/VERB à/ADP quel/DET homme/NOUN
+modf/DET ainsi/DET s'amusaient/VERB bien/NOUN cette/DET nuit/NOUN
+complètement/NOUN perdre/VERB la/DET tête/NOUN pour/NOUN les/DET belles/NOUN étudiantes/NOUN
+être/VERB souvent/VERB triste/NOUN
+french/NOUN il/PRON mange/VERB une/DET pomme/NOUN
+moi/NOUN je/PRON porte/NOUN la/DET table/NOUN
+tu/PRON attends/VERB qui/NOUN
+qui/NOUN attendstu/NOUN
+où/NOUN tu/PRON vas/VERB
+moi/NOUN je/PRON sors/VERB
+nonstandard/NOUN french/PRON porte/NOUN la/DET table/NOUN
+moi/NOUN je/PRON porte/NOUN la/DET table/NOUN
+moi/NOUN je/PRON porte/NOUN la/DET table/NOUN
+moi/NOUN je/PRON porte/NOUN la/DET table/NOUN
+jules/NOUN il/VERB porte/NOUN la/DET table/NOUN
+jules/NOUN il/VERB porte/NOUN la/DET table/NOUN
+nous/alexandra/NOUN et/CONJ moi/PRON on/VERB porte/NOUN la/DET table/NOUN
+nous/alexandra/NOUN et/CONJ moi/PRON on/VERB porte/NOUN la/DET table/NOUN
+alexandra/NOUN et/CONJ moi/PRON nous/VERB portons/NOUN la/DET table/NOUN
+alexandra/NOUN et/CONJ moi/PRON nous/VERB portons/NOUN la/DET table/NOUN
+quand/NOUN partira/VERB probablement/VERB ton/PRON ami/NOUN
+ton/PRON ami/NOUN partira/VERB probablement/VERB quand/NOUN
+partira/VERB ton/PRON ami/NOUN quand/NOUN
+je/PRON me/PRON demande/NOUN quand/NOUN partira/VERB ton/PRON ami/NOUN
+la/DET maison/NOUN ou/NOUN habite/VERB cet/DET homme/NOUN est/VERB tres/ADV jolie/VERB
+marie/NOUN pense/DET que/DET pierre/NOUN a/VERB souvent/VERB cri´e/VERB
+avec/NOUN qui/NOUN a/VERB pretendu/VERB marie/NOUN que/DET sortirait/VERB jean/NOUN
+sait/NOUN marie/NOUN comment/NOUN luc/NOUN est/VERB mort/VERB
+jean/NOUN lui/PRON a/VERB donnl/VERB le/DET livre/NOUN
+le/DET livre/NOUN a/VERB ltl/NOUN donnl/VERB e/PRON marie/NOUN par/VERB jean/NOUN
+marie/NOUN a/VERB ltl/NOUN donnl/VERB le/DET livre/NOUN par/VERB jean/NOUN
+mcshcf/NOUN nc/DET wasbcrhe/VERB bc/VERB mcesgcnna/NOUN tc/NOUN &cdigu/NOUN llu/PRON
+bcrhe/VERB mcshcf/NOUN bc/VERB mcesgcnna/NOUN tc/NOUN &cdigu/NOUN
+bcrhe/VERB mcshcf/NOUN bc/VERB mcesgcnna/NOUN tc/NOUN wchibu/NOUN
+elle/PRON roule/VERB pas/ADV
+claire/NOUN nageait/NOUN
+tu/PRON pense/DET que/DET marie/NOUN est/VERB venue/VERB
+il/PRON a/VERB donne/VERB ´/DET `/ADP qui/NOUN
+jean/NOUN et/CONJ marie/NOUN croient/VERB que/DET pierre/NOUN a/VERB embrasse/NOUN qui/NOUN
+il/PRON a/VERB donne/VERB ´/DET a/ADP `/NOUN
+le/DET directeur/NOUN du/DET département/NOUN semble/NOUN être/ADP accepté/VERB
+le/DET directeur/NOUN du/DET département/NOUN espère/NOUN être/ADP accepté/VERB
+a/ADP qui/NOUN téléphone/VERB ton/PRON amie/NOUN
+ton/PRON amie/NOUN téléphone/NOUN à/ADP qui/NOUN
+comment/NOUN tu/PRON as/VERB ti/NOUN fait/NOUN
+pourquoi/NOUN elle/PRON y/DET va/VERB ti/ADP
+t'/PRON tu/DET en/ADP forme/NOUN
+on/NOUN esttu/NOUN chanceux/VERB
+nous/NOUN sommestu/DET en/ADP guerre/NOUN
+rose/NOUN atu/VERB grossi/NOUN
+voistutu/PRON des/DET solutions/NOUN
+elle/PRON rencontretu/NOUN qui/NOUN
+qui/NOUN atu/VERB tapé/VERB à/DET la/DET porte/NOUN
+quelle/DET fille/NOUN jouetu/NOUN
+parlezvoustu/NOUN anglais/NOUN
+quelle/DET remarque/PRON il/PRON atu/VERB fait/VERB
+avec/NOUN quel/DET garçon/NOUN il/PRON atu/VERB parlé/NOUN
+quoi/DET t'/PRON tu/VERB mangé/NOUN
+que/DET t'/PRON tu/VERB mangé/NOUN
+combien/NOUN ça/NOUN co/DET tetu/NOUN
+quand/NOUN elle/PRON auratu/VERB fini/NOUN
+elle/NOUN a/VERB rencontré/NOUN qui/DET
+qui/DET elle/NOUN a/VERB rencontré/NOUN
+est/VERB jean/NOUN a/ADP paris/NOUN
+quand/NOUN jean/NOUN estil/PRON venu/VERB
+nisun/ADV el/PRON vien/VERB
+il/PRON semble/VERB que/DET
+quand/ADV est/NOUN jean/NOUN venu/VERB
+quando/ADV ze/NOUN nane/NOUN vegnúo/VERB
+quand/ADV estil/NOUN venu/VERB
+quando/ADV zelo/NOUN vegnuo/VERB
+quand/NOUN jean/NOUN vientil/NOUN
+cossa/DET che/DET la/NOUN magna/PRON
+qui/NOUN tu/PRON aswh/VERB vu/VERB
+qui/VERB que/DET tu/PRON as/VERB vu/VERB
+seraistu/VERB parti/VERB je/PRON t'/PRON aurais/VERB accompagné/NOUN
+que/DET vous/NOUN cherchez/VERB
+que/DET cherche/VERB rose/VERB
+que/DET rose/PRON cherchetelle/VERB
+veuxtuti/NOUN
+jean/lui/NOUN je/PRON crois/DET aime/VERB beaucoup/DET la/DET musique/NOUN
+il/VERB je/PRON crois/DET aime/VERB beaucoup/DET la/DET musique/NOUN
+personne/NOUN il/PRON a/VERB invité/VERB jean/NOUN
+pierre/NOUN selon/ADP toi/NOUN parletu/NOUN anglais/NOUN
+il/NOUN selon/ADP toi/NOUN parletu/NOUN anglais/NOUN
+qui/VERB qu'/DET tapé/VERB à/VERB la/DET porte/DET 11a/NOUN
+quoi/DET c'/DET que/VERB t'/DET tu/PRON mangé/VERB 9c/NOUN
+t'/PRON tu/VERB mangé/NOUN quoi/DET
+quoi/DET t'/PRON tu/VERB mangé/NOUN
+qui/NOUN qui/NOUN a/VERB tapé/VERB à/DET la/DET porte/NOUN
+ü/NOUN il/ADV n'y'a/NOUN pas/VERB {/ADV de/NOUN gens//ADP âme/NOUN qui/NOUN vive/DET }/VERB sur/ADP la/DET pelouse/NOUN
+ü/ADV personne/NOUN n'a/VERB été/VERB vu/VERB ce/DET matin/NOUN
+ü/PRON je/NOUN ne/ADP te/NOUN donnerai/VERB pas/ADV une/DET calotte/NOUN
+ü/PRON je/NOUN ne/ADP te/NOUN donnerai/VERB pas/ADV une/DET calotte/NOUN
+ü/NOUN pierre/NOUN n'a/VERB pas/ADV posé/VERB {un//NOUN de}/NOUN lapin/VERB à/ADP jeanne/NOUN
+ü/NOUN non/NOUN pierre/NOUN n'a/VERB pas/ADV {cassé/NOUN sa/PRON pipe//NOUN largué/VERB les/DET amarres}/NOUN
+pas/ADV non/NOUN pas/ADV
+plus/NOUN non/NOUN pas/ADV
+ü/NOUN pierre/ADV n'est/VERB plus/NOUN du/DET tout/DET content/VERB
+pierre/NOUN n'est/ADV non/VERB plusadv/NOUN du/DET tout/DET content/VERB
+ü/NOUN pierre/NOUN non/NOUN plusadv/ADV n'est/VERB plus/NOUN du/DET tout/DET content/VERB
+ü/NOUN pierre/ADV n'est/NOUN pas/ADV du/DET tout/DET content/VERB
+non/NOUN pas/ADV que/DET pierre/NOUN soit/VERB pas/ADV content/VERB du/DET tout/DET
+deux/NOUN fois/NOUN personne/ADV
+il/PRON a/VERB cessé/VERB deux/NOUN fois/NOUN rien/ADV
+pierre/NOUN a/VERB passé/VERB sous/NOUN silence/NOUN trois/NUM fois/NOUN rien/ADV aujourd'hui/NOUN
+il/PRON est/VERB passé/VERB inaperçu/VERB trois/NUM fois/NOUN personne/ADV chez/DET pierre/NOUN
+deux/NOUN fois/NOUN rien/ADV est/VERB arrivé/VERB
+trois/NUM fois/NOUN rien/NOUN a/VERB été/VERB fait/NOUN par/VERB pierre/NOUN
+trois/NUM fois/NOUN personne/ADV est/VERB venu/NOUN chez/DET pierre/NOUN
+ü/PRON je/ADV n'ai/VERB pas/ADV été/VERB bien/VERB hier/NOUN
+a:/PRON tu/NOUN n'es/DET pas/ADV gentille/NOUN
+ü/DET les/NOUN hommes/DET killõ/VERB aimé/VERB savent/NOUN leur/DET chance/NOUN
+ü/PRON tull'entends/VERB
+ü/PRON voull'avez/VERB trouvé/NOUN
+ü/PRON tu/ADV nell'entends/NOUN pas/ADV
+ü/PRON vous/ADV nell'avez/VERB pas/ADV trouvé/NOUN
+ü/PRON tull'entends/NOUN pas/ADV bien/VERB
+ü/PRON voull'avez/VERB trouvé/NOUN pas/ADV assez/NOUN tôt/ADV
+weh/NOUN him/NOUN call/NOUN not/VERB the/DET tall/NOUN fairhaired/NOUN ,/NOUN but/VERB the/DET great/NOUN fool/NOUN
+ü/NOUN faisle/PRON
+le/PRON fais/VERB
+ü/NOUN n'/NOUN oubliesen/NOUN pas/ADV
+ü/NOUN disle/NOUN moi/ADP
+le/PRON fais/NOUN pas/ADV
+ü/VERB inquiètetoi/PRON bien/VERB
+'/PRON t'occupe/NOUN de/ADP tes/PRON affaires/VERB
+ü/VERB inquiètetoi/PRON pas/ADV
+ü/NOUN fermela/PRON
+ü/PRON je/VERB veux/DET qu'il/PRON ne/ADV mange/PRON rien/ADV
+ü/PRON je/ADV ne/NOUN veux/ADV rien/DET qu'il/PRON mange/PRON
+'/PRON ü/VERB je/DET veux/PRON qu'il/PRON mange/VERB {bien//VERB encore}/NOUN
+'/PRON ü/VERB j'exige/DET qu'il/PRON mange/PRON tout/DET
+ü/NOUN pierre/DET pense/DET que/NOUN jeanne/NOUN {ün'est//NOUN ne/NOUN soit}/VERB pas/ADV heureuse/VERB
+ü/NOUN pierre/DET pense/DET que/NOUN jeanne/NOUN {ün'est//NOUN ne/NOUN soit}/VERB pas/ADV belle/VERB
+ü/PRON j'arrive/DET à/ADP la/DET maison/NOUN
+ü/PRON j'arrive/NOUN à/ADP faire/NOUN ça/DET tout/DET seul/NOUN
+ü/PRON il/PRON s'agit/NOUN de/ADP ne/NOUN pas/ADV moisir/NOUN ici/NOUN
+ü/PRON je/PRON m'avise/NOUN de/ADP ne/NOUN pas/ADV prendre/NOUN trop/NOUN de/ADP place/NOUN
+ü/PRON "je/ADV ne/NOUN m'avise/NOUN pas/ADV de/ADP prendre/NOUN trop/NOUN de/ADP place//NOUN j'fais/PRON attention/NOUN aux/NOUN dimensions"./DET 69/NOUN
+ü/PRON je/ADP lui/NOUN conseille/ADP de/NOUN ne/ADV pas/PRON s'approcher/DET trop/ADP près/NOUN
+ü/PRON tu/VERB as/NOUN dû/ADP dépenser/NOUN un/DET paquet/NOUN
+'/DET il/NOUN vaut/VERB mieux/NOUN s'être/ADP montré/NOUN
+ü/PRON j'ai/VERB mangé/NOUN tout/DET le/DET chocolat/NOUN
+ü/PRON j'ai/VERB tout/DET mangé/ADV le/DET chocolat/NOUN
+ü/PRON je/VERB suis/DET tout/NOUN monté/DET l'escalier/NOUN
+ü/NOUN {/PRON j'ai//VERB je/PRON suis}/VERB passé/VERB le/DET pont/NOUN
+ü/PRON je/VERB viens/ADP de/NOUN monter/DET tout/DET l'escalier/NOUN
+je/PRON ne/ADV viens/VERB de/ADP manger/NOUN rien/ADV de/ADP bon/NOUN
+je/PRON ne/ADV viens/VERB de/ADP rien/NOUN manger/PRON de/ADP bon/NOUN
+ü/PRON je/VERB viens/ADP de/NOUN ne/ADV pas/NOUN monter/DET l'escalier/NOUN
+ü/PRON je/VERB l'ai/VERB fait/NOUN manger/VERB tout/DET le/DET chocolat/NOUN
+ü/PRON je/VERB l'ai/VERB fait/NOUN tout/DET manger/VERB le/DET chocolat/NOUN
+ü/PRON je/VERB l'ai/VERB tout/DET fait/NOUN manger/VERB le/DET chocolat/NOUN
+ü/PRON je/VERB l'ai/VERB laissé/NOUN manger/PRON tout/DET le/DET chocolat/NOUN
+ü/PRON je/VERB l'ai/VERB laissé/NOUN tout/DET manger/VERB le/DET chocolat/NOUN
+ü/PRON je/VERB l'ai/DET tout/VERB laissé/NOUN manger/VERB le/DET chocolat/NOUN
+ü/PRON je/VERB l'ai/VERB envoyé/PRON manger/PRON tout/DET le/DET chocolat/NOUN
+ü/PRON je/VERB l'ai/VERB envoyé/PRON tout/DET manger/VERB le/DET chocolat/NOUN
+ü/PRON je/ADV n'ai/VERB pas/ADV mangé/ADV le/DET chocolat/NOUN
+ü/PRON je/ADV ne/DET suis/ADV pas/NOUN monté/DET l'escalier/NOUN
+ü/PRON je/ADV ne/NOUN vais/NOUN pas/NOUN manger/VERB le/DET chocolat/NOUN
+je/PRON l'ai/VERB fait/VERB ne/NOUN manger/NOUN pas/PRON le/ADV chocolat/DET .80/NOUN
+ü/PRON je/VERB l'ai/VERB fait/NOUN ne/NOUN pas/ADV manger/VERB le/DET chocolat/NOUN
+ü/PRON je/VERB ne/PRON l'ai/ADV pas/VERB fait/NOUN manger/VERB le/DET chocolat/NOUN
+ü/PRON je/VERB l'ai/VERB laissé/NOUN ne/NOUN pas/ADV manger/VERB le/DET chocolat/NOUN
+ü/PRON je/VERB ne/PRON l'ai/ADV pas/VERB laissé/NOUN manger/VERB le/DET chocolat/NOUN
+ü/PRON je/VERB l'ai/VERB envoyé/PRON ne/NOUN pas/ADV manger/VERB le/DET chocolat/NOUN
+ü/PRON je/VERB ne/PRON l'ai/ADV pas/VERB envoyé/PRON manger/VERB le/DET chocolat/NOUN
+j/NOUN "miroir/NOUN magique/NOUN disle/NOUN me/ADP le:/PRON qui/VERB estce/VERB qui/DET habite/VERB le/DET châtiau"81/NOUN
+%/PRON "j'voulais/VERB vous/ADP dire/ADP de/ADP pas/NOUN vous/PRON laisser/NOUN vous/PRON impressionner"/NOUN
+jean/NOUN {me/NOUN lui//ADP lui/NOUN me}/NOUN présente/VERB
+ü/PRON j'ai/VERB exigé/VERB que/DET personne/NOUN ne/NOUN soit/VERB arrêté/VERB
+ü/PRON je/ADV n'ai/VERB exigé/VERB que/DET personne/NOUN ne/NOUN soit/VERB arrêté/VERB
+pierre/NOUN ne/NOUN prétend/VERB ne/NOUN pas/ADV venir/VERB
+ü/DET le/NOUN petit/NOUN écureuil/NOUN prétend/VERB ne/NOUN pas/ADV le/NOUN quitter/ADP
+ü/PRON je/ADV veux/VERB que/DET rien/ADV ne/NOUN soit/VERB mangé/VERB
+ü/NOUN on/NOUN devait/NOUN ne/NOUN jamais/NOUN le/NOUN revoir/ADP
+ü/DET il/ADV n'est/VERB venu/NOUN personne/ADV ü/ADV personne/ADV n'est/VERB venu/NOUN
+j/ADV point/PRON i/ADV n'est/NOUN besoin/NOUN de/ADP faire/NOUN des/DET salamalecs/NOUN
+ü/NOUN n'pleut/PRON plus/NOUN
+ü/VERB "ont/NOUN défoncé/DET le/NOUN portail//DET du/NOUN château/DET du/NOUN roi/NOUN louis//CONJ et/PRON l'ont/VERB surpris//NOUN .../DET l'idiot".98/NOUN
+ü/VERB "ont/ADP touché/ADP à/NOUN rien//DET sont/NOUN partis/NOUN plus/NOUN loin//NOUN rien/ADP à/NOUN dire//NOUN faut/ADP savoir//DET c'que/DET vouloir".101/ADP
+ü/VERB "sans/ADV même/DET un/NOUN billet/ADP d'absence//NOUN doucement/VERB la/DET porte/NOUN ai/VERB refermée".103/NOUN
+ü/NOUN "on/NOUN ne/NOUN l'a/VERB pas/ADV vue/VERB longtemps//VERB s'en/PRON est/NOUN allée/VERB comme/VERB sa/VERB peine//PRON au/NOUN dernier/DET jour/NOUN du/NOUN printemps"./DET 104/NOUN
+ü/NOUN "rien/ADP à/NOUN faire/DET !.../NOUN tout/NOUN essayé/NOUN n'en/PRON démordent/ADV pas:/NOUN veulent/NOUN aller/ADP à/DET la/NOUN mecque/VERB point/DET c'est/DET tout/ADP
+ü/VERB "'n'avez/VERB rien/ADV d'autre/ADP à/NOUN faire/ADP que/NOUN me/DET courir/ADP dans/NOUN les/ADP pieds/DET ."116/NOUN
+ü/NOUN "snowball/NOUN d'eagle/PRON avons/VERB complètement/NOUN perdu/VERB l'hostile/DET ."129/NOUN
+ü/NOUN "m'en/VERB occupe/NOUN fred/NOUN je/PRON t'embrasse/PRON !"130/NOUN
+ü/PRON s'élimine/VERB sans/NOUN nuire/ADP
+ü/NOUN pierre/NOUN n'a/VERB pas/ADV mangé/NOUN de/ADP chocolat/NOUN
+pierre/NOUN a/VERB posté/NOUN beaucoup/NOUN de/ADP lettres/NOUN
+pierre/NOUN a/VERB beaucoup/NOUN posté/NOUN de/ADP lettres/NOUN
+son/PRON regard/NOUN a/VERB beaucoup/NOUN plu/VERB à/ADP de/ADP minettes/NOUN
+ü/NOUN ça/ADP me/NOUN fait/NOUN trop/ADP de/NOUN bien/NOUN ça/NOUN me/ADP fait/NOUN de/ADP bien/NOUN
+ü/NOUN il/ADP me/NOUN fit/VERB promettre/ADP de/NOUN ne/NOUN te/ADP la/NOUN répéter/PRON jamais/PRON
+il/NOUN me/ADP fit/NOUN promettre/VERB de/ADP ne/NOUN te/NOUN la/ADP répéter/PRON plus/PRON
+ü/ADV pas/NOUN âme/DET qui/VERB vive/ADV n'est/VERB arrivée/DET
+ü/ADV pas/VERB grandchose/NOUN ne/PRON s'est/VERB passé/VERB
+pas/ADV quiq/NOUN n'est/ADV parti/VERB 171/VERB
+ü/NOUN qui/ADV n'est/NOUN pas/ADV parti/VERB
+ü/NOUN quelqu'un/ADV n'est/NOUN pas/ADV parti/VERB
+%/PRON je/ADV n'ai/VERB pas/ADV vu/VERB personne/NOUN
+%/PRON je/ADV n'ai/VERB pas/ADV rien/ADV dit/NOUN à/ADP personne/NOUN
+%/DET il/ADV n'est/NOUN pas/ADV arrivé/DET personne/ADV
+%/ADV personne/ADV n'est/NOUN pas/ADV arrivé/DET
+%/ADV pas/ADV personne/ADV n'est/VERB arrivé/DET
+ü/PRON c'est/VERB un/DET pabô/NOUN
+ü/ADV personne/ADV n'est/NOUN beau/VERB
+ü/NOUN non/PRON il/ADV n'est/NOUN pas/ADV beau/VERB
+jean/NOUN fait/NOUN partir/VERB paul/NOUN
+jean/NOUN fait/NOUN partir/NOUN à/ADP paul/NOUN
+jean/NOUN fait/NOUN laver/NOUN la/DET vaisselle/NOUN les/DET enfants/NOUN
+jean/NOUN lui/ADP fait/NOUN partir/VERB
+ü/NOUN pierre/DET la/NOUN fait/ADP laver/ADP à/DET l'enfant/NOUN
+cela/DET fera/NOUN téléphoner/NOUN pierre/NOUN à/ADP ses/NOUN parents/NOUN
+cela/DET le/PRON fera/NOUN téléphoner/NOUN à/ADP ses/NOUN parents/NOUN
+cela/DET leur/ADP fera/NOUN téléphoner/NOUN leur/DET fils/NOUN
+pierre/NOUN la/DET fait/NOUN ne/NOUN pas/ADV le/DET laver/ADP
+ü/NOUN pierre/DET la/NOUN fait/ADP laver/ADP à/DET l'enfant/NOUN
+pierre/NOUN la/DET fait/VERB lui/DET laver/ADP
+ü/NOUN pierre/PRON lui/VERB fait/NOUN ne/ADV pas/PRON la/DET laver/ADP
+pierre/NOUN la/DET fait/NOUN ne/NOUN pas/ADV lui/DET laver/ADP
+ü/NOUN pierre/NOUN fait/ADP faire/DET un/NOUN sort/ADP à/DET la/NOUN tarte/ADP à/DET l'enfant/NOUN
+ü/NOUN pierre/PRON lui/VERB fait/DET lui/NOUN faire/ADP un/DET sort/NOUN
+ü/PRON "je/ADV ne/NOUN sais/ADV rien//ADP de/DET l'avenir//NOUN mais/VERB je/PRON sais/NOUN bien//VERB qu'il/DET est/PRON temps/VERB de/NOUN partir/ADP ."/VERB
+non/NOUN oui/NOUN
+resto/NOUN qui/NOUN finché/NOUN non/ADV arrivi/DET
+resto/NOUN qui/NOUN finché/NOUN arrivi/DET
+resto/NOUN qui/NOUN finché/NOUN non/ADV parli/NOUN
+resto/NOUN qui/NOUN finché/NOUN parli/NOUN
+ü/NOUN pierre/VERB est/NOUN encore/NOUN plus/VERB beau/DET que/PRON je/ADV ne/VERB {croyais//NOUN savais}/NOUN
+ü/NOUN pierre/VERB est/VERB moins/NOUN fidèle/DET que/PRON je/ADV ne/NOUN {pensais//NOUN apprenais}/VERB
+ü/PRON il/PRON se/NOUN passera/ADP du/NOUN temps/VERB avant/DET que/PRON je/VERB ne/PRON le/PRON revoie/NOUN pas/ADV
+ü/PRON "j'ai/VERB bien/NOUN peur/NOUN que/DET nous/NOUN ne/NOUN devions/NOUN compter/NOUN que/ADV sur/NOUN nous/VERB seuls"/NOUN
+ü/NOUN jeanne/NOUN n'a/VERB que/ADV son/PRON seul/NOUN mari/NOUN pour/NOUN amant/VERB
+ü/DET la/NOUN lune/NOUN n'atelle/VERB {/PRON jamais//NOUN une/VERB fois}/VERB été/ADV qu'un/DET astre/NOUN mort/NOUN
+ü/NOUN "des/VERB noisettes/VERB géantes/PRON je/VERB croyais/DET que/DET ces/DET choseslà/NOUN n'/VERB arrivaient/NOUN jamais/ADV que/ADP dans/DET les/NOUN rêves/ADP d'un/DET
+ü/PRON ça/ADV ne/NOUN fait/NOUN {jamais//NOUN une/VERB fois}/ADV qu'une/NOUN semaine/NOUN à/ADP attendre/NOUN
+ü/PRON je/VERB {crains//NOUN doute//VERB empêche//VERB évite}/DET qu'il/PRON ne/ADV vienne/VERB
+ü/PRON je/VERB {crains//NOUN doute//VERB empêche//VERB évite}/DET qu'il/PRON ne/ADV vienne/VERB pas/NOUN
+ü/PRON je/ADV ne/NOUN {crains//NOUN doute//VERB empêche//DET évite}/ADV pas/DET qu'il/PRON ne/ADV vienne/VERB pas/NOUN
+ü/PRON je/VERB ÷/PRON l'aime/VERB {pas//NOUN bien//VERB certes}/NOUN
+ü/DET que/PRON je/VERB ÷/PRON l'aime/VERB
+ü/DET une/NOUN espèce/ADP d'idiot/PRON
+ü/DET un/NOUN espèce/ADP d'idiot/PRON
+ü/DET une/NOUN espèce/ADP d'idiot/NOUN est/VERB venu/VERB e/NOUN
+ü/DET un/NOUN espèce/ADP d'idiot/NOUN est/VERB venu/VERB
+ü/DET l'intérieur/NOUN de/ADP son/PRON âme/NOUN est/VERB noir/VERB
+ü/DET l'intérieur/NOUN de/ADP son/PRON âme/NOUN est/VERB noire/VERB
+ü/NOUN jeanne/VERB est/NOUN conne/NOUN
+ü/NOUN jeanne/VERB a/DET l'air/NOUN {conne//NOUN intelligente}/NOUN
+ü/NOUN jeanne/VERB a/DET l'air/NOUN {con//NOUN intelligent}/NOUN
+ü/DET que/NOUN diable/NOUN ne/NOUN saistu/PRON pas/ADV où/NOUN trouver/ADP
+ü/DET quelle/NOUN bêtise/PRON te/NOUN demandestu/PRON si/NOUN pierre/NOUN a/VERB faite/VERB
+ü/DET la/NOUN bêtise/VERB que/DET pierre/NOUN a/VERB fait/VERB
+ü/ADP "si/DET la/NOUN foudre/VERB était/NOUN tombée/NOUN on/PRON l'aurait/VERB entendu".222/PRON
+ü/DET la/NOUN bêtise/NOUN a/VERB été/VERB faite/NOUN par/VERB pierre/NOUN
+ü/DET des/NOUN bêtises/ADP de/DET ce/NOUN genre/PRON tu/ADV n'en/NOUN as/VERB jamais/ADV fait/DET
+ü/PRON te/NOUN s/NOUN folies/PRT passagères/VERB m'ont/NOUN mis/DET la/NOUN tête/DET à/DET l'envers/NOUN
+ü/PRON je/VERB ÷/PRON l'ai/VERB pris/PRON
+ü/NOUN jell'ai/VERB prise/VERB
+ü/NOUN jeanne/NOUN n'a/VERB {pas//VERB plus//NOUN jamais}/ADV un/DET radis/NOUN depuis/NOUN son/PRON divorce/NOUN
+ü/NOUN pierre/NOUN fait/PRON ses/VERB achats/VERB avant/DET que/VERB grandmonde/ADV n'envahisse/NOUN le/DET magasin/NOUN
+pierre/NOUN a/VERB fait/VERB ses/VERB achats/VERB après/NOUN que/DET grandmonde/VERB ait/VERB 236/NOUN envahi/VERB le/DET magasin/NOUN
+pierre/NOUN a/VERB traversé/VERB la/DET pelouse/NOUN en/ADP voyant/VERB âme/NOUN qui/DET vive/VERB
+ü/NOUN pierre/PRON se/NOUN demande/NOUN s'il/PRON apprendra/VERB grandchose/VERB à/DET ce/DET cours/NOUN
+ü/NOUN on/NOUN verrait/VERB grandmonde/ADP sur/DET la/NOUN pelouse/DET que/PRON ça/NOUN m'étonnerait/VERB
+ü/NOUN jeanne/VERB est/VERB moins/VERB sortable/DET que/NOUN pierre/ADV n'est/VERB causant/NOUN
+ü/DET "ce/DET qui/NOUN va/VERB être/VERB folichon/PRON c'est/NOUN d'expliquer/ADP tout/NOUN ça/DET à/DET tonton/ADP georges/NOUN ."237/NOUN
+ü/NOUN pierre/VERB {nie//NOUN avoue}/NOUN avoir/ADP dit/NOUN grandchose/VERB
+ü/NOUN pierre/VERB est/VERB {surpris//NOUN blasé}/VERB que/DET jeanne/NOUN soit/VERB sortable/VERB
+ü/DET cet/NOUN endroit/ADV n'est/NOUN pas/ADV folichon/NOUN
+ü/VERB {ce/ADV n'est/NOUN pas//ADV c'est/PRON vachement}/PRON ragoûtant/NOUN
+ü/NOUN pierre/ADV n'est/VERB aucunement/ADV triste/NOUN
+ü/NOUN jeanne/ADV n'est/VERB ni/ADV belle/VERB ni/ADV bonne/VERB
+ü/NOUN jeanne/VERB est/VERB {dure//NOUN facile}/NOUN à/ADP la/DET comprenette/NOUN
+ü/PRON il/VERB est/NOUN agréable/ADP de/NOUN manger/VERB avec/NOUN {une//NOUN aucune}/NOUN cuillère/NOUN
+'/DET ü/NOUN l'usage/ADP d'aucun/NOUN couteau/NOUN ne/NOUN facilite/NOUN pas/ADV le/DET découpage/NOUN du/DET steak/NOUN
+ü/ADV rien/NOUN ne/PRON s'est/VERB passé/VERB
+ü/NOUN non/NOUN pierre/ADV n'est/NOUN pas/ADV beau/VERB
+ü/NOUN pierre/NOUN n'aime/VERB {pas//NOUN que}/VERB jeanne/NOUN
+ü/PRON ce/ADV n'est/NOUN pas/ADV lui/VERB que/DET pierre/NOUN a/VERB vu/VERB
+ü/ADP comprendre/DET ce/NOUN livre/NOUN n'est/NOUN pas/ADV de/ADP la/DET tarte/NOUN
+ça/PRON mange/NOUN du/ADP foin/NOUN
+'/DET l'habit/NOUN fait/NOUN le/DET moine/NOUN
+ü/DET le/NOUN fond/ADP de/DET l'air/NOUN est/VERB frais/NOUN
+'/VERB estce/PRON que/DET je/PRON veux/VERB mon/NOUN neveu/NOUN
+ü/NOUN jeanne/NOUN trouve/DET que/DET le/NOUN fond/ADP de/DET l'air/NOUN est/VERB frais/NOUN
+je/PRON ne/ADV veux/NOUN pas/ADV mon/NOUN papa/NOUN
+ü/ADP a/NOUN bouchequeveuxtun/NOUN
+ü/NOUN pierre/PRON s'est/VERB cassé/VERB le/DET cul/NOUN pour/NOUN jeanne/NOUN
+ü/NOUN pierre/NOUN ne/PRON s'est/NOUN pas/ADV cassé/VERB le/DET cul/NOUN pour/NOUN jeanne/NOUN
+{les//NOUN ses}/PRON arrières/VERB que/DET pierre/NOUN a/VERB protégés/VERB
+le/DET beurre/NOUN comme/VERB dans/ADP lequel/DET pierre/NOUN est/VERB entré/VERB
+la/DET girafe/NOUN que/DET pierre/NOUN a/VERB peignée/VERB
+le/DET chaud/NOUN que/DET jeanne/NOUN a/VERB eu/VERB
+ü/NOUN pierre/NOUN n'a/VERB pas/ADV posé/NOUN de/ADP lapin/NOUN à/ADP jeanne/NOUN
+ü/NOUN pierre/NOUN n'a/VERB pas/ADV roulé/VERB de/ADP patin/NOUN à/ADP jean/NOUN
+la/DET patte/NOUN que/DET pierre/NOUN a/VERB graissée/VERB
+'/DET l'oignon/NOUN que/DET jeanne/NOUN a/VERB graissé/VERB
+il/PRON est/VERB tombé/NOUN un/DET verdict/NOUN
+un/DET verdict/NOUN est/VERB tombé/NOUN
+ü/DET l'/NOUN homme/VERB est/DET un/NOUN loup/NOUN pour/DET l'homme/NOUN
+pierre/NOUN part/VERB en/DET guerre/NOUN à/DET la/DET guerre/NOUN comme/NOUN à/DET la/DET guerre/NOUN
+le/DET bien/NOUN appelle/NOUN le/DET bien/NOUN en/ADP bien/NOUN
+les/DET filles/NOUN jouent/NOUN à/ADP jouer/NOUN à/DET un/DET jeu/NOUN
+j/PRON "c'est/VERB pas/ADV juste/NOUN ,/PRON c'est/VERB pas/ADV juste/NOUN et/CONJ c'est/PRON pas/VERB juste/ADV ..."251/NOUN
+vraiment/PRON pierre/NOUN mange/NOUN vraiment/VERB une/DET sauterelle/NOUN
+maintenant/ADV pierre/NOUN mange/ADV maintenant/ADV une/DET sauterelle/NOUN
+pierre/NOUN ne/NOUN mange/NOUN pas/ADV pas/ADV une/DET sauterelle/NOUN
+ü/NOUN pierre/NOUN n'a/VERB pas/ADV touttoutq/DET compris/NOUN
+ü/NOUN comme/NOUN atroce/NOUN chanteur/VERB obispo/VERB est/NOUN plus/VERB pire/DET que/VERB dave/ADV n'est/VERB pire/VERB que/DET pagny/NOUN
+ü/PRON c'est/VERB peutêtre/VERB ouvert/NOUN si/NOUN on/VERB revient/VERB après/NOUN
+ü/DET "l'/NOUN illusion/ADP de/VERB croire/DET qu'on/NOUN durera/VERB toujours".256/NOUN
+ü/NOUN nonnon/PRON je/VERB suis/NOUN sûr/DET que/NOUN pierre/ADV n'est/NOUN pas/ADV venu/VERB
+ü/DET "alors/PRON je/NOUN puis/PRON vous/VERB assurer/DET qu'aucune/NOUN photo/NOUN d'île/ADP ou/NOUN de/VERB bateau/ADP ne/NOUN comporte/NOUN rien/VERB de/ADV ce/ADP genre"./DET 276/NOUN
+ü/PRON "il/VERB nie/DET qu'aucun/NOUN sousmarin/NOUN connu/NOUN ou/VERB inconnu/NOUN se/PRON trouve/NOUN dans/ADP ses/PRON eaux/NOUN territoriales".278/NOUN
+ü/PRON b:/ADV je/VERB n'ai/ADV pas/ADV pas/NOUN mangé/PRON j'ai/VERB mangé/NOUN légèrement/VERB
+tu/PRON ne/ADV tousses/NOUN pas/ADV pas/ADV ce/DET matin/NOUN
+je/PRON ne/NOUN te/ADP demande/NOUN pas/ADV pas/ADV de/ADP ne/NOUN pas/ADV venir/VERB
+ü/PRON il/NOUN n'a/VERB pas/ADV été/NOUN pas/ADV détruit/VERB
+ü/ADV personne/ADV n'est/NOUN pas/ADV venu/VERB
+ü/NOUN aucun/NOUN étudiant/NOUN n'a/VERB lu/VERB aucun/NOUN livre/NOUN
+je/PRON ne/ADV vois/VERB pas/ADV personne/ADV
+%/PRON je/ADV n'ai/VERB pas/ADV vu/VERB personne/NOUN
+je/PRON ne/ADV vois/VERB pas/ADV personned/ADV
+je/PRON ne/ADV vois/VERB pas/ADV rienq/ADV
+%/PRON je/ADV ne/NOUN veux/ADV pas/NOUN {/NOUN jamais//NOUN plus//NOUN guère}/NOUN rien/ADV devoir/NOUN à/ADP personne/NOUN
+%/NOUN il/ADV ne/NOUN faut/ADV pas/NOUN {/NOUN jamais//NOUN plus//NOUN guère}/NOUN rien/NOUN dire/ADP à/ADP personne/NOUN
+ü/NOUN pierre/NOUN ne/NOUN fait/NOUN rien/ADV üpierre/NOUN ne/NOUN fait/NOUN pas/NOUN quoi/NOUN que/ADV ce/NOUN soit/NOUN
+pas/ADV plus/NOUN
+ü/VERB ".../NOUN mais/NOUN interdiction/NOUN absolue/ADP de/NOUN franchir/DET la/NOUN limite/DET des/NOUN eaux/NOUN territoriales/NOUN dominicaines/NOUN sous/NOUN aucun/NOUN
+ü/NOUN "fred/NOUN évite/NOUN soigneusement/NOUN d'en/ADP parler/NOUN à/ADP personne/ADP ."/NOUN 335/NOUN
+ü/PRON je/VERB veux/DET qu'il/PRON ne/ADV mange/NOUN {pas//NOUN plus}/NOUN
+ü/ADV "pas/NOUN un/ADP d'entre/NOUN nous/NOUN ne/NOUN peut/NOUN se/PRON vanter/VERB de/ADP n'avoir/NOUN jamais/VERB connu/NOUN la/NOUN peur/DET panique/NOUN ."/NOUN
+ü/PRON je/ADV ne/NOUN veux/ADV pas/DET qu'il/PRON ne/ADV vienne/VERB pas/ADV
+ü/PRON je/ADV n'exige/NOUN pas/ADV que/DET tu/PRON ne/ADV veuilles/NOUN pas/ADV ne/NOUN pas/ADV venir/ADP
+ü/PRON je/ADV n'exige/NOUN pas/ADV que/DET tu/PRON veuilles/VERB venir/VERB
+ü/PRON vous/VERB auriez/NOUN intérêt/ADP à/NOUN disparaître/VERB avant/DET que/NOUN moi/PRON je/ADP vous/VERB casse/DET toute/DET la/NOUN cafetière/ADP sur/DET la/NOUN tête/NOUN si/NOUN
+ü/PRON "vous/VERB auriez/NOUN intérêt/ADP à/NOUN disparaître/VERB avant/DET que/NOUN moi/NOUN je/PRON ne/NOUN vous/ADP casse/VERB toute/DET la/DET cafetière/NOUN sur/ADP la/DET tête/NOUN !"344/NOUN
+pierre/NOUN de/ADP partir/VERB
+ü/DET il/NOUN y'a/VERB le/DET feu/NOUN
+ü/DET il/NOUN y'a/VERB le/DET patron/NOUN
+ü/DET il/NOUN y'a/VERB le/DET président/NOUN de/ADP la/DET république/NOUN
+'/NOUN ü/ADV il/NOUN n'y'a/VERB pas/ADV le/DET feu/NOUN au/ADP lac/NOUN
+'/DET il/NOUN y'a/VERB le/DET feu/NOUN au/ADP lac/NOUN
+ü/PRON lui/PRON il/PRON m'énerve/DET
+ü/DET "quel/NOUN maladroit/DET cet/NOUN aubergiste/ADV non/ADV seulement/PRON il/NOUN n'a/VERB rieni/VERB à/NOUN manger/ADV mais/NOUN il/NOUN faut/ADP encore/NOUN qu'il/VERB lei/PRON
+ü/ADV non/ADV seulement/PRON il/VERB a/ADV que/NOUN dalle/ADP de/NOUN boni/ADP à/NOUN manger/VERB mais/PRON il/VERB faut/VERB encore/DET qu'il/PRON lei/PRON renverse/NOUN par/NOUN terre/NOUN
+ü/PRON c'est/ADV seulement/NOUN quand/NOUN on/NOUN n'a/VERB pas/ADV besoin/NOUN de/ADP quoi/NOUN que/ADP ce/NOUN soit/PRON d'important/DET i/PRON qu'il/VERB faut/NOUN lei/ADP lui/NOUN
+'/ADP au/NOUN lieu/ADP de/DET qu'il/PRON aide/VERB jeanne/NOUN pierre/NOUN va/VERB dormir/ADP
+j/PRON il/NOUN fait/ADV rien/NOUN {/NOUN qu'//ADP d'}à/ADP m'embêter/NOUN !352/DET
+%/NOUN jeanne/NOUN ne/NOUN fait/NOUN {/NOUN qu'//ADP d'}à/ADP acheter/NOUN des/DET bêtises/NOUN
+ü/NOUN parle/ADP à/NOUN pierre/VERB avant/DET qu'il/PRON ne/ADV parte/VERB
+ü/NOUN pierre/NOUN chauffe/PRON son/NOUN moteur/NOUN avant/ADP de/NOUN ne/NOUN partir/NOUN
+ü/PRON il/VERB faudrait/DET que/NOUN pierre/VERB soit/NOUN maso/NOUN pour/DET qu'il/PRON reste/NOUN avec/NOUN jeanne/NOUN
+ü/PRON plutôt/DET que/ADP de/NOUN le/ADP voir/ADP partir/PRON je/VERB préfère/NOUN m'en/VERB aller/VERB
+ü/ADP agir/NOUN en/NOUN en/NOUN connaissant/DET l'enjeu/NOUN
+ü/DET que/NOUN ne/PRT lui/VERB astu/NOUN pas/ADV dit/NOUN là/DET
+ü/DET que/NOUN ne/PRT lui/VERB astu/NOUN pas/ADV dit/NOUN
+ü/DET que/PRT lui/VERB astu/PRON dit/VERB là/DET
+ü/DET que/PRT lui/VERB astu/PRON dit/VERB
+'/DET que/NOUN le/NOUN lui/ADP atil/VERB dit/ADV dit/NOUN
+ü/PRON je/NOUN vous/ADP le/PRON demande/DET pas/ADV
+'/PRON ü/NOUN tu/NOUN m'étonnes/DET pas/ADV
+'/PRON ü/VERB c'est/PRON ton/VERB père/DET qui/NOUN va/NOUN être/ADV content/VERB content/VERB
+üfrench:/NOUN personne/ADV n'}/NOUN a/VERB téléphoné/VERB
+ü/ADV personne/NOUN n'a/NOUN {téléphoné//VERB vu/VERB ma/NOUN perceuse}/VERB
+ü/PRON je/ADP me/NOUN demande/NOUN si/ADV personne/NOUN ne/NOUN viendra/NOUN avec/NOUN moi/NOUN
+ü/NOUN pierre/NOUN ne/NOUN rêve/ADV pas/ADP d'être/ADP beau/VERB
+ü/NOUN qui/NOUN ne/NOUN rêve/ADV pas/ADP d'être/ADP beau/VERB
+ü/NOUN mieux/NOUN vaut/ADV ne/NOUN {pas//NOUN plus//ADV jamais}/DET que/PRON tu/PRON l'apprennes/VERB
+ü/PRON il/VERB faut/ADV ne/NOUN {pas//NOUN plus//ADV jamais}/DET que/PRON tu/PRON l'apprennes/VERB
+ü/NOUN ne/NOUN {pas//NOUN plus//ADV jamais}/DET que/PRON tu/PRON l'apprennes/VERB est/VERB une/DET bonne/NOUN idée/NOUN
+a/ADP moins/NOUN ne/NOUN pas/ADV {que//NOUN de}/VERB
+ü/PRON "il/PRON s'est/VERB peint/VERB en/ADP bleu/NOUN pour/ADP ne/NOUN pas/ADV que/DET je/PRON puisse/NOUN lui/PRON faire/NOUN signer/NOUN le/DET contrat".366/NOUN
+ü/DET "alors/NOUN il/ADP lui/NOUN sourit/ADP pour/NOUN ne/ADV pas/DET qu'elle/NOUN s'inquiète"./PRON 369/VERB
+ü/PRON je/ADV n'ai/VERB rien/ADV vu/VERB
+'/PRON j'ai/VERB vu/VERB tout/DET
+ü/PRON je/ADV n'ai/VERB vu/VERB personne/NOUN
+ü/NOUN pierre/VERB a/VERB laissé/DET le/NOUN chocolat/ADP à/NOUN jeanne/NOUN pour/NOUN ne/ADV pas/DET qu'elle/NOUN ne/ADV grossisse/NOUN pas/ADV
+charles/NOUN ne/NOUN doit/NOUN pas/ADV manger/PRON si/ADP je/PRON ne/ADV le/NOUN lui/ADP commande/NOUN
+je/PRON ne/ADV reposerai/VERB pas/ADV de/ADP tout/DET mon/NOUN vivant/VERB
+ü/DET la/NOUN terre/VERB serait/DET un/NOUN paradis/NOUN si/PRON elle/VERB n'était/NOUN pas/ADV si/NOUN mal/VERB habitée/VERB
+ü/DET il/ADV n'est/NOUN pas/ADV de/ADP pire/VERB ennemi/NOUN que/DET soimême/PRON
+ü/DET il/ADV n'est/NOUN pas/ADV de/ADP plus/NOUN belle/VERB ville/ADP que/DET paris/NOUN
+ü/PRON je/ADV ne/NOUN connais/ADV personne/DET qui/NOUN n'aime/VERB pas/ADV prendre/NOUN le/DET temps/NOUN de/ADP vivre/NOUN
+ü/NOUN pierre/VERB est/NOUN plus/ADP intéressant/DET que/VERB grandmonde/NOUN ne/PRON l'est/VERB dans/ADP sa/PRON classe/VERB
+ü/VERB "mais/PRON c'est/VERB le/DET plus/NOUN fier/VERB service/NOUN que/DET tu/NOUN m'aies/ADP jamais/VERB rendu/NOUN ."/NOUN
+ü/PRON je/NOUN veux/ADP épouser/DET un/NOUN prince/VERB ou/NOUN n'épouser/ADP personne/NOUN
+ü/PRON je/NOUN veux/ADP épouser/DET un/NOUN prince/VERB ou/VERB préfère/NOUN n'épouser/ADP personne/NOUN
+ü/ADV rien/NOUN n'arrivera/NOUN sinon/NOUN du/ADP bon/NOUN
+ü/NOUN jeanne/VERB aime/NOUN pierre/NOUN sinon/ADV personne/ADV
+ü/ADV personne/NOUN n'aime/VERB pierre/NOUN sinon/NOUN jeanne/NOUN
+ü/NOUN pierre/NOUN veut/NOUN certes/ADP manger/NOUN et/NOUN ne/NOUN pas/ADV boire/ADP
+ü/NOUN pierre/ADV n'est/NOUN pas/ADV sorti/VERB ni/NOUN hier/NOUN ni/ADV aujourd'hui/NOUN
+ü/NOUN pierre/NOUN n'a/VERB eu/VERB aucune/ADV dépense/PRON supplémentaire/NOUN
+ü/NOUN pierre/NOUN n'a/VERB eu/VERB aucuns/DET frais/NOUN supplémentaires/NOUN
+ü/PRON chaque/NOUN homme/ADV n'est/NOUN pas/ADV venu/NOUN
+'/ADV {quelques//NOUN plusieurs}/PRON hommes/NOUN ne/NOUN sont/DET pas/ADV venus/NOUN
+ü/DET tout/DET le/NOUN monde/ADV n'est/VERB jamais/NOUN croyant/NOUN
+ü/NOUN {/ADV pas//NOUN plus}/ADV personne/ADV n'est/VERB venu/NOUN
+ü/DET il/ADV n'est/NOUN pas/ADV sorti/NOUN mot/VERB de/NOUN sa/PRON bouche/NOUN
+ü/DET il/ADV n'est/NOUN pas/ADV touttout/DET sorti/NOUN de/NOUN sa/PRON bouche/NOUN
+ü/DET il/ADV n'est/NOUN pas/ADV venu/NOUN n'importe/NOUN qui/NOUN
+ü/DET il/ADV n'est/NOUN pas/ADV venu/NOUN tout/DET le/DET monde/NOUN
+ü/NOUN n'importe/NOUN qui/ADV n'est/NOUN pas/ADV venu/NOUN
+ü/DET tout/DET le/NOUN monde/ADV n'est/NOUN pas/ADV venu/NOUN
+ü/ADV pas/DET grandmonde/NOUN n'est/VERB venu/VERB
+ü/ADV pas/VERB mot/ADV n'est/VERB sorti/VERB de/NOUN sa/PRON bouche/NOUN
+ü/DET grandmonde/NOUN n'a/VERB pas/ADV été/VERB vu/VERB
+ü/VERB mot/NOUN n'a/VERB pas/ADV été/VERB dit/VERB
+ü/DET touttout/NOUN n'a/VERB pas/ADV été/VERB dit/VERB
+ü/NOUN n'importe/NOUN qui/NOUN n'a/VERB pas/ADV été/VERB vu/VERB
+ü/DET tout/DET le/NOUN monde/NOUN n'a/VERB pas/ADV été/VERB vu/VERB
+ü/ADV pas/DET grandmonde/NOUN n'a/VERB été/VERB vu/VERB
+ü/ADV pas/VERB mot/NOUN n'a/VERB été/VERB dit/VERB
+ü/ADV pas/DET touttout/NOUN n'a/VERB été/VERB dit/VERB
+ü/ADV pas/NOUN n'importe/NOUN qui/NOUN n'a/VERB été/VERB vu/VERB
+ü/ADV pas/DET tout/DET le/NOUN monde/NOUN n'a/VERB été/VERB vu/VERB
+ü/NOUN tout/NOUN peut/ADP t'arriver/NOUN
+ü/ADV personne/NOUN n'a/VERB rien/ADV dit/NOUN
+ü/ADV nessuno/NOUN non/ADV ha/VERB detto/VERB niente/ADV
+je/PRON ne/ADV vois/VERB pas/ADV personne/ADV
+%/PRON je/ADV n'ai/VERB pas/ADV vu/VERB personne/NOUN
+ü412/NOUN n'attends/NOUN pas/ADV que/DET pierre/NOUN voie/VERB personne/ADV le/DET dimanche/NOUN
+ü/NOUN pierre/NOUN ne/NOUN dit/NOUN pas/ADV jamais/NOUN de/ADP mensonges/VERB
+%/NOUN pierre/NOUN n'a/VERB pas/ADV jamais/NOUN dit/NOUN de/ADP mensonges/VERB
+ü/NOUN n'attends/NOUN pas/ADV que/DET pierre/NOUN dise/NOUN jamais/NOUN un/DET mensonge/NOUN
+ü/ADV rien/DET que/DET du/NOUN bon/NOUN ne/NOUN peut/NOUN nous/ADP arriver/NOUN
+ü/ADV rien/ADP d'autre/ADJ que/DET du/DET bon/NOUN ne/NOUN peut/NOUN nous/ADP arriver/NOUN
+ü/NOUN pierre/NOUN n'a/VERB rien/ADV vu/VERB du/DET tout/DET
+ü/NOUN pierre/NOUN n'a/VERB {{vu/NOUN personne/ADV //NOUN jpersonne/PRON vu}/DET du/DET tout//NOUN personne/ADV du/DET tout/DET vu}/PRON
+ü/DET que/NOUN pierre/VERB ait/VERB eu/VERB été/NOUN chantant/ADP sous/DET la/NOUN pluie/NOUN ne/NOUN m'étonnerait/VERB pas/ADV
+ü/NOUN pierre/NOUN aurait/VERB eu/VERB été/NOUN chantant/ADP sous/DET la/NOUN pluie/DET que/PRON ça/NOUN ne/NOUN m'étonnerait/VERB pas/ADV
+%/NOUN pierre/ADV n'est/NOUN pas/ADV jamais/NOUN plus/NOUN venu/VERB
+ü/PRON vous/NOUN ne/NOUN me/NOUN dérangez/NOUN {aucunement//ADP nullement//NOUN jamais//NOUN plus}/NOUN
+il/PRON ne/ADV faut/NOUN laisser/ADP les/DET sots/NOUN penser/DET pour/NOUN soi/VERB
+je/PRON ne/ADV dois/NOUN laisser/NOUN jeanne/NOUN faire/VERB ça/DET
+ü/NOUN pierre/NOUN ne/NOUN sait/ADV pas/NOUN s'il/PRON doit/VERB dire/VERB ça/DET à/ADP jeanne/NOUN
+ü/DET "les/NOUN agents/ADP de/NOUN police/NOUN n'ont/VERB le/DET temps/NOUN de/ADP réagir"/VERB
+ü/DET "tout/DET ceci/NOUN n'aurait/VERB une/DET telle/NOUN importance/NOUN si/ADP la/DET presse/NOUN ne/NOUN s'en/PRON était/VERB emparé/VERB ."420/NOUN
+ü/ADV non/DET qu'il/PRON {/VERB est//VERB soit}/VERB beau/VERB loin/NOUN de/NOUN là/PRON
+pierre/NOUN trouve/VERB des/NOUN hommes/NOUN qui/DET soient/VERB beaux/VERB
+ü/NOUN pierre/NOUN ne/NOUN trouve/NOUN {pas//ADV point//NOUN jamais//NOUN plus//ADV guère}/ADP d'hommes/NOUN qui/DET soient/VERB beaux/VERB
+ü/NOUN pierre/NOUN ne/NOUN trouve/NOUN {pas//ADV point//NOUN jamais//NOUN plus//ADV guère}/ADP d'hommes/NOUN qui/DET sont/NOUN beaux/VERB
+ü/NOUN après/DET qu'il/PRON {est//NOUN soit}/NOUN parti/VERB on/NOUN a/VERB continué/NOUN la/DET fête/NOUN sans/VERB lui/PRON
+b:/PRON j'essaie/NOUN de/ADP ne/NOUN plus/NOUN
+b:/PRON j'essaie/NOUN de/ADP ne/NOUN jamais/NOUN
+ü/NOUN pierre/ADV n'est/VERB jamais/NOUN venu/VERB ici/NOUN avant/VERB cette/DET fois/NOUN
+%/PRON je/ADV ne/NOUN veux/ADV pas/NOUN jamais/PRON la/VERB revoir/NOUN
+pierre/NOUN ne/NOUN peut/NOUN jamais/NOUN {avaler//NOUN blairer//NOUN boire//VERB digérer//VERB encadrer//NOUN encaisser//NOUN piffer//NOUN puer//NOUN sacquer//NOUN se/PRON
+il/PRON n'a/VERB été/VERB pas/ADV parti/NOUN
+ü/PRON il/NOUN n'a/VERB pas/ADV eu/VERB chante/NOUN il/PRON chante/VERB encore/NOUN
+ü/PRON il/NOUN n'a/VERB pas/ADV ete/VERB parti/NOUN il/PRON est/VERB parti/VERB
+{jamais//NOUN {déjà//NOUN toujours}}/NOUN
+{non/VERB pas//DET si/NOUN fait}/NOUN
+{pas//NOUN bien}/NOUN
+ü/NOUN puissestu/PRON trouver/NOUN un/DET endroit/NOUN folichon/NOUN où/NOUN refaire/PRON ta/PRON vie/VERB
+ü/NOUN souffle/NOUN mot/ADP de/DET cette/NOUN affaire/CONJ et/PRON je/PRON t'étrangle/NOUN
+ü/PRON gagne/NOUN un/VERB sou/NOUN avec/VERB cette/DET invention/NOUN et/CONJ je/PRON te/PRON paie/VERB un/DET château/NOUN
+ü/NOUN viendrastu/PRON
+ü/NOUN ne/NOUN viendrastu/PRON pas/ADV
+ü/NOUN viendraistu/PRON
+ü/NOUN ne/NOUN viendraistu/PRON pas/ADV
+vienspro/VERB
+ne/NOUN vienspro/NOUN pas/ADV
+ü/NOUN c'est/DET l'heure/NOUN que/DET tu/PRON manges/PRON ta/PRON soupe/NOUN
+ü/NOUN pierre/NOUN n'ose/VERB venir/ADV .venir/ADP
+nonmanger/ADP
+noncourir/ADP
+non{manger//ADV mangeaille}/PRON
+non{courir//NOUN course}/PRON
+non{dormir//NOUN dormition}/NOUN
+nonfranchement/ADV
+nonheureusement/ADV
+nonévidemment/ADV
+nonprobablement/ADV
+nonéventuellement/ADV
+nonvolontairement/ADV
+noningénieusement/ADV
+nonhabituellement/ADV
+nonsouvent/ADV
+nonrapidement/ADV
+nonencore/ADV
+nontoujours/ADV
+nonbientôt/NOUN
+nonbrièvement/ADV
+noncaractéristiquement/ADV
+nonpresque/ADV
+noncomplètement/ADV
+nontout/ADV
+nontôt/ADV
+ü/NOUN jamais/NOUN âme/DET qui/VERB vive/ADV n'est/VERB venue/VERB
+ü/NOUN {/ADV pas//NOUN plus//NOUN jamais}/ADV pierre/NOUN ne/NOUN vient/VERB
+'/NOUN ü/NOUN zéro/NOUN personnes/NOUN ne/VERB viennent/NOUN jamais/NOUN ici/NOUN
+'/PRON ü/NOUN je/NOUN ne/VERB vois/NOUN jamais/NOUN zéro/NOUN personnes/NOUN
+zéro/NOUN chose/DET a/VERB été/VERB faite/NOUN par/VERB pierre/NOUN
+pierre/NOUN a/VERB une/VERB balle/VERB en/ADP poche/NOUN
+pierre/NOUN a/VERB vu/VERB zéro/NOUN cheval/NOUN à/ADP la/DET ferme/NOUN
+''/NOUN pierre/VERB a/VERB cassé/NOUN zéro/NOUN vitrail/NOUN cette/DET semaine/NOUN
+ü/ADV aucun/VERB lavabo/ADV n'est/VERB propre/ADJ
+aucuns/DET lavabos/NOUN ne/NOUN sont/DET propres/ADJ
+ü/DET aucuns/VERB travaux/NOUN n'ont/VERB été/VERB entrepris/NOUN
+ü/DET les/NOUN zéro/NOUN points/ADP d'hier/NOUN sont/DET déjà/ADV oubliés/NOUN
+%/PRON je/ADV n'ai/VERB pas/ADV vu/VERB personne/NOUN
+ü/PRON je/ADV n'ai/VERB pas/ADV vu/VERB zéro/NOUN personnes/NOUN
+ü/DET une/NOUN partie/ADP d'une/DET farine/NOUN
+une/DET partie/NOUN de/ADP farine/NOUN
+ü/NOUN {quelque/ADV chose//NOUN rien//NOUN tout}/ADP d'intéressant/NOUN
+ü/DET pas/NOUN de/ADP cette/DET farine/NOUN
+ü/DET pas/NOUN de/ADP sa/PRON farine/NOUN
+ü/DET pas/NOUN de/ADP farine/NOUN
+ü/DET pas/NOUN de/ADP ces/DET hommes/NOUN
+ü/DET pas/NOUN de/ADP ses/PRON hommes/NOUN
+pierre/NOUN n'a/NOUN pas/VERB des/ADV idées/DET i/NOUN pour/ADP lesk/DET jeter/NOUN
+ü/NOUN pierre/NOUN n'a/VERB pas/ADV d'idées/ADP i/NOUN pour/ADP lesk/DET jeter/NOUN
+une/DET dose/NOUN de/ADP la/DET farine/NOUN
+ü/DET une/NOUN dose/ADP d'une/DET farine/NOUN
+tous/DET des/NOUN premiers/NOUN
+ü/NOUN "tristement/PRON il/VERB déclina/NOUN mon/NOUN offre/VERB car/PRON il/ADV n'en/NOUN avait/VERB jamais/ADV eue/VERB d'âme"./ADP 441/NOUN
+{le/NOUN un//DET un/DET le}/DET professeur/VERB
+ü/NOUN pierre/NOUN n'a/VERB pas/ADV une/NOUN idée/NOUN à/ADP exploiter/NOUN
+ü/NOUN pierre/NOUN n'a/VERB aucune/ADV idée/NOUN à/ADP exploiter/NOUN
+ü/NOUN pierre/NOUN n'a/VERB aucune/ADV chance/NOUN de/ADP gagner/NOUN
+ü/DET il/NOUN y'a/VERB le/DET feu/NOUN
+ü/DET il/NOUN y'a/VERB le/DET patron/NOUN
+ü/DET il/NOUN y'a/VERB le/DET président/NOUN de/ADP la/DET république/NOUN
+voit/NOUN {aucun//VERB nul}/NOUN étudiant/NOUN
+quel/DET trop/NOUN beau/VERB mec/VERB
+french:gens/NOUN aiment/ADP qui/NOUN que/VERB ce/NOUN soit/VERB
+les/DET autres/NOUN trois/NUM filles/NOUN
+long/VERB le/DET ruban/NOUN
+carrée/NOUN la/DET table/NOUN
+italien/NOUN le/DET garçon/NOUN
+long/VERB des/DET jambes/NOUN
+rond/NOUN du/DET visage/NOUN
+rouge/VERB du/DET nez/NOUN
+anglais/NOUN du/DET palais/NOUN
+ü/PRON je/ADV n'ai/VERB pas/ADV vu/NOUN de/ADP nombreux/NOUN enfants/NOUN aujourd'hui/NOUN
+aseconde/DET
+antimètre/NOUN
+déminute/NOUN
+mésheure/NOUN
+nongramme/NOUN
+ü/DET cet/NOUN acte/NOUN {est//ADV n'est/VERB pas}/ADV une/DET méprise/NOUN
+ü/DET ce/NOUN verdict/NOUN {est//ADV n'est/VERB pas}/ADV un/NOUN déplaisir/NOUN
+ü/DET cette/NOUN absence/NOUN {est//ADV n'est/VERB pas}/ADV une/NOUN impossibilité/NOUN
+ü/DET cet/NOUN homme/NOUN {est//ADV n'est/VERB pas}/ADV un/NOUN agnostique/NOUN
+üü{une/NOUN conduite/VERB passive//NOUN cette/DET conduite}/VERB est/NOUN de/ADV la/VERB nonbelligérance/ADV ./NOUN
+ü/NOUN "tumbler/ADP dans/DET l'/NOUN impossibilité/ADP de/NOUN tirer/NOUN ni/ADP d'appeler/NOUN du/DET secours/NOUN se/PRON débat/NOUN désespérément".459/NOUN
+ü/VERB ".../NOUN mais/NOUN interdiction/NOUN absolue/ADP de/NOUN franchir/DET la/NOUN limite/DET des/NOUN eaux/NOUN territoriales/NOUN dominicaines/NOUN sous/NOUN aucun/NOUN
+ü/PRON il/NOUN ne/ADP faut/NOUN franchir/DET la/NOUN limite/DET des/NOUN eaux/NOUN territoriales/NOUN dominicaines/NOUN sous/NOUN aucun/NOUN prétexte/VERB
+la/DET grandgrandmère/NOUN de/ADP jeanne/NOUN est/VERB morte/NOUN
+ü/DET l'exexmari/NOUN de/ADP pierre/VERB était/VERB beau/VERB
+la/DET grandarrièremère/NOUN de/ADP jeanne/NOUN est/VERB morte/NOUN
+ü/DET l'arrière/NOUN grandmère/NOUN de/ADP jeanne/NOUN est/VERB morte/NOUN
+ü/PRON ça/NOUN n'a/VERB pas/ADV super/NOUN grande/VERB importance/NOUN
+ü/NOUN pierre/NOUN n'a/VERB pas/ADV de/ADP cesse/NOUN que/DET son/PRON travail/VERB soit/VERB terminé/VERB
+ü/NOUN pierre/VERB a/VERB peur/DET que/NOUN jeanne/NOUN ne/VERB vienne/NOUN pas/ADV
+ü/NOUN pierre/VERB a/VERB peur/DET que/NOUN jeanne/NOUN ne/NOUN vienne/VERB pas/NOUN
+mot/VERB ne/NOUN formule/NOUN pas/ADV ce/DET principe/VERB
+{goutte//NOUN mie//NOUN miette}/NOUN vraiment/PRON
+vraiment/PRON {goutte//NOUN mie//NOUN miette}/NOUN
+ü/DET un/NOUN rien/PRON l'habille/NOUN
+ü/DET grandmonde/NOUN
+ü/DET grandchose/DET
+grand/DET personne/NOUN
+jeanne/NOUN est/VERB un/DET rien/NOUN intelligente/NOUN
+il/PRON fait/NOUN rien/VERB chaud/NOUN
+ü/PRON je/ADV n'ai/VERB vu/VERB personne/NOUN
+je/PRON n'ai/ADV vu/VERB rien/VERB 467/ADV
+ü/PRON je/ADV n'ai/VERB rien/ADV vu/VERB
+ü/PRON je/ADV n'ai/VERB vu/VERB personne/NOUN de/ADP beau/VERB
+la/DET semaine/NOUN dernière/VERB avant/VERB les/DET vacances/NOUN
+la/DET dernière/NOUN semaine/NOUN nous/NOUN avons/VERB eu/NOUN les/DET bidochons/NOUN à/ADP manger/NOUN
+et/PRON moi/VERB j'adore/DET les/NOUN choses/NOUN étranges/NOUN presque/NOUN autant/NOUN que/PRON les/VERB étranges/NOUN choses/DET
+une/DET belle/NOUN femme/NOUN de/ADP visage/NOUN
+une/DET belle/NOUN de/ADP visage/NOUN femme/NOUN
+cette/DET semaine/NOUN est/VERB dernière/VERB
+ü/DET tous/DET les/NOUN hommes_élégants/NOUN du/DET monde/NOUN plaisent/NOUN à/ADP pierre/NOUN
+'/DET les/NOUN ballons_oranges/VERB sont/DET chouettes/NOUN
+pierre/NOUN ne/NOUN mange/NOUN rien/ADV sans/VERB aucune/NOUN cuillère/NOUN
+il/PRON est/VERB sensé/NOUN de/ADP chercher/NOUN âme/NOUN qui/DET vive/VERB dans/ADP ce/DET désert/NOUN
+pierre/NOUN avoue/NOUN avoir/ADP dit/NOUN grandchose/VERB
+insensée/PRON est/VERB âme/NOUN qui/DET vive/VERB
+ü/NOUN jeanne/ADV n'est/NOUN pas/ADV un/NOUN ange/NOUN
+ü/NOUN qui/NOUN ne/NOUN prend/NOUN pas/ADV le/DET temps/NOUN de/ADP vivre/NOUN
+'/NOUN personne/ADV n'a/VERB vu/VERB un/DET chat/NOUN
+'/NOUN personne/ADV n'est/VERB tenable/VERB
+'/ADV rien/ADV n'est/VERB croyable/VERB
+'/NOUN personne/ADV n'a/VERB un/DET rond/PRON
+'/ADV rien/ADV n'a/VERB fait/VERB un/DET pli/NOUN
+'/NOUN personne/ADV n'a/VERB compris/VERB du/DET tout/DET
+ü/ADV personne/DET du/DET tout/NOUN n'a/VERB <personne>/VERB compris/NOUN
+%/PRON je/ADV n'ai/VERB personne/ADV vu/VERB <personne>/NOUN du/DET tout/DET
+avec/NOUN {vergogne//NOUN ambages}/NOUN
+en/NOUN balançant/NOUN
+pour/NOUN rien/ADV pierre/NOUN est/VERB venu/NOUN
+a/ADP toujours/NOUN et/CONJ pour/NOUN jamais/NOUN
+une/DET orge/VERB savoureuse/NOUN ü/NOUN un/DET orge/VERB {perlé//VERB mondé}/VERB
+ü/DET la/NOUN pourpre/VERB est/VERB une/DET matière/NOUN colorante/VERB le/DET pourpre/NOUN est/VERB une/DET couleur/NOUN
+ü/DET les/NOUN grandes/VERB orgues/ADP d'une/DET église/NOUN les/DET grands/NOUN orgues/VERB de/ADP france/NOUN
+ü/DET un/NOUN espace/VERB est/VERB courant/DET une/NOUN espace/PRON est/NOUN du/DET jargon/NOUN typographique/NOUN
+ü/DET un/NOUN sauna/VERB est/DET du/NOUN français/NOUN standard/DET une/NOUN sauna/NOUN est/NOUN du/DET français/NOUN populaire/NOUN
+le/DET {dindon/NOUN de/ADP la/DET farce//NOUN feu/NOUN au/ADP lac//NOUN nerf/NOUN de/ADP la/DET guerre//NOUN sel/NOUN de/ADP la/DET terre//NOUN sou}/NOUN
+mon/NOUN {neveu//NOUN vieux}/VERB
+comme/NOUN {dans/NOUN du/DET beurre//NOUN une/DET pie//NOUN un/DET pied//NOUN devant//VERB le/DET reste//NOUN une/DET savate}/NOUN
+dans/ADP {de/NOUN beaux/NOUN draps//NOUN du/DET beurre}/NOUN
+par/VERB {acquit/NOUN de/ADP conscience//NOUN la/DET racine//NOUN précaution}/VERB
+pour/NOUN {approbation//NOUN la/DET forme//NOUN une/DET bille}/NOUN
+sans/VERB {ambages//NOUN balancer//NOUN barguigner//NOUN broncher//NOUN façon//NOUN moufeter//VERB vergogne}/NOUN
+avoir/ADP {beau/NOUN faire//NOUN du/DET chien//NOUN du/DET ressort//NOUN eu/VERB chaud//NOUN les/DET foies}/NOUN
+'/DET c'est/NOUN {drôle//NOUN gai//NOUN le/DET bouquet//NOUN marrant//NOUN moins/NOUN cinq}/NOUN
+''/DET ce/NOUN n'est/NOUN pas/ADV {le/NOUN diable//NOUN lerche//NOUN malin//NOUN sorcier}/NOUN
+faire/ADP {avec//NOUN chou/NOUN blanc//NOUN le/NOUN mort//DET le/NOUN singe//DET la/NOUN sourde/DET oreille//NOUN ses/NOUN choux/DET gras//NOUN son/NOUN beurre//PRON un/NOUN malheur}/DET
+laisser/ADP {béton490//NOUN en/ADP rade//NOUN faire//NOUN pisser/NOUN le/DET chien}/NOUN
+en/NOUN {avoir//NOUN avoir/VERB après//NOUN avoir/VERB le/DET coeur/NOUN net//ADJ mettre/VERB un/DET coup//NOUN pincer/NOUN pour//NOUN vouloir}/NOUN
+se/PRON faire/NOUN {avoir//NOUN baiser//NOUN enculer//NOUN mettre//VERB refaire}/NOUN
+tomber/ADP bertom/NOUN béton/NOUN
+'/PRON s'en/NOUN {faire//VERB foutre//NOUN remettre/NOUN au/ADP vent//NOUN tenir/NOUN là}/DET
+'/NOUN n'y/VERB {plus/NOUN paraître//NOUN voir/VERB que/ADV du/DET feu//NOUN rien/NOUN faire}/ADP
+{de/NOUN beaux/NOUN draps//NOUN de/ADP belle/NOUN façon//NOUN belle/NOUN lurette}/VERB
+{aux/DET petits/NOUN {oignons//NOUN soins}//NOUN ces/DET petits/VERB riens//ADV ne/NOUN pas/ADV lever/VERB le/DET petit/NOUN doigt}/NOUN
+{a/NOUN toute/NOUN berzingue//NOUN a/ADP toute/NOUN vapeur//NOUN du/ADP tout//NOUN tout/NOUN à/DET fait//NOUN tout/DET court//NOUN touttout//DET sur/NOUN toute/NOUN la/DET ligne}/NOUN
+ü/VERB genève/VERB ne/NOUN fut/ADV pas/DET un/NOUN {lieu/NOUN important//NOUN haut/NOUN lieu}/NOUN de/ADP la/DET linguistique/NOUN
+ü/NOUN il/ADV n'y'avait/VERB pas/VERB {beaucoup/ADV de/NOUN monde//ADP grandmonde/NOUN }/VERB au/DET cours/NOUN de/ADP linguistique/VERB
+'/DET ce/NOUN village/ADP de/NOUN pêcheurs/ADV n'est/NOUN pas/ADV edgarpoétique/NOUN
+ü/DET l'intérieur/NOUN de/ADP son/PRON âme/NOUN est/VERB {joli//NOUN joli/NOUN joli}/VERB
+ü/DET l'intérieur/NOUN de/ADP son/PRON âme/NOUN n'est/ADV pas/NOUN {joli//ADV joli/NOUN joli}/VERB
+j/NOUN "hélas/DET l'amérique/NOUN pays/NOUN de/ADP cocagne/NOUN est/VERB aussi/VERB la/DET terre/NOUN d'élection/ADP des/NOUN puritains/DET des/NOUN alcooliques/DET et/NOUN
+ü/NOUN pierre/NOUN a/NOUN pris/VERB le/ADV {matériel//NOUN matos}./DET matos}/NOUN
+'/NOUN ü/VERB pierre/NOUN aime/VERB le/ADV {camembert//DET calendos}.calendos}/NOUN
+ü/DET c'est/NOUN {chouette//NOUN chouettos}/ADP d'être/VERB venu/VERB
+ü/DET ce/NOUN n'est/NOUN pas/ADV {chouette//NOUN chouettos}/ADP d'être/VERB parti/VERB sans/VERB rien/ADV dire/NOUN
+ü/DET ce/VERB professeur/NOUN est/ADV {cool//VERB bonnard}./ADV bonnard}/NOUN
+'/DET ü/NOUN ce/NOUN sont/DET des/ADV {histoires//DET racontars}.racontars}/NOUN
+'/PRON ü/NOUN t'es/NOUN {fort//DET fortiche/ADV }.fortiche}/VERB
+ü/NOUN jeanne/NOUN est/ADV {dingue//VERB dingo}./ADV dingo}/NOUN
+'/NOUN ü/NOUN pierre/ADV ne/DET met/NOUN jamais/NOUN de/NOUN {préservatif//VERB présa}/NOUN
+ü/NOUN pierre/NOUN lui/VERB a/NOUN donné/ADP un/VERB coup/NOUN de/VERB pied/NOUN dans/VERB le/NOUN {figne//ADP fignedé/DET }.499/NOUN
+ü/DET ce/NOUN guichetier/ADV n'est/NOUN pas/ADV baisant/NOUN
+ü/PRON ce/ADV n'est/NOUN pas/ADV ragoûtant/NOUN
+ü/DET une/NOUN deuxchevaux/NOUN une/DET deuche/NOUN une/DET deudeuche/NOUN
+'/NOUN ü/NOUN on/PRON ne/NOUN l'installe/ADV pas/ADP devant/DET un/NOUN grand/NOUN {piano/NOUN à/NOUN queue//NOUN queue}/NOUN
+ce/DET cours/NOUN n'est/ADV pas/NOUN se/ADV nsass/PRON
+ü/DET cette/NOUN table/NOUN n'a/VERB pas/ADV de/ADP pieds/NOUN
+ü/NOUN jeanne/NOUN est/ADV une/VERB {provocatrice//ADV vatenguerre/DET }/NOUN
+'/DET ü/VERB "elles/VERB rigolaient/DET bien/NOUN les/NOUN quatre/ADP visiteuses/NOUN de/ADP lola/NOUN à/VERB m'entendre/NOUN ainsi/NOUN me/NOUN confesser/NOUN à/VERB grands/NOUN éclats/CONJ
+ü/PRON il/VERB est/ADV {gros//VERB gravos}./ADV gravos}/NOUN
+ü/PRON c'est/NOUN une/ADV {pute//VERB pavute/ADV }./DET pavute}/NOUN
+ü/NOUN "y/ADP m'a/NOUN filé/VERB une/DET beigne/NOUN j'y/PRON ai/PRT filé/NOUN une/VERB mandale/DET ".510/NOUN
+ü/NOUN jeanne/NOUN est/ADV {contente//VERB jouasse}./ADV }/VERB
+ü/NOUN pierre/NOUN est/ADV un/VERB has/ADV been/DET du/NOUN cinéma/ADP cinéma/NOUN
+'/NOUN ü/NOUN jeanne/NOUN a/VERB le/ADV spleen/DET spleen/NOUN
+'/NOUN ü/NOUN pierre/NOUN a/VERB envie/ADV d'un/NOUN {peu//NOUN chouia}/ADP de/DET dessert/VERB de/ADP dessert/NOUN
+j/DET "le/NOUN glutmich/DET du/NOUN carbiquet/VERB présente/DET des/NOUN symptômes/ADP de/NOUN dépression/ADP à/NOUN fluctuations/NOUN antihistaminiques/DET y/VERB
+j/DET "que/DET bidulezvous/PRON avec/VERB tant/NOUN de/ADP froumiave"518/NOUN
+ü/NOUN {le//NOUN un}/NOUN concierge/NOUN peigne/NOUN la/DET girafe/NOUN
+ü/NOUN {ça//NOUN ceci}/DET vole/NOUN bas/VERB
+'/NOUN ü/ADV il/NOUN n'y'a/VERB pas/ADV le/DET feu/NOUN au/ADP lac/NOUN
+'/DET il/NOUN y'a/VERB le/DET feu/NOUN au/ADP lac/NOUN
+ça/PRON saute/VERB
+{il/VERB ne/ADV faut/NOUN pas/ADV que/DET ça/PRON saute//VERB il/PRON faut/VERB que/DET ça/PRON ne/ADV saute/VERB pas}/ADV
+''/NOUN {repasse//VERB cours}/PRON
+ne/NOUN pousse/NOUN pas/ADV
+il/PRON faut/NOUN pousser/ADP
+ü/PRON c'est/ADV toujours/NOUN bibi/DET qui/PRON s'y/VERB colle/NOUN
+ü/DET "quel/NOUN maladroit/DET cet/NOUN aubergiste/ADV non/ADV seulement/PRON il/NOUN n'a/VERB rieni/VERB à/NOUN manger/ADV mais/NOUN il/NOUN faut/ADP encore/NOUN qu'il/VERB lei/PRON
+'/PRON ü/ADV "c'est/NOUN seulement/NOUN quand/NOUN on/VERB n'a/ADV besoin/NOUN de/ADP rieni/ADV qu'il/NOUN faut/NOUN {lei/DET lui//PRON vous/VERB lei}/NOUN demander/ADP ."/NOUN 528/NOUN
+ü/PRON c'est/ADV personne/DET que/PRON j'ai/VERB vu/NOUN pas/ADV quelqu'un/NOUN
+c'est/PRON {/NOUN ame/DET qui/VERB vive//DET une/NOUN ame}/DET que/PRON je/ADV n'ai/VERB pas/ADV vue/VERB pas/ADV quelqu'un/NOUN
+pas/NOUN pouvoir/ADV {avaler//NOUN blairer//NOUN boire/NOUN //VERB digérer//VERB encadrer//NOUN encaisser//NOUN piffer//NOUN puer//NOUN sacquer}/NOUN
+que/DET {couic//NOUN dalle}/NOUN
+{moins//NOUN plus}/NOUN que534/DET
+de/ADP {beaucoup//NOUN loin//VERB peu}/NOUN
+{beaucoup//NOUN moins//NOUN peu//NOUN plus}/NOUN de/ADP
+un/NOUN une/DET ,/NOUN des/VERB
+{n'importe/NOUN qui//NOUN quiconque/NOUN }/NOUN
+{quelque/NOUN chose//ADV rien}/ADP d'autre/NOUN
+{non/NOUN pas//ADV non/NOUN plus}/NOUN
+sans/VERB chaque/PRON
+ü/NOUN {ce/VERB mec/VERB est//VERB un/DET mec}/NOUN groggy/VERB
+ü/PRON c'est/VERB le/DET bouquet/NOUN
+ü/NOUN c'est/NOUN du/NOUN flan/NOUN
+ü/PRON ce/ADV n'est/NOUN pas/ADV du/NOUN nougat/NOUN
+c'est/PRON de/VERB la/DET tarte/NOUN
+ü/PRON ce/ADV n'est/NOUN pas/ADV de/VERB la/DET tarte/NOUN
+ü/DET le/NOUN mystère/NOUN divin/ADV n'est/NOUN pas/NOUN connaissable/NOUN
+ü/NOUN {sans//NOUN avec}/NOUN ambages/NOUN
+ü/DET c'est/NOUN pas/NOUN lerche/NOUN
+ü/NOUN {quelqu'un//NOUN personne}/ADP d'autre/ADJ
+ü/DET cette/NOUN usine/VERB produit/NOUN de/ADP trois/NUM farines/NOUN de/ADP qualité/NOUN différente/NOUN
+ü/NOUN jeanne/VERB est/ADP dans/NOUN {des//NOUN les}/DET beaux/NOUN draps/NOUN
+ü/NOUN jeanne/VERB a/VERB {du//NOUN un}/DET chien/NOUN
+ü/NOUN pierre/VERB aime/NOUN de/ADP quelqu'un/NOUN
+ü/NOUN pierre/VERB a/NOUN de/ADP touttout/DET compris/NOUN
+ü/NOUN jeanne/VERB ment/VERB sans/NOUN {/DET la//NOUN une}/NOUN vergogne/NOUN
+ü/NOUN pierre/VERB a/VERB {/DET la//NOUN une}/NOUN grand/VERB peine/NOUN à/ADP comprendre/NOUN jeanne/NOUN
+ce/DET problème/VERB est/VERB évitable/NOUN
+ü/DET ce/VERB problème/ADV n'est/VERB {pas//VERB plus//NOUN jamais}/ADV évitable/NOUN
+ü/ADV pas/NOUN n'importe/NOUN quel/DET
+ü/PRON il/NOUN y'a/VERB des/DET gens/NOUN sur/ADP la/DET pelouse/NOUN
+üpierre/NOUN donnera/VERB ses/PRON vieux/ADJ livres/NOUN à/NOUN n'importe/ADV qui/ADP qui/NOUN .549/NOUN
+jamais/NOUN du/DET tout/DET
+{pas//NOUN plus}/NOUN de/ADP la/DET vie/NOUN
+ü/NOUN jeanne/NOUN {a/NOUN fait//NOUN fait}/NOUN chou/NOUN blanc/NOUN
+ü/NOUN {j'ai/VERB {failli//NOUN manqué/VERB }//NOUN je/PRON {faux//VERB manque}}/NOUN tomber/ADP
+ü/NOUN {de//NOUN ø}/NOUN {faillir//NOUN manquer}/NOUN tomber/ADP peut/NOUN être/VERB dangereux/VERB
+ü/PRON je/PRON l'{ai/VERB échappée/VERB //NOUN échappe}/NOUN belle/VERB
+ü/PRON je/ADV n'ai/VERB pas/ADV touttout/DET compris/NOUN
+ü/PRON je/ADV n'avais/VERB pas/ADV touttout/DET compris/NOUN
+ü/PRON je/ADV n'aurais/VERB pas/ADV touttout/DET compris/NOUN sans/VERB tes/PRON explications/NOUN
+je/PRON ne/ADV compris/NOUN pas/ADV touttout/DET
+je/PRON ne/ADV comprenais/NOUN pas/ADV touttout/DET
+je/PRON ne/ADV comprendrais/NOUN pas/ADV touttout/DET sans/VERB tes/PRON explications/NOUN
+ü/PRON ily'a/NOUN un/VERB {péquin//DET jquidam}/NOUN sur/ADP la/DET place/NOUN
+ü/NOUN pierre/NOUN n'a/VERB pas/ADV dit/VERB un/DET mot/NOUN à/ADP jeanne/NOUN
+ü/NOUN jeanne/NOUN n'en/NOUN fout/NOUN pas/ADV une/DET rame/NOUN
+ü/NOUN jeanne/NOUN n'en/NOUN fout/NOUN pas/ADV une/NOUN
+ü/NOUN quelque/NOUN chose/VERB {est/NOUN arrivé//NOUN sont/DET arrivés}/VERB
+ü/VERB {il/NOUN faut//VERB ils/DET fallent}/DET faire/ADP ça/DET
+ü/NOUN pierre/VERB {frit//NOUN et/CONJ jeanne/NOUN frient}/NOUN des/DET poissons/NOUN
+j/ADP tant/VERB pis/NOUN pour/NOUN {/DET le/NOUN ceusse/DET qui/NOUN n'est/VERB jamais/NOUN content//VERB les/DET ceusses/NOUN qui/DET ne/NOUN sont/DET jamais/NOUN contents}/NOUN
+ü/NOUN pierre/NOUN n'aime/VERB %/NOUN pas/ADV rien/ADV faire/VERB
+ü/NOUN pierre/NOUN n'a/VERB %/NOUN pas/ADV rien/ADV fait/NOUN
+ü/NOUN pierre/NOUN n'a/VERB pas/ADV vu/VERB {âme/NOUN qui/DET vive//VERB grandmonde//VERB un/DET chat//NOUN une/DET âme}/NOUN
+ü/NOUN pierre/NOUN n'a/VERB %/NOUN pas/ADV fait/NOUN que/ADV dalle/NOUN
+ü/DET l'eau/NOUN est/VERB bonne/VERB chaude/NOUN
+ü/DET la/NOUN fenêtre/VERB est/VERB grande/VERB ouverte/NOUN
+ü/DET la/NOUN voiture/NOUN est/VERB flambante/NOUN neuve/ADV
+ü/NOUN {/ADV pas//NOUN plus}/ADV personne/ADV n'est/VERB venu/NOUN
+%/DET il/ADV n'est/NOUN pas/ADV venu/VERB personne/NOUN ./ADV soit/NOUN
+%/NOUN personne/ADV n'a/NOUN pas/NOUN été/VERB vu/ADV .été/VERB vu/VERB
+ü/NOUN {/ADV pas//NOUN plus//NOUN jamais}/ADV pierre/NOUN ne/NOUN vient/VERB
+b:/NOUN ü/NOUN non/ADV pas//NOUN plus//NOUN jamais/ADV personne/ADV
+une/DET jupe/NOUN a/VERB été/VERB faite/VERB faire/VERB par/VERB marie/NOUN
+je/PRON leur/ADP le/PRON donne/VERB
+le/PRON fais/VERB
+french/NOUN quelqu'un/NOUN est/VERB grand/NOUN plus/NOUN il/PRON a/VERB de/ADP grand/VERB pieds/NOUN
+quii'estce/NOUN que/VERB tu/DET vois/PRON ti/PRON ce/DET soir/NOUN
+je/PRON sais/NOUN pas/ADV c'est/PRON où/VERB french/VERB
+je/PRON me/PRON demande/NOUN ce/DET qu'il/DET a/VERB fait/NOUN
+combien/NOUN de/ADP boitesi/NOUN astu/VERB ouvertes/PRON ti/VERB french/VERB
+combieni/NOUN n'astu/NOUN pas/VERB lu/NOUN ti/ADV de/VERB livres/ADP french/NOUN
+tu/PRON n'as/ADV pas/VERB lu/ADV combien/VERB de/NOUN livres/ADP french/NOUN
+q/PRON c'est/VERB l'anniversaire/DET de/NOUN pierre/ADP la/NOUN semaine/DET prochaine/NOUN french/NOUN
+alors/NOUN tu/PRON vas/VERB comment/VERB
+jean/NOUN a/VERB acheté/VERB un/DET livre/NOUN
+marie/NOUN a/VERB acheté/VERB quoi/DET
+elle/NOUN a/VERB fait/NOUN que/DET diable/NOUN
+qui/VERB ça/DET astu/VERB vu/VERB
+a/ADV rien/PRON j'ai/VERB pas/ADV faim/NOUN
+qu'estce/DET que/VERB tu/DET te/PRON demandes/PRON comment/NOUN réparer/NOUN french/ADP
+quel/DET voiture/NOUN estce/VERB que/DET tu/PRON te/PRON demandes/NOUN comment/NOUN réparer/ADP
+quel/DET livre/NOUN estce/VERB que/DET quel/DET homme/NOUN a/VERB acheté/VERB
+combien/NOUN de/ADP livresi/NOUN ontils/VERB tous/DET lus/DET ti/VERB
+combieni/NOUN n'astu/NOUN pas/VERB lu/NOUN ti/ADV de/VERB livres/ADP french/NOUN
+tu/PRON n'as/ADV pas/VERB lu/ADV combien/VERB de/NOUN livres/ADP french/NOUN
+qui'estce/DET qu'ils/DET ont/DET tous/VERB fait/DET ti/NOUN
+il/PRON a/VERB dit/VERB que/DET qui/NOUN avait/VERB éternué/VERB
+il/PRON a/VERB dit/VERB que/DET qui/NOUN était/VERB entré/VERB dans/ADP le/DET cinéma/NOUN
+de/ADP combien/NOUN astu/VERB besoin/ADV de/ADP livres/NOUN
+a/ADP combien/NOUN de/NOUN personnes/ADP astu/NOUN donné/VERB un/VERB livre/DET french/NOUN
+a/ADP combien/NOUN astu/VERB donné/VERB un/DET livre/NOUN de/ADP personnes/VERB
+en/ADP combien/NOUN d'années/ADP astu/NOUN fini/VERB ta/NOUN thèse/PRON french/DET
+dans/ADP combien/NOUN astu/VERB voyagé/NOUN de/ADP pays/NOUN
+avec/NOUN combien/NOUN êtesvous/DET arrivés/DET de/ADP voitures/NOUN
+tu/PRON a/VERB vu/VERB un/DET piano/NOUN où/NOUN
+tu/PRON viens/VERB quand/NOUN
+tu/PRON es/DET parti/VERB pour/NOUN quoi/DET
+j'ai/PRON fait/VERB quelque/NOUN chosei/DET de/DET très/ADP intéressant/NOUN pendant/ADP les/NOUN vacances/DET french/NOUN
+tu/PRON ferais/VERB quoi/NOUN dans/DET ces/NOUN caslà/DET french/NOUN
+ya/DET quoi/DET à/NOUN nantes/NOUN
+combien/NOUN estce/VERB qu'il/DET y/DET a/NOUN de/ADP films/NOUN c'soir/DET à/NOUN la/DET télé/DET french/NOUN
+combien/NOUN y/DET atil/NOUN de/ADP langues/VERB différentes/NOUN sur/NOUN terre/PRON
+combien/NOUN y/DET atil/NOUN de/ADP chines/NOUN
+combien/NOUN y/NOUN auratil/DET de/VERB coupures/ADP de/VERB billets/ADV en/ADP euros/NOUN
+le/DET verre/NOUN s'est/PRON brisee/VERB
+je/PRON me/NOUN suis/ADP lavé/NOUN
+la/DET fenetre/NOUN s'est/PRON ouverte/VERB
+pierre/NOUN a/VERB acheté/VERB un/DET cheval/NOUN
+pierre/NOUN n'a/ADV pas/ADV acheté/NOUN de/ADP cheval/chevaux/NOUN
+/ndi/NOUN karhba/NOUN belle/NOUN
+un/NOUN italien/NOUN en/NOUN a/VERB critiqué/VERB un/NOUN autre/NOUN
+les/DET étudiantsi/NOUN euxi/DET ont/VERB compris/NOUN aussi/ADP
+les/DET étudiantsi/NOUN ilsi/DET ont/VERB compris/NOUN aussi/ADP
+les/DET étudiantsi/NOUN euxi/DET aussi/NOUN ont/VERB compris/NOUN
+si/NOUN tu/PRON avais/VERB joué/VERB demain/NOUN tu/PRON aurais/VERB gagné/NOUN
+le/DET medecin/NOUN a/VERB radiographie/VERB l'estomac/DET aux/NOUN enfants/NOUN
+le/DET medecin/NOUN a/VERB radiographie/VERB leurs/DET estomacs/NOUN
+on/DET leur/PRON a/VERB lave/VERB les/DET mains/NOUN
+on/DET a/VERB lave/VERB leurs/DET mains/NOUN
+pierre/NOUN lui/ADP a/VERB lave/VERB les/DET mains/NOUN sales/NOUN
+pierre/NOUN a/VERB lave/VERB ses/PRON mains/NOUN sales/NOUN
+il/NOUN lui/ADP a/VERB bande/VERB les/DET doigts/NOUN geles/NOUN
+jean/NOUN embrasse/NOUN souvent/VERB marie/NOUN
+ü/ADV personne/NOUN n'a/VERB été/VERB vu/VERB ce/DET matin/NOUN
+a/PRON ü/VERB c'est/ADV personne/DET que/PRON je/VERB n'ai/VERB vu/NOUN pas/ADV quelqu'un/NOUN
+ü/PRON je/NOUN ne/ADP te/NOUN donnerai/VERB pas/ADV une/DET calotte/NOUN
+ü/PRON je/NOUN ne/ADP te/NOUN donnerai/VERB pas/ADV une/DET calotte/NOUN
+la/DET pipe/NOUN que/DET pierre/NOUN a/VERB cassée/VERB
+ü/DET le/NOUN lapin/DET que/NOUN pierre/VERB a/VERB posé/NOUN à/ADP jeanne/NOUN
+ü/NOUN pierre/NOUN n'a/VERB pas/ADV posé/VERB un//DET de/NOUN lapin/VERB à/ADP jeanne/NOUN
+ü/PRON je/ADV n'ai/VERB pas/ADV été/VERB bien/VERB hier/NOUN
+ü/PRON je/VERB n'ai/VERB été/NOUN pas/ADV bien/VERB hier/NOUN
+ü/NOUN pierre/NOUN n'aime/VERB pas/ADV les/DET femmes/NOUN
+ü/NOUN moi/NOUN non/PRON plus/NOUN je/NOUN n'ai/VERB pas/ADV peur/NOUN
+ü/NOUN jell'aime/VERB
+ü/PRON je/ADV nell'aime/VERB pas/ADV
+ü/NOUN jell'aime/VERB pas/ADV beaucoup/NOUN
+ü/NOUN faisle/PRON
+le/PRON fais/VERB
+ü/NOUN ne/NOUN faisle/PRON pas/ADV
+le/PRON fais/NOUN pas/ADV
+ü/VERB inquiètetoi/PRON bien/VERB
+'/PRON t'occupe/NOUN de/ADP tes/PRON affaires/VERB
+ü/VERB inquiètetoi/PRON pas/ADV
+ü/NOUN fermela/PRON
+je/PRON leur/ADP le/DET donne/VERB
+je/PRON ne/NOUN leur/ADP le/DET donne/VERB pas/ADV
+je/PRON luine/ADP le/NOUN donne/PRON pas/VERB
+elle/PRON se/PRON lave/VERB les/DET mains/NOUN
+grooming/VERB s'habiller/NOUN `to/NOUN wear'/NOUN guå°£¡/NOUN `to/NOUN wear'/NOUN
+selfinitiated/PRON action/NOUN se/PRON changer/NOUN `to/NOUN change'/NOUN pø÷°£¡/NOUN `to/NOUN change'/NOUN
+cognition/NOUN middle/NOUN s'aviser/NOUN de/VERB `to/NOUN think/DET up'/NOUN mit°£¡/NOUN `to/NOUN think'/DET
+emotion/NOUN middle/NOUN se/PRON réjouir/PRON `to/NOUN rejoice'/PRON a£¡lp°£¡/NOUN `to/NOUN be/VERB happy'/VERB
+indirect/NOUN middle/NOUN s'appeler/NOUN `to/NOUN be/VERB called'/NOUN lan°£¡/VERB `to/NOUN be/VERB called'/NOUN
+votre/PRON terrei/NOUN qui/NOUN la/PRON i/PRON défendra/VERB modf/NOUN
+/VERB astu/VERB lu/DET cet/DET articlei/PRON
+/NOUN oui/PRON j'ai/VERB lu/VERB ec/NOUN i/PRON hier/ADV
+/NOUN oui/PRON je/PRON l/PRON i'ai/VERB lu/VERB hier/NOUN
+la/DET fille/NOUN au/ADP seignori/NOUN lei/PRON sert/VERB et/CONJ porte/VERB proi/VERB grant/VERB enor/NOUN
+ja/NOUN lai/PRON voloient/VERB en/ADP feu/NOUN metre/ADP //NOUN por/NOUN rostir/ADP proi/NOUN et/CONJ por/NOUN greillier/ADP proi/VERB
+il/PRON partira/VERB bient^/NOUN
+pierre/NOUN t'/NOUN a/est/VERB frappe/VERB
+pierre/VERB etait/avait/VERB frappe/VERB
+tous/DET les/DET enfants/NOUN ont/VERB vu/VERB ce/DET film/NOUN
+le/DET livre/NOUN de/ADP jean/NOUN
+le/DET livre/NOUN `/ADP jean/NOUN
+ce/DET livre/NOUN est/NOUN de/ADP jean/NOUN
+ce/DET livre/NOUN est/NOUN `/ADP jean/NOUN
+dieu/VERB a/VERB fait/NOUN pleuvoir/VERB
+on/NOUN croit/pr^/VERB qu'/DET il/PRON a/VERB de/ADP l'/DET enthousiasme/NOUN
+on/NOUN lui/ADP croit/pr^/VERB de/DET l'/DET enthousiasme/NOUN
+il/PRON le/PRON voit/VERB
+jean/NOUN réspondait/VERB complètement/NOUN à/ADP la/DET question/NOUN
+je/PRON mange/VERB souvent/VERB des/DET pommes/NOUN
+jean/NOUN ne/NOUN va/VERB pas/ADV au/ADP magasin/NOUN
+réspondaitil/DET complètement/NOUN à/ADP la/DET question/NOUN
+quebec/DET french/DET tu/PRON as/VERB fait/NOUN
+jean/NOUN voit/VERB souvent/VERB marie/NOUN
+pour/ADP ne/NOUN manger/NOUN pas/PRON ti/ADV la/DET soupe/NOUN
+../PUNC que/DET jean/NOUN voit/VERB souvent/VERB marie/NOUN
+cécile/VERB s'était/PRON décrite/VERB comme/NOUN chaotique/NOUN
+les/DET filles/NOUN ont/VERB toutes/DET reçu/VERB les/DET notes/NOUN
+ce/DET livreci/NOUN french/NOUN
+ce/DET délégué/NOUN du/DET ministère/NOUN ci/NOUN
+je/PRON te/VERB lui/PRON ai/VERB écrit/VERB une/DET note/NOUN
+french/NOUN b/PRON le/PRON faites/VERB
+jean/NOUN l'a/PRON refait/PRON rapidement/NOUN souvent/ADV maintenant/ADV
+jean/NOUN l'a/PRON maintenant/ADV souvent/ADV rapidement/NOUN refait/PRON
+jean/NOUN a/VERB franchement/NOUN probablement/VERB spontanément/NOUN souvent/NOUN mangé/NOUN une/DET pomme/NOUN
+jean/NOUN n'a/VERB franchement/NOUN probablement/VERB pas/ADV récemment/PRON souvent/NOUN refait/PRON son/PRON travail/VERB
+jean/NOUN a/VERB spontanément/NOUN souvent/NOUN péniblement/NOUN refait/PRON son/PRON travail/VERB
+jean/NOUN n'a/VERB pas/ADV intelligemment/NOUN répondu/NOUN à/ADP la/DET question/NOUN
+jean/NOUN n'a/VERB intelligemment/VERB pas/ADV répondu/NOUN à/ADP la/DET question/NOUN
+jean/NOUN a/VERB donné/VERB gentiment/NOUN une/DET pomme/NOUN à/ADP marie/NOUN
+jean/NOUN a/VERB présenté/VERB récemment/PRON son/PRON amie/NOUN à/ADP ses/NOUN parents/NOUN
+jean/NOUN a/VERB gentiment/NOUN donné/VERB une/DET pomme/NOUN à/ADP marie/NOUN
+jean/NOUN a/VERB récemment/PRON présenté/VERB son/PRON amie/NOUN à/ADP ses/NOUN parents/NOUN
+jean/NOUN a/VERB donné/VERB une/DET pomme/NOUN gentiment/NOUN à/ADP marie/NOUN
+jean/NOUN a/VERB présenté/VERB son/PRON amie/NOUN récemment/ADV à/ADP ses/NOUN parents/NOUN
+jean/NOUN a/VERB donné/VERB gentiment/NOUN à/ADP marie/NOUN une/DET pomme/NOUN
+jean/NOUN a/VERB donné/VERB à/ADP marie/NOUN gentiment/récemment/NOUN une/DET pomme/NOUN
+jean/NOUN a/VERB lu/VERB bien/NOUN un/DET livre/NOUN bien/NOUN à/ADP marie/NOUN
+jean/NOUN a/VERB souvent/VERB gentiment/NOUN donné/VERB une/DET pomme/NOUN à/ADP marie/NOUN
+jean/NOUN a/VERB gentiment/NOUN donné/VERB souvent/NOUN une/DET pomme/NOUN à/ADP marie/NOUN
+jean/NOUN a/VERB lu/VERB un/DET livre/NOUN récemment/VERB
+jean/NOUN a/VERB lu/VERB la/DET bible/NOUN souvent/NOUN
+jean/NOUN a/VERB embrassé/NOUN marie/NOUN tendrement/NOUN
+jean/NOUN n'a/ADV pas/ADV lu/VERB la/DET bible/NOUN heureusement/NOUN
+jean/NOUN a/VERB lu/VERB la/DET bible/NOUN probablement/VERB
+jean/NOUN a/VERB embrassé/NOUN marie/NOUN souvent/NOUN tendrement/NOUN
+jean/NOUN a/VERB mangé/VERB une/DET pomme/NOUN parfois/VERB entièrement/ADV
+jean/NOUN a/VERB mangé/VERB une/DET pomme/NOUN entièrement/ADV récemment/PRON
+jean/NOUN lira/NOUN la/DET bible/NOUN attentivement/NOUN souvent/ADV maintenant/ADV
+beaucoup/NOUN jean/NOUN a/VERB lu/VERB la/DET bible/NOUN
+presque/VERB jean/NOUN a/VERB mangé/VERB sa/PRON soupe/NOUN
+bien/NOUN il/PRON a/VERB mangé/VERB sa/PRON soupe/NOUN
+entièrement/ADV jean/NOUN a/VERB lu/VERB ce/DET livre/NOUN
+je/PRON me/PRON demande/NOUN quand/NOUN partira/VERB ton/PRON ami/NOUN
+je/PRON me/PRON demande/NOUN quand/NOUN mangera/VERB marie/NOUN sa/PRON pomme/NOUN
+l'homme/DET qui/NOUN je/PRON connais/NOUN
+l'homme/DET que/NOUN je/PRON connais/NOUN
+le/DET roi/NOUN de/ADP france/NOUN il/PRON est/VERB chauve/VERB
+elle/NOUN a/VERB invite/VERB le/DET roi/NOUN de/ADP france/NOUN
+kambii/NOUN ,/DET ´/NOUN ,/NOUN caj/NOUN ne/NOUN luii/ADP allait/NOUN pas/ADV trop/ADP
+le/DET laiti/NOUN ,/NOUN stephj/PRON ,/NOUN cai/NOUN ne/NOUN va/VERB pas/ADV avec/VERB sonj/PRON estomac/NOUN
+sesi/PRON chaussettes/NOUN ont/VERB disparu/NOUN `/ADP claasi/NOUN
+je/PRON ne/VERB savais/NOUN pas/NOUN que/NOUN les/ADV cochonsi/DET ,/DET ilsi/NOUN avaient/DET des/VERB salles/NOUN de/NOUN bain/VERB
+cette/DET toilej/NOUN ,/PRON je/DET pense/DET que/NOUN juliai/PRON ,/NOUN ellei/NOUN ne/VERB l'j/PRON a/VERB pas/ADV vendue/NOUN
+chaque/PRON maitre6/NOUN i/VERB a/VERB renvoye´un/NOUN de/ADP sesi/x/PRON disciples/NOUN
+ellei/NOUN a/VERB lu/VERB en/ADP une/NOUN nuit/ADV le/DET dernier/NOUN livre/NOUN que/DET j'ai/NOUN prete/VERB a/ADP mariehelenei/NOUN
+toutes/DET ces/DET toilesi/NOUN la/PRON of/NOUN elle/NOUN ne/VERB lesi/DET a/VERB pas/ADV vendues/NOUN
+le/DET livre/NOUN de/ADP personnei/NOUN ,/PRON je/VERB ne/NOUN l'i/VERB ai/PRON lu/VERB
+des/les/ADP enfants/NOUN moi/NOUN toutes/DET les/DET photos/NOUN que/DET j'en/PRON ai/VERB vu/VERB etaient/NOUN floues/VERB
+a/ADP la/DET deuxieme/NOUN on/NOUN lui/ADP reprochait/VERB tout/NOUN et/CONJ on/NOUN lui/ADP demandait/NOUN encore/ADV
+c'est/PRON cet/DET hommela/NOUN qui/NOUN a/VERB mange/VERB le/DET raisin/NOUN vert/VERB
+cet/DET hommela/NOUN `/PRON a/VERB mange/VERB le/DET raisin/NOUN vert/VERB
+kesteri/NOUN dit/NOUN qu'ili/DET aime/VERB bien/NOUN les/DET poissons/NOUN
+je/PRON dois/VERB encore/NOUN luii/ADP repondre/NOUN a/ADP jimi/NOUN
+ellei/PRON ignore/VERB les/DET sujets/NOUN disloques/NOUN ,´son/PRON analysei/NOUN
+on/NOUN va/VERB lesi/DET manger/PRON avec/VERB des/DET pommes/NOUN ces/DET petits/VERB enfantsi/NOUN
+une/DET pierre/NOUN lui/ADP est/NOUN tombee/NOUN sur/ADP la/DET brouette/NOUN a/ADP jean/NOUN
+jean/NOUN luii/NOUN a/VERB ´`/NOUN a/ADP ellei/NOUN
+chaque/PRON maitrei/NOUN l'j/NOUN a/VERB renvoye/VERB un/NOUN de/ADP sesi/PRON disciplesj/NOUN
+mais/VERB je/PRON lai/PRON vois/VERB souvent/NOUN sa/PRON soeuri/NOUN
+tout/DET ce/DET que/DET tu/NOUN m'as/ADP dit/NOUN `/DET j'aimerais/NOUN mieux/VERB l'oublier/NOUN
+tu/PRON es/DET partie/VERB sans/NOUN luii/ADP parler/NOUN toi/NOUN a/ADP davei/NOUN
+tu/NOUN m'avais/ADP dit/VERB que/DET tu/PRON l'i/PRON inviterais/NOUN a/ADP moi/NOUN ta/PRON merei/NOUN
+comme/NOUN poisson/NOUN j'aime/NOUN bien/VERB les/DET sardines/NOUN
+tu/PRON veux/VERB que/DET moi/NOUN je/PRON le/PRON dessine/VERB
+elle/PRON enregistre/PRON ce/DET que/DET toi/NOUN tu/PRON dis/NOUN
+et/CONJ si/NOUN moi/NOUN je/PRON viens/VERB et/CONJ que/DET je/PRON casse/VERB tous/DET tes/PRON jouets/NOUN tu/PRON seras/VERB contente/VERB
+elle/NOUN a/VERB demande/VERB `/ADP tout/NOUN le/DET monde/NOUN de/ADP les/DET equeuter/NOUN
+elle/NOUN a/VERB demande´de/VERB lesi/ADP equeuter/DET les/NOUN haricotsi/DET ,/NOUN a/ADP tout/NOUN le/DET monde/NOUN
+elle/NOUN a/VERB demande/VERB de/ADP lesi/DET equeuter/NOUN a/DET tout/NOUN le/ADP monde/NOUN les/DET haricotsi/NOUN
+c'est/PRON la/DET mienne/NOUN de/ADP collection/NOUN
+mais/VERB non/ADV c'est/PRON le/DET brigadier/NOUN azewe/NOUN a/DET laken/NOUN
+le/DET grand/NOUN frere/NOUN c'/PRON est/VERB lucas/VERB l'/DET autre/NOUN c'/PRON est/VERB maxime/NOUN et/CONJ le/DET petit/NOUN dernier/VERB c'/PRON est/VERB
+c'/PRON est/VERB lucas/VERB le/DET grand/NOUN frere/NOUN c'/PRON est/VERB maxime/NOUN l'/DET autre/NOUN c'/PRON est/VERB mateo/NOUN le/DET petit/NOUN
+et/CONJ ceux/DET de/ADP luc/NOUN aussi/ADP ils/DET sentent/NOUN le/DET fromage/NOUN
+ils/DET sentent/NOUN le/DET fromage/NOUN ceux/DET de/ADP luc/NOUN aussi/ADP
+mamani/NOUN est/NOUN malade/ADJ ellei/PRON
+ah/NOUN tu/PRON sais/VERB ce/DET que/DET c'i/PRON est/VERB cai/DET aussi/NOUN
+ili/PRON veut/VERB une/DET poire/NOUN crocroi/NOUN aussi/ADP
+ah/NOUN tu/PRON sais/VERB ce/DET que/DET c'i/PRON est/VERB cette/DET imagei/NOUN aussi/ADP
+on/NOUN peut/NOUN pas/ADV s'en/PRON servir/NOUN le/NOUN reste/VERB ashby/DET 1988/NOUN
+non/NOUN il/PRON y/DET a/VERB personne/ADV qui/NOUN est/VERB venu/VERB
+mais/VERB `/ADP alicei/NOUN ,/PRON j'ai/VERB vu/DET le/NOUN livre/DET qu'ils/NOUN ont/VERB achete/NOUN
+onj/NOUN a/VERB assassiné/NOUN la/DET présidente/NOUN ilj/PRON était/VERB du/NOUN berry/NOUN paraîtil/PRON
+je/PRON le/VERB vois/PRON
+je/PRON lui/VERB vois/PRON
+je/PRON la/la/PRON préfère/VERB
+je/PRON le/pierre/VERB vois/PRON
+je/PRON vois/VERB pierre/le/VERB
+jean/NOUN te/NOUN et/CONJ me/NOUN voit/VERB souvent/NOUN
+elle/PRON se/PRON lave/VERB les/DET mains/NOUN
+être/VERB souvent/VERB triste/NOUN
+les/DET enfants/NOUN l'ont/VERB persuadé/VERB de/ADP tous/NOUN acheter/VERB ce/DET livre/NOUN
+paul/NOUN n'a/VERB pas/ADV lu/VERB un/DET journal/NOUN
+personne/ADV ne/VERB voulait/DET que/PRON j'achète/VERB de/ADP journal/NOUN
+paul/NOUN n'a/VERB pas/ADV eu/VERB l'occasion/DET de/NOUN lire/ADP de/VERB journal/ADP aujourd'hui/NOUN
+il/PRON ne/NOUN veut/ADP signer/NOUN aucun/NOUN papier/NOUN de/ADP tout/DET le/NOUN mois/NOUN
+il/PRON avouait/VERB ne/ADV savoir/DET quoi/ADP dire/NOUN
+il/PRON ne/ADV lit/DET les/NOUN compterendus/ADP d'aucun/NOUN de/ADP ses/PRON spectacles/NOUN
+cet/DET inculpé/NOUN n'essaie/NOUN de/ADP convaincre/NOUN personne/ADV
+aujourd'hui/ADP il/PRON n'est/ADV souhaitable/NOUN de/ADP voir/NOUN personne/ADV
+le/DET patron/NOUN ne/NOUN veut/ADP tolérer/NOUN aucun/NOUN désordre/NOUN
+le/DET patron/NOUN ne/ADV veut/DET qu'aucun/NOUN désordre/NOUN subsiste/PRON
+personne/NOUN ne/NOUN semble/ADP être/VERB malade/NOUN
+il/PRON n'a/VERB encore/NOUN cherché/NOUN à/ADP contacter/NOUN personne/ADV
+il/PRON a/VERB tout/VERB cherché/NOUN à/ADP comprendre/NOUN
+il/PRON n'a/VERB reconnu/VERB avoir/VERB rencontré/VERB personne/NOUN
+personne/NOUN n'a/VERB prétendu/VERB qu'aucun/DET de/NOUN ses/ADP livres/PRON ait/NOUN été/VERB compris/VERB
+paul/NOUN n'a/NOUN pas/ADV prétendu/VERB qu'aucun/DET de/NOUN ses/ADP livres/PRON ait/VERB été/VERB compris/NOUN
+il/PRON prétend/VERB ne/NOUN jamais/NOUN recevoir/PRON personne/ADV le/NOUN dimanche/NOUN
+no/NOUN parce/VERB que/VERB hanno/NOUN donné/ADP des/DET cours/NOUN
+j'ai/PRON joué/VERB avec/VERB ilku:ra/DET
+marie/NOUN le/NOUN connaît/NOUN
+jean/NOUN a/VERB peinte/VERB la/DET porte/NOUN
+jean/NOUN l'a/PRON peinte/VERB e/VERB
+je/PRON t'acheterais/VERB un/DET cadeau/NOUN à/ADP pierre/NOUN
+si/NOUN è/NOUN donné/VERB un/DET cadeau/NOUN
+un/DET cadeau/NOUN si/NOUN è/NOUN donné/NOUN
+no/NOUN parce/VERB que/VERB hanno/NOUN donné/ADP des/DET cours/NOUN
+i/PRON want/VERB to/VERB acheter/VERB le/DET lait/NOUN
+i/PRON want/VERB acheter/VERB le/DET lait/NOUN
+jean/NOUN semble/VERB tp/PRON lui/PRON avoir/VERB lavé/VERB les/DET cheveux/NOUN
+une/DET voiture/NOUN splendide/minuscule/NOUN
+une/DET splendide/minuscule/NOUN voiture/NOUN
+une/DET table/NOUN ronde/PRON blanche/NOUN
+une/DET voiture/NOUN rouge/VERB italienne/NOUN
+une/DET voiture/NOUN superbe/NOUN //NOUN une/DET superbe/NOUN voiture/NOUN
+une/DET fusée/NOUN énorme/NOUN américaine/NOUN
+un/DET homme/NOUN français/NOUN entièrement/ADV nu/NOUN
+une/DET femme/NOUN blanche/NOUN dénuée/NOUN de/ADP tout/NOUN scrupule/NOUN
+un/DET homme/NOUN gentil/NOUN tout/DET nu/fier/NOUN de/ADP son/PRON fils/NOUN
+un/DET homme/NOUN bon/VERB de/NOUN la/DET région/NOUN
+un/DET homme/NOUN de/ADP talent/NOUN tout/DET nu/NOUN
+un/DET homme/NOUN d'église/ADP tout/NOUN nu/DET collocation/NOUN
+une/DET voiture/NOUN rouge/VERB française/NOUN
+une/DET île/NOUN verte/VERB française/NOUN
+une/DET maison/NOUN carrée/NOUN espagnole/NOUN
+un/DET vase/NOUN blanc/NOUN chinois/NOUN
+une/DET table/NOUN ronde/PRON magnifique/VERB
+une/DET île/NOUN verte/VERB splendide/NOUN
+une/DET voiture/NOUN italienne/NOUN rouge/VERB
+un/DET vase/NOUN chinois/NOUN ovale/VERB
+une/NOUN île/NOUN française/NOUN ronde/PRON
+une/DET maison/NOUN espagnole/NOUN blanche/NOUN
+une/DET énorme/petite/NOUN voiture/NOUN rouge/VERB
+une/DET énorme/petite/NOUN voiture/NOUN magnifique/VERB
+une/DET magnifique/NOUN voiture/NOUN rouge/VERB italienne/NOUN
+de/VERB gros_avions/VERB
+ces/DET nombreuses/NOUN superbes/NOUN petites/NOUN voitures/NOUN rouges/VERB
+une/DET voiture/NOUN rouge/VERB italienne/NOUN magnifique/VERB
+une/DET voiture/NOUN rouge/VERB italienne/NOUN vraiment/PRON magnifique/VERB
+un/DET vase/NOUN splendide/NOUN chinois/NOUN ovale/VERB
+un/DET vase/NOUN chinois/NOUN ovale/VERB splendide/NOUN
+une/DET table/NOUN ronde/PRON blanche/NOUN savoyarde/NOUN magnifique/magnifique/VERB
+une/DET petite/énorme/NOUN voiture/NOUN rouge/VERB italienne/NOUN magnifique/VERB
+une/DET magnifique/NOUN petite/NOUN table/NOUN ronde/PRON savoyarde/NOUN
+une/VERB seule/ADV jolie/NOUN petite/NOUN voiture/NOUN rouge/VERB
+une/DET magnifique/NOUN voiture/NOUN rouge/VERB italienne/NOUN
+une/DET énorme/petite/NOUN voiture/NOUN rouge/VERB magnifique/VERB
+une/DET magnifique/NOUN voiture/NOUN italienne/NOUN rouge/VERB
+une/DET magnifique/NOUN voiture/NOUN italienne/NOUN rouge/VERB
+un/DET magnifique/NOUN vase/NOUN chinois/NOUN ovale/VERB
+une/DET voiture/NOUN de/ADP course/PRON rouge/VERB
+une/DET voiture/NOUN rouge/VERB de/ADP course/PRON
+un/DET vase/NOUN de/ADP jade/NOUN marron/VERB
+un/DET vase/NOUN marron/VERB de/ADP jade/NOUN
+une/DET voiture/NOUN rouge/VERB magnifique/magnifique/NOUN de/ADP course/PRON
+une/DET magnifique/NOUN voiture/NOUN de/ADP course/PRON rouge/VERB de/ADP course/PRON italienne/NOUN de/ADP course/PRON
+une/DET magnifique/NOUN voiture/NOUN de/ADP course/PRON rouge/VERB de/ADP course/PRON italienne/NOUN de/ADP course/PRON
+une/DET femme/NOUN seule/VERB
+une/DET seule/ADV femme/NOUN
+une/DET nouvelle/NOUN proposition/VERB intéressante/ADP
+la/DET seule/NOUN situation/NOUN financière/NOUN désastreuse/NOUN
+votre/PRON terrei/NOUN qui/NOUN la/PRON i/PRON défendra/VERB modf/NOUN
+car/VERB les/DET lettresi/DET que/DET le/NOUN messager/NOUN apportait/PRON c'était/VERB mon/NOUN habitude/NOUN
+/VERB astu/VERB lu/DET cet/DET articlei/PRON
+/NOUN oui/PRON j'ai/VERB lu/VERB ec/NOUN i/PRON hier/ADV
+/NOUN oui/PRON je/PRON l/PRON i'ai/VERB lu/VERB hier/NOUN
+moi/NOUN je/PRON sors/VERB
+nonstandard/NOUN french/PRON porte/NOUN la/DET table/NOUN
+moi/NOUN je/PRON porte/NOUN la/DET table/NOUN
+moi/NOUN je/PRON porte/NOUN la/DET table/NOUN
+moi/NOUN je/PRON porte/NOUN la/DET table/NOUN
+jules/NOUN il/VERB porte/NOUN la/DET table/NOUN
+jules/NOUN il/VERB porte/NOUN la/DET table/NOUN
+nous/alexandra/NOUN et/CONJ moi/PRON on/VERB porte/NOUN la/DET table/NOUN
+nous/alexandra/NOUN et/CONJ moi/PRON on/VERB porte/NOUN la/DET table/NOUN
+alexandra/NOUN et/CONJ moi/PRON nous/VERB portons/NOUN la/DET table/NOUN
+alexandra/NOUN et/CONJ moi/PRON nous/VERB portons/NOUN la/DET table/NOUN
+tu/PRON as/VERB vendu/NOUN quoi/DET
+jean/NOUN et/CONJ marie/NOUN croient/VERB que/DET pierre/NOUN a/VERB embrassé/NOUN qui/NOUN
+pierre/NOUN a/VERB demandé/VERB tu/PRON as/VERB embrassé/NOUN qui/NOUN
+tu/PRON a/VERB vendu/NOUN quoi/DET
+tu/PRON as/VERB vendu/NOUN quoi/DET
+jean/NOUN et/CONJ marie/NOUN croient/VERB que/DET pierre/NOUN e/VERB embrassé/NOUN qui/NOUN
+pierre/NOUN a/VERB demandé/VERB tu/PRON as/VERB embrassé/NOUN qui/NOUN
+il/DET s'/PRON est/VERB dénoncé/VERB trois/NUM mille/DET
+je/PRON ferai/VERB laver/NOUN max/NOUN à/ADP paul/NOUN
+je/PRON ferai/VERB courir/NOUN à/ADP paul/NOUN
+je/PRON le/PRON ferai/VERB laver/NOUN à/ADP paul/NOUN
+je/PRON ferai/VERB se/PRON laver/NOUN à/ADP paul/NOUN
+marie/NOUN les/PRON a/VERB décrites/VERB
+marie/NOUN s'/PRON est/VERB décrite/VERB
+j'/PRON en/VERB considère/VERB intelligents/NOUN trois/NUM
+la/DET maison1/NOUN n'/NOUN a/VERB pas2/NOUN été4/VERB détruite3/VERB
+rien/NOUN n'est/ADV fait/NOUN par/VERB personne/NOUN
+quelqu'un/NOUN mange/NOUN aucun/NOUN des/ADP légumes/NOUN
+il/PRON est/VERB autre/NOUN que/DET je/PRON ne/ADV croyais/VERB
+il/PRON vient/VERB sans/VERB personne/NOUN
+jean/NOUN n'a/ADV une/ADV idée/DET french/NOUN
+jean/NOUN n'a/ADV pas/ADV une/DET idée/NOUN
+jean/NOUN n'a/ADV aucune/VERB idée/NOUN
+il/PRON n'y/VERB a/PRT pas/ADV personne/NOUN
+personne/NOUN ne/ADV mange/NOUN pas/ADV
+regarde/NOUN le/PRON
+ne/ADV regarde/NOUN moi/le/NOUN pas/ADV
+ne/ADV me/le/PRON regarde/NOUN pas/ADV
+il/PRON n'y/ADV a/VERB pas/ADV personne/NOUN
+personne/NOUN ne/ADV mange/NOUN pas/ADV
+il/PRON y/VERB a/DET pas/ADV personne/NOUN en/ADP ville/NOUN
+personne/NOUN est/VERB pas/ADV capable/NOUN de/ADP parler/NOUN français/NOUN à/ADP montréal/NOUN
+ne/ADV le/PRON fais/NOUN pas/ADV
+vasy/NOUN pas/ADV
+n'être/ADV pas/ADV heureux/VERB est/VERB une/DET condition/NOUN pour/NOUN écrire/NOUN des/ADP romans/NOUN
+ne/ADV sembler/PRON pas/ADV heureux/VERB est/VERB une/DET condition/NOUN pour/NOUN écrire/ADP des/DET romans/NOUN
+me/ADV regarde/NOUN pas/NOUN french/ADV
+regarde/ADV moi/NOUN pas/NOUN french/ADV
+il/PRON ne/ADV regarde/NOUN pas/ADV moi/NOUN
+pas/ADV moi/NOUN
+pas/ADV de/ADP paris/NOUN
+elle/NOUN a/VERB peur/VERB que/DET tu/PRON ne/ADV sois/VERB pas/ADV là/DET
+personne/NOUN dit/NOUN rien/NOUN
+les/DET enfants/NOUN ça/NOUN s'embrassent/NOUN sur/VERB le/DET front/NOUN
+il/PRON a/VERB donné/VERB quoi/DET à/ADP qui/NOUN
+pierre/NOUN a/VERB demandé/VERB tu/PRON as/VERB embrassé/NOUN qui/NOUN
+jean/NOUN et/CONJ marie/NOUN croient/VERB que/DET pierre/NOUN a/VERB embrassé/NOUN qui/NOUN
+que/NOUN tu/PRON as/VERB vu/VERB qui/NOUN
+il/PRON a/VERB donné/VERB quoi/DET à/ADP qui/NOUN
+il/PRON a/VERB donné/VERB quoi/DET à/ADP qui/NOUN
+jean/NOUN et/CONJ pierre/NOUN croient/VERB que/DET marie/NOUN a/VERB vu/VERB qui/NOUN
+qui/NOUN croit/VERB que/DET marie/NOUN a/VERB vu/VERB qui/NOUN
+cette/DET fillela/NOUN je/PRON la/PRON deteste/VERB french/NOUN clld/NOUN ruewt/PRON 1982/PRON
+il/PRON a/VERB donne/VERB ´/DET `/ADP qui/NOUN
+jean/NOUN et/CONJ marie/NOUN croient/VERB que/DET pierre/NOUN a/VERB embrasse/NOUN ´/NOUN
+que/NOUN tu/PRON as/VERB vu/VERB qui/NOUN
+il/PRON a/VERB donne/VERB ´/DET a/ADP `/NOUN
+french/NOUN était/NOUN si/NOUN timide/VERB qu'/DET il/PRON sortait/VERB trè/NOUN peu/VERB
+jean/NOUN a/VERB donné/VERB le/DET livre/NOUN à/ADP marie/NOUN
+jean/NOUN a/VERB donné/VERB marie/NOUN le/DET livre/NOUN
+a/ADP qui/NOUN atil/VERB pierre/NOUN parl/NOUN
+pierre/NOUN il/NOUN a/VERB vendu/NOUN sa/PRON voiture/NOUN
+je/PRON me/ADP demande/NOUN que/DET jean/NOUN a/VERB achethier/NOUN
+pierre/NOUN doute/NOUN que/DET marie/NOUN ait/VERB vu/VERB personne/NOUN
+a/ADP qui/NOUN pierre/NOUN atil/VERB parl/PRON french/NOUN
+qui/NOUN atil/VERB lu/VERB un/DET livre/NOUN
+jean/NOUN s'est/PRON fait/VERB pincer/NOUN par/VERB marie/NOUN
+jean/NOUN s'est/PRON fait/VERB pincer/NOUN `a/PRON marie/NOUN
+paul/NOUN le/PRON fera/NOUN rarer/NOUN la/DET voiture/NOUN
+marie/NOUN le/PRON fera/NOUN la/PRON rarer/NOUN
+je/PRON te/PRON ferai/VERB nous/NOUN expliquer/NOUN la/DET solution/NOUN
+marie/NOUN fera/VERB travailler/VERB jean/NOUN
+marie/NOUN fera/NOUN laver/VERB le/DET chien/NOUN `/PRON jean/NOUN
+marie0/NOUN fera/NOUN laver/VERB le/DET chien1/NOUN par/VERB jean2/NOUN
+dieu/VERB fera/NOUN appara^/NOUN e/NOUN la/DET sainte/NOUN vierge/NOUN
+le/DET beau/NOUN temps/NOUN y/DET fera/VERB aller/VERB en/NOUN masse/VERB
+sa/PRON famille/NOUN a/VERB cassla/VERB croute/DET ^/NOUN
+il/PRON a/VERB fait/VERB casser/VERB la/DET croute/NOUN par/VERB sa/PRON famille/NOUN
+jean/NOUN a/VERB fait/VERB se/PRON pincer/VERB marie/NOUN
+jean/NOUN l'a/VERB fait/VERB se/PRON pincer/NOUN
+jean/NOUN s'est/PRON fait/VERB pincer/NOUN par/VERB marie/NOUN
+jean/NOUN s'est/PRON fait/NOUN rire/VERB
+jean/NOUN s'est/PRON fait/VERB pincer/VERB marie/NOUN
+j'ai/PRON fait/VERB promettre/NOUN `/VERB a/PRON jean/NOUN d'^/ADP `/NOUN l'heure/NOUN
+faites/NOUN cuire/NOUN pendant/NOUN 2/NOUN heures/NOUN et/NOUN faites/CONJ gouter/VERB `/NOUN a/PRON un/DET
+jean/NOUN s'ach`etera/PRON ce/DET jouet/NOUN
+je/PRON ferai/VERB s'acheter/PRON ce/DET jouet/NOUN a/PRON jean/NOUN
+je/PRON ferai/VERB s'acheter/PRON ce/DET jouet/NOUN par/VERB jean/NOUN
+profond/NOUN de/ADP 2/NOUN meters/NOUN
+profond/NOUN de/ADP 2/NOUN meters/NOUN
+bill/VERB gates/VERB est/VERB riche/ADJ de/ADP 9/NOUN billion/VERB
+marcelle/NOUN est/VERB très/ADV fatiguée/ADJ ce/NOUN que/NOUN marie/NOUN n'est/ADV pas/ADV
+ils/DET restaient/NOUN l/DET les/DET pauvres/NOUN d/DET ils/DET les/NOUN pauvres/NOUN restaient/VERB l/DET
+il/PRON le/PRON lui/PRON a/VERB donn/NOUN
+lui/PRON il/PRON rejette/PRON cette/DET idée/NOUN
+moi/NOUN je/NOUN rejette/VERB cette/DET idée/NOUN
+rhai/VERB cyhoeddus/NOUN cenedlaethol/NOUN
+un/DET fruit/NOUN orange/VERB énorme/NOUN
+french/NOUN
+chantez/NOUN
+jean/NOUN a/VERB raté/VERB le/DET bus/NOUN
+jean/NOUN a/VERB raté/VERB le/DET train/NOUN
+j'ai/PRON acheté/VERB deux/NOUN livres/NOUN french/NOUN
+j'ai/PRON pris/VERB le/NOUN train/DET french/NOUN
+il/DET y/NOUN a/VERB le/DET livre/NOUN sur/ADP la/DET table/NOUN
+il/DET y/NOUN a/VERB ce/DET livre/NOUN sur/ADP la/DET table/NOUN
+il/DET y/NOUN a/VERB le/DET livre/NOUN que/DET j'ai/PRON lu/VERB sur/VERB la/NOUN table/DET french/NOUN
+un/DET tel/NOUN //NOUN le/DET mon/NOUN livre/NOUN
+c'est/PRON ta/VERB recette/PRON qui/VERB est/DET bonne/NOUN pas/VERB sa/ADV recette/PRON french/VERB
+seulement/ADV la/DET sienne/NOUN a/VERB été/VERB vendue/NOUN pas/ADV la/DET mienne/NOUN
+la/DET tienne/NOUN et/CONJ la/DET sienne/NOUN étaient/NOUN bonnes/VERB
+seulement/ADV sa/PRON maison/NOUN a/VERB été/VERB vendue/NOUN pas/ADV la/DET mienne/NOUN
+c'est/PRON la/VERB mienne/DET qui/NOUN est/DET bonne/NOUN pas/VERB la/ADV tienne/DET french/NOUN
+la/DET tienne/NOUN et/CONJ la/DET mienne/NOUN sont/DET bonnes/VERB
+seulement/ADV la/DET mienne/NOUN a/VERB été/VERB vendue/NOUN pas/ADV la/DET sienne/NOUN
+livre/DET mon/NOUN //NOUN mien/NOUN //NOUN le/NOUN mien/DET french/NOUN
+je/PRON am/VERB todois/NOUN diner/NOUN avecjosephjoseph/NOUN la/DET semaine/NOUN prochaine/ADV
+nous/NOUN avons/VERB décidé/VERB
+jean/NOUN a/VERB souvent/VERB mangé/NOUN des/DET pommes/NOUN
+qui/NOUN as/VERB tu/PRON vu/VERB
+qualit/NOUN d'/ADP impression/VERB
+jean/NOUN laisse/NOUN venir/VERB le/DET conducteur/NOUN
+jean/NOUN le/PRON laisse/NOUN venir/VERB
+les/DET moteurs/NOUN sont/NOUN grand/VERB
+frenchj'ai/PRON coupé/VERB les/DET cheveux/NOUN de/ADP pierre/NOUN
+j'ai/PRON coupé/VERB les/DET cheveux/NOUN à/ADP pierre/NOUN
+jean/NOUN s'est/PRON fait/VERB broyer/NOUN par/VERB un/DET camion/NOUN
+jean/NOUN s'est/PRON fait/VERB broyer/PRON sa/NOUN voiture/NOUN par/VERB un/DET camion/NOUN
+je/PRON ferai/NOUN manger/VERB les/DET gâteaux/NOUN à/ADP jean/NOUN
+je/PRON laisserai/VERB jean/NOUN manger/VERB les/DET gâteaux/NOUN
+personne/NOUN d/NOUN '/NOUN important/NOUN a'./NOUN personne/rien/ADV important/NOUN
+chaque/toute/PRON idéed/NOUN 'importante/ADP a'./NOUN chaque//PRON toute/NOUN idée/NOUN
+je/PRON n'ai/VERB pas/ADV vu/PRON grand/NOUN personne/VERB
+je/PRON ne/VERB crois/VERB pas/DET qu'il/DET vienne/VERB grand/VERB monde/VERB ce/VERB soir/ADP
+je/PRON ne/VERB connais/NOUN âme/NOUN qui/DET vive/VERB dans/ADP cette/DET ville/NOUN
+ame/NOUN qui/DET vive/VERB ne/NOUN saurait/ADV pas/NOUN vous/PRON sauver/NOUN d'un/NOUN tel/DET danger/NOUN
+je/NOUN ne/NOUN crois/NOUN pas/VERB que/NOUN âme/NOUN qui/NOUN vive/NOUN viendra/VERB a/DET cette/NOUN soirée/NOUN
+je/PRON n'achète/VERB aucune/NOUN jupe/NOUN de/ADP rouge/VERB
+non/NOUN personne/NOUN n'a/NOUN rien/NOUN mangé/ADV ils/DET ont/VERB tous/DET au/NOUN moins/DET gouté/VERB un/NOUN plat/NOUN
+il/DET ya/PRON /ont/VERB trois/NUM chiens/NOUN dans/ADP la/DET salle/NOUN
+il/PRON est/NOUN venuhave/NOUN trois/NUM hommes/NOUN
+je/PRON ne/ADV l'ai/NOUN pas/ADV vois/VERB
+je/PRON l'ai/VERB pas/ADV vois/VERB
+tu/PRON as/VERB donné/VERB quoi/DET à/ADP qui/NOUN
+qui/NOUN il/PRON a/VERB vu/VERB hier/NOUN soir/ADV
+a/ADP qui/NOUN tu/PRON as/VERB donné/VERB quoi/DET
+a/ADP qui/NOUN que/DET pierre/NOUN parle/NOUN
+comment/VERB que/DET pierre/NOUN fait/NOUN
+qui/VERB qui/DET vient/VERB
+qui/NOUN a/VERB jean/NOUN vu/VERB
+qui/NOUN a/VERB vu/VERB jean/NOUN
+le/DET lait/NOUN de/ADP vachei/NOUN ,/NOUN il/PRON vaut/VERB mieux/NOUN avoir/ADP un/DET frigo/NOUN pour/ADP
+kambii/NOUN ,/DET l'ecolej/NOUN ,/VERB c'est/NOUN pas/NOUN laj/DET qu'on/DET etait/NOUN bien/NOUN avec/VERB luii/PRON
+le/DET laiti/NOUN ,/NOUN stephj/PRON ,/NOUN il/NOUN ne/NOUN faut/NOUN pas/ADV de/ADP cai/DET dans/ADP sonj/PRON estomac/NOUN
+sesi/PRON chaussettes/NOUN ont/VERB disparu/NOUN `/ADP claasi/NOUN
+cette/DET toilej/NOUN ,/PRON je/DET pense/DET que/NOUN juliai/PRON ,/NOUN ellei/NOUN ne/VERB l'j/PRON a/VERB pas/ADV vendue/NOUN
+chaque/PRON maitre6/NOUN i/VERB a/VERB renvoye´un/NOUN de/ADP sesi/x/PRON disciples/NOUN
+certains/DET de/ADP sesx/i/PRON livres/NOUN chaque/PRON auteuri/NOUN en/NOUN a/VERB trouve/NOUN sur/ADP les/DET rayons/NOUN
+le/DET dernier/NOUN livre/NOUN que/DET j'ai/NOUN prete/VERB a^´`/ADP soeuri/NOUN ,/NOUN ellei/NOUN l'a/PRON
+la/DET meilleure/NOUN toile/NOUN d'un/ADP artistej/NOUN i/ADP ,/PRON on/DET vendue/NOUN ne/NOUN luij/NOUN ^/NOUN
+le/DET livre/NOUN de/ADP personnei/NOUN ,/PRON je/VERB ne/NOUN l'i/VERB ai/PRON lu/VERB
+mais/VERB le/DET jugej/NOUN cai/PRON a/VERB surpris/VERB tout/DET le/DET monde/NOUN qu'elle/DET l'j/PRON
+des/les/ADP enfants/NOUN moi/NOUN toutes/DET les/DET photos/NOUN que/DET j'en/PRON ai/VERB vu/VERB
+c'est/PRON cet/DET hommela/NOUN qui/NOUN a/VERB mange/VERB le/DET raisin/NOUN vert/VERB
+cet/DET hommela/NOUN `/PRON a/VERB mange/VERB le/DET raisin/NOUN vert/VERB
+kesteri/NOUN dit/NOUN qu'ili/DET aime/VERB bien/NOUN les/DET poissons/NOUN
+je/PRON pense/DET qu'a`son/ADP photographei/NOUN ,/NOUN elle/NOUN luii/ADP en/VERB fait/NOUN voir/VERB
+je/PRON dois/VERB encore/NOUN luii/ADP repondre/NOUN `/ADP jimi/NOUN
+une/DET pierre/NOUN lui/ADP est/NOUN tombee/NOUN sur/ADP la/DET tete/NOUN `/ADP jean/NOUN
+ellei/PRON ignore/VERB les/DET sujets/NOUN disloques/NOUN son/PRON analysei/NOUN
+on/NOUN va/VERB lesi/DET manger/PRON avec/VERB des/DET pommes/NOUN ces/DET petits/VERB enfantsi/NOUN
+une/DET pierre/NOUN lui/ADP est/NOUN tombee/NOUN sur/ADP la/DET brouette/NOUN a/ADP jean/NOUN
+une/DET pierre/NOUN est/VERB tombee/NOUN sur/VERB sai/PRON brouette/NOUN `/ADP jeani/NOUN
+jean/NOUN luii/NOUN a/VERB ´`/NOUN a/ADP ellei/NOUN
+tu/PRON lesi/DET as/VERB dechires/NOUN au/ADP lieu/NOUN de/ADP les/DET consulter/NOUN les/DET livresi/NOUN
+chaque/PRON maitrei/NOUN l'j/NOUN a/VERB renvoye/VERB un/NOUN de/ADP sesi/PRON disciplesj/NOUN
+mais/VERB je/PRON lai/PRON vois/VERB souvent/NOUN sa/PRON soeuri/NOUN
+tout/DET ce/DET que/DET tu/NOUN m'as/ADP dit/NOUN la/DET j'aimerais/NOUN mieux/VERB
+j'aimerais/NOUN mieux/VERB l'oublier/PRON tout/DET ce/DET que/DET tu/NOUN m'as/PRON dit/VERB
+tu/PRON es/DET partie/VERB sans/NOUN luii/ADP parler/NOUN toi/NOUN a/ADP davei/NOUN
+tu/NOUN m'avais/ADP dit/VERB que/DET tu/PRON l'i/PRON inviterais/NOUN a/ADP `/NOUN ta/PRON
+comme/NOUN poisson/NOUN j'aime/NOUN bien/VERB les/DET sardines/NOUN
+tu/PRON veux/VERB que/DET moi/NOUN je/PRON le/PRON dessine/VERB
+elle/PRON enregistre/PRON ce/DET que/DET toi/NOUN tu/PRON dis/NOUN
+je/PRON savais/NOUN pas/ADV que/DET les/DET cochons/NOUN ils/DET avaient/VERB des/DET
+et/CONJ si/NOUN moi/NOUN je/PRON viens/VERB et/CONJ que/DET je/PRON casse/VERB tous/DET tes/PRON jouets/NOUN tu/PRON
+elle/NOUN a/VERB demande/VERB de´lesi/ADP equeuter/DET a/NOUN `/DET tout/NOUN le/ADP monde/NOUN les/DET
+elle/NOUN a/VERB demande/VERB `/ADP tout/NOUN le/DET monde/NOUN de/ADP les/DET equeuter/NOUN
+c'est/PRON la/DET mienne/NOUN de/ADP collection/NOUN
+mais/VERB non/ADV c'est/PRON le/DET brigadier/NOUN azewe/NOUN a/DET laken/NOUN
+le/DET grand/NOUN frere/NOUN ,`c'/PRON est/VERB lucas/VERB l'/DET autre/NOUN c'/PRON est/VERB maxime/NOUN et/CONJ le/DET
+c'/PRON est/VERB lucas/VERB le/DET grand/NOUN `/NOUN c'/PRON est/VERB maxime/NOUN l'/DET autre/NOUN
+et/CONJ ceux/DET de/ADP luc/NOUN aussi/ADP ils/DET sentent/NOUN le/DET fromage/NOUN
+ils/DET sentent/NOUN le/DET fromage/NOUN ceux/DET de/ADP luc/NOUN aussi/ADP
+mamani/NOUN est/NOUN malade/ADJ ellei/PRON
+ili/PRON veut/VERB une/DET poire/NOUN crocroi/NOUN aussi/ADP
+ah/NOUN tu/PRON sais/VERB ce/DET que/DET c'i/PRON est/VERB cette/DET imagei/NOUN aussi/ADP
+tu´sais/PRON ou/NOUN `/NOUN il/PRON allait/VERB l'avion/DET que/NOUN tu/PRON as/VERB vu/VERB qui/DET
+on/NOUN peut/NOUN pas/ADV s'en/PRON servir/NOUN le/NOUN reste/VERB ashby/DET 1988/NOUN
+non/NOUN il/PRON y/DET a/VERB personne/ADV qui/NOUN est/VERB venu/VERB
+mais/VERB le/DET jugej/NOUN cai/PRON a/VERB surpris/VERB tout/DET le/DET monde/NOUN qu'elle/DET l'j/PRON
+ca/NOUN me/NOUN dit/NOUN rien/VERB d'aller/NOUN au/ADP cinema/DET ce/NOUN soir/ADP
+mais/VERB a`alicei/ADP ,/NOUN je/PRON connais/VERB le/DET livre/NOUN qu'ils/DET luii/NOUN ont/NOUN donne/NOUN
+si/NOUN tu/PRON veux/NOUN du/ADP bon/NOUN frommage/NOUN tu/PRON n'as/ADV qu'à/NOUN aller/NOUN à/ADP ne/NOUN
+je/PRON n'/ADV ai/VERB vu/VERB que/PRON jean/NOUN
+tout/DET le/DET monde/NOUN n'/ADV a/VERB qu'/PRON une/NOUN voiture/NOUN
+tout/DET le/DET monde/NOUN ne/ADV voit/VERB que/NOUN des/DET oiseaux/NOUN
+tout/DET le/DET monde/NOUN ne/ADV veut/NOUN que/PRON partir/VERB
+je/PRON n'ai/ADV mangé/NOUN qu'/PRON une/DET pomme/NOUN
+si/NOUN tu/PRON veux/NOUN de/ADP bon/NOUN fromage/NOUN tu/PRON n'/ADV as/VERB qu'à/PRON aller/NOUN à/ADP north/NOUN
+je/PRON n'ai/ADV rien/VERB mangé/ADV sauf/a/NOUN part/NOUN une/DET pomme/NOUN
+evlapse/VERB para/NOUN ofelise/DET tin/VERB ipothesi/DET mas/NOUN b/VERB
+je/PRON crois/VERB qu'il/DET est/soit/PRON intelligente/VERB french/VERB
+marie/NOUN parle/NOUN souvent/NOUN français/NOUN
+ne/NOUN pas/ADV parler/NOUN français/NOUN
+si/NOUN max/VERB était/VERB bel/VERB et/CONJ bien/VERB un/DET meutrier/NOUN il/ce/PRON serait/VERB un/DET homme/NOUN traqué/VERB par/VERB la/DET justice/NOUN
+si/NOUN max/NOUN commettait/VERB un/DET meutrier/NOUN il/ce/PRON serait/VERB alors/DET un/DET homme/NOUN traqué/VERB par/VERB la/DET justice/NOUN
+sylviei/NOUN est/VERB convaincue/VERB que/DET ci'/NOUN est/VERB une/DET matheuse/NOUN
+tous/DET les/DET professeurs/NOUN de/ADP sylviei/NOUN sont/DET convaincus/VERB que/DET ci'/NOUN est/VERB ene/DET matheuse/NOUN
+léoni/VERB veut/VERB que/DET tous/DET sachent/NOUN qu'/DET ili/PRON est/VERB le/DET chef/NOUN
+léoni/VERB veut/VERB que/DET tous/DET sachent/NOUN qu'/DET ilj/PRON est/VERB le/DET chef/NOUN
+il/PRON est/VERB difficile/NOUN pour/NOUN marie/NOUN de/à/VERB comprendre/NOUN jean/NOUN
+il/PRON est/VERB difficile/NOUN pour/NOUN marie/NOUN de/à/VERB comprendre/NOUN jean/NOUN
+jean/NOUN est/VERB difficile/NOUN pour/NOUN marie/NOUN à/de/NOUN comprendre/NOUN
+le/DET livre/NOUN de/à/VERB jean/NOUN est/VERB à/de/VERB vendre/PRON
+il/PRON est/VERB important/VERB de/VERB pro/VERB passer/VERB à/NOUN paris/NOUN
+il/PRON est/VERB important/VERB que/DET vous/PRON passiez/VERB à/NOUN paris/NOUN
+john/NOUN aspire/VERB à/NOUN prendre/NOUN sa/PRON retraite/PRON
+john/NOUN aspire/VERB à/NOUN la/DET retraite/NOUN
+jean/NOUN est/VERB facile/ADV à/NOUN tous/DET pro/VERB convaincre/NOUN
+il/PRON est/VERB facile/ADV de/VERB tous/DET pro/VERB convaincre/NOUN jean/NOUN
+il/PRON est/VERB difficile/NOUN pour/NOUN moi/NOUN pour/VERB lui/PRON de/VERB comprendre/NOUN john/NOUN
+pour/NOUN moi/NOUN mary/NOUN est/VERB difficile/NOUN pour/NOUN moi/NOUN à/NOUN comprendre/NOUN pour/NOUN moi/NOUN
+il/PRON m'/NOUN est/VERB difficile/NOUN de/VERB comprendre/NOUN mary/NOUN
+ce/DET livre/NOUN m'/NOUN est/VERB difficile/NOUN à/NOUN lire/VERB
+je/PRON veux/VERB le/PRON faire/VERB
+je/PRON le/PRON veux/VERB faire/VERB
+marie/NOUN est/VERB sûrement/NOUN facile/ADV à/NOUN contenter/VERB
+facile/ADV à/NOUN contenter/VERB marie/NOUN l'/PRON est/VERB sûrement/NOUN
+il/PRON est/VERB facile/ADV de/VERB contenter/VERB marie/NOUN
+facile/ADV de/VERB contenter/VERB marie/NOUN ça/DET l'/PRON est/VERB sûrement/NOUN
+mary/NOUN est/VERB difficile/NOUN pour/NOUN moi/NOUN à/NOUN comprendre/NOUN
+n'/ADV embrasser/NOUN pas/ADV john/NOUN
+il/PRON est/VERB facile/ADV de/VERB souvent/NOUN réussir/VERB souvent/NOUN cette/DET recette/VERB
+cette/DET recette/PRON est/VERB facile/ADV à/NOUN souvent/NOUN réussir/VERB souvent/NOUN
+elles/DET ont/VERB été/VERB battues/VERB
+elles/DET ont/VERB été/VERB arrivées/DET
+john/NOUN s'/PRON est/VERB décidé/VERB à/de/NOUN partir/VERB
+john/NOUN a/VERB décidé/VERB de/à/VERB partir/VERB
+john/NOUN s'/PRON est/VERB décidé/VERB à/NOUN embrasser/NOUN marie/NOUN
+beau/NOUN à/NOUN voir/VERB triste/NOUN à/NOUN mourir/NOUN
+prendre/VERB un/NOUN bain/VERB to/ADP take/NOUN a/DET bath/VERB
+jean/NOUN n'aime/VERB pas/ADV marie/NOUN
+mes/NOUN amis/NOUN aiment/VERB tous/DET marie/NOUN
+je/PRON ferai/NOUN manger/VERB les/DET gâteaux/NOUN à/PRON jean/NOUN
+je/PRON viens/VERB de/NOUN lire/VERB
+a/DET la/NOUN course/VERB donne/DET une/NOUN grande/DET soif/ADP jean/NOUN donne/VERB a/ADP jean/NOUN
+c/DET la/NOUN course/VERB donne/PRON .vraiment/DET soif/ADP a/NOUN jean/VERB donne/ADP jean/NOUN
+si/NOUN tu/PRON veux/NOUN du/ADP bon/NOUN frommage/NOUN tu/PRON n'as/ADV qu'à/NOUN aller/NOUN à/ADP ne/NOUN
+je/PRON n'/ADV ai/VERB vu/VERB que/PRON jean/NOUN
+il/PRON ne/ADV lit/VERB pas/VERB le/VERB monde/NOUN
+il/PRON ne/ADV lit/VERB que/PRON le/VERB monde/NOUN
+il/PRON ne/ADV lit/VERB rien/PRON
+il/PRON ne/ADV lit/VERB plus/NOUN
+il/PRON ne/ADV lit/VERB jamais/NOUN
+que/PRON jean/NOUN aime/VERB marie/NOUN
+tout/DET le/DET monde/NOUN n'/ADV a/VERB qu'/PRON une/NOUN voiture/NOUN
+tout/DET le/DET monde/NOUN ne/ADV voit/VERB que/NOUN des/DET oiseaux/NOUN
+tout/DET le/DET monde/NOUN ne/ADV veut/NOUN que/PRON partir/VERB
+tintin/NOUN a/VERB faim/NOUN
+tintin/NOUN a/VERB peur/NOUN tá/VERB gaeilge/VERB ag/DET fliodhais/NOUN
+tes/PRON lunettes/DET sont/DET géniales/VERB
+vous/PRON êtes/DET loyal/VERB
+nous/DET sommes/DET loyal/VERB
+on/VERB est/VERB loyaux/VERB
+j'ai/PRON lu/VERB un/PRON livre/NOUN french/NOUN
+jean/NOUN lave/VERB toujours/ADV bien/VERB ses/PRON vêtements/NOUN
+il/PRON la/PRON tombe/NOUN
+il/PRON la/PRON verse/NOUN
+j'en/PRON ai/VERB mangé/VERB trois/ADV pf/NUM
+voilà/VERB mon/NOUN ami/NOUN
+le/VERB voilà/VERB
+y/DET a/VERB jean/NOUN qui/NOUN a/VERB téléphoné/VERB
+y/DET a/VERB le/DET téléphone/NOUN qui/DET sonne/PRON
+les/NOUN ouvriersi/NOUN sont/NOUN venus/ADP afin/NOUN de/DET øi/NOUN peindre/NOUN la/NOUN maison/NOUN
+je/PRON ferai/VERB courir/VERB henriette/NOUN
+je/PRON ferai/VERB manger/VERB les/DET gateaux/NOUN a/PRON jean/NOUN
+je/PRON ferai/VERB ecrire/VERB une/DET lettre/NOUN au/ADP directeur/NOUN par/VERB jean/NOUN
+pierre/NOUN a/VERB acheté/VERB un/DET cheval/NOUN
+pierre/NOUN n'a/ADV pas/ADV acheté/NOUN de/ADP cheval/chevaux/NOUN
+l'homme/NOUN que/DET j'ai/NOUN vu/VERB
+j'ai/PRON vue/VERB une/VERB certaine/NOUN guitare/PRON ce/NOUN matin/DET la/NOUN je/PRON ne/ADV me/PRON rappelle/PRON plus/NOUN
+ce/DET livreci/NOUN french/NOUN
+ils/DET sont/DET dans/ADP la/DET remise/NOUN tes/PRON futs/VERB
+un/DET enfant/NOUN il/PRON est/VERB arrive/DET pi/DET il/NOUN t'/ADP a/VERB pose/VERB une/DET question/NOUN
+tse/NOUN un/DET enfant/NOUN il/PRON arrive/VERB pi/DET il/NOUN te/ADP pose/NOUN une/DET question/NOUN
+j'/PRON ai/VERB dit:/NOUN moi/NOUN j'/PRON aime/VERB bien/NOUN les/DET aux/NOUN fraises/NOUN
+ca/DET c'est/PRON facile/VERB ld/ADV c'est/PRON facile/VERB ca/ADV rd/DET
+vole/ADV pas/NOUN 9l'elephant/NOUN bel1/ADV 2;1/DET .14/NOUN
+est/PRON ou/VERB can/NOUN 2;0/NOUN .14/DET
+ca/DET e/NOUN boxe/NOUN can/VERB 1;11/NOUN .0/NOUN
+a/ADP qui/NOUN a/VERB telephone/VERB marie/NOUN
+jean/NOUN le/VERB voit/VERB
+paul/NOUN fera/NOUN passer/NOUN son/PRON examen/NOUN a/ADP jean/NOUN
+il/PRON parla/VERB
+jean/NOUN a/VERB vu/VERB la/DET maison/NOUN
+jean/NOUN a/VERB vu/VERB la/PRON
+jean/NOUN l'a/PRON vu/VERB
+je/PRON voudrait/NOUN aller/VERB
+il/PRON ne/ADV marche/NOUN pas/ADV
+jean/NOUN est/VERB plus/NOUN grand/VERB que/DET je/PRON ne/VERB le/PRON suis/NOUN
+je/PRON crains/NOUN qu'il/DET ne/ADV pleuve/PRON
+jean/NOUN embrasse/NOUN souvent/VERB marie/NOUN
+jean/NOUN souvent/VERB embrasse/NOUN marie/NOUN
+les/DET enfants/NOUN embrassent/NOUN tous/DET marie/NOUN
+les/DET enfants/NOUN tous/DET embrassent/NOUN marie/NOUN
+{moi/PRON //NOUN me},/NOUN il/NOUN me/NOUN voulait/NOUN {me/VERB .strong/weak}/NOUN he/PRON me/PRON wanted/VERB
+pierre/NOUN et/CONJ jean/NOUN se/PRON sont/DET entendus/VERB chanter/NOUN la/DET marseillaise/NOUN
+ils/DET se/PRON sont/NOUN embrassés/NOUN l'un/PRON l'autre/NOUN
+la/DET porte/NOUN s'ouvre/PRON french/VERB
+max/NOUN s'évanouit/PRON french/NOUN
+j'ai/PRON fait/VERB écrire/NOUN une/VERB lettre/DET au/NOUN directeur/ADP par/DET paul/NOUN comrie/VERB 1981:172/NOUN
+jean/NOUN a/VERB fait/VERB manger/VERB les/DET pommes/NOUN à/par/ADP paul/NOUN
+marie/NOUN a/VERB laissé/VERB paul/NOUN lire/VERB ces/DET romans/NOUN
+je/PRON le/PRON ferai/NOUN laver/NOUN à/ADP paul/NOUN
+je/PRON ferai/VERB le/PRON laver/NOUN à/ADP paul/NOUN
+je/PRON ferai/VERB se/PRON laver/VERB les/DET mains/NOUN paul/NOUN
+je/PRON le/PRON ferai/VERB se/PRON laver/VERB les/DET mains/NOUN
+je/PRON lui/PRON ferai/VERB se/PRON laver/VERB les/DET mains/NOUN
+je/PRON laisserai/VERB paul/NOUN se/PRON laver/VERB les/DET mains/NOUN
+je/PRON laisserai/VERB se/PRON laver/VERB les/DET mains/NOUN paul/NOUN
+je/PRON le/PRON ferai/NOUN se/PRON laver/NOUN
+le/DET professeur/NOUN fera/NOUN le/PRON lire/VERB les/DET secondes/NOUN
+le/DET professeur/NOUN nous/NOUN l'a/PRON fait/VERB lire/VERB monoclausal/VERB
+il/PRON mangera/VERB trois/DET filles/NOUN cette/DET tarte/NOUN
+elle/NOUN a/VERB dancé/VERB
+elle/PRON est/NOUN arrivée/DET
+la/DET mère/NOUN a/VERB lavé/VERB sa/PRON fille/NOUN
+la/DET mère/NOUN l'/NOUN a/VERB lavée/VERB
+la/DET fille/NOUN que/DET la/DET mère/NOUN a/VERB lavée/VERB
+la/DET mère/NOUN s'/PRON est/VERB lavée/VERB
+la/DET mère/NOUN s'/PRON est/VERB lavé/VERB les/DET mains/NOUN
+un/DET nuage/NOUN est/VERB audessus/VERB d'unemontagne/DET french/NOUN
+personne/ADV ne/NOUN vient/VERB pas/NOUN
+je/PRON ne/VERB saurais/NOUN vous/PRON dire/NOUN pourquoi/NOUN
+personne/ADV ne/NOUN vient/VERB
+je/PRON ne/VERB vois/VERB rien/ADV
+marie/NOUN et/CONJ il/PRON ont/a/VERB mangé/ADV le/DET gateau20/NOUN
+beaucoup/DET de/ADP linguistes/NOUN ont/VERB dansé/VERB la/DET salsa/NOUN
+les/DET enfants/NOUN ont/VERB tous/DET dansé/VERB
+les/DET enfants/NOUN ont/VERB chacun/PRON dansé/VERB
+jean/NOUN va/NOUN être/avoire/ADP vu/VERB
+jean/NOUN est/a/VERB arrivé/DET
+jean/NOUN a/est/VERB dansé/VERB
+les/DET enfants/NOUN ont/VERB probablement/VERB intelligemment/NOUN tous/DET soigneusement/NOUN formulé/VERB leur/DET
+les/DET enfants/NOUN ont/VERB probablement/VERB intelligemment/NOUN soigneusement/NOUN tous/DET formulé/VERB leur/DET
+les/DET enfants/NOUN ont/VERB tous/DET soigneusement/NOUN formulé/VERB leur/DET demande/VERB
+les/DET enfants/NOUN ont/VERB soigneusement/NOUN tous/DET formulé/VERB leur/DET demande/VERB
+les/DET enfants/NOUN ont/VERB vu/VERB tous/DET ce/DET film/NOUN
+les/DET étudiants/NOUN risent/VERB tous/DET
+jean/NOUN souvent/NOUN embrasse/NOUN souvent/VERB marie/PRON
+mes/NOUN amis/NOUN tous/NOUN aiment/VERB tous/DET marie/PRON
+j'ai/PRON tous/DET les/DET voulu/NOUN lire/ADP
+j'ai/VERB les/DET livres/NOUN voulu/NOUN lire/ADP
+les/DET livres/NOUN que/DET j'ai/PRON tous/DET lu/VERB avant/VERB la/DET classe/NOUN sont/DET sur/ADP la/DET table/NOUN
+les/DET livres/NOUN que/DET j'ai/NOUN tous/DET acheté/DET sont/ADP sur/DET la/NOUN table/NOUN
+j'ai/PRON vendu/NOUN les/DET livres/NOUN que/DET j'ai/PRON chacun/PRON lu/VERB au/DET moin/NOUN trois/VERB fois/NOUN
+les/DET étudiants1/NOUN sont/DET vp/NOUN tous/DET pro1/NOUN vp/NOUN arrivés/DET
+il/PRON a/VERB tous/DET fallu/VERB que/DET les/DET enfants/NOUN viennent/VERB
+il/PRON a/VERB tous/DET fallu/VERB qu'ils/DET viennent/NOUN
+il/PRON a/VERB tous/DET fallu/VERB que/DET les/DET enfants/NOUN viennent/VERB
+que/DET ne/ADV mangetil/PRON pas/ADV
+quelle/DET homme/NOUN estce/VERB qui/DET a/VERB embrassé/VERB jean/NOUN whichwh/NOUN
+quelle/DET homme/NOUN estce/VERB que/DET marie/NOUN a/VERB embrassé/VERB whichwh/VERB
+tous/DET les/DET enfants/NOUN ont/VERB vu/VERB ce/DET film/NOUN
+les/DET enfants/NOUN ont/VERB tous/DET vu/VERB ce/DET film/NOUN
+jean/NOUN embarasse/NOUN souvent/VERB marie/NOUN
+jean/NOUN souvent/VERB embarasse/NOUN marie/NOUN
+á/NOUN peine/ADP parler/NOUN l'italien/NOUN après/NOUN cinq/NOUN ans/ADP d'ètude/NOUN est/VERB une/DET honte/NOUN
+parler/ADP à/NOUN peine/NOUN l'italien/NOUN après/NOUN cinq/NOUN ans/ADP d'ètude/NOUN est/VERB une/DET honte/NOUN
+allez/VERB courons/VERB dans/ADP la/DET maison/NOUN
+josèphe/NOUN a/VERB écrite/VERB cette/DET lettre/NOUN
+la/DET lettre/NOUN que/DET josèphe/NOUN a/VERB écrite/VERB hier/NOUN
+jean/NOUN se/PRON lave/VERB
+pierrei/NOUN bavarde/NOUN avec/NOUN luii/VERB ,z/PRON
+il/PRON ne/ADV bosse/VERB que/DET
+il/PRON ne/ADV fait/NOUN que/NOUN bosser/VERB
+il/NOUN n'a/ADV pas/ADV si/NOUN bossé/VERB que/PRON ça/DET
+il/NOUN n'a/ADV pas/ADV si/NOUN bossé/VERB qu'il/PRON soit/NOUN fatigué/ADJ
+je/PRON souhaite/VERB que/DET vous/PRON soyez/VERB heureuse/VERB
+les/DET filles/NOUN sont/DET ti/NOUN en/ADP train/NOUN de/ADP dîner/ADP
+tu/PRON vas/VERB ti/NOUN
+a/NOUN pierre/PRON l'avait/VERB acheté/NOUN
+pierre/NOUN avait/VERB acheté/NOUN le/PRON
+où/NOUN l'avaitili/PRON ip/VERB ti/PRON acheté/VERB
+la/DET lourde/NOUN jolie/VERB valise/NOUN
+paul/NOUN a/VERB peur/NOUN de/ADP marie/NOUN
+il/PRON ne/ADV pouvait/NOUN plus/NOUN contenir/ADP sa/NOUN rage/PRON
+jean/NOUN donne/VERB du/DET soucis/NOUN à/ADP marie/NOUN
+jean/NOUN se/PRON préoccupe/VERB
+jean/NOUN se/NOUN frappe/PRON par/VERB son/PRON intelligence/NOUN
+il/PRON s'est/PRON accusé/VERB luimême/PRON
+il/PRON s'est/PRON acheté/VERB une/DET voiture/NOUN à/ADP luimême/PRON
+il/PRON a/VERB parlé/NOUN de/ADP luimême/PRON
+il/PRON s'est/PRON parlé/NOUN de/ADP luimême/PRON
+il/PRON compte/NOUN sur/NOUN luimême/PRON
+il/PRON se/PRON compte/NOUN sur/NOUN luimême/PRON
+son/PRON bruit/NOUN déplaisant/NOUN fait/NOUN dégoûter/NOUN jean/NOUN à/ADP la/DET télévision/NOUN
+cette/DET blague/NOUN faisait/NOUN amuser/VERB les/DET enfants/NOUN aux/ADP marionnettes/NOUN
+ça/DET fera/NOUN intéresser/VERB pierre/NOUN à/ADP la/DET linguistique/NOUN
+sa/PRON nouvelle/ADV coiffure/VERB la/PRON fera/VERB plaire/NOUN à/ADP pierre/NOUN
+cette/DET chanson/NOUN faisait/NOUN manquer/NOUN la/DET statue/NOUN à/ADP marie/NOUN
+ça/DET a/VERB fait/NOUN plaire/ADP marie/NOUN à/ADP pierre/NOUN
+ça/DET a/VERB fait/NOUN parler/ADP marie/NOUN à/ADP pierre/NOUN
+a/ADP marie/NOUN plaît/VERB cette/DET musique/NOUN
+les/DET femmes/NOUN que/DET la/DET tempête/NOUN a/VERB surprises/VERB sont/DET parties/VERB
+les/DET femmes/NOUN que/DET les/DET invités/NOUN ont/VERB surprises/NOUN délibérément/NOUN sont/DET parties/VERB
+pro1/2/VERB ayant/NOUN critiqué/VERB la/VERB politique/VERB étrangère/NOUN du/VERB gouvernement/NOUN
+jean/NOUN a/VERB cassé/VERB le/DET verre/NOUN
+le/DET verre/NOUN s'est/PRON cassé/VERB
+tous/DET ont/VERB décidé/NOUN de/ADP venir/NOUN
+jean/NOUN est/VERB //NOUN a/VERB aimé/VERB marie/NOUN
+jean/NOUN l'a/VERB aimée/VERB
+french:/NOUN boeckx/VERB 2004/PRON la/NOUN fille/NOUN
+quelle/DET fille/NOUN jean/NOUN atil/VERB vue/PRON
+cette/DET fille/NOUN a/VERB ete/VERB vue/PRON
+tous/DET ces/DET trois/NUM linguistes/NOUN fameux/NOUN de/ADP l'allemagne/NOUN

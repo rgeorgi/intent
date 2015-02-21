@@ -7,6 +7,22 @@ Created on Jan 27, 2015
 from unittest import TestCase
 
 #===============================================================================
+# Decorator
+#===============================================================================
+def argp(f):
+	'''
+	This decorator takes a function that normally has some keyword args
+	and instead makes it require one keyword arg that is an argpasser. This is
+	helpful for doing some of the default tests with argpasser.
+	 
+	:param f:
+	:type f: func
+	'''
+	def new_f(*args, **kwargs):
+		return f(*args, kwargs=ArgPasser(kwargs))
+	return new_f
+
+#===============================================================================
 # ArgPasser
 #===============================================================================
 
@@ -20,7 +36,7 @@ class ArgPasser(dict):
 	to be returned without being replaced by the default.
 	'''
 	
-	def __init__(self, d):
+	def __init__(self, d = {}):
 		super().__init__(d)		
 	
 	def get(self, k, default=None, t=None):

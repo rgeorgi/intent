@@ -6,7 +6,7 @@ Created on Feb 20, 2015
 import argparse
 from utils.argutils import existsfile, writefile
 from igt.rgxigt import RGCorpus
-from utils.argpasser import ArgPasser
+from utils.argpasser import ArgPasser, argp
 from utils.setup_env import c
 from interfaces.stanford_tagger import StanfordPOSTagger
 from interfaces.mallet_maxent import MalletMaxent
@@ -27,27 +27,31 @@ UNK            = 'UNK'
 
 class TagProductionException(Exception): pass
 
-def argp(f):
-	def new_f(*args, **kwargs):
-		return f(*args, kwargs=ArgPasser(kwargs))
-	return new_f
+
 
 @argp
-def produce_tagger(inpath, out_f, method, kwargs):
+def produce_tagger(inpath, out_f, method, kwargs = None):
 	
-	# Load the xigt corpus.
-	xc = RGCorpus.load(inpath)
+	if kwargs.get('xc'):
+		xc = kwargs.get('xc')
+	else:
+		# Load the xigt corpus.
+		xc = RGCorpus.load(inpath)
 	
 	# Before reducing the size of the corpus, filter out
 	# instances missing translation lines if we are projecting
 	if method in projection:
+		old_len = len(xc)
 		xc.require_trans_lines()
+		new_len = len(xc)
+		
+		filtered = old_len - new_len
 	
 	limit = kwargs.get('limit', 0, int)
 	if limit:
 		xc.igts = xc.igts[:limit]
 		
-	skipped = 0
+	skipped = filtered
 	
 	# Giza Realignment ---------------------------------------------------------
 	# If we are using a giza based approach, we will want to
@@ -93,6 +97,9 @@ def produce_tagger(inpath, out_f, method, kwargs):
 			out_f.write(' '.join(['%s/%s' % (i.seq, i.label) for i in sequence]))
 			out_f.write('\n')
 			out_f.flush()
+			
+	out_f.close()
+	return skipped
 		
 		
 		

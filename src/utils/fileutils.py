@@ -8,7 +8,26 @@ import re
 import sys
 import glob
 
+def lc(fname):
+	'''
+	Get the linecount for a file.
+	:param fname:
+	'''
+	with open(fname, encoding='utf-8') as f:
+		i = 0
+		for i, l in enumerate(f):
+			pass
+		return i + 1
+
 def swapext(path, ext):
+	'''
+	Swap the extension on a file
+	
+	:param path: Path to the file
+	:type path: filepath
+	:param ext: new extension (if not starting with "." one will be added)
+	:type ext: str
+	'''
 	return os.path.splitext(path)[0]+ext
 
 def remove_safe(path):
