@@ -22,11 +22,13 @@ def sub_run(sub_train_path, sub_model_path, raw_test_path, sub_tag_path, test_co
 	# Now, run it.
 	stanford_tagger.test(raw_test_path, sub_model_path, sub_tag_path)
 	
+	num_tokens = sum([len(i) for i in sub_corpus])
+	
 	# Load the result of the tagging...
 	result_corpus = POSCorpus.read_slashtags(sub_tag_path)
 	
 	acc = pos_eval.poseval(result_corpus, test_corpus)
-	return (len(sub_corpus), acc)
+	return (num_tokens, acc)
 
 
 def full_run(c):
@@ -36,6 +38,8 @@ def full_run(c):
 	curve_dir = os.path.abspath(writedir(c['curve_dir']))
 	train_path = c['train_path']
 	test_path = c['test_path']
+	
+	
 	
 	train_corpus = POSCorpus.read_slashtags(train_path)
 	test_corpus = POSCorpus.read_slashtags(test_path)
@@ -60,11 +64,17 @@ def full_run(c):
 		# we will get the last <99 instances too.
 		actual_limit = sent_limit+step_increment
 		sub_corpus = POSCorpus(train_corpus[0:actual_limit])
+		
+		# Let's make the x values the number of tokens instead of sentences...
+		
 
 		# Let's create the necessary filenames.
 		sub_train_path = os.path.join(curve_dir, '%d_train.txt' % actual_limit)
 		sub_model_path = os.path.join(curve_dir, '%d_train.model' % actual_limit)
 		sub_tag_path =   os.path.join(curve_dir, '%d_tagged.txt' % actual_limit)
+
+		# Get the number of tokens in the corpus for our x axis...
+		num_tokens = sum([len(x) for x in sub_corpus])
 
 		sub_corpus.write(os.path.basename(sub_train_path), 'slashtags', outdir=curve_dir)
 

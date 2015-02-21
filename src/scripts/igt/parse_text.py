@@ -44,7 +44,7 @@ def parse_text(c):
 	tagger_out = open(outpath, 'w', encoding='utf-8')
 
 	# 4) Initialize tagger/classifier ---
-	if c.get('tagging_method') == 'projection':
+	if c.get('tagging_method') != 'classification':
 		spt = StanfordPOSTagger(e.get('stanford_tagger_trans'))
 	else:
 		# Load the classifier...
@@ -57,12 +57,14 @@ def parse_text(c):
 	#===========================================================================
 	# 5) Align the corpus for projection ---
 	#===========================================================================
-	if c.get('tagging_method') == 'projection':
+	if c.get('tagging_method') != 'classification':
 		# If the alignment method is giza, use giza to align the
 		# gloss and translation.
-		if c.get('alignment_method', 'giza') == 'giza':
+		if c.get('alignment_method') == 'giza':
 			corp.giza_align_t_g()
-
+			
+		elif c.get('alignment_method') == 'giza-direct':
+			corp.giza_align_l_t()
 		# Otherwise, perform heuristic alignment.		
 		else:
 			corp.heur_align()
@@ -89,6 +91,10 @@ def parse_text(c):
 			inst.tag_trans_pos(spt)
 			inst.project_trans_to_gloss()
 			inst.project_gloss_to_lang()
+			
+		elif c.get('tagging_method') == 'direct-projection':
+			inst.tag_trans_pos(spt)
+			inst.project_trans_to_lang()
 			
 		
 		#=======================================================================

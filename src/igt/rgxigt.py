@@ -231,6 +231,15 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		l_sents = [i.lang.text().lower() for i in self]
 		t_sents = [i.trans.text().lower() for i in self]
 		
+		ga = interfaces.giza.GizaAligner()
+		
+		l_t_asents = ga.temp_train(l_sents, t_sents)
+		
+		assert len(l_t_asents) == len(self)
+		
+		for l_t_asent, igt in zip(l_t_asents, self):
+			t_l_aln = l_t_asent.flip()
+			igt.set_bilingual_alignment(igt.trans, igt.lang, t_l_aln)
 		
 		
 			
@@ -725,7 +734,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		seq = []
 		
 		for w in self.lang:
-			w_tag = label=w_tags.find(attributes={'alignment':w.id})
+			w_tag = w_tags.find(attributes={'alignment':w.id})
 			if not w_tag:
 				w_tag = 'UNK'
 				
@@ -824,6 +833,8 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		# Get the gloss tags...
 		gloss_tags = self.get_pos_tags(self.gloss.id)
 		
+		# Get the bilingual alignment from trans to 
+		
 		# Create the new pos tier...
 		pt = RGTokenTier(type='pos', id='w-pos', alignment='w')
 		
@@ -835,8 +846,24 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			
 		self.add(pt)
 		
-	
+	def project_trans_to_lang(self):
+		# Get the trans tags...
+		trans_tags = self.get_pos_tags(self.trans.id)
 		
+		t_l_aln = self.get_bilingual_alignment(self.trans.id, self.lang.id)
+				
+		# Create the new pos tier...
+		pt = RGTokenTier(type='pos', id='w-pos', alignment='w')
+		
+		for t_i, l_i in t_l_aln:
+			t_word = self.trans.get_index(t_i)
+			t_tag = trans_tags[t_i-1]
+			
+			l_word = self.lang.get_index(l_i)
+		
+			pt.add(RGToken(id=pt.askItemId(), alignment = l_word.id, text = str(t_tag)))
+		
+		self.add(pt)
 	
 	
 #===============================================================================
