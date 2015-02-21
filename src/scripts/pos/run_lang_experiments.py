@@ -20,6 +20,7 @@ from utils.fileutils import lc
 import shutil
 import sys
 from collections import defaultdict
+from multiprocessing.pool import Pool
 
 
 class TestFile(object):
@@ -32,7 +33,7 @@ class TestFile(object):
 		if ftype not in ['giza','standard']:
 			raise Exception('This type is not recognized.')
 
-def run_tagger(name, train_path, logfile, rawfile, pc):
+def run_tagger(name, train_path, rawfile, pc):
 	# Create a new temporary file to store the model. We won't 
 	# need to keep it.
 	
@@ -41,15 +42,15 @@ def run_tagger(name, train_path, logfile, rawfile, pc):
 		
 	# Now, train and test.
 	print('Training "%s"' % os.path.basename(train_path))
-	stanford_tagger.train(train_path, mod_temp.name, out_f=logfile)
+	stanford_tagger.train(train_path, mod_temp.name, out_f=open(os.devnull, 'w'))
 	print('Testing "%s"' % os.path.basename(train_path))
-	stanford_tagger.test(rawfile.name, mod_temp.name, tag_temp.name, log_f=logfile)
+	stanford_tagger.test(rawfile, mod_temp.name, tag_temp.name, log_f=open(os.devnull, 'w'))
 	
 	# Finally, evaluate.
 	eval_corpus = POSCorpus.read_slashtags(tag_temp.name)
 	
 	# Get the accuracy.
-	acc = pos_eval.poseval(eval_corpus, pc, out_f=logfile)
+	acc = pos_eval.poseval(eval_corpus, pc, out_f=open(os.devnull, 'w'))
 	train_l = lc(train_path)
 	return name, acc, train_l
 	
@@ -72,6 +73,7 @@ def train_and_test(filelist, goldpath, outdir):
 	logfile = open(os.path.join(outdir, 'taglog.txt'), 'w', encoding='utf-8')
 
 	
+	
 	tempdir = mkdtemp()
 	
 	model = os.path.join(tempdir, 'model')
@@ -84,6 +86,10 @@ def train_and_test(filelist, goldpath, outdir):
 	def callback(result):
 		name, acc, length = result
 		results[name][length] = acc
+		print(results)
+	
+	# Multithreaded pool...
+	p = Pool(8)
 	
 	# Now, let's go through each file in the list and train and test.
 	for tf in filelist:
@@ -98,20 +104,27 @@ def train_and_test(filelist, goldpath, outdir):
 			
 			for i in range(50, len(full_c), 50):
 				small_c = full_c[0:i]
-				small_path = NamedTemporaryFile('r', delete=True)
+				small_path = NamedTemporaryFile('r', delete=False)
 				POSCorpus(small_c).write(small_path.name, 'slashtags', outdir='')
 				
-				result = run_tagger(os.path.basename(train_path), small_path.name, logfile, rawfile, pc)
-				small_path.close()
-				callback(result)
-				print(results)
+				#result = run_tagger(os.path.basename(train_path), small_path.name, logfile, rawfile, pc)
+				args = [os.path.basename(train_path), small_path.name, rawfile.name, pc]
+				p.apply_async(run_tagger, args=args, callback=callback)
+				
 				
 		else:
-			result = run_tagger(os.path.basename(train_path), train_path, logfile, rawfile, pc)
-			callback(result)
+			args = [os.path.basename(train_path), train_path, logfile, rawfile, pc]
+			#print(p.apply(run_tagger, args))
+			#p.apply_async(run_tagger, args, callback=callback)
+			#result = run_tagger(os.path.basename(train_path), train_path, logfile, rawfile, pc)
+			#callback(result)
 			
-		print(results)
 
+
+	# Wait for the pool to finish.
+	p.close()
+	p.join()
+	
 	print('Removing "%s" ' % tempdir)
 	shutil.rmtree(tempdir)
 
