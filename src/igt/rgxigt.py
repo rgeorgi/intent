@@ -27,6 +27,7 @@ from logging import getLogger
 import logging
 from utils.token import Token, POSToken
 import copy
+from interfaces.giza import GizaAligner
 
 #===============================================================================
 # Logging
@@ -217,28 +218,38 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 				i.trans
 				new_igts.append(i)
 			except NoTransLineException as ntle:
-				logging.warn('Filtering out igt instance "%s"' % i.id)
+				logging.warn('Filtering out igt instance "%s" - no translation line' % i.id)
 
 		self.igts = new_igts
 	
-	def giza_align_t_g(self):
+	def giza_align_t_g(self, resume = True):
 		'''
 		Perform giza alignments on the gloss and translation
 		lines.
+		
+		:param resume: Whether to "resume" from the saved aligner, or start fresh.
+		:type resume: bool
 		'''
 		
 		# First, make sentences out of the gloss and text lines.
 		g_sents = [i.glosses.text().lower() for i in self]
 		t_sents = [i.trans.text().lower() for i in self]
 		
-		# Next, load up the saved gloss-trans giza alignment model
-		ga = interfaces.giza.GizaAligner.load(c['g_t_prefix'], c['g_path'], c['t_path'])
-
-		# ...and use it to align the gloss line to the translation line.
-		g_t_asents = ga.force_align(g_sents, t_sents)
+		
+		if resume:
+			# Next, load up the saved gloss-trans giza alignment model
+			ga = interfaces.giza.GizaAligner.load(c['g_t_prefix'], c['g_path'], c['t_path'])
+	
+			# ...and use it to align the gloss line to the translation line.
+			g_t_asents = ga.force_align(g_sents, t_sents)
+			
+		# Otherwise, start a fresh alignment model.
+		else:
+			ga = GizaAligner()
+			g_t_asents = ga.temp_train(g_sents, t_sents)
 		
 		# Before continuing, make sure that we have the same number of alignments as we do instances.
-		assert len(g_t_asents) == len(self)
+		assert len(g_t_asents) == len(self), 'giza: %s -- self: %s' % (len(g_t_asents), len(self))
 		
 		# Next, iterate through the aligned sentences and assign their alignments
 		# to the instance.
@@ -263,7 +274,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		assert len(l_t_asents) == len(self)
 		
 		for l_t_asent, igt in zip(l_t_asents, self):
-			t_l_aln = l_t_asent.flip()
+			t_l_aln = l_t_asent.aln.flip()
 			igt.set_bilingual_alignment(igt.trans, igt.lang, t_l_aln)
 		
 		
@@ -1456,7 +1467,7 @@ line=961 tag=T:     `I made the child eat rice.\''''
 		
 		self.igt.add_pos_tags('gw', self.tags)
 		
-		self.assertEquals(self.igt.get_pos_tags('gw'), self.tags)
+		self.assertEquals(self.igt.get_pos_tags('gw').tokens(), self.tags)
 		
 	def test_classify_pos_tags(self):
 		pos_dict = pickle.load(open(c['pos_dict'], 'rb'))

@@ -47,17 +47,20 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 		
 		filtered = old_len - new_len
 	
+	
+	
 	limit = kwargs.get('limit', 0, int)
 	if limit:
 		xc.igts = xc.igts[:limit]
+		xc.refresh_index()
 		
-	skipped = filtered
+	skipped = 0
 	
 	# Giza Realignment ---------------------------------------------------------
 	# If we are using a giza based approach, we will want to
 	# realign the corpus now, since it is heuristic by default.
 	if method == giza_proj:
-		xc.giza_align_t_g()
+		xc.giza_align_t_g(kwargs.get('resume'))
 		
 	elif method == giza_direct:
 		xc.giza_align_l_t()
@@ -89,12 +92,19 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 			
 		# Whichever method, get the gloss line tags:
 		sequence = inst.get_lang_sequence()
+		
+		# If we get a "skip" and "UNK" appears in the sequence...
 		if kwargs.get('skip') and len(sequence) != len([i for i in sequence if i.label != UNK]):
 			skipped += 1
 			continue
 	
 		else:
-			out_f.write(' '.join(['%s/%s' % (i.seq, i.label) for i in sequence]))
+			# Replace the "UNK" with "NOUN"			
+			for pos_token in sequence:				
+				if pos_token.label == 'UNK' and kwargs.get('replace_unknown'):
+					pos_token.label = "NOUN"
+				
+				out_f.write('%s/%s ' % (pos_token.seq, pos_token.label))
 			out_f.write('\n')
 			out_f.flush()
 			

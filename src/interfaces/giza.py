@@ -489,7 +489,7 @@ class GizaAligner(object):
 		
 		tf.clean()
 		
-		return [a.aln for a in tf.aligned_sents()]
+		return tf.aligned_sents()
 		
 	def force_align(self, e_snts, f_snts):
 		return self.temp_align(e_snts, f_snts, self.resume)
