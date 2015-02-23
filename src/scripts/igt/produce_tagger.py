@@ -38,23 +38,20 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 		# Load the xigt corpus.
 		xc = RGCorpus.load(inpath)
 	
+	corp_length = len(xc)
+	
 	# Before reducing the size of the corpus, filter out
 	# instances missing translation lines if we are projecting
 	if method in projection:
-		old_len = len(xc)
 		xc.require_trans_lines()
-		new_len = len(xc)
+		corp_length = len(xc)
 		
-		filtered = old_len - new_len
-	
-	
 	
 	limit = kwargs.get('limit', 0, int)
 	if limit:
 		xc.igts = xc.igts[:limit]
 		xc.refresh_index()
 		
-	skipped = 0
 	
 	# Giza Realignment ---------------------------------------------------------
 	# If we are using a giza based approach, we will want to
@@ -95,13 +92,13 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 		
 		# If we get a "skip" and "UNK" appears in the sequence...
 		if kwargs.get('skip') and len(sequence) != len([i for i in sequence if i.label != UNK]):
-			skipped += 1
+			corp_length -= 1
 			continue
 	
 		else:
 			# Replace the "UNK" with "NOUN"			
 			for pos_token in sequence:				
-				if pos_token.label == 'UNK' and kwargs.get('replace_unknown'):
+				if pos_token.label == 'UNK' and kwargs.get('unk_nouns'):
 					pos_token.label = "NOUN"
 				
 				out_f.write('%s/%s ' % (pos_token.seq, pos_token.label))
@@ -109,7 +106,7 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 			out_f.flush()
 			
 	out_f.close()
-	return skipped
+	return corp_length
 		
 		
 		

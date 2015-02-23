@@ -105,6 +105,18 @@ class ResultsFile(object):
 		self.execute("INSERT INTO results VALUES ('%s', %s, %s, '%s');" % (name, length, acc, os.path.basename(filename)))
 		self.db.commit()
 		
+	def lastlen(self, name):
+		'''
+		Return the largest previous length of a run for the test of this name.
+		:param name:
+		'''
+		results = self.execute("SELECT DISTINCT length FROM results WHERE name = '%s' ORDER BY length DESC" % name)
+		if results:
+			return results[0][0]
+		else:
+			return 0
+		
+		
 	def keys(self):
 		return [i[0] for i in self.execute("SELECT DISTINCT name FROM results")]
 		
@@ -117,7 +129,7 @@ class ResultsFile(object):
 			fh.write('-'*40+'\n')
 			fh.write('%s\n' % key)
 			
-			rows = self.execute("SELECT length, acc FROM results WHERE name = '%s'" % key)
+			rows = sorted(self.execute("SELECT DISTINCT length, acc FROM results WHERE name = '%s'" % key))
 
 			for row in rows:
 				fh.write('%s,%.2f\n' % row)
@@ -139,7 +151,15 @@ def train_and_test(filelist, goldpath, outdir):
 	rawfile.write(pc.raw())
 	rawfile.close()
 	
+	logfile = open(os.path.join(outdir, 'taglog.txt'), 'w', encoding='utf-8')
+
 	
+	
+	tempdir = mkdtemp()
+	print("Creating temporary directory %s" % tempdir)
+	
+	
+
 	# Place to store the results
 	results = os.path.join(outdir, 'results.db')
 	results_txt = os.path.join(outdir, 'results.txt')
@@ -186,6 +206,7 @@ def train_and_test(filelist, goldpath, outdir):
 				
 		
 		else:
+			# Again, only run if we haven't done the results.
 			if not r.seen_file(train_path):
 				args = [train_name, train_path, rawfile.name, pc, False]
 				p.apply_async(run_tagger, args, callback=callback)
@@ -194,10 +215,12 @@ def train_and_test(filelist, goldpath, outdir):
 	# Wait for the pool to finish.
 	p.close()
 	p.join()
-	
-	r.write(results_txt)
 
 	
+
+	print('Removing "%s" ' % tempdir)
+	shutil.rmtree(tempdir)
+
 
 def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 	
@@ -211,6 +234,8 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 	# Gather the files that we will be training and testing
 	# a tagger on.
 	files_to_test = []
+
+	
 
 	
 	#===========================================================================
@@ -233,32 +258,39 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 	#===========================================================================
 	# Giza files
 	#===========================================================================
+	
 	def produce_giza_taggers(name, method, skip=False, resume=True):
 		giza_dir = os.path.join(outdir, name)
 		os.makedirs(giza_dir, exist_ok = True)
 		
+		prev_corp_length = None
+		cur_corp_length = None
+		
 		for i in range(50, len(xc)+1, 50):
-			# check if this iteration has already been written:
+			
+			# Create the filename to be created....
 			filename = os.path.join(giza_dir, '%s.txt' % i)
 			files_to_test.append(TestFile(filename, 'giza', name))
 			
-			length = 0 if not os.path.exists(filename) else lc(filename)
-			
-			
-			# And skip it if it has, and we're not forcing overwrites.
-			if (not make_files) or (os.path.exists(filename) and not kwargs.get('force')) or length + i > len(xc):
+					
+			# Just continue on if we're not making files.
+			if (not make_files):
 				continue
 			
-			# Deep copy the subset of igts... this will save on performance by a lot.
-			#small_xc = RGCorpus(igts=(xc.igts[:i]))
+			# If the filename already exists and is non-empty, and we're not forcing, use that.
+			if os.path.exists(filename) and lc(filename) > 0 and not kwargs.get('force'):
+				prev_corp_length = cur_corp_length
+				cur_corp_length = lc(filename)
+
 			
-			sk = pt.produce_tagger(inpath, writefile(os.path.join(giza_dir, '%s.txt' % i)), method, xc = copy.deepcopy(xc), skip=skip, limit=i, resume=resume)
+			else:
+				prev_corp_length = cur_corp_length
+				cur_corp_length = pt.produce_tagger(inpath, writefile(os.path.join(giza_dir, '%s.txt' % i)), method, xc = copy.deepcopy(xc), skip=skip, limit=i, resume=resume)
 			
-			# Between how many we want and how many were skipped, if
-			# it reaches the size of the corpus, just stop now, otherwise
-			# we will just keep skipping more.
-			#if length + i > len(xc):
-			#	break
+			
+			# If we haven't increased the size of the output corpus in the last two efforts, abort.
+			if (prev_corp_length is not None) and (cur_corp_length is not None) and (cur_corp_length >= prev_corp_length):
+				break 
 	
 	
 	# 1) Non-Giza Files -----------------------------------------------------------
@@ -266,6 +298,7 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 	if True:
 		prod('classification.txt', pt.classification, classifier=classifier)
 		prod('proj-keep.txt', pt.heur_proj, skip=False)
+		prod('proj-keep-nouns.txt', pt.heur_proj, skip=False, unk_nouns=True)
 		prod('proj-skip.txt', pt.heur_proj, skip=True)
 	
 	# 2) Giza Files ---------------------------------------------------------------
