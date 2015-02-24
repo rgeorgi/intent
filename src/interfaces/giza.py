@@ -485,7 +485,8 @@ class GizaAligner(object):
 				'-hmmiterations', '5',
 				'-model4iterations', '0']
 		cmd = ' '.join(elts)
-		os.system(cmd)
+		
+		piperunner(cmd, log_name='giza')
 		
 		tf.clean()
 		
@@ -574,7 +575,7 @@ class GizaAligner(object):
 		
 		cmd = ' '.join(args)
 
-		os.system(cmd)
+		piperunner(cmd, log_name='giza')
 		
 		new_gf.clean()
 		

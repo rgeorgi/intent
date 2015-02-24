@@ -28,6 +28,7 @@ import logging
 from utils.token import Token, POSToken
 import copy
 from interfaces.giza import GizaAligner
+import sys
 
 #===============================================================================
 # Logging
@@ -126,11 +127,14 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 	def __len__(self):
 		return len(self._list)
 	
-	def copy(self):
+	def copy(self, limit=None):
 		new_c = RGCorpus(id=self.id, attributes=copy.deepcopy(self.attributes), metadata=copy.copy(self.metadata), igts=None)
 		
-		for igt in self.igts:
+		for i, igt in enumerate(self.igts):
 			new_c.add(igt.copy(parent=new_c))
+			
+			if limit and i >= limit:
+				break
 			
 		return new_c
 	
@@ -874,6 +878,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			t_tag = trans_tags[t_i-1]
 			
 			g_morph = self.glosses.get_index(g_i)
+			g_morph.__class__ = RGMorph
 			
 			# TODO: Implement order of precedence here.
 			g_word = g_morph.word
@@ -928,15 +933,18 @@ class RGItem(xigt.core.Item, FindMixin):
 	Subclass of the xigt core "Item."
 	'''
 	
-	def __init__(self, index=None, **kwargs):
-		super().__init__(**kwargs)
+	def __init__(self, **kwargs):
+		
+		new_kwargs = {key : value for key, value in kwargs.items() if key != 'index'}
+		
+		super().__init__(**new_kwargs)
 		
 		self.start = kwargs.get('start')
 		self.stop = kwargs.get('stop')
-		self.index = index
+		self.index = kwargs.get('index')
 		
 	def copy(self, parent=None):
-		new_item = RGItem(self.id, type=self.type,
+		new_item = RGItem(id=self.id, type=self.type,
 							alignment=copy.copy(self.alignment),
 							content=copy.copy(self.content),
 							segmentation=copy.copy(self.segmentation),
@@ -1429,72 +1437,90 @@ line=961 tag=T:     `I made the child eat rice.\''''
 		
 		self.assertEqual(a, self.igt.get_trans_gloss_alignment())
 		
-class XigtParseTest(TestCase):
-	'''
-	Testcase to make sure we can load from XIGT objects.
-	'''
-	def setUp(self):
-		self.xc = RGCorpus.load(c['xigt_ex'])
+# class XigtParseTest(TestCase):
+# 	'''
+# 	Testcase to make sure we can load from XIGT objects.
+# 	'''
+# 	def setUp(self):
+# 		self.xc = RGCorpus.load(c['xigt_ex'])
+# 		
+# 	def xigt_load_test(self):
+# 		pass
+# 	
+# 	def giza_align_test(self):
+# 		self.xc.giza_align_t_g()
+# 		giza_aln = self.xc[0].get_trans_gloss_alignment()
+# 		
+# 		giza_a = Alignment([(3, 2), (2, 8), (5, 7), (4, 3), (1, 1), (6, 5)])
+# 		
+# 		self.assertEquals(giza_a, giza_aln)
+# 		
+# 	def heur_align_test(self):
+# 		self.xc.heur_align()
+# 		aln = self.xc[0].get_trans_gloss_alignment()
+# 		a = Alignment([(5, 7), (6, 5), (1, 1), (4, 3)])
+# 		self.assertEquals(a, aln)
 		
-	def xigt_load_test(self):
-		pass
-	
-	def giza_align_test(self):
-		self.xc.giza_align_t_g()
-		giza_aln = self.xc[0].get_trans_gloss_alignment()
-		
-		giza_a = Alignment([(3, 2), (2, 8), (5, 7), (4, 3), (1, 1), (6, 5)])
-		
-		self.assertEquals(giza_a, giza_aln)
-		
-	def heur_align_test(self):
-		self.xc.heur_align()
-		aln = self.xc[0].get_trans_gloss_alignment()
-		a = Alignment([(5, 7), (6, 5), (1, 1), (4, 3)])
-		self.assertEquals(a, aln)
-		
-	
-
-class POSTestCase(TestCase):
-	
-	def setUp(self):
-		self.txt = '''doc_id=38 275 277 L G T
+class CopyTest(TestCase):
+		def setUp(self):
+			self.txt = '''doc_id=38 275 277 L G T
 stage3_lang_chosen: korean (kor)
 lang_code: korean (kor) || seoul (kor) || japanese (jpn) || inuit (ike) || french (fra) || malayalam (mal)
 note: lang_chosen_idx=0
 line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
 line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
 line=961 tag=T:     `I made the child eat rice.\''''
-		self.igt = RGIgt.fromString(self.txt)
-		self.tags = ['PRON', 'NOUN', 'NOUN', 'VERB']
-	
-	def test_add_pos_tags(self):
-		
-		self.igt.add_pos_tags('gw', self.tags)
-		
-		self.assertEquals(self.igt.get_pos_tags('gw').tokens(), self.tags)
-		
-	def test_classify_pos_tags(self):
-		pos_dict = pickle.load(open(c['pos_dict'], 'rb'))
-		tags = self.igt.classify_gloss_pos(MalletMaxent(c['classifier_model']), posdict=pos_dict)
-		
-		self.assertEqual(tags, self.tags)
-		
-		
-	def test_tag_trans_line(self):
-		tagger = StanfordPOSTagger(c['stanford_tagger_trans'])
-		self.igt.tag_trans_pos(tagger)
+			self.igt = RGIgt.fromString(self.txt)
+			self.corpus = RGCorpus(igts=[self.igt])
+			
+		def test_copy(self):
+			
+			new_c = self.corpus.copy()
+			
+			self.assertNotEqual(id(self.corpus), id(new_c))
+			
+			# Assert that there is no alignment.
+			self.assertIsNone(self.corpus.find(id='a'))
+			
+			rgp(self.corpus)
+			input()
+			rgp(new_c)
+			
+			self.assertEqual(rgencode(self.corpus), rgencode(new_c))
+			
+			self.assertIsNone(self.corpus.find(id='a'))
+			
+			new_c.heur_align()
+			self.assertIsNotNone(self.corpus.find(id='a'))
+
+# class POSTestCase(TestCase):
+# 	
+# 	def setUp(self):
+# 		self.txt = '''doc_id=38 275 277 L G T
+# stage3_lang_chosen: korean (kor)
+# lang_code: korean (kor) || seoul (kor) || japanese (jpn) || inuit (ike) || french (fra) || malayalam (mal)
+# note: lang_chosen_idx=0
+# line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
+# line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
+# line=961 tag=T:     `I made the child eat rice.\''''
+# 		self.igt = RGIgt.fromString(self.txt)
+# 		self.tags = ['PRON', 'NOUN', 'NOUN', 'VERB']
+# 	
+# 	def test_add_pos_tags(self):
+# 		
+# 		self.igt.add_pos_tags('gw', self.tags)
+# 		
+# 		self.assertEquals(self.igt.get_pos_tags('gw').tokens(), self.tags)
+# 		
+# 	def test_classify_pos_tags(self):
+# 		pos_dict = pickle.load(open(c['pos_dict'], 'rb'))
+# 		tags = self.igt.classify_gloss_pos(MalletMaxent(c['classifier_model']), posdict=pos_dict)
+# 		
+# 		self.assertEqual(tags, self.tags)
+# 		
+# 		
+# 	def test_tag_trans_line(self):
+# 		tagger = StanfordPOSTagger(c['stanford_tagger_trans'])
+# 		self.igt.tag_trans_pos(tagger)
 		
 
-class CopyTest(TestCase):
-		def setUp(self):
-			self.txt = '''doc_id=38 275 277 L G T
-	stage3_lang_chosen: korean (kor)
-	lang_code: korean (kor) || seoul (kor) || japanese (jpn) || inuit (ike) || french (fra) || malayalam (mal)
-	note: lang_chosen_idx=0
-	line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
-	line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
-	line=961 tag=T:     `I made the child eat rice.\''''
-			self.igt = RGIgt.fromString(self.txt)
-		
-	

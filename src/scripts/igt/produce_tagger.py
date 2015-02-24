@@ -12,12 +12,13 @@ from interfaces.stanford_tagger import StanfordPOSTagger
 from interfaces.mallet_maxent import MalletMaxent
 import sys
 import logging
+import os
 
 #===============================================================================
 # Set up logging
 #===============================================================================
 
-TAGLOG = logging.getLogger('taglog')
+TAGLOG = logging.getLogger(__name__)
 
 classification = 'classification'
 
@@ -52,10 +53,10 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 		xc.require_trans_lines()
 		corp_length = len(xc)
 		
-	
 	limit = kwargs.get('limit', 0, int)
 	if limit:
 		xc.igts = xc.igts[:limit]
+		corp_length = len(xc)
 		
 	
 	# Giza Realignment ---------------------------------------------------------
@@ -66,6 +67,8 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 		
 	elif method == giza_direct:
 		xc.giza_align_l_t()
+	
+	TAGLOG.info('Producing tagfile for "%s"' % os.path.relpath(out_f.name))
 	
 	for i, inst in enumerate(xc):
 		

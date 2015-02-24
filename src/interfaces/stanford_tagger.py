@@ -86,7 +86,7 @@ class StanfordPOSTagger(object):
 # Functions to call for testing and training.
 #===============================================================================
 
-def train(train_file, model_path, delimeter = '/', out_f = sys.stdout):
+def train(train_file, model_path, delimeter = '/'):
 	jar()
 	
 	# Exists
@@ -98,16 +98,16 @@ def train(train_file, model_path, delimeter = '/', out_f = sys.stdout):
 	global stanford_jar
 	cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (stanford_jar, model_path, train_file, delimeter)
 	
-	piperunner(cmd, out_f)
+	piperunner(cmd, 'stanford_tagger')
 
 def eval(test_file, model_path, delimeter = '/'):
 	jar()
 	global stanford_jar
 	cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s' % (stanford_jar, model_path, test_file, delimeter )
-	piperunner(cmd)
+	piperunner(cmd, 'stanford_tagger')
 
 
-def test(test_file, model_path, out_file, delimeter = '/', log_f=sys.stdout):
+def test(test_file, model_path, out_file, delimeter = '/'):
 	global stanford_jar
 	
 	existsfile(test_file)
@@ -117,7 +117,7 @@ def test(test_file, model_path, out_file, delimeter = '/', log_f=sys.stdout):
 	os.makedirs(os.path.dirname(out_file), exist_ok=True)
 	
 	cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s -outputFormat slashTags -outputFile %s' % (stanford_jar, model_path, test_file, delimeter, out_file)
-	piperunner(cmd, log_f)
+	piperunner(cmd, 'stanford_tagger')
 	
 	
 def tag(string, model):

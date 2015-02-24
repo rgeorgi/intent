@@ -21,10 +21,15 @@ import shutil
 import sys
 from collections import defaultdict
 from multiprocessing.pool import Pool
-import copy
+
 import sqlite3
 from multiprocessing.synchronize import Lock
 import pickle
+import logging
+import itertools
+
+logging.basicConfig(handlers=[logging.NullHandler()])
+logging.getLogger(__name__)
 
 
 class TestFile(object):
@@ -47,14 +52,13 @@ def run_tagger(name, train_path, rawfile, pc, delete_path = False):
 		
 	# Now, train and test.
 	print('Training "%s"' % os.path.basename(train_path))
-	stanford_tagger.train(train_path, mod_temp.name, out_f=open(os.devnull, 'w'))
+	stanford_tagger.train(train_path, mod_temp.name)
 	print('Testing "%s"' % os.path.basename(train_path))
-	stanford_tagger.test(rawfile, mod_temp.name, tag_temp.name, log_f=open(os.devnull, 'w'))
+	stanford_tagger.test(rawfile, mod_temp.name, tag_temp.name)
 	
 	# Finally, evaluate.
 	eval_corpus = POSCorpus.read_slashtags(tag_temp.name)
 	
-	# Get the accuracy.
 	acc = pos_eval.poseval(eval_corpus, pc, out_f=open(os.devnull, 'w'))
 	
 	train_c = POSCorpus.read_slashtags(train_path)
@@ -123,17 +127,39 @@ class ResultsFile(object):
 		
 	def write(self, fh):
 
-		
+		lists = []
 		
 		fh = open(fh, 'w')
 		for key in sorted(self.keys()):
-			fh.write('-'*40+'\n')
-			fh.write('%s\n' % key)
+			#fh.write('-'*40+'\n')
+			#fh.write('%s\n' % key)
 			
 			rows = sorted(self.execute("SELECT DISTINCT length, acc FROM results WHERE name = '%s'" % key))
+			rows.insert(0, (key+'-x', key+'-y'))
+			lists.append(rows)
+			
+		datapoints = itertools.zip_longest(*lists, fillvalue=('',''))
+		
+	
+		for row in datapoints:
+			first = True
+			for x, y in row:
+				try:
+					y = '%.2f' % y
+				except: pass
+				
+				if first:					
+					fh.write('%s,%s' % (x,y))
+				else:
+					fh.write(',%s,%s' % (x, y))
+					
+				first=False
 
-			for row in rows:
-				fh.write('%s,%.2f\n' % row)
+			fh.write('\n')
+			
+
+			#for row in rows:
+			#	fh.write('%s,%.2f\n' % row)
 		fh.close()
 				
 
@@ -152,15 +178,8 @@ def train_and_test(filelist, goldpath, outdir):
 	rawfile.write(pc.raw())
 	rawfile.close()
 	
-	logfile = open(os.path.join(outdir, 'taglog.txt'), 'w', encoding='utf-8')
 
 	
-	
-	tempdir = mkdtemp()
-	print("Creating temporary directory %s" % tempdir)
-	
-	
-
 	# Place to store the results
 	results = os.path.join(outdir, 'results.db')
 	results_txt = os.path.join(outdir, 'results.txt')
@@ -216,12 +235,8 @@ def train_and_test(filelist, goldpath, outdir):
 	# Wait for the pool to finish.
 	p.close()
 	p.join()
-
+	r.write(results_txt)
 	
-
-	print('Removing "%s" ' % tempdir)
-	shutil.rmtree(tempdir)
-
 
 def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 	
@@ -237,8 +252,21 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 	# a tagger on.
 	files_to_test = []
 
-	
+	#===========================================================================
+	# LOGGING
+	#===========================================================================
 
+	# Make a logfile specifically for giza, and set it to the
+	# lowest loglevel.
+	
+	
+	giza_logger = logging.getLogger('giza')	
+	giza_logger.addHandler(logging.FileHandler(os.path.join(outdir, 'giza.log'), 'w'))
+	giza_logger.setLevel(logging.DEBUG)
+
+	tag_logger = logging.getLogger('scripts.igt.produce_tagger')
+	tag_logger.addHandler(logging.FileHandler(os.path.join(outdir, 'taglog.log'), 'w'))
+	tag_logger.setLevel(logging.DEBUG)
 	
 	#===========================================================================
 	# Non-giza files
@@ -258,7 +286,10 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 		
 		# Only overwrite if force tag is present
 		if make_files and (not os.path.exists(outfile) or kwargs.get('force')):
-			pt.produce_tagger(inpath, writefile(outfile), method, xc = copy.deepcopy(xc), posdict=posdict, classifier=classifier, **new_kwargs)
+			print('Creating file "%s"...' % os.path.relpath(outfile, outdir))
+			pt.produce_tagger(inpath, writefile(outfile), method, xc = xc.copy(), posdict=posdict, classifier=classifier, **new_kwargs)
+		else:
+			print('Skipping file "%s"...' % os.path.relpath(outfile, outdir))
 			
 	#===========================================================================
 	# Giza files
@@ -275,7 +306,7 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 		
 		for i in range(50, len(xc)+1, 50):
 			
-			new_xc = copy.deepcopy(xc)
+
 			
 			# Create the filename to be created....
 			filename = os.path.join(giza_dir, '%s.txt' % i)
@@ -291,14 +322,18 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 				prev_corp_length = cur_corp_length
 				cur_corp_length = lc(filename)
 
+				print('Skipping file "%s"...' % os.path.relpath(filename, outdir))
 			
 			else:
+				new_xc = xc.copy(limit=i)
 				prev_corp_length = cur_corp_length
 				
+				print('Creating file "%s"...' % os.path.relpath(filename, outdir))
 				cur_corp_length = pt.produce_tagger(inpath, writefile(os.path.join(giza_dir, '%s.txt' % i)), method, 
 												classifier=classifier, posdict=posdict, 
 												xc=new_xc, limit=i,
 												**new_kwargs)
+				print('Length was "%s"' % cur_corp_length)
 			
 			
 			# If we haven't increased the size of the output corpus in the last two efforts, abort.
