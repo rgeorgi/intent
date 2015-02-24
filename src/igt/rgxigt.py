@@ -12,7 +12,7 @@ from unittest.case import TestCase
 from uuid import uuid4
 from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xigtcorpus
 from igt.igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
-	clean_trans_string, remove_hyphens, surrounding_quotes_and_parens
+	clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re
 
 import utils.token
 from collections import defaultdict
@@ -788,6 +788,9 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 				
 			w_content = w.get_content().lower()
 			w_content = surrounding_quotes_and_parens(remove_hyphens(w_content))
+			
+			w_content = re.sub(punc_re, '', w_content)
+			
 			
 			seq.append(POSToken(w_content, label=w_tag))
 		return seq

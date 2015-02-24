@@ -187,10 +187,12 @@ def train_and_test(filelist, goldpath, outdir):
 	r = ResultsFile(results)
 	l = Lock()
 	
+	last_name = None
 	# Callback
 	def callback(result):
 		l.acquire()
 		r = ResultsFile(results)
+		
 		r.add(*result)		
 		r.write(results_txt)
 		r.db.commit()
@@ -214,7 +216,7 @@ def train_and_test(filelist, goldpath, outdir):
 			# Only run the experiment if we don't have results in the database.
 			if not r.seen_name(train_name):
 						
-				for i in range(50, len(full_c), 25):
+				for i in range(50, len(full_c), 50):
 					small_c = full_c[0:i]
 					small_path = NamedTemporaryFile('r', delete=False)
 					POSCorpus(small_c).write(small_path.name, 'slashtags', outdir='')
@@ -304,7 +306,7 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 		
 		new_kwargs = dict(list(rest.items()) + list(kwargs.items()))
 		
-		for i in range(50, len(xc)+1, 50):
+		for i in range(50, min(len(xc)+1, kwargs.get('global_limit')), 50):
 			
 
 			
@@ -383,8 +385,20 @@ if __name__ == '__main__':
 	p.add_argument('-d', '--directory', required=True, type=writedir)
 	p.add_argument('-g', '--gold', required=True, type=existsfile)
 	p.add_argument('-p', '--produce', default=True, help='Whether to produce files or just evaluate.')
+	p.add_argument('-o', '--other', default=[], help="Other files to test.", nargs='+')
 	
 	args = p.parse_args()
 	
-	filelist = create_files(args.input, args.directory, args.gold, args.produce)
+	
+	filelist = []
+	for n in args.other:
+		tf = TestFile(n, 'standard', os.path.splitext(os.path.basename(n))[0])
+		filelist.append(tf)
+	
+	
+	
+	created_files = create_files(args.input, args.directory, args.gold, args.produce, global_limit=1000)
+	filelist.extend(created_files)
 	train_and_test(filelist, args.gold, args.directory)
+	
+	

@@ -70,6 +70,26 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 	
 	TAGLOG.info('Producing tagfile for "%s"' % os.path.relpath(out_f.name))
 	
+	#===========================================================================
+	# ADD PUNC
+	#===========================================================================
+	out_f.write('''./PUNC
+?/PUNC
+“/PUNC
+"/PUNC
+''/PUNC
+'/PUNC
+,/PUNC
+…/PUNC
+//PUNC
+--/PUNC
+``/PUNC
+:/PUNC
+;/PUNC
+«/PUNC
+»/PUNC
+-/PUNC\n''')
+	
 	for i, inst in enumerate(xc):
 		
 		if i % 25 == 0:
