@@ -24,6 +24,7 @@ from multiprocessing.pool import Pool
 import copy
 import sqlite3
 from multiprocessing.synchronize import Lock
+import pickle
 
 
 class TestFile(object):
@@ -225,6 +226,7 @@ def train_and_test(filelist, goldpath, outdir):
 def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 	
 	classifier = MalletMaxent(c['classifier_model'])
+	posdict = pickle.load(open(c['pos_dict'], 'rb'))
 
 	# Load the corpus...	
 	print('loading XIGT corpus...', end=' ')
@@ -242,10 +244,13 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 	# Non-giza files
 	#===========================================================================
 	
-	def prod(name, method, **kwargs):
+	def prod(name, method, skip=False, **rest):
 		'''
 		Convenience method to generate standard files.
 		'''
+		
+		new_kwargs = dict(list(rest.items()) + list(kwargs.items()))
+		new_kwargs['skip'] = skip
 		
 		outfile = os.path.join(outdir, name)
 		files_to_test.append(TestFile(outfile, 'standard', name))
@@ -253,20 +258,24 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 		
 		# Only overwrite if force tag is present
 		if make_files and (not os.path.exists(outfile) or kwargs.get('force')):
-			pt.produce_tagger(inpath, writefile(outfile), method, xc = copy.deepcopy(xc), **kwargs)
+			pt.produce_tagger(inpath, writefile(outfile), method, xc = copy.deepcopy(xc), posdict=posdict, classifier=classifier, **new_kwargs)
 			
 	#===========================================================================
 	# Giza files
 	#===========================================================================
 	
-	def produce_giza_taggers(name, method, skip=False, resume=True):
+	def produce_giza_taggers(name, method, **rest):
 		giza_dir = os.path.join(outdir, name)
 		os.makedirs(giza_dir, exist_ok = True)
 		
 		prev_corp_length = None
 		cur_corp_length = None
 		
+		new_kwargs = dict(list(rest.items()) + list(kwargs.items()))
+		
 		for i in range(50, len(xc)+1, 50):
+			
+			new_xc = copy.deepcopy(xc)
 			
 			# Create the filename to be created....
 			filename = os.path.join(giza_dir, '%s.txt' % i)
@@ -278,27 +287,32 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 				continue
 			
 			# If the filename already exists and is non-empty, and we're not forcing, use that.
-			if os.path.exists(filename) and lc(filename) > 0 and not kwargs.get('force'):
+			if os.path.exists(filename) and lc(filename) > 0 and not new_kwargs.get('force'):
 				prev_corp_length = cur_corp_length
 				cur_corp_length = lc(filename)
 
 			
 			else:
 				prev_corp_length = cur_corp_length
-				cur_corp_length = pt.produce_tagger(inpath, writefile(os.path.join(giza_dir, '%s.txt' % i)), method, xc = copy.deepcopy(xc), skip=skip, limit=i, resume=resume)
+				
+				cur_corp_length = pt.produce_tagger(inpath, writefile(os.path.join(giza_dir, '%s.txt' % i)), method, 
+												classifier=classifier, posdict=posdict, 
+												xc=new_xc, limit=i,
+												**new_kwargs)
 			
 			
 			# If we haven't increased the size of the output corpus in the last two efforts, abort.
-			if (prev_corp_length is not None) and (cur_corp_length is not None) and (cur_corp_length >= prev_corp_length):
+			if (prev_corp_length is not None) and (cur_corp_length is not None) and (cur_corp_length <= prev_corp_length):
 				break 
 	
 	
 	# 1) Non-Giza Files -----------------------------------------------------------
 	# First, we will create all the files for the non-giza methods.
 	if True:
-		prod('classification.txt', pt.classification, classifier=classifier)
+		prod('classification.txt', pt.classification)
 		prod('proj-keep.txt', pt.heur_proj, skip=False)
 		prod('proj-keep-nouns.txt', pt.heur_proj, skip=False, unk_nouns=True)
+		prod('proj-keep-classify.txt', pt.heur_proj, skip=False, unk_classify=True)
 		prod('proj-skip.txt', pt.heur_proj, skip=True)
 	
 	# 2) Giza Files ---------------------------------------------------------------
@@ -306,13 +320,20 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 	
 	if True:
 		produce_giza_taggers('proj-keep-giza-resume', pt.giza_proj, skip=False)
+		produce_giza_taggers('proj-keep-giza-resume-nouns', pt.giza_proj, skip=False, unk_nouns=True)
+		produce_giza_taggers('proj-keep-giza-resume-class', pt.giza_proj, skip=False, unk_classify=True)
 		produce_giza_taggers('proj-skip-giza-resume', pt.giza_proj, skip=True)
 		
 		# The case where the 
 		produce_giza_taggers('proj-keep-giza', pt.giza_proj, skip=False, resume=False)
+		produce_giza_taggers('proj-keep-giza-nouns', pt.giza_proj, skip=False, resume=False, unk_nouns=True)
+		produce_giza_taggers('proj-keep-giza-class', pt.giza_proj, skip=False, resume=False, unk_classify=True)
 		produce_giza_taggers('proj-skip-giza', pt.giza_proj, skip=True, resume=False)
 		
+		
 		produce_giza_taggers('direct-keep-giza', pt.giza_direct, skip=False)
+		produce_giza_taggers('direct-keep-giza-nouns', pt.giza_direct, skip=False, unk_nouns=True)
+		produce_giza_taggers('direct-keep-giza-class', pt.giza_direct, skip=False, unk_classify=True)
 		produce_giza_taggers('direct-skip-giza', pt.giza_direct, skip=True)
 		
 

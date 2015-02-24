@@ -12,7 +12,7 @@ from unittest.case import TestCase
 from uuid import uuid4
 from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xigtcorpus
 from igt.igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
-	clean_trans_string, remove_hyphens
+	clean_trans_string, remove_hyphens, surrounding_quotes_and_parens
 
 import utils.token
 from collections import defaultdict
@@ -783,7 +783,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 				w_tag = 'UNK'
 				
 			w_content = w.get_content().lower()
-			w_content = remove_hyphens(w_content)
+			w_content = surrounding_quotes_and_parens(remove_hyphens(w_content))
 			
 			seq.append(POSToken(w_content, label=w_tag))
 		return seq
@@ -820,27 +820,32 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 		# Iterate over the gloss tokens...
 		for i, gloss_token in enumerate(self.gloss.tokens()):
-			
-			# lowercase the token...
-			gloss_token = gloss_token.lower()
-			
-			#===================================================================
-			# Make sure to set up the next and previous tokens for the classifier
-			# if they are requested...
-			#===================================================================
-			if i+1 < len(self.gloss):
-				kwargs['next_gram'] = self.gloss.tokens()[i+1]
-			if i-1 >= 0:
-				kwargs['prev_gram'] = self.gloss.tokens()[i-1]
+
+			# Manually ensure punctuation.
+			if re.match('[\.\?"\';/,]+', gloss_token.seq):
+				tags.append('PUNC')
+			else:
 				
-			# The classifier returns a Classification object which has all the weights...
-			# obtain the highest weight.
-			result = classifier.classify_string(gloss_token, **kwargs)
-			
-			best = result.largest()
-			
-			# Return the POS tags
-			tags.append(best[0])
+				# lowercase the token...
+				gloss_token = gloss_token.lower()
+				
+				#===================================================================
+				# Make sure to set up the next and previous tokens for the classifier
+				# if they are requested...
+				#===================================================================
+				if i+1 < len(self.gloss):
+					kwargs['next_gram'] = self.gloss.tokens()[i+1]
+				if i-1 >= 0:
+					kwargs['prev_gram'] = self.gloss.tokens()[i-1]
+					
+				# The classifier returns a Classification object which has all the weights...
+				# obtain the highest weight.
+				result = classifier.classify_string(gloss_token, **kwargs)
+				
+				best = result.largest()
+				
+				# Return the POS tags
+				tags.append(best[0])
 			
 		self.add_pos_tags(self.gloss.id, tags)
 		return tags
@@ -1481,4 +1486,15 @@ line=961 tag=T:     `I made the child eat rice.\''''
 		self.igt.tag_trans_pos(tagger)
 		
 
+class CopyTest(TestCase):
+		def setUp(self):
+			self.txt = '''doc_id=38 275 277 L G T
+	stage3_lang_chosen: korean (kor)
+	lang_code: korean (kor) || seoul (kor) || japanese (jpn) || inuit (ike) || french (fra) || malayalam (mal)
+	note: lang_chosen_idx=0
+	line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
+	line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
+	line=961 tag=T:     `I made the child eat rice.\''''
+			self.igt = RGIgt.fromString(self.txt)
+		
 	

@@ -11,7 +11,13 @@ from utils.setup_env import c
 from interfaces.stanford_tagger import StanfordPOSTagger
 from interfaces.mallet_maxent import MalletMaxent
 import sys
+import logging
 
+#===============================================================================
+# Set up logging
+#===============================================================================
+
+TAGLOG = logging.getLogger('taglog')
 
 classification = 'classification'
 
@@ -50,7 +56,6 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 	limit = kwargs.get('limit', 0, int)
 	if limit:
 		xc.igts = xc.igts[:limit]
-		xc.refresh_index()
 		
 	
 	# Giza Realignment ---------------------------------------------------------
@@ -65,11 +70,11 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 	for i, inst in enumerate(xc):
 		
 		if i % 25 == 0:
-			print('Processing instance %d' % i)
+			TAGLOG.info('Processing instance %d' % i)
 
 		# If we are doing classification
 		if method == classification:
-			inst.classify_gloss_pos(kwargs.get('classifier'))
+			inst.classify_gloss_pos(kwargs.get('classifier'), posdict=kwargs.get('posdict'))
 			inst.project_gloss_to_lang()
 			
 		# If we are doing normal projection via the gloss line
@@ -97,9 +102,22 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 	
 		else:
 			# Replace the "UNK" with "NOUN"			
-			for pos_token in sequence:				
+			for i, pos_token in enumerate(sequence):				
 				if pos_token.label == 'UNK' and kwargs.get('unk_nouns'):
 					pos_token.label = "NOUN"
+				elif pos_token.label == 'UNK' and kwargs.get('unk_classify'):
+					classifier = kwargs.get('classifier')
+					
+					kwargs['prev_gram'] = ''
+					kwargs['next_gram'] = ''
+					
+					if i > 0:
+						kwargs['prev_gram'] = inst.gloss[i-1].get_content()
+					if i < len(inst.gloss)-1:
+						kwargs['next_gram'] = inst.gloss[i+1].get_content()
+					
+					pos_token.label = classifier.classify_string(inst.gloss[i].get_content(), **kwargs).largest()[0]
+				
 				
 				out_f.write('%s/%s ' % (pos_token.seq, pos_token.label))
 			out_f.write('\n')
@@ -129,5 +147,6 @@ if __name__ == '__main__':
 	
 	if args.method not in projection:
 		ap['classifier'] = MalletMaxent(c['classifier_model'])
+		
 		
 	produce_tagger(args.input, args.output, args.method, **ap)
