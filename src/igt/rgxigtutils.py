@@ -146,9 +146,11 @@ def follow_alignment(inst, id):
 #===============================================================================
 
 def strip_enrichment(inst):
-	for pt in inst.findall(type='pos'):
-		pt.delete()
+	strip_pos(inst)
 	for at in inst.findall(type='bilingual-alignments'):
 		at.delete()
 	
+def strip_pos(inst):
+	for pt in inst.findall(type='pos'):
+		pt.delete()
 	

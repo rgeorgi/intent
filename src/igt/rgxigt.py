@@ -85,6 +85,17 @@ class NoTransLineException(TextParseException):
 class GlossLangAlignException(RGXigtException):
 	pass
 
+class ProjectionException(RGXigtException):
+	pass
+
+def project_creator_except(msg_start, msg_end, created_by):
+	
+	if created_by:
+		msg_start += ' by the creator "%s".' % created_by
+	else:
+		msg_start += '.'
+	raise ProjectionException(msg_start + ' ' + msg_end)
+
 #===============================================================================
 # Mixins
 #===============================================================================
@@ -563,11 +574,26 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			morph_align(self.glosses, self.morphemes)
 
 	
-	def askTierId(self, type, id):
+	def askTierId(self, type, id, id_prefix=False):
 		'''
 		Generate a new tierID, based on the number of tiers that already exist for that type.
+		
+		:param type: Tier type to count
+		:type type: str
+		:param id: ID to assign the instance, followed by a number
+		:type id: str
+		:param id_prefix: Whether or not to assign the number suffix based on the number of types of that tier
+						  or the number of tiers with a similar id prefix.
+		:type id_prefix: str
 		'''
-		numtiers = len(self.findall(type=type))
+		
+		tiers = self.findall(type=type)
+		
+		if id_prefix:
+			prefixed = [t.id for t in tiers if t.id.startswith(id)]
+			numtiers = len(prefixed)
+		else:
+			numtiers = len(tiers)
 		return '%s%d' % (id, numtiers+1)
 
 			
@@ -938,7 +964,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 	
 	# • POS Tag Manipulation ---------------------------------------------------------------
 	
-	def add_pos_tags(self, tier_id, tags):
+	def add_pos_tags(self, tier_id, tags, created_by = None):
 		'''
 		Assign a list of pos tags to the tier specified by tier_id. The number of tags
 		must match the number of items in the tier.
@@ -949,20 +975,26 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		:type tags: [str]
 		'''
 		
-		# Determine the id of this new tier...
-		new_id = tier_id+'-pos'
+		# See if we have a pos tier that's already been assigned by this method.
+		attributes = {} if not created_by else {'created-by':created_by}
+		prev_tier = self.find(type='pos', attributes=attributes)
 		
-		# Delete that tier if it exists...
-		if self.find(new_id): self.find(new_id).delete()
+		# And delete it if so.
+		if prev_tier: prev_tier.delete()
+		
+	
+		# Determine the id of this new tier...
+		new_id = self.askTierId('pos', tier_id+'-pos', id_prefix=True) 
 		
 		# Find the tier that we are adding tags to.
 		tier = self.find(id=tier_id)
 		
-		# We assume that the 
+		# We assume that the length of the tags we are to add is the same as the
+		# number of tokens on the target tier.
 		assert len(tier) == len(tags)
 		
 		# Create the POS tier
-		pt = RGTokenTier(type='pos', id=tier_id+'-pos', alignment=tier_id)
+		pt = RGTokenTier(type='pos', id=new_id, alignment=tier_id, attributes=attributes)
 		self.add(pt)
 		
 		# Go through the words and add the tags.
@@ -970,7 +1002,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			p = RGToken(id=pt.askItemId(), alignment=w.id, text=tag)
 			pt.add(p)			
 			
-	def get_pos_tags(self, tier_id):
+	def get_pos_tags(self, tier_id, created_by = None):
 		'''
 		Retrieve the pos tags if they exist for the given tier id...
 		
@@ -978,7 +1010,13 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		:type tier_id: str
 		'''
 		
-		pos_tier = self.find(attributes={'alignment':tier_id}, type='pos')
+		attributes = {'alignment':tier_id}
+		
+		# Also add the created-by feature to select which we are looking for.
+		if created_by:
+			attributes['created-by'] = created_by
+		
+		pos_tier = self.find(attributes=attributes, type='pos')
 		
 		if pos_tier is not None:
 			pos_tier.__class__ = RGTokenTier
@@ -986,12 +1024,15 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 		
 		
-	def get_lang_sequence(self):
+	def get_lang_sequence(self, created_by = None):
 		'''
 		Retrieve the language line, with as many POS tags as are available.
 		'''
 		# TODO: This is another function that needs reworking
-		w_tags = self.get_pos_tags(self.lang.id)
+		w_tags = self.get_pos_tags(self.lang.id, created_by)
+		
+		if not w_tags:
+			project_creator_except("Language-line POS tags were not found", "To obtain the language line sequence, please project or annotate the language line.", created_by)
 		
 		seq = []
 		
@@ -1011,7 +1052,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 	
 	# • POS Tag Production -----------------------------------------------------
 		
-	def tag_trans_pos(self, tagger, **kwargs):
+	def tag_trans_pos(self, tagger):
 		'''
 		Run the stanford tagger on the translation words and return the POS tags.
 		
@@ -1022,7 +1063,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		trans_tags = [i.label for i in tagger.tag(self.trans.text())]
 		
 		# Add the generated pos tags to the tier.
-		self.add_pos_tags(self.trans.id, trans_tags)
+		self.add_pos_tags(self.trans.id, trans_tags, created_by = 'intent-tagger')
 		return trans_tags
 			
 		
@@ -1072,72 +1113,134 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		return tags
 		
 	# • POS Tag Projection -----------------------------------------------------
-	def project_trans_to_gloss(self):
+	def project_trans_to_gloss(self, created_by=None, pos_creator = None):
 		'''
 		Project POS tags from the translation words to the gloss words.
-		|
-		NOTE: Since the default trans-gloss alignment is done via the gloss MORPHS, this projection
-		is actually done from translation words to gloss morphs, and then again from gloss
-		morphs to the gloss words.
 		'''
 		
+		# Set the created-by attribute if specified.
+		attributes = {'created-by':created_by} if created_by else {}
+		
 		# Remove the previous tags if they are present...
-		prev_t = self.find(type='pos', id='gw-pos')
+		prev_t = self.find(type='pos', attributes=attributes)
 		if prev_t: prev_t.delete()
 		
 		# Get the trans tags...
-		trans_tags = self.get_pos_tags(self.trans.id)
+		trans_tags = self.get_pos_tags(self.trans.id, created_by = pos_creator)
 		
-		# Get the alignment...
-		t_g_aln = sorted(self.get_trans_glosses_alignment())
+		# If we don't get any trans tags back, throw an exception:
+		if not trans_tags:
+			project_creator_except("There were no translation-line POS tags found", 
+								"Please create the appropriate translation-line POS tags before projecting.", 
+								pos_creator)
+		
+		# Get the alignment between the trans words and the gloss words.
+		t_g_aln = sorted(self.get_trans_gloss_alignment(created_by))
 		
 		# Create the new pos tier.
 		# TODO: There should be a more unified approach to transferring tags.
-		pt = RGTokenTier(type='pos', id='gw-pos', alignment='gw')
 		
-		
+		pt = RGTokenTier(type='pos', id=self.askTierId('pos', 'gw-pos', True), alignment=self.gloss.id, attributes=attributes)
 		
 		for t_i, g_i in t_g_aln:
-			t_word = self.trans.get_index(t_i)
+			g_word = self.gloss.get_index(g_i)
 			t_tag = trans_tags[t_i-1]
 			
-			g_morph = self.glosses.get_index(g_i)
-			g_morph.__class__ = RGMorph
-			
 			# TODO: Implement order of precedence here.
-			g_word = g_morph.word
 			
 			pt.add(RGToken(id=pt.askItemId(), alignment = g_word.id, text = str(t_tag)))
 			
 		self.add(pt)
 		
-	def project_gloss_to_lang(self):
+	def project_gloss_to_lang(self, created_by = None, pos_creator = None, unk_handling=None, classifier=None, posdict=None):
 		'''
 		Project POS tags from gloss words to language words. This assumes that we have
 		alignment tags on the gloss words already that align them to the language words.
 		'''
 		# Get the gloss tags...
-		gloss_tags = self.get_pos_tags(self.gloss.id)
+		
+		attributes = {} if not pos_creator else {'created-by':created_by}
+		
+		gloss_tags = self.get_pos_tags(self.gloss.id, created_by=pos_creator)
+		
+		# If we don't have gloss tags by that creator...
+		if not gloss_tags:
+			project_creator_except("There were no gloss-line POS tags found",
+									"Please create the appropriate gloss-line POS tags before projecting.",
+									pos_creator)
 		
 		alignment = self.gloss.get_aligned_tokens()
 		
 		# If we don't have an alignment between language and gloss line,
 		# throw an error.
 		if not alignment:
-			rgp(self)
 			raise GlossLangAlignException()
+		
+
 		
 		# Get the bilingual alignment from trans to 
 		# Create the new pos tier...
-		pt = RGTokenTier(type='pos', id='w-pos', alignment='w')
+		pt = RGTokenTier(type='pos', id=self.askTierId('pos', 'w-pos', True), alignment=self.lang.id, attributes=attributes)
 		
-		for g_t in gloss_tags:
-			g_w = self.find(g_t.alignment)
-			l_w = self.find(g_w.alignment)
+
+		
+		for g_idx, l_idx in alignment:
+			l_w = self.lang.get_index(l_idx)
+			g_w = self.gloss.get_index(g_idx)
 			
-			pt.add(RGToken(id=pt.askItemId(), alignment = l_w.id, text=str(g_t)))
+			# Find the tag associated with this word.
+			g_tag = gloss_tags.find(attributes={'alignment':g_w.id})
 			
+			# If no gloss tag exists for this...
+			if not g_tag:
+				label = 'UNK'
+				
+				# If we are not handling unknowns, we could
+				# assign it "UNK", OR we could just skip it
+				# and leave it unspecified.
+				# Here, we choose to skip.
+				if unk_handling is None:
+					continue
+				
+				# If we are doing the "Noun" method, then we
+				# replace all the unknowns with "NOUN"
+				elif unk_handling == 'noun':
+					label = 'NOUN'
+					
+				# Finally, we can choose to run the classifier on
+				# the unknown gloss words.
+				elif unk_handling == 'classify':
+					kwargs = {'posdict':posdict}    # <-- Initialize the new kwargs for the classifier.
+					if not classifier:
+						raise ProjectionException('To project with a classifier, one must be provided.')
+					
+					# Set up for the classifier...
+					kwargs['prev_gram'] = ''
+					kwargs['next_gram'] = ''
+					
+					if g_idx > 1:
+						kwargs['prev_gram'] = self.gloss.get_index(g_idx-1).get_content()
+					if g_idx < len(self.gloss):
+						kwargs['next_gram'] = self.gloss.get_index(g_idx+1).get_content()
+					
+					# Replace the whitespace in the gloss word for error
+					# TODO: Another whitespace replacement handling.
+					g_content = re.sub('\s+','', g_w.get_content())
+					
+					
+					label = classifier.classify_string(g_content, **kwargs).largest()[0]
+				
+				else:
+					raise ProjectionException('Unknown unk_handling method "%s"' % unk_handling)
+			
+			else:
+				label = str(g_tag)
+				
+			pt.add(RGToken(id=pt.askItemId(), alignment = l_w.id, text=label))
+		
 		self.add(pt)
+		
+
 		
 	def project_trans_to_lang(self):
 		'''
@@ -1368,12 +1471,19 @@ class RGTier(xigt.core.Tier, RecursiveFindMixin):
 	def askIndex(self):
 		return len(self.items)+1
 	
-	def text(self):
+	def text(self, remove_whitespace_inside_tokens = True):
 		'''
 		Return a whitespace-delimeted string consisting of the
-		elements of this tier.
+		elements of this tier. Default to removing whitespace
+		that occurs within a token.
 		'''
-		return ' '.join([str(i) for i in self.tokens()])
+		tokens = [str(i) for i in self.tokens()]
+		if remove_whitespace_inside_tokens:
+			
+			# TODO: Another whitespace replacement handling
+			tokens = [re.sub('\s+','',i) for i in tokens]
+			
+		return ' '.join(tokens)
 	
 	def tokens(self):
 		'''
