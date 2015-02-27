@@ -426,7 +426,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		
 		for l_t_asent, igt in zip(l_t_asents, self):
 			t_l_aln = l_t_asent.aln.flip()
-			igt.set_bilingual_alignment(igt.trans, igt.lang, t_l_aln)
+			igt.set_bilingual_alignment(igt.trans, igt.lang, t_l_aln, created_by = 'intent-giza')
 		
 		
 			
@@ -1024,7 +1024,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 		
 		
-	def get_lang_sequence(self, created_by = None):
+	def get_lang_sequence(self, created_by = None, unk_handling=None):
 		'''
 		Retrieve the language line, with as many POS tags as are available.
 		'''
@@ -1039,7 +1039,12 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		for w in self.lang:
 			w_tag = w_tags.find(attributes={'alignment':w.id})
 			if not w_tag:
-				w_tag = 'UNK'
+				if unk_handling == None:
+					w_tag = 'UNK'
+				elif unk_handling == 'noun':
+					w_tag = 'NOUN'
+				else:
+					raise ProjectionException('Unknown unk_handling attribute')
 				
 			w_content = w.get_content().lower()
 			w_content = surrounding_quotes_and_parens(remove_hyphens(w_content))
@@ -1242,19 +1247,28 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 
 		
-	def project_trans_to_lang(self):
+	def project_trans_to_lang(self, created_by=None, pos_creator=None, aln_creator=None):
 		'''
 		Project POS tags from the translation line directly to the language
 		line. This assumes that we have a bilingual alignment between
 		translation words and language words already.
-		'''
-		# Get the trans tags...
-		trans_tags = self.get_pos_tags(self.trans.id)
 		
-		t_l_aln = self.get_bilingual_alignment(self.trans.id, self.lang.id)
+		:param created_by: The attribute that the projected tags will have
+		:param pos_creator: The pos tags from which to select for projection
+		'''
+		
+		attributes = {} if not created_by else {'created-by':created_by}
+		
+		# Get the trans tags...
+		trans_tags = self.get_pos_tags(self.trans.id, created_by=pos_creator)
+		
+		t_l_aln = self.get_bilingual_alignment(self.trans.id, self.lang.id, created_by=aln_creator)
+		if not t_l_aln:
+			raise ProjectionException("No trans-lang alignment found...")
+		
 				
 		# Create the new pos tier...
-		pt = RGTokenTier(type='pos', id='w-pos', alignment='w')
+		pt = RGTokenTier(type='pos', id='w-pos', alignment=self.lang.id, attributes=attributes)
 		
 		for t_i, l_i in t_l_aln:
 			t_word = self.trans.get_index(t_i)
@@ -1340,6 +1354,7 @@ class RGToken(RGItem):
 	def __init__(self, index=None, **kwargs):
 		RGItem.__init__(self, **kwargs)
 		self.index = index
+		
 
 class RGWord(RGToken):
 	'''

@@ -13,6 +13,11 @@ from alignment.Alignment import AlignedCorpus, AlignedSent
 from eval.AlignEval import AlignEval
 import glob
 import os
+from utils.setup_env import c
+from interfaces.stanford_tagger import StanfordPOSTagger
+from interfaces.mallet_maxent import MalletMaxent
+import pickle
+from eval.pos_eval import poseval
 logging.basicConfig(handlers=[logging.StreamHandler()])
 XAML_LOG = logging.getLogger(__name__)
 XAML_LOG.setLevel(logging.DEBUG)
@@ -22,7 +27,7 @@ XAML_LOG.setLevel(logging.DEBUG)
 import lxml.etree
 import sys
 from igt.rgxigt import RGCorpus, RGTier, rgp, RGIgt, RGItem, RGWordTier, RGWord,\
-	RGBilingualAlignmentTier, RGTokenTier, RGToken
+	RGBilingualAlignmentTier, RGTokenTier, RGToken, ProjectionException
 import re
 from utils.uniqify import uniqify
 import logging
@@ -328,6 +333,11 @@ def load(xaml_path):
 		
 
 if __name__ == '__main__':
+	
+	tagger = StanfordPOSTagger(c['stanford_tagger_trans'])
+	classifier = MalletMaxent(c['classifier_model'])
+	posdict = pickle.load(open(c['pos_dict'], 'rb'))
+	
 	for path in glob.glob('/Users/rgeorgi/Documents/treebanks/xigt_odin/annotated/*-filtered.xml'):
 		
 		lang = os.path.basename(path)[0:4]
@@ -337,11 +347,22 @@ if __name__ == '__main__':
 			
 		new_xc = xc.copy()
 		new_xc.giza_align_t_g()
+		new_xc.giza_align_l_t()
 		
 		gold_ac = AlignedCorpus()
 		
 		heur_ac = AlignedCorpus()
 		giza_ac = AlignedCorpus()
+		
+		# Set up the POS evaluation corpora...
+		gold_pos_sents = []
+		
+		b1_sents = []
+		s1a_sents = []
+		s1c_sents = []
+		s2a_sents = []
+		s2c_sents = []
+		s3_sents = []
 		
 		for old_inst, new_inst in zip(xc, new_xc):
 			# Strip any enrichment (pos tags, bilingual alignment)
@@ -364,12 +385,75 @@ if __name__ == '__main__':
 				giza_ac.append(giza_sent)
 				gold_ac.append(gold_sent)
 				
+				# Now, let's try the POS tagging for each one of the different configurations...
+				# B1 = Giza, treating l/g as bitext, assuming "NOUN"
+				# S1a = Heuristic Alignment, assuming "NOUN"
+				# S1c = Heuristic Alignment, Classifying
+				#
+				# S2a = Giza alignment, assuming "NOUN"
+				# S2c = Giza alignment, Classifying
+				#
+				# S3 = classifying
+				#
+				
+				#===============================================================
+				# S1a
+				#===============================================================
+				new_inst.tag_trans_pos(tagger)
+				new_inst.project_trans_to_gloss(created_by = 'intent-heuristic', pos_creator = 'intent-tagger')
+				
+				new_inst.project_trans_to_gloss(created_by = 'intent-giza', pos_creator = 'intent-tagger')
+				
+				new_inst.project_gloss_to_lang(created_by = 'intent-s1a', pos_creator='intent-heuristic', unk_handling='noun')
+				new_inst.project_gloss_to_lang(created_by = 'intent-s1c', pos_creator='intent-heuristic', unk_handling='classify', classifier=classifier, posdict=posdict)
+				
+				new_inst.project_gloss_to_lang(created_by = 'intent-s2a', pos_creator='intent-giza', unk_handling='noun')
+				new_inst.project_gloss_to_lang(created_by = 'intent-s2c', pos_creator='intent-giza', unk_handling='classify', classifier=classifier, posdict=posdict)
+				
+				new_inst.project_trans_to_lang(created_by = 'intent-b1', pos_creator='intent-tagger', aln_creator='intent-giza')
+				
+				rgp(new_inst)
+				
+				try:
+					gold_sent = old_inst.get_lang_sequence()
+				except ProjectionException:
+					# TODO: More useful error report here...
+					sys.stderr.write("Skipping instance...\n")
+					continue
+
+				gold_pos_sents.append(gold_sent)	
+
+				b1_sents.append(new_inst.get_lang_sequence('intent-b1'))
+
+				s1a_sents.append(new_inst.get_lang_sequence('intent-s1a'))				
+				s1c_sents.append(new_inst.get_lang_sequence('intent-s1c'))
+				
+				s2a_sents.append(new_inst.get_lang_sequence('intent-s2a'))
+				s2c_sents.append(new_inst.get_lang_sequence('intent-s2c'))
+				
+				
+				
+								
+		
+				
 		giza_ae = AlignEval(giza_ac, gold_ac)
 		heur_ae = AlignEval(heur_ac, gold_ac)
 		
 		print(lang)
 		print(heur_ae.all())
 		print(giza_ae.all())
+		
+		b1_acc = poseval(b1_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
+		s1a_acc = poseval(s1a_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
+		s1c_acc = poseval(s1c_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
+		s2a_acc = poseval(s2a_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
+		s2c_acc = poseval(s2c_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
+		
+		
+		accs = [b1_acc, s1a_acc, s1c_acc, s2a_acc, s2c_acc]
+		accs = [i.overall_breakdown() for i in accs]
+		
+		print(''.join(accs))
 			
 
 	
