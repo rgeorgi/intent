@@ -59,7 +59,7 @@ def simple_tagger_eval(eval_path, gold_path, out_f = sys.stdout, csv=True):
 	poseval(eval_c, gold_c, out_f)
 	
 	
-def poseval(eval_sents, gold_sents, out_f = sys.stdout, csv=True, ansi=False, greedy_1_to_1=True, greedy_n_to_1=True):
+def poseval(eval_sents, gold_sents, out_f = sys.stdout, csv=True, ansi=False, greedy_1_to_1=False, greedy_n_to_1=False, matrix=False):
 	if len(eval_sents) != len(gold_sents):
 		raise EvalException('Number of eval sents does not match number of gold sents.')
 	
@@ -81,8 +81,8 @@ def poseval(eval_sents, gold_sents, out_f = sys.stdout, csv=True, ansi=False, gr
 		
 		for eval_token, gold_token in zip(eval_sent, gold_sent):
 			
-			gold_label = gold_token.label
-			eval_label = eval_token.label
+			gold_label = str(gold_token.label)
+			eval_label = str(eval_token.label)
 			
 			# Kludgy way to make sure all the assigned
 			# labels end up getting seen.
@@ -102,24 +102,27 @@ def poseval(eval_sents, gold_sents, out_f = sys.stdout, csv=True, ansi=False, gr
 	#===========================================================================
 	# Now, evaluate based on the gold-to-eval labels
 	#===========================================================================
-	eval_print_helper(out_f, 'STANDARD', c, ansi, csv)
+	eval_print_helper(out_f, 'STANDARD', matrix, c, ansi, csv)
 
 	
 	if greedy_1_to_1:
 		c.greedy_1_to_1()
-		eval_print_helper(out_f, 'GREEDY 1-to-1', c, ansi, csv)
+		eval_print_helper(out_f, 'GREEDY 1-to-1',  matrix, c, ansi, csv)
 		
 	if greedy_n_to_1:
 		c.greedy_n_to_1()
-		eval_print_helper(out_f, 'GREEDY N-to-1', c, ansi, csv)
+		eval_print_helper(out_f, 'GREEDY N-to-1', matrix, c, ansi, csv)
 		
-	return c.accuracy()
+	return c
 
 			
-def eval_print_helper(out_f, title, c, ansi, csv):
+def eval_print_helper(out_f, title, matrix, c, ansi, csv):
 	out_f.write('='*80+'\n')
-	out_f.write('%s:\n' % title + '-'*80+'\n' + c.error_matrix(ansi=ansi, csv=csv))
-	out_f.write('-'*80+'\nOVERALL ACCURACY: %.2f\n' % c.accuracy() + '='*80+'\n')
+	out_f.write('%s:\n' % title + '-'*80+'\n')
+	if matrix:
+		out_f.write(c.error_matrix(ansi=ansi, csv=csv))
+		out_f.write('-'*80+'\n')
+	out_f.write('OVERALL ACCURACY: %.2f\n' % c.accuracy() + '='*80+'\n')
 	
 	
 	
