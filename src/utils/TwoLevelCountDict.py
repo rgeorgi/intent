@@ -23,6 +23,7 @@ class TwoLevelCountDict(object):
 			
 		return s[0:n]
 
+
 	def most_frequent(self, key, num = 1, key2_re = ''):
 		most_frequent = None
 		biggest_count = 0
@@ -107,6 +108,9 @@ class POSEvalDict(TwoLevelCountDict):
 		self.mapping = {}
 	
 
+	def keys(self):
+		return [str(k) for k in TwoLevelCountDict.keys(self)]
+
 	def _resetmapping(self):
 		self.mapping = {t:t for t in self.keys()}
 
@@ -121,6 +125,17 @@ class POSEvalDict(TwoLevelCountDict):
 		keys = [o for o, n in self.mapping.items() if n == k]
 		assert len(keys) == 1
 		return keys[0]
+	
+	def overall_breakdown(self, title=None):
+		ret_s = ''
+		if title:
+			ret_s = title+','
+		
+		ret_s += 'accuracy, matches, total\n'
+		ret_s += '%.2f,%s,%s\n' % (self.accuracy(), self.all_matches(), self.fulltotal())
+		return ret_s
+		
+		
 	
 	def breakdown_csv(self):
 		ret_s = 'TAG,PRECISION,RECALL,F_1\n'
