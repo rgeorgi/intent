@@ -12,7 +12,7 @@ from xigt.core import get_alignment_expression_ids
 
 
 #===============================================================================
-# Tier Creation
+# • Tier Creation ---
 #===============================================================================
 
 def create_words_tier(cur_item, words_letter, words_name):
@@ -48,7 +48,7 @@ def create_phrase_tier(cur_item, phrase_letter, phrase_name):
 	return pt
 	
 #===============================================================================
-# Alignment Utilities
+# Alignment Utilities ---
 #===============================================================================
 
 def word_align(this, other):
@@ -102,7 +102,7 @@ def morph_align(this, other):
 			this_m.alignment = this_m.id	
 			
 #===============================================================================
-# Searching
+# Searching ---
 #===============================================================================
 
 def word(morph):
@@ -142,7 +142,7 @@ def follow_alignment(inst, id):
 
 			
 #===============================================================================
-# Cleaning
+# Cleaning ---
 #===============================================================================
 
 def strip_enrichment(inst):

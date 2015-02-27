@@ -660,6 +660,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		#if we have the words tier, let's just return it.
 		words_tier = self.find(type=words_name)
 		if words_tier:
+			words_tier.__class__ = RGWordTier
 			return words_tier		
 			
 		else:
@@ -748,10 +749,10 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 	
 	@property
 	def morphemes(self):
-		morphemes = [t for t in self if t.type == 'morphemes']
+		morphemes = self.find(type='morphemes')
 		if morphemes:
-			morphemes[0].__class__ = RGMorphTier
-			return morphemes[0]
+			morphemes.__class__ = RGMorphTier
+			return morphemes
 		else:
 			mt = self.lang.morph_tier('morphemes', 'm')
 			self.add(mt)
@@ -768,13 +769,39 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 	# • Alignment --------------------------------------------------------------
 
+	def get_trans_gloss_alignment(self, created_by=None):
+		'''
+		Get the alignment between trans words and gloss words. 
+		'''
+		# If we already have this alignment, just return it.
+		trans_gloss = self.get_bilingual_alignment(self.trans.id, self.gloss.id, created_by)
+		if trans_gloss:
+			return trans_gloss
 		
-	def get_trans_gloss_alignment(self):
+		# Otherwise, let's create it from the glosses alignment
+		else:
+			trans_glosses = self.get_bilingual_alignment(self.trans.id, self.glosses.id, created_by)
+			
+			assert trans_glosses, "Trans_glosses must already exist, otherwise create with giza or heur"
+			
+			new_trans_gloss = Alignment()
+			
+			for trans_i, gloss_i in trans_glosses:
+				gloss_m = self.glosses[gloss_i-1]
+				gloss_w = word(gloss_m)
+				new_trans_gloss.add((trans_i, gloss_w.index))
+				
+			return new_trans_gloss
+				
+				
+
+	def get_trans_glosses_alignment(self, created_by=None):
 		'''
 		Convenience method for getting the trans-word to gloss-morpheme
 		bilingual alignment.
 		'''
-		return self.get_bilingual_alignment(self.trans.id, self.glosses.id)
+		return self.get_bilingual_alignment(self.trans.id, self.glosses.id, created_by=None)
+	
 	
 	def get_gloss_lang_alignment(self):
 		'''
@@ -788,29 +815,42 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 	# ALIGNMENT STUFF
 	#===========================================================================
 		
-	def get_bilingual_alignment(self, src_id, tgt_id):
+	def get_bilingual_alignment(self, src_id, tgt_id, created_by=None):
 		'''
 		Retrieve the bilingual alignment (assuming that the source tier is
 		the translation words and that the target tier is the gloss morphemes.)
 		'''
-		# TODO: Make the search for bilingual alignments dynamic
-		ba_tier = self.find(attributes={'source':src_id, 'target':tgt_id})
-		ba_tier.__class__ = RGBilingualAlignmentTier
 		
-		a = Alignment()
-		# Now, iterate through the alignment tier
-		for ba in ba_tier:
-			ba.__class__ = RGBilingualAlignment
-			src_item = self.find(id=ba.source)
+		attributes = {'source':src_id, 'target':tgt_id}
+		# If we have the created_by trait, look for that, too.
+		if created_by:
+			attributes['created-by'] = created_by
 			
-			# There may be multiple targets, so get all the ids
-			# and find them...
-			tgt_ids = get_alignment_expression_ids(ba.target)
-			for tgt in tgt_ids:
-				tgt_item = self.find(id=tgt)
-				a.add((src_item.index, tgt_item.index))
+		ba_tier = self.find(attributes=attributes)
+		if not ba_tier:
+			return None
+		else:
+			ba_tier.__class__ = RGBilingualAlignmentTier
+			
+			a = Alignment()
+			# Now, iterate through the alignment tier
+			for ba in ba_tier:
+				ba.__class__ = RGBilingualAlignment
+				src_item = self.find(id=ba.source)
 				
-		return a
+				# There may be multiple targets, so get all the ids
+				# and find them...
+				tgt_ids = get_alignment_expression_ids(ba.target)
+				for tgt in tgt_ids:
+					tgt_item = self.find(id=tgt)
+					
+					if tgt_item:
+						a.add((src_item.index, tgt_item.index))
+					else:
+						PARSELOG.warn('Instance had target ID "%s", but no such ID was found.' % tgt_item)
+					
+			return a
+
 		
 	def set_bilingual_alignment(self, src_tier, tgt_tier, aln, created_by = None):
 		'''
@@ -824,8 +864,15 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		:param aln: The alignment to be added
 		:type aln: Alignment
 		'''
-		# Remove the previous alignment, if it exists.
-		prev_ba_tier = self.find(attributes={'source':src_tier.id, 'target':tgt_tier.id})
+		
+		# Look for a previously created alignment of the same type.
+		attributes = {'source':src_tier.id, 'target':tgt_tier.id}
+		if created_by:
+			attributes['created-by'] = created_by
+			
+
+		# If it already exists, delete it and overwrite.		
+		prev_ba_tier = self.find(attributes=attributes)
 		if prev_ba_tier:
 			prev_ba_tier.delete()
 		
@@ -1006,6 +1053,13 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 	# • POS Tag Projection -----------------------------------------------------
 	def project_trans_to_gloss(self):
+		'''
+		Project POS tags from the translation words to the gloss words.
+		|
+		NOTE: Since the default trans-gloss alignment is done via the gloss MORPHS, this projection
+		is actually done from translation words to gloss morphs, and then again from gloss
+		morphs to the gloss words.
+		'''
 		
 		# Remove the previous tags if they are present...
 		prev_t = self.find(type='pos', id='gw-pos')
@@ -1015,7 +1069,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		trans_tags = self.get_pos_tags(self.trans.id)
 		
 		# Get the alignment...
-		t_g_aln = sorted(self.get_trans_gloss_alignment())
+		t_g_aln = sorted(self.get_trans_glosses_alignment())
 		
 		# Create the new pos tier.
 		# TODO: There should be a more unified approach to transferring tags.
@@ -1038,6 +1092,10 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		self.add(pt)
 		
 	def project_gloss_to_lang(self):
+		'''
+		Project POS tags from gloss words to language words. This assumes that we have
+		alignment tags on the gloss words already that align them to the language words.
+		'''
 		# Get the gloss tags...
 		gloss_tags = self.get_pos_tags(self.gloss.id)
 		
@@ -1062,6 +1120,11 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		self.add(pt)
 		
 	def project_trans_to_lang(self):
+		'''
+		Project POS tags from the translation line directly to the language
+		line. This assumes that we have a bilingual alignment between
+		translation words and language words already.
+		'''
 		# Get the trans tags...
 		trans_tags = self.get_pos_tags(self.trans.id)
 		
@@ -1552,7 +1615,7 @@ line=961 tag=T:     `I made the child eat rice.\''''
 		a = Alignment([(1,1),(1,2),(2,8),(4,3),(5,7),(6,5)])
 		self.igt.set_bilingual_alignment(self.igt.trans, self.igt.glosses, a)
 		
-		self.assertEqual(a, self.igt.get_trans_gloss_alignment())
+		self.assertEqual(a, self.igt.get_trans_glosses_alignment())
 		
 class XigtParseTest(TestCase):
 	'''
@@ -1566,7 +1629,7 @@ class XigtParseTest(TestCase):
 	
 	def giza_align_test(self):
 		self.xc.giza_align_t_g()
-		giza_aln = self.xc[0].get_trans_gloss_alignment()
+		giza_aln = self.xc[0].get_trans_glosses_alignment()
 		
 		giza_a = Alignment([(3, 2), (2, 8), (5, 7), (4, 3), (1, 1), (6, 5)])
 		
@@ -1574,7 +1637,7 @@ class XigtParseTest(TestCase):
 		
 	def heur_align_test(self):
 		self.xc.heur_align()
-		aln = self.xc[0].get_trans_gloss_alignment()
+		aln = self.xc[0].get_trans_glosses_alignment()
 		a = Alignment([(5, 7), (6, 5), (1, 1), (4, 3)])
 		self.assertEquals(a, aln)
 		
@@ -1633,4 +1696,5 @@ line=961 tag=T:     `I made the child eat rice.\''''
 		tagger = StanfordPOSTagger(c['stanford_tagger_trans'])
 		self.igt.tag_trans_pos(tagger)
 		
-from igt.rgxigtutils import create_words_tier, create_phrase_tier, morph_align
+from igt.rgxigtutils import create_words_tier, create_phrase_tier, morph_align,\
+	word

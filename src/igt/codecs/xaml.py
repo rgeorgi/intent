@@ -325,19 +325,26 @@ if __name__ == '__main__':
 	xc = load('/Users/rgeorgi/Documents/treebanks/xigt_odin/annotated/bul-filtered.xml')
 	
 		
-	inst = xc[0]
-	inst.enrich_instance()
-	rgp(inst)
-	conventionify(inst)
-	rgp(inst)
-	sys.exit()
+	new_xc = xc.copy()
+	new_xc.giza_align_t_g()
+	
+	for old_inst, new_inst in zip(xc, new_xc):
+		# Strip any enrichment (pos tags, bilingual alignment)
+		# from the instance we are going to try the tools on.
+		
+		
+
+		ba = old_inst.get_trans_gloss_alignment()
+		if ba:
+			new_inst.heur_align()
+			
+			rgp(new_inst)
+			
+			print(new_inst.get_trans_gloss_alignment('intent-heuristic'))
+			print(new_inst.get_trans_gloss_alignment('intent-giza'))
+			print(ba)
+			sys.exit()
+			
 
 	
 	
-	#strip_enrichment(inst)
-	xc.heur_align()
-	xc.giza_align_l_t()
-	
-	rgp(inst)
-	
-	print(follow_alignment(inst, inst.find(id='a21').target))
