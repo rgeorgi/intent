@@ -9,16 +9,131 @@ Basic analysis such as word types, number of types of POS tag, and the percentag
 that each make up of things.
 '''
 
+# Set up logging.
+import logging
+import os
+
+
+logging.basicConfig(handlers=[logging.NullHandler()], fmt='%(levelno)s: %(message)s')
+STATS_LOGGER = logging.getLogger(__name__)
+
+#===============================================================================
+# IMPORTS
+#===============================================================================
+
+from igt.rgxigt import RGCorpus, NoLangLineException, TextParseException,\
+	GlossLangAlignException
+from igt import rgxigt
 import argparse
-import glob
-from utils.fileutils import globlist
 from utils.StatDict import StatDict
 from utils.token import tokenize_string, tag_tokenizer
 from _collections import defaultdict
 from utils.argutils import writefile
 import sys
 
-def gather_stats(filelist, tagged, log_file = sys.stdout, csv=False):
+#===========================================================================
+# Get XIGT logging info....
+#===========================================================================
+xigt_logger = logging.getLogger(rgxigt.__name__)
+sh = logging.StreamHandler()
+sh.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
+xigt_logger.addHandler(sh)
+xigt_logger.setLevel(logging.ERROR)
+
+#  -----------------------------------------------------------------------------
+
+def igt_stats(filelist, type='text', logpath=None):
+	
+	# Set up the headers -------------------------------------------------------
+	cols = ['language','instances','all_lines','g-l-1-to-1']
+	keys = ['lang', 'gloss', 'trans']
+	for k in keys:
+		lin = k+'_lines'
+		tok = k+'_tokens'
+		typ = k+'_types'
+		cols += [lin, tok, typ]
+	STATS_LOGGER.info(','.join(cols))
+	
+	# Load the corpus.
+	for path in filelist:
+	
+		row = [os.path.splitext(os.path.basename(path))[0]]
+		
+		igts = defaultdict(int)
+		types = defaultdict(lambda: defaultdict(int))
+				
+		if type == 'xigt':
+			STATS_LOGGER.info('Processing xigt file: "%s"' % path)
+			rc = RGCorpus.load(path)
+			
+		elif type == 'text':
+			STATS_LOGGER.info('Processing text file: "%s"' % path)
+			rc = RGCorpus.from_txt(path, require_1_to_1=False)
+			
+		
+		
+		#=======================================================================
+		# Count the text on the lines
+		#=======================================================================
+		def igt_line_count(igt, attr):
+			try:
+				line = getattr(igt, attr)
+			except TextParseException as tpe:
+				line = False
+				
+			if line:
+				igts[attr+'_lines'] += 1
+				igts[attr+'_tokens'] += len(line)
+				for token in line:
+					types[attr+'_types'][token.get_content().lower()] += 1
+					
+		
+		for igt in rc:
+			
+			# Count the language lines -----------------------------------------
+			igt_line_count(igt, 'lang')
+			igt_line_count(igt, 'gloss')
+			igt_line_count(igt, 'trans')
+			
+			try:
+				igt.trans
+				igt.gloss
+				igt.lang
+			except TextParseException as tpe:
+				pass
+			else:
+				igts['all_lines'] += 1
+				try:
+					igt.get_gloss_lang_alignment()
+				except GlossLangAlignException as glae:
+					pass
+				else:
+					igts['1-to-1'] += 1
+			
+			igts['instances'] += 1
+		
+		
+		row += [igts['instances'], igts['all_lines'], igts['1-to-1']]
+		for k in keys:
+			lin = k+'_lines'
+			tok = k+'_tokens'
+			typ = k+'_types'
+			
+			row += [igts[lin], igts[tok], len(types[typ])]
+			
+		# Make them all into strings
+		row = [str(i) for i in row]  
+		
+
+		STATS_LOGGER.info(','.join(row))
+		
+				
+				
+				
+				
+	
+
+def pos_stats(filelist, tagged, log_file = sys.stdout, csv=False):
 	
 	# Count of each unique word and its count.
 	wordCount = StatDict()
@@ -60,7 +175,10 @@ def gather_stats(filelist, tagged, log_file = sys.stdout, csv=False):
 	for word in tagtypes.keys():
 		type_sum += len(tagtypes[word])
 		
-	tag_per_type_avg = type_sum / len(tagtypes)
+	if len(tagtypes) == 0:
+		tag_per_type_avg = 0
+	else:
+		tag_per_type_avg = type_sum / len(tagtypes)
 
 	#===========================================================================
 	# Get the stats we want to return
@@ -101,11 +219,28 @@ def gather_stats(filelist, tagged, log_file = sys.stdout, csv=False):
 
 if __name__ == '__main__':
 	p = argparse.ArgumentParser()
-	p.add_argument('file', nargs='+')
+	p.add_argument('--slashtags', nargs='*', default=[])
+	p.add_argument('--xigt', nargs='*', default=[])
+	p.add_argument('--igt-txt', nargs='*', default=[])
 	p.add_argument('--tagged', default=True)
-	p.add_argument('--log', default=sys.stdout, type=writefile)
+	p.add_argument('--log', type=str)
 	p.add_argument('--csv', action='store_true', default=True)
 	
 	args = p.parse_args()
 	
-	gather_stats(args.file, args.tagged, log_file = args.log, csv=args.csv)
+	#===========================================================================
+	# Our own logging info...
+	#===========================================================================
+	if args.log:
+		STATS_LOGGER.addHandler(logging.FileHandler(args.log))
+	else:
+		STATS_LOGGER.addHandler(logging.StreamHandler())
+		
+	STATS_LOGGER.setLevel(logging.INFO)
+	#  -----------------------------------------------------------------------------
+
+	
+	#igt_stats(args.xigt, type='xigt')
+	igt_stats(args.igt_txt, type='text')
+	#pos_stats(args.slashtags, args.tagged, log_file = args.log, csv=args.csv)
+	

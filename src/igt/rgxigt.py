@@ -3,6 +3,22 @@ Subclassing of the xigt package to add a few convenience methods.
 
 
 '''
+
+#===============================================================================
+# Logging
+#===============================================================================
+
+import logging
+import sys
+from interfaces.mallet_maxent import MalletMaxent
+import pickle
+from interfaces.stanford_tagger import StanfordPOSTagger
+logging.basicConfig(handlers=[logging.NullHandler()])
+PARSELOG = logging.getLogger(__name__)
+
+
+#  -----------------------------------------------------------------------------
+
 import xigt.core
 from xigt.core import Metadata, Meta, Tier, Item, Igt,\
 	get_alignment_expression_ids, XigtCorpus
@@ -18,22 +34,31 @@ import utils.token
 from collections import defaultdict
 import interfaces.giza
 from utils.setup_env import c
-from unittest.suite import TestSuite
 from alignment.Alignment import Alignment, heur_alignments
-from interfaces.mallet_maxent import MalletMaxent
-import pickle
-from interfaces.stanford_tagger import StanfordPOSTagger
-from logging import getLogger
-import logging
 from utils.token import Token, POSToken
 import copy
 from interfaces.giza import GizaAligner
-import sys
+
 
 #===============================================================================
-# Logging
+# Commonly Used Strings ---
 #===============================================================================
-PARSELOG = getLogger('textparse')
+
+# Words ------------------------------------------------------------------------
+
+trans_words = 'translation-words'
+gloss_words = 'gloss-words'
+lang_words = 'words'
+
+trans_word_id = 'tw'
+gloss_word_id = 'gw'
+lang_word_id = 'w'
+
+# Phrases ----------------------------------------------------------------------
+
+trans_phrase = 'translations'
+lang_phrase  = 'phrases'
+
 
 #===============================================================================
 # Exceptions
@@ -69,46 +94,79 @@ class FindMixin():
 	Extension of the recursive search for non-iterable elements.
 	'''
 	
-	def find_self(self, id=None, attributes=None, type = None):
+	def find_self(self, id=None, attributes=None, type = None, segments = None, contents=None):
+		'''
+		Check on this element to see if it matches the find criteria. Must satisfy all the specified
+		criteria, (they are considered unspecified if "None")
+		
+		:param id:
+		:type id:
+		:param attributes:
+		:type attributes:
+		:param type:
+		:type type:
+		:param segments:
+		:type segments:
+		'''
 		
 		id_match = id is None or (self.id == id)
 		type_match = type is None or (self.type == type)
 		attr_match = attributes is None or (set(attributes.items()).issubset(set(self.attributes.items())))
+		seg_match  = segments is None or (hasattr(self, 'segmentation') and segments in get_alignment_expression_ids(self.segmentation))
+		
+		# TODO: not sure the contents is working...
+		cnt_match = contents is None or (hasattr(self, 'content') and contents in get_alignment_expression_ids(self.content))
 		
 		# At least ONE thing must be specified
-		assert any([id, attributes, type])
+		assert any([id, attributes, type, segments, contents])
 		
-		if id_match and type_match and attr_match:
+		if id_match and type_match and attr_match and seg_match and cnt_match:
 			return self
 		else:
 			return None
 		
-	def find(self, id=None, attributes=None, type=None):
-		return self.find_self(id, attributes, type)
+	def find(self, id=None, attributes=None, type=None, segments=None, contents=None):
+		return self.find_self(id, attributes, type, segments, contents)
+	
+	def findall(self, id=None, attributes=None, type=None, segments=None, contents=None):
+		found = self.find_self(id, attributes, type, segments, contents)
+		if found:
+			return [found]
+		else:
+			return []
 
 class RecursiveFindMixin(FindMixin):
-	'''
-	Enable recursive search on items that have iterable elements and attributes.
-	
-	WARNING: This stops on the first match.
-	'''
-	
-	def find(self, id=None, attributes=None, type=None):
+
+	def find(self, id=None, attributes=None, type=None, segments=None, contents=None):
 		'''
-		Generic find function for non-iterable elements.
+		Generic find function for non-iterable elements. NOTE: This version stops on the first match.
+		
 		:param id: id of an element to find, or None to search by attribute.
 		:type id: str
 		:param attributes: key:value pairs that are an inclusive subset of those found in the desired item.
 		:type attributes: dict
 		'''
-		if self.find_self(id,attributes,type) is not None:
+		if self.find_self(id,attributes,type,segments,contents) is not None:
 			return self
 		else:
 			found = None
 			for child in self:
-				found = child.find(id=id, attributes=attributes, type=type)
+				found = child.find(id, attributes, type, segments, contents)
 				if found is not None:
 					break
+			return found
+		
+	def findall(self, id=None, attributes=None, type=None, segments=None, contents=None):
+		'''
+		Find function that does not terminate on the first match.
+		'''
+		if self.find_self(id, attributes, type, segments, contents) is not None:
+			return [self]
+		else:
+			found = []
+			for child in self:
+				new_found = child.findall(id, attributes, type, segments, contents)
+				found.extend(new_found)
 			return found
 				
 
@@ -139,7 +197,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		return new_c
 	
 	@classmethod
-	def from_txt(cls, path, require_trans = True):
+	def from_txt(cls, path, require_trans = False, require_gloss = False, require_lang = False, require_1_to_1 = True):
 		'''
 		Read in a odin-style textfile to create the xigt corpus.
 		 
@@ -163,45 +221,85 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		# Read all the text lines
 		inst_txts = re.findall('doc_id=[\s\S]+?\n\n', data)
 		
+		#=======================================================================
+		# Begin parsing...
+		#=======================================================================
+		
 		parsed = 0
+		PARSELOG.info('Beginning parse on "%s"' % path)
 		for inst_txt in inst_txts:
 			
 			if parsed % 250 == 0:
-				logging.warning('Instance %d...' % parsed)
+				PARSELOG.info('Parsing instance %d...' % parsed)
+				pass
 			
+			# Handle the requirement for 1_to_1 alignment.
 			try:
-				i = RGIgt.fromString(inst_txt, corpus=xc)
-				
-				# Also check optional requirements passed in
-				trans_constraint = (not require_trans) or i.trans
-				
-				# If the constraints are satisfied, add it to the corpus.
-				if trans_constraint:
-					xc.add(i)
+				i = RGIgt.fromString(inst_txt, corpus=xc, require_1_to_1=require_1_to_1)
 			except GlossLangAlignException as glae:
-				PARSELOG.debug(glae)
-			except NoGlossLineException as ngle:
-				PARSELOG.debug(ngle)
-			except NoLangLineException as nlle:
-				PARSELOG.debug(nlle)
+				PARSELOG.info(glae)
+				if require_1_to_1:
+					continue
+				else:
+					pass
+							
+			
+			# Try to get the translation line. ---------------------------------
+			try:
+				hastrans = i.trans
 			except NoTransLineException as ntle:
-				PARSELOG.debug(ntle)
+				PARSELOG.info(ntle)
+				hastrans = False
+				
+			# Try to get the gloss line. --------------------------------------
+			try:
+				hasgloss = i.gloss
+			except NoGlossLineException as ngle:
+				PARSELOG.info(ngle)
+				hasgloss = False
+			
+			# Try to get the language line. ------------------------------------
+			try:
+				haslang = i.lang
+			except NoLangLineException as nlle:
+				PARSELOG.info(nlle)
+				haslang = False
+
+
+			parsed +=1
+			
+			trans_constraint = (hastrans and require_trans) or (not require_trans)
+			gloss_constraint = (hasgloss and require_gloss) or (not require_gloss)
+			lang_constraint  = (haslang  and require_lang)  or (not require_lang)
+			
+			if trans_constraint and gloss_constraint and lang_constraint:
+				xc.add(i)
 			
 			
-			parsed += 1
+			
 				
 			
 		# Return the corpus
 		return xc
 	
+	
+	@classmethod
+	def loads(cls, s):
+		xc = xigtxml.loads(s)
+		xc.__class__ = RGCorpus
+		xc._finish_load()
+		return xc
+	
 	@classmethod
 	def load(cls, path):
 		xc = xigtxml.load(path)
-		
 		xc.__class__ = RGCorpus
-		
+		xc._finish_load()
+		return xc
+	
+	def _finish_load(self):
 		# Now, convert all the IGT instances to RGIgt instances.
-		for igt in xc.igts:
+		for igt in self.igts:
 			igt.__class__ = RGIgt			
 			
 			for tier in igt.tiers:
@@ -212,19 +310,41 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 					item.index = i+1
 				
 			igt.enrich_instance()
-			
-		return xc
 	
-	def require_trans_lines(self):
+	def filter(self, attr):
 		new_igts = []
 		for i in self:
 			try:
-				i.trans
+				tier = getattr(i, attr)
+			except TextParseException as tpe:
+				PARSELOG.info(tpe)
+			else:
 				new_igts.append(i)
-			except NoTransLineException as ntle:
-				logging.warn('Filtering out igt instance "%s" - no translation line' % i.id)
-
+				
 		self.igts = new_igts
+				
+	
+	def require_trans_lines(self):
+		self.filter('trans')
+		
+	def require_gloss_lines(self):
+		self.filter('gloss')
+		
+	def require_lang_lines(self):
+		self.filter('lang')
+		
+	def require_one_to_one(self):
+		self.require_gloss_lines()
+		self.require_lang_lines()
+		new_igts = []
+		for i in self:
+			if len(i.gloss) == len(i.lang):
+				new_igts.append(i)
+			else:
+				PARSELOG.info('Filtered out "%s" because gloss and lang not same length.')
+		self.igts = new_igts
+			
+				
 	
 	def giza_align_t_g(self, resume = True):
 		'''
@@ -259,7 +379,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		# to the instance.
 		for g_t_asent, igt in zip(g_t_asents, self):
 			t_g_aln = g_t_asent.aln.flip()
-			igt.set_bilingual_alignment(igt.trans, igt.glosses, t_g_aln)
+			igt.set_bilingual_alignment(igt.trans, igt.glosses, t_g_aln, created_by = 'intent-giza')
 			
 	def giza_align_l_t(self):
 		'''
@@ -318,7 +438,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		#self.metadata = mdt
 
 	@classmethod
-	def fromString(cls, string, corpus = None):
+	def fromString(cls, string, corpus = None, require_1_to_1 = True):
 		'''
 		Method to parse and create an IGT instance from odin-style text.
 		'''
@@ -350,7 +470,10 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		inst.add(rt)
 		
 		# --- 4) Do the enriching if necessary
-		inst.basic_processing()
+
+		inst.basic_processing(require_1_to_1 = require_1_to_1)
+		inst.enrich_instance()
+		
 		
 		return inst
 
@@ -371,7 +494,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 
 	# • Processing of newly created instances ----------------------------------
 
-	def basic_processing(self):
+	def basic_processing(self, require_1_to_1 = True):
 		# Create the clean tier
 		self.clean_tier()
 		self.normal_tier()
@@ -388,50 +511,48 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			pass
 		
 		try:
-			self.lang
+			haslang = self.lang
 		except TextParseException:
-			pass
+			haslang = False
 		
 		# Create the morpheme tiers...
-		self.glosses
-		self.morphemes
+		try:
+			hasgloss = self.glosses
+		except NoGlossLineException:
+			hasgloss = False
 		
+		try:
+			self.morphemes
+		except NoLangLineException:
+			pass
+
 		# And do word-to-word alignment if it's not already done.
-		if not self.gloss.alignment:
-			self.gloss.word_align(self.lang)
+		if hasgloss and haslang and not self.gloss.alignment:
+			try:
+				self.gloss.word_align(self.lang)
+			except GlossLangAlignException as glae:
+				PARSELOG.info(glae)
+				if require_1_to_1:
+					raise glae
+				else:
+					pass
+
 		
 	def enrich_instance(self):
 			
 		# Finally, do morpheme-to-morpheme alignment between gloss
 		# and language if it's not already done...
 		if not self.glosses.alignment:
-			self.glosses.gloss_align(self.morphemes)
+			morph_align(self.glosses, self.morphemes)
 
-	def getTier(self, type):
-		return [t for t in self.tiers if t.type == type] 
-		
-	def findUUID(self, uu):
-		retlist = []	
-		for t in self.tiers:
-			retlist.extend(t.findUUID(uu))
-		
-		if not retlist:
-			return None
-		else:
-			return retlist[0]
 	
-	def askTierId(self, type):
+	def askTierId(self, type, id):
 		'''
 		Generate a new tierID, based on the number of tiers that already exist for that type.
 		'''
-		numtiers = len(self.getTier(type))
-		return '%s%d' % (type, numtiers+1)
-	
-	def delUUIDs(self):
-		if 'uuid' in self.attributes:
-			del self.attributes['uuid']
-		for t in self.tiers:
-			t.delUUIDs()
+		numtiers = len(self.findall(type=type))
+		return '%s%d' % (id, numtiers+1)
+
 			
 	# • Basic Tier Creation ------------------------------------------------------------
 	
@@ -535,47 +656,64 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		@param words_letter: The letter used for the id of the words tier.
 		'''
 		
-		# Make sure we've run the normalization...
-		c = self.normal_tier()
-		
-		# If we still don't have a normalized line, throw an exception...
-		line = c.find(attributes={'tag':orig_tag})
-		if not line:
-			return None
-		
+
+		#if we have the words tier, let's just return it.
+		words_tier = self.find(type=words_name)
+		if words_tier:
+			return words_tier		
+			
 		else:
+			# Make sure we've run the normalization...
+			c = self.normal_tier()
 			
-			# -- 2) If the phrase tier already exists, get it.
-			phrase_tier = self.find(id = phrase_letter)
-			if phrase_tier:
-				phrase_tier.__class__ = RGPhraseTier
+			# Look for the original tags
+			line = None
+			
+			for raw_line in c:
+				if orig_tag in raw_line.attributes['tag']:
+					line = raw_line
+					break 
 	
-				
-			# -- 4) If such a phrase tier does not exist, create it.
-			else:
-				phrase_tier = RGPhraseTier(id=phrase_letter, type=phrase_name, attributes={'content':c.id}, igt=self)
-				phrase_item = RGPhrase(id='%s1' % phrase_letter, content=line.id, tier=phrase_tier)
-				phrase_tier.add(phrase_item)
-				self.add(phrase_tier)
-				
-								
-			# -- 5) Finally, get the words tier if it exists.
-			words_tier = self.find(id = words_letter)
-			if words_tier:
-				words_tier.__class__ = RGWordTier
-				return words_tier
+			# TODO: Verify that we shouldn't be throwing an exception here.
+			if not line:
+				return None
 			
-			# -- 6) ...otherwise, create it.
+			
+			# If we have a raw tier, but not a words tier, let's create the needed
+			# tiers beneath.
 			else:
-				phrase = phrase_tier[0]
-				phrase.__class__ = RGPhrase
-				words_tier = phrase.words_tier(words_name, words_letter)
-					
-				# -- 6) Add the created translation-word tier to the instance
-				self.add(words_tier)
 				
-				# -- 7) Finally, return the translation word tier.
-				return words_tier
+				# If we are dealing with the glosses, don't create a phrase.
+				if words_name == gloss_words:
+					words_tier =  create_words_tier(line, words_letter, words_name)
+					self.add(words_tier)
+					return words_tier
+				
+				# Otherwise, find or create the phrase tier, and base the 
+				# words tier off of that.
+				else:
+
+					# -- 1) If the phrase tier already exists, get it.
+					phrase_tier = self.find(id = phrase_letter)
+					if phrase_tier:
+						phrase_tier.__class__ = RGPhraseTier
+		
+					
+					# -- 4) If such a phrase tier does not exist, create it.
+					else:
+						phrase_tier = create_phrase_tier(line, phrase_letter, phrase_name)
+						self.add(phrase_tier)
+					
+					# Finally, create a words tier based on the phrase tier.
+					words_tier = create_words_tier(phrase_tier[0], words_letter, words_name)
+					self.add(words_tier)
+					
+					# And finally, return our words tier.
+					
+					return words_tier
+				
+						
+	
 
 	@property
 	def lang(self):
@@ -599,10 +737,10 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 	@property
 	def glosses(self):
-		glosses = [t for t in self if t.type == 'glosses']
+		glosses = self.find(type='glosses')
 		if glosses:
-			glosses[0].__class__ = RGMorphTier
-			return glosses[0]
+			glosses.__class__ = RGMorphTier
+			return glosses
 		else:
 			gt = self.gloss.morph_tier('glosses', 'gm')
 			self.add(gt)
@@ -622,7 +760,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 
 	@property
 	def trans(self):
-		tt = self.obtain_phrase_and_words_tiers('T', 'translations', 't', 'translation-words', 'tw')		
+		tt = self.obtain_phrase_and_words_tiers('T', trans_phrase, 't', trans_words, trans_word_id)		
 		if not tt:
 			raise NoTransLineException('No trans line available for igt "%s"' % self.id)
 		else:
@@ -637,6 +775,14 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		bilingual alignment.
 		'''
 		return self.get_bilingual_alignment(self.trans.id, self.glosses.id)
+	
+	def get_gloss_lang_alignment(self):
+		'''
+		Convenience method for getting the gloss-word to lang-word
+		token based alignment
+		'''
+		return self.gloss.get_aligned_tokens()
+		
 		
 	#===========================================================================
 	# ALIGNMENT STUFF
@@ -666,7 +812,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 				
 		return a
 		
-	def set_bilingual_alignment(self, src_tier, tgt_tier, aln):
+	def set_bilingual_alignment(self, src_tier, tgt_tier, aln, created_by = None):
 		'''
 		Specify the source tier and target tier, and create a bilingual alignment tier
 		between the two, using the indices specified by the Alignment aln.
@@ -687,10 +833,11 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		aln = sorted(aln, key = lambda x: x[0])
 		
 		# Start by creating the alignment tier.
-		#
-		# TODO: Make this dynamic, allowing for multiple alignment tiers
-		#       from different sources. 
-		ba_tier = RGBilingualAlignmentTier(id = 'a', source = src_tier.id, target = tgt_tier.id)
+		ba_tier = RGBilingualAlignmentTier(id = self.askTierId('bilingual-alignments', 'a'), source = src_tier.id, target = tgt_tier.id)
+		
+		# Add the "created-by" attribute if one is specified.
+		if created_by:
+			ba_tier.attributes['created-by'] = created_by
 				
 		for src_i, tgt_i in aln:
 			src_token = src_tier[src_i-1]
@@ -718,7 +865,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		aln = heur_alignments(gloss_tokens, trans_tokens, **kwargs).flip()
 		
 		# Now, add these alignments as bilingual alignments...
-		self.set_bilingual_alignment(self.trans, self.glosses, aln)
+		self.set_bilingual_alignment(self.trans, self.glosses, aln, created_by='intent-heuristic')
 		
 		
 	
@@ -894,8 +1041,15 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		# Get the gloss tags...
 		gloss_tags = self.get_pos_tags(self.gloss.id)
 		
-		# Get the bilingual alignment from trans to 
+		alignment = self.gloss.get_aligned_tokens()
 		
+		# If we don't have an alignment between language and gloss line,
+		# throw an error.
+		if not alignment:
+			rgp(self)
+			raise GlossLangAlignException()
+		
+		# Get the bilingual alignment from trans to 
 		# Create the new pos tier...
 		pt = RGTokenTier(type='pos', id='w-pos', alignment='w')
 		
@@ -947,6 +1101,13 @@ class RGItem(xigt.core.Item, FindMixin):
 		self.index = kwargs.get('index')
 		
 	def copy(self, parent=None):
+		'''
+		Part of a recursive deep-copy function. Faster to implement here specifically than calling
+		copy.deepcopy.
+		
+		:param parent:
+		:type parent:
+		'''
 		new_item = RGItem(id=self.id, type=self.type,
 							alignment=copy.copy(self.alignment),
 							content=copy.copy(self.content),
@@ -957,15 +1118,6 @@ class RGItem(xigt.core.Item, FindMixin):
 		return new_item
 		
 	
-	def findUUID(self, uu):
-		retlist = []
-		if self.attributes.get('uuid') == uu:
-			retlist.append(self)
-		return retlist
-	
-	def delUUIDs(self):
-		if 'uuid' in self.attributes:
-			del self.attributes['uuid']
 			
 			
 
@@ -1301,53 +1453,12 @@ class RGWordTier(RGTokenTier):
 			for my_word, their_word in zip(self, wt):
 				my_word.alignment = their_word.id
 				
-			self.igt.refresh_index()
 						
 		
 class RGMorphTier(RGTokenTier):
 	'''
 	Tier type that contains morphemes.
 	'''	
-	def gloss_align(self, mt):
-		'''
-		Align glosses with the morpheme tier.
-		@param mt:
-		'''
-
-		
-
-		# Let's count up how many morphemes there are
-		# for each word on the translation line...
-		lang_word_dict = defaultdict(list)
-		for m in mt:
-			m.__class__ = RGMorph
-			
-			# Add this morpheme to the dictionary, so we can keep
-			# count of how many morphemes align to a given word.
-			lang_word_dict[m.word.id].append(m)
-			
-			
-		# Now, iterate over our morphs.
-		for m in self:
-			m.__class__ = RGMorph
-			
-			# Find our parent word, and it's
-			# alignment.
-			w = m.word
-			other_w_id = w.alignment
-			
-			# Next, let's see what unaligned morphs there are
-			other_w_list = lang_word_dict[other_w_id]
-			
-			# If there's only one morph left, align with that.
-			if len(other_w_list) == 1:
-				m.alignment = other_w_list[0].id
-				
-			# If there's more, pop one off the beginning of the list and use that.
-			elif len(other_w_list) > 1:
-				other_m = other_w_list.pop(0)
-				m.alignment = other_m.id
-				
 			
 		
 						
@@ -1380,6 +1491,8 @@ def rgencode(o):
 		return encode_igt(o)
 	elif isinstance(o, XigtCorpus):
 		return ''.join(encode_xigtcorpus(o))
+	else:
+		raise Exception('%s is not a XIGT object, but is: %s' % (o, type(o)))
 
 #===============================================================================
 # Unit Tests
@@ -1401,7 +1514,7 @@ line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
 line=961 tag=T:     `I made the child eat rice.\''''
 		
 		self.igt = RGIgt.fromString(self.txt)
-		 
+		
 	
 	def line_test(self):
 		'''
@@ -1421,6 +1534,7 @@ line=961 tag=T:     `I made the child eat rice.\''''
 		Test that the gloss has been automatically aligned at the word level correctly.
 		'''
 		at = self.igt.gloss.get_aligned_tokens()
+		
 		self.assertEqual(at, Alignment([(1,1),(2,2),(3,3),(4,4)]))
 		
 	def set_align_test(self):
@@ -1440,29 +1554,29 @@ line=961 tag=T:     `I made the child eat rice.\''''
 		
 		self.assertEqual(a, self.igt.get_trans_gloss_alignment())
 		
-# class XigtParseTest(TestCase):
-# 	'''
-# 	Testcase to make sure we can load from XIGT objects.
-# 	'''
-# 	def setUp(self):
-# 		self.xc = RGCorpus.load(c['xigt_ex'])
-# 		
-# 	def xigt_load_test(self):
-# 		pass
-# 	
-# 	def giza_align_test(self):
-# 		self.xc.giza_align_t_g()
-# 		giza_aln = self.xc[0].get_trans_gloss_alignment()
-# 		
-# 		giza_a = Alignment([(3, 2), (2, 8), (5, 7), (4, 3), (1, 1), (6, 5)])
-# 		
-# 		self.assertEquals(giza_a, giza_aln)
-# 		
-# 	def heur_align_test(self):
-# 		self.xc.heur_align()
-# 		aln = self.xc[0].get_trans_gloss_alignment()
-# 		a = Alignment([(5, 7), (6, 5), (1, 1), (4, 3)])
-# 		self.assertEquals(a, aln)
+class XigtParseTest(TestCase):
+	'''
+	Testcase to make sure we can load from XIGT objects.
+	'''
+	def setUp(self):
+		self.xc = RGCorpus.load(c['xigt_ex'])
+		
+	def xigt_load_test(self):
+		pass
+	
+	def giza_align_test(self):
+		self.xc.giza_align_t_g()
+		giza_aln = self.xc[0].get_trans_gloss_alignment()
+		
+		giza_a = Alignment([(3, 2), (2, 8), (5, 7), (4, 3), (1, 1), (6, 5)])
+		
+		self.assertEquals(giza_a, giza_aln)
+		
+	def heur_align_test(self):
+		self.xc.heur_align()
+		aln = self.xc[0].get_trans_gloss_alignment()
+		a = Alignment([(5, 7), (6, 5), (1, 1), (4, 3)])
+		self.assertEquals(a, aln)
 		
 class CopyTest(TestCase):
 		def setUp(self):
@@ -1483,47 +1597,40 @@ line=961 tag=T:     `I made the child eat rice.\''''
 			self.assertNotEqual(id(self.corpus), id(new_c))
 			
 			# Assert that there is no alignment.
-			self.assertIsNone(self.corpus.find(id='a'))
-			
-			rgp(self.corpus)
-			input()
-			rgp(new_c)
-			
-			self.assertEqual(rgencode(self.corpus), rgencode(new_c))
-			
-			self.assertIsNone(self.corpus.find(id='a'))
+			self.assertIsNone(self.corpus.find(type='bilingual-alignments'))
 			
 			new_c.heur_align()
-			self.assertIsNotNone(self.corpus.find(id='a'))
+			self.assertIsNotNone(new_c.find(type='bilingual-alignments'))
+			self.assertIsNone(self.corpus.find(id='bilingual-alignments'))
 
-# class POSTestCase(TestCase):
-# 	
-# 	def setUp(self):
-# 		self.txt = '''doc_id=38 275 277 L G T
-# stage3_lang_chosen: korean (kor)
-# lang_code: korean (kor) || seoul (kor) || japanese (jpn) || inuit (ike) || french (fra) || malayalam (mal)
-# note: lang_chosen_idx=0
-# line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
-# line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
-# line=961 tag=T:     `I made the child eat rice.\''''
-# 		self.igt = RGIgt.fromString(self.txt)
-# 		self.tags = ['PRON', 'NOUN', 'NOUN', 'VERB']
-# 	
-# 	def test_add_pos_tags(self):
-# 		
-# 		self.igt.add_pos_tags('gw', self.tags)
-# 		
-# 		self.assertEquals(self.igt.get_pos_tags('gw').tokens(), self.tags)
-# 		
-# 	def test_classify_pos_tags(self):
-# 		pos_dict = pickle.load(open(c['pos_dict'], 'rb'))
-# 		tags = self.igt.classify_gloss_pos(MalletMaxent(c['classifier_model']), posdict=pos_dict)
-# 		
-# 		self.assertEqual(tags, self.tags)
-# 		
-# 		
-# 	def test_tag_trans_line(self):
-# 		tagger = StanfordPOSTagger(c['stanford_tagger_trans'])
-# 		self.igt.tag_trans_pos(tagger)
+class POSTestCase(TestCase):
+	
+	def setUp(self):
+		self.txt = '''doc_id=38 275 277 L G T
+stage3_lang_chosen: korean (kor)
+lang_code: korean (kor) || seoul (kor) || japanese (jpn) || inuit (ike) || french (fra) || malayalam (mal)
+note: lang_chosen_idx=0
+line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
+line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
+line=961 tag=T:     `I made the child eat rice.\''''
+		self.igt = RGIgt.fromString(self.txt)
+		self.tags = ['PRON', 'NOUN', 'NOUN', 'VERB']
+	
+	def test_add_pos_tags(self):
 		
-
+		self.igt.add_pos_tags('gw', self.tags)
+		
+		self.assertEquals(self.igt.get_pos_tags('gw').tokens(), self.tags)
+		
+	def test_classify_pos_tags(self):
+		pos_dict = pickle.load(open(c['pos_dict'], 'rb'))
+		tags = self.igt.classify_gloss_pos(MalletMaxent(c['classifier_model']), posdict=pos_dict)
+		
+		self.assertEqual(tags, self.tags)
+		
+		
+	def test_tag_trans_line(self):
+		tagger = StanfordPOSTagger(c['stanford_tagger_trans'])
+		self.igt.tag_trans_pos(tagger)
+		
+from igt.rgxigtutils import create_words_tier, create_phrase_tier, morph_align

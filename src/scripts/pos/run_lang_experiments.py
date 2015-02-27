@@ -27,6 +27,7 @@ from multiprocessing.synchronize import Lock
 import pickle
 import logging
 import itertools
+from igt import rgxigt
 
 logging.basicConfig(handlers=[logging.NullHandler()])
 logging.getLogger(__name__)
@@ -266,9 +267,16 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 	giza_logger.addHandler(logging.FileHandler(os.path.join(outdir, 'giza.log'), 'w'))
 	giza_logger.setLevel(logging.DEBUG)
 
+	th = logging.FileHandler(os.path.join(outdir, 'taglog.log'), 'w')
+	th.setFormatter(logging.Formatter('%(name)s - %(levelname)s: %(message)s'))
+
 	tag_logger = logging.getLogger('scripts.igt.produce_tagger')
-	tag_logger.addHandler(logging.FileHandler(os.path.join(outdir, 'taglog.log'), 'w'))
+	tag_logger.addHandler(th)
 	tag_logger.setLevel(logging.DEBUG)
+	
+	parse_logger = logging.getLogger(rgxigt.__name__)
+	parse_logger.addHandler(th)
+	parse_logger.setLevel(logging.DEBUG)
 	
 	#===========================================================================
 	# Non-giza files
@@ -286,8 +294,9 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 		files_to_test.append(TestFile(outfile, 'standard', name))
 		length = 0 if not os.path.exists(inpath) else lc(inpath)
 		
-		# Only overwrite if force tag is present
-		if make_files and (not os.path.exists(outfile) or kwargs.get('force')):
+		# 
+		# A) 
+		if make_files and (not os.path.exists(outfile) or kwargs.get('force') or lc(outfile) <= 16):
 			print('Creating file "%s"...' % os.path.relpath(outfile, outdir))
 			pt.produce_tagger(inpath, writefile(outfile), method, xc = xc.copy(), posdict=posdict, classifier=classifier, **new_kwargs)
 		else:
@@ -397,7 +406,7 @@ if __name__ == '__main__':
 	
 	
 	
-	created_files = create_files(args.input, args.directory, args.gold, args.produce, global_limit=1000)
+	created_files = create_files(args.input, args.directory, args.gold, args.produce, global_limit=10000)
 	filelist.extend(created_files)
 	train_and_test(filelist, args.gold, args.directory)
 	

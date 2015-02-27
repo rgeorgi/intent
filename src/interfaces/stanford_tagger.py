@@ -151,13 +151,11 @@ if __name__ == '__main__':
 	# Now do the testing and training
 	train(c['train_file'],
  		  c['model'],
- 		  c['delimeter'],
- 		  log_f)
+ 		  c['delimeter'])
 	test(c['test_file'],
  		 c['model'],
  		 c['out_file'],
- 		 c['delimeter'],
- 		 log_f=log_f)
+ 		 c['delimeter'])
 	time.sleep(1)
 	
 	# Evaluate...

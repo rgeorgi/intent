@@ -5,7 +5,7 @@ Created on Feb 20, 2015
 '''
 import argparse
 from utils.argutils import existsfile, writefile
-from igt.rgxigt import RGCorpus
+from igt.rgxigt import RGCorpus, rgp
 from utils.argpasser import ArgPasser, argp
 from utils.setup_env import c
 from interfaces.stanford_tagger import StanfordPOSTagger
@@ -48,10 +48,19 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 	corp_length = len(xc)
 	
 	# Before reducing the size of the corpus, filter out
-	# instances missing translation lines if we are projecting
+	# instances lacking g/t alignment for classification and projection...
+	if method == classification or method in normal_proj:
+		xc.require_one_to_one()
+		corp_length = len(xc)
+	
+	# Also, filter out instances where a translation line is missing
+	# if we are projecting. (This overlaps with the above, but leaves
+	# direct giza alignments to not require one to one alignment.)
 	if method in projection:
 		xc.require_trans_lines()
 		corp_length = len(xc)
+		
+
 		
 	limit = kwargs.get('limit', 0, int)
 	if limit:
