@@ -355,9 +355,25 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		:type resume: bool
 		'''
 		
-		# First, make sentences out of the gloss and text lines.
-		g_sents = [i.glosses.text().lower() for i in self]
-		t_sents = [i.trans.text().lower() for i in self]
+		# Make sure that there are no spaces within a token, this will get us
+		# all out of alignment...
+		
+		g_sents = []
+		t_sents = []
+		
+		for inst in self:
+			g_sent = []
+			t_sent = []
+			
+			for gloss in inst.glosses.tokens():
+				g_sent.append(re.sub('\s+','', gloss.get_content().lower()))
+			g_sents.append(' '.join(g_sent))
+			
+			for trans in inst.trans.tokens():
+				t_sent.append(re.sub('\s+', '', trans.get_content().lower()))
+			t_sents.append(' '.join(t_sent))
+			
+		
 		
 		
 		if resume:
@@ -412,6 +428,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 				g_heur_aln = igt.heur_align()
 			except NoTransLineException as ntle:
 				logging.warn(ntle)
+				raise ntle
 		
 		
 		
@@ -838,16 +855,19 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 				ba.__class__ = RGBilingualAlignment
 				src_item = self.find(id=ba.source)
 				
-				# There may be multiple targets, so get all the ids
-				# and find them...
-				tgt_ids = get_alignment_expression_ids(ba.target)
-				for tgt in tgt_ids:
-					tgt_item = self.find(id=tgt)
-					
-					if tgt_item:
-						a.add((src_item.index, tgt_item.index))
-					else:
-						PARSELOG.warn('Instance had target ID "%s", but no such ID was found.' % tgt_item)
+				if not src_item:
+					PARSELOG.warn('Instance had src ID "%s", but no such ID was found.' % src_item)
+				else:
+					# There may be multiple targets, so get all the ids
+					# and find them...
+					tgt_ids = get_alignment_expression_ids(ba.target)
+					for tgt in tgt_ids:
+						tgt_item = self.find(id=tgt)
+						
+						if tgt_item:
+							a.add((src_item.index, tgt_item.index))
+						else:
+							PARSELOG.warn('Instance had target ID "%s", but no such ID was found.' % tgt_item)
 					
 			return a
 
@@ -1493,6 +1513,7 @@ class RGWordTier(RGTokenTier):
 		mt = RGMorphTier(id=letter, igt=self.igt, content=self.id, type=type)
 		
 		for word in self:
+			
 			morphs = utils.token.tokenize_item(word, utils.token.morpheme_tokenizer)
 			for morph in morphs:
 				rm = RGMorph(id=mt.askItemId(), content='%s[%s:%s]' % (word.id, morph.start, morph.stop), index=mt.askIndex())

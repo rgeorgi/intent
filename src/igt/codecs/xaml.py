@@ -9,6 +9,10 @@ Created on Feb 25, 2015
 #===============================================================================
 import logging
 from igt.rgxigtutils import strip_enrichment, follow_alignment
+from alignment.Alignment import AlignedCorpus, AlignedSent
+from eval.AlignEval import AlignEval
+import glob
+import os
 logging.basicConfig(handlers=[logging.StreamHandler()])
 XAML_LOG = logging.getLogger(__name__)
 XAML_LOG.setLevel(logging.DEBUG)
@@ -244,12 +248,14 @@ def load(xaml_path):
 		lines = igt.xpath(".//*[local-name()='TextTier' and not(contains(@TierType,'odin-txt'))]")
 		for textitem in lines:
 			
+			# Occasionally some broken lines have no text.
+			if 'Text' in textitem.attrib:
 			
-			tags = re.search('([^\-]+)\-?', textitem.attrib['TierType']).group(1)
-			
-			item = RGItem(id=xaml_id(textitem), attributes={'tag':tags})
-			item.text = textitem.attrib['Text']
-			tt.add(item)
+				tags = re.search('([^\-]+)\-?', textitem.attrib['TierType']).group(1)
+				
+				item = RGItem(id=xaml_id(textitem), attributes={'tag':tags})
+				item.text = textitem.attrib['Text']
+				tt.add(item)
 			
 		# Add the text tier to the instance.
 		inst.add(tt)
@@ -322,28 +328,48 @@ def load(xaml_path):
 		
 
 if __name__ == '__main__':
-	xc = load('/Users/rgeorgi/Documents/treebanks/xigt_odin/annotated/bul-filtered.xml')
-	
+	for path in glob.glob('/Users/rgeorgi/Documents/treebanks/xigt_odin/annotated/*-filtered.xml'):
 		
-	new_xc = xc.copy()
-	new_xc.giza_align_t_g()
-	
-	for old_inst, new_inst in zip(xc, new_xc):
-		# Strip any enrichment (pos tags, bilingual alignment)
-		# from the instance we are going to try the tools on.
+		lang = os.path.basename(path)[0:4]
 		
+		xc = load(path)
 		
-
-		ba = old_inst.get_trans_gloss_alignment()
-		if ba:
-			new_inst.heur_align()
 			
-			rgp(new_inst)
+		new_xc = xc.copy()
+		new_xc.giza_align_t_g()
+		
+		gold_ac = AlignedCorpus()
+		
+		heur_ac = AlignedCorpus()
+		giza_ac = AlignedCorpus()
+		
+		for old_inst, new_inst in zip(xc, new_xc):
+			# Strip any enrichment (pos tags, bilingual alignment)
+			# from the instance we are going to try the tools on.
 			
-			print(new_inst.get_trans_gloss_alignment('intent-heuristic'))
-			print(new_inst.get_trans_gloss_alignment('intent-giza'))
-			print(ba)
-			sys.exit()
+			
+			# TODO: This assertion error is sloppy, find another way.
+			try:
+				ba = old_inst.get_trans_gloss_alignment()
+			except AssertionError:
+				continue
+			if ba:
+				new_inst.heur_align()
+				
+				heur_sent = AlignedSent(new_inst.trans.tokens(), new_inst.gloss.tokens(), new_inst.get_trans_gloss_alignment('intent-heuristic'))
+				giza_sent = AlignedSent(new_inst.trans.tokens(), new_inst.gloss.tokens(), new_inst.get_trans_gloss_alignment('intent-giza'))
+				gold_sent = AlignedSent(new_inst.trans.tokens(), new_inst.gloss.tokens(), old_inst.get_trans_gloss_alignment())
+				
+				heur_ac.append(heur_sent)
+				giza_ac.append(giza_sent)
+				gold_ac.append(gold_sent)
+				
+		giza_ae = AlignEval(giza_ac, gold_ac)
+		heur_ae = AlignEval(heur_ac, gold_ac)
+		
+		print(lang)
+		print(heur_ae.all())
+		print(giza_ae.all())
 			
 
 	
