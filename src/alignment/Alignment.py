@@ -9,6 +9,7 @@ import sys
 import re
 import unittest
 from utils.token import tokenize_string, whitespace_tokenizer
+import copy
 
 #===============================================================================
 # Aligned Sent Class
@@ -35,6 +36,15 @@ class AlignedSent():
 				raise AlignmentError('Source index %d is too high for %s'  % (src_i, self.src_tokens))
 			if tgt_i - 1 >= len(self.tgt_tokens):
 				raise AlignmentError('Target index %d is too high for sentence %s' % (tgt_i, self.tgt_tokens))	
+	
+	def aln_with_nulls(self):
+		new_aln = copy.copy(self.aln)
+		for i, src_t in enumerate(self.src_tokens):
+			if src_t.index not in [src for src, tgt in self.aln]:
+				new_aln.add((src_t.index, 0))
+				
+		return new_aln
+		
 			
 	def aligned_words(self):
 		words = set([])

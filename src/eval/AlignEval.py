@@ -7,7 +7,7 @@ import sys
 from alignment.Alignment import MorphAlign, Alignment
 
 class AlignEval():
-	def __init__(self, aligned_corpus_a, aligned_corpus_b, debug = False, filter=None, reverse=False):
+	def __init__(self, aligned_corpus_a, aligned_corpus_b, debug = False, filter=None, reverse=False, explicit_nulls = False):
 		self.matches = 0.
 		self.total_test = 0.
 		self.total_gold = 0.
@@ -17,10 +17,17 @@ class AlignEval():
 		self._parallel = list(aligned_corpus)		
 		
 		for model_sent, gold_sent in self._parallel:
-	
+			
+			
 			model_aln = model_sent.aln
 			gold_aln = gold_sent.aln
 			
+			# If we are going to count the lack of an alignment
+			# as an explicit null...
+			if explicit_nulls:
+				model_aln = model_sent.aln_with_nulls()
+				gold_aln = gold_sent.aln_with_nulls()
+				
 			# So we can filter by lang
 			if filter and filter[0] in model_sent.attrs and model_sent.attrs[filter[0]] != filter[1]:
 				continue
@@ -31,9 +38,9 @@ class AlignEval():
 			if reverse:
 				model_aln = model_aln.flip()
 			
-			# Only look for alignments which are non-null...
-			model_aln = model_aln.nonzeros()
-			gold_aln = gold_aln.nonzeros()
+			
+			#model_aln = model_aln.nonzeros()
+			#gold_aln = gold_aln.nonzeros()
 			#  -----------------------------------------------------------------------------
 			
 			#===================================================================
@@ -74,10 +81,11 @@ class AlignEval():
 			self.matches += len(model_aln & gold_aln)
 			self.total_test += len(model_aln)
 			self.total_gold += len(gold_aln)
+
 			
 	def aer(self):
 		'''
-		Return the Average Error Rate (AER).
+		Return the Average Error Rate (AER). 
 		'''
 		if not self.total_gold:
 			return 0
