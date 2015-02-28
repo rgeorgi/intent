@@ -8,7 +8,7 @@ Script to generate all the parse documents for a given language.
 from argparse import ArgumentParser
 from utils.argutils import existsfile, writedir, writefile
 from utils.setup_env import c
-from interfaces.mallet_maxent import MalletMaxent
+
 import scripts.igt.produce_tagger as pt
 import os
 from igt.rgxigt import RGCorpus
@@ -60,7 +60,7 @@ def run_tagger(name, train_path, rawfile, pc, delete_path = False):
 	# Finally, evaluate.
 	eval_corpus = POSCorpus.read_slashtags(tag_temp.name)
 	
-	acc = pos_eval.poseval(eval_corpus, pc, out_f=open(os.devnull, 'w'))
+	acc = pos_eval.poseval(eval_corpus, pc, out_f=open(os.devnull, 'w')).accuracy()
 	
 	train_c = POSCorpus.read_slashtags(train_path)
 	
@@ -108,7 +108,9 @@ class ResultsFile(object):
 			return False
 		
 	def add(self, name, acc, length, filename):
-		self.execute("INSERT INTO results VALUES ('%s', %s, %s, '%s');" % (name, length, acc, os.path.basename(filename)))
+		
+		query = "INSERT INTO results VALUES ('%s', %s, %s, '%s');" % (name, length, acc, os.path.basename(filename))
+		self.execute(query)
 		self.db.commit()
 		
 	def lastlen(self, name):
@@ -315,7 +317,7 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 		
 		new_kwargs = dict(list(rest.items()) + list(kwargs.items()))
 		
-		for i in range(50, min(len(xc)+1, kwargs.get('global_limit')), 50):
+		for i in range(50, min(50, kwargs.get('global_limit')), 25):
 			
 
 			
@@ -387,6 +389,7 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 	return files_to_test
 		
 	
+from interfaces.mallet_maxent import MalletMaxent
 
 if __name__ == '__main__':
 	p = ArgumentParser()
@@ -406,8 +409,8 @@ if __name__ == '__main__':
 	
 	
 	
-	created_files = create_files(args.input, args.directory, args.gold, args.produce, global_limit=10000)
-	filelist.extend(created_files)
+	#created_files = create_files(args.input, args.directory, args.gold, args.produce, global_limit=10000)
+	#filelist.extend(created_files)
 	train_and_test(filelist, args.gold, args.directory)
 	
 	

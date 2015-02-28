@@ -13,6 +13,7 @@ import string
 #===============================================================================
 
 punc_re = '[.?!,\xc2]'
+list_re = '(?:[0-9]+|[a-z]|i+)'
 
 def grammaticality(string):
 	# Now, remove leading grammaticality markers
@@ -62,7 +63,19 @@ def remove_parenthetical_numbering(ret_str):
 	return re.sub('^\S+\s*[.)]', '', ret_str).strip()
 
 def remove_period_numbering(ret_str):
-	return re.sub('^\S+\s*[.)]', '', ret_str).strip()
+	'''
+	Remove period-initial numbering like:
+	|
+	1.   a.  ii.
+	'''
+	number_search = '^%s\.' % list_re
+	
+	number_match = re.search(number_search, ret_str.strip())
+	
+	if number_match:
+		return re.sub(number_search, '', ret_str)
+	else:
+		return ret_str
 
 def remove_leading_numbers(ret_str):
 	return re.sub('^[0-9]+', '', ret_str).strip()
@@ -83,6 +96,9 @@ def collapse_spaces(ret_str):
 	return re.sub('\s+', ' ', ret_str)
 
 def merge_lines(linelist):
+	
+	# TODO: Verify merge_lines is working...
+	
 	'''
 	Given two lines, merge characters that fall into blank space on
 	the other line.
@@ -273,6 +289,17 @@ class TestLangLines(unittest.TestCase):
 		
 		self.assertEqual(clean_lang_string(l1), l1c)
 		
+	def keep_something_test(self):
+		l1 = ' (1)      Mangi-a.'
+		#l1 = '  (1)     Mangi-a.'
+		
+		l1_clean = clean_lang_string(l1)
+		l1_target = 'Mangi-a'
+		
+		print(l1_clean == l1_target)
+		
+		self.assertEquals(l1_clean, l1_target)
+		
 class TestHyphenate(unittest.TestCase):
 	def runTest(self):
 		h1 = 'the guests wanted to visit the other pavilion'
@@ -280,5 +307,6 @@ class TestHyphenate(unittest.TestCase):
 		
 		self.assertEqual(hyphenate_infinitive(h1), h1f)
 		
+
 		
 		

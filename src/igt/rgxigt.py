@@ -10,7 +10,7 @@ Subclassing of the xigt package to add a few convenience methods.
 
 import logging
 import sys
-from interfaces.mallet_maxent import MalletMaxent
+
 import pickle
 from interfaces.stanford_tagger import StanfordPOSTagger
 logging.basicConfig(handlers=[logging.NullHandler()])
@@ -644,7 +644,9 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		:type tag:
 		'''
 		raw_tier = self.raw_tier()
-		raw_lines = [i for i in raw_tier if tag in i.attributes['tag']]
+
+		# Remember, we want to match "L" for a tag L+LN, but NOT LN+M
+		raw_lines = [i for i in raw_tier if tag in i.attributes['tag'].split('+')]
 		
 		# If there are raw lines to work with...
 		if raw_lines:
@@ -1080,6 +1082,18 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		:type classifier: MalletMaxent
 		'''
 		
+		attributes = {'alignment':self.gloss.id}
+		# Put our created_by attribute in here...
+		created_by = kwargs.get('created_by', 'intent-classify')
+		if created_by:
+			attributes['created-by'] = created_by		
+		
+		 
+		# Search for a previous run and Remove if found...
+		prev_tier = self.find(type='pos', attributes=attributes)
+		if prev_tier:
+			prev_tier.delete()
+		
 		kwargs['prev_gram'] = None
 		kwargs['next_gram'] = None
 		
@@ -1092,6 +1106,10 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			if re.match('[\.\?"\';/,]+', gloss_token.seq):
 				tags.append('PUNC')
 			else:
+				
+				# TODO: Yet another whitespace issue..
+				# TODO: Also, somewhat inelegant forcing it to a string like this...
+				gloss_token = re.sub('\s+', '', str(gloss_token))
 				
 				# lowercase the token...
 				gloss_token = gloss_token.lower()
@@ -1114,7 +1132,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 				# Return the POS tags
 				tags.append(best[0])
 			
-		self.add_pos_tags(self.gloss.id, tags)
+		self.add_pos_tags(self.gloss.id, tags, created_by)
 		return tags
 		
 	# • POS Tag Projection -----------------------------------------------------
@@ -1844,3 +1862,4 @@ line=961 tag=T:     `I made the child eat rice.\''''
 		
 from igt.rgxigtutils import create_words_tier, create_phrase_tier, morph_align,\
 	word
+from interfaces.mallet_maxent import MalletMaxent

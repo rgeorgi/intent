@@ -412,7 +412,9 @@ if __name__ == '__main__':
 				
 				new_inst.project_trans_to_lang(created_by = 'intent-b1', pos_creator='intent-tagger', aln_creator='intent-giza')
 				
-				rgp(new_inst)
+				new_inst.classify_gloss_pos(classifier, created_by='intent-classify')
+				new_inst.project_gloss_to_lang(created_by = 'intent-s3', pos_creator='intent-classify')
+				
 				
 				try:
 					gold_sent = old_inst.get_lang_sequence()
@@ -431,6 +433,8 @@ if __name__ == '__main__':
 				s2a_sents.append(new_inst.get_lang_sequence('intent-s2a'))
 				s2c_sents.append(new_inst.get_lang_sequence('intent-s2c'))
 				
+				s3_sents.append(new_inst.get_lang_sequence('intent-s3'))
+				
 				
 				
 								
@@ -448,9 +452,10 @@ if __name__ == '__main__':
 		s1c_acc = poseval(s1c_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
 		s2a_acc = poseval(s2a_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
 		s2c_acc = poseval(s2c_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
+		s3_acc = poseval(s3_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
 		
 		
-		accs = [b1_acc, s1a_acc, s1c_acc, s2a_acc, s2c_acc]
+		accs = [b1_acc, s1a_acc, s1c_acc, s2a_acc, s2c_acc, s3_acc]
 		accs = [i.overall_breakdown() for i in accs]
 		
 		print(''.join(accs))
