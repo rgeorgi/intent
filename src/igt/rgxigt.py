@@ -88,6 +88,9 @@ class GlossLangAlignException(RGXigtException):
 class ProjectionException(RGXigtException):
 	pass
 
+class ProjectionTransGlossException(ProjectionException):
+	pass
+
 def project_creator_except(msg_start, msg_end, created_by):
 	
 	if created_by:
@@ -430,7 +433,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		
 		
 			
-	def heur_align(self):
+	def heur_align(self, error=False):
 		'''
 		Perform heuristic alignment between the gloss and translation.
 		'''
@@ -439,7 +442,8 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 				g_heur_aln = igt.heur_align()
 			except NoTransLineException as ntle:
 				logging.warn(ntle)
-				raise ntle
+				if error:
+					raise ntle
 		
 		
 		
@@ -500,7 +504,11 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		# --- 4) Do the enriching if necessary
 
 		inst.basic_processing(require_1_to_1 = require_1_to_1)
-		inst.enrich_instance()
+		# TODO: Clean up this exception handling
+		try:
+			inst.enrich_instance()
+		except TextParseException as ngle:
+			PARSELOG.warning(ngle)
 		
 		
 		return inst
@@ -827,7 +835,8 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		else:
 			trans_glosses = self.get_bilingual_alignment(self.trans.id, self.glosses.id, created_by)
 			
-			assert trans_glosses, "Trans_glosses must already exist, otherwise create with giza or heur"
+			if not trans_glosses:
+				raise ProjectionTransGlossException("Trans-to-gloss alignment must already exist, otherwise create with giza or heur")
 			
 			new_trans_gloss = Alignment()
 			
@@ -1017,8 +1026,9 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		# Also add the created-by feature to select which we are looking for.
 		if created_by:
 			attributes['created-by'] = created_by
-		
+			
 		pos_tier = self.find(attributes=attributes, type='pos')
+		
 		
 		if pos_tier is not None:
 			pos_tier.__class__ = RGTokenTier
@@ -1141,8 +1151,11 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		Project POS tags from the translation words to the gloss words.
 		'''
 		
+		# Remove previous gloss tags created by us if specified...
+		attributes = {'alignment':self.gloss.id}
 		# Set the created-by attribute if specified.
-		attributes = {'created-by':created_by} if created_by else {}
+		if created_by:
+			attributes['created-by'] = created_by
 		
 		# Remove the previous tags if they are present...
 		prev_t = self.find(type='pos', attributes=attributes)

@@ -5,7 +5,8 @@ Created on Feb 20, 2015
 '''
 import argparse
 from utils.argutils import existsfile, writefile
-from igt.rgxigt import RGCorpus, rgp
+from igt.rgxigt import RGCorpus, rgp, ProjectionException,\
+	ProjectionTransGlossException
 from utils.argpasser import ArgPasser, argp
 from utils.setup_env import c
 from interfaces.stanford_tagger import StanfordPOSTagger
@@ -111,8 +112,13 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 			
 		# If we are doing normal projection via the gloss line
 		elif method in normal_proj:
-			inst.project_trans_to_gloss()
+			try:
+				inst.project_trans_to_gloss()
+			except ProjectionTransGlossException as ptge:
+				TAGLOG.warn(ptge)
+				continue
 			inst.project_gloss_to_lang()
+
 			
 		# Otherwise, we are looking at doing the direct translation
 		# to language based approach.
@@ -126,6 +132,7 @@ def produce_tagger(inpath, out_f, method, kwargs = None):
 			
 		# Whichever method, get the gloss line tags:
 		sequence = inst.get_lang_sequence()
+
 		
 		# If we get a "skip" and "UNK" appears in the sequence...
 		if kwargs.get('skip') and len(sequence) != len([i for i in sequence if i.label != UNK]):

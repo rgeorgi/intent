@@ -317,7 +317,7 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 		
 		new_kwargs = dict(list(rest.items()) + list(kwargs.items()))
 		
-		for i in range(50, min(50, kwargs.get('global_limit')), 25):
+		for i in range(len(xc), min(50, kwargs.get('global_limit')), 50):
 			
 
 			
@@ -379,7 +379,7 @@ def create_files(inpath, outdir, goldpath, make_files = True, **kwargs):
 		produce_giza_taggers('proj-skip-giza', pt.giza_proj, skip=True, resume=False)
 		
 		
-		produce_giza_taggers('direct-keep-giza', pt.giza_direct, skip=False)
+		#produce_giza_taggers('direct-keep-giza', pt.giza_direct, skip=False)
 		produce_giza_taggers('direct-keep-giza-nouns', pt.giza_direct, skip=False, unk_nouns=True)
 		produce_giza_taggers('direct-keep-giza-class', pt.giza_direct, skip=False, unk_classify=True)
 		produce_giza_taggers('direct-skip-giza', pt.giza_direct, skip=True)
@@ -405,12 +405,12 @@ if __name__ == '__main__':
 	filelist = []
 	for n in args.other:
 		tf = TestFile(n, 'standard', os.path.splitext(os.path.basename(n))[0])
-		filelist.append(tf)
+		#filelist.append(tf)
 	
 	
 	
-	#created_files = create_files(args.input, args.directory, args.gold, args.produce, global_limit=10000)
-	#filelist.extend(created_files)
+	created_files = create_files(args.input, args.directory, args.gold, args.produce, global_limit=10000)
+	filelist.extend(created_files)
 	train_and_test(filelist, args.gold, args.directory)
 	
 	

@@ -5,12 +5,12 @@ Created on Apr 30, 2014
 
 @author: rgeorgi
 '''
-from interfaces.mallet_maxent import MalletMaxent
+
 import pickle
 from argparse import ArgumentParser
 from utils.argutils import existsfile
 from utils.ConfigFile import ConfigFile
-from interfaces.stanford_tagger import StanfordPOSTagger
+
 
 from utils.setup_env import c as e
 
@@ -65,14 +65,16 @@ def parse_text(txt_path, xigt_path):
 									feat_suffix=True,
 									lowercase=True)
 		
-	
+	# TODO FIXME: How to gracefully handle generating a corpus that doesn't require a translation line
 	corp.heur_align()
+
 		
 	xigt_f = open(xigt_path, 'w', encoding='utf-8')
 	xigtxml.dump(xigt_f, corp)
 	xigt_f.close()
 		
-
+from interfaces.stanford_tagger import StanfordPOSTagger
+from interfaces.mallet_maxent import MalletMaxent
 
 if __name__ == '__main__':
 	

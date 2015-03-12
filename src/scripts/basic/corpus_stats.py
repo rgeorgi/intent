@@ -240,7 +240,10 @@ if __name__ == '__main__':
 	#  -----------------------------------------------------------------------------
 
 	
-	#igt_stats(args.xigt, type='xigt')
+	igt_stats(args.xigt, type='xigt')
 	igt_stats(args.igt_txt, type='text')
-	#pos_stats(args.slashtags, args.tagged, log_file = args.log, csv=args.csv)
+	
+	for f in args.slashtags:
+		sys.stderr.write('\n\n\n\n\n\n%s\n' % f)		
+		pos_stats([f], args.tagged, log_file = sys.stderr, csv=args.csv)
 	
