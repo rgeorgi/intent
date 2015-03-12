@@ -24,14 +24,14 @@ And INTENT will soon:
 Currently, INTENT is written in Python 3, and depends on several external [python modules](#python-modules) and [other tools](#other-tools).
 
 
-###<a name="python-modules"></a> Python Modules ###
+###Python Modules ###
 * [XIGT](http://goodmami.github.io/xigt/)
 * [NLTK](http://www.nltk.org/)
 * The [lxml](http://lxml.de/) XML library
 
 These modules must be either installed or on the PYTHONPATH variable when running INTENT. **[pip](https://pypi.python.org/pypi/pip)** is strongly reccomended for installing NLTK and lxml.
 
-###<a name="other-tools"></a> Other Tools ###
+###Other Tools ###
 * [MALLET](http://mallet.cs.umass.edu/) (MAchine Learning for LanguagE Toolkit)
 * [Stanford Log-linear Part-Of-Speech Tagger](http://nlp.stanford.edu/software/tagger.shtml)
 * [mgiza++](http://www.kyloo.net/software/doku.php/mgiza:overview)
