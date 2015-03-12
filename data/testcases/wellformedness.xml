@@ -1,0 +1,91 @@
+<igt id="i195" tag-types="L+CR L+CR G L G T" doc-id="1269" line-range="3656 3661">
+  <metadata type="xigt-meta">
+    <meta type="language" name="english" tiers="glosses translations" iso-639-3="eng"/>
+  </metadata>
+  <tier id="r" type="odin" state="raw">
+    <item id="r1" line="3656" tag="L+CR">         c La course donne vraiment soif           a     Jean donne  Jean</item>
+    <item id="r2" line="3657" tag="L+CR">                                                                        a</item>
+    <item id="r3" line="3658" tag="G">           the race gives really           thirst to      J.      gives to J.</item>
+    <item id="r4" line="3659" tag="L">            vraiment soif .</item>
+    <item id="r5" line="3660" tag="G">            really    thirst</item>
+    <item id="r6" line="3661" tag="T">           `The race makes Jean really thirsty.'</item>
+  </tier>
+  <tier id="c" type="odin" alignment="r" state="clean">
+    <item id="c1" alignment="r1" tag="L+CR">         c La course donne vraiment soif           a     Jean donne  Jean</item>
+    <item id="c2" alignment="r2" tag="L+CR">                                                                        a</item>
+    <item id="c3" alignment="r3" tag="G">           the race gives really           thirst to      J.      gives to J.</item>
+    <item id="c4" alignment="r4" tag="L">            vraiment soif .</item>
+    <item id="c5" alignment="r5" tag="G">            really    thirst</item>
+    <item id="c6" alignment="r6" tag="T">           `The race makes Jean really thirsty.'</item>
+  </tier>
+  <tier id="n" type="odin" alignment="c" state="normalized">
+    <item id="n1" alignment="r1,r2,r4" tag="L">c La course donne .vraiment soif a Jean donne Jean</item>
+    <item id="n2" alignment="r3,r5" tag="G">the race gives really thirst to J gives to J</item>
+    <item id="n3" alignment="r6" tag="T">The race makes Jean really thirsty</item>
+  </tier>
+  <tier id="t" type="translations" content="n">
+    <item id="t1" content="n3"/>
+  </tier>
+  <tier id="tw" type="translation-words" segmentation="t">
+    <item id="tw1" segmentation="t1[0:3]"/>
+    <item id="tw2" segmentation="t1[4:8]"/>
+    <item id="tw3" segmentation="t1[9:14]"/>
+    <item id="tw4" segmentation="t1[15:19]"/>
+    <item id="tw5" segmentation="t1[20:26]"/>
+    <item id="tw6" segmentation="t1[27:34]"/>
+  </tier>
+  <tier id="g" type="gloss-phrases" content="n">
+    <item id="g1" content="n2"/>
+  </tier>
+  <tier id="gw" type="gloss-words" segmentation="g" alignment="w">
+    <item id="gw1" segmentation="g1[0:3]" alignment="w1"/>
+    <item id="gw2" segmentation="g1[4:8]" alignment="w2"/>
+    <item id="gw3" segmentation="g1[9:14]" alignment="w3"/>
+    <item id="gw4" segmentation="g1[15:21]" alignment="w4"/>
+    <item id="gw5" segmentation="g1[22:28]" alignment="w5"/>
+    <item id="gw6" segmentation="g1[29:31]" alignment="w6"/>
+    <item id="gw7" segmentation="g1[32:33]" alignment="w7"/>
+    <item id="gw8" segmentation="g1[34:39]" alignment="w8"/>
+    <item id="gw9" segmentation="g1[40:42]" alignment="w9"/>
+    <item id="gw10" segmentation="g1[43:44]" alignment="w10"/>
+  </tier>
+  <tier id="p" type="phrases" content="n">
+    <item id="p1" content="n1"/>
+  </tier>
+  <tier id="w" type="words" segmentation="p">
+    <item id="w1" segmentation="p1[0:1]"/>
+    <item id="w2" segmentation="p1[2:4]"/>
+    <item id="w3" segmentation="p1[5:11]"/>
+    <item id="w4" segmentation="p1[12:17]"/>
+    <item id="w5" segmentation="p1[18:27]"/>
+    <item id="w6" segmentation="p1[28:32]"/>
+    <item id="w7" segmentation="p1[33:34]"/>
+    <item id="w8" segmentation="p1[35:39]"/>
+    <item id="w9" segmentation="p1[40:45]"/>
+    <item id="w10" segmentation="p1[46:50]"/>
+  </tier>
+  <tier id="gm" type="glosses" content="gw">
+    <item id="gm1" content="gw1[0:3]"/>
+    <item id="gm2" content="gw2[0:4]"/>
+    <item id="gm3" content="gw3[0:5]"/>
+    <item id="gm4" content="gw4[0:6]"/>
+    <item id="gm5" content="gw5[0:6]"/>
+    <item id="gm6" content="gw6[0:2]"/>
+    <item id="gm7" content="gw7[0:1]"/>
+    <item id="gm8" content="gw8[0:5]"/>
+    <item id="gm9" content="gw9[0:2]"/>
+    <item id="gm10" content="gw10[0:1]"/>
+  </tier>
+  <tier id="m" type="morphemes" content="w">
+    <item id="m1" content="w1[0:1]"/>
+    <item id="m2" content="w2[0:2]"/>
+    <item id="m3" content="w3[0:6]"/>
+    <item id="m4" content="w4[0:5]"/>
+    <item id="m5" content="w5[1:9]"/>
+    <item id="m6" content="w6[0:4]"/>
+    <item id="m7" content="w7[0:1]"/>
+    <item id="m8" content="w8[0:4]"/>
+    <item id="m9" content="w9[0:5]"/>
+    <item id="m10" content="w10[0:4]"/>
+  </tier>
+</igt>
