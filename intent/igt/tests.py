@@ -1,7 +1,7 @@
 '''
 Created on Feb 24, 2015
 
-@author: rgeorgi
+:author: rgeorgi <rgeorgi@uw.edu>
 '''
 import unittest
 from xigt.codecs import xigtxml
