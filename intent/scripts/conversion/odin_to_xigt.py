@@ -6,19 +6,16 @@ Created on Apr 30, 2014
 @author: rgeorgi
 '''
 
-import pickle
+# Built-in Imports -------------------------------------------------------------
+import pickle, logging
 from argparse import ArgumentParser
-from utils.argutils import existsfile
-from utils.ConfigFile import ConfigFile
 
+# Internal Imports -------------------------------------------------------------
+from intent.utils.argutils import existsfile
+from intent.utils.env import c as e
+from intent.igt.rgxigt import RGCorpus, NoTransLineException
 
-from utils.setup_env import c as e
-
-import logging
-import os
-import sys
-from igt.rgxigt import RGCorpus, rgp, NoTransLineException
-from glob import glob
+# XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
 
 PARSELOGGER = logging.getLogger(__name__)

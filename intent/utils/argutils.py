@@ -24,11 +24,11 @@ def require_opt(option, msg, must_exist = False, must_exist_msg = 'The file "%s"
 class CommandLineException(Exception):
 	pass
 
-class FileNotExistsException(CommandLineException):
-	pass
+class PathArgException(CommandLineException): pass
 
-class DirNotExistsException(CommandLineException):
-	pass
+class PathNotExistsException(PathArgException): pass
+
+class PathInvalidException(PathArgException): pass
 
 #===============================================================================
 # Argparse Types
@@ -51,9 +51,9 @@ def existsfile(path):
 	- Exists on the filesystem
 	'''
 	if not os.path.exists(path):
-		raise CommandLineException('File "%s" does not exist.' % path)
+		raise PathNotExistsException('File "%s" does not exist.' % path)
 	elif not os.path.isfile(path):
-		raise CommandLineException('Path "%s" is not a file.' % path)
+		raise PathInvalidException('Path "%s" is not a file.' % path)
 	else:
 		return path
 	
@@ -71,9 +71,9 @@ def existsdir(path, rootpath=None):
 		path = os.path.join(rootpath, path)
 		
 	if not os.path.exists(path):
-		raise CommandLineException('Directory "%s" does not exist.' % path)
+		raise PathNotExistsException('Directory "%s" does not exist.' % path)
 	if not os.path.isdir(path):
-		raise CommandLineException('Path "%s" is not a directory.' % path)
+		raise PathInvalidException('Path "%s" is not a directory.' % path)
 	else:
 		return path
 	

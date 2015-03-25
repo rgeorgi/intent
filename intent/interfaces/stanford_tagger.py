@@ -15,8 +15,12 @@ from intent.utils.ConfigFile import ConfigFile
 from intent.eval.pos_eval import slashtags_eval
 from intent.utils.token import tag_tokenizer, tokenize_string
 
-from intent.utils.setup_env import c
+from intent.utils.env import c
 
+# Logging ----------------------------------------------------------------------
+TAG_LOG = logging.getLogger(__name__)
+
+class TaggerError(Exception): pass
 
 #===============================================================================
 # Set up the stanford tagger to run via stdin.
@@ -29,7 +33,12 @@ class StanfordPOSTagger(object):
 	def __init__(self, model):
 		
 		# Get the jar defined in the env.conf file.
-		stanford_jar = c.get('stanford_tagger_jar')
+		stanford_jar = c.getpath('stanford_tagger_jar')
+		
+		# If the .jar is not defined... ----------------------------------------
+		if stanford_jar is None:
+			TAG_LOG.critical('Path to the stanford tagger .jar file is not defined.')
+			raise TaggerError('Path to the stanford tagger .jar file is not defined.')
 		
 		self.st = sub.Popen(['java', 
 							'-cp', stanford_jar,
@@ -38,9 +47,14 @@ class StanfordPOSTagger(object):
 							'-tokenize', 'false'],
 						
 				stdout=sub.PIPE, stdin=sub.PIPE, stderr=sys.stderr)
+		
+		print(self.st.stdout.read())
+		
+
 
 	def tag_tokenization(self, tokenization, **kwargs):
 		return self.tag(tokenization.text(), **kwargs)
+		
 
 	def tag(self, s, **kwargs):
 		
@@ -74,6 +88,8 @@ class StanfordPOSTagger(object):
 		# Advance past the newline
 		self.st.stdout.readline()
 		
+		
+		
 
 		return tokenize_string(output_str, tokenizer=tag_tokenizer)
 	
@@ -85,8 +101,6 @@ class StanfordPOSTagger(object):
 #===============================================================================
 
 def train(train_file, model_path, delimeter = '/'):
-	jar()
-	
 	# Exists
 	existsfile(train_file)
 	
@@ -99,7 +113,6 @@ def train(train_file, model_path, delimeter = '/'):
 	piperunner(cmd, 'stanford_tagger')
 
 def eval(test_file, model_path, delimeter = '/'):
-	jar()
 	global stanford_jar
 	cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s' % (stanford_jar, model_path, test_file, delimeter )
 	piperunner(cmd, 'stanford_tagger')
