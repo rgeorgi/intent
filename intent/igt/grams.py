@@ -3,11 +3,10 @@ Created on Mar 8, 2014
 
 @author: rgeorgi
 '''
-import sys
-import re
-import logging
-import utils.token
-from utils.argpasser import ArgPasser
+import sys, re, logging
+
+import intent.utils.token
+from intent.utils.argpasser import ArgPasser
 
 
 #===============================================================================

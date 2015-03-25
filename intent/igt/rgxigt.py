@@ -8,36 +8,34 @@ Subclassing of the xigt package to add a few convenience methods.
 # Logging
 #===============================================================================
 
-import logging
-import sys
+import logging, sys, pickle, re, copy
 
-import pickle
-from interfaces.stanford_tagger import StanfordPOSTagger
-logging.basicConfig(handlers=[logging.NullHandler()])
+
+from intent.interfaces.stanford_tagger import StanfordPOSTagger
+
+# Set up logging ---------------------------------------------------------------
 PARSELOG = logging.getLogger(__name__)
 
-
-#  -----------------------------------------------------------------------------
-
+# XIGT imports -----------------------------------------------------------------
 import xigt.core
 from xigt.core import Metadata, Meta, Tier, Item, Igt,\
 	get_alignment_expression_ids, XigtCorpus
-import re
 from xigt.codecs import xigtxml
+from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xigtcorpus
+
+# INTERNAL imports -------------------------------------------------------------
+from .igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
+	clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re
+import intent.utils.token
+from intent.utils.setup_env import c
+from intent.alignment.Alignment import Alignment, heur_alignments
+from intent.utils.token import Token, POSToken
+from intent.interfaces.giza import GizaAligner
+
+# Other imports ----------------------------------------------------------------
 from unittest.case import TestCase
 from uuid import uuid4
-from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xigtcorpus
-from igt.igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
-	clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re
-
-import utils.token
 from collections import defaultdict
-import interfaces.giza
-from utils.setup_env import c
-from alignment.Alignment import Alignment, heur_alignments
-from utils.token import Token, POSToken
-import copy
-from interfaces.giza import GizaAligner
 
 
 #===============================================================================
@@ -392,7 +390,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		
 		if resume:
 			# Next, load up the saved gloss-trans giza alignment model
-			ga = interfaces.giza.GizaAligner.load(c['g_t_prefix'], c['g_path'], c['t_path'])
+			ga = GizaAligner.load(c['g_t_prefix'], c['g_path'], c['t_path'])
 	
 			# ...and use it to align the gloss line to the translation line.
 			g_t_asents = ga.force_align(g_sents, t_sents)
@@ -421,7 +419,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		l_sents = [i.lang.text().lower() for i in self]
 		t_sents = [i.trans.text().lower() for i in self]
 		
-		ga = interfaces.giza.GizaAligner()
+		ga = GizaAligner()
 		
 		l_t_asents = ga.temp_train(l_sents, t_sents)
 		
@@ -1366,7 +1364,7 @@ class RGPhrase(RGItem):
 	def words_tier(self, words_name, words_letter):
 		
 		# Tokenize the words in this phrase...
-		words = utils.token.tokenize_item(self)
+		words = intent.utils.token.tokenize_item(self)
 		
 		# Create a new word tier to hold the tokenized words...
 		wt = RGWordTier(id = words_letter, type=words_name, segmentation=self.tier.id, igt=self.igt)
@@ -1670,7 +1668,7 @@ class RGWordTier(RGTokenTier):
 		
 		for word in self:
 			
-			morphs = utils.token.tokenize_item(word, utils.token.morpheme_tokenizer)
+			morphs = intent.utils.token.tokenize_item(word, intent.utils.token.morpheme_tokenizer)
 			for morph in morphs:
 				rm = RGMorph(id=mt.askItemId(), content='%s[%s:%s]' % (word.id, morph.start, morph.stop), index=mt.askIndex())
 				mt.add(rm)
@@ -1873,6 +1871,6 @@ line=961 tag=T:     `I made the child eat rice.\''''
 		tagger = StanfordPOSTagger(c['stanford_tagger_trans'])
 		self.igt.tag_trans_pos(tagger)
 		
-from igt.rgxigtutils import create_words_tier, create_phrase_tier, morph_align,\
+from .rgxigtutils import create_words_tier, create_phrase_tier, morph_align,\
 	word
-from interfaces.mallet_maxent import MalletMaxent
+from intent.interfaces.mallet_maxent import MalletMaxent

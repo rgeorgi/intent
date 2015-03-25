@@ -33,7 +33,14 @@ class SetConflict(ConfigFileException):
 		ConfigFileException.__init__(self, m)
 
 class ConfigFile(ArgPasser):
+	'''
+	Configuration file 
+	'''
 	def __init__(self, path):
+		# Set the path to this file for relative
+		# paths...
+		self.dir = os.path.dirname(path)
+		
 		cf = open(path, 'rb')
 		lines = cf.readlines()
 		for line in lines:
@@ -72,6 +79,19 @@ class ConfigFile(ArgPasser):
 					
 			self[var] = string
 		
+
+	def getpath(self, key):
+		'''
+		Retrieve a path from the config file, returning a path that is relative
+		to this config file if necessary.
+		:param key:
+		:type key:
+		'''
+		path = self.get(key)
+		if not os.path.isabs(path):
+			return os.path.join(self.dir, path)
+		else:
+			return path
 
 	def set_defaults(self, dict):
 		for key in dict:

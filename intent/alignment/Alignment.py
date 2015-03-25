@@ -4,12 +4,8 @@ Created on Feb 21, 2014
 @author: rgeorgi
 '''
 
-import collections
-import sys
-import re
-import unittest
-from utils.token import tokenize_string, whitespace_tokenizer
-import copy
+import collections, sys, re, unittest, copy
+from intent.utils.token import tokenize_string, whitespace_tokenizer
 
 #===============================================================================
 # Aligned Sent Class
@@ -17,9 +13,7 @@ import copy
 
 class AlignedSent():
 	'''
-	AlignedSent
-	
-	Contains source and target tokens, and an alignment between the two.
+	An object class to contain source and target tokens, and an alignment between the two.
 	'''
 	def __init__(self, src_tokens, tgt_tokens, aln):
 		self.src_tokens = src_tokens
@@ -38,6 +32,9 @@ class AlignedSent():
 				raise AlignmentError('Target index %d is too high for sentence %s' % (tgt_i, self.tgt_tokens))	
 	
 	def aln_with_nulls(self):
+		'''
+		Return alignment with explicit NULL alignments.
+		'''
 		new_aln = copy.copy(self.aln)
 		for i, src_t in enumerate(self.src_tokens):
 			if src_t.index not in [src for src, tgt in self.aln]:

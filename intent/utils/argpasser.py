@@ -46,11 +46,10 @@ class ArgPasser(dict):
 		argument which can be applied to verify the argument is of the
 		right type.
 		
-		**k**       -- the key
-		
-		**default** -- what to return if *k* was not found in the dict
-		
-		**t**       -- the type function to apply to the retrieved argument.   
+		:param k: the key
+		:param default: what to return if *k* was not found in the dict
+		:param t: the type function to apply to the retrieved argument.
+		:type t: type
 		'''
 
 		# Only replace with default if the key is actually

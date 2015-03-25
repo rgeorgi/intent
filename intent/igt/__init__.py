@@ -1,1 +1,1 @@
-import igt.rgxigt
+from . import rgxigt

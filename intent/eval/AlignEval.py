@@ -4,7 +4,7 @@ Created on Feb 14, 2014
 @author: rgeorgi
 '''
 import sys
-from alignment.Alignment import MorphAlign, Alignment
+from intent.alignment.Alignment import MorphAlign, Alignment
 
 class AlignEval():
 	def __init__(self, aligned_corpus_a, aligned_corpus_b, debug = False, filter=None, reverse=False, explicit_nulls = False):

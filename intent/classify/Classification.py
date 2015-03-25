@@ -3,7 +3,7 @@ Created on Apr 4, 2014
 
 @author: rgeorgi
 '''
-from utils.CountDict import CountDict
+from intent.utils.dicts import CountDict
 
 class Classification(CountDict):
 	

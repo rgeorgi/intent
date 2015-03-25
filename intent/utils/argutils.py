@@ -3,10 +3,10 @@ Created on Aug 26, 2013
 
 @author: rgeorgi
 '''
-import sys, os
+import sys, os, argparse
 from unittest import TestCase
 from .ConfigFile import ConfigFile
-from utils.ConfigFile import ConfigFileException
+from .ConfigFile import ConfigFileException
 
 def require_opt(option, msg, must_exist = False, must_exist_msg = 'The file "%s" was not found\n'):
 	errors = False
@@ -57,13 +57,19 @@ def existsfile(path):
 	else:
 		return path
 	
-def existsdir(path):
+def existsdir(path, rootpath=None):
 	'''
 	Type for passing to argparse to verify that the argument both:
 	
 	- Is a directory
 	- Exists on the filesystem
+	
+	:param path: Path to check
+	:param rootpath: Path from which to construct relative paths.
 	'''
+	if not os.path.isabs(path) and rootpath:
+		path = os.path.join(rootpath, path)
+		
 	if not os.path.exists(path):
 		raise CommandLineException('Directory "%s" does not exist.' % path)
 	if not os.path.isdir(path):
@@ -71,7 +77,7 @@ def existsdir(path):
 	else:
 		return path
 	
-	
+
 def configfile(path):
 	c = existsfile(path)
 	return ConfigFile(c)
@@ -105,3 +111,15 @@ def writefile(path, mode='w', encoding='utf-8'):
 	
 	return f
 	
+#===============================================================================
+# Default to showing help for an argparser
+#===============================================================================
+
+class DefaultHelpParser(argparse.ArgumentParser):
+	'''
+	Make the argparser default to printing help when an error is encountered.
+	'''
+	def error(self, message):
+		sys.stderr.write('error: %s\n' % message)
+		self.print_help()
+		sys.exit(2)

@@ -3,16 +3,17 @@ Created on Apr 4, 2014
 
 @author: rgeorgi
 '''
-import os
+# Built-in imports -------------------------------------------------------------
+import os, sys, re
 import subprocess as sub
-import sys
-from classify.Classification import Classification
-from utils.TwoLevelCountDict import TwoLevelCountDict
-import re
-from _io import StringIO
-import igt.grams
-from utils.token import GoldTagPOSToken
-from utils.setup_env import c
+from io import StringIO
+
+# Internal Imports -------------------------------------------------------------
+from intent.classify.Classification import Classification
+from intent.utils.dicts import TwoLevelCountDict
+import intent.igt.grams
+from intent.utils.token import GoldTagPOSToken
+from intent.utils.setup_env import c
 
 class ClassifierException(Exception):
 	pass

@@ -3,9 +3,8 @@ Created on Feb 26, 2015
 
 @author: rgeorgi
 '''
-import utils
-from .rgxigt import RGWordTier, RGWord
-from igt.rgxigt import RGPhraseTier, RGPhrase, GlossLangAlignException, RGMorph,\
+import intent.utils
+from .rgxigt import RGWordTier, RGWord, RGPhraseTier, RGPhrase, GlossLangAlignException, RGMorph,\
 	rgp, RGXigtException
 from collections import defaultdict
 from xigt.core import get_alignment_expression_ids
@@ -18,7 +17,7 @@ from xigt.core import get_alignment_expression_ids
 def create_words_tier(cur_item, words_letter, words_name):
 	
 	# Tokenize the words in this phrase...
-	words = utils.token.tokenize_item(cur_item)
+	words = intent.utils.token.tokenize_item(cur_item)
 	
 	# Create a new word tier to hold the tokenized words...
 	wt = RGWordTier(id = words_letter, type=words_name, segmentation=cur_item.tier.id, igt=cur_item.igt)

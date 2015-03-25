@@ -21,11 +21,10 @@ import sys
 import os
 
 from argparse import ArgumentParser
-from utils import ConfigFile
+from intent.utils import ConfigFile
 import re
-from eval.EvalException import POSEvalException, EvalException
-from utils.TwoLevelCountDict import TwoLevelCountDict, POSEvalDict
-from corpora.POSCorpus import POSCorpus
+from intent.eval.EvalException import POSEvalException, EvalException
+from intent.corpora.POSCorpus import POSCorpus
 
 __all__ = []
 __version__ = 0.1

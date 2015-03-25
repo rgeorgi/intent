@@ -3,7 +3,7 @@ Created on Mar 21, 2014
 
 @author: rgeorgi
 '''
-from utils.string_utils import string_compare_with_processing
+from intent.utils.string_utils import string_compare_with_processing
 import re
 
 #===============================================================================

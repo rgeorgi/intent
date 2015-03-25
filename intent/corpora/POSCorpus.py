@@ -3,10 +3,8 @@ Created on Mar 6, 2014
 
 @author: rgeorgi
 '''
-import os
-import codecs
-from utils.token import tokenize_string, tag_tokenizer, POSToken
-import re
+import os, codecs, re
+from intent.utils.token import tokenize_string, tag_tokenizer, POSToken
 
 
 

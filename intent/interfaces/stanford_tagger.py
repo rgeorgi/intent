@@ -4,35 +4,33 @@ Created on Oct 22, 2013
 @author: rgeorgi
 '''
 
-import os, sys
-from optparse import OptionParser
-from utils.argutils import require_opt, existsfile
-from utils.systematizing import notify, piperunner
-from utils.ConfigFile import ConfigFile
-from eval.pos_eval import slashtags_eval
-import time
+import os, sys, re, unittest, time, logging
 import subprocess as sub
-from utils.token import tag_tokenizer, tokenize_string
-import unittest
-import re
+from optparse import OptionParser
+
+# Internal Imports -------------------------------------------------------------
+from intent.utils.argutils import require_opt, existsfile
+from intent.utils.systematizing import notify, piperunner
+from intent.utils.ConfigFile import ConfigFile
+from intent.eval.pos_eval import slashtags_eval
+from intent.utils.token import tag_tokenizer, tokenize_string
+
+from intent.utils.setup_env import c
+
 
 #===============================================================================
 # Set up the stanford tagger to run via stdin.
 #===============================================================================
 
-def jar():
-	global stanford_jar
-	mydir = os.path.abspath(os.path.dirname(__file__))
-	c = ConfigFile(os.path.join(mydir, 'stanford_tagger.prop'))
-	
-	javahome = c['javahome']
-	os.environ['JAVAHOME'] = javahome	
-	stanford_jar = c['jar']
-	
-
 class StanfordPOSTagger(object):
-	def __init__(self, model):	
-		jar()
+	'''
+	Instantiate a java VM to run the stanford tagger.
+	'''
+	def __init__(self, model):
+		
+		# Get the jar defined in the env.conf file.
+		stanford_jar = c.get('stanford_tagger_jar')
+		
 		self.st = sub.Popen(['java', 
 							'-cp', stanford_jar,
 							'edu.stanford.nlp.tagger.maxent.MaxentTagger',

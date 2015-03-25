@@ -7,7 +7,6 @@ Created on Mar 8, 2014
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.stem.snowball import EnglishStemmer
 from nltk.stem.porter import PorterStemmer
-import igt
 
 
 

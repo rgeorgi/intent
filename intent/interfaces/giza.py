@@ -4,25 +4,33 @@ Created on Feb 14, 2014
 .. codeauthor::Ryan Georgi <rgeorgi@uw.edu>
 '''
 
-import os, sys, re, argparse
-from utils import ConfigFile
-import glob
-from alignment.Alignment import AlignedCorpus, combine_corpora, AlignedSent,\
+# Built-in imports -------------------------------------------------------------
+import os, sys, re, argparse, glob, shutil, time
+
+# Internal imports -------------------------------------------------------------
+from intent.utils import ConfigFile
+from intent.alignment.Alignment import AlignedCorpus, combine_corpora, AlignedSent,\
 	Alignment
-from eval.AlignEval import AlignEval
-from utils.setup_env import c
-from utils.fileutils import swapext, matching_files, remove_safe
-from utils.systematizing import piperunner
+from intent.eval.AlignEval import AlignEval
+from intent.utils.setup_env import c
+from intent.utils.fileutils import swapext, matching_files, remove_safe
+from intent.utils.systematizing import piperunner
+
+# Other imports ----------------------------------------------------------------
 from tempfile import mkdtemp
-import shutil
 from collections import defaultdict
-import time
 from unittest.case import TestCase
 
+
 class GizaAlignmentException(Exception):
-	pass
+	'''
+	An exception class for Giza errors.
+	'''
 
 class CooccurrenceFile(defaultdict):
+	'''
+	An internal representation of a cooccurrence file.
+	'''
 	def __init__(self):
 		defaultdict.__init__(self, set)
 		
