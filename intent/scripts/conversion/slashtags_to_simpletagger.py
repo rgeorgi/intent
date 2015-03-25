@@ -3,10 +3,15 @@ Created on Nov 14, 2014
 
 @author: rgeorgi
 '''
-from corpora.POSCorpus import POSCorpus
+
+# built-in imports -------------------------------------------------------------
 from argparse import ArgumentParser
-from utils.argutils import existsfile
-from tagging.features import SequenceFeature
+
+# Internal Imports -------------------------------------------------------------
+
+from intent.corpora.POSCorpus import POSCorpus
+from intent.utils.argutils import existsfile
+from intent.tagging.features import SequenceFeature
 
 def slashtags_to_simpletagger(in_path, out_path):
 	p = POSCorpus.read_slashtags(in_path)

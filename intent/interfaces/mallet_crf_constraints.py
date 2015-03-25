@@ -4,12 +4,14 @@ Created on Mar 6, 2014
 @author: rgeorgi
 '''
 
-import argparse
-from utils.ConfigFile import ConfigFile
-import os
-import sys
-from interfaces.mallet_crf import write_and_eval
+# Global imports ---------------------------------------------------------------
+import argparse, os, sys
 import subprocess as sub
+
+# Internal Imports -------------------------------------------------------------
+from intent.utils.ConfigFile import ConfigFile
+from intent.interfaces.mallet_crf import write_and_eval
+
 
 def setup():
 	global mallet, cp

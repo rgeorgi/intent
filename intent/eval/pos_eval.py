@@ -17,12 +17,12 @@ It defines a main method that scores tag accuracy.
 @deffield    updated: Updated
 '''
 
-import sys
-import os
-
+# Global imports ---------------------------------------------------------------
+import sys, os, re
 from argparse import ArgumentParser
+
+# Internal Imports -------------------------------------------------------------
 from intent.utils import ConfigFile
-import re
 from intent.eval.EvalException import POSEvalException, EvalException
 from intent.corpora.POSCorpus import POSCorpus
 

@@ -4,22 +4,30 @@ import argparse, os, sys
 import logging
 
 # Start the logger and set it up. ----------------------------------------------
-logging.basicConfig(formatter=logging.BASIC_FORMAT)
+logging.basicConfig(format=logging.BASIC_FORMAT)
 MAIN_LOG = logging.getLogger('INTENT')
 
 #===============================================================================
 # Check for dependencies...
 #===============================================================================
 
+import_errors = False
+
 try:
 	import nltk
 except ImportError:
 	MAIN_LOG.critical('NLTK module not installed')
+	import_errors = True
 	
 try:
 	import lxml
 except ImportError:
 	MAIN_LOG.critical('lxml not installed.')
+	import_errors = True
+	
+if import_errors:
+	MAIN_LOG.critical('Necessary python modules were not found. Please install and try again.')
+	sys.exit(2)
 
 	
 #===============================================================================

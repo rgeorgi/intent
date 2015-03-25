@@ -3,10 +3,13 @@ Created on Sep 12, 2014
 
 @author: rgeorgi
 '''
-import argparse
-import os
-from ingestion.conll.ConllParser import ConllParser
-from corpora.POSCorpus import POSCorpus
+
+# Global Imports ---------------------------------------------------------------
+import argparse, os
+
+# Internal imports -------------------------------------------------------------
+from intent.ingestion.conll.ConllParser import ConllParser
+from intent.corpora.POSCorpus import POSCorpus
 
 def conll_to_slashtags(infiles, outpath):
 	'''
