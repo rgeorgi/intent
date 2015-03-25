@@ -48,8 +48,6 @@ class StanfordPOSTagger(object):
 						
 				stdout=sub.PIPE, stdin=sub.PIPE, stderr=sys.stderr)
 		
-		print(self.st.stdout.read())
-		
 
 
 	def tag_tokenization(self, tokenization, **kwargs):
