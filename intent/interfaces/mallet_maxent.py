@@ -13,7 +13,7 @@ from intent.classify.Classification import Classification
 from intent.utils.dicts import TwoLevelCountDict
 import intent.igt.grams
 from intent.utils.token import GoldTagPOSToken
-from intent.utils.setup_env import c
+from intent.utils.env import c
 
 class ClassifierException(Exception):
 	pass

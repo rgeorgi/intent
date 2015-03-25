@@ -17,6 +17,12 @@ proj_root = dir_above(__file__, 3)
 
 c = ConfigFile(os.path.join(proj_root, 'env.conf'))
 
+# Strings used in the configuration. -------------------------------------------
+xigt_dir_string   = 'xigt_dir'
+mgiza_string      = 'mgiza'
+mallet_string     = 'mallet'
+classifier_string = 'classifier_model'
+
 #===============================================================================
 # Try to import the XIGT module.
 #===============================================================================
@@ -30,7 +36,7 @@ else:
 
 if load_fail:
 	# -- 2) If it's not installed, try to find it in env.conf.
-	xigt_dir = c.get('xigt_dir')
+	xigt_dir = c.getpath(xigt_dir_string)
 	
 	# -- 3) If it's not in the env.conf file, error out.
 	if xigt_dir is None:
@@ -51,3 +57,8 @@ if load_fail:
 		except ImportError:
 			ENV_LOG.critical('Specified XIGT dir "%s" is not valid for the xigt module.' % xigt_dir)
 			sys.exit(2)
+
+#===============================================================================
+# Test other paths...
+#===============================================================================
+

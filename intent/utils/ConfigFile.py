@@ -19,18 +19,11 @@ import os
 from .argpasser import ArgPasser
 
 
-class ConfigFileException(Exception):
-	def __init__(self, m = None):
-		Exception.__init__(self, m)
+class ConfigFileException(Exception): pass
 		
+class NoOptionException(ConfigFileException): pass
 		
-class NoOptionException(ConfigFileException):
-	def __init__(self, m = None):
-		ConfigFileException.__init__(self, m)
-		
-class SetConflict(ConfigFileException):
-	def __init__(self, m = None):
-		ConfigFileException.__init__(self, m)
+class SetConflict(ConfigFileException): pass
 
 class ConfigFile(ArgPasser):
 	'''
@@ -88,6 +81,8 @@ class ConfigFile(ArgPasser):
 		:type key:
 		'''
 		path = self.get(key)
+		if path is None:
+			return None 
 		if not os.path.isabs(path):
 			return os.path.join(self.dir, path)
 		else:

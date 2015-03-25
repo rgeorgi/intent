@@ -12,7 +12,7 @@ from intent.utils import ConfigFile
 from intent.alignment.Alignment import AlignedCorpus, combine_corpora, AlignedSent,\
 	Alignment
 from intent.eval.AlignEval import AlignEval
-from intent.utils.setup_env import c
+from intent.utils.env import c
 from intent.utils.fileutils import swapext, matching_files, remove_safe
 from intent.utils.systematizing import piperunner
 
@@ -481,7 +481,12 @@ class GizaAligner(object):
 		self.tf.txt_to_snt(ev = Vocab(), fv = Vocab())
 		
 		# Now, do the aligning...
-		exe = c['mgiza']
+		exe = c.getpath('mgiza')
+		
+		if exe is None:
+			raise GizaAlignmentException('Path to mgiza binary not defined.')
+		elif not os.path.exists(exe):
+			raise GizaAlignmentException('Path to mgiza binary "%s" invalid.')
 				
 		
 		elts = [exe,
@@ -566,7 +571,12 @@ class GizaAligner(object):
 		# Write out
 		new_gf.txt_to_snt(ev = old_ev, fv = old_fv)
 
-		exe = c['mgiza']
+		exe = c.getpath('mgiza')
+		
+		if exe is None:
+			raise GizaAlignmentException('Path to mgiza binary not defined.')
+		elif not os.path.exists(exe):
+			raise GizaAlignmentException('Path to mgiza binary "%s" invalid.' % exe)
 		
 		args = [exe, #self.tf.cfg,
 				'-restart', '2',

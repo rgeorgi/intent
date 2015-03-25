@@ -27,7 +27,7 @@ from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xig
 from .igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
 	clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re
 import intent.utils.token
-from intent.utils.setup_env import c
+from intent.utils.env import c
 from intent.alignment.Alignment import Alignment, heur_alignments
 from intent.utils.token import Token, POSToken
 from intent.interfaces.giza import GizaAligner
