@@ -3,17 +3,17 @@ Created on Feb 20, 2015
 
 @author: rgeorgi
 '''
-import argparse
-from utils.argutils import existsfile, writefile
-from igt.rgxigt import RGCorpus, rgp, ProjectionException,\
-	ProjectionTransGlossException
-from utils.argpasser import ArgPasser, argp
-from utils.setup_env import c
-from interfaces.stanford_tagger import StanfordPOSTagger
-from interfaces.mallet_maxent import MalletMaxent
-import sys
-import logging
-import os
+
+# Built-in imports -------------------------------------------------------------
+import argparse, os, sys, logging
+
+# Internal imports -------------------------------------------------------------
+from intent.utils.argutils import existsfile, writefile
+from intent.igt.rgxigt import RGCorpus, rgp, ProjectionException, ProjectionTransGlossException
+from intent.utils.argpasser import ArgPasser, argp
+from intent.utils.env import c
+from intent.interfaces.stanford_tagger import StanfordPOSTagger
+from intent.interfaces.mallet_maxent import MalletMaxent
 
 #===============================================================================
 # Set up logging

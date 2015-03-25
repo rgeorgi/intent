@@ -9,8 +9,7 @@ import os, sys, re, argparse, glob, shutil, time
 
 # Internal imports -------------------------------------------------------------
 from intent.utils import ConfigFile
-from intent.alignment.Alignment import AlignedCorpus, combine_corpora, AlignedSent,\
-	Alignment
+from intent.alignment.Alignment import AlignedCorpus, combine_corpora, AlignedSent,	Alignment
 from intent.eval.AlignEval import AlignEval
 from intent.utils.env import c
 from intent.utils.fileutils import swapext, matching_files, remove_safe

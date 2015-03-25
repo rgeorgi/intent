@@ -5,8 +5,8 @@ Created on Feb 13, 2015
 '''
 
 import argparse
-from utils.argutils import existsfile
-from interfaces.giza import GizaAligner, Vocab
+from intent.utils.argutils import existsfile
+from intent.interfaces.giza import GizaAligner, Vocab
 
 def train_aligner(o, e, f):
 	#ga = GizaAligner()

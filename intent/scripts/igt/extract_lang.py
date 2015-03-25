@@ -5,12 +5,13 @@ Created on Dec 19, 2014
 
 This script is used to point at a dump of the ODIN database and extract the specified language from it.
 '''
-import argparse
-from utils.argutils import configfile, writefile
-from utils.fileutils import matching_files
-import re
 
-import utils.setup_env
+# Built-in imports -------------------------------------------------------------
+import argparse, re
+
+# Internal imports -------------------------------------------------------------
+from intent.utils.argutils import configfile, writefile
+from intent.utils.fileutils import matching_files
 
 def extract_lang(dir, lang, outfile):
 	

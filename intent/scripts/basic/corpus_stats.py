@@ -11,7 +11,7 @@ that each make up of things.
 
 # Set up logging.
 import logging
-import os
+import os, argparse, sys
 
 
 logging.basicConfig(handlers=[logging.NullHandler()], fmt='%(levelno)s: %(message)s')
@@ -21,15 +21,14 @@ STATS_LOGGER = logging.getLogger(__name__)
 # IMPORTS
 #===============================================================================
 
-from igt.rgxigt import RGCorpus, NoLangLineException, TextParseException,\
+from collections import defaultdict
+
+from intent.igt.rgxigt import RGCorpus, NoLangLineException, TextParseException,\
 	GlossLangAlignException
-from igt import rgxigt
-import argparse
-from utils.StatDict import StatDict
-from utils.token import tokenize_string, tag_tokenizer
-from _collections import defaultdict
-from utils.argutils import writefile
-import sys
+from intent.intent.igt import rgxigt
+from intent.utils.dicts import StatDict
+from intent.utils.token import tokenize_string, tag_tokenizer
+from intent.utils.argutils import writefile
 
 #===========================================================================
 # Get XIGT logging info....

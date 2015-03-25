@@ -4,11 +4,14 @@ Created on Mar 6, 2014
 @author: rgeorgi
 '''
 
-import argparse
-from utils.ConfigFile import ConfigFile
-from utils.TwoLevelCountDict import TwoLevelCountDict
-from utils.TagCounter import TagCounter
-import sys
+# Global imports ---------------------------------------------------------------
+import argparse, sys
+
+# Internal Imports -------------------------------------------------------------
+from intent.utils.ConfigFile import ConfigFile
+from intent.utils.TwoLevelCountDict import TwoLevelCountDict
+from intent.utils.TagCounter import TagCounter
+
 
 def get_constraints(tagged_path, out_path, lowercase = True, delimeter='/'):
 	output = open(out_path, 'w') 

@@ -3,13 +3,16 @@ Created on Oct 22, 2013
 
 @author: rgeorgi
 '''
+
+# Global imports ---------------------------------------------------------------
 from optparse import OptionParser
-import sys
-from utils.ConfigFile import ConfigFile
-from utils.TwoLevelCountDict import TwoLevelCountDict
-from utils.SetDict import SetDict
-import re
-import codecs
+import sys, re, codecs
+from collections import defaultdict
+
+# Internal imports -------------------------------------------------------------
+from intent.utils.ConfigFile import ConfigFile
+from intent.utils.dicts import TwoLevelCountDict
+
 
 def get_prototypes(tagged_path, proto_out, delimeter, 
 				   ignoretags = [], unambiguous = False,
@@ -22,7 +25,7 @@ def get_prototypes(tagged_path, proto_out, delimeter,
 	tag_word_dict = TwoLevelCountDict()
 	word_tag_dict = TwoLevelCountDict()
 	
-	proto_dict = SetDict()
+	proto_dict = defaultdict(set)
 	
 	for line in tagged_file:
 		tokens = line.split()

@@ -3,14 +3,15 @@ Created on Apr 4, 2014
 
 @author: rgeorgi
 '''
-import argparse
-from utils.argutils import existsfile
-from utils.ConfigFile import ConfigFile
-import os
+
+# Global imports ---------------------------------------------------------------
+import argparse, os, sys, re
 import subprocess as sub
-import sys
-import re
-from eval.pos_eval import simple_tagger_eval
+
+# Internal Imports -------------------------------------------------------------
+from intent.utils.argutils import existsfile
+from intent.utils.ConfigFile import ConfigFile
+from intent.eval.pos_eval import simple_tagger_eval
 
 def setup():
 	global mallet, cp

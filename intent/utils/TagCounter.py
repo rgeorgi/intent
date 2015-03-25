@@ -3,7 +3,7 @@ Created on Mar 6, 2014
 
 @author: rgeorgi
 '''
-from utils.TwoLevelCountDict import TwoLevelCountDict
+from intent.utils.dicts import TwoLevelCountDict
 import re
 
 class TagCounter:

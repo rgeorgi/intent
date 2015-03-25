@@ -4,11 +4,13 @@ Created on Apr 3, 2014
 @author: rgeorgi
 '''
 
-import argparse
-from alignment.Alignment import AlignedCorpus
-import sys
-from _collections import defaultdict
-from utils.TwoLevelCountDict import TwoLevelCountDict
+# Built-in imports -------------------------------------------------------------
+import argparse, sys
+from collections import defaultdict
+
+# Internal Imports -------------------------------------------------------------
+from intent.alignment.Alignment import AlignedCorpus
+from intent.utils.dicts import TwoLevelCountDict
 
 def analyze_giza(source, target, st, ts, output):
 	# Read in the source/target alignment

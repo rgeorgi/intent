@@ -3,15 +3,17 @@ Created on Oct 1, 2014
 
 @author: rgeorgi
 '''
-from interfaces.MalletMaxentTrainer import MalletMaxentTrainer
-from utils.ConfigFile import ConfigFile
-import glob
-import os
-from ingestion.xaml.XamlParser import XamlParser
-from utils.argutils import ArgPasser
-import pickle
+# Global Imports ---------------------------------------------------------------
+import glob, os, pickle
 from collections import OrderedDict
 from multiprocessing import Pool
+
+# Internal imports -------------------------------------------------------------
+from intent.interfaces.MalletMaxentTrainer import MalletMaxentTrainer
+from intent.utils.ConfigFile import ConfigFile
+from intent.ingestion.xaml.XamlParser import XamlParser
+from intent.utils.argutils import ArgPasser
+
 
 def produce_files(**c):
 	

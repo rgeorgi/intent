@@ -3,8 +3,7 @@ Created on Oct 2, 2014
 
 @author: rgeorgi
 '''
-import sys
-import logging
+import sys, logging
 
 ALIGN_LOGGER = logging.getLogger('projection')
 
