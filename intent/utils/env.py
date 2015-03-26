@@ -44,8 +44,6 @@ else:
 	load_fail = False
 
 if load_fail:
-	# -- 2) If it's not installed, try to find it in env.conf.
-	xigt_dir = c.getpath(xigt_dir_string)
 	
 	# -- 3) If it's not in the env.conf file, error out.
 	if xigt_dir is None:
