@@ -10,7 +10,7 @@ from optparse import OptionParser
 
 # Internal Imports -------------------------------------------------------------
 from intent.utils.argutils import require_opt, existsfile
-from intent.utils.systematizing import notify, piperunner
+from intent.utils.systematizing import piperunner, ProcessCommunicator
 from intent.utils.ConfigFile import ConfigFile
 from intent.eval.pos_eval import slashtags_eval
 from intent.utils.token import tag_tokenizer, tokenize_string
@@ -19,6 +19,8 @@ from intent.utils.env import c
 
 # Logging ----------------------------------------------------------------------
 TAG_LOG = logging.getLogger(__name__)
+
+STANFORD_LOG = logging.getLogger('STANFORD_POSTAGGER')
 
 class TaggerError(Exception): pass
 
@@ -40,13 +42,11 @@ class StanfordPOSTagger(object):
 			TAG_LOG.critical('Path to the stanford tagger .jar file is not defined.')
 			raise TaggerError('Path to the stanford tagger .jar file is not defined.')
 		
-		self.st = sub.Popen(['java', 
-							'-cp', stanford_jar,
-							'edu.stanford.nlp.tagger.maxent.MaxentTagger',
-							'-model', model, 
-							'-tokenize', 'false'],
-						
-				stdout=sub.PIPE, stdin=sub.PIPE, stderr=sys.stderr)
+		self.st = ProcessCommunicator(['java', 
+									'-cp', stanford_jar,
+									'edu.stanford.nlp.tagger.maxent.MaxentTagger',
+									'-model', model, 
+									'-tokenize', 'false'], stderr_func=STANFORD_LOG.warn)
 		
 
 
