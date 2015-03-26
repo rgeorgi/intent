@@ -4,16 +4,20 @@ Created on Mar 24, 2015
 @author: rgeorgi
 '''
 
+import sys, logging
+
 import intent.igt.rgxigt as rgx
-from intent.utils.env import c
+from intent.utils.env import c, classifier
 from intent.utils.argutils import writefile
 from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError
-import sys, logging
+import intent.interfaces.giza
+from intent.interfaces.giza import GizaAlignmentException
+
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
-import intent.interfaces.giza
-from intent.interfaces.giza import GizaAlignmentException
+from interfaces import mallet_maxent
+
 
 #===============================================================================
 # The ENRICH subcommand.
@@ -35,15 +39,23 @@ def enrich(**kwargs):
 			s = StanfordPOSTagger(tagger)
 		except TaggerError:
 			sys.exit(2)
+			
+	#===========================================================================
+	# If the classifier is asked for, initialize it...
+	#===========================================================================
+	if kwargs.get('pos_lang') == 'class':
+		print("Initializing gloss-line classifier...")
+		m = mallet_maxent.MalletMaxent(classifier)
 	
-	#===========================================================================
-	# If alignment is requested, add it.
-	#===========================================================================
+	# -- 1a) Heuristic Alignment --------------------------------------------------
 	if kwargs.get('alignment') == 'heur':
-		print('Heuristically aligning instances...')
+		print('Heuristically aligning gloss and translation lines...')
 		corp.heur_align()
+		
+	# -- 1b) Giza Gloss to Translation alignment --------------------------------------
 	elif kwargs.get('alignment') == 'giza':
-		print('Aligning instances using GIZA++...')
+		print('Aligning gloss and translation lines using mgiza++...')
+		
 		try:
 			corp.giza_align_t_g()
 		except GizaAlignmentException as gae:
@@ -51,11 +63,15 @@ def enrich(**kwargs):
 			gl.critical(str(gae))
 			sys.exit(2)
 			
-		
-	
+	# -- 2) Iterate through the corpus -----------------------------------------------
 	for inst in corp:
+		
+		# 3) POS tag the translation line --------------------------------------
 		if kwargs.get('pos_trans'):
 			inst.tag_trans_pos(s)
+			
+		if kwargs.get('pos_lang') == 'class':
+			inst.classify_gloss_pos(m)
 
 	print('Writing output file...', end=' ')	
 	xigtxml.dump(writefile(kwargs.get('OUT_FILE')), corp)

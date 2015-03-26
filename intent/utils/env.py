@@ -7,21 +7,30 @@ import os, sys, logging
 from .fileutils import dir_above
 from .ConfigFile import ConfigFile
 
-#===============================================================================
-# Set up logging.
-#===============================================================================
+# 1) Set up logging ------------------------------------------------------------
 ENV_LOG = logging.getLogger(__name__)
 
-# Start by geting the project root...
+# 2) Determine the project root directory --------------------------------------
 proj_root = dir_above(__file__, 3)
 
+# 3) Load the "env.conf" file. -------------------------------------------------
+env_path = os.path.join(proj_root, 'env.conf')
+if not os.path.exists(env_path):
+	ENV_LOG.critical('No env.conf file was found. Please create one in the root directory of the project.')
+	sys.exit(2)
+	
 c = ConfigFile(os.path.join(proj_root, 'env.conf'))
 
-# Strings used in the configuration. -------------------------------------------
-xigt_dir_string   = 'xigt_dir'
-mgiza_string      = 'mgiza'
-mallet_string     = 'mallet'
-classifier_string = 'classifier_model'
+#===============================================================================
+# Now, have the variables conveniently made available. 
+#===============================================================================
+
+classifier   = c.getpath('classifier_model')
+mgiza        = c.getpath('mgiza')
+mallet       = c.getpath('mallet')
+xigt_dir     = c.getpath('xigt_dir')
+tagger_jar   = c.getpath('stanford_tagger_jar')
+tagger_model = c.getpath('stanford_tagger_trans')
 
 #===============================================================================
 # Try to import the XIGT module.
