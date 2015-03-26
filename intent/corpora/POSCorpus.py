@@ -106,9 +106,14 @@ class POSCorpus(list):
 	@classmethod	
 	def read_slashtags(cls, fp, **kwargs):
 		'''
+		Method to read in a corpus in the form of Token/TAG. (Assumes the default delimiter "/")
 		
-		@param cls: My class
-		@param fp: File path to the slashtagged file to read in.
+		:param fp: File path to the slashtagged file to read in.
+		:type fp: path		
+		:param delimiter: Delimiter between token and Tag
+		:type delimiter: str
+			
+		:returns: POSCorpus		
 		
 		'''
 		f = open(fp, 'r', encoding='utf-8')
@@ -124,7 +129,6 @@ class POSCorpus(list):
 			if inst:
 				c.append(inst)
 			
-		c.read_complete()
 		return c
 			
 			
@@ -135,8 +139,8 @@ class POSCorpus(list):
 		of one token per line, with its features listed first
 		and then its label listed last.
 		
-		@param cls:
-		@param fp:
+		:param cls:
+		:param fp:
 		'''
 		f = open(fp, 'r', encoding='utf-8')
 		data = f.read()
@@ -179,9 +183,6 @@ class POSCorpus(list):
 			inst.append(token)
 		return inst
 			
-	
-	def read_complete(self):
-		pass
 	
 
 

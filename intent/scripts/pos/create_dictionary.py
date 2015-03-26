@@ -3,15 +3,16 @@ Created on Jun 12, 2014
 
 @author: rgeorgi
 '''
-import argparse
-from utils.commandline import existsfile, existsdir
-from corpora.POSCorpus import POSCorpus
-import pickle
-import sys
-import shelve
+
+# Built-in imports -------------------------------------------------------------
+import argparse, pickle, sys, shelve
 from collections import defaultdict
 from functools import partial
-from utils.TwoLevelCountDict import TwoLevelCountDict
+
+# Internal imports -------------------------------------------------------------
+from intent.utils.argutils import existsfile, existsdir
+from intent.corpora.POSCorpus import POSCorpus
+from intent.utils.dicts import TwoLevelCountDict
 
 
 class POSDictBuilder(POSCorpus):
@@ -23,21 +24,25 @@ class POSDictBuilder(POSCorpus):
 		self.wordlabelcount = TwoLevelCountDict()
 		POSCorpus.__init__(self, seq=seq)
 	
-	def read_handler(self, tokens):
+	def token_handler(self, tokens):
+		'''
+		Overwrite the POSCorpus method. 
+		
+		:param tokens:
+		:type tokens:
+		'''
+		POSCorpus.token_handler(self, tokens)
 		for token in tokens:
 			self.wordlabelcount[token.seq.lower()][token.label] += 1
-			
-		POSCorpus.read_handler(self, tokens)
 		
-	def pickle_dict(self, fp):
+	def pickle_dict(self, fp):		
 		pickle.dump(self.wordlabelcount, open(fp, 'wb'))
 		
 		
 		
 
 def create_dictionary(**kwargs):
-	pc = POSDictBuilder()
-	pc.read(kwargs['corpus'])
+	pc = POSDictBuilder.read_slashtags(kwargs['corpus'])	
 	pc.pickle_dict(kwargs['output'])
 
 if __name__ == '__main__':
