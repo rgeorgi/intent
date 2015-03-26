@@ -609,7 +609,8 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		'''
 		Retrieve the raw ODIN tier, otherwise raise an exception.
 		'''
-		raw_tier = self.find(id='r')
+		raw_tier = self.find(type='odin', attributes={'state':'raw'})
+		
 		if not raw_tier:
 			raise NoODINRawException('No raw tier found.')
 		else:
