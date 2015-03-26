@@ -87,7 +87,7 @@ def write_gram(token, **kwargs):
 		# Get the morphemes
 		#=======================================================================
 		
-		morphs = utils.token.tokenize_string(gram, utils.token.morpheme_tokenizer)
+		morphs = intent.utils.token.tokenize_string(gram, intent.utils.token.morpheme_tokenizer)
 		
 				
 		#=======================================================================
@@ -133,7 +133,7 @@ def write_gram(token, **kwargs):
 			prev_gram = prev_gram.lower() if lower else prev_gram
 					
 			# And then tokenize...
-			for token in utils.token.tokenize_string(prev_gram, utils.token.morpheme_tokenizer):
+			for token in intent.utils.token.tokenize_string(prev_gram, intent.utils.token.morpheme_tokenizer):
 				
 				if kwargs.get('feat_prev_gram', True, bool):
 					output.write('\tprev-gram-%s:1' % token.seq)
@@ -152,7 +152,7 @@ def write_gram(token, **kwargs):
 		#===================================================================
 		if next_gram:
 			next_gram = next_gram.lower() if lower else next_gram
-			for token in utils.token.tokenize_string(next_gram, utils.token.morpheme_tokenizer):
+			for token in intent.utils.token.tokenize_string(next_gram, intent.utils.token.morpheme_tokenizer):
 				
 			#===================================================================
 			# Gram itself

@@ -85,7 +85,7 @@ class MalletMaxent(object):
 		sio = StringIO()
 		
 		# TODO: Fix the behavior of write_gram such that we can just do it from a string.
-		igt.grams.write_gram(token, type='classifier', output=sio, **kwargs)
+		intent.igt.grams.write_gram(token, type='classifier', output=sio, **kwargs)
 		
 		c_token = sio.getvalue().strip()
 		sio.close()
