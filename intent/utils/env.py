@@ -31,6 +31,7 @@ mallet       = c.getpath('mallet')
 xigt_dir     = c.getpath('xigt_dir')
 tagger_jar   = c.getpath('stanford_tagger_jar')
 tagger_model = c.getpath('stanford_tagger_trans')
+posdict      = c.getpath('pos_dict')
 
 #===============================================================================
 # Try to import the XIGT module.
