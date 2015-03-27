@@ -9,7 +9,7 @@ import sys, logging, pickle
 from intent.igt.rgxigt import RGCorpus, GlossLangAlignException
 from intent.utils.env import c, classifier, posdict
 from intent.utils.argutils import writefile
-from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError
+from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
 import intent.interfaces.giza
 from intent.interfaces.giza import GizaAlignmentException
 from intent.interfaces import mallet_maxent
@@ -71,7 +71,11 @@ def enrich(**kwargs):
 		
 		# 3) POS tag the translation line --------------------------------------
 		if kwargs.get('pos_trans'):
-			inst.tag_trans_pos(s)
+			try:
+				inst.tag_trans_pos(s)
+			except CriticalTaggerError as cte:
+				ENRICH_LOG.critical(str(cte))
+				sys.exit(2)
 			
 		if kwargs.get('pos_lang') == 'class':
 			inst.classify_gloss_pos(m, posdict=p)

@@ -15,7 +15,7 @@ from intent.utils.ConfigFile import ConfigFile
 from intent.eval.pos_eval import slashtags_eval
 from intent.utils.token import tag_tokenizer, tokenize_string
 
-from intent.utils.env import c
+from intent.utils.env import c, tagger_jar, tagger_model
 
 # Logging ----------------------------------------------------------------------
 TAG_LOG = logging.getLogger(__name__)
@@ -24,9 +24,29 @@ STANFORD_LOG = logging.getLogger('STANFORD_POSTAGGER')
 
 class TaggerError(Exception): pass
 
+class CriticalTaggerError(TaggerError): pass
+
 #===============================================================================
 # Set up the stanford tagger to run via stdin.
 #===============================================================================
+
+def stanford_stderr_handler(line):
+	
+	if line.startswith('Loading default properties'):
+		pass
+	elif line.startswith('Reading POS tagger model'):
+		pass
+	elif line.startswith('done'):
+		pass
+	elif line.startswith('Type some text to tag,'):
+		pass
+	elif line.startswith('(For EOF, use Return'):
+		pass
+	elif line.startswith('Error:'):
+		STANFORD_LOG.error(line)
+	else:
+		STANFORD_LOG.warn(line) 
+	
 
 class StanfordPOSTagger(object):
 	'''
@@ -35,18 +55,17 @@ class StanfordPOSTagger(object):
 	def __init__(self, model):
 		
 		# Get the jar defined in the env.conf file.
-		stanford_jar = c.getpath('stanford_tagger_jar')
 		
 		# If the .jar is not defined... ----------------------------------------
-		if stanford_jar is None:
+		if tagger_jar is None:
 			TAG_LOG.critical('Path to the stanford tagger .jar file is not defined.')
 			raise TaggerError('Path to the stanford tagger .jar file is not defined.')
 		
 		self.st = ProcessCommunicator(['java', 
-									'-cp', stanford_jar,
+									'-cp', tagger_jar,
 									'edu.stanford.nlp.tagger.maxent.MaxentTagger',
 									'-model', model, 
-									'-tokenize', 'false'], stderr_func=STANFORD_LOG.warn)
+									'-tokenize', 'false'], stderr_func=stanford_stderr_handler)
 		
 
 
@@ -61,7 +80,12 @@ class StanfordPOSTagger(object):
 			s = s.lower()
 				
 		self.st.stdin.write(bytes(s+'\r\n', encoding='utf-8'))
-		self.st.stdin.flush()
+		
+		# Try to flush out to stdin
+		try:
+			self.st.stdin.flush()
+		except BrokenPipeError:
+			raise CriticalTaggerError('The Stanford parser unexpectedly quit.')
 		
 		#=======================================================================
 		# Have a sliding window here such that we find all the tokens...
@@ -105,8 +129,7 @@ def train(train_file, model_path, delimeter = '/'):
 	# If the model path doesn't exists, create it
 	os.makedirs(os.path.dirname(model_path), exist_ok=True)
 	
-	global stanford_jar
-	cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (stanford_jar, model_path, train_file, delimeter)
+	cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (intent.utils.env.tagger_jar, model_path, train_file, delimeter)
 	
 	piperunner(cmd, 'stanford_tagger')
 
