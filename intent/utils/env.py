@@ -25,13 +25,16 @@ c = ConfigFile(os.path.join(proj_root, 'env.conf'))
 # Now, have the variables conveniently made available. 
 #===============================================================================
 
-classifier   = c.getpath('classifier_model')
-mgiza        = c.getpath('mgiza')
-mallet       = c.getpath('mallet')
-xigt_dir     = c.getpath('xigt_dir')
-tagger_jar   = c.getpath('stanford_tagger_jar')
-tagger_model = c.getpath('stanford_tagger_trans')
-posdict      = c.getpath('pos_dict')
+classifier       = c.getpath('classifier_model')
+mgiza            = c.getpath('mgiza')
+mallet           = c.getpath('mallet')
+xigt_dir         = c.getpath('xigt_dir')
+tagger_jar       = c.getpath('stanford_tagger_jar')
+tagger_model     = c.getpath('stanford_tagger_trans')
+parser_jar       = c.getpath('stanford_parser_jar')
+parser_model_jar = c.getpath('stanford_parser_model_jar')
+parser_model     = c.get('stanford_parser_model')
+posdict          = c.getpath('pos_dict')
 
 #===============================================================================
 # Try to import the XIGT module.
