@@ -1330,10 +1330,11 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 	def create_pt_tier(self, pt):
 		'''
-		Given a phrase tree, create a phrase tree tier.
+		Given a phrase tree, create a phrase tree tier. The :class:`intent.trees.IdTree` passed in must
+		have the same number of leaves as words in the translation line.
 		
-		:param pt:
-		:type pt:
+		:param pt: Phrase tree.
+		:type pt: :class:`intent.trees.IdTree`
 		'''
 		
 		# 1) Start by creating a phrase structure tier -------------------------

@@ -91,18 +91,19 @@ class DepTree(IdTree):
 	@classmethod
 	def fromstring(cls, s, id_base='', **kwargs):
 		'''
-		Read a dependency tree from the stanford dependencies:
+		Read a dependency tree from the stanford dependency format. Example:
 		
-		nsubj(ran-2, John-1)
-		root(ROOT-0, ran-2)
-		det(woods-5, the-4)
-		prep_into(ran-2, woods-5)
+		::
 		
-		:param cls:
-		:param s:
-		:type s:
-		:param id_base:
-		:type id_base:
+			nsubj(ran-2, John-1)
+			root(ROOT-0, ran-2)
+			det(woods-5, the-4)
+			prep_into(ran-2, woods-5)
+		
+		:param s: String to parse
+		:type s: str
+		:param id_base: ID string on which to base the IDs in this tree.
+		:type id_base: str
 		'''
 		
 		t = get_nodes(s)

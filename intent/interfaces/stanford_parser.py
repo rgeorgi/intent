@@ -1,7 +1,7 @@
 '''
-Created on Oct 23, 2013
+OO interface for communicating with the Stanford Parser
 
-@author: rgeorgi
+:author: rgeorgi
 '''
 
 # Built-in imports -------------------------------------------------------------
@@ -47,6 +47,14 @@ class StanfordParser(object):
 										'-'], stderr_func=parser_stderr_handler)
 	
 	def parse(self, string, id_base = None):
+		'''
+		Use the parser to parse the given string, and parse it for both dependency tree and phrase structure trees.
+		
+		:param string: String to parse
+		:type string: str
+		:param id_base: 
+		:type id_base:
+		'''
 		self.p.stdin.write(bytes(string+'\n', encoding='utf-8'))
 		self.p.stdin.flush()
 		

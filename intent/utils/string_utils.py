@@ -1,12 +1,12 @@
 '''
-Created on Mar 8, 2014
-
-@author: rgeorgi
+:author: Ryan Georgi <rgeorgi@uw.edu>
 '''
 
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.stem.snowball import EnglishStemmer
 from nltk.stem.porter import PorterStemmer
+
+import intent.igt.grams
 
 
 
@@ -30,8 +30,10 @@ def string_compare_with_processing(s1, s2, **kwargs):
 	'''
 	Given two strings, do all the various processing tricks to decide if they match or not.
 	
-	@param s1: First string to compare
-	@param s2: Second string to compare
+	:param s1: First string to compare
+	:type s1: str
+	:param s2: Second string to compare
+	:type s2: str
 	'''
 	
 	# Before we do anything, see if we have a match.
@@ -77,8 +79,8 @@ def string_compare_with_processing(s1, s2, **kwargs):
 	# Instead, let's try doing it as a second pass to pick up stil-unaligned
 	# words.
 	if kwargs.get('gloss_on',False):
-		gloss_grams_1 = igt.grams.sub_grams(s1)
-		gloss_grams_2 = igt.grams.sub_grams(s2)
+		gloss_grams_1 = intent.igt.grams.sub_grams(s1)
+		gloss_grams_2 = intent.igt.grams.sub_grams(s2)
 		
 		if s2.strip() and s2 in gloss_grams_1:
 			return True
