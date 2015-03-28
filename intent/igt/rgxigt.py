@@ -1375,7 +1375,6 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 		# 2) Next, simply iterate through the tree and make the head/dep mappings. 
 		for head_i, dep_i in dt.index_pairs():
-			print(head_i, dep_i)
 			
 			attributes={'dep':self.trans.get_index(dep_i).id}
 			
