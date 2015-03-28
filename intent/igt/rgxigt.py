@@ -1350,26 +1350,34 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 		assert len(leaves) == len(preterms)
 		
-
-			
-		# 3) Finally, run through the rest of the subtrees. --------------------
-		remaining_subtrees = pt.subtrees(filter = lambda x: x.height() != 2)
-		for st in remaining_subtrees:
-			child_refs = ','.join([s.id for s in st])
-			si = RGItem(id=st.id, attributes={'children':child_refs}, text=st.label())
-			pt_tier.add(si)
-			
 		# 2) Now, run through the leaves and the preterminals ------------------
 		for wi, preterm in zip(self.trans, preterms):
 			
 			# Note that the preterminals align with a given word...
 			pi = RGItem(id=preterm.id, alignment=wi.id, text=preterm.label())
 			pt_tier.add(pi)
+			
+		# 3) Finally, run through the rest of the subtrees. --------------------
+		remaining_subtrees = pt.subtrees(filter = lambda x: x.height() != 2)
+		for st in remaining_subtrees:
+			child_refs = ' '.join([s.id for s in st])
+			si = RGItem(id=st.id, attributes={'children':child_refs}, text=st.label())
+			pt_tier.add(si)
+			
+		
 		
 			
 		self.add(pt_tier)
 		
 	def create_dt_tier(self, dt):
+		'''
+		Create the dependency structure tier based on the ds that is passed in. The :class:`intent.trees.DepTree` 
+		structure that is passed in must be based on the words in the translation line, as the indices from the
+		dependency tree will be used to identify the tokens.
+		
+		:param dt: Dependency tree to create a tier for. 
+		:type dt: DepTree
+		'''
 		
 		# 1) Start by creating dt tier -----------------------------------------
 		dt_tier = RGTier(type='dependencies', id='ds', attributes = {'dep':self.trans.id, 'head':self.trans.id})
