@@ -10,9 +10,10 @@ class IdTree(ParentedTree):
 	This is a tree that inherits from NLTK's tree implementation,
 	but assigns IDs that can be used in writing out the Xigt format.
 	'''
-	def __init__(self, node, children=None, id=None):
+	def __init__(self, node, children=None, id=None, index=None):
 		super().__init__(node, children)
 		self.id = id
+		self.index = index
 	
 	def assign_ids(self, id_base=''):
 		for i, st in enumerate(self.subtrees()):
@@ -23,6 +24,11 @@ class IdTree(ParentedTree):
 		t = super(IdTree, cls).fromstring(s, **kwargs)
 		t.assign_ids()
 		return t
+	
+	def index_pairs(self):
+		for st in self.subtrees():
+			for child in st:
+				yield((st.index, child.index)) 
 		
 class Word(object):
 	def __init__(self, w, i):	
@@ -47,7 +53,7 @@ def _build_tree(dict, word):
 	else:		
 		children = []
 		for type, child in dict[word]:
-			d = DepTree(child, _build_tree(dict, child), type=type, index=child.i)
+			d = DepTree(child.w, _build_tree(dict, child), type=type, index=child.i)
 			children.append(d)
 		return children
 		
@@ -79,9 +85,8 @@ def get_nodes(string):
 class DepTree(IdTree):
 	
 	def __init__(self, node, children=None, id=None, type=None, index=0):
-		super().__init__(node, children, id)
+		super().__init__(node, children, id, index)
 		self.type = type
-		self.index = index
 		
 	@classmethod
 	def fromstring(cls, s, id_base='', **kwargs):

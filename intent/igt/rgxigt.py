@@ -1311,18 +1311,30 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		self.add(pt)
 	
 	# • Translation Line Parsing -----------------------------------------------
-	def parse_translation_line(self, parser):
+	def parse_translation_line(self, parser, pt=False, dt=False):
 		'''
 		Parse the translation line in order to project phrase structure.
 		
 		:param parser: Initialized StanfordParser
 		:type parser: StanfordParser
 		'''
+		assert pt or dt, "At least one of pt or dt should be true."
+		
 		result = parser.parse(self.trans.text())
-		self.create_pt_tier(result.pt)
+		
+		if pt:
+			self.create_pt_tier(result.pt)
+		if dt:
+			self.create_dt_tier(result.dt)
 
 		
 	def create_pt_tier(self, pt):
+		'''
+		Given a phrase tree, create a phrase tree tier.
+		
+		:param pt:
+		:type pt:
+		'''
 		
 		# 1) Start by creating a phrase structure tier -------------------------
 		pt_tier = RGPhraseStructureTier(type='phrase-structure', id='ps', alignment=self.trans.id)
@@ -1355,6 +1367,29 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 			
 		self.add(pt_tier)
+		
+	def create_dt_tier(self, dt):
+		
+		# 1) Start by creating dt tier -----------------------------------------
+		dt_tier = RGTier(type='dependencies', id='dt', attributes = {'dep':self.trans.id, 'head':self.trans.id})
+		
+		# 2) Next, simply iterate through the tree and make the head/dep mappings. 
+		for head_i, dep_i in dt.index_pairs():
+			print(head_i, dep_i)
+			
+			attributes={'dep':self.trans.get_index(dep_i).id}
+			
+			if head_i != 0:
+				attributes['head'] = self.trans.get_index(head_i).id
+							
+				
+			di = RGItem(id=dt_tier.askItemId(), attributes=attributes)
+			dt_tier.add(di)
+		
+		self.add(dt_tier)
+		
+			
+		
 	
 		
 		

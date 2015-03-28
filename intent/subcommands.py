@@ -94,7 +94,7 @@ def enrich(**kwargs):
 				
 		# 5) Parse the translation line ----------------------------------------
 		if kwargs.get('parse_trans'):
-			inst.parse_translation_line(sp)
+			inst.parse_translation_line(sp, pt=True, dt=True)
 
 	print('Writing output file...', end=' ')	
 	xigtxml.dump(writefile(kwargs.get('OUT_FILE')), corp)
