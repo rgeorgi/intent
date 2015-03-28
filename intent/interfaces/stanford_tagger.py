@@ -129,7 +129,7 @@ def train(train_file, model_path, delimeter = '/'):
 	# If the model path doesn't exists, create it
 	os.makedirs(os.path.dirname(model_path), exist_ok=True)
 	
-	cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (intent.utils.env.tagger_jar, model_path, train_file, delimeter)
+	cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (tagger_jar, model_path, train_file, delimeter)
 	
 	piperunner(cmd, 'stanford_tagger')
 
@@ -153,14 +153,11 @@ def test(test_file, model_path, out_file, delimeter = '/'):
 	
 	
 def tag(string, model):
-	jar()
-	global stanford_jar
-	pt = StanfordPOSTagger(model, stanford_jar)
+	pt = StanfordPOSTagger(tagger_model, tagger_jar)
 	return pt.tag(string)
 	
 
 if __name__ == '__main__':
-	jar()
 	
 	p = OptionParser()
 	p.add_option('-c', '--conf', help='configuration file')
