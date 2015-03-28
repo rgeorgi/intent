@@ -72,6 +72,9 @@ class ProcessCommunicator(object):
 	def poll(self):
 		return self.p.poll()
 	
+	def kill(self):
+		return self.p.kill()
+	
 	@property
 	def stdout(self):
 		return self.p.stdout

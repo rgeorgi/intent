@@ -10,9 +10,9 @@ from intent.igt.rgxigt import RGCorpus, GlossLangAlignException
 from intent.utils.env import c, classifier, posdict
 from intent.utils.argutils import writefile
 from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
-import intent.interfaces.giza
+
 from intent.interfaces.giza import GizaAlignmentException
-from intent.interfaces import mallet_maxent
+from intent.interfaces import mallet_maxent, stanford_parser
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
@@ -41,6 +41,13 @@ def enrich(**kwargs):
 			s = StanfordPOSTagger(tagger)
 		except TaggerError:
 			sys.exit(2)
+			
+	#===========================================================================
+	# Initialize the parser 
+	#===========================================================================
+	if kwargs.get('parse_trans'):
+		print("Intializing English parser...")
+		sp = stanford_parser.StanfordParser()
 			
 	#===========================================================================
 	# If the classifier is asked for, initialize it...
@@ -77,12 +84,17 @@ def enrich(**kwargs):
 				ENRICH_LOG.critical(str(cte))
 				sys.exit(2)
 			
+		# 4) POS tag the gloss line --------------------------------------------
 		if kwargs.get('pos_lang') == 'class':
 			inst.classify_gloss_pos(m, posdict=p)
 			try:
 				inst.project_gloss_to_lang(created_by="intent-classify")
 			except GlossLangAlignException:
 				ENRICH_LOG.warning('The gloss and language lines for instance id "%s" do not align. Language line not POS tagged.' % inst.id)
+				
+		# 5) Parse the translation line ----------------------------------------
+		if kwargs.get('parse_trans'):
+			inst.parse_translation_line(sp)
 
 	print('Writing output file...', end=' ')	
 	xigtxml.dump(writefile(kwargs.get('OUT_FILE')), corp)

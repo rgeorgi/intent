@@ -5,7 +5,7 @@ Created on Feb 24, 2015
 '''
 import unittest
 from xigt.codecs import xigtxml
-from igt.rgxigt import RGCorpus, rgp, GlossLangAlignException
+from intent.igt.rgxigt import RGCorpus, rgp, GlossLangAlignException
 
 
 xc = RGCorpus.loads('''<xigt-corpus>

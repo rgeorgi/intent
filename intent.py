@@ -69,6 +69,8 @@ enrich.add_argument('--pos-trans', choices=[0, 1], default=1, type=int, help='PO
 enrich.add_argument('--pos-lang', choices=['proj', 'class', 'none'], default='none',
 				 help='POS tag the language line using either projection (which requires a POS tagged translation line and alignment between trans and gloss)')
 
+enrich.add_argument('--parse-trans', choices=[0,1], default=0, type=int, help='Parse the translation line for phrase structure and dependencies.')
+
 
 # Parse the args. --------------------------------------------------------------
 try:
@@ -79,7 +81,7 @@ except PathArgException as pae:  # If we get some kind of invalid file in the ar
 	sys.exit(2)
 
 # Decide on action based on subcommand and args. -------------------------------
-from intent.scripts import subcommands
+from intent import subcommands
 
 if args.subcommand == 'enrich':
 	subcommands.enrich(**vars(args))

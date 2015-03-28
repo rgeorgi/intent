@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 Created on Oct 23, 2013
 
@@ -7,23 +6,26 @@ Created on Oct 23, 2013
 
 # Built-in imports -------------------------------------------------------------
 import os, sys, logging
-from tempfile import NamedTemporaryFile
 
 # Internal Imports -------------------------------------------------------------
 from intent.utils.env import parser_jar, parser_model, parser_model_jar
 from intent.utils.systematizing import ProcessCommunicator
-from unittest.case import TestCase
 
 # NLTK Import
-from intent.trees import XigtTree
-from intent.igt.rgxigt import RGWordTier
+from intent.trees import IdTree, DepTree
+from intent.igt.rgxigt import RGWordTier, rgp
+import unittest
 
 
 # Set up the parser logger -----------------------------------------------------
 PARSE_LOG = logging.getLogger('STANFORD_PARSER')
 
 def parser_stderr_handler(msg):
-	PARSE_LOG.warn(msg)
+	if   msg.startswith('Loading parser from serialized'): PARSE_LOG.info(msg)
+	elif msg.startswith('Parsing file:'): PARSE_LOG.info(msg)
+	elif msg.startswith('Parsing [sent. 1 len. 5]:'): PARSE_LOG.info(msg)
+	else:
+		PARSE_LOG.warn(msg)
 
 class ParseResult(object):
 	def __init__(self):
@@ -36,7 +38,6 @@ class StanfordParser(object):
 	dependency parses.
 	'''
 	def __init__(self):
-		print(parser_jar)
 		self.p = ProcessCommunicator(['java', '-Xmx500m',
 										'-cp', parser_jar+':'+parser_model_jar,
 										'edu.stanford.nlp.parser.lexparser.LexicalizedParser',
@@ -60,28 +61,33 @@ class StanfordParser(object):
 			if not line:
 				
 				if result.pt:
-					result.dt = string
+					result.dt = DepTree.fromstring(string, id_base = 'ds')
 					break
 				else:
-					result.pt = XigtTree.fromstring(string, id_base = id_base)
+					result.pt = IdTree.fromstring(string, id_base = 'ps')
 					string = ''
 					
 			string += line+' '
 			
 		return result
 			
-		
-if __name__ == '__main__':
-	sp = StanfordParser()
-	wt = RGWordTier.from_string('The man ran', type='words', alignment='t', id='tw')
-	wt.parse_pt(sp)
+	def close(self):
+		self.p.kill()
 
-class ParseTest(TestCase):
+class ParseTest(unittest.TestCase):
+	
 	
 	def setUp(self):
 		self.sp = StanfordParser()
-		print(self.sp.parse('This is a test').dt)
-		print(self.sp.parse('John ran').pt)
+		self.r = self.sp.parse('John ran into the woods')
+		self.sp.close()
+		
+		
 	
-	def basic_test(self):
-		pass
+# 	def test_phrase(self):
+# 		
+# 		a = IdTree.fromstring('(ROOT (S (NP (NNP John)) (VP (VBD ran) (PP (IN into) (NP (DT the) (NNS woods))))))')
+# 		self.assertEqual(self.r.pt, a)
+		
+	def test_deptree(self):
+		print(self.r.dt)
