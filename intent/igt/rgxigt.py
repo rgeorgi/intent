@@ -1371,7 +1371,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 	def create_dt_tier(self, dt):
 		
 		# 1) Start by creating dt tier -----------------------------------------
-		dt_tier = RGTier(type='dependencies', id='dt', attributes = {'dep':self.trans.id, 'head':self.trans.id})
+		dt_tier = RGTier(type='dependencies', id='ds', attributes = {'dep':self.trans.id, 'head':self.trans.id})
 		
 		# 2) Next, simply iterate through the tree and make the head/dep mappings. 
 		for head_i, dep_i in dt.index_pairs():
