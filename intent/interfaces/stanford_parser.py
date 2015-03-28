@@ -9,10 +9,14 @@ Created on Oct 23, 2013
 import os, sys, logging
 from tempfile import NamedTemporaryFile
 
-# Internal imports 
+# Internal Imports -------------------------------------------------------------
 from intent.utils.env import parser_jar, parser_model, parser_model_jar
 from intent.utils.systematizing import ProcessCommunicator
 from unittest.case import TestCase
+
+# NLTK Import
+from intent.trees import XigtTree
+from intent.igt.rgxigt import RGWordTier
 
 
 # Set up the parser logger -----------------------------------------------------
@@ -20,7 +24,6 @@ PARSE_LOG = logging.getLogger('STANFORD_PARSER')
 
 def parser_stderr_handler(msg):
 	PARSE_LOG.warn(msg)
-	print(msg)
 
 class ParseResult(object):
 	def __init__(self):
@@ -28,6 +31,10 @@ class ParseResult(object):
 		self.dt = None
 
 class StanfordParser(object):
+	'''
+	Instantiate an object which can be called upon to return either phrase structure parses or
+	dependency parses.
+	'''
 	def __init__(self):
 		print(parser_jar)
 		self.p = ProcessCommunicator(['java', '-Xmx500m',
@@ -38,7 +45,7 @@ class StanfordParser(object):
 										parser_model,
 										'-'], stderr_func=parser_stderr_handler)
 	
-	def parse(self, string):
+	def parse(self, string, id_base = None):
 		self.p.stdin.write(bytes(string+'\n', encoding='utf-8'))
 		self.p.stdin.flush()
 		
@@ -56,7 +63,7 @@ class StanfordParser(object):
 					result.dt = string
 					break
 				else:
-					result.pt = string
+					result.pt = XigtTree.fromstring(string, id_base = id_base)
 					string = ''
 					
 			string += line+' '
@@ -64,26 +71,10 @@ class StanfordParser(object):
 		return result
 			
 		
-		
-		
-
-def parse_file(filename):
-	global parser_jar, model
-	os.system('java -Xmx500m -cp %s edu.stanford.nlp.parser.lexparser.LexicalizedParser -outputFormat "penn,typedDependencies" %s %s' % (parser_jar, model, filename))
-
-
-def parse_lines(inlines):
-	global parser_jar
-
-
-	infile = NamedTemporaryFile()
-	for line in inlines:
-		infile.write(line+'\n')
-	infile.flush()
-	
-	parse_file(infile.name)
-	
-	infile.close()
+if __name__ == '__main__':
+	sp = StanfordParser()
+	wt = RGWordTier.from_string('The man ran', type='words', alignment='t', id='tw')
+	wt.parse_pt(sp)
 
 class ParseTest(TestCase):
 	

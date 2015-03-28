@@ -1661,6 +1661,46 @@ class RGWordTier(RGTokenTier):
 	Tier type that contains words.
 	'''
 	
+	@classmethod
+	def from_string(cls, string, **kwargs):
+		wt = cls(**kwargs)
+		for w in intent.utils.token.tokenize_string(string):
+			wi = RGToken(id=wt.askItemId(), text=str(w))
+			wt.add(wi)
+		return wt
+	
+	def parse_pt(self, parser):
+		
+		# 1) Start by creating a phrase structure tier -------------------------
+		pt_tier = RGTier(type='phrase-structure', id='ps', alignment=self.id)
+
+		# 2) Now do the actual parsing. ----------------------------------------
+		result = parser.parse(self.text(), id_base=pt_tier.id)
+		
+		# We should get back the same number of tokens as we put in
+		assert len(result.pt.leaves()) == len(self)
+		
+		leaves = list(result.pt.leaves())
+		preterms = list(result.pt.subtrees(filter = lambda x: x.height() == 2))
+		
+		assert len(leaves) == len(preterms)
+		
+		# 2) Now, run through the leaves and the preterminals ------------------
+		for wi, preterm in zip(self, preterms):
+			pi = RGItem(id=preterm.id, alignment=wi.id, text=preterm.label())
+			pt_tier.add(pi)
+			
+		# 3) Finally, run through the rest of the subtrees. --------------------
+		remaining_subtrees = result.pt.subtrees(filter = lambda x: x.height() != 2)
+		for st in remaining_subtrees:
+			child_refs = ','.join([s.id for s in st])
+			si = RGItem(id=st.id, attributes={'children':child_refs}, text=st.label())
+			pt_tier.add(si)
+		
+			
+		rgp(pt_tier)
+
+	
 	def morph_tier(self, type, letter):
 		'''
 		Given the "words" in this tier, segment them. 
