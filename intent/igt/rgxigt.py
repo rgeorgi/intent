@@ -184,7 +184,7 @@ class FindMixin():
 		'''
 		
 		id_match = id is None or (self.id == id)
-		id_base_match = id_base is None or (re.search('^(\w+)', self.id).group(1) == id_base)
+		id_base_match = id_base is None or (get_id_base(self.id) == id_base)
 		type_match = type is None or (self.type == type)
 		attr_match = attributes is None or (set(attributes.items()).issubset(set(self.attributes.items())))
 		seg_match  = segments is None or (hasattr(self, SEGMENTATION) and segments in get_alignment_expression_ids(self.segmentation))
@@ -305,7 +305,7 @@ def read_pt(tier):
 	return child_n.root()
 	
 
-def gen_id(id_str, num, letter=False):
+def gen_id(id_str, num, letter=False, suppress_numbering=False):
 	'''
 	Unified method to generate an ID string. Ex: `gen_id('i',2)` returns `i2` if letter is False or `ib` if True.
 	
@@ -313,8 +313,13 @@ def gen_id(id_str, num, letter=False):
 	:type id_str: str
 	:param num: Number to append
 	:param letter: 
-	:type letter:
+	:type letter: bool
+	:param suppress_numbering: If true, avoid using trailing numbering on items that have num == 0.
+	:type suppress_numbering: bool
 	'''
+	
+	if num == 0 and suppress_numbering:
+		return id_str
 	if not letter:
 		return '{}{}'.format(id_str, num+1)
 	else:					
@@ -322,6 +327,15 @@ def gen_id(id_str, num, letter=False):
 		letters = string.ascii_lowercase
 		return '{}-{}'.format(id_str, letters[num])
 
+def get_id_base(id_str):
+	'''
+	Return the "base" of the id string. This should either be everything leading up to the final numbering, or a hyphen-separated letter.
+	
+	:param id_str:
+	:type id_str:
+	'''
+	s = re.search('^(\S+?)(?:[0-9]+|-[a-z])?$', id_str).group(1)
+	return s
 
 #===============================================================================
 
@@ -716,7 +730,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			morph_align(self.glosses, self.morphemes)
 
 	
-	def askTierId(self, type, id):
+	def askTierId(self, type, id, id_based = False, suppress_numbering=True):
 		'''
 		Generate a new tierID, based on the number of tiers that already exist for that type.
 		
@@ -724,12 +738,23 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		:type type: str
 		:param id: ID to assign the instance, followed by a number
 		:type id: str
+		:param id_based: Base the count of similar tiers on the ID, rather than on the number of types.
+		:type id_based: bool
+		:param suppress_numbering: If there are no other tiers of this type, suppress the final hyphenated letter.
+		:type suppress_numbering: bool
 		'''
 		
-		tiers = self.findall(type=type)
-		numtiers = len(tiers)
 		
-		return gen_id(id, numtiers, letter=True)
+		
+		if not id_based:
+			tiers = self.findall(type=type)		
+		else:
+			tiers = self.findall(id_base=id)
+			
+		numtiers = len(tiers)
+		print(type, id, numtiers)
+		
+		return gen_id(id, numtiers, letter=True, suppress_numbering=True)
 
 			
 	# • Basic Tier Creation ------------------------------------------------------------
@@ -1141,7 +1166,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 	
 		# Determine the id of this new tier...
-		new_id = self.askTierId(POS_TIER_TYPE, tier_id+'-pos') 
+		new_id = self.askTierId(POS_TIER_TYPE, tier_id+'-pos', id_based=True, suppress_numbering=True) 
 		
 		# Find the tier that we are adding tags to.
 		tier = self.find(id=tier_id)
@@ -1322,7 +1347,8 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		# Create the new pos tier.
 		# TODO: There should be a more unified approach to transferring tags.
 		
-		pt = RGTokenTier(type=POS_TIER_TYPE, id=self.askTierId(POS_TIER_TYPE, GLOSS_POS_ID), alignment=self.gloss.id, attributes=attributes)
+		pt = RGTokenTier(type=POS_TIER_TYPE, id=self.askTierId(POS_TIER_TYPE, GLOSS_POS_ID, id_based=True, suppress_numbering=True),
+						 alignment=self.gloss.id, attributes=attributes)
 		
 		for t_i, g_i in t_g_aln:
 			g_word = self.gloss.get_index(g_i)
@@ -1362,7 +1388,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 		# Get the bilingual alignment from trans to 
 		# Create the new pos tier...
-		pt = RGTokenTier(type=POS_TIER_TYPE, id=self.askTierId(POS_TIER_TYPE, LANG_POS_ID),
+		pt = RGTokenTier(type=POS_TIER_TYPE, id=self.askTierId(POS_TIER_TYPE, LANG_POS_ID, id_based=True),
 							alignment=self.lang.id, attributes=attributes)
 		
 
