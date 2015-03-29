@@ -752,7 +752,6 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			tiers = self.findall(id_base=id)
 			
 		numtiers = len(tiers)
-		print(type, id, numtiers)
 		
 		return gen_id(id, numtiers, letter=True, suppress_numbering=True)
 
