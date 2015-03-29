@@ -13,6 +13,7 @@ import logging, pickle, re, copy
 
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 import sys
+import string
 
 
 
@@ -660,12 +661,18 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 		tiers = self.findall(type=type)
 		
+		# Use letter numbering:
+		letters = string.ascii_lowercase		
+		
 		if id_prefix:
 			prefixed = [t.id for t in tiers if t.id.startswith(id)]
 			numtiers = len(prefixed)
 		else:
 			numtiers = len(tiers)
-		return '%s%d' % (id, numtiers+1)
+			
+		assert numtiers < 25, "Too many tiers of the same type"
+		
+		return '%s-%s' % (id, letters[numtiers])
 
 			
 	# • Basic Tier Creation ------------------------------------------------------------
