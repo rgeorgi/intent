@@ -73,7 +73,7 @@ class IdTree(ParentedTree):
 		'''
 		Delete self from parent.
 		'''
-		del self.parent()[self.my_idx]
+		del self.parent()[self.get_idx]
 		
 	
 	def copy(self):
@@ -131,11 +131,12 @@ class IdTree(ParentedTree):
 			return (self[0].span()[0], self[-1].span()[1])
 			
 	@property
-	def my_idx(self):
+	def get_idx(self):
 		if not self.parent():
 			return None
 		else:
 			return list(self.parent()).index(self)
+	
 	
 	def promote(self):
 		'''
@@ -144,7 +145,7 @@ class IdTree(ParentedTree):
 		
 		# Get the index of this node, and a ref
 		# to its parent, then delete it.
-		my_idx = self.my_idx
+		my_idx = self.get_idx
 		parent = self.parent()
 		self.delete()
 		
@@ -406,9 +407,36 @@ def project_ps(src_t, tgt_w, aln):
 				nodes_to_examine.append(node)
 				
 	# 4) Time to reattach unattached tgt words. ---
+	
+	unaligned_tgt_words = [w for w in tgt_w if w.index not in [t for s, t in aln]]
+	
+	
+	for unaligned_tgt_word in unaligned_tgt_words:
+		left_words = [w for w in tgt_w if w.index < unaligned_tgt_word.index]
+		right_words= [w for w in tgt_w if w.index > unaligned_tgt_word.index]
+		
+		assert left_words or right_words, "Unless none of the words are aligned..."
 
-	tgt_t.draw()
+		left_word = None if not left_words else left_words[-1]
+		right_word= None if not right_words else right_words[0]
 
+		t = IdTree('UNK', [unaligned_tgt_word.get_content()], id=unaligned_tgt_word.id, index=unaligned_tgt_word.index)
+		
+
+		# If there's only the right word, attach to that.		
+		if not left_word:
+			left_n = tgt_t.find(index=right_word.index)
+			left_idx = left_n.get_idx
+			
+			left_n.parent().insert(left_idx, t)
+			
+		# If there's only the left word, attach to that.
+		if not right_word:
+			right_n = tgt_t.find(index=left_word.index)
+			right_idx = right_n.get_idx
+			right_n.parent().insert(right_idx+1, t)
+			
+	
 	return tgt_t
 
 	

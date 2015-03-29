@@ -13,7 +13,7 @@ import logging, pickle, re, copy
 
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 import sys
-from intent.trees import IdTree, project_ps
+
 
 
 # Set up logging ---------------------------------------------------------------
@@ -1404,27 +1404,29 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		result = parser.parse(self.trans.text())
 		
 		if pt:
-			self.create_pt_tier(result.pt)
+			self.create_pt_tier(result.pt, self.trans)
 		if dt:
 			self.create_dt_tier(result.dt)
 
 		
-	def create_pt_tier(self, pt):
+	def create_pt_tier(self, pt, w_tier):
 		'''
 		Given a phrase tree, create a phrase tree tier. The :class:`intent.trees.IdTree` passed in must
 		have the same number of leaves as words in the translation line.
 		
 		:param pt: Phrase tree.
 		:type pt: :class:`intent.trees.IdTree`
+		:param w_tier: Word tier
+		:type pt: RGWordTier
 		'''
 		
 		# 1) Start by creating a phrase structure tier -------------------------
-		pt_tier = RGPhraseStructureTier(type='phrase-structure', id='ps', alignment=self.trans.id)
+		pt_tier = RGPhraseStructureTier(type='phrase-structure', id=self.askTierId('phrase-structure', 'ps'), alignment=w_tier.id)
 
 		pt.assign_ids(pt_tier.id)
 		
 		# We should get back the same number of tokens as we put in
-		assert len(pt.leaves()) == len(self.trans)
+		assert len(pt.leaves()) == len(w_tier)
 		
 		leaves = list(pt.leaves())
 		preterms = list(pt.preterminals())
@@ -1432,7 +1434,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		assert len(leaves) == len(preterms)
 		
 		# 2) Now, run through the leaves and the preterminals ------------------
-		for wi, preterm in zip(self.trans, preterms):
+		for wi, preterm in zip(w_tier, preterms):
 			
 			# Note that the preterminals align with a given word...
 			pi = RGItem(id=preterm.id, alignment=wi.id, text=preterm.label())
@@ -1460,12 +1462,16 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		trans_parse_tier = self.get_trans_parse_tier()		
 		trans_tree = read_pt(trans_parse_tier)
 		
+		trans_tree.draw()
+		
 		# This might raise a ProjectionTransGlossException if the trans and gloss
 		# alignments don't exist.
 		tl_aln = self.get_trans_gloss_lang_alignment()
 		
-		project_ps(trans_tree, self.lang, tl_aln)
+		pt = project_ps(trans_tree, self.lang, tl_aln)
 		
+
+		self.create_pt_tier(pt, self.lang)
 		
 			
 		
@@ -2093,3 +2099,4 @@ line=961 tag=T:     `I made the child eat rice.\''''
 from .rgxigtutils import create_words_tier, create_phrase_tier, morph_align,\
 	word
 from intent.interfaces.mallet_maxent import MalletMaxent
+from intent.trees import IdTree, project_ps

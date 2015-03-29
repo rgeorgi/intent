@@ -411,7 +411,7 @@ class AlignmentError(Exception):
 # Alignment Class
 #===============================================================================
 
-class Alignment(list):
+class Alignment(set):
 	'''
 	Simply, a set of (src_index, tgt_index) pairs in a set.
 	'''
