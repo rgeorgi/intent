@@ -1,7 +1,5 @@
 
-from nltk.tree import Tree, ParentedTree
-from unittest.case import TestCase
-from intent.igt.rgxigt import RGTier, rgp, RGItem, RGWordTier
+from nltk.tree import ParentedTree
 import re
 from collections import defaultdict
 
@@ -16,14 +14,37 @@ class IdTree(ParentedTree):
 		self.index = index
 	
 	def assign_ids(self, id_base=''):
-		for i, st in enumerate(self.subtrees()):
-			st.id = '%s%d' % (id_base, i+1)
+		'''
+		Assign IDs to the elements of the tree, using the "id_base" string
+		as a leading element. 
+		|
+		Example: `id_base` of `'ds'` would result in `'ds1'`, `'ds2'` etc.  
+		
+		:param id_base: base which to build the IDs from
+		:type id_base: str
+		'''
+		
+		# Per the conventions, we want the preterminals to start from one.
+		i = 1
+		for st in self.preterminals():
+			st.id = '%s%d' % (id_base, i)
+			i+=1
+		
+		for st in self.nonterminals():
+			st.id = '%s%d' % (id_base, i)
+			i+=1
 	
 	@classmethod
 	def fromstring(cls, s, id_base='', **kwargs):
 		t = super(IdTree, cls).fromstring(s, **kwargs)
 		t.assign_ids()
 		return t
+	
+	def preterminals(self):
+		return self.subtrees(filter=lambda t: t.height() == 2)
+	
+	def nonterminals(self):
+		return self.subtrees(filter=lambda t: t.height() > 2)
 	
 	def index_pairs(self):
 		for st in self.subtrees():
