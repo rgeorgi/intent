@@ -6,7 +6,9 @@ Created on Mar 24, 2015
 
 import sys, logging, pickle
 
-from intent.igt.rgxigt import RGCorpus, GlossLangAlignException
+from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
+	PhraseStructureProjectionException, ProjectionException,\
+	ProjectionTransGlossException
 from intent.utils.env import c, classifier, posdict
 from intent.utils.argutils import writefile
 from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
@@ -95,6 +97,16 @@ def enrich(**kwargs):
 			except GlossLangAlignException:
 				ENRICH_LOG.warning('The gloss and language lines for instance id "%s" do not align. Language line not POS tagged.' % inst.id)
 				
+		elif kwargs.get('pos_lang') == 'proj':
+			try:
+				inst.project_trans_to_gloss()
+			except ProjectionTransGlossException as ptge:
+				ENRICH_LOG.warning('No alignment between translation and gloss lines found for instance "%s". Not projecting POS tags.' % inst.id)
+			except ProjectionException as pe:
+				ENRICH_LOG.warning('No translation POS tags were found for instance "%s". Not projecting POS tags.' % inst.id)
+			else:
+				inst.project_gloss_to_lang()
+				
 			
 				
 		# 5) Parse the translation line ----------------------------------------
@@ -103,7 +115,13 @@ def enrich(**kwargs):
 			
 		# If parse tree projection is enabled... -------------------------------
 		if kwargs.get('project_pt'):
-			inst.project_pt()
+			try:
+				inst.project_pt()
+			except PhraseStructureProjectionException as pspe:
+				ENRICH_LOG.warning('A parse for the translation line was not found for instance "%s", not projecting phrase structure.' % inst.id)
+			except ProjectionTransGlossException as ptge:
+				ENRICH_LOG.warning('Alignment between translation and gloss lines was not found for instance "%s". Not projecting phrase structure.' % inst.id)
+				
 
 	print('Writing output file...', end=' ')	
 	xigtxml.dump(writefile(kwargs.get('OUT_FILE')), corp)

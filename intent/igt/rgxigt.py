@@ -128,32 +128,26 @@ DS_HEAD_ATTRIBUTE = 'head'
 # Exceptions
 #===============================================================================
 
-class RGXigtException(Exception):
-	pass
+class RGXigtException(Exception): pass
 
-class NoODINRawException(RGXigtException):
-	pass 
+class NoODINRawException(RGXigtException):	pass 
 
-class TextParseException(RGXigtException):
-	pass
+class TextParseException(RGXigtException):	pass
 
-class NoLangLineException(TextParseException):
-	pass
+class NoLangLineException(TextParseException):	pass
 
-class NoGlossLineException(TextParseException):
-	pass
+class NoGlossLineException(TextParseException):	pass
 
-class NoTransLineException(TextParseException):
-	pass
+class NoTransLineException(TextParseException):	pass
 
-class GlossLangAlignException(RGXigtException):
-	pass
+class GlossLangAlignException(RGXigtException):	pass
 
-class ProjectionException(RGXigtException):
-	pass
+class ProjectionException(RGXigtException): pass
 
-class ProjectionTransGlossException(ProjectionException):
-	pass
+class ProjectionTransGlossException(ProjectionException): pass
+
+class PhraseStructureProjectionException(RGXigtException): pass
+
 
 def project_creator_except(msg_start, msg_end, created_by):
 	
@@ -1328,7 +1322,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		# Create the new pos tier.
 		# TODO: There should be a more unified approach to transferring tags.
 		
-		pt = RGTokenTier(type=POS_TIER_TYPE, id=self.askTierId(POS_TIER_TYPE, GLOSS_POS_ID, True), alignment=self.gloss.id, attributes=attributes)
+		pt = RGTokenTier(type=POS_TIER_TYPE, id=self.askTierId(POS_TIER_TYPE, GLOSS_POS_ID), alignment=self.gloss.id, attributes=attributes)
 		
 		for t_i, g_i in t_g_aln:
 			g_word = self.gloss.get_index(g_i)
@@ -1532,7 +1526,11 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 	def project_pt(self):
 		
-		trans_parse_tier = self.get_trans_parse_tier()		
+		trans_parse_tier = self.get_trans_parse_tier()
+		
+		if trans_parse_tier is None:
+			raise PhraseStructureProjectionException('Translation tier not found for instance "%s"' % self.id)
+		
 		trans_tree = read_pt(trans_parse_tier)
 		
 		# This might raise a ProjectionTransGlossException if the trans and gloss
