@@ -1,5 +1,5 @@
 
-from nltk.tree import ParentedTree
+from nltk.tree import ParentedTree, Tree
 import re
 from collections import defaultdict
 import sys
@@ -199,7 +199,12 @@ class IdTree(ParentedTree):
 		# Create the new node that is a "+" combination of
 		# the labels, and just the child of the first.
 		newlabel = '{}+{}'.format(i_n.label(), j_n.label())
-		n = IdTree(newlabel, list(i_n), index=i_n.index, id=i_n.id)		
+		for child in i_n:
+			if isinstance(child, Tree):
+				child._parent = None
+				
+		n = IdTree(newlabel, list(i_n), index=i_n.index, id=i_n.id)
+		
 		
 		self.insert(i, n)
 		
@@ -431,11 +436,15 @@ def project_ps(src_t, tgt_w, aln):
 			left_n.parent().insert(left_idx, t)
 			
 		# If there's only the left word, attach to that.
-		if not right_word:
+		elif not right_word:
 			right_n = tgt_t.find(index=left_word.index)
 			right_idx = right_n.get_idx
 			right_n.parent().insert(right_idx+1, t)
 			
+		# TODO: What if there is both a left and a right.
+		else:
+			left_n = tgt_t.find(index=left_word.index)
+			right_n= tgt_t.find(index=right_word.index)
 	
 	return tgt_t
 

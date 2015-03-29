@@ -13,13 +13,13 @@ from xigt.core import get_alignment_expression_ids
 # • Tier Creation ---
 #===============================================================================
 
-def create_words_tier(cur_item, words_letter, words_name):
+def create_words_tier(cur_item, word_id, word_type):
 	
 	# Tokenize the words in this phrase...
 	words = intent.utils.token.tokenize_item(cur_item)
 	
 	# Create a new word tier to hold the tokenized words...
-	wt = RGWordTier(id = words_letter, type=words_name, segmentation=cur_item.tier.id, igt=cur_item.igt)
+	wt = RGWordTier(id = word_id, type=word_type, segmentation=cur_item.tier.id, igt=cur_item.igt)
 	
 	for w in words:
 		# Create a new word that is a segmentation of this tier.
@@ -29,19 +29,19 @@ def create_words_tier(cur_item, words_letter, words_name):
 	return wt
 
 
-def create_phrase_tier(cur_item, phrase_letter, phrase_name):
+def create_phrase_tier(cur_item, phrase_id, phrase_type):
 	'''
 	Create a phrase tier from a current normalized line.
 	
 	:param cur_item:
 	:type cur_item:
-	:param phrase_letter:
-	:type phrase_letter:
-	:param phrase_name:
-	:type phrase_name:
+	:param phrase_id:
+	:type phrase_id:
+	:param phrase_type:
+	:type phrase_type:
 	'''
 	
-	pt = RGPhraseTier(id=phrase_letter, type=phrase_name, content=cur_item.tier.id, igt=cur_item.igt)
+	pt = RGPhraseTier(id=phrase_id, type=phrase_type, content=cur_item.tier.id, igt=cur_item.igt)
 	pt.add(RGPhrase(id=pt.askItemId(), content=cur_item.id, tier=pt))
 	return pt
 	
