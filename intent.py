@@ -70,6 +70,7 @@ enrich.add_argument('--pos-lang', choices=['proj', 'class', 'none'], default='no
 				 help='POS tag the language line using either projection (which requires a POS tagged translation line and alignment between trans and gloss)')
 
 enrich.add_argument('--parse-trans', choices=[0,1], default=0, type=int, help='Parse the translation line for phrase structure and dependencies.')
+enrich.add_argument('--project-pt', choices=[0,1], default=0, type=int, help='Project the phrase structure tree from translation to language line.')
 
 
 # Parse the args. --------------------------------------------------------------
