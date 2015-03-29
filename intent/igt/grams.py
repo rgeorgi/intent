@@ -5,7 +5,7 @@ Created on Mar 8, 2014
 '''
 import sys, re, logging
 
-import intent.utils.token
+
 from intent.utils.argpasser import ArgPasser
 
 
@@ -204,3 +204,5 @@ def write_gram(token, **kwargs):
 	
 	if type == 'tagger' and kwargs.get('tag_f'):
 		output.write('%s/%s ' % (gram, pos))
+		
+import intent.utils.token

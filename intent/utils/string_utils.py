@@ -2,27 +2,22 @@
 :author: Ryan Georgi <rgeorgi@uw.edu>
 '''
 
-from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.stem.snowball import EnglishStemmer
-from nltk.stem.porter import PorterStemmer
 
-import intent.igt.grams
-
+#from nltk.stem import WordNetLemmatizer
 
 
-
-global s
-l = WordNetLemmatizer()
 s = EnglishStemmer()
-# s = PorterStemmer()
-
 def stem_token(st):
 	return s.stem(st)
-# 	return s.stem(st)
-# 	return s.lemmatize(st)
 
-def lemmatize_token(st, pos='v'):
-	return l.lemmatize(st, pos)
+def lemmatize_token(st, pos=None):
+	return s.stem(st)
+
+#l = WordNetLemmatizer()
+# TODO: Decide on wordnet lemmatizer versus standard stemmer.
+# def lemmatize_token(st, pos='v'):
+# 	return l.lemmatize(st, pos)
 
 
 		

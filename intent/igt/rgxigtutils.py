@@ -4,8 +4,7 @@ Created on Feb 26, 2015
 @author: rgeorgi
 '''
 import intent.utils
-from .rgxigt import RGWordTier, RGWord, RGPhraseTier, RGPhrase, GlossLangAlignException, RGMorph,\
-	rgp, RGXigtException
+from .rgxigt import RGWordTier, RGWord, RGPhraseTier, RGPhrase, GlossLangAlignException, RGMorph
 from collections import defaultdict
 from xigt.core import get_alignment_expression_ids
 
@@ -101,7 +100,7 @@ def morph_align(this, other):
 			this_m.alignment = this_m.id	
 			
 #===============================================================================
-# Searching ---
+# • Searching ---
 #===============================================================================
 
 def word(morph):
@@ -137,11 +136,11 @@ def follow_alignment(inst, id):
 	
 	else:		
 		return found
-				
+
 
 			
 #===============================================================================
-# Cleaning ---
+# • Cleaning ---
 #===============================================================================
 
 def strip_enrichment(inst):

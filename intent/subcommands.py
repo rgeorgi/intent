@@ -76,6 +76,9 @@ def enrich(**kwargs):
 	# -- 2) Iterate through the corpus -----------------------------------------------
 	for inst in corp:
 		
+		# Attempt to align the gloss and language lines if requested... --------
+		inst.gloss.word_align(inst.lang)
+		
 		# 3) POS tag the translation line --------------------------------------
 		if kwargs.get('pos_trans'):
 			try:
@@ -92,9 +95,15 @@ def enrich(**kwargs):
 			except GlossLangAlignException:
 				ENRICH_LOG.warning('The gloss and language lines for instance id "%s" do not align. Language line not POS tagged.' % inst.id)
 				
+			
+				
 		# 5) Parse the translation line ----------------------------------------
 		if kwargs.get('parse_trans'):
 			inst.parse_translation_line(sp, pt=True, dt=True)
+			
+		# If parse tree projection is enabled... -------------------------------
+		if kwargs.get('project_pt'):
+			inst.project_pt()
 
 	print('Writing output file...', end=' ')	
 	xigtxml.dump(writefile(kwargs.get('OUT_FILE')), corp)

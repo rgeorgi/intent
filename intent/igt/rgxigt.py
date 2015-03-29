@@ -8,10 +8,13 @@ Subclassing of the xigt package to add a few convenience methods.
 # Logging
 #===============================================================================
 
-import logging, sys, pickle, re, copy
+import logging, pickle, re, copy
 
 
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
+import sys
+from intent.trees import IdTree, project_ps
+
 
 # Set up logging ---------------------------------------------------------------
 PARSELOG = logging.getLogger(__name__)
@@ -27,7 +30,7 @@ from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xig
 from .igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
 	clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re
 import intent.utils.token
-from intent.utils.env import c
+from intent.utils.env import c, tagger_model, posdict, classifier
 from intent.alignment.Alignment import Alignment, heur_alignments
 from intent.utils.token import Token, POSToken
 from intent.interfaces.giza import GizaAligner
@@ -36,6 +39,7 @@ from intent.interfaces.giza import GizaAligner
 from unittest.case import TestCase
 from uuid import uuid4
 from collections import defaultdict
+
 
 
 #===============================================================================
@@ -182,8 +186,69 @@ class RecursiveFindMixin(FindMixin):
 			return found
 				
 
+#===============================================================================
+# • Parse Tree Functions ---
+#===============================================================================
+def read_pt(tier):
+	
+	assert tier.type == 'phrase-structure'
+	
+	# Provide a way to look up the nodes by their ID so we can
+	# pair them directly later...
+	node_dict = {}
+	
+	# Also, keep track of the child-parent relationships that need
+	# to be constructed.
+	children_dict = defaultdict(list)
+	
+	for node in tier:
+	
+		# 1) If the node has an alignment, that means it's a terminal ----------
+		aln = node.attributes.get('alignment')
+		if aln:
+			w = tier.igt.find(id=aln)
+			idx = w.index
+			w = w.get_content()			
+			n = IdTree(node.get_content(), [w], index=idx)
+			
+			# If this is a preterminal, it shouldn't have children.
+			assert not node.attributes.get('children')
+			
+			
+		else:
+			n = IdTree(node.get_content(), [])
+		
+			# 2) If there is a "children" attribute, split it on whitespace and store ---
+			#    those IDs to revisit, with the current node as the parent.
+			childids = node.attributes.get('children', '').split()
+			
+			for childid in childids:
+				children_dict[node.id].append(childid)
 		
 		
+		node_dict[node.id] = n
+		
+			
+	# 3) Revisit the children and make the linkages.
+	for parent_id in children_dict.keys():
+		parent_n = node_dict[parent_id]
+		for child_id in children_dict[parent_id]:
+			child_n = node_dict[child_id]
+			parent_n.append(child_n)
+		
+		
+	# Finally, pick an arbitrary node, and try to find the root.
+	assert child_n, "There should have been at least one child found..."
+	
+	
+	
+	return child_n.root()
+	
+
+
+		
+
+
 #===============================================================================
 
 class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
@@ -845,8 +910,6 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 				new_trans_gloss.add((trans_i, gloss_w.index))
 				
 			return new_trans_gloss
-				
-				
 
 	def get_trans_glosses_alignment(self, created_by=None):
 		'''
@@ -862,6 +925,24 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		token based alignment
 		'''
 		return self.gloss.get_aligned_tokens()
+	
+	def get_trans_gloss_lang_alignment(self):
+		'''
+		Get the translation to lang alignment, travelling through the gloss line.
+		'''
+		
+		tg_aln = self.get_trans_gloss_alignment()
+		gl_aln = self.get_gloss_lang_alignment()
+
+		# Combine the two alignments...		
+		a = Alignment()
+		for t_i, g_i in tg_aln:
+			l_js = [l_j for (g_j, l_j) in gl_aln if g_j == g_i]
+			for l_j in l_js:
+				a.add((t_i, l_j))
+		return a
+			
+				
 		
 		
 	#===========================================================================
@@ -1346,7 +1427,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		assert len(pt.leaves()) == len(self.trans)
 		
 		leaves = list(pt.leaves())
-		preterms = list(pt.subtrees(filter = lambda x: x.height() == 2))
+		preterms = list(pt.preterminals())
 		
 		assert len(leaves) == len(preterms)
 		
@@ -1358,16 +1439,37 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			pt_tier.add(pi)
 			
 		# 3) Finally, run through the rest of the subtrees. --------------------
-		remaining_subtrees = pt.subtrees(filter = lambda x: x.height() != 2)
-		for st in remaining_subtrees:
+		for st in pt.nonterminals():
 			child_refs = ' '.join([s.id for s in st])
 			si = RGItem(id=st.id, attributes={'children':child_refs}, text=st.label())
 			pt_tier.add(si)
 			
 		
 		
-			
+		# 4) And add the created tier to this instance. ------------------------
 		self.add(pt_tier)
+		
+	def get_trans_parse_tier(self):
+		'''
+		Get the phrase structure tier aligned with the translation words.
+		'''
+		return self.find(type='phrase-structure', attributes={'alignment':self.trans.id})
+		
+	def project_pt(self):
+		
+		trans_parse_tier = self.get_trans_parse_tier()		
+		trans_tree = read_pt(trans_parse_tier)
+		
+		# This might raise a ProjectionTransGlossException if the trans and gloss
+		# alignments don't exist.
+		tl_aln = self.get_trans_gloss_lang_alignment()
+		
+		project_ps(trans_tree, self.lang, tl_aln)
+		
+		
+			
+		
+		
 		
 	def create_dt_tier(self, dt):
 		'''
@@ -1396,7 +1498,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 		self.add(dt_tier)
 		
-			
+	
 		
 	
 		
@@ -1746,7 +1848,23 @@ class RGTokenTier(RGTier):
 			
 		
 class RGPhraseStructureTier(RGTier):
-	pass
+	'''
+	Specialized tier that will hold a phrase structure tree, or read it if it doesn't exist.
+	'''
+	def __init__(self, pt=None, **kwargs):
+		RGTier.__init__(self, **kwargs)
+		self._tree = pt
+		
+	@property
+	def tree(self):
+		'''
+		If the tier already has a IdTree, simply return it. Otherwise, create it by reading the Xigt.
+		'''
+		if self._tree is None:
+			self._tree = read_pt(self.igt)
+			
+		return self._tree
+			
 	
 class RGWordTier(RGTokenTier):
 	'''
@@ -1811,11 +1929,9 @@ class RGMorphTier(RGTokenTier):
 #===============================================================================
 	
 	
-class RGMetadata(Metadata):
-	pass
+class RGMetadata(Metadata): pass
 
-class RGMeta(Meta):
-	pass
+class RGMeta(Meta): pass
 
 #===============================================================================
 # Encode
@@ -1964,14 +2080,14 @@ line=961 tag=T:     `I made the child eat rice.\''''
 		self.assertEquals(self.igt.get_pos_tags('gw').tokens(), self.tags)
 		
 	def test_classify_pos_tags(self):
-		pos_dict = pickle.load(open(c['pos_dict'], 'rb'))
-		tags = self.igt.classify_gloss_pos(MalletMaxent(c['classifier_model']), posdict=pos_dict)
+		pos_dict = pickle.load(open(posdict, 'rb'))
+		tags = self.igt.classify_gloss_pos(MalletMaxent(classifier), posdict=pos_dict)
 		
 		self.assertEqual(tags, self.tags)
 		
 		
 	def test_tag_trans_line(self):
-		tagger = StanfordPOSTagger(c['stanford_tagger_trans'])
+		tagger = StanfordPOSTagger(tagger_model)
 		self.igt.tag_trans_pos(tagger)
 		
 from .rgxigtutils import create_words_tier, create_phrase_tier, morph_align,\

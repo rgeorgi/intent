@@ -13,7 +13,7 @@ from intent.classify.Classification import Classification
 from intent.utils.dicts import TwoLevelCountDict
 import intent.igt.grams
 from intent.utils.token import GoldTagPOSToken
-from intent.utils.env import c
+from intent.utils.env import c, mallet
 
 class ClassifierException(Exception):
 	pass
@@ -26,8 +26,6 @@ class MalletMaxent(object):
 	
 	def __init__(self, model):
 		self._model = model
-		
-		mallet = c['mallet']
 		
 		mallet_bin = os.path.join(os.path.join(mallet, 'bin'), 'mallet')
 		
@@ -98,7 +96,7 @@ class MalletMaxent(object):
 		token = GoldTagPOSToken.fromToken(token, goldlabel='NONE')
 		
 		sio = StringIO()
-		igt.grams.write_gram(token, type='classifier', output=sio, **kwargs)
+		intent.igt.grams.write_gram(token, type='classifier', output=sio, **kwargs)
 		c_token = sio.getvalue().strip()
 		sio.close()
 		
