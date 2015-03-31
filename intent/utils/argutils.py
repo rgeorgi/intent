@@ -123,3 +123,10 @@ class DefaultHelpParser(argparse.ArgumentParser):
 		sys.stderr.write('error: %s\n' % message)
 		self.print_help()
 		sys.exit(2)
+
+	def convert_arg_line_to_args(self, arg_line):
+		if arg_line.startswith('#') or not arg_line.strip():
+			return
+		else:
+			for arg in arg_line.split():
+				yield arg
