@@ -2,6 +2,8 @@
 
 import argparse, os, sys
 import logging
+from intent.utils.ConfigFile import ConfigFile
+from telnetlib import theNULL
 
 # Start the logger and set it up. ----------------------------------------------
 logging.basicConfig(format=logging.BASIC_FORMAT)
@@ -36,7 +38,7 @@ if import_errors:
 
 from intent.utils.env import c
 from intent.utils.argutils import DefaultHelpParser, existsfile,\
-	PathArgException
+	PathArgException, configfile
 
 #===============================================================================
 # Now, intialize the subcommands.
@@ -46,8 +48,9 @@ from intent.utils.argutils import DefaultHelpParser, existsfile,\
 
 main = DefaultHelpParser(description="This is the main module for the INTENT package.",
 								formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+main.add_argument('-c', '--config', help='Configuration file to set options for batch mode.', type=configfile)
 subparsers = main.add_subparsers(help = 'Valid subcommands', dest='subcommand')
-subparsers.required = True
+
 
 #===============================================================================
 # Enrich subcommand
@@ -74,11 +77,34 @@ enrich.add_argument('--project-pt', choices=[0,1], default=0, type=int, help='Pr
 
 
 # Parse the args. --------------------------------------------------------------
-try:
-	args = main.parse_args()
-except PathArgException as pae:  # If we get some kind of invalid file in the arguments, print it and exit.
-	MAIN_LOG.critical(str(pae))
-	#sys.stderr.write(str(pae)+'\n')
+arglist = sys.argv[1:]
+
+# The loop is here so that if we specify a config file, we can pull the subcommand out, and then 
+# try the parse_args() again on the config file options.
+
+while True:
+	
+	try:
+		args = main.parse_args(arglist)
+	except PathArgException as pae:  # If we get some kind of invalid file in the arguments, print it and exit.
+		MAIN_LOG.critical(str(pae))
+		#sys.stderr.write(str(pae)+'\n')
+		sys.exit(2)
+	else:
+		if args.config:
+			arglist = [args.config['COMMAND']]
+			del args.config['COMMAND']
+			other_args = args.config.to_arglist()
+			
+			arglist += other_args
+			continue
+		else:
+			break
+	
+	
+if args.subcommand is None:
+	sys.stderr.write('A subcommand is required.\n\n')
+	main.print_help()
 	sys.exit(2)
 
 # Decide on action based on subcommand and args. -------------------------------
