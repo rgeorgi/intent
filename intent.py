@@ -50,6 +50,7 @@ main = DefaultHelpParser(description="This is the main module for the INTENT pac
 								fromfile_prefix_chars='@')
 
 subparsers = main.add_subparsers(help = 'Valid subcommands', dest='subcommand')
+subparsers.required = True
 
 #===============================================================================
 # Enrich subcommand
