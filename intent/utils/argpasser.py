@@ -29,6 +29,20 @@ def argp(f):
 class ArgPassingException(Exception):
 	pass
 
+def add_args_to_namespace(ap, ns, overwrite = False):
+	'''
+	Given an ArgPasser, add the key, value pairs to a given namespace.
+	:param ap: ArgPasser with the values to use.
+	:type ap: ArgPasser
+	:param ns: Namespace to add the ArgPasser values to.
+	:type ns: Namespace
+	:param overwrite: Whether or not to overwrite existing values.
+	:type overwrite: bool
+	'''
+	for k, v in ap.items():
+		if overwrite or (not hasattr(ns, k)):
+			setattr(ns, k, v)
+
 class ArgPasser(dict):
 	'''
 	Argpasser is just a drop-in replacement for a \*\*kwarg dict,
