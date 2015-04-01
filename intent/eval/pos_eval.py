@@ -7,14 +7,6 @@ eval.slashtags_eval is a script to evaluate pos-tagged files.
 
 It defines a main method that scores tag accuracy.
 
-@author:     Ryan Georgi
-			
-@copyright:  2013 Ryan Georgi. All rights reserved.
-			
-@license:    MIT License
-
-@contact:    rgeorgi@uw.edu
-@deffield    updated: Updated
 '''
 
 # Global imports ---------------------------------------------------------------
@@ -25,11 +17,9 @@ from argparse import ArgumentParser
 from intent.utils import ConfigFile
 from intent.eval.EvalException import POSEvalException, EvalException
 from intent.corpora.POSCorpus import POSCorpus
+from intent.utils.dicts import POSEvalDict
 
-__all__ = []
-__version__ = 0.1
-__date__ = '2013-08-26'
-__updated__ = '2013-08-26'
+
 
 
 
@@ -39,6 +29,22 @@ __updated__ = '2013-08-26'
 #===============================================================================
 
 def slashtags_eval(goldpath, testpath, delimeter, out_f=sys.stdout, tagmap=None):
+	'''
+	Evaluate a "slashtags" format file
+	
+	:param goldpath:
+	:type goldpath:
+	:param testpath:
+	:type testpath:
+	:param delimeter:
+	:type delimeter:
+	:param out_f:
+	:type out_f:
+	:param tagmap:
+	:type tagmap:
+	
+	:rtype: POSEvalDict
+	'''
 			
 	gold_c = POSCorpus.read_slashtags(goldpath)
 	test_c = POSCorpus.read_slashtags(testpath)

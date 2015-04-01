@@ -107,7 +107,9 @@ def word(morph):
 	
 	if morph.content:
 		id = get_alignment_expression_ids(morph.content)[0]
-		word = morph.tier.igt.find(id=id)		
+		
+		# TODO: Finding a "Word" here requires a words tier, which may or may not exist already.
+		word = morph.tier.igt.find(id=id)	
 		word.__class__ = RGWord
 		return word
 	else:

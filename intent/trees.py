@@ -79,6 +79,8 @@ class IdTree(ParentedTree):
 	def copy(self):
 		'''
 		Perform a deep copy
+		
+		:rtype: IdTree
 		'''
 		if self.is_preterminal():
 			return IdTree(self.label(), copy(self), id=self.id, index=self.index)
