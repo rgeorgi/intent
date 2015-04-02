@@ -285,18 +285,28 @@ def follow_alignment(inst, id):
 		return found
 
 
-			
 #===============================================================================
-# • Cleaning ---
+# • Sorting ---
 #===============================================================================
 
 def sort_idx(l, v):
+	'''
+	Return the index of an item in a list, otherwise the length of the list (for sorting)
+	
+	:param l: list
+	:param v: value
+	'''
 	try:
 		return l.index(v)
 	except:
 		return len(l)
 
 def tier_sorter(x):
+	'''
+	``key=`` function to sort a tier according to tier type,
+	tier state (for ODIN tiers), and word_id (for word
+	tiers that all share the same type attribute)
+	'''
 	type_order = [ODIN_TYPE, 
 					LANG_PHRASE_TYPE, TRANS_PHRASE_TYPE,
 					LANG_WORD_TYPE, GLOSS_WORD_TYPE, TRANS_WORD_TYPE,
@@ -311,10 +321,11 @@ def tier_sorter(x):
 	type_index = sort_idx(type_order, x.type)
 	id_index = sort_idx(word_id_order, x.id)
 	
-	print(type_index, state_index, id_index)
+	return (type_index, state_index, id_index, x.id)
 	
-	return (type_index, state_index, id_index)
-	
+#===============================================================================
+# • Cleaning ---
+#===============================================================================
 
 
 def strip_enrichment(inst):
