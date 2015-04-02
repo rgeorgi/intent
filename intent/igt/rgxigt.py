@@ -8,13 +8,10 @@ Subclassing of the xigt package to add a few convenience methods.
 # Logging
 #===============================================================================
 
-import logging, pickle, re, copy
+import logging, pickle, re, copy, string
 
 
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
-import sys
-import string
-
 
 
 # Set up logging ---------------------------------------------------------------
@@ -124,6 +121,12 @@ TRANS_DS_ID = 'ds'
 DS_DEP_ATTRIBUTE = 'dep'
 DS_HEAD_ATTRIBUTE = 'head'
 
+# ODIN Line Tags ---------------------------------------------------------------
+ODIN_LANG_TAG = 'L'
+ODIN_GLOSS_TAG = 'G'
+ODIN_TRANS_TAG = 'T'
+
+
 #===============================================================================
 # Exceptions
 #===============================================================================
@@ -166,7 +169,7 @@ class FindMixin():
 	Extension of the recursive search for non-iterable elements.
 	'''
 	
-	def find_self(self, id=None, id_base=None, attributes=None, type = None, segments = None, contents=None):
+	def find_self(self, id=None, id_base=None, attributes=None, type = None, segmentation = None, content=None):
 		'''
 		Check on this element to see if it matches the find criteria. Must satisfy all the specified
 		criteria, (they are considered unspecified if "None")
@@ -179,32 +182,32 @@ class FindMixin():
 		:type attributes: dict
 		:param type:
 		:type type: str
-		:param segments:
-		:type segments: str
+		:param segmentation:
+		:type segmentation: str
 		'''
 		
 		id_match = id is None or (self.id == id)
 		id_base_match = id_base is None or (get_id_base(self.id) == id_base)
 		type_match = type is None or (self.type == type)
 		attr_match = attributes is None or (set(attributes.items()).issubset(set(self.attributes.items())))
-		seg_match  = segments is None or (hasattr(self, SEGMENTATION) and segments in get_alignment_expression_ids(self.segmentation))
+		seg_match  = segmentation is None or (hasattr(self, SEGMENTATION) and segmentation in get_alignment_expression_ids(self.segmentation))
 		
-		# TODO: not sure the contents is working...
-		cnt_match = contents is None or (hasattr(self, CONTENT) and contents in get_alignment_expression_ids(self.content))
+		# TODO: not sure the content is working...
+		cnt_match = content is None or (hasattr(self, CONTENT) and content in get_alignment_expression_ids(self.content))
 		
 		# At least ONE thing must be specified
-		assert any([id, id_base, attributes, type, segments, contents])
+		assert any([id, id_base, attributes, type, segmentation, content])
 		
 		if id_match and id_base_match and type_match and attr_match and seg_match and cnt_match:
 			return self
 		else:
 			return None
 		
-	def find(self, id=None, id_base = None, attributes=None, type=None, segments=None, contents=None):
-		return self.find_self(id, id_base, attributes, type, segments, contents)
+	def find(self, id=None, id_base = None, attributes=None, type=None, segmentation=None, content=None):
+		return self.find_self(id, id_base, attributes, type, segmentation, content)
 	
-	def findall(self, id=None, id_base=None, attributes=None, type=None, segments=None, contents=None):
-		found = self.find_self(id, id_base, attributes, type, segments, contents)
+	def findall(self, id=None, id_base=None, attributes=None, type=None, segmentation=None, content=None):
+		found = self.find_self(id, id_base, attributes, type, segmentation, content)
 		if found:
 			return [found]
 		else:
@@ -212,7 +215,7 @@ class FindMixin():
 
 class RecursiveFindMixin(FindMixin):
 
-	def find(self, id=None, id_base=None, attributes=None, type=None, segments=None, contents=None):
+	def find(self, id=None, id_base=None, attributes=None, type=None, segmentation=None, content=None):
 		'''
 		Generic find function for non-iterable elements. NOTE: This version stops on the first match.
 		
@@ -221,12 +224,12 @@ class RecursiveFindMixin(FindMixin):
 		:param attributes: key:value pairs that are an inclusive subset of those found in the desired item.
 		:type attributes: dict
 		'''
-		if self.find_self(id,id_base, attributes,type,segments,contents) is not None:
+		if self.find_self(id,id_base, attributes,type,segmentation,content) is not None:
 			return self
 		else:
 			found = None
 			for child in self:
-				found = child.find(id, id_base, attributes, type, segments, contents)
+				found = child.find(id, id_base, attributes, type, segmentation, content)
 				if found is not None:
 					break
 			return found
@@ -307,7 +310,9 @@ def read_pt(tier):
 
 def gen_id(id_str, num, letter=False, suppress_numbering=False):
 	'''
-	Unified method to generate an ID string. Ex: `gen_id('i',2)` returns `i2` if letter is False or `ib` if True.
+	Unified method to generate an ID string.
+	|
+	Ex: ``gen_id('i',2)`` returns ``i2`` if letter is False or ``ib`` if True.
 	
 	:param id_str: Basis to generate the ID.
 	:type id_str: str
@@ -676,6 +681,9 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		return new_i
 		
 
+	def sort(self):
+		self._list = sorted(self._list, key=tier_sorter)
+
 	# • Processing of newly created instances ----------------------------------
 
 	def basic_processing(self, require_1_to_1 = True):
@@ -843,89 +851,22 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 				normal_tier = RGLineTier(id = NORM_ID, type=ODIN_TYPE,
 										 attributes={STATE_ATTRIBUTE:NORM_STATE, ALIGNMENT:clean_tier.id})
 				
-				self.add_normal_line(normal_tier, 'L', clean_lang_string, merge)
-				self.add_normal_line(normal_tier, 'G', clean_gloss_string, merge)
-				self.add_normal_line(normal_tier, 'T', clean_trans_string, merge)
+				self.add_normal_line(normal_tier, ODIN_LANG_TAG, clean_lang_string, merge)
+				self.add_normal_line(normal_tier, ODIN_GLOSS_TAG, clean_gloss_string, merge)
+				self.add_normal_line(normal_tier, ODIN_TRANS_TAG, clean_trans_string, merge)
 				
 				self.add(normal_tier)
 				return normal_tier
 			
 			
-	def create_phrases_words(self, orig_tag, word_type, word_id, phrase_type, phrase_id):
-		'''
-		Starting with an original "line" from the ODIN text, make it into a XIGT
-		phrase tier and segmented words tier.
-		
-		@param orig_tag:  One of 'T', 'G', or 'L'
-		@param phrase_tier: The type of the tier used for the phrase.
-		@param phrase_letter: The letter used for the id of the tier.
-		@param words_name: The type of the tier used for the words.
-		@param words_letter: The letter used for the id of the words tier.
-		'''
-		
 
-		#if we have the words tier, let's just return it.
-		words_tier = self.find(type=word_type, id_base=word_id)
-		if words_tier:
-			words_tier.__class__ = RGWordTier
-			return words_tier		
-			
-		else:
-			# Make sure we've run the normalization...
-			c = self.normal_tier()
-			
-			# Look for the original tags
-			line = None
-			
-			for raw_line in c:
-				if orig_tag in raw_line.attributes['tag']:
-					line = raw_line
-					break 
-	
-			# TODO: Verify that we shouldn't be throwing an exception here.
-			if not line:
-				return None
-			
-			
-			# If we have a raw tier, but not a words tier, let's create the needed
-			# tiers beneath.
-			else:
-				
-				# If we are dealing with the glosses, don't create a phrase.
-				if not phrase_type:
-					words_tier =  create_words_tier(line, word_id, word_type)
-					self.add(words_tier)
-					return words_tier
-				
-				# Otherwise, find or create the phrase tier, and base the 
-				# words tier off of that.
-				else:
-
-					# -- 1) If the phrase tier already exists, get it.
-					phrase_tier = self.find(type = phrase_type, id_base = phrase_id)
-					if phrase_tier:
-						phrase_tier.__class__ = RGPhraseTier
-		
-					
-					# -- 4) If such a phrase tier does not exist, create it.
-					else:
-						phrase_tier = create_phrase_tier(line, phrase_id, phrase_type)
-						self.add(phrase_tier)
-					
-					# Finally, create a words tier based on the phrase tier.
-					words_tier = create_words_tier(phrase_tier[0], word_id, word_type)
-					self.add(words_tier)
-					
-					# And finally, return our words tier.
-					
-					return words_tier
 				
 						
-	
+	# • Words Tiers ------------------------------------------------------------
 
 	@property
 	def lang(self):
-		lt = self.create_phrases_words('L', LANG_WORD_TYPE, LANG_WORD_ID, LANG_PHRASE_TYPE, LANG_PHRASE_ID)
+		lt = retrieve_lang_words(self) 
 		if not lt:
 			raise NoLangLineException('No lang line available for igt "%s"' % self.id)
 		else:
@@ -933,11 +874,19 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 	@property
 	def gloss(self):
-		gt = self.create_phrases_words('G', GLOSS_WORD_TYPE, GLOSS_WORD_ID, None, None)
+		gt = retrieve_gloss(self)
 		if not gt:
 			raise NoGlossLineException('No gloss line available for igt "%s"' % self.id)
 		else:
 			return gt
+		
+	@property
+	def trans(self):
+		tt = retrieve_trans_words(self)
+		if not tt:
+			raise NoTransLineException('No trans line available for igt "%s"' % self.id)
+		else:
+			return tt
 		
 
 	# • Properties -------------------------------------------------------------
@@ -966,14 +915,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			return mt
 		
 
-	@property
-	def trans(self):
-		tt = self.create_phrases_words('T', TRANS_WORD_TYPE, TRANS_WORD_ID, TRANS_PHRASE_TYPE, TRANS_PHRASE_ID)		
-		if not tt:
-			raise NoTransLineException('No trans line available for igt "%s"' % self.id)
-		else:
-			return tt
-		
+
 	# • Alignment --------------------------------------------------------------
 
 	def get_trans_gloss_alignment(self, created_by=None):
@@ -1656,19 +1598,6 @@ class RGPhrase(RGItem):
 	Subtype for phrases...
 	'''
 	
-	def words_tier(self, words_name, words_letter):
-		
-		# Tokenize the words in this phrase...
-		words = intent.utils.token.tokenize_item(self)
-		
-		# Create a new word tier to hold the tokenized words...
-		wt = RGWordTier(id = words_letter, type=words_name, segmentation=self.tier.id, igt=self.igt)
-		for w in words:
-			# Create a new word that is a segmentation of this tier.
-			rw = RGWord(id=wt.askItemId(), segmentation='%s[%s:%s]' % (self.id, w.start, w.stop), tier=wt)
-			wt.add(rw)
-		
-		return wt
 
 class RGToken(RGItem):
 	'''
@@ -1972,13 +1901,13 @@ class RGWordTier(RGTokenTier):
 		'''
 		Given the "words" in this tier, segment them. 
 		'''
-		mt = RGMorphTier(id=id, content=self.id, type=type)
+		mt = RGMorphTier(id=id, segmentation=self.id, type=type)
 		
 		for word in self:
 			
 			morphs = intent.utils.token.tokenize_item(word, intent.utils.token.morpheme_tokenizer)
 			for morph in morphs:
-				rm = RGMorph(id=mt.askItemId(), content='%s[%s:%s]' % (word.id, morph.start, morph.stop), index=mt.askIndex())
+				rm = RGMorph(id=mt.askItemId(), segmentation=create_aln_expr(word.id, morph.start, morph.stop), index=mt.askIndex())
 				mt.add(rm)
 				
 				
@@ -2177,7 +2106,7 @@ line=961 tag=T:     `I made the child eat rice.\''''
 		tagger = StanfordPOSTagger(tagger_model)
 		self.igt.tag_trans_pos(tagger)
 		
-from .rgxigtutils import create_words_tier, create_phrase_tier, morph_align,\
-	word
+from .rgxigtutils import create_words_tier, morph_align,\
+	word, retrieve_gloss, retrieve_trans_words, retrieve_lang_words, tier_sorter, create_aln_expr
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.trees import IdTree, project_ps

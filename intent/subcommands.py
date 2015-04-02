@@ -8,7 +8,7 @@ import sys, logging, pickle
 
 from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
 	PhraseStructureProjectionException, ProjectionException,\
-	ProjectionTransGlossException
+	ProjectionTransGlossException, rgp
 from intent.utils.env import c, classifier, posdict
 from intent.utils.argutils import writefile
 from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
@@ -18,6 +18,7 @@ from intent.interfaces import mallet_maxent, stanford_parser
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
+from intent.igt.rgxigtutils import word_align, tier_sorter
 
 
 #===============================================================================
@@ -79,7 +80,7 @@ def enrich(**kwargs):
 	for inst in corp:
 		
 		# Attempt to align the gloss and language lines if requested... --------
-		inst.gloss.word_align(inst.lang)
+		word_align(inst.gloss, inst.lang)
 		
 		# 3) POS tag the translation line --------------------------------------
 		if kwargs.get('pos_trans'):
@@ -122,6 +123,8 @@ def enrich(**kwargs):
 			except ProjectionTransGlossException as ptge:
 				ENRICH_LOG.warning('Alignment between translation and gloss lines was not found for instance "%s". Not projecting phrase structure.' % inst.id)
 				
+		# Sort the tiers... ----------------------------------------------------
+		inst.sort()
 
 	print('Writing output file...', end=' ')	
 	xigtxml.dump(writefile(kwargs.get('OUT_FILE')), corp)
