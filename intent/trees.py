@@ -628,11 +628,11 @@ class PromoteTest(unittest.TestCase):
 		t3 = self.t.copy()
 		self.assertEqual(self.t, t2)
 		
-		t2.find(1).delete()
+		t2.find_index(1).delete()
 		self.assertNotEqual(self.t, t2)
 		
 		# Change the id
-		t3n = t3.find(1)
+		t3n = t3.find_index(1)
 		t3id = t3n.id
 		t3idx = t3n.index
 		
