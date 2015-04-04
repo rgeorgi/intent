@@ -8,10 +8,10 @@ Subclassing of the xigt package to add a few convenience methods.
 # Logging
 #===============================================================================
 
-import logging, pickle, re, copy, string
+import logging, re, copy, string
+import sys
+import unittest
 
-
-from intent.interfaces.stanford_tagger import StanfordPOSTagger
 
 
 # Set up logging ---------------------------------------------------------------
@@ -19,8 +19,7 @@ PARSELOG = logging.getLogger(__name__)
 
 # XIGT imports -----------------------------------------------------------------
 import xigt.core
-from xigt.core import Metadata, Meta, Tier, Item, Igt,\
-	get_alignment_expression_ids, XigtCorpus, ALIGNMENT, SEGMENTATION, CONTENT
+from xigt.core import *
 from xigt.codecs import xigtxml
 from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xigtcorpus
 
@@ -28,13 +27,12 @@ from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xig
 from .igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
 	clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re
 import intent.utils.token
-from intent.utils.env import c, tagger_model, posdict, classifier
+from intent.utils.env import c
 from intent.alignment.Alignment import Alignment, heur_alignments
 from intent.utils.token import Token, POSToken
 from intent.interfaces.giza import GizaAligner
 
 # Other imports ----------------------------------------------------------------
-from unittest.case import TestCase
 from uuid import uuid4
 from collections import defaultdict
 
@@ -938,9 +936,10 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 			
 			for trans_i, gloss_i in trans_glosses:
 				gloss_m = self.glosses[gloss_i-1]
-				gloss_w = word(gloss_m)
-				new_trans_gloss.add((trans_i, gloss_w.index))
+				gloss_w = find_gloss_word(self, gloss_m)
 				
+				new_trans_gloss.add((trans_i, gloss_w.index))
+
 			return new_trans_gloss
 
 	def get_trans_glosses_alignment(self, created_by=None):
@@ -1235,6 +1234,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 				
 				# lowercase the token...
 				gloss_token = gloss_token.lower()
+
 				
 				#===================================================================
 				# Make sure to set up the next and previous tokens for the classifier
@@ -1459,6 +1459,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 
 		pt.assign_ids(pt_tier.id)
 		
+		
 		# We should get back the same number of tokens as we put in
 		assert len(pt.leaves()) == len(w_tier)
 		
@@ -1503,6 +1504,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		# This might raise a ProjectionTransGlossException if the trans and gloss
 		# alignments don't exist.
 		tl_aln = self.get_trans_gloss_lang_alignment()
+		
 		
 		pt = project_ps(trans_tree, self.lang, tl_aln)
 		
@@ -1558,7 +1560,7 @@ class RGItem(xigt.core.Item, FindMixin):
 	
 	def __init__(self, **kwargs):
 		
-		new_kwargs = {key : value for key, value in kwargs.items() if key != 'index'}
+		new_kwargs = {key : value for key, value in kwargs.items() if key not in ['index', 'start', 'stop']}
 		
 		super().__init__(**new_kwargs)
 		
@@ -1967,146 +1969,513 @@ def rgencode(o):
 	else:
 		raise Exception('%s is not a XIGT object, but is: %s' % (o, type(o)))
 
+
+
 #===============================================================================
-# Unit Tests
+# • Basic Functions
+#===============================================================================
+def create_aln_expr(id, start=None, stop=None):
+	'''
+	Create an alignment expression, such as ``n2[5:8]`` or ``tw1`` given an id, and start/stop range.
+	
+	:param id: ID with which to align
+	:type id: str
+	:param start: Range at which to start
+	:type start: int
+	:param stop: Range at which to stop
+	:type stop: int
+	'''
+	
+	if start is None and stop is None:
+		return id
+	elif start is not None and stop is not None:
+		return '%s[%d:%d]' % (id, start, stop)
+	else:
+		raise Exception('Invalid alignment expression request')
+
+
+#===============================================================================
+# • Phrase Tier Creation ---
+#===============================================================================
+
+def retrieve_trans_phrase(inst):
+	'''
+	Retrieve the translation phrase tier if it exists, otherwise create it. (Making
+	sure to align it with the language phrase if it is present)
+	
+	:param inst: Instance to search
+	:type inst: RGIgt
+	'''
+	tpt = retrieve_phrase(inst, ODIN_TRANS_TAG, TRANS_PHRASE_ID, TRANS_PHRASE_TYPE)
+	
+	# Add the alignment with the language line phrase if it's not already there.
+	if ALIGNMENT not in tpt.attributes:
+		lpt = retrieve_lang_phrase(inst)
+		tpt.attributes[ALIGNMENT] = lpt.id
+		tpt[0].attributes[ALIGNMENT] = lpt[0].id
+		
+	return tpt
+
+def retrieve_lang_phrase(inst):
+	'''
+	Retrieve the language phrase if it exists, otherwise create it.
+	
+	:param inst: Instance to search
+	:type inst: RGIgt
+	'''
+	return retrieve_phrase(inst, ODIN_LANG_TAG, LANG_PHRASE_ID, LANG_PHRASE_TYPE)
+
+def retrieve_phrase(inst, tag, id, type):
+	'''
+	Retrieve a phrase for the given tag, with the provided id and type.
+	
+	:param inst: Instance to retrieve the elements from.
+	:type inst: RGIgt
+	:param tag: 'L', 'G' or 'T'
+	:type tag: str
+	:param id: 
+	:type id: str
+	:param type: 
+	:type type: str
+	'''
+	
+	n = inst.normal_tier()
+	
+	pt = inst.find(type=type, content = n.id)
+	if not pt:
+		# Get the normalized line line
+		l = retrieve_normal_line(inst, tag)
+		pt = RGPhraseTier(id=id, type=type, content=n.id)
+		pt.add(RGPhrase(id=pt.askItemId(), content=l.id))
+		inst.add(pt)
+	else:
+		pt.__class__ = RGPhraseTier
+		
+	return pt
+
+#===============================================================================
+# • Word Tier Creation ---
+#===============================================================================
+
+def create_words_tier(cur_item, word_id, word_type):
+	'''
+	Create a words tier from an ODIN line type item.
+	
+	:param cur_item: Either a phrase item or a line item to tokenize and create words form.
+	:type cur_item: RGItem
+	:param word_id: The ID for this tier.
+	:type word_id: str
+	:param word_type: Tier type for this tier.
+	:type word_type: str
+	
+	:rtype: RGWordTier
+	'''
+	
+	# Tokenize the words in this phrase...
+	words = intent.utils.token.tokenize_item(cur_item)
+	
+	# Create a new word tier to hold the tokenized words...
+	wt = RGWordTier(id = word_id, type=word_type, content=cur_item.tier.id, igt=cur_item.igt)
+	
+	for w in words:
+		# Create a new word that is a segmentation of this tier.
+		rw = RGWord(id=wt.askItemId(), content=create_aln_expr(cur_item.id, w.start, w.stop), tier=wt, start=w.start, stop=w.stop)
+		wt.add(rw)
+	
+	return wt
+
+def retrieve_trans_words(inst):
+	'''
+	Retrieve the translation words tier from an instance. 
+	
+	:type inst: RGIgt
+	:rtype: RGWordTier
+	'''
+
+	# Get the translation phrase tier
+	tpt = retrieve_trans_phrase(inst)
+	
+	# Get the translation word tier
+	twt = inst.find(type=TRANS_WORD_TYPE, content=tpt.id)
+
+	if not twt:
+		twt = create_words_tier(tpt[0], TRANS_WORD_ID, TRANS_WORD_TYPE)
+		inst.add(twt)
+	else:
+		twt.__class__ = RGWordTier
+	
+	return twt
+	
+def retrieve_lang_words(inst):
+	'''
+	Retrieve the language words tier from an instance
+
+	:type inst: RGIgt
+	:rtype: RGWordTier
+	'''
+	# Get the lang phrase tier
+	lpt = retrieve_lang_phrase(inst)
+	
+	# Get the lang word tier
+	lwt = inst.find(type=LANG_WORD_TYPE, content=lpt.id)
+	
+	if not lwt:
+		lwt = create_words_tier(lpt[0], LANG_WORD_ID, LANG_WORD_TYPE)
+		inst.add(lwt)
+	else:
+		lwt.__class__ = RGWordTier
+		
+	return lwt
+
+def retrieve_gloss(inst):
+	'''
+	Given an IGT instance, create the gloss "words" and "glosses" tiers.
+	
+	1. If a "words" type exists, and it's contents are the gloss line, return it.
+	2. If it does not exist, tokenize the gloss line and return it.
+		
+	:param inst: Instance which to create the tiers from.
+	:type inst: RGIgt
+	:rtype: RGWordTier
+	'''
+	
+	# 1. Look for an existing words tier that aligns with the normalized tier...
+	n = inst.normal_tier()
+	wt = inst.find(type=GLOSS_WORD_TYPE, content = n.id)
+	
+	# 2. If it exists, return it. Otherwise, look for the glosses tier.
+	if not wt:
+		wt = create_words_tier(retrieve_normal_line(inst, ODIN_GLOSS_TAG), GLOSS_WORD_ID, GLOSS_WORD_TYPE)
+		inst.add(wt)
+	else:
+		wt.__class__ = RGWordTier
+		
+	return wt
+
+def retrieve_normal_line(inst, tag):
+	'''
+	Retrieve a normalized line from the instance ``inst`` with the given ``tag``.
+	
+	:param inst: Instance to retrieve the normalized line from.
+	:type inst: RGIgt
+	:param tag: {'L', 'G', or 'T'}
+	:type tag: str
+	
+	:rtype: RGPhrase
+	'''
+	
+	n = inst.normal_tier()
+	
+	lines = [l for l in n if tag in l.attributes['tag'].split('+')]
+	
+	assert len(lines) == 1, "There should not be more than one line for each tag in the normalized tier."
+	
+	return lines[0]
+
+		
+	
+#===============================================================================
+# Alignment Utilities ---
+#===============================================================================
+
+def word_align(this, other):
+	'''
+	
+	:param this:
+	:type this:
+	:param other:
+	:type other:
+	'''
+	
+	if len(this) != len(other):
+		raise GlossLangAlignException('Gloss and language lines could not be auto-aligned for igt "%s"' % this.igt.id)
+	else:
+		# Note on the tier the alignment
+		this.alignment = other.id
+		
+		# Align the words 1-to-1, left-to-right
+		for my_word, their_word in zip(this, other):
+			my_word.alignment = their_word.id
+			
+def morph_align(this, other):
+	# Let's count up how many morphemes there are
+	# for each word on the translation line...
+	
+	
+	lang_word_dict = defaultdict(list)
+	for other_m in other:
+		other_m.__class__ = RGMorph
+		
+		# Add this morpheme to the dictionary, so we can keep
+		# count of how many morphemes align to a given word.
+		lang_word_dict[other_m.word.id].append(other_m)
+
+		
+	# Now, iterate over our morphs.
+	for this_m in this:
+		
+		
+		this_m.__class__ = RGMorph
+		
+		# Find our parent word, and it's
+		# alignment.
+
+		w = this_m.word
+		other_w_id = w.alignment
+		
+		# Next, let's see what unaligned morphs there are
+		other_w_list = lang_word_dict[other_w_id]
+		
+		# If there's only one morph left, align with that.
+		if len(other_w_list) == 1:
+			this_m.alignment = other_w_list[0].id
+			
+		# If there's more, pop one off the beginning of the list and use that.
+		elif len(other_w_list) > 1:
+			this_m = other_w_list.pop(0)
+			this_m.alignment = this_m.id	
+			
+#===============================================================================
+# • Searching ---
+#===============================================================================
+
+def find_lang_word(morph):
+	'''
+	Given a morph that segments the language line, find its associated word. 
+	
+	:param morph: The morpheme to find the aligned word for.
+	:type morph: RGMorph
+	
+	:rtype: RGWord
+	'''
+	raise Exception('Who is calling me?')
+	
+def odin_span(inst, item):
+	aligned_items = _odin_span(inst, item)
+	
+	# All the alignments should come from only one item...
+	assert len(set([i[0].id for i in aligned_items])) == 1
+	
+	spans = [(start, stop) for item, start, stop in aligned_items]
+	return spans
+	
+def _odin_span(inst, item, shift_index = 0):
+	'''
+	Follow this item's segmentation all the way
+	back to the raw odin item it originates from.
+	
+	:param inst: Instance to pull from
+	:type inst: RGIgt
+	:param item: RGItem
+	:type item: Item to trace the alignment for.
+	'''
+	
+	# Select the expression which indicates the alignment...
+	aln_expr = item.attributes.get(CONTENT)
+	if not aln_expr:
+		aln_expr = item.attributes.get(SEGMENTATION)
+	
+	aligned_items = []
+		
+	for item in get_alignment_expression_spans(aln_expr):
+		# The items here can either be:
+		#  (1) a bare id.
+		#  (2) '+' or ','
+		#  (3) a tuple of (id, start, stop)
+		
+		# (2) 
+		if item == '+' or item == ',':
+			continue
+		
+		# (3)
+		elif isinstance(item, tuple):
+			ref_id, start, stop = item
+			ref_item = inst.find(ref_id)
+			
+			# If we have found a tier of type ODIN_TYPE,
+			# then append it to the aligned items.
+			if ref_item.tier.type == ODIN_TYPE:
+				aligned_items.append((ref_item, start+shift_index, stop+shift_index))
+				
+			# Otherwise, if we have not, recurse to the next item until
+			# we do, shifting the indices as required. (e.g. if we were
+			# at a morpheme which segmented [0:2] of a word that segmented
+			# [2:4] of a line, we ultimately want the returned index to be
+			# [2:6].
+			else:
+				aligned_items.extend(_odin_span(inst, ref_item, start+shift_index))
+	
+	return aligned_items
+	
+def x_contains_y(inst, x_item, y_item):
+	return x_span_contains_y(odin_span(inst, x_item), odin_span(inst, y_item))
+		
+def x_span_contains_y(x_spans, y_spans):
+	'''
+	Return whether all elements of y_spans are contained by some elements of x_spans 
+	
+	:param span:
+	:type span:
+	:param span_list:
+	:type span_list:
+	'''
+	
+	
+	
+	for i, j in y_spans:
+		match_found = False
+		
+		for m, n in x_spans:
+			if i >= m and j <= n:
+				 match_found = True
+				 break
+		
+		# If this particular x_span found
+		# a match, keep looking.
+		if match_found:
+			continue
+		
+		# If we find an element that doesn't
+		# have a match, return false.
+		else:
+			return False
+		
+	# If we have reached the end of both loops, then
+	# all elements match.
+	return True
+				 
+	# If we make it all the way through, then it
+	# wasn't contained.
+	return False
+	
+def find_gloss_word(inst, morph):
+	'''
+	Find the gloss word to which this gloss morph is aligned. This will search the word-level "glosses" tier to
+	find overlaps.
+	
+	:param morph: Gloss line morph to find alignment for.
+	:type morph: RGMorph
+	
+	:rtype: RGWord
+	'''
+	content = morph.attributes.get(CONTENT)
+	
+	for g in inst.gloss:
+		
+		if x_contains_y(inst, g, morph):
+			return g
+		
+	# If we reached this far, there is no gloss word that contains this
+	# morph.
+	return None
+
+def follow_alignment(inst, id):
+	'''
+	If the given ID is aligned to another item, return that other item. If that item
+	is aligned to another item, return THAT item's ID, and so on.
+	'''
+	
+	# Return none if this id isn't found.
+	found = inst.find(id)
+	w = None
+	
+	if not found:
+		return None
+	
+	# Look to see if there's an alignment attribute.
+	if found.alignment:
+		return follow_alignment(inst, found.alignment)
+	
+	# If there's not a word that this is a part of, 	
+	if w:
+		return follow_alignment(inst, w.id)
+	
+	else:		
+		return found
+
+
+#===============================================================================
+# • Sorting ---
+#===============================================================================
+
+def sort_idx(l, v):
+	'''
+	Return the index of an item in a list, otherwise the length of the list (for sorting)
+	
+	:param l: list
+	:param v: value
+	'''
+	try:
+		return l.index(v)
+	except:
+		return len(l)
+
+def tier_sorter(x):
+	'''
+	``key=`` function to sort a tier according to tier type,
+	tier state (for ODIN tiers), and word_id (for word
+	tiers that all share the same type attribute)
+	'''
+	type_order = [ODIN_TYPE, 
+					LANG_PHRASE_TYPE, TRANS_PHRASE_TYPE,
+					LANG_WORD_TYPE, GLOSS_WORD_TYPE, TRANS_WORD_TYPE,
+					LANG_MORPH_TYPE, GLOSS_MORPH_TYPE,
+					POS_TIER_TYPE, ALN_TIER_TYPE, PS_TIER_TYPE, DS_TIER_TYPE, None]
+	
+	state_order = [RAW_STATE, CLEAN_STATE, NORM_STATE]	
+	word_id_order = [LANG_WORD_ID, GLOSS_WORD_ID, TRANS_WORD_ID]
+	
+	
+	state_index = sort_idx(state_order, x.attributes.get('state'))
+	type_index = sort_idx(type_order, x.type)
+	id_index = sort_idx(word_id_order, x.id)
+	
+	return (type_index, state_index, id_index, x.id)
+	
+#===============================================================================
+# • Cleaning ---
 #===============================================================================
 
 
+def strip_enrichment(inst):
+	strip_pos(inst)
+	for at in inst.findall(type='bilingual-alignments'):
+		at.delete()
+	
+def strip_pos(inst):
+	for pt in inst.findall(type='pos'):
+		pt.delete()
+	
+
+#===============================================================================
+# Some tests
+#===============================================================================
+class ContainsTests(unittest.TestCase):
+	
+	def test_contains_simple(self):
+		spanlist_a = [(2,5)]
+		spanlist_b = [(1,5)]
+		spanlist_c = [(3,5)]
+		spanlist_d = [(3,4)]
+		spanlist_e = [(2,7)]
 		
+		self.assertTrue(x_span_contains_y(spanlist_b, spanlist_b))
+		self.assertTrue(x_span_contains_y(spanlist_b, spanlist_a))
+		self.assertTrue(x_span_contains_y(spanlist_a, spanlist_d))
+		self.assertFalse(x_span_contains_y(spanlist_c, spanlist_b))
+		self.assertFalse(x_span_contains_y(spanlist_e, spanlist_b))
+		
+	def test_contains_complex(self):
+		spanlist_a = [(1, 4), (5, 7)]
+		spanlist_b = [(1, 7)]
+		
+		spanlist_c = [(1, 4), (8, 10)]
+		spanlist_d = [(0, 5), (7, 10), (11, 14)]
+		
+		self.assertTrue(x_span_contains_y(spanlist_b, spanlist_a))
+		self.assertTrue(x_span_contains_y(spanlist_d, spanlist_c))
+		self.assertFalse(x_span_contains_y(spanlist_d, spanlist_a))
+
 		
 
-class TextParseTest(TestCase):
-	
-	def setUp(self):
-		self.txt = '''doc_id=38 275 277 L G T
-stage3_lang_chosen: korean (kor)
-lang_code: korean (kor) || seoul (kor) || japanese (jpn) || inuit (ike) || french (fra) || malayalam (mal)
-note: lang_chosen_idx=0
-line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
-line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
-line=961 tag=T:     `I made the child eat rice.\''''
-		
-		self.igt = RGIgt.fromString(self.txt)
-		
-	
-	def line_test(self):
-		'''
-		Test that lines are rendered correctly.
-		'''
-		self.assertEqual(self.igt.gloss.text(), 'I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec')
-		self.assertEqual(self.igt.trans.text(), 'I made the child eat rice')
-		
-	def glosses_test(self):
-		'''
-		Test that the glosses are rendered correctly.
-		'''
-		self.assertEqual(self.igt.glosses.text(), 'I Nom child Dat rice Acc eat Caus Pst Dec')
-		
-	def word_align_test(self):
-		'''
-		Test that the gloss has been automatically aligned at the word level correctly.
-		'''
-		at = self.igt.gloss.get_aligned_tokens()
-		
-		self.assertEqual(at, Alignment([(1,1),(2,2),(3,3),(4,4)]))
-		
-	def set_align_test(self):
-		'''
-		Check setting alignment attributes between tiers.
-		'''
-		self.igt.gloss.set_aligned_tokens(self.igt.lang, Alignment([(1,1),(2,2)]))
-		self.assertEqual(self.igt.gloss.get_aligned_tokens(), Alignment([(1,1),(2,2)]))
-		
-	def set_bilingual_align_test(self):
-		'''
-		Set the bilingual alignment manually, and ensure that it is read back correctly.
-		'''
-		
-		a = Alignment([(1,1),(1,2),(2,8),(4,3),(5,7),(6,5)])
-		self.igt.set_bilingual_alignment(self.igt.trans, self.igt.glosses, a)
-		
-		self.assertEqual(a, self.igt.get_trans_glosses_alignment())
-		
-class XigtParseTest(TestCase):
-	'''
-	Testcase to make sure we can load from XIGT objects.
-	'''
-	def setUp(self):
-		self.xc = RGCorpus.load(c['xigt_ex'])
-		
-	def xigt_load_test(self):
-		pass
-	
-	def giza_align_test(self):
-		self.xc.giza_align_t_g()
-		giza_aln = self.xc[0].get_trans_glosses_alignment()
-		
-		giza_a = Alignment([(3, 2), (2, 8), (5, 7), (4, 3), (1, 1), (6, 5)])
-		
-		self.assertEquals(giza_a, giza_aln)
-		
-	def heur_align_test(self):
-		self.xc.heur_align()
-		aln = self.xc[0].get_trans_glosses_alignment()
-		a = Alignment([(5, 7), (6, 5), (1, 1), (4, 3)])
-		self.assertEquals(a, aln)
-		
-class CopyTest(TestCase):
-		def setUp(self):
-			self.txt = '''doc_id=38 275 277 L G T
-stage3_lang_chosen: korean (kor)
-lang_code: korean (kor) || seoul (kor) || japanese (jpn) || inuit (ike) || french (fra) || malayalam (mal)
-note: lang_chosen_idx=0
-line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
-line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
-line=961 tag=T:     `I made the child eat rice.\''''
-			self.igt = RGIgt.fromString(self.txt)
-			self.corpus = RGCorpus(igts=[self.igt])
-			
-		def test_copy(self):
-			
-			new_c = self.corpus.copy()
-			
-			self.assertNotEqual(id(self.corpus), id(new_c))
-			
-			# Assert that there is no alignment.
-			self.assertIsNone(self.corpus.find(type='bilingual-alignments'))
-			
-			new_c.heur_align()
-			self.assertIsNotNone(new_c.find(type='bilingual-alignments'))
-			self.assertIsNone(self.corpus.find(id='bilingual-alignments'))
-
-class POSTestCase(TestCase):
-	
-	def setUp(self):
-		self.txt = '''doc_id=38 275 277 L G T
-stage3_lang_chosen: korean (kor)
-lang_code: korean (kor) || seoul (kor) || japanese (jpn) || inuit (ike) || french (fra) || malayalam (mal)
-note: lang_chosen_idx=0
-line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
-line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
-line=961 tag=T:     `I made the child eat rice.\''''
-		self.igt = RGIgt.fromString(self.txt)
-		self.tags = ['PRON', 'NOUN', 'NOUN', 'VERB']
-	
-	def test_add_pos_tags(self):
-		
-		self.igt.add_pos_tags('gw', self.tags)
-		
-		self.assertEquals(self.igt.get_pos_tags('gw').tokens(), self.tags)
-		
-	def test_classify_pos_tags(self):
-		pos_dict = pickle.load(open(posdict, 'rb'))
-		tags = self.igt.classify_gloss_pos(MalletMaxent(classifier), posdict=pos_dict)
-		
-		self.assertEqual(tags, self.tags)
-		
-		
-	def test_tag_trans_line(self):
-		tagger = StanfordPOSTagger(tagger_model)
-		self.igt.tag_trans_pos(tagger)
-		
-from .rgxigtutils import create_words_tier, morph_align,\
-	word, retrieve_gloss, retrieve_trans_words, retrieve_lang_words, tier_sorter, create_aln_expr
-from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.trees import IdTree, project_ps

@@ -8,7 +8,7 @@ import sys, logging, pickle
 
 from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
 	PhraseStructureProjectionException, ProjectionException,\
-	ProjectionTransGlossException, rgp
+	ProjectionTransGlossException, rgp, word_align
 from intent.utils.env import c, classifier, posdict
 from intent.utils.argutils import writefile
 from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
@@ -18,7 +18,6 @@ from intent.interfaces import mallet_maxent, stanford_parser
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
-from intent.igt.rgxigtutils import word_align, tier_sorter
 
 
 #===============================================================================
