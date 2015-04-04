@@ -1,7 +1,6 @@
 '''
-Created on Feb 13, 2015
-
-@author: rgeorgi
+Simple script to train an aligner for gloss and translation lines, 
+picking up from a previously partially trained aligner.
 '''
 
 import argparse

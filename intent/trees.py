@@ -270,37 +270,38 @@ def get_nodes(string):
 	
 def project_ps(src_t, tgt_w, aln):
 	'''
-	1) Copy the English PS, and remove all unaligned English words.
-	2) Replace each English word with the corresponding target words.
-	   * If an English word x aligns to several target words,
-	     make copies of the node, one copy for each such word.
-	     The copies will all be siblings.
+	1. Copy the English PS, and remove all unaligned English words.
+
+	2. Replace each English word with the corresponding target words.
 	
-	3) Start from the root of the projected	PS and for each node
-	    x with more than one child, reorder each pair of x’s children until
-		they are in the correct order.
-			* Let y_i and y_j be two children of x
-			* Spans are:
-				* S_i = [a_i,b_i]
-				* S_j = [a_j,b_j]
-			* Reordering y_i and y_j gives four scenarios:
-				* S_i and S_j don't overlap.
-					* Put y_i before y_j if a_i < a_j
-					* Put y_i after  y_j if a_i > a_j
-					
+		* If an English word x aligns to several target words, \
+		make copies of the t, one copy for each such word. The copies will all be siblings.
+
+	3. Start from the root of the projected	PS and for each \
+	t x with more than one child, reorder each pair \
+	of x's children until they are in the correct order.
+
+		* Let y_i and y_j be two children of x
+		* Spans are:
+			* S_i = [a_i,b_i]
+			* S_j = [a_j,b_j]
+		* Reordering y_i and y_j gives four scenarios:
+			* S_i and S_j don't overlap.
+				* Put y_i before y_j if a_i < a_j
+				* Put y_i after  y_j if a_i > a_j
 				* S_i is contained within S_j
 					* Remove y_i and promote its children
-				
+
 				* S_j is contained with S_i
 					* Remove y_j and promote its children
-					
+
 				* S_i and S_j overlap, but neither contains
 				  the other.
 				  	* Remove both, promote their children
 				  	* If they are both leaf nodes with the
 				  	* Same span, merge them. (IN+DT, for example)
-				  	 
-	4) Reattach unaligned words.
+
+	4. Reattach unaligned words.
 		* For each unaligned word x:
 			* Find closest left and right aligned neighbor
 			* Attach x to the lowest common ancestor of the two.

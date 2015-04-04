@@ -1,7 +1,5 @@
 '''
-Created on Aug 30, 2013
-
-@author: rgeorgi
+This module is meant to 
 '''
 import os
 

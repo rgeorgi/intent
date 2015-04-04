@@ -1,7 +1,5 @@
 '''
-Created on Mar 8, 2014
-
-@author: rgeorgi
+Module to help dealing with "grams" (sub-token level gloss-line elements)
 '''
 import sys, re, logging
 
@@ -45,7 +43,7 @@ def write_gram(token, **kwargs):
 	output = kwargs.get('output', sys.stdout)
 	
 	posdict = kwargs.get('posdict', {})	
-		
+	
 	# Previous tag info
 	prev_gram = kwargs.get('prev_gram')
 	next_gram = kwargs.get('next_gram')
