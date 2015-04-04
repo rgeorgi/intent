@@ -46,15 +46,13 @@ class IdTree(ParentedTree):
 			st.id = '%s%d' % (id_base, i)
 			i+=1
 	
-	def find(self, index = None, id = None):
+	def find_index(self, idx):
+		return self.find(lambda x: x.index == idx)
+	
+	def find(self, filter):
 		
 		# Must search by either id or index
-		assert id or index
-		
-		index_q = (index is None) or (self.index == index)
-		id_q    = (id is None) or (self.id == id)
-		
-		if index_q and id_q:
+		if filter(self):
 			return self
 		
 		elif self.is_preterminal():
@@ -62,7 +60,7 @@ class IdTree(ParentedTree):
 		else:
 			ret = None
 			for child in self:
-				found = child.find(index, id)
+				found = child.find(filter)
 				if found is not None:
 					ret = found
 					break
@@ -167,17 +165,20 @@ class IdTree(ParentedTree):
 		:param j: 
 		:type j: int
 		'''
+		
+		assert i < j
+		
 		i_n = self[i]
 		j_n = self[j]
 		
 		
-		# The NLTK Tree throws a fit if we try to "insert"
-		# trees without first "zeroing out" the old one.
-		self[i] = None
-		self[j] = None
+		del self[i]
+		del self[j-1]
 		
-		self[i] = j_n
-		self[j] = i_n
+		
+		self.insert(i, j_n)
+		self.insert(j, i_n)
+		
 		
 	def merge(self, i, j):
 		'''
@@ -333,8 +334,8 @@ def project_ps(src_t, tgt_w, aln):
 	
 	for src_i, tgt_i in aln:
 		
-		# Get the node for the new tree...
-		tgt_n = tgt_t.find(index = src_i)
+		# Get the t for the new tree...
+		tgt_n = tgt_t.find_index(src_i)
 		
 		# This must be a preterminal...
 		assert(tgt_n.is_preterminal())
@@ -350,107 +351,171 @@ def project_ps(src_t, tgt_w, aln):
 		node.index = word.index
 		
 		
-	# 3) Reorder all nodes with 2 or more children... ---
-	nodes_to_examine = list(tgt_t.subtrees(filter=lambda x: len(x) >= 2))
-	for node in nodes_to_examine:
 		
-		# Try each combination pairwise... 
-		for s_i, s_j in itertools.combinations(node, 2):
-			a_i, b_i = s_i.span()
-			a_j, b_j = s_j.span()
-			
-			# TODO: Check that this logic is sound
-			# We may have manipulated the node 
-			# such that the next permutation is invalid.
-			# In that case, let's skip it.
-			if s_i not in node:
-				continue
-			if s_j not in node:
-				continue
-			
-			s_i_idx = list(node).index(s_i)
-			s_j_idx = list(node).index(s_j)
-						
-			# 3a) The nodes are already in order. Do nothing. ---
-			if a_i < a_j and b_i < b_j:
-				pass
-				
-			# 3b) The nodes are swapped. ---
-			elif a_i > a_j and b_i > b_j:
-				node.swap(s_i_idx, s_j_idx)
-				# TODO: Write a testcase for swap
-				
-				
-			# 3c-i) S_i contains S_j              ---
-			# delete s_i and promote its children.		
-			elif a_i < a_j and b_i > b_j:
-				nodes_to_examine.append(s_i.parent())
-				s_i.promote()
-				
-			
-			# 3c-ii) S_j contains S_i ---
-			#  delete s_j and promote its children.
-			elif a_i > a_j and b_i < b_j:
-				nodes_to_examine.append(s_j.parent())
-				s_j.promote()
-				
-			# d) S_j and S_i overlap but are not subsets. ---      
-			
-			
-			# 3di) They are the same span. ---
-			#    Merge them
-			elif a_i == a_j and b_i == b_j:
-				node.merge(s_i_idx, s_j_idx)
-				
-				# TODO: Write a test case for merge
-								
-			# 3dii) They are different ---
-			# Promote both of them.
-			else:
-				if not s_i.is_preterminal():
-					s_i.promote()
-				if not s_j.is_preterminal():
-					s_j.promote()
-					
-				nodes_to_examine.append(node)
+	# 3) Reorder the tree...
+	reorder_tree(tgt_t)
+
 				
 	# 4) Time to reattach unattached tgt words. ---
 	
-	unaligned_tgt_words = [w for w in tgt_w if w.index not in [t for s, t in aln]]
+	aligned_indices = [t for s, t in aln]
+	
+	unaligned_tgt_words = [w for w in tgt_w if w.index not in aligned_indices]
 	
 	
 	for unaligned_tgt_word in unaligned_tgt_words:
-		left_words = [w for w in tgt_w if w.index < unaligned_tgt_word.index]
-		right_words= [w for w in tgt_w if w.index > unaligned_tgt_word.index]
 		
-		assert left_words or right_words, "Unless none of the words are aligned..."
+		# Get the left and right words that are aligned...
+		left_words = [w for w in tgt_w if w.index < unaligned_tgt_word.index and w.index in aligned_indices]
+		right_words= [w for w in tgt_w if w.index > unaligned_tgt_word.index and w.index in aligned_indices]
+		
+		assert left_words or right_words, "At least some words should alig..."
 
 		left_word = None if not left_words else left_words[-1]
 		right_word= None if not right_words else right_words[0]
+		
+		assert right_word or left_word
 
 		t = IdTree('UNK', [unaligned_tgt_word.get_content()], id=unaligned_tgt_word.id, index=unaligned_tgt_word.index)
 		
 
 		# If there's only the right word, attach to that.		
 		if not left_word:
-			left_n = tgt_t.find(index=right_word.index)
-			left_idx = left_n.get_idx
+			left_n = tgt_t.find_index(right_word.index)
+			prev_left_idx = left_n.get_idx
 			
-			left_n.parent().insert(left_idx, t)
+			left_n.parent().insert(prev_left_idx, t)
 			
 		# If there's only the left word, attach to that.
 		elif not right_word:
-			right_n = tgt_t.find(index=left_word.index)
+			right_n = tgt_t.find_index(left_word.index)
 			right_idx = right_n.get_idx
 			right_n.parent().insert(right_idx+1, t)
 			
 		# TODO: What if there is both a left and a right.
 		else:
-			left_n = tgt_t.find(index=left_word.index)
-			right_n= tgt_t.find(index=right_word.index)
+			left_n = tgt_t.find_index(left_word.index)
+			right_n= tgt_t.find_index(right_word.index)
+			
+			# Get the list of ancestors going up to the root of the
+			# tree. The first point at which they "intersect"
+			# is the point we want.
+			left_ancestors = get_ancestors(left_n)
+			right_ancestors = get_ancestors(right_n)
+			
+			lowest_ancestor = None 
+			prev_left_idx = None
+			
+			for left_ancestor in left_ancestors:
+
+				for right_ancestor in right_ancestors:
+					if left_ancestor == right_ancestor:
+						lowest_ancestor = left_ancestor
+						break
+					
+				# Also save the most recent index of the previous
+				# left ancestor, so we can insert after it 
+				prev_left_idx = left_ancestor.get_idx
+				
+				if lowest_ancestor is not None:
+					break
+						
+			lowest_ancestor.insert(prev_left_idx+1, t)
+
 	
 	return tgt_t
 
+def get_ancestors(t):
+	return _get_ancestors(t.parent())
+
+def _get_ancestors(t):
+	if t is None:
+		return []
+	else:
+		return [t]+_get_ancestors(t.parent())
+	
+
+def lowest_common_ancestor(t1, t2):
+	
+	t1_ancestors = None
+	
+	
+	
+	
+def reorder_tree(t):
+	'''
+	Recursively reorder a tree. 
+	
+	:param t:
+	:type t:
+	'''
+	
+	if not t.is_preterminal():
+		if len(t) >= 2:
+			
+			# Try each combination pairwise... 
+			for s_i, s_j in itertools.combinations(t, 2):
+				a_i, b_i = s_i.span()
+				a_j, b_j = s_j.span()
+				
+				
+				s_i_idx = list(t).index(s_i)
+				s_j_idx = list(t).index(s_j)
+							
+				# 3a) The nodes are already in order. Do nothing. ---
+				if a_i < a_j and b_i < b_j:
+					pass
+					
+				# 3b) The nodes are swapped. ---
+				elif a_i > a_j and b_i > b_j:
+					t.swap(s_i_idx, s_j_idx)
+					# TODO: Write a testcase for swap
+					reorder_tree(t.root())
+					return
+					
+					
+				# 3c-i) S_i contains S_j              ---
+				# delete s_i and promote its children.		
+				elif a_i < a_j and b_i > b_j:
+					s_i.promote()
+					reorder_tree(t.root())
+					return
+					
+				
+				# 3c-ii) S_j contains S_i ---
+				#  delete s_j and promote its children.
+				elif a_i > a_j and b_i < b_j:
+					s_j.promote()
+					reorder_tree(t.root())
+					return
+					
+				# d) S_j and S_i overlap but are not subsets. ---      
+				
+				
+				# 3di) They are the same span. ---
+				#    Merge them
+				elif a_i == a_j and b_i == b_j:
+					t.merge(s_i_idx, s_j_idx)
+					reorder_tree(t.root())
+					return
+					
+					# TODO: Write a test case for merge
+									
+				# 3dii) They are different ---
+				# Promote both of them.
+				else:
+					if not s_i.is_preterminal():
+						s_i.promote()					
+					if not s_j.is_preterminal():
+						s_j.promote()
+					
+					reorder_tree(t.root())
+					return
+	
+		# If we've got to this point, that means that all of this node's children
+		# are in order. Now, if this is a nonterminal, recurse down the children.
+		for child in t:
+			reorder_tree(child)
 	
 class DepTree(IdTree):
 	

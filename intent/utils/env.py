@@ -6,6 +6,7 @@ Created on Feb 12, 2015
 import os, sys, logging
 from .fileutils import dir_above
 from .ConfigFile import ConfigFile
+import pickle
 
 # 1) Set up logging ------------------------------------------------------------
 ENV_LOG = logging.getLogger(__name__)
@@ -34,7 +35,7 @@ tagger_model     = c.getpath('stanford_tagger_trans')
 parser_jar       = c.getpath('stanford_parser_jar')
 parser_model_jar = c.getpath('stanford_parser_model_jar')
 parser_model     = c.get('stanford_parser_model')
-posdict          = c.getpath('pos_dict')
+posdict          = 0 if not c.getpath('pos_dict') else pickle.load(open(c.getpath('pos_dict'), 'rb'))
 
 #===============================================================================
 # Try to import the XIGT module.
