@@ -56,7 +56,7 @@ def enrich(**kwargs):
 	#===========================================================================
 	if kwargs.get('pos_lang') == 'class':
 		print("Initializing gloss-line classifier...")
-		p = pickle.load(open(posdict, 'rb'))
+		p = posdict
 		m = mallet_maxent.MalletMaxent(classifier)
 	
 	# -- 1a) Heuristic Alignment --------------------------------------------------
