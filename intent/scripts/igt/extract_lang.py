@@ -7,18 +7,23 @@ This script is used to point at a dump of the ODIN database and extract the spec
 '''
 
 # Built-in imports -------------------------------------------------------------
-import argparse, re
+import argparse, re, logging
+
+EXTR_LOG = logging.getLogger('LANG_EXTRACTOR')
 
 # Internal imports -------------------------------------------------------------
 from intent.utils.argutils import configfile, writefile
 from intent.utils.fileutils import matching_files
 
-def extract_lang(dir, lang, outfile):
+def extract_lang(dir, lang, outfile, limit=None):
 	
 	i = 0
+	EXTR_LOG.info('Extracting language "%s" from ODIN...' % lang)
 	
 	# Iterate through each ".check" file in the given directory.
 	for path in matching_files(dir, '.*\.check$', recursive=True):
+		
+		EXTR_LOG.debug('Working on path... "%s"' % path)
 		
 		# Open up the file... 
 		f = open(path, 'r', encoding='latin-1')		
@@ -48,9 +53,11 @@ def extract_lang(dir, lang, outfile):
 			if inst_lang == lang:
 				outfile.write(instance+'\n\n')
 				i += 1
+				if limit and i == limit: break
 				
-	print('%d instances written.' % i)
-	outfile.close()
+		if limit and i == limit: break
+	
+	EXTR_LOG.info('%d instances written.' % i)
 			
 
 if __name__ == '__main__':

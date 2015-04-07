@@ -32,6 +32,34 @@ def remove_external_punctuation(ret_str):
 	ret_str = re.sub(r'(?:^|\s)({}+)(\w+)'.format(punc_re), r'\2', ret_str).strip()
 	return re.sub(r'(\w+)([{}])+$'.format(punc_re), r'\1 ', ret_str).strip()
 
+def join_morphs(ret_str):
+	'''
+	Find tokens that have letters or numbers on two sides separated by a
+	period or morph and join them.
+	
+	E.g. MASC . 1SG becomes "MASC.1SG"
+	'''
+	m = re.sub('([\w\d])\s*([\.\-])\s*(?=[\w\d])', r'\1\2', ret_str)
+	return m
+	
+def fix_grams(ret_str):
+	'''
+	Search for gram strings that have been split with whitespace and rejoin them.
+
+	For instance "3 SG" will become "3SG"
+	'''
+	for gram in ['3SG', '1PL', '2SG', '2PL']:
+		for i in range(1, len(gram)+1):
+			first, last = gram[:i], gram[i:]
+			
+			if first and last:
+				
+				expr = '%s\s+%s' % (first, last)
+				ret_str = re.sub(expr, gram, ret_str, flags=re.I)
+	return ret_str 
+			
+	
+
 def remove_elipses(ret_str):
 	return re.sub('\.\s*\.\s*\.', '', ret_str)
 
@@ -187,6 +215,8 @@ def clean_gloss_string(ret_str):
 	
 	# Remove ellipses
 	#ret_str = remove_elipses(ret_str) 
+	ret_str = join_morphs(ret_str)
+	ret_str = fix_grams(ret_str)
 	
 	# Rejoin letters
 	ret_str = rejoin_letter(ret_str, 't', 'right')
@@ -285,7 +315,7 @@ class TestLangLines(unittest.TestCase):
 	def runTest(self):
 		
 		l1 = '  (38)     Este taxista     (*me) parece [t estar cansado]'
-		l1c = 'Este taxista *me parece t estar cansado'
+		l1c = 'Este taxista me parece t estar cansado'
 		
 		self.assertEqual(clean_lang_string(l1), l1c)
 		
@@ -299,6 +329,16 @@ class TestLangLines(unittest.TestCase):
 		print(l1_clean == l1_target)
 		
 		self.assertEquals(l1_clean, l1_target)
+		
+class TestGlossLines(unittest.TestCase):
+	 
+	 def test_gloss(self):
+	 	g1 = 'Agnès     1SG . REC   3SG . M . THM   present. FUT .3 SG'
+	 	
+	 	g1_clean = clean_gloss_string(g1)
+	 	g1_target= 'Agnès 1SG.REC 3SG.M.THM present.FUT.3SG'
+	 	
+	 	self.assertEquals(g1_clean, g1_target)
 		
 class TestHyphenate(unittest.TestCase):
 	def runTest(self):

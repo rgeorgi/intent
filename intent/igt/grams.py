@@ -186,8 +186,8 @@ def write_gram(token, **kwargs):
 				
 				top_tags = posdict.top_n(token.seq)
 				best = top_tags[0][0]
-				if best != pos:
-					MODULE_LOGGER.debug('%s TAGGED as %s NOT %s' % (gram, pos, best))
+				#if best != pos:
+				#	MODULE_LOGGER.debug('%s tagged as %s not %s' % (gram, pos, best))
 				
 				output.write('\ttop-dict-word-%s:1' % top_tags[0][0])
 				if len(top_tags) > 1:

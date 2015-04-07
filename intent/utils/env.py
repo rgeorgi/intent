@@ -36,6 +36,7 @@ parser_jar       = c.getpath('stanford_parser_jar')
 parser_model_jar = c.getpath('stanford_parser_model_jar')
 parser_model     = c.get('stanford_parser_model')
 posdict          = 0 if not c.getpath('pos_dict') else pickle.load(open(c.getpath('pos_dict'), 'rb'))
+odin_data		 = c.getpath('odin_data')
 
 #===============================================================================
 # Try to import the XIGT module.

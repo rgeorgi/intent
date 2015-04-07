@@ -77,6 +77,18 @@ enrich.add_argument('--parse-trans', choices=[0,1], default=0, type=int, help='P
 enrich.add_argument('--project-pt', choices=[0,1], default=0, type=int, help='Project the phrase structure tree from translation to language line.')
 
 
+#===============================================================================
+# ODIN subcommand
+#===============================================================================
+odin = subparsers.add_parser('odin', help='Convert ODIN data to XIGT format')
+
+odin.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
+odin.add_argument('--format', help='Format to output odin data in.', choices=['txt', 'xigt'], default='xigt')
+odin.add_argument('LNG', help='ISO 639-3 code for a language')
+odin.add_argument('OUT_FILE', help='Output path for the output file.')
+odin.add_argument('--limit', help="Limit number of instances written.", type=int)
+odin.add_argument('--randomize', action='store_true', help='Randomly select the instances')
+
 
 # Parse the args. --------------------------------------------------------------
 try:
@@ -98,3 +110,5 @@ logging.getLogger().setLevel(logging.WARNING - 10*(min(args.verbose, 2)))
 
 if args.subcommand == 'enrich':
 	subcommands.enrich(**vars(args))
+elif args.subcommand == 'odin':
+	subcommands.odin(**vars(args))

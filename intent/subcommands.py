@@ -9,16 +9,40 @@ import sys, logging, pickle
 from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
 	PhraseStructureProjectionException, ProjectionException,\
 	ProjectionTransGlossException, rgp, word_align
-from intent.utils.env import c, classifier, posdict
+from intent.utils.env import c, classifier, posdict, odin_data
 from intent.utils.argutils import writefile
 from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
 
 from intent.interfaces.giza import GizaAlignmentException
 from intent.interfaces import mallet_maxent, stanford_parser
+from io import StringIO
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
+from intent.scripts.igt.extract_lang import extract_lang
+from intent.scripts.conversion.odin_to_xigt import parse_text
 
+#===============================================================================
+# The ODIN subcommand
+#===============================================================================
+def odin(**kwargs):
+	ODIN_LOG = logging.getLogger('ODIN')
+	
+	odin_txt = StringIO()
+	print('Extracting languages matching "%s" from ODIN.' % kwargs.get('LNG'))
+	extract_lang(odin_data, kwargs.get('LNG'), odin_txt, limit=kwargs.get('limit'))
+	odin_txt_data = odin_txt.getvalue()
+	
+	print(kwargs.get('out_file'))
+	
+	if kwargs.get('format') == 'txt':
+		f = open(kwargs.get('OUT_FILE'), 'w', encoding='utf-8')
+		f.write(odin_txt_data)
+	else:		
+		f = open(kwargs.get('OUT_FILE'), 'w', encoding='utf-8')
+		
+		parse_text(StringIO(odin_txt_data), f)
+		
 
 #===============================================================================
 # The ENRICH subcommand.

@@ -131,15 +131,19 @@ ODIN_TRANS_TAG = 'T'
 
 class RGXigtException(Exception): pass
 
-class NoODINRawException(RGXigtException):	pass 
+# • Format Exceptions ------------------------------------------------------------
 
-class TextParseException(RGXigtException):	pass
+class XigtFormatException(RGXigtException): pass
+class NoNormLineException(XigtFormatException): pass
+class MultipleNormLineException(XigtFormatException): pass
 
-class NoLangLineException(TextParseException):	pass
+class NoTransLineException(XigtFormatException): pass
+class NoLangLineException(XigtFormatException):	pass
+class NoGlossLineException(XigtFormatException): pass
 
-class NoGlossLineException(TextParseException):	pass
+class NoODINRawException(XigtFormatException):	pass
 
-class NoTransLineException(TextParseException):	pass
+# • Alignment and Projection Exceptions ------------------------------------------
 
 class GlossLangAlignException(RGXigtException):	pass
 
@@ -362,26 +366,20 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		return new_c
 	
 	@classmethod
-	def from_txt(cls, path, require_trans = False, require_gloss = False, require_lang = False, require_1_to_1 = True):
+	def from_txt(cls, text, require_trans = False, require_gloss = False, require_lang = False, require_1_to_1 = True):
 		'''
 		Read in a odin-style textfile to create the xigt corpus.
 		 
-		:param path: Path to the text file
-		:type path: str
 		'''
 		# Initialize the corpus
 		xc = cls()
 		
-		# Open the textfile and read the contents...
-		f = open(path, 'r', encoding='utf-8')
-		data = f.read()
 		
 		# Replace invalid characters...
 		_illegal_xml_chars_RE = re.compile(u'[\x00-\x08\x0b\x0c\x0e-\x1F\uD800-\uDFFF\uFFFE\uFFFF]')
-		data = re.sub(_illegal_xml_chars_RE, ' ', data)
+		data = re.sub(_illegal_xml_chars_RE, ' ', text)
 		
 		
-		f.close()
 		
 		# Read all the text lines
 		inst_txts = re.findall('doc_id=[\s\S]+?\n\n', data)
@@ -391,7 +389,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		#=======================================================================
 		
 		parsed = 0
-		PARSELOG.info('Beginning parse on "%s"' % path)
+		PARSELOG.info('Beginning parse')
 		for inst_txt in inst_txts:
 			
 			if parsed % 250 == 0:
@@ -481,7 +479,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		for i in self:
 			try:
 				tier = getattr(i, attr)
-			except TextParseException as tpe:
+			except XigtFormatException as tpe:
 				PARSELOG.info(tpe)
 			else:
 				new_igts.append(i)
@@ -658,7 +656,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		# TODO: Clean up this exception handling
 		try:
 			inst.enrich_instance()
-		except TextParseException as ngle:
+		except XigtFormatException as ngle:
 			PARSELOG.warning(ngle)
 		
 		
@@ -692,17 +690,17 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		# Create the word and phrase tiers...
 		try:
 			self.trans
-		except TextParseException:
+		except XigtFormatException:
 			pass
 		
 		try:
 			self.gloss
-		except TextParseException:
+		except XigtFormatException:
 			pass
 		
 		try:
 			haslang = self.lang
-		except TextParseException:
+		except XigtFormatException:
 			haslang = False
 		
 		# Create the morpheme tiers...
@@ -840,6 +838,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 	def normal_tier(self, merge = True):
 			# If a clean tier already exists, return it.
 			normal_tier = self.find(type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:NORM_STATE})
+
 			if normal_tier:
 				return normal_tier
 			else:
@@ -864,24 +863,27 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 
 	@property
 	def lang(self):
-		lt = retrieve_lang_words(self) 
-		if not lt:
+		try:
+			lt = retrieve_lang_words(self) 
+		except:
 			raise NoLangLineException('No lang line available for igt "%s"' % self.id)
 		else:
 			return lt
 		
 	@property
 	def gloss(self):
-		gt = retrieve_gloss(self)
-		if not gt:
+		try:
+			gt = retrieve_gloss(self)
+		except NoNormLineException:
 			raise NoGlossLineException('No gloss line available for igt "%s"' % self.id)
 		else:
 			return gt
 		
 	@property
 	def trans(self):
-		tt = retrieve_trans_words(self)
-		if not tt:
+		try:
+			tt = retrieve_trans_words(self)
+		except NoNormLineException:
 			raise NoTransLineException('No trans line available for igt "%s"' % self.id)
 		else:
 			return tt
@@ -1507,7 +1509,6 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 		
 		pt = project_ps(trans_tree, self.lang, tl_aln)
-		
 
 		self.create_pt_tier(pt, self.lang)
 		
@@ -2057,7 +2058,7 @@ def retrieve_phrase(inst, tag, id, type):
 # • Word Tier Creation ---
 #===============================================================================
 
-def create_words_tier(cur_item, word_id, word_type):
+def create_words_tier(cur_item, word_id, word_type, aln_attribute = SEGMENTATION):
 	'''
 	Create a words tier from an ODIN line type item.
 	
@@ -2075,11 +2076,11 @@ def create_words_tier(cur_item, word_id, word_type):
 	words = intent.utils.token.tokenize_item(cur_item)
 	
 	# Create a new word tier to hold the tokenized words...
-	wt = RGWordTier(id = word_id, type=word_type, content=cur_item.tier.id, igt=cur_item.igt)
+	wt = RGWordTier(id = word_id, type=word_type, attributes={aln_attribute:cur_item.tier.id}, igt=cur_item.igt)
 	
 	for w in words:
 		# Create a new word that is a segmentation of this tier.
-		rw = RGWord(id=wt.askItemId(), content=create_aln_expr(cur_item.id, w.start, w.stop), tier=wt, start=w.start, stop=w.stop)
+		rw = RGWord(id=wt.askItemId(), attributes={aln_attribute:create_aln_expr(cur_item.id, w.start, w.stop)}, tier=wt, start=w.start, stop=w.stop)
 		wt.add(rw)
 	
 	return wt
@@ -2096,7 +2097,9 @@ def retrieve_trans_words(inst):
 	tpt = retrieve_trans_phrase(inst)
 	
 	# Get the translation word tier
-	twt = inst.find(type=TRANS_WORD_TYPE, content=tpt.id)
+	twt = inst.find(
+				#type=TRANS_WORD_TYPE,
+				segmentation=tpt.id)
 
 	if not twt:
 		twt = create_words_tier(tpt[0], TRANS_WORD_ID, TRANS_WORD_TYPE)
@@ -2117,7 +2120,7 @@ def retrieve_lang_words(inst):
 	lpt = retrieve_lang_phrase(inst)
 	
 	# Get the lang word tier
-	lwt = inst.find(type=LANG_WORD_TYPE, content=lpt.id)
+	lwt = inst.find(type=LANG_WORD_TYPE, segmentation=lpt.id)
 	
 	if not lwt:
 		lwt = create_words_tier(lpt[0], LANG_WORD_ID, LANG_WORD_TYPE)
@@ -2145,7 +2148,7 @@ def retrieve_gloss(inst):
 	
 	# 2. If it exists, return it. Otherwise, look for the glosses tier.
 	if not wt:
-		wt = create_words_tier(retrieve_normal_line(inst, ODIN_GLOSS_TAG), GLOSS_WORD_ID, GLOSS_WORD_TYPE)
+		wt = create_words_tier(retrieve_normal_line(inst, ODIN_GLOSS_TAG), GLOSS_WORD_ID, GLOSS_WORD_TYPE, aln_attribute=CONTENT)
 		inst.add(wt)
 	else:
 		wt.__class__ = RGWordTier
@@ -2168,9 +2171,12 @@ def retrieve_normal_line(inst, tag):
 	
 	lines = [l for l in n if tag in l.attributes['tag'].split('+')]
 	
-	assert len(lines) == 1, "There should not be more than one line for each tag in the normalized tier."
-	
-	return lines[0]
+	if len(lines) < 1:
+		raise NoNormLineException()
+	elif len(lines) > 1:
+		raise MultipleNormLineException()
+	else:
+		return lines[0]
 
 		
 	
@@ -2358,7 +2364,6 @@ def find_gloss_word(inst, morph):
 	
 	:rtype: RGWord
 	'''
-	content = morph.attributes.get(CONTENT)
 	
 	for g in inst.gloss:
 		
