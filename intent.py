@@ -59,6 +59,8 @@ enrich = subparsers.add_parser('enrich', help='Enrich igt data.',
 							description='Ingest a XIGT document and add information, such as alignment, or POS tags.',
 							formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
+enrich.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
+
 # Positional arguments ---------------------------------------------------------
 enrich.add_argument('IN_FILE', type=existsfile, help='Input XIGT file.')
 enrich.add_argument('OUT_FILE', help='Path to output XIGT file.')
@@ -87,6 +89,12 @@ except PathArgException as pae:  # If we get some kind of invalid file in the ar
 	
 # Decide on action based on subcommand and args. -------------------------------
 from intent import subcommands
+
+#===============================================================================
+# Set verbosity level
+#===============================================================================
+
+logging.getLogger().setLevel(logging.WARNING - 10*(min(args.verbose, 2)))
 
 if args.subcommand == 'enrich':
 	subcommands.enrich(**vars(args))
