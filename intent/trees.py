@@ -7,8 +7,19 @@ import unittest
 import intent.alignment.Alignment
 from copy import copy
 import itertools
+import logging
 
+#===============================================================================
+# Exceptions
+#===============================================================================
 
+class TreeError(Exception): pass
+class PhraseTreeError(TreeError): pass
+
+class TreeProjectionError(Exception): pass
+class TreeMergeError(TreeProjectionError): pass
+
+PS_LOG = logging.getLogger('PS_PROJECT')
 
 class IdTree(ParentedTree):
 	'''
@@ -71,7 +82,7 @@ class IdTree(ParentedTree):
 		'''
 		Delete self from parent.
 		'''
-		del self.parent()[self.get_idx]
+		del self.parent()[self.parent_index()]
 		
 	
 	def copy(self):
@@ -129,14 +140,6 @@ class IdTree(ParentedTree):
 		#    children.
 		else:
 			return (self[0].span()[0], self[-1].span()[1])
-			
-	@property
-	def get_idx(self):
-		if not self.parent():
-			return None
-		else:
-			return list(self.parent()).index(self)
-	
 	
 	def promote(self):
 		'''
@@ -145,7 +148,7 @@ class IdTree(ParentedTree):
 		
 		# Get the index of this node, and a ref
 		# to its parent, then delete it.
-		my_idx = self.get_idx
+		my_idx = self.parent_index()
 		parent = self.parent()
 		self.delete()
 		
@@ -190,7 +193,10 @@ class IdTree(ParentedTree):
 		:type j: int
 		'''
 		
-		assert i != j, 'indices cannot be equal in a merge'
+		if i == j:
+			raise TreeMergeError("Indices cannot be equal in a merge.")
+
+
 		assert i < j, 'i must be smaller index'
 		
 		i_n = self[i]
@@ -213,7 +219,21 @@ class IdTree(ParentedTree):
 		
 		
 		
+	def insert_by_span(self, t):
+
+		assert not self.is_preterminal(), "Should not be preterminal"
 		
+		last_index = None
+		for i, sibling in enumerate(self):
+			start, stop = sibling.span()
+			if start > t.index:
+				last_index = i
+				break
+		
+		last_index = last_index if last_index is not None else len(self)
+			
+		PS_LOG.debug('Inserting {} into {} at position {}'.format(t.pprint(margin=5000), self.pprint(margin=5000), last_index))
+		self.insert(last_index, t)
 		
 		
 		
@@ -269,7 +289,15 @@ def get_nodes(string):
 	# Now that we have the dictionary, we can start from "ROOT"
 	return build_tree(child_dict)
 	
+def aln_indices(tokens):
+	index_str = ''
+	for i, token in enumerate(tokens):
+		index_str += ('{:<' + str(len(token)+1) + '}').format(i+1)
+	return index_str
+	
+	
 def project_ps(src_t, tgt_w, aln):
+
 	'''
 	1. Copy the English PS, and remove all unaligned English words.
 
@@ -308,19 +336,28 @@ def project_ps(src_t, tgt_w, aln):
 			* Attach x to the lowest common ancestor of the two.
 	'''
 	
+	PS_LOG.debug('Projecting phrase structure.')
+	PS_LOG.debug('             ' + aln_indices(src_t.leaves()))
+	PS_LOG.debug('SRC        : %s' % ' '.join(src_t.leaves()))
+	PS_LOG.debug('SRC -> TGT : %s' % str(sorted(list(aln))))
+	PS_LOG.debug('TGT        : %s' % tgt_w.text())
+	PS_LOG.debug('             ' + aln_indices([t.get_content() for t in tgt_w]))
+
+	
 	src_is = [x[0] for x in aln]
 	
 	# 1) Copy the English PS... ---	
 	tgt_t = src_t.copy()
 	
 	# 1b) Remove unaligned words... ---
+	nodes_to_delete = []	
 	for pt in tgt_t.preterminals():
 		if pt.index not in src_is:
+			nodes_to_delete.append(pt)
 
-			# Get the child's index in the parent's list,
-			# and delete it that way.	
-			child_idx = list(pt.parent()).index(pt)
-			del pt.parent()[child_idx]
+	for n in nodes_to_delete:
+		n.delete()
+
 		
 	# 2) Replace all the English words with the foreign words ---
 	#    (and their indices!)
@@ -347,17 +384,19 @@ def project_ps(src_t, tgt_w, aln):
 		
 	# Now, let's do the swapping.
 	for node, word in nodes_to_swap:
+		PS_LOG.debug('Replacing {:>14s} {:<4s} with {:<4s} {:<14s}'.format('"%s"'%node[0], '[%d]'%node.index, '[%d]'%word.index, '"%s"' % word.get_content()))
 		node[0] = word.get_content()
 		node.index = word.index
 		
-		
+	PS_LOG.debug('Current Tree: {}'.format(tgt_t.pprint(margin=100)))
 		
 	# 3) Reorder the tree...
+	PS_LOG.debug('#'*10+' Now reordering tree...' + '#'*10)
 	reorder_tree(tgt_t)
 
 				
 	# 4) Time to reattach unattached tgt words. ---
-	
+	PS_LOG.debug('#'*10+' Now reattaching unaligned words...' + '#'*10)
 	aligned_indices = [t for s, t in aln]
 	
 	unaligned_tgt_words = [w for w in tgt_w if w.index not in aligned_indices]
@@ -382,15 +421,12 @@ def project_ps(src_t, tgt_w, aln):
 		# If there's only the right word, attach to that.		
 		if not left_word:
 			left_n = tgt_t.find_index(right_word.index)
-			prev_left_idx = left_n.get_idx
-			
-			left_n.parent().insert(prev_left_idx, t)
+			left_n.parent().insert_by_span(t)
 			
 		# If there's only the left word, attach to that.
 		elif not right_word:
 			right_n = tgt_t.find_index(left_word.index)
-			right_idx = right_n.get_idx
-			right_n.parent().insert(right_idx+1, t)
+			right_n.parent().insert_by_span(t)
 			
 		# TODO: What if there is both a left and a right.
 		else:
@@ -404,7 +440,6 @@ def project_ps(src_t, tgt_w, aln):
 			right_ancestors = get_ancestors(right_n)
 			
 			lowest_ancestor = None 
-			prev_left_idx = None
 			
 			for left_ancestor in left_ancestors:
 
@@ -412,18 +447,16 @@ def project_ps(src_t, tgt_w, aln):
 					if left_ancestor == right_ancestor:
 						lowest_ancestor = left_ancestor
 						break
-					
-				# Also save the most recent index of the previous
-				# left ancestor, so we can insert after it 
-				prev_left_idx = left_ancestor.get_idx
 				
 				if lowest_ancestor is not None:
 					break
 						
-			lowest_ancestor.insert(prev_left_idx+1, t)
+			lowest_ancestor.insert_by_span(t)
 
 	
 	return tgt_t
+
+
 
 def get_ancestors(t):
 	return _get_ancestors(t.parent())
@@ -459,8 +492,8 @@ def reorder_tree(t):
 				a_j, b_j = s_j.span()
 				
 				
-				s_i_idx = list(t).index(s_i)
-				s_j_idx = list(t).index(s_j)
+				s_i_idx = s_i.parent_index()
+				s_j_idx = s_j.parent_index()
 							
 				# 3a) The nodes are already in order. Do nothing. ---
 				if a_i < a_j and b_i < b_j:
@@ -468,6 +501,7 @@ def reorder_tree(t):
 					
 				# 3b) The nodes are swapped. ---
 				elif a_i > a_j and b_i > b_j:
+					PS_LOG.debug('SWAPPING: {:>30} [{},{}] for [{},{}] {:<12}'.format(str(s_i), a_i, b_i, a_j, b_j, str(s_j)))
 					t.swap(s_i_idx, s_j_idx)
 					# TODO: Write a testcase for swap
 					reorder_tree(t.root())
@@ -477,6 +511,7 @@ def reorder_tree(t):
 				# 3c-i) S_i contains S_j              ---
 				# delete s_i and promote its children.		
 				elif a_i < a_j and b_i > b_j:
+					PS_LOG.debug('PROMOTE: {} [{},{}]'.format(s_i, b_i, b_j))
 					s_i.promote()
 					reorder_tree(t.root())
 					return
@@ -485,6 +520,7 @@ def reorder_tree(t):
 				# 3c-ii) S_j contains S_i ---
 				#  delete s_j and promote its children.
 				elif a_i > a_j and b_i < b_j:
+					PS_LOG.debug('PROMOTE: {} [{},{}]'.format(s_i, b_i, b_j))
 					s_j.promote()
 					reorder_tree(t.root())
 					return
@@ -495,6 +531,7 @@ def reorder_tree(t):
 				# 3di) They are the same span. ---
 				#    Merge them
 				elif a_i == a_j and b_i == b_j:
+					PS_LOG.debug('Merging: {:>30} [{},{}] with [{},{}] {:<}'.format(str(s_i), a_i, b_i, a_j, b_j, str(s_j)))
 					t.merge(s_i_idx, s_j_idx)
 					reorder_tree(t.root())
 					return
