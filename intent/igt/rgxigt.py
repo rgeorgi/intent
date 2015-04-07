@@ -1530,16 +1530,17 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		dt_tier = RGTier(type=DS_TIER_TYPE, id=self.askTierId(DS_TIER_TYPE, GEN_DS_ID),
 						attributes = {DS_DEP_ATTRIBUTE:self.trans.id, DS_HEAD_ATTRIBUTE:self.trans.id})
 		
-		# 2) Next, simply iterate through the tree and make the head/dep mappings. 
-		for head_i, dep_i in dt.index_pairs():
-			
+		# 2) Next, simply iterate through the tree and make the head/dep mappings.
+		
+		for label, head_i, dep_i in dt.indices_labels():
+	
 			attributes={DS_DEP_ATTRIBUTE:self.trans.get_index(dep_i).id}
 			
 			if head_i != 0:
 				attributes[DS_HEAD_ATTRIBUTE] = self.trans.get_index(head_i).id
 							
 				
-			di = RGItem(id=dt_tier.askItemId(), attributes=attributes)
+			di = RGItem(id=dt_tier.askItemId(), attributes=attributes, text=label)
 			dt_tier.add(di)
 		
 		self.add(dt_tier)

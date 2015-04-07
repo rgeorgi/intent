@@ -106,18 +106,33 @@ class IdTree(ParentedTree):
 		return t
 	
 	def preterminals(self):
-		return self.subtrees(filter=lambda t: t.height() == 2)
+		return self.subtrees(filter=lambda t: t.is_preterminal())
 	
 	def nonterminals(self):
-		return self.subtrees(filter=lambda t: t.height() > 2)
+		return self.subtrees(filter=lambda t: not t.is_preterminal())
 	
 	def is_preterminal(self):
+		'''
+		Check whether or not the given node is a preterminal (its height
+		should be == 2)
+		'''
 		return self.height() == 2
 	
-	def index_pairs(self):
-		for st in self.subtrees():
-			for child in st:
-				yield((st.index, child.index)) 
+	def indices_labels(self):
+		'''
+		Iterate through the tree, and return the list of
+		(label, head, child) tuples.
+		'''
+		if self.parent():
+			ret_tup = [(self.type, self.parent().index, self.index)]
+		else:
+			ret_tup = []
+		
+		for child in self:
+			ret_tup += child.indices_labels()
+		return ret_tup
+	
+			
 				
 	def span(self):
 		'''
