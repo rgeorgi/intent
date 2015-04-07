@@ -43,6 +43,7 @@ class StanfordParser(object):
 										'edu.stanford.nlp.parser.lexparser.LexicalizedParser',
 										'-outputFormat', 'penn,typedDependencies',
 										'-sentences', 'newline',
+										'-tokenized',
 										parser_model,
 										'-'], stderr_func=parser_stderr_handler)
 	
