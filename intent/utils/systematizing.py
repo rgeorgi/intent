@@ -121,7 +121,7 @@ def piperunner(cmd, log_name = None):
 		except Empty:
 			pass
 		else:
-			out_func(data.decode('utf-8'))
+			out_func(data.decode('utf-8').strip())
 		
 		
 	return p.returncode
