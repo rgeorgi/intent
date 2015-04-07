@@ -3,12 +3,12 @@ Created on Jan 31, 2014
 
 @author: rgeorgi
 '''
-from ingestion.TextParser import TextParser
-from utils.ConfigFile import ConfigFile
+from intent.ingestion.TextParser import TextParser
+from intent.utils.ConfigFile import ConfigFile
 import argparse
 import os
 import sys
-from corpora.POSCorpus import POSCorpus, POSToken, POSCorpusInstance
+from intent.corpora.POSCorpus import POSCorpus, POSToken, POSCorpusInstance
 
 def sent_count(path):
 	f = open(path, 'r', encoding='utf-8')

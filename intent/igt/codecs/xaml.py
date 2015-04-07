@@ -8,16 +8,16 @@ Created on Feb 25, 2015
 # Logging
 #===============================================================================
 import logging
-from igt.rgxigtutils import strip_enrichment, follow_alignment
-from alignment.Alignment import AlignedCorpus, AlignedSent
-from eval.AlignEval import AlignEval
+from intent.igt.rgxigt import strip_enrichment, follow_alignment
+from intent.alignment.Alignment import AlignedCorpus, AlignedSent
+from intent.eval.AlignEval import AlignEval
 import glob
 import os
-from utils.setup_env import c
-from interfaces.stanford_tagger import StanfordPOSTagger
-from interfaces.mallet_maxent import MalletMaxent
+from intent.utils.env import c
+from intent.interfaces.stanford_tagger import StanfordPOSTagger
+from intent.interfaces.mallet_maxent import MalletMaxent
 import pickle
-from eval.pos_eval import poseval
+from intent.eval.pos_eval import poseval
 logging.basicConfig(handlers=[logging.StreamHandler()])
 XAML_LOG = logging.getLogger(__name__)
 XAML_LOG.setLevel(logging.DEBUG)
@@ -26,10 +26,10 @@ XAML_LOG.setLevel(logging.DEBUG)
 
 import lxml.etree
 import sys
-from igt.rgxigt import RGCorpus, RGTier, rgp, RGIgt, RGItem, RGWordTier, RGWord,\
+from intent.igt.rgxigt import RGCorpus, RGTier, rgp, RGIgt, RGItem, RGWordTier, RGWord,\
 	RGBilingualAlignmentTier, RGTokenTier, RGToken, ProjectionException
 import re
-from utils.uniqify import uniqify
+from intent.utils.uniqify import uniqify
 import logging
 
 

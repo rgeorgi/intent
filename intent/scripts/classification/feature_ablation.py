@@ -9,10 +9,8 @@ from collections import OrderedDict
 from multiprocessing import Pool
 
 # Internal imports -------------------------------------------------------------
-from intent.interfaces.MalletMaxentTrainer import MalletMaxentTrainer
 from intent.utils.ConfigFile import ConfigFile
-from intent.ingestion.xaml.XamlParser import XamlParser
-from intent.utils.argutils import ArgPasser
+from intent.utils.argpasser import ArgPasser
 
 
 def produce_files(**c):

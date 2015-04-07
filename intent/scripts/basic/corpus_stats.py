@@ -14,7 +14,6 @@ import logging
 import os, argparse, sys
 
 
-logging.basicConfig(handlers=[logging.NullHandler()], fmt='%(levelno)s: %(message)s')
 STATS_LOGGER = logging.getLogger(__name__)
 
 #===============================================================================
@@ -23,9 +22,9 @@ STATS_LOGGER = logging.getLogger(__name__)
 
 from collections import defaultdict
 
-from intent.igt.rgxigt import RGCorpus, NoLangLineException, TextParseException,\
+from intent.igt.rgxigt import RGCorpus, NoLangLineException, XigtFormatException,\
 	GlossLangAlignException
-from intent.intent.igt import rgxigt
+from intent.igt import rgxigt
 from intent.utils.dicts import StatDict
 from intent.utils.token import tokenize_string, tag_tokenizer
 from intent.utils.argutils import writefile
@@ -77,7 +76,7 @@ def igt_stats(filelist, type='text', logpath=None):
 		def igt_line_count(igt, attr):
 			try:
 				line = getattr(igt, attr)
-			except TextParseException as tpe:
+			except XigtFormatException as tpe:
 				line = False
 				
 			if line:
@@ -98,7 +97,7 @@ def igt_stats(filelist, type='text', logpath=None):
 				igt.trans
 				igt.gloss
 				igt.lang
-			except TextParseException as tpe:
+			except XigtFormatException as tpe:
 				pass
 			else:
 				igts['all_lines'] += 1

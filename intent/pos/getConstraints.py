@@ -9,7 +9,7 @@ import argparse, sys
 
 # Internal Imports -------------------------------------------------------------
 from intent.utils.ConfigFile import ConfigFile
-from intent.utils.TwoLevelCountDict import TwoLevelCountDict
+from intent.utils.dicts import TwoLevelCountDict
 from intent.utils.TagCounter import TagCounter
 
 
