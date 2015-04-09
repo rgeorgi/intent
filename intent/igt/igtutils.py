@@ -292,7 +292,7 @@ def clean_lang_string(ret_str):
 	ret_str = collapse_spaces(ret_str)
 	
 	# Remove final punctuation
-	ret_str = remove_final_punctuation(ret_str)
+	#ret_str = remove_final_punctuation(ret_str)
 	
 	
 	#ret_str = remove_hyphens(ret_str)
@@ -324,21 +324,21 @@ class TestLangLines(unittest.TestCase):
 		#l1 = '  (1)     Mangi-a.'
 		
 		l1_clean = clean_lang_string(l1)
-		l1_target = 'Mangi-a'
+		l1_target = 'Mangi-a .'
 		
 		print(l1_clean == l1_target)
 		
 		self.assertEquals(l1_clean, l1_target)
 		
 class TestGlossLines(unittest.TestCase):
-	 
-	 def test_gloss(self):
-	 	g1 = 'Agnès     1SG . REC   3SG . M . THM   present. FUT .3 SG'
-	 	
-	 	g1_clean = clean_gloss_string(g1)
-	 	g1_target= 'Agnès 1SG.REC 3SG.M.THM present.FUT.3SG'
-	 	
-	 	self.assertEquals(g1_clean, g1_target)
+	
+	def test_gloss(self):
+		g1 = 'Agnès     1SG . REC   3SG . M . THM   present. FUT .3 SG'
+		
+		g1_clean = clean_gloss_string(g1)
+		g1_target= 'Agnès 1SG.REC 3SG.M.THM present.FUT.3SG'
+		
+		self.assertEquals(g1_clean, g1_target)
 		
 class TestHyphenate(unittest.TestCase):
 	def runTest(self):
@@ -348,5 +348,12 @@ class TestHyphenate(unittest.TestCase):
 		self.assertEqual(hyphenate_infinitive(h1), h1f)
 		
 
+class TestMergeLines(unittest.TestCase):
+	def runTest(self):
+		l1 = 'This        an example          merged lines'
+		l2 = '      is         sdfa     of                '
 		
+		merged = merge_lines([l1,l2])
+		tgt= 'This  is    an example    of    merged lines'
+		self.assertEqual(merged, tgt)
 		

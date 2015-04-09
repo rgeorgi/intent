@@ -18,7 +18,6 @@ import unittest
 PARSELOG = logging.getLogger(__name__)
 
 # XIGT imports -----------------------------------------------------------------
-import xigt.core
 from xigt.core import *
 from xigt.codecs import xigtxml
 from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xigtcorpus
@@ -31,6 +30,7 @@ from intent.utils.env import c
 from intent.alignment.Alignment import Alignment, heur_alignments
 from intent.utils.token import Token, POSToken
 from intent.interfaces.giza import GizaAligner
+from intent.utils.dicts import DefaultOrderedDict
 
 # Other imports ----------------------------------------------------------------
 from uuid import uuid4
@@ -123,6 +123,7 @@ DS_HEAD_ATTRIBUTE = 'head'
 ODIN_LANG_TAG = 'L'
 ODIN_GLOSS_TAG = 'G'
 ODIN_TRANS_TAG = 'T'
+ODIN_CORRUPT_TAG = 'CR'
 
 
 #===============================================================================
@@ -346,7 +347,7 @@ def get_id_base(id_str):
 
 #===============================================================================
 
-class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
+class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
 	def askIgtId(self):
 		return gen_id('i', len(self.igts), letter=False)
@@ -366,7 +367,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		return new_c
 	
 	@classmethod
-	def from_txt(cls, text, require_trans = False, require_gloss = False, require_lang = False, require_1_to_1 = True):
+	def from_txt(cls, text, require_trans = True, require_gloss = True, require_lang = True, require_1_to_1 = True, limit = None):
 		'''
 		Read in a odin-style textfile to create the xigt corpus.
 		 
@@ -390,7 +391,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 		
 		parsed = 0
 		PARSELOG.info('Beginning parse')
-		for inst_txt in inst_txts:
+		for inst_num, inst_txt in enumerate(inst_txts):
 			
 			if parsed % 250 == 0:
 				PARSELOG.info('Parsing instance %d...' % parsed)
@@ -398,13 +399,10 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 			
 			# Handle the requirement for 1_to_1 alignment.
 			try:
-				i = RGIgt.fromString(inst_txt, corpus=xc, require_1_to_1=require_1_to_1)
+				i = RGIgt.fromString(inst_txt, corpus=xc, require_1_to_1=require_1_to_1, idnum=inst_num)
 			except GlossLangAlignException as glae:
-				PARSELOG.info(glae)
-				if require_1_to_1:
-					continue
-				else:
-					pass
+				PARSELOG.warn('Gloss and language could not be automatically aligned for instance "%s". Skipping' % gen_id('i', inst_num))
+				continue
 							
 			
 			# Try to get the translation line. ---------------------------------
@@ -431,14 +429,19 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 
 			parsed +=1
 			
+			
 			trans_constraint = (hastrans and require_trans) or (not require_trans)
 			gloss_constraint = (hasgloss and require_gloss) or (not require_gloss)
 			lang_constraint  = (haslang  and require_lang)  or (not require_lang)
 			
 			if trans_constraint and gloss_constraint and lang_constraint:
 				xc.add(i)
+			else:
+				PARSELOG.info('Requirements for instance "%s" were not satisfied. Skipping' % i.id)
 			
-			
+			# If we have reached the limit of instances that have been requested,
+			# stop processing.
+			if limit is not None and limit == parsed: break
 			
 				
 			
@@ -601,7 +604,7 @@ class RGCorpus(xigt.core.XigtCorpus, RecursiveFindMixin):
 # IGT Class
 #===============================================================================
 
-class RGIgt(xigt.core.Igt, RecursiveFindMixin):
+class RGIgt(Igt, RecursiveFindMixin):
 
 	# • Constructors -----------------------------------------------------------
 
@@ -619,7 +622,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		#self.metadata = mdt
 
 	@classmethod
-	def fromString(cls, string, corpus = None, require_1_to_1 = True):
+	def fromString(cls, string, corpus = None, require_1_to_1 = True, idnum=None):
 		'''
 		Method to parse and create an IGT instance from odin-style text.
 		'''
@@ -628,7 +631,9 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		doc_re = re.search('doc_id=(\S+)\s([0-9]+)\s([0-9]+)\s(.*)\n', string)
 		docid, lnstart, lnstop, tagtypes = doc_re.groups()
 		
-		if corpus:
+		if idnum:
+			id = gen_id('i', idnum)
+		elif corpus:
 			id = corpus.askIgtId()
 		else:
 			id = str(uuid4())
@@ -716,14 +721,8 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 
 		# And do word-to-word alignment if it's not already done.
 		if hasgloss and haslang and not self.gloss.alignment:
-			try:
-				self.gloss.word_align(self.lang)
-			except GlossLangAlignException as glae:
-				PARSELOG.info(glae)
-				if require_1_to_1:
-					raise glae
-				else:
-					pass
+			word_align(self.gloss, self.lang)
+			
 
 		
 	def enrich_instance(self):
@@ -776,6 +775,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 	def clean_tier(self):
 		'''
 		If the clean odin tier exists, return it. Otherwise, create it.
+		
 		'''
 		
 		# If a clean tier already exists, return it.
@@ -786,72 +786,92 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		else:
 			# Otherwise, we will make our own:
 			raw_tier = self.raw_tier()
-			
-			# Now, create the normalized and clean tiers...
-			clean_tier = RGLineTier(id = CLEAN_ID, type=ODIN_TYPE,
-									 attributes={STATE_ATTRIBUTE:CLEAN_STATE,
-												ALIGNMENT:raw_tier.id})
 
-			# Create the clean tier...			
-			for raw in raw_tier:
-				clean_tier.add(RGLine(id=clean_tier.askItemId(), alignment=raw.id, tier=clean_tier, attributes={'tag':raw.attributes['tag']},
-										text=raw.text))
+
+			# Initialize the clean tier...
+			clean_tier = RGLineTier(id = CLEAN_ID, type=ODIN_TYPE,
+						 attributes={STATE_ATTRIBUTE:CLEAN_STATE,
+									ALIGNMENT:raw_tier.id})
+
+			# Gather the different tags used in this tier.
+			# Note that we don't want to discard non-L,G,T tiers yet.
+			line_tags = DefaultOrderedDict(list)
+			for l in raw_tier:
+				tags = l.attributes['tag'].split('+')
+				primary = tags[0]		
+				others = tags[1:]		
+				line_tags[primary].append(l)
+			
+			# Now, the line_tags should be indexed by the primary
+			# tag (L, G, T, etc...) with the +'s after it...
+			
+			
+			# Now, go through and merge if needed.
+			for primary_tag in line_tags.keys():
+				
+				lines = line_tags[primary_tag]
+				
+				if len(lines) == 1:
+					text = lines[0].get_content()
+					new_tag = lines[0].attributes['tag']
+					align_id = lines[0].id
+					
+				elif len(lines) > 1:
+					PARSELOG.info('Corruption detected in instance %s: %s' % (self.id, [l.attributes['tag'] for l in lines]))
+					for l in lines:
+						PARSELOG.debug('BEFORE: %s' % l)
+					text = merge_lines([l.get_content() for l in lines])
+					PARSELOG.debug('AFTER: %s' % text)
+					new_tag = primary_tag
+					align_id = ','.join([l.id for l in lines])
+					
+					
+				item = RGLine(id=clean_tier.askItemId(), alignment=align_id, text=text,
+							attributes={'tag':new_tag})
+				clean_tier.add(item)
+			
 			self.add(clean_tier)
 			return clean_tier
 			
-	def add_normal_line(self, normal_tier, tag, cleaning_func, merge=True):
-		'''
-		Grab the raw lines and add a normalized line, if one with that tag exists. 
-		
-		:param tier:
-		:type tier:
-		:param tag:
-		:type tag:
-		'''
-		raw_tier = self.raw_tier()
-
-		# Remember, we want to match "L" for a tag L+LN, but NOT LN+M
-		raw_lines = [i for i in raw_tier if tag in i.attributes['tag'].split('+')]
-		
-		# If there are raw lines to work with...
-		if raw_lines:
-			norm_line = RGLine(id=normal_tier.askItemId(), alignment=raw_lines[0].id, tier=normal_tier, attributes={'tag':tag})
-			
-			# Set the content dependent upon whether we are merging or just taking the first line
-			if merge:
-				norm_cont = merge_lines([l.get_content() for l in raw_lines])
-				
-				# Update the alignment if we do merge...
-				norm_line.alignment = ','.join([l.id for l in raw_lines])
-			else:
-				# Otherwise, just take the first line.
-				norm_cont = raw_lines[0].get_content()
-				
-			
-			# Finally, clean the content accordingly...
-			norm_cont = cleaning_func(norm_cont)
-			norm_line.text = norm_cont
-			normal_tier.add(norm_line)
 	
 	# • Word Tier Creation -----------------------------------
+	
+	def add_normal_line(self, tier, tag, func):
+		clean_tier = self.clean_tier()
+		clean_lines = [l for l in clean_tier if tag in l.attributes['tag'].split('+')]
+		
+		if len(clean_lines) > 1:
+			PARSELOG.warning(rgencode(clean_tier))
+			raise XigtFormatException("Clean tier should not have multiple lines of same tag.")
+		
+		# If there are clean lines for this tag... There must be only 1...
+		# create it and add it to the tier.
+		if clean_lines:
+			item = RGLine(id=tier.askItemId(),
+						text=func(clean_lines[0].get_content()), 
+						alignment=clean_lines[0].id,
+						attributes={STATE_ATTRIBUTE:NORM_STATE, 'tag':tag})
 			
-	def normal_tier(self, merge = True):
-			# If a clean tier already exists, return it.
+			tier.add(item)
+	
+	def normal_tier(self):
+		
+			# If a normal tier already exists, return it.
 			normal_tier = self.find(type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:NORM_STATE})
-
 			if normal_tier:
 				return normal_tier
+			
+			# Otherwise, create a new one, with only L, G and T lines.
 			else:
-				raw_tier = self.raw_tier()
-				clean_tier = self.clean_tier()
-				
 				normal_tier = RGLineTier(id = NORM_ID, type=ODIN_TYPE,
-										 attributes={STATE_ATTRIBUTE:NORM_STATE, ALIGNMENT:clean_tier.id})
+										 attributes={STATE_ATTRIBUTE:NORM_STATE, ALIGNMENT:self.clean_tier().id})
 				
-				self.add_normal_line(normal_tier, ODIN_LANG_TAG, clean_lang_string, merge)
-				self.add_normal_line(normal_tier, ODIN_GLOSS_TAG, clean_gloss_string, merge)
-				self.add_normal_line(normal_tier, ODIN_TRANS_TAG, clean_trans_string, merge)
 				
+				# Get one item per...
+				self.add_normal_line(normal_tier, ODIN_LANG_TAG, clean_lang_string)
+				self.add_normal_line(normal_tier, ODIN_GLOSS_TAG, clean_gloss_string)
+				self.add_normal_line(normal_tier, ODIN_TRANS_TAG, clean_trans_string)
+
 				self.add(normal_tier)
 				return normal_tier
 			
@@ -989,9 +1009,6 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		'''
 		
 		attributes = {SOURCE_ATTRIBUTE:src_id, TARGET_ATTRIBUTE:tgt_id}
-		# If we have the created_by trait, look for that, too.
-		if created_by:
-			attributes['created-by'] = created_by
 			
 		ba_tier = self.find(attributes=attributes)
 		if not ba_tier:
@@ -1021,7 +1038,6 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 					
 			return a
 
-		
 	def set_bilingual_alignment(self, src_tier, tgt_tier, aln, created_by = None):
 		'''
 		Specify the source tier and target tier, and create a bilingual alignment tier
@@ -1037,9 +1053,6 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 		
 		# Look for a previously created alignment of the same type.
 		attributes = {SOURCE_ATTRIBUTE:src_tier.id, TARGET_ATTRIBUTE:tgt_tier.id}
-		if created_by:
-			attributes['created-by'] = created_by
-			
 
 		# If it already exists, delete it and overwrite.		
 		prev_ba_tier = self.find(attributes=attributes)
@@ -1555,7 +1568,7 @@ class RGIgt(xigt.core.Igt, RecursiveFindMixin):
 # Items
 #===============================================================================
 		
-class RGItem(xigt.core.Item, FindMixin):
+class RGItem(Item, FindMixin):
 	'''
 	Subclass of the xigt core "Item."
 	'''
@@ -1684,7 +1697,7 @@ class RGBilingualAlignment(RGItem):
 # Tiers
 #===============================================================================
 
-class RGTier(xigt.core.Tier, RecursiveFindMixin):
+class RGTier(Tier, RecursiveFindMixin):
 	
 	def copy(self, parent=None):
 		'''
@@ -1711,7 +1724,7 @@ class RGTier(xigt.core.Tier, RecursiveFindMixin):
 		elements.
 		'''
 		obj.index = len(self)+1
-		xigt.core.Tier.add(self, obj)
+		Tier.add(self, obj)
 		
 	def get_index(self, index):
 		'''
@@ -1917,21 +1930,6 @@ class RGWordTier(RGTokenTier):
 				
 		return mt
 	
-	def word_align(self, wt):
-		'''
-		Given another word tier, attempt to align it word by word.
-		'''
-
-		if len(self) != len(wt):
-			raise GlossLangAlignException('Gloss and language lines could not be auto-aligned for igt "%s"' % self.igt.id)
-		else:
-			# Note on the tier the alignment
-			self.alignment = wt.id
-			
-			# Align the words 1-to-1, left-to-right
-			for my_word, their_word in zip(self, wt):
-				my_word.alignment = their_word.id
-				
 						
 		
 class RGMorphTier(RGTokenTier):
@@ -2073,6 +2071,7 @@ def create_words_tier(cur_item, word_id, word_type, aln_attribute = SEGMENTATION
 	:rtype: RGWordTier
 	'''
 	
+	
 	# Tokenize the words in this phrase...
 	words = intent.utils.token.tokenize_item(cur_item)
 	
@@ -2208,6 +2207,7 @@ def morph_align(this, other):
 	# Let's count up how many morphemes there are
 	# for each word on the translation line...
 	
+	this.alignment = other.id
 	
 	lang_word_dict = defaultdict(list)
 	for other_m in other:
