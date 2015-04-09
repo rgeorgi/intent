@@ -90,50 +90,70 @@ def project_creator_except(msg_start, msg_end, created_by):
 # Mixins
 #===============================================================================
 
+
+
+def ref_match(o, seg, ref_type):
+	if hasattr(o, ref_type):
+		reference = getattr(o, ref_type)
+		if reference is not None and reference in ref.ids(reference):
+			return o
+		
+def seg_match(o, seg): return ref_match(o, seg, SEGMENTATION)
+def cnt_match(o, cnt): return ref_match(o, cnt, CONTENT)
+		
+def type_match(o, type): return o.type == type
+def id_match(o, id): return o.id == id
+def id_base_match(o, id_base): return get_id_base(o.id) == id_base
+def attr_match(o, attr): return set(attr.items()).issubset(set(o.attributes.items()))
+
 class FindMixin():
 	'''
 	Extension of the recursive search for non-iterable elements.
 	'''
 	
-	def find_self(self, id=None, id_base=None, attributes=None, type = None, segmentation = None, content=None):
+	def find_self(self, filters=[]):
 		'''
-		Check on this element to see if it matches the find criteria. Must satisfy all the specified
-		criteria, (they are considered unspecified if "None")
+		Check to see if this object matches all of the filter functions in filters.
 		
-		:param id:
-		:type id: str
-		:param id_base:
-		:type id_base: str
-		:param attributes:
-		:type attributes: dict
-		:param type:
-		:type type: str
-		:param segmentation:
-		:type segmentation: str
+		:param filters: List of functions to apply to this object. All filters have a logical and
+						applied to them.
+		:type filters: list
 		'''
 		
-		id_match = id is None or (self.id == id)
-		id_base_match = id_base is None or (get_id_base(self.id) == id_base)
-		type_match = type is None or (self.type == type)
-		attr_match = attributes is None or (set(attributes.items()).issubset(set(self.attributes.items())))
-		seg_match  = segmentation is None or (hasattr(self, SEGMENTATION) and segmentation in get_alignment_expression_ids(self.segmentation))
+		assert len(filters) > 0, "Must have selected some attribute to filter."
 		
-		# TODO: not sure the content is working...
-		cnt_match = content is None or (hasattr(self, CONTENT) and content in get_alignment_expression_ids(self.content))
+		# Iterate through the filters... 
+		for filter, val in filters:
+			if not filter(self, val): # If one evaluates to false...
+				return None      # ..we're done. Exit with "None"
+			
+		# If we make it through all the iteration, we're a match. Return.
+		return self
 		
-		# At least ONE thing must be specified
-		assert any([id, id_base, attributes, type, segmentation, content])
+	def _build_filterlist(self, **kwargs):
+		filters = []
+		for kw, val in kwargs.items():
+			if kw == 'id':
+				filters += [(id_match, val)]
+			elif kw == 'content':
+				filters += [(cnt_match, val)]
+			elif kw == 'segmentation':
+				filters += [(seg_match, val)]
+			elif kw == 'id_base':
+				filters += [(id_base_match, val)]
+			elif kw == 'attributes':
+				filters += [(attr_match, val)]
+			elif kw == 'type':
+				filters += [(type_match, val)]
+			else:
+				raise ValueError('Invalid keyword argument "%s"' % kw) 
+		return filters
 		
-		if id_match and id_base_match and type_match and attr_match and seg_match and cnt_match:
-			return self
-		else:
-			return None
-		
-	def find(self, id=None, id_base = None, attributes=None, type=None, segmentation=None, content=None):
-		return self.find_self(id, id_base, attributes, type, segmentation, content)
+	def find(self, **kwargs):
+		return self.find_self(self._build_filterlist(**kwargs))
 	
-	def findall(self, id=None, id_base=None, attributes=None, type=None, segmentation=None, content=None):
-		found = self.find_self(id, id_base, attributes, type, segmentation, content)
+	def findall(self, **kwargs):
+		found = self.find_self(self._build_filterlist(**kwargs))
 		if found:
 			return [found]
 		else:
@@ -141,7 +161,7 @@ class FindMixin():
 
 class RecursiveFindMixin(FindMixin):
 
-	def find(self, id=None, id_base=None, attributes=None, type=None, segmentation=None, content=None):
+	def find(self, **kwargs):
 		'''
 		Generic find function for non-iterable elements. NOTE: This version stops on the first match.
 		
@@ -150,28 +170,28 @@ class RecursiveFindMixin(FindMixin):
 		:param attributes: key:value pairs that are an inclusive subset of those found in the desired item.
 		:type attributes: dict
 		'''
-		if self.find_self(id,id_base, attributes,type,segmentation,content) is not None:
+		if super().find(**kwargs) is not None:
 			return self
 		else:
 			found = None
 			for child in self:
-				found = child.find(id, id_base, attributes, type, segmentation, content)
+				found = child.find(**kwargs)
 				if found is not None:
 					break
 			return found
 		
-	def findall(self, id=None, id_base = None, attributes=None, type=None, segments=None, contents=None):
+	def findall(self, **kwargs):
 		'''
 		Find function that does not terminate on the first match.
 		'''
-		if self.find_self(id, id_base, attributes, type, segments, contents) is not None:
-			return [self]
-		else:
-			found = []
-			for child in self:
-				new_found = child.findall(id, id_base, attributes, type, segments, contents)
-				found.extend(new_found)
-			return found
+		found = []
+		if super().find(id, **kwargs) is not None:
+			found = [self]
+		
+		for child in self:
+			found += child.findall(**kwargs)
+			
+		return found
 				
 
 #===============================================================================
