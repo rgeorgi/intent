@@ -11,6 +11,12 @@ Subclassing of the xigt package to add a few convenience methods.
 import logging, re, copy, string
 import sys
 import unittest
+from xigt.model import XigtCorpus, Igt, Item, Tier
+from xigt.metadata import Metadata, Meta
+from xigt.consts import ALIGNMENT, SEGMENTATION, CONTENT
+from intent.igt.metadata import set_data_provenance, set_gloss_type,\
+	get_gloss_type
+from xigt import ref
 
 
 
@@ -18,13 +24,16 @@ import unittest
 PARSELOG = logging.getLogger(__name__)
 
 # XIGT imports -----------------------------------------------------------------
-from xigt.core import *
+from xigt.ref import get_alignment_expression_ids, get_alignment_expression_spans
 from xigt.codecs import xigtxml
 from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xigtcorpus
 
 # INTERNAL imports -------------------------------------------------------------
 from .igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
 	clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re
+
+from .consts import *	
+
 import intent.utils.token
 from intent.utils.env import c
 from intent.alignment.Alignment import Alignment, heur_alignments
@@ -38,92 +47,6 @@ from collections import defaultdict
 
 
 
-#===============================================================================
-# String Conventions ---
-#===============================================================================
-
-# Lines ------------------------------------------------------------------------
-ODIN_TYPE  = 'odin'
-
-STATE_ATTRIBUTE = 'state'
-
-RAW_STATE, RAW_ID     = 'raw', 'r'
-CLEAN_STATE, CLEAN_ID = 'clean', 'c'
-NORM_STATE, NORM_ID   = 'normalized', 'n'
-
-# Words ------------------------------------------------------------------------
-
-WORDS_TYPE = 'words'
-
-TRANS_WORD_TYPE = 'words'
-GLOSS_WORD_TYPE = 'words'
-LANG_WORD_TYPE  = 'words'
-
-LANG_WORD_ID = 'w'
-GLOSS_WORD_ID = 'gw'
-TRANS_WORD_ID = 'tw'
-
-# Phrases ----------------------------------------------------------------------
-
-TRANS_PHRASE_TYPE = 'translations'
-LANG_PHRASE_TYPE  = 'phrases'
-
-TRANS_PHRASE_ID = 't'
-LANG_PHRASE_ID = 'p'
-
-# Morphemes --------------------------------------------------------------------
-
-LANG_MORPH_TYPE = 'morphemes'
-GLOSS_MORPH_TYPE = 'glosses'
-
-LANG_MORPH_ID = 'm'
-GLOSS_MORPH_ID= 'g'
-
-# POS --------------------------------------------------------------------------
-POS_TIER_TYPE = 'pos'
-
-LANG_POS_ID  = 'w-pos'
-GLOSS_POS_ID = 'g-pos'
-TRANS_POS_ID = 'tw-pos'
-
-# Alignments -------------------------------------------------------------------
-
-ALN_TIER_TYPE = 'bilingual-alignments'
-
-L_T_ALN_ID = 'a'
-G_T_ALN_ID = 'a'
-
-SOURCE_ATTRIBUTE = 'source'
-TARGET_ATTRIBUTE = 'target'
-
-# Phrase structures ------------------------------------------------------------
-
-PS_TIER_TYPE = 'phrase-structure'
-
-GEN_PS_ID   = 'ps'
-LANG_PS_ID  = 'ps'
-GLOSS_PS_ID = 'ps'
-TRANS_PS_ID = 'ps'
-
-PS_CHILD_ATTRIBUTE = 'children'
-
-# Dependencies -----------------------------------------------------------------
-
-DS_TIER_TYPE = 'dependencies'
-
-GEN_DS_ID   = 'ds'
-LANG_DS_ID  = 'ds'
-GLOSS_DS_ID = 'ds'
-TRANS_DS_ID = 'ds'
-
-DS_DEP_ATTRIBUTE = 'dep'
-DS_HEAD_ATTRIBUTE = 'head'
-
-# ODIN Line Tags ---------------------------------------------------------------
-ODIN_LANG_TAG = 'L'
-ODIN_GLOSS_TAG = 'G'
-ODIN_TRANS_TAG = 'T'
-ODIN_CORRUPT_TAG = 'CR'
 
 
 #===============================================================================
