@@ -42,7 +42,7 @@ odin_data		 = c.getpath('odin_data')
 # Try to import the XIGT module.
 #===============================================================================
 try:
-	import xigt.core  # First, try to import the module that's installed.
+	import xigt.model  # First, try to import the module that's installed.
 except ImportError:
 	ENV_LOG.warn('XIGT library is not installed, will try to load from env.conf')
 	load_fail = True
@@ -66,9 +66,10 @@ if load_fail:
 		sys.path.append(xigt_dir)
 		
 		try:
-			import xigt.core
-		except ImportError:
+			import xigt.model
+		except ImportError as ie:
 			ENV_LOG.critical('Specified XIGT dir "%s" is not valid for the xigt module.' % xigt_dir)
+			ENV_LOG.critical(ie)
 			sys.exit(2)
 
 #===============================================================================
