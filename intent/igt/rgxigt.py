@@ -15,7 +15,7 @@ from xigt.model import XigtCorpus, Igt, Item, Tier
 from xigt.metadata import Metadata, Meta
 from xigt.consts import ALIGNMENT, SEGMENTATION, CONTENT
 from intent.igt.metadata import set_data_provenance, set_gloss_type,\
-	get_gloss_type
+	get_gloss_type, find_meta
 from xigt import ref
 
 
@@ -98,13 +98,13 @@ def ref_match(o, seg, ref_type):
 		if reference is not None and reference in ref.ids(reference):
 			return o
 		
-def seg_match(o, seg): return ref_match(o, seg, SEGMENTATION)
-def cnt_match(o, cnt): return ref_match(o, cnt, CONTENT)
+def seg_match(seg): return lambda o: ref_match(o, seg, SEGMENTATION)
+def cnt_match(cnt): return lambda o: ref_match(o, cnt, CONTENT)
 		
-def type_match(o, type): return o.type == type
-def id_match(o, id): return o.id == id
-def id_base_match(o, id_base): return get_id_base(o.id) == id_base
-def attr_match(o, attr): return set(attr.items()).issubset(set(o.attributes.items()))
+def type_match(type): return lambda o: o.type == type
+def id_match(id): return lambda o: o.id == id
+def id_base_match(id_base): return lambda o: get_id_base(o.id) == id_base
+def attr_match(attr): return lambda o: set(attr.items()).issubset(set(o.attributes.items()))
 
 class FindMixin():
 	'''
@@ -123,8 +123,8 @@ class FindMixin():
 		assert len(filters) > 0, "Must have selected some attribute to filter."
 		
 		# Iterate through the filters... 
-		for filter, val in filters:
-			if not filter(self, val): # If one evaluates to false...
+		for filter in filters:
+			if not filter(self): # If one evaluates to false...
 				return None      # ..we're done. Exit with "None"
 			
 		# If we make it through all the iteration, we're a match. Return.
@@ -134,17 +134,20 @@ class FindMixin():
 		filters = []
 		for kw, val in kwargs.items():
 			if kw == 'id':
-				filters += [(id_match, val)]
+				filters += [id_match(val)]
 			elif kw == 'content':
-				filters += [(cnt_match, val)]
+				filters += [cnt_match(val)]
 			elif kw == 'segmentation':
-				filters += [(seg_match, val)]
+				filters += [seg_match(val)]
 			elif kw == 'id_base':
-				filters += [(id_base_match, val)]
+				filters += [id_base_match(val)]
 			elif kw == 'attributes':
-				filters += [(attr_match, val)]
+				filters += [attr_match(val)]
 			elif kw == 'type':
-				filters += [(type_match, val)]
+				filters += [type_match(val)]
+				
+			elif kw == 'others': # Append any other filters...
+				filters += val
 			else:
 				raise ValueError('Invalid keyword argument "%s"' % kw) 
 		return filters
@@ -836,7 +839,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 	@property
 	def gloss(self):
 		try:
-			gt = retrieve_gloss(self)
+			gt = retrieve_gloss_words(self)
 		except NoNormLineException:
 			raise NoGlossLineException('No gloss line available for igt "%s"' % self.id)
 		else:
@@ -2073,7 +2076,7 @@ def retrieve_lang_words(inst):
 		
 	return lwt
 
-def retrieve_gloss(inst):
+def retrieve_gloss_words(inst):
 	'''
 	Given an IGT instance, create the gloss "words" and "glosses" tiers.
 	
@@ -2087,11 +2090,20 @@ def retrieve_gloss(inst):
 	
 	# 1. Look for an existing words tier that aligns with the normalized tier...
 	n = inst.normal_tier()
-	wt = inst.find(type=GLOSS_WORD_TYPE, content = n.id)
+	wt = inst.find(type=GLOSS_WORD_TYPE, content = n.id,
+					# Add the "others" to find only the "glosses" tiers that
+					# are at the word level... 
+					others=[lambda x: find_meta(x, INTENT_TOKEN_TYPE) == INTENT_GLOSS_WORD])
 	
 	# 2. If it exists, return it. Otherwise, look for the glosses tier.
 	if not wt:
 		wt = create_words_tier(retrieve_normal_line(inst, ODIN_GLOSS_TAG), GLOSS_WORD_ID, GLOSS_WORD_TYPE, aln_attribute=CONTENT)
+
+		# Set the "gloss type" to the "word-level"
+		set_gloss_type(wt, INTENT_GLOSS_WORD)
+		
+		get_gloss_type(wt)
+
 		inst.add(wt)
 	else:
 		wt.__class__ = RGWordTier
