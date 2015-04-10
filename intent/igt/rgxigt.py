@@ -794,7 +794,7 @@ class RGIgt(Igt, RecursiveFindMixin):
             item = RGLine(id=tier.askItemId(),
                         text=func(clean_lines[0].get_content()),
                         alignment=clean_lines[0].id,
-                        attributes={STATE_ATTRIBUTE:NORM_STATE, 'tag':tag})
+                        attributes={'tag':tag})
 
             tier.add(item)
 
