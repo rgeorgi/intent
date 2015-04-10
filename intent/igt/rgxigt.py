@@ -1345,7 +1345,7 @@ class RGIgt(Igt, RecursiveFindMixin):
                     raise ProjectionException('Unknown unk_handling method "%s"' % unk_handling)
 
             else:
-                label = str(g_tag)
+                label = g_tag.get_content()
 
             pt.add(RGToken(id=pt.askItemId(), alignment = l_w.id, text=label))
 
