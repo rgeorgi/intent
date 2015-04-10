@@ -4,12 +4,13 @@ Created on Feb 24, 2015
 :author: rgeorgi <rgeorgi@uw.edu>
 '''
 from unittest import TestCase
-from intent.igt.rgxigt import RGCorpus, GlossLangAlignException, RGIgt
+from intent.igt.rgxigt import RGCorpus, GlossLangAlignException, RGIgt, rgp
 from intent.alignment.Alignment import Alignment
-from intent.utils.env import c, posdict, classifier, tagger_model
+from intent.utils.env import c, posdict, classifier, tagger_model, xigt_dir
 import pickle
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
+import os
 
 
 xc = RGCorpus.loads('''<xigt-corpus>
@@ -174,23 +175,26 @@ class XigtParseTest(TestCase):
 	Testcase to make sure we can load from XIGT objects.
 	'''
 	def setUp(self):
-		self.xc = RGCorpus.load(c['xigt_ex'])
+		self.xc = RGCorpus.load(os.path.join(xigt_dir, 'examples/odin/kor-ex.xml'))
 		
 	def xigt_load_test(self):
 		pass
 	
 	def giza_align_test(self):
-		self.xc.giza_align_t_g()
-		giza_aln = self.xc[0].get_trans_glosses_alignment()
+		new_c = self.xc.copy()
+		new_c.giza_align_t_g()
+		giza_aln = new_c[0].get_trans_glosses_alignment()
 		
 		giza_a = Alignment([(3, 2), (2, 8), (5, 7), (4, 3), (1, 1), (6, 5)])
 		
 		self.assertEquals(giza_a, giza_aln)
 		
 	def heur_align_test(self):
-		self.xc.heur_align()
-		aln = self.xc[0].get_trans_glosses_alignment()
+		new_c = self.xc.copy()
+		new_c.heur_align()
+		aln = new_c[0].get_trans_glosses_alignment()
 		a = Alignment([(5, 7), (6, 5), (1, 1), (4, 3)])
+		rgp(new_c)
 		self.assertEquals(a, aln)
 		
 class CopyTest(TestCase):

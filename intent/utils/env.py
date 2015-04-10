@@ -17,9 +17,9 @@ proj_root = dir_above(__file__, 3)
 # 3) Load the "env.conf" file. -------------------------------------------------
 env_path = os.path.join(proj_root, 'env.conf')
 if not os.path.exists(env_path):
-	ENV_LOG.critical('No env.conf file was found. Please create one in the root directory of the project.')
-	sys.exit(2)
-	
+    ENV_LOG.critical('No env.conf file was found. Please create one in the root directory of the project.')
+    sys.exit(2)
+
 c = ConfigFile(os.path.join(proj_root, 'env.conf'))
 
 #===============================================================================
@@ -42,35 +42,35 @@ odin_data		 = c.getpath('odin_data')
 # Try to import the XIGT module.
 #===============================================================================
 try:
-	import xigt.model  # First, try to import the module that's installed.
+    import xigt.model  # First, try to import the module that's installed.
 except ImportError:
-	ENV_LOG.warn('XIGT library is not installed, will try to load from env.conf')
-	load_fail = True
+    ENV_LOG.warn('XIGT library is not installed, will try to load from env.conf')
+    load_fail = True
 else:
-	load_fail = False
+    load_fail = False
 
 if load_fail:
-	
-	# -- 3) If it's not in the env.conf file, error out.
-	if xigt_dir is None:
-		ENV_LOG.critical('XIGT dir not defined. Unable to import XIGT.')
-		sys.exit(2)
-		
-	# -- 4) If it IS in the env.conf file, but not found, error out.
-	elif not os.path.exists(xigt_dir):
-		ENV_LOG.critical('XIGT dir "%s" not found. Unable to import XIGT' % xigt_dir)
-		sys.exit(2)
-		
-	# -- 5) Try to load it from the env.conf file...
-	else:
-		sys.path.append(xigt_dir)
-		
-		try:
-			import xigt.model
-		except ImportError as ie:
-			ENV_LOG.critical('Specified XIGT dir "%s" is not valid for the xigt module.' % xigt_dir)
-			ENV_LOG.critical(ie)
-			sys.exit(2)
+
+    # -- 3) If it's not in the env.conf file, error out.
+    if xigt_dir is None:
+        ENV_LOG.critical('XIGT dir not defined. Unable to import XIGT.')
+        sys.exit(2)
+
+    # -- 4) If it IS in the env.conf file, but not found, error out.
+    elif not os.path.exists(xigt_dir):
+        ENV_LOG.critical('XIGT dir "%s" not found. Unable to import XIGT' % xigt_dir)
+        sys.exit(2)
+
+    # -- 5) Try to load it from the env.conf file...
+    else:
+        sys.path.append(xigt_dir)
+
+        try:
+            import xigt.model
+        except ImportError as ie:
+            ENV_LOG.critical('Specified XIGT dir "%s" is not valid for the xigt module.' % xigt_dir)
+            ENV_LOG.critical(ie)
+            sys.exit(2)
 
 #===============================================================================
 # Test other paths...

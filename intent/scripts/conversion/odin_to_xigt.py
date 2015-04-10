@@ -7,13 +7,11 @@ Created on Apr 30, 2014
 '''
 
 # Built-in Imports -------------------------------------------------------------
-import pickle, logging
+import logging
 from argparse import ArgumentParser
 
 # Internal Imports -------------------------------------------------------------
-from intent.utils.argutils import existsfile
-from intent.utils.env import posdict, tagger_model, classifier
-from intent.igt.rgxigt import RGCorpus, NoTransLineException, rgp, tier_sorter
+from intent.igt.rgxigt import RGCorpus
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
@@ -23,25 +21,22 @@ PARSELOGGER = logging.getLogger(__name__)
 
 def parse_text(f, xigt_path):
 
-	# 1) Build the corpus --------------------------------------------------
-	corp = RGCorpus.from_txt(f.read(), require_trans=False, require_gloss=True, require_lang=True, require_1_to_1=True)
-	
-	# 2) load the pos dict to help classify the gloss line ---------------------
-	for inst in corp:
-		inst.sort()
-	xigtxml.dump(xigt_path, corp)
-	
-		
-from intent.interfaces.stanford_tagger import StanfordPOSTagger
-from intent.interfaces.mallet_maxent import MalletMaxent
+    # 1) Build the corpus --------------------------------------------------
+    corp = RGCorpus.from_txt(f.read(), require_trans=False, require_gloss=True, require_lang=True, require_1_to_1=True)
+
+    # 2) load the pos dict to help classify the gloss line ---------------------
+    for inst in corp:
+        inst.sort()
+    xigtxml.dump(xigt_path, corp)
+
 
 if __name__ == '__main__':
-	
-	p = ArgumentParser()
-	p.add_argument('-i', '--input', required=True, help='Input text file to convert to annotated xigt.')
-	p.add_argument('-o', '--output', required=True, help='Output xigt path.')
-	
-	args = p.parse_args()
-	
-	
-	parse_text(args.input, args.output)
+
+    p = ArgumentParser()
+    p.add_argument('-i', '--input', required=True, help='Input text file to convert to annotated xigt.')
+    p.add_argument('-o', '--output', required=True, help='Output xigt path.')
+
+    args = p.parse_args()
+
+
+    parse_text(args.input, args.output)
