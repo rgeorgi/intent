@@ -90,10 +90,10 @@ def project_creator_except(msg_start, msg_end, created_by):
 
 
 
-def ref_match(o, seg, ref_type):
+def ref_match(o, target_ref, ref_type):
     if hasattr(o, ref_type):
-        reference = getattr(o, ref_type)
-        if reference is not None and reference in ref.ids(reference):
+        my_ref = getattr(o, ref_type)
+        if my_ref and target_ref in ref.ids(my_ref):
             return o
 
 def seg_match(seg): return lambda o: ref_match(o, seg, SEGMENTATION)
