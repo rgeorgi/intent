@@ -91,12 +91,42 @@ ODIN_TRANS_TAG = 'T'
 ODIN_CORRUPT_TAG = 'CR'
 
 #===============================================================================
-# • Metadata Types ---
+# Metadata
 #===============================================================================
-XIGT_META_TYPE='xigt-meta'
-XIGT_DATA_PROV='data-provenance'
 
-INTENT_META_TYPE='intent-meta'
-INTENT_TOKEN_TYPE = 'token-type'
-INTENT_GLOSS_WORD='word'
-INTENT_GLOSS_MORPH='sub-word'
+# The overall types for intent-specific meta
+# and xigt-general meta.
+XIGT_META_TYPE     = 'xigt-meta'
+INTENT_META_TYPE   = 'intent-meta'
+
+# Define the strings for data source and data method
+
+XIGT_DATA_PROV='data-source'
+XIGT_DATA_METH='data-method'
+
+# Now, define intent as the data-source provider...
+INTENT_META_SOURCE = 'intent'
+
+#===============================================================================
+# Methods
+#===============================================================================
+
+# Now, for intent-specific data, let's identify
+# the strings to use for identifying the tier's
+# token type.
+INTENT_TOKEN_TYPE  = 'token-type'
+INTENT_GLOSS_WORD  = 'word'
+INTENT_GLOSS_MORPH = 'sub-word'
+
+INTENT_ALN_GIZA = 'mgiza'
+INTENT_ALN_HEUR = 'heur'
+
+INTENT_POS_CLASS  = 'classifier'
+INTENT_POS_PROJ   = 'projection'
+INTENT_POS_TAGGER = 'stanford-tagger'
+
+INTENT_PS_PARSER  = 'stanford-parser'
+INTENT_PS_PROJ    = 'projection'
+
+INTENT_DS_PARSER  = 'stanford-parser'
+INTENT_DS_PROJ    = 'projection'

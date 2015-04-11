@@ -5,6 +5,8 @@ Created on Mar 24, 2015
 '''
 
 import sys, logging, pickle
+from intent.igt.consts import INTENT_POS_CLASS, INTENT_POS_PROJ
+from intent.igt.igtutils import rgp
 
 from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
     PhraseStructureProjectionException, ProjectionException,\
@@ -117,7 +119,7 @@ def enrich(**kwargs):
         if kwargs.get('pos_lang') == 'class':
             inst.classify_gloss_pos(m, posdict=p)
             try:
-                inst.project_gloss_to_lang(created_by="intent-classify")
+                inst.project_gloss_to_lang(tag_method=INTENT_POS_CLASS)
             except GlossLangAlignException:
                 ENRICH_LOG.warning('The gloss and language lines for instance id "%s" do not align. Language line not POS tagged.' % inst.id)
 
@@ -129,7 +131,7 @@ def enrich(**kwargs):
             except ProjectionException as pe:
                 ENRICH_LOG.warning('No translation POS tags were found for instance "%s". Not projecting POS tags.' % inst.id)
             else:
-                inst.project_gloss_to_lang()
+                inst.project_gloss_to_lang(tag_method=INTENT_POS_PROJ)
 
 
 

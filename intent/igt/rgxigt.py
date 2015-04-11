@@ -6,15 +6,18 @@ Subclassing of the xigt package to add a few convenience methods.
 # Logging
 #===============================================================================
 
-import logging, re, copy, string
-import sys
+import logging
+import re
+import copy
+import string
 import unittest
+
 from xigt.model import XigtCorpus, Igt, Item, Tier
 from xigt.metadata import Metadata, Meta
 from xigt.consts import ALIGNMENT, SEGMENTATION, CONTENT
-from intent.igt.metadata import set_data_provenance, set_gloss_type,\
-    get_gloss_type, find_meta
+from intent.igt.metadata import find_meta, add_meta
 from xigt import ref
+
 
 
 
@@ -22,9 +25,8 @@ from xigt import ref
 PARSELOG = logging.getLogger(__name__)
 
 # XIGT imports -----------------------------------------------------------------
-from xigt.ref import get_alignment_expression_ids, get_alignment_expression_spans
+from xigt.ref import get_alignment_expression_ids, get_alignment_expression_spans, robust_ref_re
 from xigt.codecs import xigtxml
-from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xigtcorpus
 
 # INTERNAL imports -------------------------------------------------------------
 from .igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
@@ -109,7 +111,10 @@ class FindMixin():
     Extension of the recursive search for non-iterable elements.
     """
 
-    def find_self(self, filters=[]):
+    # FindMixin objects should have an index.
+    index = None
+
+    def find_self(self, filters=list):
         """
         Check to see if this object matches all of the filter functions in filters.
 
@@ -161,6 +166,10 @@ class FindMixin():
             return []
 
 class RecursiveFindMixin(FindMixin):
+
+    # Define the FindMixin as iterable,
+    # but don't implement the class.
+    def __iter__(self): pass
 
     def find(self, **kwargs):
         """
@@ -240,6 +249,7 @@ def read_pt(tier):
 
 
     # 3) Revisit the children and make the linkages.
+    child_n = None
     for parent_id in children_dict.keys():
         parent_n = node_dict[parent_id]
         for child_id in children_dict[parent_id]:
@@ -505,7 +515,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         # to the instance.
         for g_t_asent, igt in zip(g_t_asents, self):
             t_g_aln = g_t_asent.aln.flip()
-            igt.set_bilingual_alignment(igt.trans, igt.glosses, t_g_aln, created_by = 'intent-giza')
+            igt.set_bilingual_alignment(igt.trans, igt.glosses, t_g_aln, aln_method = INTENT_ALN_GIZA)
 
     def giza_align_l_t(self):
         """
@@ -525,7 +535,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
         for l_t_asent, igt in zip(l_t_asents, self):
             t_l_aln = l_t_asent.aln.flip()
-            igt.set_bilingual_alignment(igt.trans, igt.lang, t_l_aln, created_by = 'intent-giza')
+            igt.set_bilingual_alignment(igt.trans, igt.lang, t_l_aln, aln_method = INTENT_ALN_GIZA)
 
 
 
@@ -913,7 +923,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         Convenience method for getting the trans-word to gloss-morpheme
         bilingual alignment.
         """
-        return self.get_bilingual_alignment(self.trans.id, self.glosses.id, created_by=None)
+        return self.get_bilingual_alignment(self.trans.id, self.glosses.id, aln_method=INTENT_ALN_GIZA)
 
 
     def get_gloss_lang_alignment(self):
@@ -946,16 +956,38 @@ class RGIgt(Igt, RecursiveFindMixin):
     # ALIGNMENT STUFF
     #===========================================================================
 
-    def get_bilingual_alignment(self, src_id, tgt_id, created_by=None):
+    def get_bilingual_alignment_tier(self, src_id, tgt_id, aln_method=None):
+        """
+
+        :param src_id:
+        :type src_id: str
+        :param tgt_id:
+        :type tgt_id: str
+        :param aln_method: Specify an alignment method that the alignment must be produced by.
+        :rtype: RGTier
+        """
+        # Look for a previously created alignment of the same type.
+        attributes = {SOURCE_ATTRIBUTE:src_id, TARGET_ATTRIBUTE:tgt_id}
+
+        # Also add some search filters to match the metadata information, so that
+        # we don't overwrite alignments provided by other sources.
+        filters = []
+        if aln_method:
+            data_prov_match = lambda x: find_meta(x, XIGT_DATA_PROV) == INTENT_META_SOURCE
+            data_meth_match = lambda x: find_meta(x, XIGT_DATA_METH) == aln_method
+            filters = [data_prov_match, data_meth_match]
+
+        ba_tier = self.find(attributes=attributes, others=filters)
+        return ba_tier
+
+
+    def get_bilingual_alignment(self, src_id, tgt_id, aln_method=None):
         """
         Retrieve the bilingual alignment (assuming that the source tier is
         the translation words and that the target tier is the gloss morphemes.)
         :rtype : Alignment
         """
-
-        attributes = {SOURCE_ATTRIBUTE:src_id, TARGET_ATTRIBUTE:tgt_id}
-
-        ba_tier = self.find(attributes=attributes)
+        ba_tier = self.get_bilingual_alignment_tier(src_id,tgt_id,aln_method)
         if not ba_tier:
             return None
         else:
@@ -983,7 +1015,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             return a
 
-    def set_bilingual_alignment(self, src_tier, tgt_tier, aln, created_by = None):
+    def set_bilingual_alignment(self, src_tier, tgt_tier, aln, aln_method = None):
         """
         Specify the source tier and target tier, and create a bilingual alignment tier
         between the two, using the indices specified by the Alignment aln.
@@ -996,11 +1028,9 @@ class RGIgt(Igt, RecursiveFindMixin):
         :type aln: Alignment
         """
 
-        # Look for a previously created alignment of the same type.
-        attributes = {SOURCE_ATTRIBUTE:src_tier.id, TARGET_ATTRIBUTE:tgt_tier.id}
-
-        # If it already exists, delete it and overwrite.
-        prev_ba_tier = self.find(attributes=attributes)
+        # Look for any alignments previously generated by this method, and delete them
+        # if found. Do NOT replace other alignments generated by other methods.
+        prev_ba_tier = self.get_bilingual_alignment_tier(src_tier.id, tgt_tier.id, aln_method)
         if prev_ba_tier:
             prev_ba_tier.delete()
 
@@ -1010,11 +1040,9 @@ class RGIgt(Igt, RecursiveFindMixin):
         # Start by creating the alignment tier.
         ba_tier = RGBilingualAlignmentTier(id = self.askTierId(ALN_TIER_TYPE, G_T_ALN_ID), source = src_tier.id, target = tgt_tier.id)
 
-        set_data_provenance(ba_tier, 'intent')
-
-        # Add the "created-by" attribute if one is specified.
-        if created_by:
-            ba_tier.attributes['created-by'] = created_by
+        # Add the metadata for the alignment source (intent) and type (giza or heur)
+        add_meta(ba_tier, XIGT_DATA_PROV, INTENT_META_SOURCE, XIGT_META_TYPE)
+        add_meta(ba_tier, XIGT_DATA_METH, aln_method, XIGT_META_TYPE)
 
         for src_i, tgt_i in aln:
             src_token = src_tier[src_i-1]
@@ -1042,13 +1070,13 @@ class RGIgt(Igt, RecursiveFindMixin):
         aln = heur_alignments(gloss_tokens, trans_tokens, **kwargs).flip()
 
         # Now, add these alignments as bilingual alignments...
-        self.set_bilingual_alignment(self.trans, self.glosses, aln, created_by='intent-heuristic')
+        self.set_bilingual_alignment(self.trans, self.glosses, aln, aln_method=INTENT_ALN_HEUR)
 
 
 
     # • POS Tag Manipulation ---------------------------------------------------------------
 
-    def add_pos_tags(self, tier_id, tags, created_by = None):
+    def add_pos_tags(self, tier_id, tags, tag_method = None):
         """
         Assign a list of pos tags to the tier specified by tier_id. The number of tags
         must match the number of items in the tier.
@@ -1060,12 +1088,10 @@ class RGIgt(Igt, RecursiveFindMixin):
         """
 
         # See if we have a pos tier that's already been assigned by this method.
-        attributes = {} if not created_by else {'created-by':created_by}
-        prev_tier = self.find(type=POS_TIER_TYPE, attributes=attributes)
+        prev_tier = self.get_pos_tags(tier_id, tag_method=tag_method)
 
         # And delete it if so.
         if prev_tier: prev_tier.delete()
-
 
         # Determine the id of this new tier...
         new_id = self.askTierId(POS_TIER_TYPE, tier_id+'-pos', id_based=True, suppress_numbering=True)
@@ -1078,7 +1104,13 @@ class RGIgt(Igt, RecursiveFindMixin):
         assert len(tier) == len(tags)
 
         # Create the POS tier
-        pt = RGTokenTier(type=POS_TIER_TYPE, id=new_id, alignment=tier_id, attributes=attributes)
+        pt = RGTokenTier(type=POS_TIER_TYPE, id=new_id, alignment=tier_id,
+                        attributes={ALIGNMENT:tier_id})
+
+        # And add the metadata for the source (intent) and tagging method
+        add_meta(pt, XIGT_DATA_PROV, INTENT_META_SOURCE, XIGT_META_TYPE)
+        add_meta(pt, XIGT_DATA_METH, tag_method, XIGT_META_TYPE)
+
         self.append(pt)
 
         # Go through the words and add the tags.
@@ -1086,27 +1118,31 @@ class RGIgt(Igt, RecursiveFindMixin):
             p = RGToken(id=pt.askItemId(), alignment=w.id, text=tag)
             pt.add(p)
 
-    def get_pos_tags(self, tier_id, created_by = None):
+    def get_pos_tags(self, tier_id, tag_method = None):
         """
         Retrieve the pos tags if they exist for the given tier id...
 
+        :rtype : RGTokenTier
         :param tier_id: Id for the tier to find tags for
         :type tier_id: str
         """
 
-        attributes = {ALIGNMENT:tier_id}
+        # Also, if we have specified a tag_method we are looking for, then
+        # check the metadata to see if the source is correct.
+        filters = []
+        if tag_method:
+            data_source = lambda x: find_meta(x, XIGT_DATA_PROV) == INTENT_META_SOURCE
+            data_method = lambda x: find_meta(x, XIGT_DATA_METH) == tag_method
+            filters = [data_source, data_method]
 
-        # Also add the created-by feature to select which we are looking for.
-        if created_by:
-            attributes['created-by'] = created_by
+        pos_tier = self.find(attributes={ALIGNMENT:tier_id}, type=POS_TIER_TYPE, others = filters)
 
-        pos_tier = self.find(attributes=attributes, type=POS_TIER_TYPE)
-
-
+        # If we found a tier, return it with the token methods...
         if pos_tier is not None:
             pos_tier.__class__ = RGTokenTier
             return pos_tier
 
+        # Otherwise, return None...
 
 
     def get_lang_sequence(self, created_by = None, unk_handling=None):
@@ -1153,11 +1189,11 @@ class RGIgt(Igt, RecursiveFindMixin):
         trans_tags = [i.label for i in tagger.tag(self.trans.text())]
 
         # Add the generated pos tags to the tier.
-        self.add_pos_tags(self.trans.id, trans_tags, created_by = 'intent-tagger')
+        self.add_pos_tags(self.trans.id, trans_tags, tag_method=INTENT_POS_TAGGER)
         return trans_tags
 
 
-    def classify_gloss_pos(self, classifier, **kwargs):
+    def classify_gloss_pos(self, classifier, tag_method=None, **kwargs):
         """
         Run the classifier on the gloss words and return the POS tags.
 
@@ -1166,14 +1202,10 @@ class RGIgt(Igt, RecursiveFindMixin):
         """
 
         attributes = {ALIGNMENT:self.gloss.id}
-        # Put our created_by attribute in here...
-        created_by = kwargs.get('created_by', 'intent-classify')
-        if created_by:
-            attributes['created-by'] = created_by
 
+        # Search for a previous run and remove if found...
+        prev_tier = self.get_pos_tags(self.gloss.id, tag_method = tag_method)
 
-        # Search for a previous run and Remove if found...
-        prev_tier = self.find(type='pos', attributes=attributes)
         if prev_tier:
             prev_tier.delete()
 
@@ -1216,36 +1248,33 @@ class RGIgt(Igt, RecursiveFindMixin):
                 # Return the POS tags
                 tags.append(best[0])
 
-        self.add_pos_tags(self.gloss.id, tags, created_by)
+        self.add_pos_tags(self.gloss.id, tags, tag_method=INTENT_POS_CLASS)
         return tags
 
     # • POS Tag Projection -----------------------------------------------------
-    def project_trans_to_gloss(self, created_by=None, pos_creator = None):
+    def project_trans_to_gloss(self, tag_method=None):
         """
         Project POS tags from the translation words to the gloss words.
         """
 
         # Remove previous gloss tags created by us if specified...
         attributes = {ALIGNMENT:self.gloss.id}
-        # Set the created-by attribute if specified.
-        if created_by:
-            attributes['created-by'] = created_by
 
         # Remove the previous tags if they are present...
-        prev_t = self.find(type=POS_TIER_TYPE, attributes=attributes)
+        prev_t = self.get_pos_tags(self.gloss.id, tag_method=tag_method)
         if prev_t: prev_t.delete()
 
         # Get the trans tags...
-        trans_tags = self.get_pos_tags(self.trans.id, created_by = pos_creator)
+        trans_tags = self.get_pos_tags(self.trans.id)
 
         # If we don't get any trans tags back, throw an exception:
         if not trans_tags:
             project_creator_except("There were no translation-line POS tags found",
                                 "Please create the appropriate translation-line POS tags before projecting.",
-                                pos_creator)
+                                tag_method)
 
         # Get the alignment between the trans words and the gloss words.
-        t_g_aln = sorted(self.get_trans_gloss_alignment(created_by))
+        t_g_aln = sorted(self.get_trans_gloss_alignment())
 
         # Create the new pos tier.
         # TODO: There should be a more unified approach to transferring tags.
@@ -1253,32 +1282,34 @@ class RGIgt(Igt, RecursiveFindMixin):
         pt = RGTokenTier(type=POS_TIER_TYPE, id=self.askTierId(POS_TIER_TYPE, GLOSS_POS_ID, id_based=True, suppress_numbering=True),
                          alignment=self.gloss.id, attributes=attributes)
 
+        # Add the metadata about this tier...
+        add_meta(pt, XIGT_DATA_PROV, INTENT_META_SOURCE)
+        add_meta(pt, XIGT_DATA_METH, INTENT_POS_PROJ)
+
         for t_i, g_i in t_g_aln:
             g_word = self.gloss.get_index(g_i)
             t_tag = trans_tags[t_i-1]
 
             # TODO: Implement order of precedence here.
 
-            pt.add(RGToken(id=pt.askItemId(), alignment = g_word.id, text = str(t_tag)))
+            pt.add(RGToken(id=pt.askItemId(), alignment = g_word.id, text = t_tag.get_content()))
 
         self.append(pt)
 
-    def project_gloss_to_lang(self, created_by = None, pos_creator = None, unk_handling=None, classifier=None, posdict=None):
+    def project_gloss_to_lang(self, tag_method = None, unk_handling=None, classifier=None, posdict=None):
         """
         Project POS tags from gloss words to language words. This assumes that we have
         alignment tags on the gloss words already that align them to the language words.
         """
-        # Get the gloss tags...
 
-        attributes = {} if not pos_creator else {'created-by':created_by}
 
-        gloss_tags = self.get_pos_tags(self.gloss.id, created_by=pos_creator)
+        gloss_tags = self.get_pos_tags(self.gloss.id, tag_method=tag_method)
 
         # If we don't have gloss tags by that creator...
         if not gloss_tags:
             project_creator_except("There were no gloss-line POS tags found",
                                     "Please create the appropriate gloss-line POS tags before projecting.",
-                                    pos_creator)
+                                    tag_method)
 
         alignment = self.gloss.get_aligned_tokens()
 
@@ -1292,7 +1323,11 @@ class RGIgt(Igt, RecursiveFindMixin):
         # Get the bilingual alignment from trans to
         # Create the new pos tier...
         pt = RGTokenTier(type=POS_TIER_TYPE, id=self.askTierId(POS_TIER_TYPE, LANG_POS_ID, id_based=True),
-                            alignment=self.lang.id, attributes=attributes)
+                            alignment=self.lang.id)
+
+        # Add the metadata as to the source
+        add_meta(pt, XIGT_DATA_PROV, INTENT_META_SOURCE)
+        add_meta(pt, XIGT_DATA_METH, tag_method)
 
 
 
@@ -1354,30 +1389,32 @@ class RGIgt(Igt, RecursiveFindMixin):
 
 
 
-    def project_trans_to_lang(self, created_by=None, pos_creator=None, aln_creator=None):
+    def project_trans_to_lang(self, aln_method=None, tag_method=None):
         """
         Project POS tags from the translation line directly to the language
         line. This assumes that we have a bilingual alignment between
         translation words and language words already.
 
-        :param created_by: The attribute that the projected tags will have
-        :param pos_creator: The pos tags from which to select for projection
         """
 
-        attributes = {} if not created_by else {'created-by':created_by}
+        # Get the alignment between translation and language lines
+        ta_aln = self.get_bilingual_alignment(self.trans.id, self.lang.id, aln_method=aln_method)
 
         # Get the trans tags...
-        trans_tags = self.get_pos_tags(self.trans.id, created_by=pos_creator)
+        trans_tags = self.get_pos_tags(self.trans.id, tag_method=tag_method)
 
-        t_l_aln = self.get_bilingual_alignment(self.trans.id, self.lang.id, created_by=aln_creator)
-        if not t_l_aln:
-            raise ProjectionException("No trans-lang alignment found...")
+        if not ta_aln:
+            raise ProjectionException("No translation-language-line alignment was found for instance \"{}\". Not projecting.".format(self.id))
 
 
         # Create the new pos tier...
-        pt = RGTokenTier(type=POS_TIER_TYPE, id=LANG_POS_ID, alignment=self.lang.id, attributes=attributes)
+        pt = RGTokenTier(type=POS_TIER_TYPE, id=LANG_POS_ID, alignment=self.lang.id)
 
-        for t_i, l_i in t_l_aln:
+        # Add the metadata about the source of the tags.
+        add_meta(pt, XIGT_DATA_PROV, INTENT_META_SOURCE)
+        add_meta(pt, XIGT_DATA_METH, INTENT_POS_PROJ)
+
+        for t_i, l_i in ta_aln:
             t_word = self.trans.get_index(t_i)
             t_tag = trans_tags[t_i-1]
 
@@ -1400,33 +1437,37 @@ class RGIgt(Igt, RecursiveFindMixin):
         result = parser.parse(self.trans.text())
 
         if pt:
-            self.create_pt_tier(result.pt, self.trans)
+            self.create_pt_tier(result.pt, self.trans, parse_method=INTENT_PS_PARSER)
         if dt:
-            self.create_dt_tier(result.dt)
+            self.create_dt_tier(result.dt, parse_method=INTENT_DS_PARSER)
 
 
-    def create_pt_tier(self, pt, w_tier):
+    def create_pt_tier(self, phrase_tree, w_tier, parse_method=None):
         """
         Given a phrase tree, create a phrase tree tier. The :class:`intent.trees.IdTree` passed in must
         have the same number of leaves as words in the translation line.
 
-        :param pt: Phrase tree.
-        :type pt: :class:`intent.trees.IdTree`
+        :param phrase_tree: Phrase tree.
+        :type phrase_tree: IdTree
         :param w_tier: Word tier
-        :type pt: RGWordTier
+        :type w_tier: RGWordTier
         """
 
         # 1) Start by creating a phrase structure tier -------------------------
         pt_tier = RGPhraseStructureTier(type=PS_TIER_TYPE, id=self.askTierId(PS_TIER_TYPE, GEN_PS_ID), alignment=w_tier.id)
 
-        pt.assign_ids(pt_tier.id)
+        add_meta(pt_tier, XIGT_DATA_PROV, INTENT_META_SOURCE)
+        add_meta(pt_tier, XIGT_DATA_METH, parse_method)
+
+        #TODO: is the assign_ids doing anything anymore?
+        phrase_tree.assign_ids(pt_tier.id)
 
 
         # We should get back the same number of tokens as we put in
-        assert len(pt.leaves()) == len(w_tier)
+        assert len(phrase_tree.leaves()) == len(w_tier)
 
-        leaves = list(pt.leaves())
-        preterms = list(pt.preterminals())
+        leaves = list(phrase_tree.leaves())
+        preterms = list(phrase_tree.preterminals())
 
         assert len(leaves) == len(preterms)
 
@@ -1438,7 +1479,7 @@ class RGIgt(Igt, RecursiveFindMixin):
             pt_tier.add(pi)
 
         # 3) Finally, run through the rest of the subtrees. --------------------
-        for st in pt.nonterminals():
+        for st in phrase_tree.nonterminals():
             child_refs = ' '.join([s.id for s in st])
             si = RGItem(id=st.id, attributes={PS_CHILD_ATTRIBUTE:child_refs}, text=st.label())
             pt_tier.add(si)
@@ -1456,10 +1497,14 @@ class RGIgt(Igt, RecursiveFindMixin):
 
     def project_pt(self):
 
+        """
+
+        :raise PhraseStructureProjectionException: If there is no translation parse already in the tree, raise this error.
+        """
         trans_parse_tier = self.get_trans_parse_tier()
 
         if trans_parse_tier is None:
-            raise PhraseStructureProjectionException('Translation tier not found for instance "%s"' % self.id)
+            raise PhraseStructureProjectionException('Translation parse not found for instance "%s"' % self.id)
 
         trans_tree = read_pt(trans_parse_tier)
 
@@ -1470,13 +1515,13 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         pt = project_ps(trans_tree, self.lang, tl_aln)
 
-        self.create_pt_tier(pt, self.lang)
+        self.create_pt_tier(pt, self.lang, parse_method=INTENT_PS_PROJ)
 
 
 
 
 
-    def create_dt_tier(self, dt):
+    def create_dt_tier(self, dt, parse_method=None):
         """
         Create the dependency structure tier based on the ds that is passed in. The :class:`intent.trees.DepTree`
         structure that is passed in must be based on the words in the translation line, as the indices from the
@@ -1489,6 +1534,10 @@ class RGIgt(Igt, RecursiveFindMixin):
         # 1) Start by creating dt tier -----------------------------------------
         dt_tier = RGTier(type=DS_TIER_TYPE, id=self.askTierId(DS_TIER_TYPE, GEN_DS_ID),
                         attributes = {DS_DEP_ATTRIBUTE:self.trans.id, DS_HEAD_ATTRIBUTE:self.trans.id})
+
+
+        add_meta(dt_tier, XIGT_DATA_PROV, INTENT_META_SOURCE)
+        add_meta(dt_tier, XIGT_DATA_METH, parse_method)
 
         # 2) Next, simply iterate through the tree and make the head/dep mappings.
 
@@ -1583,25 +1632,9 @@ class RGMorph(RGToken):
     A specific type of item for handling sub-word-level items.
     """
 
-    def __init__(self, words=[], **kwargs):
+    def __init__(self, words=list, **kwargs):
         RGItem.__init__(self, **kwargs)
         self._words = words
-
-    @property
-    def word(self):
-        """
-        Attempt to find the word item(s) that this morph resolves to.
-        """
-
-        if self.content:
-            id = get_alignment_expression_ids(self.content)[0]
-        elif self.segmentation:
-            id = get_alignment_expression_ids(self.segmentation)[0]
-
-        word = self.tier.igt.find(id=id)
-        word.__class__ = RGWord
-        return word
-
 
 
 class RGBilingualAlignment(RGItem):
@@ -2085,9 +2118,7 @@ def retrieve_gloss_words(inst):
         wt = create_words_tier(retrieve_normal_line(inst, ODIN_GLOSS_TAG), GLOSS_WORD_ID, GLOSS_WORD_TYPE, aln_attribute=CONTENT)
 
         # Set the "gloss type" to the "word-level"
-        set_gloss_type(wt, INTENT_GLOSS_WORD)
-
-        get_gloss_type(wt)
+        add_meta(wt, INTENT_TOKEN_TYPE, INTENT_GLOSS_WORD, INTENT_META_TYPE)
 
         inst.append(wt)
     else:
@@ -2143,50 +2174,44 @@ def word_align(this, other):
         for my_word, their_word in zip(this, other):
             my_word.alignment = their_word.id
 
-def morph_align(this, other):
+def morph_align(gloss_tier, morph_tier):
+
+    # First, set the alignment...
+    gloss_tier.alignment = morph_tier.id
+
     # Let's count up how many morphemes there are
     # for each word on the translation line...
-
-    this.alignment = other.id
-
     lang_word_dict = defaultdict(list)
-    for other_m in other:
-        other_m.__class__ = RGMorph
 
+    for morph in morph_tier:
         # Add this morpheme to the dictionary, so we can keep
         # count of how many morphemes align to a given word.
-        lang_word_dict[other_m.word.id].append(other_m)
+        lang_word_dict[find_lang_word(gloss_tier.igt, morph).id].append(morph)
 
 
     # Now, iterate over our morphs.
-    for this_m in this:
+    for gloss in gloss_tier:
 
-
-        this_m.__class__ = RGMorph
-
-        # Find our parent word, and it's
-        # alignment.
-
-        w = this_m.word
-        other_w_id = w.alignment
+        gloss_word = find_gloss_word(gloss_tier.igt, gloss)
+        word_id = gloss_word.alignment
 
         # Next, let's see what unaligned morphs there are
-        other_w_list = lang_word_dict[other_w_id]
+        aligned_lang_words = lang_word_dict[word_id]
 
         # If there's only one morph left, align with that.
-        if len(other_w_list) == 1:
-            this_m.alignment = other_w_list[0].id
+        if len(aligned_lang_words) == 1:
+            gloss.alignment = aligned_lang_words[0].id
 
         # If there's more, pop one off the beginning of the list and use that.
-        elif len(other_w_list) > 1:
-            this_m = other_w_list.pop(0)
-            this_m.alignment = this_m.id
+        elif len(aligned_lang_words) > 1:
+            gloss = aligned_lang_words.pop(0)
+            gloss.alignment = gloss.id
 
 #===============================================================================
 # • Searching ---
 #===============================================================================
 
-def find_lang_word(morph):
+def find_lang_word(inst, morph):
     """
     Given a morph that segments the language line, find its associated word.
 
@@ -2195,7 +2220,10 @@ def find_lang_word(morph):
 
     :rtype: RGWord
     """
-    raise Exception('Who is calling me?')
+    ids = set(ref.ids(morph.segmentation))
+    assert len(ids) == 1, "A morph should not segment more than one word"
+
+    return inst.find(id = ids.pop())
 
 def odin_span(inst, item):
     aligned_items = _odin_span(inst, item)
@@ -2224,20 +2252,19 @@ def _odin_span(inst, item, shift_index = 0):
 
     aligned_items = []
 
-    for item in get_alignment_expression_spans(aln_expr):
+    for item in ref.spans(aln_expr, keep_delimiters=False):
         # The items here can either be:
         #  (1) a bare id.
-        #  (2) '+' or ','
-        #  (3) a tuple of (id, start, stop)
+        #  (2) an alignment expression like: "a1[3:5]"
 
-        # (2)
-        if item == '+' or item == ',':
-            continue
+        # Get the ids.
+        ref_id = ref.ids(item)[0]
 
-        # (3)
-        elif isinstance(item, tuple):
-            ref_id, start, stop = item
-            ref_item = inst.find(ref_id)
+        for _, start, stop in ref.span_re.findall(item):
+
+            ref_item = inst.find(id=ref_id)
+            start = int(start)
+            stop  = int(stop)
 
             # If we have found a tier of type ODIN_TYPE,
             # then append it to the aligned items.
@@ -2261,10 +2288,10 @@ def x_span_contains_y(x_spans, y_spans):
     """
     Return whether all elements of y_spans are contained by some elements of x_spans
 
-    :param span:
-    :type span:
-    :param span_list:
-    :type span_list:
+    :param x_spans:
+    :type x_spans:
+    :param y_spans:
+    :type y_spans:
     """
 
 
@@ -2291,9 +2318,6 @@ def x_span_contains_y(x_spans, y_spans):
     # all elements match.
     return True
 
-    # If we make it all the way through, then it
-    # wasn't contained.
-    return False
 
 def find_gloss_word(inst, morph):
     """
