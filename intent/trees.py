@@ -22,10 +22,10 @@ class TreeMergeError(TreeProjectionError): pass
 PS_LOG = logging.getLogger('PS_PROJECT')
 
 class IdTree(ParentedTree):
-    '''
+    """
     This is a tree that inherits from NLTK's tree implementation,
     but assigns IDs that can be used in writing out the Xigt format.
-    '''
+    """
     def __init__(self, node, children=None, id=None, index=None):
         super().__init__(node, children)
         self.id = id
@@ -37,7 +37,7 @@ class IdTree(ParentedTree):
 
 
     def assign_ids(self, id_base=''):
-        '''
+        """
         Assign IDs to the elements of the tree, using the "id_base" string
         as a leading element.
         |
@@ -45,7 +45,7 @@ class IdTree(ParentedTree):
 
         :param id_base: base which to build the IDs from
         :type id_base: str
-        '''
+        """
 
         # Per the conventions, we want the preterminals to start from one.
         i = 1
@@ -79,18 +79,18 @@ class IdTree(ParentedTree):
 
 
     def delete(self):
-        '''
+        """
         Delete self from parent.
-        '''
+        """
         del self.parent()[self.parent_index()]
 
 
     def copy(self):
-        '''
+        """
         Perform a deep copy
 
         :rtype: IdTree
-        '''
+        """
         if self.is_preterminal():
             return IdTree(self.label(), copy(self), id=self.id, index=self.index)
         else:
@@ -98,8 +98,14 @@ class IdTree(ParentedTree):
             return IdTree(self.label(), new_children, id=self.id, index=self.index)
 
     @classmethod
-    def fromstring(cls, s, id_base='', **kwargs):
-        t = super(IdTree, cls).fromstring(s, **kwargs)
+    def fromstring(cls, tree_string, id_base='', **kwargs):
+        """
+        :param tree_string:  String of a phrase structure tree in PTB format.
+        :param id_base:
+        :param kwargs:
+        :rtype : IdTree
+        """
+        t = super(IdTree, cls).fromstring(tree_string, **kwargs)
         t.assign_ids()
         for i, pt in enumerate(t.preterminals()):
             pt.index = i+1
@@ -112,17 +118,17 @@ class IdTree(ParentedTree):
         return self.subtrees(filter=lambda t: not t.is_preterminal())
 
     def is_preterminal(self):
-        '''
+        """
         Check whether or not the given node is a preterminal (its height
         should be == 2)
-        '''
+        """
         return self.height() == 2
 
     def indices_labels(self):
-        '''
+        """
         Iterate through the tree, and return the list of
         (label, head, child) tuples.
-        '''
+        """
         if self.parent():
             ret_tup = [(self.type, self.parent().index, self.index)]
         else:
@@ -135,9 +141,9 @@ class IdTree(ParentedTree):
 
 
     def span(self):
-        '''
+        """
         Return the span of indices covered by this node.
-        '''
+        """
 
         # 1) If this node is a preterminal, just return
         #    the (1,1) pair of indices for this node.
@@ -157,9 +163,9 @@ class IdTree(ParentedTree):
             return (self[0].span()[0], self[-1].span()[1])
 
     def promote(self):
-        '''
+        """
         Delete this node and promote its children
-        '''
+        """
 
         # Get the index of this node, and a ref
         # to its parent, then delete it.
@@ -176,13 +182,13 @@ class IdTree(ParentedTree):
             parent.insert(my_idx+i, child)
 
     def swap(self, i, j):
-        '''
+        """
         Swap the node indices i and j.
         :param i:
         :type i: int
         :param j:
         :type j: int
-        '''
+        """
 
         assert i < j
 
@@ -199,14 +205,14 @@ class IdTree(ParentedTree):
 
 
     def merge(self, i, j):
-        '''
+        """
         Merge the node indices i and j
 
         :param i:
         :type i: int
         :param j:
         :type j: int
-        '''
+        """
 
         if i == j:
             raise TreeMergeError("Indices cannot be equal in a merge.")
@@ -259,12 +265,15 @@ class Word(object):
 
     def __str__(self):
         return self.w
+
     def __repr__(self):
-        return self.w
+        return '{}[{}]'.format(self.w, self.i)
+
     def __hash__(self):
         return hash(self.w)
+
     def __eq__(self, o):
-        return self.w == str(o)
+        return isinstance(o, Word) and self.w == o.w and self.i == o.i
 
 def build_tree(dict):
     return DepTree('ROOT', _build_tree(dict, 'ROOT'))
@@ -283,6 +292,12 @@ def _build_tree(dict, word):
 
 
 def get_nodes(string):
+    """
+
+    :param string: A string representation of the dependency tree produced by the stanford parser.
+    :return: Dictionary of
+    :rtype: dict
+    """
     nodes = re.findall('(\w+)\((.*?)\)', string)
 
     # We are going to store a dictionary of words
@@ -301,8 +316,8 @@ def get_nodes(string):
 
         child_dict[head].append((name, child))
 
-    # Now that we have the dictionary, we can start from "ROOT"
-    return build_tree(child_dict)
+    return child_dict
+
 
 def aln_indices(tokens):
     index_str = ''
@@ -313,7 +328,7 @@ def aln_indices(tokens):
 
 def project_ps(src_t, tgt_w, aln):
 
-    '''
+    """
     1. Copy the English PS, and remove all unaligned English words.
 
     2. Replace each English word with the corresponding target words.
@@ -349,7 +364,7 @@ def project_ps(src_t, tgt_w, aln):
         * For each unaligned word x:
             * Find closest left and right aligned neighbor
             * Attach x to the lowest common ancestor of the two.
-    '''
+    """
 
     PS_LOG.debug('Projecting phrase structure.')
     PS_LOG.debug('             ' + aln_indices(src_t.leaves()))
@@ -491,12 +506,12 @@ def lowest_common_ancestor(t1, t2):
 
 
 def reorder_tree(t):
-    '''
+    """
     Recursively reorder a tree.
 
     :param t:
     :type t:
-    '''
+    """
 
     if not t.is_preterminal():
         if len(t) >= 2:
@@ -576,8 +591,8 @@ class DepTree(IdTree):
         self.type = type
 
     @classmethod
-    def fromstring(cls, s, id_base='', **kwargs):
-        '''
+    def fromstring(cls, tree_string, id_base='', **kwargs):
+        """
         Read a dependency tree from the stanford dependency format. Example:
 
         ::
@@ -587,13 +602,14 @@ class DepTree(IdTree):
             det(woods-5, the-4)
             prep_into(ran-2, woods-5)
 
-        :param s: String to parse
-        :type s: str
+        :param tree_string: String to parse
+        :type tree_string: str
         :param id_base: ID string on which to base the IDs in this tree.
         :type id_base: str
-        '''
+        """
 
-        t = get_nodes(s)
+        child_dict = get_nodes(tree_string)
+        t = build_tree(child_dict)
         t.assign_ids(id_base)
         return t
 
@@ -603,115 +619,3 @@ class DepTree(IdTree):
             ret_str += ' %s' % str(child)
         return ret_str + ')'
 
-class SpanTest(unittest.TestCase):
-
-    def setUp(self):
-        self.t = IdTree.fromstring('''(ROOT
-  (SBARQ
-    (WHNP (WP Who))
-    (SQ (VBP do) (NP (PRP you)) (VP (VB believe) (VP (VBN called))))))'''
-    )
-
-    def test_span(self):
-        self.assertEqual(self.t.span(), (1,5))
-
-class ProjectTest(unittest.TestCase):
-
-    def setUp(self):
-        self.t = IdTree.fromstring('''
-(S
-    (NP
-        (DT The)
-        (NN teacher)
-    )
-    (VP
-        (VBD gave)
-        (NP
-            (DT a)
-            (NN book)
-        )
-        (PP
-            (IN to)
-            (NP
-                (DT the)
-                (NN boy)
-            )
-        )
-        (NP
-            (NN yesterday)
-        )
-    )
-)''')
-        self.proj = IdTree.fromstring(
-'''(S
-    (VBD rhoddodd)
-    (NP
-        (DT yr)
-        (NN athro)
-    )
-    (NP
-        (NN lyfr)
-    )
-    (PP
-        (IN+DT i'r)
-        (NN bachgen)
-    )
-    (NP
-        (NN ddoe)
-    )
-)''')
-        self.aln = intent.alignment.Alignment.Alignment([(1,2), (2,3), (3,1), (5,4), (6, 5), (7, 5), (8, 6), (9, 7)])
-
-    def test_proj(self):
-        proj = project_ps(self.t, RGWordTier.from_string("rhoddodd yr athro lyfr i'r bachgen ddoe"), self.aln)
-
-        # Reassign the ids after everything has moved around.
-        proj.assign_ids()
-
-        self.assertEqual(self.proj, proj)
-
-class PromoteTest(unittest.TestCase):
-
-    def setUp(self):
-        self.t = IdTree.fromstring('(S (NP (DT the) (NN boy)) (VP (VBD ran) (IN away)))')
-
-    def test_equality(self):
-        t2 = self.t.copy()
-        t3 = self.t.copy()
-        self.assertEqual(self.t, t2)
-
-        t2.find_index(1).delete()
-        self.assertNotEqual(self.t, t2)
-
-        # Change the id
-        t3n = t3.find_index(1)
-        t3id = t3n.id
-        t3idx = t3n.index
-
-        t3n.id = 'asdf'
-
-        self.assertNotEqual(self.t, t3)
-
-        # Change it back.
-        t3n.id = t3id
-        self.assertEqual(self.t, t3)
-
-        # Change the index
-        t3n.index = -1
-        self.assertNotEqual(self.t, t3)
-
-        # Change it back
-        t3n.index = t3idx
-        self.assertEqual(self.t, t3)
-
-    def test_promote(self):
-        t2 = self.t.copy()
-        t3 = self.t.copy()
-        vp = self.t[1]
-        vp.promote()
-
-        self.assertNotEqual(self.t, t2)
-        self.assertEqual(t2, t3)
-
-
-from intent.igt.rgxigt import RGWordTier

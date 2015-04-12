@@ -54,7 +54,7 @@ def find_meta(obj, meta_type):
     """
     if not isinstance(obj, XigtContainerMixin):
         return None
-    if obj.metadata is not None:
+    elif obj.metadata is not None:
         for metadata in obj.metadata:
             for meta in metadata.metas:
                 if meta.type == meta_type:

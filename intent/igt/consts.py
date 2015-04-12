@@ -130,3 +130,12 @@ INTENT_PS_PROJ    = 'projection'
 
 INTENT_DS_PARSER  = 'stanford-parser'
 INTENT_DS_PROJ    = 'projection'
+
+
+# ===============================================================================
+# ID STYLES
+# ===============================================================================
+ID_DEFAULT                   = 'default'    # e.g. "t1"
+ID_SAME_TYPE_DIFFERENT_TIERS = 'diff-tiers' # e.g. "t-w"
+ID_SAME_TYPE_DIFFERENT_ITEMS = 'diff-items' # e.g. "t1-w"
+ID_SAME_TYPE_ALTERNATE       = 'alternate'  # e.g. "pos_a"
