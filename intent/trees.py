@@ -1,13 +1,11 @@
-
-from nltk.tree import ParentedTree, Tree
 import re
 from collections import defaultdict
-import sys
-import unittest
-import intent.alignment.Alignment
 from copy import copy
 import itertools
 import logging
+
+from nltk.tree import ParentedTree, Tree
+
 
 #===============================================================================
 # Exceptions
@@ -21,20 +19,33 @@ class TreeMergeError(TreeProjectionError): pass
 
 PS_LOG = logging.getLogger('PS_PROJECT')
 
+
+
 class IdTree(ParentedTree):
     """
     This is a tree that inherits from NLTK's tree implementation,
     but assigns IDs that can be used in writing out the Xigt format.
     """
-    def __init__(self, node, children=None, id=None, index=None):
+    def __init__(self, node, children=None, id=None):
         super().__init__(node, children)
         self.id = id
-        self.index = index
 
     def __eq__(self, other):
         q = ParentedTree.__eq__(self, other)
-        return q and (self.id == other.id) and (self.index == other.index)
+        return q and (self.id == other.id)
 
+    def similar(self, other):
+        if not isinstance(other, Tree):
+            return False
+        if len(self) != len(other):
+            return False
+        for my_child, other_child in zip(self, other):
+            if not my_child.similar(other_child):
+                return False
+
+        # If we make it all the way through without returning false,
+        # return True.
+        return True
 
     def assign_ids(self, id_base=''):
         """
@@ -57,8 +68,14 @@ class IdTree(ParentedTree):
             st.id = '%s%d' % (id_base, i)
             i+=1
 
+    def find_start_index(self, idx):
+        return self.find(lambda x: x.is_preterminal() and x.span()[0] == idx)
+
+    def find_stop_index(self, idx):
+        return self.find(lambda x: x.is_preterminal() and x.span()[1] == idx)
+
     def find_index(self, idx):
-        return self.find(lambda x: x.index == idx)
+        return self.find(lambda x: x.is_preterminal() and x.span() == (idx,idx))
 
     def find(self, filter):
 
@@ -77,13 +94,11 @@ class IdTree(ParentedTree):
                     break
             return ret
 
-
     def delete(self):
         """
         Delete self from parent.
         """
         del self.parent()[self.parent_index()]
-
 
     def copy(self):
         """
@@ -91,24 +106,25 @@ class IdTree(ParentedTree):
 
         :rtype: IdTree
         """
-        if self.is_preterminal():
-            return IdTree(self.label(), copy(self), id=self.id, index=self.index)
-        else:
-            new_children = [t.copy() for t in self]
-            return IdTree(self.label(), new_children, id=self.id, index=self.index)
+        new_children = [t.copy() for t in self]
+        return IdTree(self.label(), new_children, id=copy(self.id))
 
     @classmethod
-    def fromstring(cls, tree_string, id_base='', **kwargs):
+    def fromstring(cls, tree_string, id_base=''):
         """
         :param tree_string:  String of a phrase structure tree in PTB format.
         :param id_base:
         :param kwargs:
         :rtype : IdTree
         """
-        t = super(IdTree, cls).fromstring(tree_string, **kwargs)
+        t = super(IdTree, cls).fromstring(tree_string,
+                                          # When leaves are read in, make them Terminal objects.
+                                        read_leaf=lambda x: Terminal(x))
         t.assign_ids()
-        for i, pt in enumerate(t.preterminals()):
-            pt.index = i+1
+        for i, leaf in enumerate(t.leaves()):
+            leaf.index = i+1
+
+
         return t
 
     def preterminals(self):
@@ -145,18 +161,12 @@ class IdTree(ParentedTree):
         Return the span of indices covered by this node.
         """
 
-        # 1) If this node is a preterminal, just return
-        #    the (1,1) pair of indices for this node.
-
-        if self.is_preterminal():
-            return (self.index, self.index)
-
-        # 2) If we only have one child, then simply
+        # 1) If we only have one child, then simply
         #    return the span of that child.
-        elif len(self) == 1:
+        if len(self) == 1:
             return self[0].span()
 
-        # 3) Otherwise, return a span consisting of
+        # 2) Otherwise, return a span consisting of
         #    the (leftmost, rightmost) indices of the
         #    children.
         else:
@@ -195,16 +205,13 @@ class IdTree(ParentedTree):
         i_n = self[i]
         j_n = self[j]
 
-
         del self[i]
         del self[j-1]
-
 
         self.insert(i, j_n)
         self.insert(j, i_n)
 
-
-    def merge(self, i, j):
+    def merge(self, i, j, unify_children=True):
         """
         Merge the node indices i and j
 
@@ -217,6 +224,8 @@ class IdTree(ParentedTree):
         if i == j:
             raise TreeMergeError("Indices cannot be equal in a merge.")
 
+        if (self[i].is_preterminal() != self[j].is_preterminal()):
+            raise TreeMergeError("Must merge interior nodes or preterminal with preterminal")
 
         assert i < j, 'i must be smaller index'
 
@@ -226,19 +235,33 @@ class IdTree(ParentedTree):
         del self[i]
         del self[j-1]
 
+
+        new_children = []
         # Create the new node that is a "+" combination of
         # the labels, and just the child of the first.
-        newlabel = '{}+{}'.format(i_n.label(), j_n.label())
+        newlabel = i_n.label()+'+'+j_n.label()
+
         for child in i_n:
             if isinstance(child, Tree):
                 child._parent = None
+            new_children.append(child)
 
-        n = IdTree(newlabel, list(i_n), index=i_n.index, id=i_n.id)
+        for child in j_n:
+            if isinstance(child, Tree):
+                child._parent = None
+            new_children.append(child)
+
+        # In the preterminal sense we are usually merging terminals
+        # that were originally the same word, with the same index.
+        if unify_children:
+            new_children = new_children[0:1]
+            assert len(new_children) == 1
+
+
+        n = IdTree(newlabel, children=new_children, id=i_n.id)
 
 
         self.insert(i, n)
-
-
 
     def insert_by_span(self, t):
 
@@ -256,7 +279,30 @@ class IdTree(ParentedTree):
         PS_LOG.debug('Inserting {} into {} at position {}'.format(t.pprint(margin=5000), self.pprint(margin=5000), last_index))
         self.insert(last_index, t)
 
+class Terminal(object):
+    def __init__(self, label, index=None):
+        self.label = label
+        self.index = index
 
+    def __str__(self):
+        return self.label
+    def __eq__(self, other):
+        return isinstance(other, Terminal) and self.label == other.label and self.index == other.index
+    def __repr__(self):
+        return self.label
+    def __len__(self):
+        return len(self.label)
+    def __hash__(self):
+        return hash('{}[{}]'.format(self.label, self.index))
+
+    def span(self):
+        return (self.index, self.index)
+
+    def similar(self, other):
+        return self.__eq__(other)
+
+    def copy(self):
+        return Terminal(copy(self.label), copy(self.index))
 
 class Word(object):
     def __init__(self, w, i):
@@ -368,10 +414,10 @@ def project_ps(src_t, tgt_w, aln):
 
     PS_LOG.debug('Projecting phrase structure.')
     PS_LOG.debug('             ' + aln_indices(src_t.leaves()))
-    PS_LOG.debug('SRC        : %s' % ' '.join(src_t.leaves()))
+    PS_LOG.debug('SRC        : %s' % ' '.join([str(l) for l in src_t.leaves()]))
     PS_LOG.debug('SRC -> TGT : %s' % str(sorted(list(aln))))
     PS_LOG.debug('TGT        : %s' % tgt_w.text())
-    PS_LOG.debug('             ' + aln_indices([t.get_content() for t in tgt_w]))
+    PS_LOG.debug('             ' + aln_indices([t.value() for t in tgt_w]))
 
 
     src_is = [x[0] for x in aln]
@@ -382,7 +428,7 @@ def project_ps(src_t, tgt_w, aln):
     # 1b) Remove unaligned words... ---
     nodes_to_delete = []
     for pt in tgt_t.preterminals():
-        if pt.index not in src_is:
+        if pt.span()[0] not in src_is:
             nodes_to_delete.append(pt)
 
     for n in nodes_to_delete:
@@ -414,9 +460,8 @@ def project_ps(src_t, tgt_w, aln):
 
     # Now, let's do the swapping.
     for node, word in nodes_to_swap:
-        PS_LOG.debug('Replacing {:>14s} {:<4s} with {:<4s} {:<14s}'.format('"%s"'%node[0], '[%d]'%node.index, '[%d]'%word.index, '"%s"' % word.get_content()))
-        node[0] = word.get_content()
-        node.index = word.index
+        PS_LOG.debug('Replacing {:>14s} {:<4s} with {:<4s} {:<14s}'.format('"%s"'%node[0], '[%s]'%str(node.span()), '[%d]'%word.index, '"%s"' % word.get_content()))
+        node[0] = Terminal(word.value(), index=word.index)
 
     PS_LOG.debug('Current Tree: {}'.format(tgt_t.pprint(margin=100)))
 
@@ -438,30 +483,35 @@ def project_ps(src_t, tgt_w, aln):
         left_words = [w for w in tgt_w if w.index < unaligned_tgt_word.index and w.index in aligned_indices]
         right_words= [w for w in tgt_w if w.index > unaligned_tgt_word.index and w.index in aligned_indices]
 
-        assert left_words or right_words, "At least some words should alig..."
+        assert left_words or right_words, "No aligned words were found..."
 
         left_word = None if not left_words else left_words[-1]
         right_word= None if not right_words else right_words[0]
 
-        assert right_word or left_word
+        # Create the new preterminal node with the label 'UNK',
+        # using the ID label provided by this word, and its index
+        # at the preterminal stage.
+        t = IdTree('UNK', [Terminal(unaligned_tgt_word.value(), index=unaligned_tgt_word.index)], id=unaligned_tgt_word.id)
 
-        t = IdTree('UNK', [unaligned_tgt_word.get_content()], id=unaligned_tgt_word.id, index=unaligned_tgt_word.index)
 
-
-        # If there's only the right word, attach to that.
+        # If the only aligned word found was to the right,
+        # select the preterminal with a span that starts
+        # at that right word's index.
         if not left_word:
-            left_n = tgt_t.find_index(right_word.index)
+            left_n = tgt_t.find_start_index(right_word.index)
             left_n.parent().insert_by_span(t)
 
-        # If there's only the left word, attach to that.
+        # If the only aligned word found was to the left,
+        # select the preterminal with a span that ends
+        # at that left word's index
         elif not right_word:
-            right_n = tgt_t.find_index(left_word.index)
+            right_n = tgt_t.find_stop_index(left_word.index)
             right_n.parent().insert_by_span(t)
 
         # TODO: What if there is both a left and a right.
         else:
-            left_n = tgt_t.find_index(left_word.index)
-            right_n= tgt_t.find_index(right_word.index)
+            left_n = tgt_t.find_stop_index(left_word.index)
+            right_n= tgt_t.find_start_index(right_word.index)
 
             # Get the list of ancestors going up to the root of the
             # tree. The first point at which they "intersect"
@@ -586,9 +636,10 @@ def reorder_tree(t):
 
 class DepTree(IdTree):
 
-    def __init__(self, node, children=None, id=None, type=None, index=0):
-        super().__init__(node, children, id, index)
+    def __init__(self, node, children=None, id=None, type=None, word_index=None):
+        super().__init__(node, children, id)
         self.type = type
+        self._word_index = word_index
 
     @classmethod
     def fromstring(cls, tree_string, id_base='', **kwargs):
@@ -613,8 +664,12 @@ class DepTree(IdTree):
         t.assign_ids(id_base)
         return t
 
+    @property
+    def word_index(self):
+        return self._word_index
+
     def __str__(self):
-        ret_str = '(%s[%s]' % (self.label(), self.index)
+        ret_str = '(%s[%s]' % (self.label(), self.word_index)
         for child in self:
             ret_str += ' %s' % str(child)
         return ret_str + ')'
