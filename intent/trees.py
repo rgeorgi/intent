@@ -269,8 +269,9 @@ class IdTree(ParentedTree):
 
         last_index = None
         for i, sibling in enumerate(self):
-            start, stop = sibling.span()
-            if start > t.index:
+            sib_start, sib_stop = sibling.span()
+            my_start, my_stop = t.span()
+            if sib_start > my_start:
                 last_index = i
                 break
 
