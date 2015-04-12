@@ -2,7 +2,7 @@ import unittest
 
 import intent
 from intent.igt.rgxigt import RGWordTier
-from intent.trees import IdTree, project_ps, TreeMergeError
+from intent.trees import IdTree, project_ps, TreeMergeError, DepTree, Terminal, TreeError
 
 
 __author__ = 'rgeorgi'
@@ -181,3 +181,31 @@ class MergeTests(unittest.TestCase):
         self.assertRaises(TreeMergeError, sq.merge, 0,1)
 
 
+class DepTreeTests(unittest.TestCase):
+
+    def setUp(self):
+        dt_string = '''nsubj(ran-2, John-1)
+                       root(ROOT-0, ran-2)
+                       det(woods-5, the-4)
+                       prep_into(ran-2, woods-5)'''
+        self.dt = DepTree.fromstring(dt_string)
+
+    def test_find(self):
+        j = self.dt.find_index(1)
+        self.assertEqual(j, DepTree('John', [], id=j.id, word_index=1, type='nsubj'))
+
+    def test_copy(self):
+        t2 = self.dt.copy()
+        self.assertEqual(self.dt, t2)
+
+    def test_equality(self):
+        t2 = self.dt.copy()
+        t2._word_index = -1
+        self.assertNotEqual(t2, self.dt)
+        t2._word_index = 0
+        self.assertEqual(t2, self.dt)
+        t2._label = 'notroot'
+        self.assertNotEqual(t2, self.dt)
+
+    def test_span(self):
+        self.assertRaises(TreeError, self.dt.span)

@@ -284,6 +284,8 @@ class Terminal(object):
     def __init__(self, label, index=None):
         self.label = label
         self.index = index
+        if index is not None:
+            self.index = int(index)
 
     def __str__(self):
         return self.label
@@ -305,25 +307,10 @@ class Terminal(object):
     def copy(self):
         return Terminal(copy(self.label), copy(self.index))
 
-class Word(object):
-    def __init__(self, w, i):
-        self.w = w
-        self.i = int(i)
-
-    def __str__(self):
-        return self.w
-
-    def __repr__(self):
-        return '{}[{}]'.format(self.w, self.i)
-
-    def __hash__(self):
-        return hash(self.w)
-
-    def __eq__(self, o):
-        return isinstance(o, Word) and self.w == o.w and self.i == o.i
 
 def build_tree(dict):
-    return DepTree('ROOT', _build_tree(dict, 'ROOT'))
+    root = Terminal('ROOT', index=0)
+    return DepTree(root.label, _build_tree(dict, root), word_index=root.index)
 
 def _build_tree(dict, word):
     if word not in dict:
@@ -331,7 +318,7 @@ def _build_tree(dict, word):
     else:
         children = []
         for dep_type, child in dict[word]:
-            d = DepTree(child.w, _build_tree(dict, child), type=dep_type, index=child.i)
+            d = DepTree(child.label, _build_tree(dict, child), type=dep_type, word_index=child.index)
             children.append(d)
         return children
 
@@ -356,10 +343,10 @@ def get_nodes(string):
     for name, pair in nodes:
         head, child = pair.split(',')
 
-        w_i_re = re.compile('(\S+)-([0-9]+)')
+        w_i_re = re.compile('(\S+)-(\d+)')
 
-        head  = Word(*re.search(w_i_re, head).groups())
-        child = Word(*re.search(w_i_re, child).groups())
+        head  = Terminal(*re.search(w_i_re, head).groups())
+        child = Terminal(*re.search(w_i_re, child).groups())
 
         child_dict[head].append((name, child))
 
@@ -675,3 +662,27 @@ class DepTree(IdTree):
             ret_str += ' %s' % str(child)
         return ret_str + ')'
 
+    def find_index(self, idx):
+        return self.find(lambda x: x.word_index == idx)
+
+    def __eq__(self, other):
+        if (self.word_index != other.word_index):
+            return False
+        elif (self.type != other.type):
+            return False
+        elif len(self) != len(other):
+            return False
+        elif (self._label != other._label):
+            return False
+        for my_child, their_child in zip(self, other):
+            if not my_child == their_child:
+                return False
+        return True
+
+    def span(self):
+        raise TreeError('Span is not supported for dependency tree.')
+
+    def copy(self):
+        children = [c.copy() for c in self]
+        dt = DepTree(copy(self.label()), children, id=copy(self.id), type=copy(self.type), word_index=copy(self.word_index))
+        return dt

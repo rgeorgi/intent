@@ -228,9 +228,7 @@ def read_pt(tier):
         aln = node.attributes.get(ALIGNMENT)
         if aln:
             w = tier.igt.find(id=aln)
-            idx = w.index
-            w = w.value()
-            n = IdTree(node.value(), [w], index=idx)
+            n = IdTree(node.value(), [Terminal(w.value(), w.index)])
 
             # If this is a preterminal, it shouldn't have children.
             assert not node.attributes.get(PS_CHILD_ATTRIBUTE)
@@ -1276,7 +1274,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         # Create the new pos tier.
         # TODO: There should be a more unified approach to transferring tags.
 
-        pt = RGTokenTier(type=POS_TIER_TYPE, id=self.askTierId(POS_TIER_TYPE, GLOSS_POS_ID, id_based=True, suppress_numbering=True),
+        pt = RGTokenTier(type=POS_TIER_TYPE, id=self.askTierId(POS_TIER_TYPE, GLOSS_POS_ID, numbering_scheme=ID_SAME_TYPE_ALTERNATE),
                          alignment=self.gloss.id, attributes=attributes)
 
         # Add the metadata about this tier...
@@ -1450,7 +1448,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         """
 
         # 1) Start by creating a phrase structure tier -------------------------
-        pt_tier = RGPhraseStructureTier(type=PS_TIER_TYPE, id=self.askTierId(PS_TIER_TYPE, GEN_PS_ID), alignment=w_tier.id)
+        pt_tier = RGPhraseStructureTier(type=PS_TIER_TYPE, id=self.askTierId(PS_TIER_TYPE, GEN_PS_ID, numbering_scheme=ID_SAME_TYPE_ALTERNATE), alignment=w_tier.id)
 
         add_meta(pt_tier, XIGT_DATA_PROV, INTENT_META_SOURCE)
         add_meta(pt_tier, XIGT_DATA_METH, parse_method)
@@ -1528,7 +1526,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         """
 
         # 1) Start by creating dt tier -----------------------------------------
-        dt_tier = RGTier(type=DS_TIER_TYPE, id=self.askTierId(DS_TIER_TYPE, GEN_DS_ID),
+        dt_tier = RGTier(type=DS_TIER_TYPE, id=self.askTierId(DS_TIER_TYPE, GEN_DS_ID, numbering_scheme=ID_SAME_TYPE_ALTERNATE),
                         attributes = {DS_DEP_ATTRIBUTE:self.trans.id, DS_HEAD_ATTRIBUTE:self.trans.id})
 
 
@@ -2405,4 +2403,4 @@ def strip_pos(inst):
 
 
 
-from intent.trees import IdTree, project_ps
+from intent.trees import IdTree, project_ps, Terminal
