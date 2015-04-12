@@ -5,19 +5,18 @@ Created on Mar 3, 2014
 '''
 
 class EvalException(Exception):
-	'''
-	classdocs
-	'''
+    '''
+    classdocs
+    '''
 
 
-	def __init__(self, msg):
-		'''
-		Constructor
-		'''
-		self.message = msg
-		
+    def __init__(self, msg):
+        '''
+        Constructor
+        '''
+        self.message = msg
+
 class POSEvalException(Exception):
-	
-	def __init__(self, msg):
-		Exception.__init__(self, msg)
-		
+
+    def __init__(self, msg):
+        Exception.__init__(self, msg)
