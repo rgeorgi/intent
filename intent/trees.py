@@ -35,6 +35,12 @@ class IdTree(ParentedTree):
         return q and (self.id == other.id)
 
     def similar(self, other):
+        """
+        Test equivalency in a tree, but without
+
+        :param other:
+        :return:
+        """
         if not isinstance(other, Tree):
             return False
         if len(self) != len(other):
@@ -146,7 +152,7 @@ class IdTree(ParentedTree):
         (label, head, child) tuples.
         """
         if self.parent():
-            ret_tup = [(self.type, self.parent().index, self.index)]
+            ret_tup = [(self.type, self.parent().word_index, self.word_index)]
         else:
             ret_tup = []
 

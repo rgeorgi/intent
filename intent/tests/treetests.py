@@ -209,3 +209,33 @@ class DepTreeTests(unittest.TestCase):
 
     def test_span(self):
         self.assertRaises(TreeError, self.dt.span)
+
+class SwapTests(unittest.TestCase):
+    def setUp(self):
+        self.t = IdTree.fromstring('''(S (NP (DT The) (NN Boy)) (VP (VB Ran) ))''')
+        self.t2 = IdTree.fromstring('''(NP (DT The) (ADJ quick) (NN Fox))''')
+
+    def test_swap_nonterminals(self):
+        t = self.t.copy()
+        t.swap(0, 1)
+
+        # Now, set up the leaves with the correct indices...
+        t2 = IdTree.fromstring('''(S (VP (VB Ran)) (NP (DT The) (NN Boy)))''')
+        l = t2.leaves()
+
+        l[0].index = 3
+        l[1].index = 1
+        l[2].index = 2
+
+        self.assertTrue(t.similar(t2))
+
+    def test_swap_preterminals(self):
+        t2 = self.t2.copy()
+        t2.swap(0,2)
+
+        t3 = IdTree.fromstring('''(NP (NN Fox) (DT quick) (ADJ The))''')
+        l = t3.leaves()
+        l[0].index = 3
+        l[2].index = 1
+
+        self.assertTrue(t2.similar(t3))
