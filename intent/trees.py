@@ -502,7 +502,6 @@ def project_ps(src_t, tgt_w, aln):
             right_n = tgt_t.find_stop_index(left_word.index)
             right_n.parent().insert_by_span(t)
 
-        # TODO: What if there is both a left and a right.
         else:
             left_n = tgt_t.find_stop_index(left_word.index)
             right_n= tgt_t.find_start_index(right_word.index)
@@ -577,7 +576,6 @@ def reorder_tree(t):
                 elif a_i > a_j and b_i > b_j:
                     PS_LOG.debug('SWAPPING: {:>30} [{},{}] for [{},{}] {:<12}'.format(str(s_i), a_i, b_i, a_j, b_j, str(s_j)))
                     t.swap(s_i_idx, s_j_idx)
-                    # TODO: Write a testcase for swap
                     reorder_tree(t.root())
                     return
 
@@ -610,7 +608,6 @@ def reorder_tree(t):
                     reorder_tree(t.root())
                     return
 
-                    # TODO: Write a test case for merge
 
                 # 3dii) They are different ---
                 # Promote both of them.

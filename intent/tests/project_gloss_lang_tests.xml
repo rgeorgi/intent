@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xigt-corpus>
+<igt id="i1" doc-id="14.txt" line-range="13 15" tag-types="L G T">
+  <tier id="n" type="odin" state="normalized" alignment="c">
+    <item id="n1" tag="L" alignment="c1">Was glaubst Du wer angerufen hat UNKNOWN-TOKEN</item>
+    <item id="n2" tag="G" alignment="c2">What believe you who called has</item>
+    <item id="n3" tag="T" alignment="c3">Who do you believe called</item>
+  </tier>
+  <tier id="p" type="phrases" content="n">
+    <item id="p1" content="n1"/>
+  </tier>
+  <tier id="t" type="translations" content="n" alignment="p">
+    <item id="t1" content="n3" alignment="p1"/>
+  </tier>
+  <tier id="w" type="words" segmentation="p">
+    <item id="w1" segmentation="p1[0:3]"/>
+    <item id="w2" segmentation="p1[4:11]"/>
+    <item id="w3" segmentation="p1[12:14]"/>
+    <item id="w4" segmentation="p1[15:18]"/>
+    <item id="w5" segmentation="p1[19:28]"/>
+    <item id="w6" segmentation="p1[29:32]"/>
+    <item id="w7" segmentation="p1[34:36]"/>
+  </tier>
+  <tier id="tw" type="words" segmentation="t">
+    <item id="tw1" segmentation="t1[0:3]"/>
+    <item id="tw2" segmentation="t1[4:6]"/>
+    <item id="tw3" segmentation="t1[7:10]"/>
+    <item id="tw4" segmentation="t1[11:18]"/>
+    <item id="tw5" segmentation="t1[19:25]"/>
+  </tier>
+  <tier id="gw" type="glosses" content="n" alignment="w">
+    <metadata type="intent-meta">
+      <meta type="token-type">word</meta>
+    </metadata>
+    <item id="gw1" content="n2[0:4]" alignment="w1"/>
+    <item id="gw2" content="n2[5:12]" alignment="w2"/>
+    <item id="gw3" content="n2[13:16]" alignment="w3"/>
+    <item id="gw4" content="n2[17:20]" alignment="w4"/>
+    <item id="gw5" content="n2[21:27]" alignment="w5"/>
+    <item id="gw6" content="n2[28:31]" alignment="w6"/>
+  </tier>
+  <tier id="g" type="glosses" segmentation="gw">
+    <item id="g1" segmentation="gw1[0:4]"/>
+    <item id="g2" segmentation="gw2[0:7]"/>
+    <item id="g3" segmentation="gw3[0:3]"/>
+    <item id="g4" segmentation="gw4[0:3]"/>
+    <item id="g5" segmentation="gw5[0:6]"/>
+    <item id="g6" segmentation="gw6[0:3]"/>
+  </tier>
+
+  <tier id="g-pos" type="pos" alignment="gw">
+    <metadata type="xigt-meta">
+      <meta type="data-source">intent</meta>
+      <meta type="data-method">projection</meta>
+    </metadata>
+    <item id="g-pos1" alignment="gw4">PRON</item>
+    <item id="g-pos2" alignment="gw3">PRON</item>
+    <item id="g-pos3" alignment="gw2">VERB</item>
+    <item id="g-pos4" alignment="gw5">VERB</item>
+  </tier>
+  <tier id="tw-pos" type="pos" alignment="tw">
+    <metadata type="xigt-meta">
+      <meta type="data-source">intent</meta>
+      <meta type="data-method">stanford-tagger</meta>
+    </metadata>
+    <item id="tw-pos1" alignment="tw1">PRON</item>
+    <item id="tw-pos2" alignment="tw2">VERB</item>
+    <item id="tw-pos3" alignment="tw3">PRON</item>
+    <item id="tw-pos4" alignment="tw4">VERB</item>
+    <item id="tw-pos5" alignment="tw5">VERB</item>
+  </tier>
+  <tier id="w-pos" type="pos" alignment="w">
+    <metadata type="xigt-meta">
+      <meta type="data-source">intent</meta>
+      <meta type="data-method">projection</meta>
+    </metadata>
+    <item id="w-pos1" alignment="w5">VERB</item>
+    <item id="w-pos2" alignment="w3">PRON</item>
+    <item id="w-pos3" alignment="w4">PRON</item>
+    <item id="w-pos4" alignment="w2">VERB</item>
+  </tier>
+  <tier id="ps" type="phrase-structure" alignment="tw">
+    <metadata type="xigt-meta">
+      <meta type="data-source">intent</meta>
+      <meta type="data-method">stanford-parser</meta>
+    </metadata>
+    <item id="ps1" alignment="tw1">WP</item>
+    <item id="ps2" alignment="tw2">VBP</item>
+    <item id="ps3" alignment="tw3">PRP</item>
+    <item id="ps4" alignment="tw4">VB</item>
+    <item id="ps5" alignment="tw5">VBN</item>
+    <item id="ps6" children="ps7">ROOT</item>
+    <item id="ps7" children="ps8 ps9">SBARQ</item>
+    <item id="ps8" children="ps1">WHNP</item>
+    <item id="ps9" children="ps2 ps10 ps11">SQ</item>
+    <item id="ps10" children="ps3">NP</item>
+    <item id="ps11" children="ps4 ps12">VP</item>
+    <item id="ps12" children="ps5">VP</item>
+  </tier>
+  <tier id="ps-b" type="phrase-structure" alignment="w">
+    <metadata type="xigt-meta">
+      <meta type="data-source">intent</meta>
+      <meta type="data-method">projection</meta>
+    </metadata>
+    <item id="ps-b1" alignment="w1">UNK</item>
+    <item id="ps-b2" alignment="w2">VB</item>
+    <item id="ps-b3" alignment="w3">PRP</item>
+    <item id="ps-b4" alignment="w4">WP</item>
+    <item id="ps-b5" alignment="w5">VBN</item>
+    <item id="ps-b6" alignment="w6">UNK</item>
+    <item id="ps-b7" children="ps-b8">ROOT</item>
+    <item id="ps-b8" children="ps-b1 ps-b2 ps-b9 ps-b10 ps-b11">SBARQ</item>
+    <item id="ps-b9" children="ps-b3">NP</item>
+    <item id="ps-b10" children="ps-b4">WHNP</item>
+    <item id="ps-b11" children="ps-b5 ps-b6">VP</item>
+  </tier>
+  <tier id="ds" type="dependencies" head="tw" dep="tw">
+    <metadata type="xigt-meta">
+      <meta type="data-source">intent</meta>
+      <meta type="data-method">stanford-parser</meta>
+    </metadata>
+    <item id="ds1" dep="tw4">root</item>
+    <item id="ds2" head="tw4" dep="tw1">dobj</item>
+    <item id="ds3" head="tw4" dep="tw2">aux</item>
+    <item id="ds4" head="tw4" dep="tw3">nsubj</item>
+    <item id="ds5" head="tw4" dep="tw5">dep</item>
+  </tier>
+</igt>
+</xigt-corpus>

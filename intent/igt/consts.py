@@ -13,7 +13,7 @@ ODIN_TYPE  = 'odin'
 STATE_ATTRIBUTE = 'state'
 
 RAW_STATE, RAW_ID     = 'raw', 'r'
-CLEAN_STATE, CLEAN_ID = 'clean', 'c'
+CLEAN_STATE, CLEAN_ID = 'cleaned', 'c'
 NORM_STATE, NORM_ID   = 'normalized', 'n'
 
 # Words ------------------------------------------------------------------------
@@ -46,10 +46,7 @@ GLOSS_MORPH_ID= 'g'
 
 # POS --------------------------------------------------------------------------
 POS_TIER_TYPE = 'pos'
-
-LANG_POS_ID  = 'w-pos'
-GLOSS_POS_ID = 'g-pos'
-TRANS_POS_ID = 'tw-pos'
+POS_TIER_ID   = 'pos'
 
 # Alignments -------------------------------------------------------------------
 
@@ -64,22 +61,15 @@ TARGET_ATTRIBUTE = 'target'
 # Phrase structures ------------------------------------------------------------
 
 PS_TIER_TYPE = 'phrase-structure'
+PS_TIER_ID   = 'ps'
 
-GEN_PS_ID   = 'ps'
-LANG_PS_ID  = 'ps'
-GLOSS_PS_ID = 'ps'
-TRANS_PS_ID = 'ps'
 
 PS_CHILD_ATTRIBUTE = 'children'
 
 # Dependencies -----------------------------------------------------------------
 
 DS_TIER_TYPE = 'dependencies'
-
-GEN_DS_ID   = 'ds'
-LANG_DS_ID  = 'ds'
-GLOSS_DS_ID = 'ds'
-TRANS_DS_ID = 'ds'
+DS_TIER_ID   = 'ds'
 
 DS_DEP_ATTRIBUTE = 'dep'
 DS_HEAD_ATTRIBUTE = 'head'
@@ -101,15 +91,16 @@ INTENT_META_TYPE   = 'intent-meta'
 
 # Define the strings for data source and data method
 
-XIGT_DATA_PROV='data-source'
-XIGT_DATA_METH='data-method'
+XIGT_DATA_PROV='data-provenance'
+XIGT_DATA_METH='method'
+XIGT_DATA_SRC ='source'
+XIGT_DATA_DATE='date'
 
 # Now, define intent as the data-source provider...
 INTENT_META_SOURCE = 'intent'
 
-#===============================================================================
-# Methods
-#===============================================================================
+# Let's also add a string for the intent extended information
+INTENT_EXTENDED_INFO = 'extended-data'
 
 # Now, for intent-specific data, let's identify
 # the strings to use for identifying the tier's
@@ -117,6 +108,12 @@ INTENT_META_SOURCE = 'intent'
 INTENT_TOKEN_TYPE  = 'token-type'
 INTENT_GLOSS_WORD  = 'word'
 INTENT_GLOSS_MORPH = 'sub-word'
+
+#===============================================================================
+# Methods
+#===============================================================================
+
+
 
 INTENT_ALN_GIZA = 'mgiza'
 INTENT_ALN_HEUR = 'heur'
