@@ -657,7 +657,12 @@ class RGIgt(Igt, RecursiveFindMixin):
 
 
     def sort(self):
+        """
+        Sort an instance's tiers.
+        """
         self._list = sorted(self._list, key=tier_sorter)
+
+
 
     # • Processing of newly created instances ----------------------------------
 
@@ -1281,8 +1286,8 @@ class RGIgt(Igt, RecursiveFindMixin):
         # If we don't get any trans tags back, throw an exception:
         if not trans_tags:
             project_creator_except("There were no translation-line POS tags found",
-                                "Please create the appropriate translation-line POS tags before projecting.",
-                                tag_method)
+                                   "Please create the appropriate translation-line POS tags before projecting.",
+                                   tag_method)
 
         # Get the alignment between the trans words and the gloss words.
         t_g_aln = sorted(self.get_trans_gloss_alignment())
@@ -1303,7 +1308,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             # TODO: Implement order of precedence here.
 
-            pt.add(RGToken(id=pt.askItemId(), alignment = g_word.id, text = t_tag.value()))
+            pt.add(RGToken(id=pt.askItemId(), alignment=g_word.id, text=t_tag.value()))
 
         self.append(pt)
 
@@ -1489,8 +1494,6 @@ class RGIgt(Igt, RecursiveFindMixin):
             child_refs = ' '.join([s.id for s in st])
             si = RGItem(id=st.id, attributes={PS_CHILD_ATTRIBUTE:child_refs}, text=st.label())
             pt_tier.add(si)
-
-
 
         # 4) And add the created tier to this instance. ------------------------
         self.append(pt_tier)

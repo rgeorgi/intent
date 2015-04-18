@@ -283,7 +283,7 @@ class IdTree(ParentedTree):
 
         last_index = last_index if last_index is not None else len(self)
 
-        PS_LOG.debug('Inserting {} into {} at position {}'.format(t.pprint(margin=5000), self.pprint(margin=5000), last_index))
+        PS_LOG.debug('Inserting {} into {} at position {}'.format(t.pformat(margin=5000), self.pformat(margin=5000), last_index))
         self.insert(last_index, t)
 
 class Terminal(object):
@@ -457,7 +457,7 @@ def project_ps(src_t, tgt_w, aln):
         PS_LOG.debug('Replacing {:>14s} {:<4s} with {:<4s} {:<14s}'.format('"%s"'%node[0], '[%s]'%str(node.span()), '[%d]'%word.index, '"%s"' % word.get_content()))
         node[0] = Terminal(word.value(), index=word.index)
 
-    PS_LOG.debug('Current Tree: {}'.format(tgt_t.pprint(margin=100)))
+    PS_LOG.debug('Current Tree: {}'.format(tgt_t.pformat(margin=100)))
 
     # 3) Reorder the tree...
     PS_LOG.debug('#'*10+' Now reordering tree...' + '#'*10)

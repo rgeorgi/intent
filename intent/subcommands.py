@@ -134,7 +134,6 @@ def enrich(**kwargs):
                 inst.project_gloss_to_lang(tag_method=INTENT_POS_PROJ)
 
 
-
         # 5) Parse the translation line ----------------------------------------
         if kwargs.get('parse_trans'):
             inst.parse_translation_line(sp, pt=True, dt=True)
