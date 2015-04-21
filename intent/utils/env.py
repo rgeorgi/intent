@@ -63,7 +63,7 @@ if load_fail:
 
     # -- 5) Try to load it from the env.conf file...
     else:
-        sys.path.append(xigt_dir)
+        sys.path.insert(0,xigt_dir)
 
         try:
             import xigt.model
