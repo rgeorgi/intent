@@ -36,6 +36,8 @@ if import_errors:
 # Set up the environment...
 #===============================================================================
 
+import intent.utils.env
+
 from intent.utils.argutils import DefaultHelpParser, existsfile, \
     PathArgException
 

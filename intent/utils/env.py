@@ -41,35 +41,39 @@ odin_data		 = c.getpath('odin_data')
 #===============================================================================
 # Try to import the XIGT module.
 #===============================================================================
-try:
-    import xigt.model  # First, try to import the module that's installed.
-except ImportError:
-    ENV_LOG.warn('XIGT library is not installed, will try to load from env.conf')
-    load_fail = True
-else:
-    load_fail = False
 
-if load_fail:
+# First, if there is a version of XIGT specified in the env file, use that
 
-    # -- 3) If it's not in the env.conf file, error out.
-    if xigt_dir is None:
-        ENV_LOG.critical('XIGT dir not defined. Unable to import XIGT.')
-        sys.exit(2)
-
-    # -- 4) If it IS in the env.conf file, but not found, error out.
-    elif not os.path.exists(xigt_dir):
-        ENV_LOG.critical('XIGT dir "%s" not found. Unable to import XIGT' % xigt_dir)
+# -- 4) If it IS in the env.conf file, but not found, error out.
+if xigt_dir:
+    if not os.path.exists(xigt_dir):
+        ENV_LOG.critical('XIGT dir is specified, but "%s" not found. Unable to import XIGT' % xigt_dir)
         sys.exit(2)
 
     # -- 5) Try to load it from the env.conf file...
-    else:
-        sys.path.insert(0,xigt_dir)
-
+    elif xigt_dir:
+        sys.path.insert(0, xigt_dir)
         try:
             import xigt.model
         except ImportError as ie:
             ENV_LOG.critical('Specified XIGT dir "%s" is not valid for the xigt module.' % xigt_dir)
             ENV_LOG.critical(ie)
+            sys.exit(2)
+
+else:
+    try:
+        import xigt.model  # First, try to import the module that's installed.
+    except ImportError:
+        ENV_LOG.warn('XIGT library is not installed, will try to load from env.conf')
+        load_fail = True
+    else:
+        load_fail = False
+
+    if load_fail:
+
+        # -- 3) If it's not in the env.conf file, error out.
+        if xigt_dir is None:
+            ENV_LOG.critical('XIGT dir not defined. Unable to import XIGT.')
             sys.exit(2)
 
 #===============================================================================
