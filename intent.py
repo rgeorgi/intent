@@ -6,6 +6,9 @@ import logging
 
 
 # Start the logger and set it up. ----------------------------------------------
+from intent.utils.arg_consts import PARSE_LANG_PROJ, PARSE_TRANS, POS_TYPES, PARSE_TYPES, ALN_TYPES, ALN_VAR, POS_VAR, \
+    PARSE_VAR
+
 logging.basicConfig(format=logging.BASIC_FORMAT)
 MAIN_LOG = logging.getLogger('INTENT')
 
@@ -32,14 +35,14 @@ if import_errors:
     sys.exit(2)
 
 
-#===============================================================================
+# ===============================================================================
 # Set up the environment...
 #===============================================================================
 
 import intent.utils.env
 
 from intent.utils.argutils import DefaultHelpParser, existsfile, \
-    PathArgException
+    PathArgException, csv_choices
 
 #===============================================================================
 # Now, intialize the subcommands.
@@ -68,19 +71,18 @@ enrich.add_argument('IN_FILE', type=existsfile, help='Input XIGT file.')
 enrich.add_argument('OUT_FILE', help='Path to output XIGT file.')
 
 # Optional arguments -----------------------------------------------------------
-enrich.add_argument('--alignment', choices=['giza', 'heur', 'none'], default='none',
-                    help="Add alignment between the translation and gloss lines using the specified method. (Required for projecting POS from translation to language lines.)")
-enrich.add_argument('--pos-trans', choices=[0, 1], default=1, type=int,
-                    help='POS tag the translation line (required for projecting POS to language line.)')
+enrich.add_argument('--align', dest=ALN_VAR,
+                    type=csv_choices(ALN_TYPES), default=[],
+                    help='Comma-separated list of alignments to add. {}'.format(ALN_TYPES))
 
-enrich.add_argument('--pos-lang', choices=['proj', 'class', 'none'], default='none',
-                    help='POS tag the language line using either projection (which requires a POS tagged translation line and alignment between trans and gloss)')
+enrich.add_argument('--pos', dest=POS_VAR,
+                    type=csv_choices(POS_TYPES), default=[],
+                    help='''Comma-separated list of POS tags to add (no spaces):
+                     {}'''.format(POS_TYPES))
 
-enrich.add_argument('--parse-trans', choices=[0, 1], default=0, type=int,
-                    help='Parse the translation line for phrase structure and dependencies.')
-enrich.add_argument('--project-pt', choices=[0, 1], default=0, type=int,
-                    help='Project the phrase structure tree from translation to language line.')
-
+enrich.add_argument('--parse', dest=PARSE_VAR,
+                    type=csv_choices(PARSE_TYPES), default=[],
+                    help='List of parses to create. {}'.format(PARSE_TYPES))
 
 #===============================================================================
 # ODIN subcommand
