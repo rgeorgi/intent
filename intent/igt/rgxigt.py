@@ -15,7 +15,8 @@ import string
 from xigt.model import XigtCorpus, Igt, Item, Tier
 from xigt.metadata import Metadata, Meta
 from xigt.consts import ALIGNMENT, SEGMENTATION, CONTENT
-from intent.igt.metadata import add_meta, find_meta_attr, del_meta_attr, set_intent_method, get_intent_method
+from intent.igt.metadata import add_meta, find_meta_attr, del_meta_attr, set_intent_method, get_intent_method, \
+    set_intent_proj_data
 from xigt import ref
 
 
@@ -431,8 +432,9 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         # If asked, we will also do some
         # basic-level enrichment...
         if basic_processing:
-            xc.basic_processing()
-            xc.add_gloss_lang_alignments()
+            for inst in xc:
+                inst.basic_processing()
+                inst.add_gloss_lang_alignments()
 
         return xc
 
@@ -567,6 +569,14 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                 logging.warning(ntle)
                 if error:
                     raise ntle
+            except (NoGlossLineException, NoTransLineException, NoLangLineException) as ngle:
+                logging.warning(ngle)
+                if error:
+                    raise ngle
+            except MultipleNormLineException as mnle:
+                logging.warning(mnle)
+                if error:
+                    raise mnle
 
 
 
@@ -912,18 +922,18 @@ class RGIgt(Igt, RecursiveFindMixin):
 
     # • Alignment --------------------------------------------------------------
 
-    def get_trans_gloss_alignment(self, created_by=None):
+    def get_trans_gloss_alignment(self, aln_method=None):
         """
         Get the alignment between trans words and gloss words.
         """
         # If we already have this alignment, just return it.
-        trans_gloss = self.get_bilingual_alignment(self.trans.id, self.gloss.id, created_by)
+        trans_gloss = self.get_bilingual_alignment(self.trans.id, self.gloss.id, aln_method)
         if trans_gloss:
             return trans_gloss
 
         # Otherwise, let's create it from the glosses alignment
         else:
-            trans_glosses = self.get_bilingual_alignment(self.trans.id, self.glosses.id, created_by)
+            trans_glosses = self.get_bilingual_alignment(self.trans.id, self.glosses.id, aln_method)
 
             if not trans_glosses:
                 raise ProjectionTransGlossException("Trans-to-gloss alignment must already exist, otherwise create with giza or heur")
@@ -1057,9 +1067,8 @@ class RGIgt(Igt, RecursiveFindMixin):
         aln = sorted(aln, key = lambda x: x[0])
 
         # Start by creating the alignment tier.
-        ba_tier = RGBilingualAlignmentTier(
-            id=gen_tier_id(self, G_T_ALN_ID, tier_type=ALN_TIER_TYPE), source=src_tier.id,
-            target=tgt_tier.id)
+        ba_tier = RGBilingualAlignmentTier(id=gen_tier_id(self, G_T_ALN_ID, tier_type=ALN_TIER_TYPE),
+                                           source=src_tier.id, target=tgt_tier.id)
 
         # Add the metadata for the alignment source (intent) and type (giza or heur)
         set_intent_method(ba_tier, aln_method)
@@ -1289,7 +1298,6 @@ class RGIgt(Igt, RecursiveFindMixin):
                                    "Please create the appropriate translation-line POS tags before projecting.",
                                    tag_method)
 
-        # Get the alignment between the trans words and the gloss words.
         t_g_aln = sorted(self.get_trans_gloss_alignment())
 
         # Create the new pos tier.
@@ -1301,6 +1309,8 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         # Add the metadata about this tier...
         set_intent_method(pt, INTENT_POS_PROJ)
+        set_intent_proj_data(pt, trans_tags)
+
 
         for t_i, g_i in t_g_aln:
             g_word = self.gloss.get_index(g_i)
@@ -1341,6 +1351,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         # Add the metadata as to the source
         set_intent_method(pt, tag_method)
+        set_intent_proj_data(pt, gloss_tags)
 
         for g_idx, l_idx in alignment:
             l_w = self.lang.get_index(l_idx)
@@ -1424,6 +1435,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         # Add the metadata about the source of the tags.
         set_intent_method(pt, INTENT_POS_PROJ)
+        set_intent_proj_data(pt, trans_tags)
 
         for t_i, l_i in ta_aln:
             t_word = self.trans.get_index(t_i)
@@ -1453,7 +1465,7 @@ class RGIgt(Igt, RecursiveFindMixin):
             self.create_dt_tier(result.dt, parse_method=INTENT_DS_PARSER)
 
 
-    def create_pt_tier(self, phrase_tree, w_tier, parse_method=None):
+    def create_pt_tier(self, phrase_tree, w_tier, parse_method=None, source_tier=None):
         """
         Given a phrase tree, create a phrase tree tier. The :class:`intent.trees.IdTree` passed in must
         have the same number of leaves as words in the translation line.
@@ -1462,6 +1474,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         :type phrase_tree: IdTree
         :param w_tier: Word tier
         :type w_tier: RGWordTier
+        :param source_tier: If this tier is being projected, add that fact to the metadata.
         """
 
         # 1) Start by creating a phrase structure tier -------------------------
@@ -1469,7 +1482,11 @@ class RGIgt(Igt, RecursiveFindMixin):
                                         id=gen_tier_id(self, PS_TIER_ID, tier_type=PS_TIER_TYPE, alignment=w_tier.id),
                                         alignment=w_tier.id)
 
+        # 2) Add the intent metadata...
         set_intent_method(pt_tier, parse_method)
+        if source_tier is not None:
+            set_intent_proj_data(pt_tier, source_tier)
+
 
         phrase_tree.assign_ids(pt_tier.id)
 
@@ -1521,10 +1538,13 @@ class RGIgt(Igt, RecursiveFindMixin):
         # alignments don't exist.
         tl_aln = self.get_trans_gloss_lang_alignment()
 
+        # Do the actual tree projection and create a tree object
+        proj_tree = project_ps(trans_tree, self.lang, tl_aln)
 
-        pt = project_ps(trans_tree, self.lang, tl_aln)
+        # Now, create a tier from that tree object.
+        self.create_pt_tier(proj_tree, self.lang, parse_method=INTENT_PS_PROJ, source_tier=self.get_trans_parse_tier)
 
-        self.create_pt_tier(pt, self.lang, parse_method=INTENT_PS_PROJ)
+
 
 
 
@@ -1905,11 +1925,22 @@ class RGWordTier(RGTokenTier):
 
         mt = RGMorphTier(id=id, attributes={aln_attribute:self.id}, type=type)
 
+        # Go through each word...
         for word in self:
 
             morphs = intent.utils.token.tokenize_item(word, intent.utils.token.morpheme_tokenizer)
+
             for morph in morphs:
-                rm = RGMorph(id=mt.askItemId(), attributes={aln_attribute:create_aln_expr(word.id, morph.start, morph.stop)}, index=mt.askIndex())
+                # If there is only one morph in the tokenization, don't bother with the indexing, just
+                # use the id.
+                if len(morphs) == 1:
+                    aln_str = word.id
+                else:
+                    aln_str = create_aln_expr(word.id, morph.start, morph.stop)
+
+                rm = RGMorph(id=mt.askItemId(),
+                             attributes={aln_attribute: aln_str},
+                             index=mt.askIndex())
                 mt.add(rm)
 
         return mt
@@ -2120,7 +2151,8 @@ def retrieve_gloss_words(inst):
 
     # 2. If it exists, return it. Otherwise, look for the glosses tier.
     if not wt:
-        wt = create_words_tier(retrieve_normal_line(inst, ODIN_GLOSS_TAG), GLOSS_WORD_ID, GLOSS_WORD_TYPE, aln_attribute=CONTENT)
+        wt = create_words_tier(retrieve_normal_line(inst, ODIN_GLOSS_TAG), GLOSS_WORD_ID,
+                               GLOSS_WORD_TYPE, aln_attribute=CONTENT)
 
         # Set the "gloss type" to the "word-level"
         add_word_level_info(wt, INTENT_GLOSS_WORD)
@@ -2155,7 +2187,7 @@ def retrieve_normal_line(inst, tag):
     if len(lines) < 1:
         raise NoNormLineException()
     elif len(lines) > 1:
-        raise MultipleNormLineException()
+        raise MultipleNormLineException('Multiple normalized lines found for tag "{}" in instance {}'.format(tag, inst.id))
     else:
         return lines[0]
 

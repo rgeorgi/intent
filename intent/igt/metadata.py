@@ -5,7 +5,7 @@ Created on Apr 9, 2015
 """
 from xigt.metadata import Metadata, Meta
 from intent.igt.consts import XIGT_META_TYPE, XIGT_DATA_DATE, INTENT_META_SOURCE, XIGT_DATA_SRC, XIGT_DATA_PROV, \
-    XIGT_DATA_METH
+    XIGT_DATA_METH, XIGT_DATA_FROM, XIGT_DATA_ALNF
 from xigt.mixins import XigtContainerMixin
 from datetime import datetime
 
@@ -31,6 +31,18 @@ def set_intent_method(obj, method):
     """
     add_meta(obj, XIGT_DATA_PROV, XIGT_DATA_SRC, INTENT_META_SOURCE)
     add_meta(obj, XIGT_DATA_PROV, XIGT_DATA_METH, method)
+
+
+def set_intent_proj_data(obj, source_tier):
+    """
+    Using the source_tier tier, add some metadata to this instance to describe the source_tier
+    that created the projection material.
+
+    :param obj:
+    :param source_tier:
+    """
+    add_meta(obj, XIGT_DATA_PROV, XIGT_DATA_FROM, source_tier.id)
+    #add_meta(obj, XIGT_DATA_PROV, XIGT_DATA_ALNF, aln_tier.id)
 
 
 def add_meta(obj, meta_type, attr, val, metadata_type=XIGT_META_TYPE, timestamp=True):
@@ -66,7 +78,7 @@ def add_meta(obj, meta_type, attr, val, metadata_type=XIGT_META_TYPE, timestamp=
 
         # Finally, add our Meta object to the metadata.
         m = find_meta(obj, meta_type)
-        if m:
+        if m is not None:
             m.attributes[attr] = val
         else:
             m = Meta(type=meta_type,attributes={attr:val})
@@ -82,7 +94,7 @@ def del_meta(obj, meta_type):
     :param meta_type:
     """
     m = find_meta(obj, meta_type)
-    if m:
+    if m is not None:
         md = m._parent
         md._list.remove(m)
 
@@ -100,10 +112,10 @@ def del_meta_attr(obj, meta_type, attr):
     """
     # Find the Meta object
     m = find_meta(obj, meta_type)
-    if m:
+    if m is not None:
         # If it has the specified attribute,
         # remove it.
-        if m and attr in m.attributes:
+        if attr in m.attributes:
             del m.attributes[attr]
 
         # If the Meta object has no text elements
@@ -159,7 +171,7 @@ def find_meta_attr(obj, meta_type, attr):
     :return: str or None
     """
     m = find_meta(obj, meta_type)
-    if m:
+    if m is not None:
         return m.attributes.get(attr)
     else:
         return None
