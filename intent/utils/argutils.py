@@ -121,6 +121,24 @@ def writefile(path, mode='w', encoding='utf-8'):
 
     return f
 
+def csv_choices(choice_list):
+
+    def in_choices(x):
+
+        ret_list = []
+        if not choice_list:
+            return []
+
+        for t in x.split(','):
+            if t.lower() not in choice_list:
+                raise CommandLineException('Argument "{}" is an invalid choice. Valid choices are: {}'.format(t, choice_list))
+            else:
+                ret_list.append(t)
+
+        return ret_list
+
+    return in_choices
+
 
 # ===============================================================================
 # Default to showing help for an argparser

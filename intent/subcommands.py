@@ -63,9 +63,12 @@ def enrich(**kwargs):
     #===========================================================================
     inpath = kwargs.get('IN_FILE')
 
-    parse_args = kwargs.get(PARSE_VAR)
-    pos_args = kwargs.get(POS_VAR)
-    aln_args = kwargs.get(ALN_VAR)
+    parse_args = kwargs.get(PARSE_VAR, [])
+    pos_args = kwargs.get(POS_VAR, [])
+    aln_args = kwargs.get(ALN_VAR, [])
+
+    if not parse_args or pos_args or aln_args:
+        ENRICH_LOG.warning("No enrichment specified. Basic processing only will be performed.")
 
     #===========================================================================
     # Sanity check the arguments.
