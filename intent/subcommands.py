@@ -67,7 +67,7 @@ def enrich(**kwargs):
     pos_args = kwargs.get(POS_VAR, [])
     aln_args = kwargs.get(ALN_VAR, [])
 
-    if not parse_args or pos_args or aln_args:
+    if not (parse_args or pos_args or aln_args):
         ENRICH_LOG.warning("No enrichment specified. Basic processing only will be performed.")
 
     #===========================================================================
@@ -75,7 +75,7 @@ def enrich(**kwargs):
     #===========================================================================
 
     # Check that alignment is asked for if projection is asked for.
-    if POS_LANG_PROJ in pos_args or PARSE_LANG_PROJ in parse_args and not aln_args:
+    if (POS_LANG_PROJ in pos_args or PARSE_LANG_PROJ in parse_args) and (not aln_args):
         ENRICH_LOG.warn("You have asked for projection methods but have not requested " + \
                         "alignments to be generated. Projection may fail if alignment not already present in file.")
 
@@ -148,7 +148,7 @@ def enrich(**kwargs):
             ENRICH_LOG.warn(str(glae))
 
         # 3) POS tag the translation line --------------------------------------
-        if POS_LANG_CLASS in pos_args:
+        if POS_LANG_PROJ in pos_args:
             try:
                 inst.tag_trans_pos(s)
             except CriticalTaggerError as cte:
@@ -190,9 +190,9 @@ def enrich(**kwargs):
                 ENRICH_LOG.warning('A parse for the translation line was not found for instance "%s", not projecting phrase structure.' % inst.id)
             except ProjectionTransGlossException as ptge:
                 ENRICH_LOG.warning('Alignment between translation and gloss lines was not found for instance "%s". Not projecting phrase structure.' % inst.id)
-            except Exception as ie:
-                ENRICH_LOG.critical("Unknown projection error in instance {}".format(inst.id))
-                ENRICH_LOG.critical(str(ie))
+            # except Exception as ie:
+            #     ENRICH_LOG.critical("Unknown projection error in instance {}".format(inst.id))
+            #     ENRICH_LOG.critical(str(ie))
 
         # Sort the tiers... ----------------------------------------------------
         inst.sort()

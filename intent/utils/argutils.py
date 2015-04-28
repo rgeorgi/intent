@@ -7,6 +7,7 @@ import sys
 import os
 import argparse
 
+
 from .ConfigFile import ConfigFile
 
 
@@ -131,7 +132,7 @@ def csv_choices(choice_list):
 
         for t in x.split(','):
             if t.lower() not in choice_list:
-                raise CommandLineException('Argument "{}" is an invalid choice. Valid choices are: {}'.format(t, choice_list))
+                raise argparse.ArgumentError('Argument "{}" is an invalid choice. Valid choices are: {}'.format(t, choice_list))
             else:
                 ret_list.append(t)
 
@@ -150,7 +151,7 @@ class DefaultHelpParser(argparse.ArgumentParser):
     """
 
     def error(self, message):
-        sys.stderr.write('error: %s\n' % message)
+        sys.stderr.write('error: %s\n\n' % message)
         self.print_help()
         sys.exit(2)
 
