@@ -259,9 +259,8 @@ def read_pt(tier):
     # Finally, pick an arbitrary node, and try to find the root.
     assert child_n, "There should have been at least one child found..."
 
-
-
     return child_n.root()
+
 
 def gen_item_id(id_base, num):
     return '{}{}'.format(id_base, num+1)
@@ -316,7 +315,8 @@ def get_id_base(id_str):
     s = re.search('^(\S+?)(?:[0-9]+|-[a-z])?$', id_str).group(1)
     return s
 
-#===============================================================================
+# ===============================================================================
+
 
 class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
@@ -1478,18 +1478,18 @@ class RGIgt(Igt, RecursiveFindMixin):
         """
 
         # 1) Start by creating a phrase structure tier -------------------------
+        pt_id = gen_tier_id(self, PS_TIER_ID, tier_type=PS_TIER_TYPE, alignment=w_tier.id)
         pt_tier = RGPhraseStructureTier(type=PS_TIER_TYPE,
-                                        id=gen_tier_id(self, PS_TIER_ID, tier_type=PS_TIER_TYPE, alignment=w_tier.id),
-                                        alignment=w_tier.id)
+                                        id=pt_id,
+                                        alignment=w_tier.id,
+                                        attributes={PS_CHILD_ATTRIBUTE:pt_id})
 
         # 2) Add the intent metadata...
         set_intent_method(pt_tier, parse_method)
         if source_tier is not None:
             set_intent_proj_data(pt_tier, source_tier)
 
-
         phrase_tree.assign_ids(pt_tier.id)
-
 
         # We should get back the same number of tokens as we put in
         assert len(phrase_tree.leaves()) == len(w_tier)
@@ -1542,12 +1542,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         proj_tree = project_ps(trans_tree, self.lang, tl_aln)
 
         # Now, create a tier from that tree object.
-        self.create_pt_tier(proj_tree, self.lang, parse_method=INTENT_PS_PROJ, source_tier=self.get_trans_parse_tier)
-
-
-
-
-
+        self.create_pt_tier(proj_tree, self.lang, parse_method=INTENT_PS_PROJ, source_tier=self.get_trans_parse_tier())
 
 
     def create_dt_tier(self, dt, parse_method=None):
