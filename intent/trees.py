@@ -83,6 +83,9 @@ class IdTree(ParentedTree):
     def find_index(self, idx):
         return self.find(lambda x: x.is_preterminal() and x.span() == (idx,idx))
 
+    def __hash__(self):
+        return hash(self.label()) + hash(self.span()) + hash(self.id)
+
     def find(self, filter):
 
         # Must search by either id or index
@@ -100,11 +103,33 @@ class IdTree(ParentedTree):
                     break
             return ret
 
-    def delete(self):
+    def delete(self, propagate=True):
         """
         Delete self from parent.
+
+         :param propagate: If true, then delete parents that are made empty by this deletion.
+         :type propagate: bool
         """
-        del self.parent()[self.parent_index()]
+        p = self.parent()
+        del p[self.parent_index()]
+
+        if propagate and not p:
+            p.delete()
+
+    def replace(self, t):
+        """
+        Replace this node in its parent with t
+
+        :param t: The tree to replace this instance with
+        """
+
+        p = self.parent()
+        if p is None:
+            raise TreeError('Attempt to replace a subtree "{}" with no parent.'.format(self))
+
+        i = self.parent_index()
+        self.delete(propagate=False)
+        p.insert(i, t)
 
     def copy(self):
         """
@@ -434,10 +459,9 @@ def project_ps(src_t, tgt_w, aln):
     aln = sorted(aln, key=lambda x: x[1])
 
     # If we swap the nodes immediately, then we won't be able to
-    # search by index correctly, so let's compile a list and then
-    # do the swap.
-    nodes_to_swap = []
-
+    # search by index correctly. Let's build a dict of the new nodes
+    # to replace the old ones with.
+    nodes_to_replace = defaultdict(list)
 
     for src_i, tgt_i in aln:
 
@@ -450,12 +474,38 @@ def project_ps(src_t, tgt_w, aln):
         # Get the correct word for the index...
         w = tgt_w.get_index(tgt_i)
 
-        nodes_to_swap.append((tgt_n, w))
+        # Make an entry in the dictionary with the new
+        # Preterminal/Terminal combination.
+        tgt_n_copy = tgt_n.copy()
+        tgt_n_copy[0] = Terminal(w.value(), index=w.index)
+
+        nodes_to_replace[tgt_n].append(tgt_n_copy)
+
 
     # Now, let's do the swapping.
-    for node, word in nodes_to_swap:
-        PS_LOG.debug('Replacing {:>14s} {:<4s} with {:<4s} {:<14s}'.format('"%s"'%node[0], '[%s]'%str(node.span()), '[%d]'%word.index, '"%s"' % word.get_content()))
-        node[0] = Terminal(word.value(), index=word.index)
+    for n, preterms in nodes_to_replace.items():
+
+        # Find the node we are replacing, get its
+        # index, and delete it.
+        p = n.parent()
+        i = n.parent_index()
+
+        # Don't propagate the deletion, since we are replacing it...
+        n.delete(propagate=False)
+
+        # Now, add every node that aligned with this one
+        # as siblings.
+        for preterm in preterms:
+
+            # From (Xia and Lewis, 2007):
+            # "If an English word x aligns to several source words,
+            # we will make several copies of the node for x, one
+            # copy for each such source word. The copies will all
+            # be siblings in the DS."
+
+            PS_LOG.debug('Replacing {:>14s} {:<4s} with {:<4s} {:<14s}'.format('"%s"'%preterm[0], '[%s]'%str(preterm.span()), '[%d]'%preterm[0].index, '"%s"' % preterm[0].label))
+            p.insert(i, preterm)
+
 
     PS_LOG.debug('Current Tree: {}'.format(tgt_t.pformat(margin=100)))
 

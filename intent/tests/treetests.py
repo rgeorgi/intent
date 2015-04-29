@@ -1,6 +1,7 @@
 import unittest
 
 import intent
+from intent.alignment.Alignment import Alignment
 from intent.igt.rgxigt import RGWordTier
 from intent.trees import IdTree, project_ps, TreeMergeError, DepTree, Terminal, TreeError
 
@@ -61,6 +62,21 @@ class ProjectTest(unittest.TestCase):
         proj.assign_ids()
 
         self.assertEqual(self.proj, proj)
+
+    def test_duplicates(self):
+        """
+        Test the case where an English word aligns to multiple language words.
+
+        """
+        src_t = IdTree.fromstring('(ROOT (SBARQ (WHNP (WP Who)) (SQ (VP (VBZ else?)))))')
+        tgt_w = RGWordTier.from_string('sa-lo sa-lo')
+        tgt_t = IdTree.fromstring('(ROOT (SBARQ (WHNP (WP sa-lo) (WP sa-lo))))')
+        aln = Alignment([(1,1),(1,2)])
+
+        result = project_ps(src_t, tgt_w, aln)
+
+        self.assertTrue(tgt_t.similar(result))
+
 
 class PromoteTest(unittest.TestCase):
 
@@ -239,3 +255,27 @@ class SwapTests(unittest.TestCase):
         l[2].index = 1
 
         self.assertTrue(t2.similar(t3))
+
+class DeleteTests(unittest.TestCase):
+    def setUp(self):
+        self.t = IdTree.fromstring('''(ROOT (NP (DT The) (NP (NN Boy))))''')
+
+    def propagate_test(self):
+        tgt = IdTree.fromstring('''(ROOT (NP (DT The)))''')
+
+        self.assertFalse(self.t.similar(tgt))
+
+        # Delete the "NN" in boy.
+        self.t[0,1,0].delete()
+
+        self.assertTrue(self.t.similar(tgt))
+
+    def replace_test(self):
+        tgt = IdTree.fromstring('''(ROOT (NP (DT The) (NN Dog)))''')
+
+        self.assertFalse(self.t.similar(tgt))
+
+        # Replace the "NP" in (NP (NN Boy)) with (NN Dog)
+        self.t[0,1].replace(IdTree('NN',[Terminal('Dog', index=2)]))
+
+        self.assertTrue(self.t.similar(tgt))
