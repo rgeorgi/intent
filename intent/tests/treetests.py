@@ -77,6 +77,39 @@ class ProjectTest(unittest.TestCase):
 
         self.assertTrue(tgt_t.similar(result))
 
+    def ordering_test(self):
+        """
+        This particular tree structure results in changing a child of a tree while iterating through
+        the children and required a fix such that if such a change is detected, we start iterating
+        over the children again, so we're not holding onto a stale pointer.
+
+        """
+        src_t = IdTree.fromstring('''(ROOT (FRAG
+                                            (ADVP (RB Probably))
+                                            (SBAR (S
+                                                    (NP (PRP you))
+                                                    (VP (VBP find)
+                                                        (ADJP (JJ something))
+                                                    )
+                                                  )
+                                            )
+                                           ))''')
+
+        tgt_t = IdTree.fromstring('''(ROOT (FRAG
+                                                (VBP chitt-u-m)
+                                                (ADVP (RB hola))
+                                                (UNK ni)
+                                                (UNK hou)
+                                                (VBP chitt-u-m)
+                                            ))''')
+        tgt_w = RGWordTier.from_string('''chitt-u-m hola ni hou chitt-u-m''')
+        aln = Alignment([(1,2),(3,1),(3,5)])
+
+        proj = project_ps(src_t, tgt_w, aln)
+
+        self.assertTrue(tgt_t.similar(proj))
+
+
 
 class PromoteTest(unittest.TestCase):
 

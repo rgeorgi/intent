@@ -201,7 +201,8 @@ class IdTree(ParentedTree):
         #    the (leftmost, rightmost) indices of the
         #    children.
         else:
-            return (self[0].span()[0], self[-1].span()[1])
+            subspans = sorted(s.span() for s in self)
+            return (subspans[0][0], subspans[-1][1])
 
     def promote(self):
         """
@@ -256,7 +257,22 @@ class IdTree(ParentedTree):
             raise TreeMergeError("Indices cannot be equal in a merge.")
 
         if (self[i].is_preterminal() != self[j].is_preterminal()):
-            raise TreeMergeError("Must merge interior nodes or preterminal with preterminal")
+            #TODO: revisit what happens here when merging a preterminal and a nonterminal...
+            #raise TreeMergeError("Must merge interior nodes or preterminal with preterminal")
+
+            # Merge all the others with this one.
+            if self[i].is_preterminal():
+                for preterm in self[j].preterminals():
+                    self[i]._label += '+' + preterm.label()
+                    preterm.delete()
+
+            elif self[j].is_preterminal():
+                for preterm in self[i].preterminals():
+                    self[j]._label += '+' + preterm.label()
+                    preterm.delete()
+
+            return
+
 
         assert i < j, 'i must be smaller index'
 
@@ -309,6 +325,7 @@ class IdTree(ParentedTree):
         last_index = last_index if last_index is not None else len(self)
 
         PS_LOG.debug('Inserting {} into {} at position {}'.format(t.pformat(margin=5000), self.pformat(margin=5000), last_index))
+        PS_LOG.debug('Tree is now: {}'.format(self.root()))
         self.insert(last_index, t)
 
 class Terminal(object):
@@ -503,7 +520,7 @@ def project_ps(src_t, tgt_w, aln):
             # copy for each such source word. The copies will all
             # be siblings in the DS."
 
-            PS_LOG.debug('Replacing {:>14s} {:<4s} with {:<4s} {:<14s}'.format('"%s"'%preterm[0], '[%s]'%str(preterm.span()), '[%d]'%preterm[0].index, '"%s"' % preterm[0].label))
+            PS_LOG.debug('Inserting {2:>14s} {3:<4s} in place of {0:<4s} {1:<14s}'.format('"%s"'%n, '[%s]'%str(n.span()), '[%d]'%preterm[0].index, '"%s"' % preterm[0].label))
             p.insert(i, preterm)
 
 
@@ -596,7 +613,14 @@ def lowest_common_ancestor(t1, t2):
     t1_ancestors = None
 
 
-
+# Contained items function
+def contains(t, s_sup, s_sub):
+    PS_LOG.debug('')
+    PS_LOG.debug('{} {} is contained in {} {}'.format(s_sub.label(), s_sub.span(), s_sup.label(), s_sup.span()))
+    PS_LOG.debug('PROMOTE: {} [{}]'.format(s_sub, s_sub.span()))
+    s_sup.promote()
+    PS_LOG.debug('TREE is now: {}'.format(t.root()))
+    reorder_tree(t.root())
 
 def reorder_tree(t):
     """
@@ -605,7 +629,6 @@ def reorder_tree(t):
     :param t:
     :type t:
     """
-
     if not t.is_preterminal():
         if len(t) >= 2:
 
@@ -620,6 +643,7 @@ def reorder_tree(t):
 
                 # 3a) The nodes are already in order. Do nothing. ---
                 if a_i < a_j and b_i < b_j:
+                    PS_LOG.debug('Nothing to be done for {}[{}] and {}[{}]'.format(s_i.label(), s_i.span(), s_j.label(), s_j.span()))
                     pass
 
                 # 3b) The nodes are swapped. ---
@@ -627,25 +651,19 @@ def reorder_tree(t):
                     PS_LOG.debug('SWAPPING: {:>30} [{},{}] for [{},{}] {:<12}'.format(str(s_i), a_i, b_i, a_j, b_j, str(s_j)))
                     t.swap(s_i_idx, s_j_idx)
                     reorder_tree(t.root())
-                    return
-
+                    return True # Return true if we've changed something
 
                 # 3c-i) S_i contains S_j              ---
                 # delete s_i and promote its children.
                 elif a_i < a_j and b_i > b_j:
-                    PS_LOG.debug('PROMOTE: {} [{},{}]'.format(s_i, b_i, b_j))
-                    s_i.promote()
-                    reorder_tree(t.root())
-                    return
+                    contains(t, s_i, s_j)
+                    return True
 
-
-                # 3c-ii) S_j contains S_i ---
+                # 3c-ii) S_j is contained by S_i ---
                 #  delete s_j and promote its children.
                 elif a_i > a_j and b_i < b_j:
-                    PS_LOG.debug('PROMOTE: {} [{},{}]'.format(s_i, b_i, b_j))
-                    s_j.promote()
-                    reorder_tree(t.root())
-                    return
+                    contains(t, s_j, s_i)
+                    return True
 
                 # d) S_j and S_i overlap but are not subsets. ---
 
@@ -655,25 +673,45 @@ def reorder_tree(t):
                 elif a_i == a_j and b_i == b_j:
                     PS_LOG.debug('Merging: {:>30} [{},{}] with [{},{}] {:<}'.format(str(s_i), a_i, b_i, a_j, b_j, str(s_j)))
                     t.merge(s_i_idx, s_j_idx)
+                    PS_LOG.debug('New tree:\n{}'.format(t.root()))
                     reorder_tree(t.root())
-                    return
-
+                    return True
 
                 # 3dii) They are different ---
                 # Promote both of them.
                 else:
+                    PS_LOG.debug('Non-exclusive overlap')
                     if not s_i.is_preterminal():
+                        PS_LOG.debug('Promoting {}[{}]'.format(s_i.label(), s_i.span()))
                         s_i.promote()
                     if not s_j.is_preterminal():
+                        PS_LOG.debug('Promoting {}[{}]'.format(s_j.label(), s_j.span()))
                         s_j.promote()
 
+                    PS_LOG.debug('New tree:\n{}'.format(t.root()))
                     reorder_tree(t.root())
-                    return
+                    return True
+        else:
+            PS_LOG.debug('Unary node {}[{}], skipping.'.format(t.label(), t.span()))
 
         # If we've got to this point, that means that all of this node's children
         # are in order. Now, if this is a nonterminal, recurse down the children.
-        for child in t:
-            reorder_tree(child)
+        while True:
+
+            # If a child was changed, we want to start over, because
+            # otherwise we may be retaining a link to a child that
+            # no longer exists.
+            child_was_changed = False
+
+            for child in t:
+                child_was_changed = reorder_tree(child)
+                if child_was_changed:
+                    break
+
+            # If we make it through all the children
+            # without a change, we can stop.
+            if not child_was_changed:
+                break
 
 class DepTree(IdTree):
 
