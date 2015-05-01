@@ -230,6 +230,59 @@ class MergeTests(unittest.TestCase):
         self.assertRaises(TreeMergeError, sq.merge, 0,1)
 
 
+    def internal_merge_test(self):
+        t = IdTree.fromstring('''(ROOT
+                                  (UCP
+                                    (S
+                                      (NP (PRP u-tus-u-kV-nɨŋ))
+                                      (VP
+                                        (RB u-tus-u-kV-nɨŋ)
+                                        (ADJP
+                                          (RB loĩs-ma)
+                                          (JJ loĩs-ma)
+                                          (S (VP (VP (VB loĩs-ma) (NP (PRP kat-a-ŋs-e)) (ADVP (RB loĩs-ma))))))))
+                                    (SBAR
+                                      (IN loĩs-ma)
+                                      (S
+                                        (NP (PRP u-tus-u-kV-nɨŋ))
+                                        (VP (VBP u-tus-u-kV-nɨŋ) (RB u-tus-u-kV-nɨŋ) (VP (VB loĩs-ma) (NP (NN loĩs-ma))))))))''')
+
+        UCP = t[0]
+        self.assertEqual(len(UCP), 2)
+        UCP.merge(0,1)
+
+
+        self.assertEqual(len(UCP), 1)
+        self.assertEqual(len(UCP[0]), 4)
+
+    def ctn_merge_2_test(self):
+        src_t = IdTree.fromstring('''(ROOT
+                                      (UCP
+                                        (S
+                                          (NP (PRP They))
+                                          (VP
+                                            (VBP are)
+                                            (RB also)
+                                            (ADJP
+                                              (RB too)
+                                              (JJ lazy)
+                                              (S
+                                                (VP
+                                                  (TO to)
+                                                  (VP (VB take) (NP (PRP it)) (ADVP (RB out,))))))))
+                                        (CC and)
+                                        (SBAR
+                                          (IN so)
+                                          (S
+                                            (NP (PRP they))
+                                            (VP (VBP do) (RB not) (VP (VB drink) (NP (NN it.))))))))''')
+        tgt_w = RGWordTier.from_string('loĩs-ma yaŋ hunci-suma kat-a-ŋs-e kina u-tus-u-kV-nɨŋ')
+        aln = Alignment([(16, 6), (3, 2), (7, 1), (15, 3), (9, 3), (11, 3), (12, 6), (14, 6), (13, 6), (4, 3), (5, 3)])
+
+        proj = project_ps(src_t, tgt_w, aln)
+        self.assertEqual(len(proj.leaves()), 6)
+
+
 class DepTreeTests(unittest.TestCase):
 
     def setUp(self):
