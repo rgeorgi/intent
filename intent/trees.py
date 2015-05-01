@@ -380,7 +380,7 @@ def get_nodes(string):
     :return: Dictionary of
     :rtype: dict
     """
-    nodes = re.findall('(\w+)\((.*?)\)', string)
+    nodes = re.findall('(\w+)\((.*?\d+)\)', string)
 
     # We are going to store a dictionary of words
     # and their children, and then construct the
@@ -643,7 +643,7 @@ def reorder_tree(t):
 
                 # 3a) The nodes are already in order. Do nothing. ---
                 if a_i < a_j and b_i < b_j:
-                    PS_LOG.debug('Nothing to be done for {}[{}] and {}[{}]'.format(s_i.label(), s_i.span(), s_j.label(), s_j.span()))
+                    #PS_LOG.debug('Nothing to be done for {}[{}] and {}[{}]'.format(s_i.label(), s_i.span(), s_j.label(), s_j.span()))
                     pass
 
                 # 3b) The nodes are swapped. ---

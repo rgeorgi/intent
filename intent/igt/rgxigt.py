@@ -1458,7 +1458,17 @@ class RGIgt(Igt, RecursiveFindMixin):
         """
         assert pt or dt, "At least one of pt or dt should be true."
 
-        result = parser.parse(self.trans.text())
+        PARSELOG.debug('Attempting to parse translation line of instance "{}"'.format(self.id))
+
+        # Replace any parens in the translation line with square brackets, since they
+        # will cause problems in the parsing otherwise.
+
+        trans = self.trans.text().replace('(', '[')
+        trans = trans.replace(')',']')
+
+        result = parser.parse(trans)
+
+        PARSELOG.debug('Result of translation parse: {}'.format(result.pt))
 
         if pt:
             self.create_pt_tier(result.pt, self.trans, parse_method=INTENT_PS_PARSER)
