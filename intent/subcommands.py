@@ -179,8 +179,9 @@ def enrich(**kwargs):
             try:
                 inst.parse_translation_line(sp, pt=True, dt=True)
             except Exception as ve:
-                ENRICH_LOG.critical("Unknown parse error in instance {}".format(inst.id))
-                ENRICH_LOG.critical(str(ve))
+                pass
+                # ENRICH_LOG.critical("Unknown parse error in instance {}".format(inst.id))
+                # ENRICH_LOG.critical(str(ve))
 
         # If parse tree projection is enabled... -------------------------------
         if PARSE_LANG_PROJ in parse_args:
