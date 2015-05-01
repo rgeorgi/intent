@@ -389,7 +389,7 @@ def get_nodes(string):
 
     # Go through each of the returned values...
     for name, pair in nodes:
-        head, child = pair.split(',')
+        head, child = re.split(',\s', pair)
 
         w_i_re = re.compile('(\S+)-(\d+)')
 
