@@ -37,7 +37,7 @@ class StanfordParser(object):
     dependency parses.
     """
     def __init__(self):
-        self.p = ProcessCommunicator(['java', '-Xmx500m',
+        self.p = ProcessCommunicator(['java', '-Xmx1200m',
                                         '-cp', parser_jar+':'+parser_model_jar,
                                         'edu.stanford.nlp.parser.lexparser.LexicalizedParser',
                                         '-outputFormat', 'penn,typedDependencies',
