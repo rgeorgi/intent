@@ -176,10 +176,10 @@ def enrich(**kwargs):
 
         # 5) Parse the translation line ----------------------------------------
         if PARSE_TRANS in parse_args:
-            try:
-                inst.parse_translation_line(sp, pt=True, dt=True)
-            except Exception as ve:
-                pass
+            # try:
+            inst.parse_translation_line(sp, pt=True, dt=True)
+            # except Exception as ve:
+                # pass
                 # ENRICH_LOG.critical("Unknown parse error in instance {}".format(inst.id))
                 # ENRICH_LOG.critical(str(ve))
 

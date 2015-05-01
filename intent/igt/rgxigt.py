@@ -513,7 +513,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
             t_sents.append(' '.join(t_sent))
 
 
-
+        PARSELOG.info('Attempting to align instance "{}" with giza'.format(inst.id))
 
         if resume:
             # Next, load up the saved gloss-trans giza alignment model
@@ -564,6 +564,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         """
         for igt in self:
             try:
+                PARSELOG.info('Attempting to heuristically align instance "{}"'.format(igt.id))
                 g_heur_aln = igt.heur_align()
             except NoTransLineException as ntle:
                 logging.warning(ntle)
