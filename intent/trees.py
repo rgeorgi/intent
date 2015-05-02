@@ -113,8 +113,9 @@ class IdTree(ParentedTree):
         p = self.parent()
         del p[self.parent_index()]
 
-        if propagate and not p:
-            p.delete()
+
+        if propagate and p is not None and not p:
+            p.delete(propagate)
 
     def replace(self, t):
         """
@@ -185,9 +186,10 @@ class IdTree(ParentedTree):
             ret_tup += child.indices_labels()
         return ret_tup
 
+    def lprint(self):
+        return '{}[{}]'.format(self.label(), self.treeposition())
 
-
-    def span(self):
+    def span(self, caller=None):
         """
         Return the span of indices covered by this node.
         """
@@ -195,13 +197,15 @@ class IdTree(ParentedTree):
         # 1) If we only have one child, then simply
         #    return the span of that child.
         if len(self) == 1:
-            return self[0].span()
+            return self[0].span(caller=caller)
 
         # 2) Otherwise, return a span consisting of
         #    the (leftmost, rightmost) indices of the
         #    children.
         else:
-            subspans = sorted(s.span() for s in self)
+            subspans = sorted(s.span(caller=caller) for s in self)
+            if not subspans:
+                raise TreeProjectionError('Dangling unary: {} - root = {}'.format(self, self.root()))
             return (subspans[0][0], subspans[-1][1])
 
     def promote(self):
@@ -213,7 +217,11 @@ class IdTree(ParentedTree):
         # to its parent, then delete it.
         my_idx = self.parent_index()
         parent = self.parent()
-        self.delete()
+
+        # Don't propagate deletion up through the parent before
+        # we have re-added the children.
+        assert self.parent(), self
+        self.delete(propagate=False)
 
         # For each of that node's children,
         # remove their parent attribute
@@ -222,6 +230,7 @@ class IdTree(ParentedTree):
         for i, child in enumerate(self):
             child._parent = None
             parent.insert(my_idx+i, child)
+
 
     def swap(self, i, j):
         """
@@ -256,22 +265,48 @@ class IdTree(ParentedTree):
         if i == j:
             raise TreeMergeError("Indices cannot be equal in a merge.")
 
+        # If we have a nonterminal that has the same span as a preterminal, we want
+        # to take all of the preterminals underneath the nonterminal and combine them with
+        # the preterminal, then delete the nonterminal.
+
         if (self[i].is_preterminal() != self[j].is_preterminal()):
             #TODO: revisit what happens here when merging a preterminal and a nonterminal...
-            #raise TreeMergeError("Must merge interior nodes or preterminal with preterminal")
 
-            # Merge all the others with this one.
-            if self[i].is_preterminal():
-                for preterm in self[j].preterminals():
-                    self[i]._label += '+' + preterm.label()
-                    preterm.delete()
+            # Make a list of the preterminals that we are going to merge.
+            preterms_to_merge = [preterm for preterm in list(self[i].preterminals())+list(self[j].preterminals())]
 
-            elif self[j].is_preterminal():
-                for preterm in self[i].preterminals():
-                    self[j]._label += '+' + preterm.label()
-                    preterm.delete()
+            # There should only be
+            assert self[i].span()[1] - self[i].span()[0] == 0
+            assert self[j].span()[1] - self[i].span()[0] == 0
 
+            i_n = self[i] if self[i].is_preterminal() else []
+            j_n = self[j] if self[j].is_preterminal() else []
+            pt_n = i_n or j_n
+
+
+            # Keep a list of the labels for the new preterm that will be joined by '+'
+            labels = []
+
+            del self[i]
+            del self[j-1]
+
+            # Create the label list.
+            for preterm in preterms_to_merge:
+                preterm._parent = None # Remove the parent so that it can be added.
+                for label in preterm.label().split('+'):
+                    if label not in labels:
+                        labels.append(label)
+
+            # Now, create the new preterminal.
+            n = IdTree('+'.join(labels), pt_n, id=pt_n.id)
+
+
+            self.insert(i, n)
             return
+
+
+
+
 
 
         assert i < j, 'i must be smaller index'
@@ -347,7 +382,7 @@ class Terminal(object):
     def __hash__(self):
         return hash('{}[{}]'.format(self.label, self.index))
 
-    def span(self):
+    def span(self, caller=None):
         return (self.index, self.index)
 
     def similar(self, other):
@@ -616,24 +651,30 @@ def lowest_common_ancestor(t1, t2):
 
 # Contained items function
 def contains(t, s_sup, s_sub):
-    PS_LOG.debug('')
     PS_LOG.debug('{} {} is contained in {} {}'.format(s_sub.label(), s_sub.span(), s_sup.label(), s_sup.span()))
-    PS_LOG.debug('PROMOTE: {} [{}]'.format(s_sub, s_sub.span()))
+    # PS_LOG.debug('{}'.format(s_sub.root()))
+    # PS_LOG.debug('{}'.format(s_sup.root()))
+    PS_LOG.debug('PROMOTE: {} [{}] into {}'.format(s_sub, s_sub.span(), s_sup))
     s_sup.promote()
+    assert s_sup.parent() == None
     PS_LOG.debug('TREE is now: {}'.format(t.root()))
 
-def reorder_tree(t):
+def reorder_tree(t, prev_t_list = []):
     """
     Recursively reorder a tree.
 
     :param t:
     :type t:
     """
+
+
     was_changed = False
+
+    prev_t = t.root().copy()
 
     if not t.is_preterminal():
         if len(t) == 1:
-            PS_LOG.debug('Unary node {}[{}], skipping.'.format(t.label(), t.span()))
+            PS_LOG.debug('Unary node {}[{}], skipping.'.format(t.label(), t.span(caller=t)))
 
         elif len(t) >= 2:
 
@@ -642,34 +683,38 @@ def reorder_tree(t):
                 a_i, b_i = s_i.span()
                 a_j, b_j = s_j.span()
 
+                # TODO: FIXME: How is it that the parent pointers get corrupted?
+                s_i._parent = t
+                s_j._parent = t
 
                 s_i_idx = s_i.parent_index()
                 s_j_idx = s_j.parent_index()
 
                 # 3a) The nodes are already in order and do not overlap. Do nothing. ---
                 if b_i < a_j:
-                    PS_LOG.debug('Nothing to be done for {}[{}] and {}[{}]'.format(s_i.label(), s_i.span(), s_j.label(), s_j.span()))
+                    #PS_LOG.debug('Nothing to be done for {}[{}] and {}[{}]'.format(s_i.label(), s_i.span(), s_j.label(), s_j.span()))
                     pass
 
                 # 3b) The nodes are swapped. ---
                 elif a_i > a_j and b_i > b_j:
                     PS_LOG.debug('SWAPPING: {:>30} [{},{}] for [{},{}] {:<12}'.format(str(s_i), a_i, b_i, a_j, b_j, str(s_j)))
                     t.swap(s_i_idx, s_j_idx)
-                    was_changed = True
+                    was_changed = 'SWAPPED'
                     break
 
                 # 3c-i) S_i contains S_j              ---
                 # delete s_i and promote its children.
                 elif a_i < a_j and b_i > b_j:
                     contains(t, s_i, s_j)
-                    was_changed = True
+                    was_changed = 'PROMOTED {} into {}'.format(s_j, s_i)
                     break
 
                 # 3c-ii) S_j is contained by S_i ---
                 #  delete s_j and promote its children.
                 elif a_i > a_j and b_i < b_j:
+                    was_changed = 'T WAS: {} \n\n PROMOTED {} into {}'.format(t.root(), s_i.lprint(), s_j.lprint())
                     contains(t, s_j, s_i)
-                    was_changed = True
+                    was_changed += ' to become\n\n {}'.format(t.root())
                     break
 
                 # d) S_j and S_i overlap but are not subsets. ---
@@ -681,38 +726,38 @@ def reorder_tree(t):
                     PS_LOG.debug('Merging: {:>30} [{},{}] with [{},{}] {:<}'.format(str(s_i), a_i, b_i, a_j, b_j, str(s_j)))
                     t.merge(s_i_idx, s_j_idx)
                     PS_LOG.debug('New tree:\n{}'.format(t.root()))
-                    was_changed = True
+                    was_changed = 'MERGED {} and {}'.format(s_i, s_j)
                     break
 
                 # 3dii) They are different ---
                 # Promote both of them.
                 else:
                     PS_LOG.debug('Non-exclusive overlap')
-                    if not s_i.is_preterminal():
-                        PS_LOG.debug('Promoting {}[{}]'.format(s_i.label(), s_i.span()))
-                        s_i.promote()
-                    if not s_j.is_preterminal():
-                        PS_LOG.debug('Promoting {}[{}]'.format(s_j.label(), s_j.span()))
-                        s_j.promote()
+                    for s in [s_i, s_j]:
+                        if not s.is_preterminal():
+                            PS_LOG.debug('Promoting {}[{}]'.format(s_i.label(), s_i.span()))
+                            s.promote()
 
                     PS_LOG.debug('New tree:\n{}'.format(t.root()))
-                    was_changed = True
+                    was_changed = 'Promoted {} and {}'.format(s_i, s_j)
                     break
 
         # If we changed somewhere along the way, let's try again from the top first.
         if was_changed:
-            reorder_tree(t.root())
-            return True
+            prev_t_list.append(prev_t)
+            reorder_tree(t.root(), prev_t_list)
+            return t.root()
 
         # Otherwise, this node does not require changes, but let's
         # recurse down it's children.
         else:
             for child in t:
 
-                child_was_changed = reorder_tree(child)
-                if child_was_changed:
-                    reorder_tree(t.root())
-                    return True
+                changed_tree = reorder_tree(child, prev_t_list)
+
+                if changed_tree:
+                    ct = reorder_tree(changed_tree, prev_t_list)
+                    return ct
 
 
 

@@ -227,7 +227,7 @@ class MergeTests(unittest.TestCase):
         sq = t[0,1,2]
         self.assertEqual(sq.span(), (4,5))
 
-        self.assertRaises(TreeMergeError, sq.merge, 0,1)
+        self.assertIsNotNone(sq.merge(0,1))
 
 
     def internal_merge_test(self):
