@@ -109,7 +109,15 @@ class ProjectTest(unittest.TestCase):
 
         self.assertTrue(tgt_t.similar(proj))
 
+    def failed_insertion_test(self):
+        t = IdTree.fromstring('''(ROOT
+  (SBARQ
+    (WHNP (WDT What) (NP (NN kind) (PP (IN of) (NP (NNP work,)))))
+    (SQ (VP (VBZ then?)))))''')
+        tgt_w = RGWordTier.from_string('kam-a na them lis-no-kha hou')
+        aln = Alignment([(1, 3), (2, 5), (4, 1), (5, 5)])
 
+        project_ps(t, tgt_w, aln)
 
 class PromoteTest(unittest.TestCase):
 

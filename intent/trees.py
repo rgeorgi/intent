@@ -539,6 +539,7 @@ def project_ps(src_t, tgt_w, aln):
     PS_LOG.debug('#'*10+' Now reordering tree...' + '#'*10)
     reorder_tree(tgt_t)
 
+    fix_tree_parents(tgt_t)
 
     # 4) Time to reattach unattached tgt words. ---
     PS_LOG.debug('#'*10+' Now reattaching unaligned words...' + '#'*10)
@@ -866,3 +867,19 @@ def get_dep_edges(string):
         edges.append(DepEdge(head, child, type=name))
 
     return edges
+
+
+def fix_tree_parents(t, preceding_parent = None):
+    """
+    For some reason, the parents are getting broken during tree projection
+    reordering. So, this function will go through and reassign parents
+    of nodes to reflect the top-down view.
+
+    :param t: Input Tree
+    """
+
+    t._parent = preceding_parent
+
+    for child in t:
+        if isinstance(child, Tree):
+            fix_tree_parents(child, preceding_parent=t)
