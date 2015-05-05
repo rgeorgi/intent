@@ -1470,9 +1470,9 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         PARSELOG.debug('Result of translation parse: {}'.format(result.pt))
 
-        if pt:
+        if pt and result.pt:
             self.create_pt_tier(result.pt, self.trans, parse_method=INTENT_PS_PARSER)
-        if dt:
+        if dt and result.dt:
             self.create_dt_tier(result.dt, parse_method=INTENT_DS_PARSER)
 
 
