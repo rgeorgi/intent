@@ -221,13 +221,28 @@ class MergeTests(unittest.TestCase):
         self.assertEqual(t.span(), (1,2))
 
 
-    def test_merge_preterminal_and_nonterminal(self):
+    def test_merge_preterminal_and_nonterminal_wo_unify(self):
         t = self.t.copy()
 
         sq = t[0,1,2]
         self.assertEqual(sq.span(), (4,5))
 
-        self.assertIsNotNone(sq.merge(0,1))
+        sq.merge(0,1, unify_children=False)
+
+        self.assertEqual(sq.span(), (4,5))
+        self.assertEqual(len(sq[0]), 2)
+
+    def test_merge_preterminal_and_nonterminal_w_unify(self):
+        t = self.t.copy()
+
+        sq = t[0,1,2]
+        self.assertEqual(sq.span(), (4,5))
+
+        sq.merge(0,1, unify_children=True)
+
+        self.assertEqual(sq.spanlength(), 0)
+        self.assertEqual(len(sq[0]), 1)
+
 
 
     def internal_merge_test(self):
@@ -311,6 +326,16 @@ class DepTreeTests(unittest.TestCase):
 
     def test_span(self):
         self.assertRaises(TreeError, self.dt.span)
+
+class DepTreeCycleTest(unittest.TestCase):
+
+    def test_cycle(self):
+        dt_string = '''nsubj(did-2, And-1) root(ROOT-0, did-2) dobj(did-2, you-3) dep(did-2, make-4) dobj(make-4, rice-5) nsubj(day,-7, rice-5) rcmod(rice-5, day,-7) dep(did-2, eat-9) conj_and(make-4, eat-9) dobj(eat-9, it?-10)'''
+
+        dt = DepTree.fromstring(dt_string)
+
+        self.assertEqual(dt[0].label(), 'did')
+
 
 class SwapTests(unittest.TestCase):
     def setUp(self):
