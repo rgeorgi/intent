@@ -12,7 +12,7 @@ from intent.utils.env import parser_jar, parser_model, parser_model_jar
 from intent.utils.systematizing import ProcessCommunicator
 
 # NLTK Import
-from intent.trees import IdTree, DepTree
+from intent.trees import IdTree, DepTree, TreeError
 import unittest
 
 
@@ -69,7 +69,10 @@ class StanfordParser(object):
             if not line:
 
                 if result.pt:
-                    result.dt = DepTree.fromstring(string, id_base = 'ds')
+                    try:
+                        result.dt = DepTree.fromstring(string, id_base = 'ds')
+                    except TreeError as te:
+                        PARSE_LOG.error(te)
                     break
                 else:
                     result.pt = IdTree.fromstring(string, id_base = 'ps')

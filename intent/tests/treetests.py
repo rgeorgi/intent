@@ -327,6 +327,23 @@ class DepTreeTests(unittest.TestCase):
     def test_span(self):
         self.assertRaises(TreeError, self.dt.span)
 
+    def parse_test(self):
+        dep_string =            ('''advmod(meet-3, When-1)
+                                    nsubj(meet-3, we-2)
+                                    xsubj(know-7, we-2)
+                                    advmod(meet-3, let's-4)
+                                    dep(meet-3, get-5)
+                                    aux(know-7, to-6)
+                                    xcomp(get-5, know-7)
+                                    det(talk.-13, each-8)
+                                    num(let's-10, other,-9)
+                                    npadvmod(laugh,-11, let's-10)
+                                    amod(talk.-13, laugh,-11)
+                                    amod(talk.-13, let's-12)
+                                    dobj(know-7, talk.-13)''')
+        self.assertRaises(TreeError, DepTree.fromstring, dep_string)
+
+
 class DepTreeCycleTest(unittest.TestCase):
 
     def test_cycle(self):

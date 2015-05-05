@@ -640,7 +640,6 @@ def reorder_tree(t, prev_t_list = []):
     :type t:
     """
 
-
     was_changed = False
 
     prev_t = t.root().copy()
@@ -769,6 +768,12 @@ class DepTree(IdTree):
         edges = get_dep_edges(tree_string)
 
         dt = DepTree('ROOT', [], word_index = 0)
+
+        roots = [e.head for e in edges if e.head.label == 'ROOT']
+        print(roots)
+        if not roots:
+            raise TreeError("No root for tree {}. Skipping.".format(tree_string))
+
 
         # Iterate through the edges, and look for those
         # that are "attachable"
