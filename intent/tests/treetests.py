@@ -109,7 +109,15 @@ class ProjectTest(unittest.TestCase):
 
         self.assertTrue(tgt_t.similar(proj))
 
+    def failed_insertion_test(self):
+        t = IdTree.fromstring('''(ROOT
+  (SBARQ
+    (WHNP (WDT What) (NP (NN kind) (PP (IN of) (NP (NNP work,)))))
+    (SQ (VP (VBZ then?)))))''')
+        tgt_w = RGWordTier.from_string('kam-a na them lis-no-kha hou')
+        aln = Alignment([(1, 3), (2, 5), (4, 1), (5, 5)])
 
+        project_ps(t, tgt_w, aln)
 
 class PromoteTest(unittest.TestCase):
 
@@ -221,13 +229,28 @@ class MergeTests(unittest.TestCase):
         self.assertEqual(t.span(), (1,2))
 
 
-    def test_merge_preterminal_and_nonterminal(self):
+    def test_merge_preterminal_and_nonterminal_wo_unify(self):
         t = self.t.copy()
 
         sq = t[0,1,2]
         self.assertEqual(sq.span(), (4,5))
 
-        self.assertIsNotNone(sq.merge(0,1))
+        sq.merge(0,1, unify_children=False)
+
+        self.assertEqual(sq.span(), (4,5))
+        self.assertEqual(len(sq[0]), 2)
+
+    def test_merge_preterminal_and_nonterminal_w_unify(self):
+        t = self.t.copy()
+
+        sq = t[0,1,2]
+        self.assertEqual(sq.span(), (4,5))
+
+        sq.merge(0,1, unify_children=True)
+
+        self.assertEqual(sq.spanlength(), 0)
+        self.assertEqual(len(sq[0]), 1)
+
 
 
     def internal_merge_test(self):
@@ -311,6 +334,38 @@ class DepTreeTests(unittest.TestCase):
 
     def test_span(self):
         self.assertRaises(TreeError, self.dt.span)
+
+    def parse_test(self):
+        dep_string =            ('''advmod(meet-3, When-1)
+                                    nsubj(meet-3, we-2)
+                                    xsubj(know-7, we-2)
+                                    advmod(meet-3, let's-4)
+                                    dep(meet-3, get-5)
+                                    aux(know-7, to-6)
+                                    xcomp(get-5, know-7)
+                                    det(talk.-13, each-8)
+                                    num(let's-10, other,-9)
+                                    npadvmod(laugh,-11, let's-10)
+                                    amod(talk.-13, laugh,-11)
+                                    amod(talk.-13, let's-12)
+                                    dobj(know-7, talk.-13)''')
+        self.assertRaises(TreeError, DepTree.fromstring, dep_string)
+
+
+class DepTreeCycleTest(unittest.TestCase):
+
+    def test_cycle(self):
+        dt_string = '''nsubj(did-2, And-1) root(ROOT-0, did-2) dobj(did-2, you-3) dep(did-2, make-4) dobj(make-4, rice-5) nsubj(day,-7, rice-5) rcmod(rice-5, day,-7) dep(did-2, eat-9) conj_and(make-4, eat-9) dobj(eat-9, it?-10)'''
+
+        dt = DepTree.fromstring(dt_string)
+
+        self.assertEqual(dt[0].label(), 'did')
+
+class DepTreeParseTests(unittest.TestCase):
+    def broken_parse_test(self):
+        dt_string = '''nsubj(get-2, I-1) nsubj(get-2', I-1) conj_and(get-2, get-2') prt(get-2, up-3) prep_at(get-2, eight-5) dep(is-11, that-8) det(problem-10, the-9) nsubj(is-11, problem-10) xsubj(cook-13, problem-10) prepc_after(get-2', is-11) aux(cook-13, to-12) xcomp(is-11, cook-13) xcomp(is-11, eat-15) conj_and(cook-13, eat-15) dobj(cook-13, rice.-16)
+                    '''
+        self.assertRaises(TreeError, DepTree.fromstring, dt_string)
 
 class SwapTests(unittest.TestCase):
     def setUp(self):

@@ -11,6 +11,7 @@ from nltk.tree import ParentedTree, Tree
 # Exceptions
 #===============================================================================
 
+
 class TreeError(Exception): pass
 class PhraseTreeError(TreeError): pass
 
@@ -93,11 +94,13 @@ class IdTree(ParentedTree):
         if filter(self):
             return self
 
-        elif self.is_preterminal():
-            return None
         else:
             ret = None
             for child in self:
+                # Skip terminals
+                if isinstance(child, Terminal):
+                    continue
+
                 found = child.find(filter)
                 if found is not None:
                     ret = found
@@ -190,6 +193,10 @@ class IdTree(ParentedTree):
     def lprint(self):
         return '{}[{}]'.format(self.label(), self.treeposition())
 
+    def spanlength(self):
+        s = self.span()
+        return s[1] - s[0]
+
     def span(self, caller=None):
         """
         Return the span of indices covered by this node.
@@ -276,9 +283,6 @@ class IdTree(ParentedTree):
             # Make a list of the preterminals that we are going to merge.
             preterms_to_merge = [preterm for preterm in list(self[i].preterminals())+list(self[j].preterminals())]
 
-            # There should only be
-            assert self[i].span()[1] - self[i].span()[0] == 0
-            assert self[j].span()[1] - self[i].span()[0] == 0
 
             i_n = self[i] if self[i].is_preterminal() else []
             j_n = self[j] if self[j].is_preterminal() else []
@@ -298,8 +302,16 @@ class IdTree(ParentedTree):
                     if label not in labels:
                         labels.append(label)
 
+            # Set the children based on unify_children
+            if unify_children:
+                children = pt_n
+            else:
+                children = []
+                for pt in preterms_to_merge:
+                    children += list(pt)
+
             # Now, create the new preterminal.
-            n = IdTree('+'.join(labels), pt_n, id=pt_n.id)
+            n = IdTree('+'.join(labels), children, id=pt_n.id)
 
 
             self.insert(i, n)
@@ -337,7 +349,7 @@ class IdTree(ParentedTree):
         # In the preterminal sense we are usually merging terminals
         # that were originally the same word, with the same index,
         # so collapse the children to only one since it's a duplicate.
-        if i_n.is_preterminal() and j_n.is_preterminal():
+        if i_n.is_preterminal() and j_n.is_preterminal() and unify_children:
             new_children = new_children[0:1]
             assert len(new_children) == 1
 
@@ -393,55 +405,8 @@ class Terminal(object):
         return Terminal(copy(self.label), copy(self.index))
 
 
-def build_tree(dict):
-    """
-    Since
-
-    :param dict:
-    :return:
-    """
-    root = Terminal('ROOT', index=0)
-    return DepTree(root.label, _build_tree(dict, root), word_index=root.index)
-
-def _build_tree(dict, word):
-    if word not in dict:
-        return []
-    else:
-        children = []
-        for dep_type, child in dict[word]:
-            d = DepTree(child.label, _build_tree(dict, child), type=dep_type, word_index=child.index)
-            children.append(d)
-        return children
 
 
-
-
-def get_nodes(string):
-    """
-
-    :param string: A string representation of the dependency tree produced by the stanford parser.
-    :return: Dictionary of
-    :rtype: dict
-    """
-    nodes = re.findall('(\w+)\((.*?\d+)\)', string)
-
-    # We are going to store a dictionary of words
-    # and their children, and then construct the
-    # tree from "ROOT" on down...
-    child_dict = defaultdict(list)
-
-    # Go through each of the returned values...
-    for name, pair in nodes:
-        head, child = re.split(',\s', pair)
-
-        w_i_re = re.compile('(\S+)-(\d+)')
-
-        head  = Terminal(*re.search(w_i_re, head).groups())
-        child = Terminal(*re.search(w_i_re, child).groups())
-
-        child_dict[head].append((name, child))
-
-    return child_dict
 
 
 def aln_indices(tokens):
@@ -674,7 +639,6 @@ def reorder_tree(t, prev_t_list = []):
     :type t:
     """
 
-
     was_changed = False
 
     prev_t = t.root().copy()
@@ -766,6 +730,11 @@ def reorder_tree(t, prev_t_list = []):
                     ct = reorder_tree(changed_tree, prev_t_list)
                     return ct
 
+class DepEdge(object):
+    def __init__(self, head=None, dep=None, type=None):
+        self.head = head
+        self.dep = dep
+        self.type = type
 
 
 class DepTree(IdTree):
@@ -795,10 +764,36 @@ class DepTree(IdTree):
         DS_LOG.debug('Building dependency tree from: {}'.format(tree_string))
 
 
-        child_dict = get_nodes(tree_string)
-        t = build_tree(child_dict)
-        t.assign_ids(id_base)
-        return t
+        edges = get_dep_edges(tree_string)
+
+        dt = DepTree('ROOT', [], word_index = 0)
+
+        roots = [e.head for e in edges if e.head.label == 'ROOT']
+        print(roots)
+        if not roots:
+            raise TreeError("No root for tree {}. Skipping.".format(tree_string))
+
+
+        # Iterate through the edges, and look for those
+        # that are "attachable"
+        while edges:
+
+            edge_found = False
+
+            for i, edge in enumerate(edges):
+                #
+                node = dt.find_terminal(edge.head)
+
+                if node is not None:
+                    node.append(DepTree(edge.dep.label, [], word_index=edge.dep.index, type=edge.type))
+                    del edges[i]
+                    edge_found = True
+                    break
+
+            if not edge_found:
+                raise TreeError("Dependency Tree {} could not be built, edge could not be connected.".format(tree_string))
+
+        return dt
 
     @property
     def word_index(self):
@@ -812,6 +807,14 @@ class DepTree(IdTree):
 
     def find_index(self, idx):
         return self.find(lambda x: x.word_index == idx)
+
+    def find_terminal(self, term):
+        assert isinstance(term, Terminal)
+        return self.find(lambda t: t.word_index == term.index and t.label() == term.label)
+
+    def find_heads(self, term):
+        assert isinstance(term, Terminal)
+        self.findall(lambda x: x.word_index == term.index and x.label() == term.label)
 
     def __eq__(self, other):
         if (self.word_index != other.word_index):
@@ -834,3 +837,49 @@ class DepTree(IdTree):
         children = [c.copy() for c in self]
         dt = DepTree(copy(self.label()), children, id=copy(self.id), type=copy(self.type), word_index=copy(self.word_index))
         return dt
+
+
+def get_dep_edges(string):
+    """
+
+    :param string: A string representation of the dependency tree produced by the stanford parser.
+    :return: Dictionary of
+    :rtype: dict
+    """
+
+    #                    Sometimes the parser seems to place a spurious quote after the digit?
+    nodes = re.findall('(\w+)\((.*?\d+)\'?\)', string)
+
+    # We are going to store a dictionary of words
+    # and their children, and then construct the
+    # tree from "ROOT" on down...
+    edges = []
+
+    # Go through each of the returned values...
+    for name, pair in nodes:
+        head, child = re.split(',\s', pair)
+
+        w_i_re = re.compile('(\S+)-(\d+)')
+
+        head  = Terminal(*re.search(w_i_re, head).groups())
+        child = Terminal(*re.search(w_i_re, child).groups())
+
+        edges.append(DepEdge(head, child, type=name))
+
+    return edges
+
+
+def fix_tree_parents(t, preceding_parent = None):
+    """
+    For some reason, the parents are getting broken during tree projection
+    reordering. So, this function will go through and reassign parents
+    of nodes to reflect the top-down view.
+
+    :param t: Input Tree
+    """
+
+    t._parent = preceding_parent
+
+    for child in t:
+        if isinstance(child, Tree):
+            fix_tree_parents(child, preceding_parent=t)
