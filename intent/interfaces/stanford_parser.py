@@ -93,12 +93,3 @@ class ParseTest(unittest.TestCase):
         self.r = self.sp.parse('John ran into the woods')
         self.sp.close()
 
-
-
-# 	def test_phrase(self):
-# 		
-# 		a = IdTree.fromstring('(ROOT (S (NP (NNP John)) (VP (VBD ran) (PP (IN into) (NP (DT the) (NNS woods))))))')
-# 		self.assertEqual(self.r.pt, a)
-
-    def test_deptree(self):
-        print(self.r.dt)

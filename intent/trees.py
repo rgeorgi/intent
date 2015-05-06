@@ -538,6 +538,8 @@ def project_ps(src_t, tgt_w, aln):
     PS_LOG.debug('#'*10+' Now reordering tree...' + '#'*10)
     reorder_tree(tgt_t)
 
+    # TODO: Re-examine why the children in the tree are "losing" their parents.
+    fix_tree_parents(tgt_t)
 
     # 4) Time to reattach unattached tgt words. ---
     PS_LOG.debug('#'*10+' Now reattaching unaligned words...' + '#'*10)
