@@ -2228,9 +2228,6 @@ def word_align(this, other):
 
 def morph_align(gloss_tier, morph_tier):
 
-    if len(gloss_tier) != len(morph_tier):
-        raise GlossLangAlignException("Gloss tier of length {} cannot automatically align to morph tier of length {}".format(len(gloss_tier), len(morph_tier)))
-
     # First, set the alignment...
     gloss_tier.alignment = morph_tier.id
 
