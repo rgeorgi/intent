@@ -848,7 +848,9 @@ def get_dep_edges(string):
     :return: Dictionary of
     :rtype: dict
     """
-    nodes = re.findall('(\w+)\((.*?\d+)\)', string)
+
+    #                    Sometimes the parser seems to place a spurious quote after the digit?
+    nodes = re.findall('(\w+)\((.*?\d+)\'?\)', string)
 
     # We are going to store a dictionary of words
     # and their children, and then construct the

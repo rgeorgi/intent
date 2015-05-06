@@ -361,6 +361,11 @@ class DepTreeCycleTest(unittest.TestCase):
 
         self.assertEqual(dt[0].label(), 'did')
 
+class DepTreeParseTests(unittest.TestCase):
+    def broken_parse_test(self):
+        dt_string = '''nsubj(get-2, I-1) nsubj(get-2', I-1) conj_and(get-2, get-2') prt(get-2, up-3) prep_at(get-2, eight-5) dep(is-11, that-8) det(problem-10, the-9) nsubj(is-11, problem-10) xsubj(cook-13, problem-10) prepc_after(get-2', is-11) aux(cook-13, to-12) xcomp(is-11, cook-13) xcomp(is-11, eat-15) conj_and(cook-13, eat-15) dobj(cook-13, rice.-16)
+                    '''
+        self.assertRaises(TreeError, DepTree.fromstring, dt_string)
 
 class SwapTests(unittest.TestCase):
     def setUp(self):
