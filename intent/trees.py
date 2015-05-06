@@ -18,6 +18,7 @@ class TreeProjectionError(Exception): pass
 class TreeMergeError(TreeProjectionError): pass
 
 PS_LOG = logging.getLogger('PS_PROJECT')
+DS_LOG = logging.getLogger('DS_PROJECT')
 
 
 
@@ -393,6 +394,12 @@ class Terminal(object):
 
 
 def build_tree(dict):
+    """
+    Since
+
+    :param dict:
+    :return:
+    """
     root = Terminal('ROOT', index=0)
     return DepTree(root.label, _build_tree(dict, root), word_index=root.index)
 
@@ -785,6 +792,8 @@ class DepTree(IdTree):
         :param id_base: ID string on which to base the IDs in this tree.
         :type id_base: str
         """
+        DS_LOG.debug('Building dependency tree from: {}'.format(tree_string))
+
 
         child_dict = get_nodes(tree_string)
         t = build_tree(child_dict)
