@@ -1,26 +1,35 @@
-'''
+"""
 Created on Feb 25, 2015
 
 @author: rgeorgi
-'''
+"""
 
 #===============================================================================
 # Logging
 #===============================================================================
 import logging
-from intent.igt.rgxigt import strip_enrichment, follow_alignment
-from intent.alignment.Alignment import AlignedCorpus, AlignedSent
-from intent.eval.AlignEval import AlignEval
 import glob
 import os
-from intent.utils.env import c
-from intent.interfaces.stanford_tagger import StanfordPOSTagger
-from intent.interfaces.mallet_maxent import MalletMaxent
-import pickle
-from intent.eval.pos_eval import poseval
-logging.basicConfig(handlers=[logging.StreamHandler()])
-XAML_LOG = logging.getLogger(__name__)
+
+logging.basicConfig()
+XAML_LOG = logging.getLogger()
 XAML_LOG.setLevel(logging.DEBUG)
+
+from intent.igt.consts import *
+from intent.igt.grams import write_gram
+from intent.igt.rgxigt import gen_tier_id, RGPhraseTier, RGPhrase, \
+    ProjectionTransGlossException, add_word_level_info
+from intent.alignment.Alignment import AlignedCorpus, AlignedSent
+from intent.eval.AlignEval import AlignEval
+from intent.utils.env import classifier, tagger_model
+from intent.interfaces.stanford_tagger import StanfordPOSTagger
+from intent.interfaces.mallet_maxent import MalletMaxent, train_txt
+from intent.utils.token import GoldTagPOSToken
+from xigt.consts import ALIGNMENT, SEGMENTATION, CONTENT
+from xigt.errors import XigtError
+from xigt.ref import ids
+
+
 
 #  -----------------------------------------------------------------------------
 
@@ -30,7 +39,6 @@ from intent.igt.rgxigt import RGCorpus, RGTier, rgp, RGIgt, RGItem, RGWordTier, 
     RGBilingualAlignmentTier, RGTokenTier, RGToken, ProjectionException
 import re
 from intent.utils.uniqify import uniqify
-import logging
 
 
 #===============================================================================
@@ -42,30 +50,35 @@ class XamlParseException(Exception): pass
 # POS Tag
 #===============================================================================
 
-def pos(pos_tier, inst):
-    sources = [xaml_ref(r) for r in pos_tier.xpath(".//*[local-name()='TagPart']/@Source")]
-    source_tiers = uniqify([inst.find(r).tier.id for r in sources if inst.find(r)])
+def pos(pos_tier, inst, seen_id_mapping):
+    sources = [seen_id_mapping.get(xaml_ref(r)) for r in pos_tier.xpath(".//*[local-name()='TagPart']/@Source")]
+    source_tiers = uniqify([inst.find(id=r).tier.id for r in sources if inst.find(id=r)])
 
     if len(source_tiers) > 1:
         raise XamlParseException('POS Tag Tier references more than one tier...')
 
-    source_tier = inst.find(source_tiers[0])
+    source_tier = inst.find(id=source_tiers[0])
+    segmented_src_tags = find_aligned_tier_tags(source_tier)
 
-    if source_tier.type == 'words':
-        pid = 'w-pos'
-    elif source_tier.type == 'translation-words':
-        pid = 'tw-pos'
-    elif source_tier.type == 'gloss-words':
-        pid = 'gw-pos'
+    if 'L' in segmented_src_tags:
+        pid = gen_tier_id(inst, POS_TIER_ID, tier_type=POS_TIER_TYPE, alignment=LANG_WORD_ID)
+    elif 'T' in segmented_src_tags:
+        pid = gen_tier_id(inst, POS_TIER_ID, tier_type=POS_TIER_TYPE, alignment=TRANS_WORD_ID)
+    elif 'G' in segmented_src_tags:
+        pid = gen_tier_id(inst, POS_TIER_ID, tier_type=POS_TIER_TYPE, alignment=GLOSS_WORD_ID)
 
-    pt = RGTokenTier(id=pid, igt=inst, alignment=source_tier.id, type='pos')
+    pt = RGTokenTier(id=pid, igt=inst, alignment=source_tier.id, type=POS_TIER_TYPE)
 
-    for tagpart in pos_tier.findall('.//{*}TagPart'):
-        src = xaml_ref(tagpart.attrib['Source'])
+    tagparts = pos_tier.findall('.//{*}TagPart')
+
+    for tagpart in tagparts:
+        src = seen_id_mapping.get(xaml_ref(tagpart.attrib['Source']))
         txt = tagpart.attrib['Text']
 
         pos_t = RGToken(id=pt.askItemId(), alignment=src, text=txt, tier=pos_tier)
         pt.add(pos_t)
+
+
     inst.add(pt)
 
 
@@ -74,16 +87,16 @@ def pos(pos_tier, inst):
 # Alignment tools
 #===============================================================================
 
-def get_refs(e):
-    return [xaml_ref(r) for r in e.xpath(".//*[local-name()='Reference']/text()")]
+def get_refs(e, seen_id_mapping):
+    return [seen_id_mapping.get(xaml_ref(r)) for r in e.xpath(".//*[local-name()='Reference']/text()")]
 
-def get_alignments(aln_tier, reverse=True):
+def get_alignments(aln_tier, seen_id_mapping, reverse=True):
     pairs = []
 
     for aln_part in aln_tier.findall('.//{*}AlignPart'):
 
-        src_id = xaml_ref(aln_part.attrib['Source'])
-        tgt_ids = get_refs(aln_part)
+        src_id = seen_id_mapping.get(xaml_ref(aln_part.attrib['Source']))
+        tgt_ids = get_refs(aln_part, seen_id_mapping)
         for tgt_id in tgt_ids:
             pairs.append((src_id, tgt_id))
 
@@ -93,27 +106,48 @@ def get_alignments(aln_tier, reverse=True):
         return pairs
 
 
+def find_aligned_tier_tags(t):
+    if SEGMENTATION in t.attributes:
+        attr = SEGMENTATION
+    else:
+        attr = CONTENT
+    seg_tier = t.igt.find(id=t.attributes[attr])
+    aligned_bits = uniqify([ids(i.attributes[attr])[0] for i in t])
+
+    assert len(aligned_bits) == 1
+
+    item = t.igt.find(id=aligned_bits[0])
+
+    if CONTENT in item.attributes:
+        item = t.igt.find(id=item.attributes[CONTENT])
 
 
-def align(aln_tier, inst):
+    return item.attributes['tag'].split('+')
+
+
+def align(aln_tier, inst, seen_id_mapping):
     # Figure out what the source alignment is:
     tgt_id = xaml_ref(aln_tier.attrib['AlignWith'])
+    tgt_id = seen_id_mapping[tgt_id]
 
-    tgt_tier = inst.find(tgt_id)
+    tgt_tier = inst.find(id=tgt_id)
+    segmented_tgt_tags = find_aligned_tier_tags(tgt_tier)
 
     # Find all the references contained by tokens inside here....
     refs = aln_tier.xpath(".//*[local-name()='AlignPart']/@Source")
 
     # Rewrite the reference...
-    refs = [xaml_ref(r) for r in refs]
+    refs = [seen_id_mapping.get(xaml_ref(r)) for r in refs]
 
-    # Now find them
-    refs = uniqify([inst.find(r).tier.id for r in refs if inst.find(r)])
+    # Now find the tier
+    refs = uniqify([inst.find(id=r).tier.id for r in refs if inst.find(id=r)])
 
     if len(refs) > 1:
         raise XamlParseException('Alignment tier aligns with multiple other tiers.')
 
-    src_tier = inst.find(refs[0])
+    src_tier = inst.find(id=refs[0])
+    segmented_src_tags = find_aligned_tier_tags(src_tier)
+
 
 
 
@@ -122,14 +156,14 @@ def align(aln_tier, inst):
     bilingual = False
     reverse = False
 
-    if src_tier.type == 'gloss-words' and tgt_tier.type == 'translation-words':
+    if 'G' in segmented_src_tags and 'T' in segmented_tgt_tags:
         bilingual = True
         reverse = True
-    elif src_tier.type == 'translation-words' and tgt_tier.type == 'gloss-words':
+    elif 'T' in segmented_src_tags and 'G' in segmented_tgt_tags:
         bilingual = True
-    elif src_tier.type == 'gloss-words' and tgt_tier.type == 'words':
+    elif 'G' in segmented_src_tags and 'L' in segmented_tgt_tags:
         pass
-    elif src_tier.type == 'words' and tgt_tier.type == 'gloss-words':
+    elif 'L' in segmented_src_tags and 'G' in segmented_tgt_tags:
         reverse = True
 
     else:
@@ -137,7 +171,7 @@ def align(aln_tier, inst):
         XAML_LOG.warning("Unknown alignment type: %s - %s" % (src_tier.type, tgt_tier.type))
         #raise XamlParseException("Unknown alignment type: %s - %s" % (src_tier.type, tgt_tier.type))
 
-    aln_pairs = get_alignments(aln_tier, reverse)
+    aln_pairs = get_alignments(aln_tier, seen_id_mapping, reverse)
 
     #===========================================================================
     # If reversed, swap things around...
@@ -152,7 +186,9 @@ def align(aln_tier, inst):
     #===========================================================================
 
     if bilingual:
-        at = RGBilingualAlignmentTier(id=inst.askTierId('bilingual-alignments','a'), source=src_tier.id, target=tgt_tier.id)
+        at = RGBilingualAlignmentTier(id=gen_tier_id(inst, L_T_ALN_ID, tier_type=ALN_TIER_TYPE),
+                                      source=src_tier.id,
+                                      target=tgt_tier.id)
         for src, tgt in aln_pairs:
             at.add_pair(src, tgt)
 
@@ -165,59 +201,11 @@ def align(aln_tier, inst):
 
         for src, tgt in aln_pairs:
 
-            src_w = src_tier.find(src)
+            src_w = src_tier.find(id=src)
             if src_w:
                 src_w.alignment = tgt
             else:
                 XAML_LOG.warn('Src token %s not found.' % src)
-
-
-def replace_references(inst, old_id, new_id):
-    for item in inst.findall(attributes={'alignment':old_id}):
-        item.alignment = new_id
-    for item in inst.findall(attributes={'source':old_id}):
-        item.attributes['source'] = new_id
-    for item in inst.findall(attributes={'target':old_id}):
-        item.attributes['target'] = new_id
-
-def conventionify_words(inst, type, letter):
-    t = inst.find(type=type)
-    old_t_id = t.id
-    t.id = letter
-
-    replace_references(inst, old_t_id, t.id)
-
-    for w in t:
-        old_id = w.id
-        w.id = letter+str(w.index)
-        replace_references(inst, old_id, w.id)
-
-
-
-def conventionify(inst):
-    '''
-    Given a xaml-converted instance, replace the xaml-generated IDs with IDs
-    fitting the conventions.
-    '''
-
-    # Starting off, doing the raw tiers.
-    for i, line in enumerate(inst.find('r')):
-        old_id = line.id
-        new_id = line.tier.id+'%s'%line.index
-        line.id = new_id
-
-        for item in inst.findall(segments=old_id):
-            item.segmentation = item.segmentation.replace(old_id, new_id)
-        for item in inst.findall(contents=old_id):
-            item.content = item.content.replace(old_id, new_id)
-
-
-    # Next, let's do the words tiers.
-    conventionify_words(inst, 'words', 'w')
-    conventionify_words(inst, 'translation-words', 'tw')
-    conventionify_words(inst, 'gloss-words', 'gw')
-
-    inst.refresh_index()
 
 
 
@@ -241,13 +229,15 @@ def load(xaml_path):
     # The default namespace doesn't get a prefix
     # for some reason, so put that into the dictionary.
     # Now, let's start by grabbin all the IGT instances
-    for igt in root.findall('.//{*}Igt'):
+    for i, igt in enumerate(root.findall('.//{*}Igt')):
 
         # Create the new IGT Instance...
-        inst = RGIgt(id=xaml_id(igt))
+        inst = RGIgt(id='i{}'.format(i+1))
+
+        seen_id_mapping = {}
 
         # Create the raw tier...
-        tt = RGTier(id='r', type='odin', attributes={'state':'raw'}, igt=inst)
+        tt = RGTier(id=RAW_ID, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE}, igt=inst)
 
         # Next, let's gather the text tiers that are not the full raw text tier.
         lines = igt.xpath(".//*[local-name()='TextTier' and not(contains(@TierType,'odin-txt'))]")
@@ -258,7 +248,11 @@ def load(xaml_path):
 
                 tags = re.search('([^\-]+)\-?', textitem.attrib['TierType']).group(1)
 
-                item = RGItem(id=xaml_id(textitem), attributes={'tag':tags})
+                # Enter this id in the seen_id_mapping and give it a better one.
+                item_id = tt.askItemId()
+                seen_id_mapping[xaml_id(textitem)] = item_id
+
+                item = RGItem(id=item_id, attributes={'tag':tags})
                 item.text = textitem.attrib['Text']
                 tt.add(item)
 
@@ -280,73 +274,206 @@ def load(xaml_path):
                 raise XamlParseException('Multiple sources for segmentation line.')
 
             # Otherwise, find that tier.
-            segmented_tier = inst.find(id=xaml_ref(sources[0]))
+
+            ref_id = seen_id_mapping.get(xaml_ref(sources[0]))
+            segmented_raw_item = inst.find(id=ref_id)
 
             # Now, decide what type of tier we are creating based on the tag of the referenced tier.
-            seg_type = None
+            tags = segmented_raw_item.attributes['tag']
 
-            tags = segmented_tier.attributes['tag']
+            tier_ref = segmented_raw_item.tier.id
+            item_ref = segmented_raw_item.id
 
-            if 'L' in tags:
-                seg_type = 'words'
-            elif 'G' in tags:
-                seg_type = 'gloss-words'
-            elif 'T' in tags:
-                seg_type = 'translation-words'
+            word_type = None
+
+            # Set up the attributes by which this tier will
+            # refer to the others.
+            if 'L' in tags.split('+'):
+                seg_attr = SEGMENTATION
+                seg_type = LANG_WORD_TYPE
+                seg_id = LANG_WORD_ID
+
+                pt = RGPhraseTier(id=gen_tier_id(inst, LANG_PHRASE_ID, LANG_PHRASE_TYPE), type=LANG_PHRASE_TYPE, content=segmented_raw_item.tier.id)
+                pt.add(RGPhrase(id=pt.askItemId(), content=segmented_raw_item.id))
+                inst.append(pt)
+
+                tier_ref = pt.id
+                item_ref = pt[0].id
+
+
+            elif 'G' in tags.split('+'):
+                seg_attr = CONTENT
+                seg_type = GLOSS_WORD_TYPE
+                seg_id = GLOSS_WORD_ID
+
+
+
+                word_type = 'gloss'
+
+            elif 'T' in tags.split('+'):
+                seg_attr = SEGMENTATION
+                seg_type = TRANS_WORD_TYPE
+                seg_id = TRANS_WORD_ID
+
+                pt = RGPhraseTier(id=gen_tier_id(inst, TRANS_PHRASE_ID, TRANS_PHRASE_TYPE), type=TRANS_PHRASE_TYPE, content=segmented_raw_item.tier.id)
+                pt.add(RGPhrase(id=pt.askItemId(), content=segmented_raw_item.id))
+                inst.append(pt)
+
+                tier_ref = pt.id
+                item_ref = pt[0].id
+
             else:
                 raise XamlParseException('Unknown tag type in segmentation tier.')
 
+
+
+
+
             # Create the new words tier.
-            wt = RGWordTier(id=xaml_id(segtier), type=seg_type, igt=inst, segmentation='r')
+            wt_id = gen_tier_id(inst, seg_id, seg_type)
+            seen_id_mapping[xaml_id(segtier)] = wt_id
+
+            wt = RGWordTier(id=wt_id, type=seg_type, igt=inst, attributes={seg_attr:tier_ref})
+
+            if word_type == 'gloss':
+                add_word_level_info(wt, INTENT_GLOSS_WORD)
 
             # Now, add the segmentation parts.
             for segpart in segtier.findall('.//{*}SegPart'):
 
-                ref_expr = '%s[%s:%s]' % (segmented_tier.id, segpart.attrib['FromChar'], segpart.attrib['ToChar'])
+                ref_expr = '%s[%s:%s]' % (item_ref, segpart.attrib['FromChar'], segpart.attrib['ToChar'])
 
-                w = RGWord(id=xaml_id(segpart),
-                        segmentation=ref_expr)
+                # Get the item ID and cache it...
+                w_id = wt.askItemId()
+                seen_id_mapping[xaml_id(segpart)] = w_id
+
+                w = RGWord(id=w_id,
+                           attributes={seg_attr:ref_expr})
 
                 wt.add(w)
 
             inst.append(wt)
 
 
-
         #=======================================================================
         # Alignment Tiers
         #=======================================================================
         aln_tiers = igt.findall('.//{*}AlignmentTier')
+
         for aln_tier in aln_tiers:
-            align(aln_tier, inst)
+            align(aln_tier, inst, seen_id_mapping)
 
 
         #=======================================================================
         # Finally, for POS tiers.
         #=======================================================================
         pos_tiers = igt.findall('.//{*}PosTagTier')
-        for pos_tier in pos_tiers:
-            pos(pos_tier, inst)
 
+        for pos_tier in pos_tiers:
+            try:
+                pos(pos_tier, inst, seen_id_mapping)
+            except XigtError as xe:
+                XAML_LOG.error(xe)
+
+        #inst.sort()
         xc.append(inst)
     return xc
+
+def get_pos_word(tier, i):
+    gp = tier[i]
+    if ALIGNMENT in gp.attributes:
+        gw = tier.igt.find(id=gp.attributes[ALIGNMENT])
+        if gw:
+            return gw.value()
+        else:
+            return None
+
+def process_pos_tags(corp, path):
+    """
+    Take the newly created corpus and extract the part-of-speech tags from the gloss
+    in order to train a classifier.
+
+    :param corp:
+    :param path:
+    """
+    f = open(path, 'w', encoding='utf-8')
+
+    for inst in corp:
+        gloss_pos = inst.find(id='gw-pos')
+        gloss_tier = inst.find(id='')
+        if gloss_pos:
+
+
+            for i, gp in enumerate(gloss_pos):
+                tag = gp.value()
+                word = get_pos_word(gloss_pos, i)
+                if word:
+
+                    prev_gram = None if i == 0 else get_pos_word(gloss_pos, i-1)
+                    next_gram = None if i >= len(gloss_pos)-1 else get_pos_word(gloss_pos, i+1)
+
+
+                    write_gram(GoldTagPOSToken(word, goldlabel=tag), output=f, type='classifier',
+                               next_gram=next_gram, prev_gram=prev_gram)
+    f.close()
+
+
 
 
 if __name__ == '__main__':
 
-    tagger = StanfordPOSTagger(c['stanford_tagger_trans'])
-    classifier = MalletMaxent(c['classifier_model'])
-    posdict = pickle.load(open(c['pos_dict'], 'rb'))
+    tagger = StanfordPOSTagger(tagger_model)
+    m = MalletMaxent(classifier)
+
+    lang_docs = []
+
+    # -- 1) Set the output directory for the xigt stuff.
+    dir = '/Users/rgeorgi/Documents/treebanks/annotated_xigt/'
 
     for path in glob.glob('/Users/rgeorgi/Documents/treebanks/xigt_odin/annotated/*-filtered.xml'):
 
-        lang = os.path.basename(path)[0:4]
+        lang = os.path.basename(path)[0:3]
 
         xc = load(path)
 
 
+
+
+        # -- 2) Dump out the XIGT docs.
+        # xigtxml.dump(open(os.path.join(dir,'{}.xml'.format(lang)), 'w', encoding='utf-8'), xc)
+
+        # -- 3) Write out the features for each language
+        process_pos_tags(xc, os.path.join(dir,'{}-feats.txt'.format(lang)))
+
+        lang_docs.append((xc, lang))
+
+
+    # Now that we have them all written out, let's go back
+    # over and create the classifiers.
+
+    for xc, lang in lang_docs:
+
+        missing_lang_file = os.path.join(dir, 'no{}.txt'.format(lang))
+        os.unlink(missing_lang_file)
+        os.system("""find {1} -iname "*feats.txt" -not -iname "*{0}*" -exec cat {{}} >> {2} \;  """.format(lang, dir, missing_lang_file))
+
+        # -- 4) Finally, train a classifier on all the data that isn't for this language, then
+        #       test it out on this language.
+
+        noclass_model_path = os.path.join(dir, 'no{}.classifier'.format(lang))
+        noclass_feat_path  = os.path.join(dir, 'no{}.txt'.format(lang))
+
+        train_txt(noclass_feat_path, noclass_model_path)
+
+        # Reinitialize the classifier and try it out on the
+
+
+        sys.exit()
+
         new_xc = xc.copy()
         new_xc.giza_align_t_g()
+
+
         new_xc.giza_align_l_t()
 
         gold_ac = AlignedCorpus()
@@ -368,17 +495,21 @@ if __name__ == '__main__':
             # Strip any enrichment (pos tags, bilingual alignment)
             # from the instance we are going to try the tools on.
 
+            old_inst.sort()
+            rgp(old_inst)
+            #print(old_inst.get_trans_gloss_alignment())
+            #sys.exit()
 
             # TODO: This assertion error is sloppy, find another way.
             try:
                 ba = old_inst.get_trans_gloss_alignment()
-            except AssertionError:
+            except ProjectionTransGlossException:
                 continue
             if ba:
                 new_inst.heur_align()
 
-                heur_sent = AlignedSent(new_inst.trans.tokens(), new_inst.gloss.tokens(), new_inst.get_trans_gloss_alignment('intent-heuristic'))
-                giza_sent = AlignedSent(new_inst.trans.tokens(), new_inst.gloss.tokens(), new_inst.get_trans_gloss_alignment('intent-giza'))
+                heur_sent = AlignedSent(new_inst.trans.tokens(), new_inst.gloss.tokens(), new_inst.get_trans_gloss_alignment(INTENT_ALN_HEUR))
+                giza_sent = AlignedSent(new_inst.trans.tokens(), new_inst.gloss.tokens(), new_inst.get_trans_gloss_alignment(INTENT_ALN_GIZA))
                 gold_sent = AlignedSent(new_inst.trans.tokens(), new_inst.gloss.tokens(), old_inst.get_trans_gloss_alignment())
 
                 heur_ac.append(heur_sent)
@@ -400,20 +531,20 @@ if __name__ == '__main__':
                 # S1a
                 #===============================================================
                 new_inst.tag_trans_pos(tagger)
-                new_inst.project_trans_to_gloss(created_by = 'intent-heuristic', pos_creator = 'intent-tagger')
+                new_inst.project_trans_to_gloss(tag_method = INTENT_POS_TAGGER)
 
-                new_inst.project_trans_to_gloss(created_by = 'intent-giza', pos_creator = 'intent-tagger')
+                new_inst.project_trans_to_gloss(tag_method = INTENT_POS_TAGGER)
 
-                new_inst.project_gloss_to_lang(created_by = 'intent-s1a', pos_creator='intent-heuristic', unk_handling='noun')
-                new_inst.project_gloss_to_lang(created_by = 'intent-s1c', pos_creator='intent-heuristic', unk_handling='classify', classifier=classifier, posdict=posdict)
+                #new_inst.project_gloss_to_lang(created_by = 'intent-s1a', pos_creator='intent-heuristic', unk_handling='noun')
+                #new_inst.project_gloss_to_lang(created_by = 'intent-s1c', pos_creator='intent-heuristic', unk_handling='classify', classifier=classifier, posdict=posdict)
 
-                new_inst.project_gloss_to_lang(created_by = 'intent-s2a', pos_creator='intent-giza', unk_handling='noun')
-                new_inst.project_gloss_to_lang(created_by = 'intent-s2c', pos_creator='intent-giza', unk_handling='classify', classifier=classifier, posdict=posdict)
+                #new_inst.project_gloss_to_lang(created_by = 'intent-s2a', pos_creator='intent-giza', unk_handling='noun')
+                #new_inst.project_gloss_to_lang(created_by = 'intent-s2c', pos_creator='intent-giza', unk_handling='classify', classifier=classifier, posdict=posdict)
 
-                new_inst.project_trans_to_lang(created_by = 'intent-b1', pos_creator='intent-tagger', aln_creator='intent-giza')
+                #new_inst.project_trans_to_lang(created_by = 'intent-b1', pos_creator='intent-tagger', aln_creator='intent-giza')
 
-                new_inst.classify_gloss_pos(classifier, created_by='intent-classify')
-                new_inst.project_gloss_to_lang(created_by = 'intent-s3', pos_creator='intent-classify')
+                new_inst.classify_gloss_pos(m, tag_method='intent-classify')
+                new_inst.project_gloss_to_lang(tag_method='intent-classify')
 
 
                 try:
@@ -427,13 +558,13 @@ if __name__ == '__main__':
 
                 b1_sents.append(new_inst.get_lang_sequence('intent-b1'))
 
-                s1a_sents.append(new_inst.get_lang_sequence('intent-s1a'))
-                s1c_sents.append(new_inst.get_lang_sequence('intent-s1c'))
+                #s1a_sents.append(new_inst.get_lang_sequence('intent-s1a'))
+                #s1c_sents.append(new_inst.get_lang_sequence('intent-s1c'))
 
-                s2a_sents.append(new_inst.get_lang_sequence('intent-s2a'))
-                s2c_sents.append(new_inst.get_lang_sequence('intent-s2c'))
+                #s2a_sents.append(new_inst.get_lang_sequence('intent-s2a'))
+                #s2c_sents.append(new_inst.get_lang_sequence('intent-s2c'))
 
-                s3_sents.append(new_inst.get_lang_sequence('intent-s3'))
+                #s3_sents.append(new_inst.get_lang_sequence('intent-s3'))
 
 
 
@@ -447,18 +578,18 @@ if __name__ == '__main__':
         print(heur_ae.all())
         print(giza_ae.all())
 
-        b1_acc = poseval(b1_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
-        s1a_acc = poseval(s1a_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
-        s1c_acc = poseval(s1c_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
-        s2a_acc = poseval(s2a_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
-        s2c_acc = poseval(s2c_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
-        s3_acc = poseval(s3_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
+        #b1_acc = poseval(b1_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
+        #s1a_acc = poseval(s1a_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
+        #s1c_acc = poseval(s1c_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
+        #s2a_acc = poseval(s2a_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
+        #s2c_acc = poseval(s2c_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
+        #s3_acc = poseval(s3_sents, gold_pos_sents, out_f=open(os.devnull, 'w'))
 
 
-        accs = [b1_acc, s1a_acc, s1c_acc, s2a_acc, s2c_acc, s3_acc]
-        accs = [i.overall_breakdown() for i in accs]
+        #accs = [b1_acc, s1a_acc, s1c_acc, s2a_acc, s2c_acc, s3_acc]
+        #accs = [i.overall_breakdown() for i in accs]
 
-        print(''.join(accs))
+        #print(''.join(accs))
 
 
 

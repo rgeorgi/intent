@@ -10,7 +10,7 @@ import logging
 import re
 import copy
 import string
-
+import sys
 
 from xigt.model import XigtCorpus, Igt, Item, Tier
 from xigt.metadata import Metadata, Meta
@@ -23,6 +23,8 @@ from xigt import ref
 
 
 # Set up logging ---------------------------------------------------------------
+from xigt.ref import dereference, ids
+
 PARSELOG = logging.getLogger(__name__)
 
 # XIGT imports -----------------------------------------------------------------
@@ -517,7 +519,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
         if resume:
             # Next, load up the saved gloss-trans giza alignment model
-            ga = GizaAligner.load(c['g_t_prefix'], c['g_path'], c['t_path'])
+            ga = GizaAligner.load(c.getpath('g_t_prefix'), c.getpath('g_path'), c.getpath('t_path'))
 
             # ...and use it to align the gloss line to the translation line.
             g_t_asents = ga.force_align(g_sents, t_sents)
@@ -1172,12 +1174,12 @@ class RGIgt(Igt, RecursiveFindMixin):
         # Otherwise, return None...
 
 
-    def get_lang_sequence(self, created_by = None, unk_handling=None):
+    def get_lang_sequence(self, tag_method = None, unk_handling=None):
         """
         Retrieve the language line, with as many POS tags as are available.
         """
         # TODO: This is another function that needs reworking
-        w_tags = self.get_pos_tags(self.lang.id, created_by)
+        w_tags = self.get_pos_tags(self.lang.id, tag_method)
 
         if not w_tags:
             project_creator_except("Language-line POS tags were not found", "To obtain the language line sequence, please project or annotate the language line.", created_by)
@@ -2044,10 +2046,15 @@ def retrieve_phrase(inst, tag, id, type):
     :type type: str
     """
 
-    n = inst.normal_tier()
+    # TODO FIXME: VERY kludgy and unstable...
+    f = lambda x: tag in aligned_tags(x)
+    pt = inst.find(type=type, others=[f])
 
-    pt = inst.find(type=type, content = n.id)
+    #n = inst.normal_tier()
+
+    #pt = inst.find(type=type, content = n.id)
     if not pt:
+        n = inst.normal_tier()
         # Get the normalized line line
         l = retrieve_normal_line(inst, tag)
         pt = RGPhraseTier(id=id, type=type, content=n.id)
@@ -2136,6 +2143,55 @@ def retrieve_lang_words(inst):
     return lwt
 
 
+def odin_ancestor(obj):
+
+    # If we are at an ODIN item, return.
+    if isinstance(obj, Item) and obj.tier.type == ODIN_TYPE:
+        return obj
+
+    # An Igt instance can't have a tier ancestor.
+    elif isinstance(obj, Igt):
+        return None
+
+    else:
+        if SEGMENTATION in obj.attributes:
+            ref_attr = SEGMENTATION
+        elif CONTENT in obj.attributes:
+            ref_attr = CONTENT
+        else:
+            return None
+
+        if isinstance(obj, Tier):
+            id = [ids(i.attributes[ref_attr])[0] for i in obj][0]
+        elif isinstance(obj, Item):
+            id = ids(obj.attributes[ref_attr])[0]
+        else:
+            raise Exception
+
+        item = obj.igt.find(id=id)
+        if item is None:
+            return None
+        else:
+            return odin_ancestor(item)
+
+
+
+def aligned_tags(obj):
+    """
+    Given an object, return the tags that it is ultimately aligned with.
+
+    :param obj:
+    """
+
+    a = odin_ancestor(obj)
+    if a:
+        return a.attributes['tag'].split('+')
+    else:
+        return []
+
+
+
+
 def retrieve_gloss_words(inst):
     """
     Given an IGT instance, create the gloss "words" and "glosses" tiers.
@@ -2149,14 +2205,18 @@ def retrieve_gloss_words(inst):
     """
 
     # 1. Look for an existing words tier that aligns with the normalized tier...
-    n = inst.normal_tier()
-    wt = inst.find(type=GLOSS_WORD_TYPE, content=n.id,
+    wt = inst.find(type=GLOSS_WORD_TYPE,
                    # Add the "others" to find only the "glosses" tiers that
                    # are at the word level...
-                   others=[lambda x: is_word_level_gloss(x)])
+
+                   # TODO FIXME: Find more elegant solution
+                   others=[lambda x: is_word_level_gloss(x),
+                           lambda x: 'G' in aligned_tags(x) ])
+
 
     # 2. If it exists, return it. Otherwise, look for the glosses tier.
     if not wt:
+        n = inst.normal_tier()
         wt = create_words_tier(retrieve_normal_line(inst, ODIN_GLOSS_TAG), GLOSS_WORD_ID,
                                GLOSS_WORD_TYPE, aln_attribute=CONTENT)
 
