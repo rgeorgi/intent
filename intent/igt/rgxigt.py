@@ -339,6 +339,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
         return new_c
 
+
     @classmethod
     def from_txt(cls, text, require_trans = True, require_gloss = True, require_lang = True, require_1_to_1 = True, limit = None):
         """
@@ -435,8 +436,16 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         # basic-level enrichment...
         if basic_processing:
             for inst in xc:
-                inst.basic_processing()
-                inst.add_gloss_lang_alignments()
+                try:
+                    inst.basic_processing()
+                except XigtFormatException as xfe:
+                    PARSELOG.warn("Basic processing failed for instance {}".format(inst.id))
+
+                else:
+                    try:
+                        inst.add_gloss_lang_alignments()
+                    except GlossLangAlignException as glae:
+                        PARSELOG.warn(glae)
 
         return xc
 
@@ -1178,11 +1187,14 @@ class RGIgt(Igt, RecursiveFindMixin):
         """
         Retrieve the language line, with as many POS tags as are available.
         """
+
         # TODO: This is another function that needs reworking
         w_tags = self.get_pos_tags(self.lang.id, tag_method)
 
         if not w_tags:
-            project_creator_except("Language-line POS tags were not found", "To obtain the language line sequence, please project or annotate the language line.", created_by)
+            project_creator_except("Language-line POS tags were not found",
+                                   "To obtain the language line sequence, please project or annotate the language line.",
+                                   tag_method)
 
         seq = []
 
@@ -1190,11 +1202,14 @@ class RGIgt(Igt, RecursiveFindMixin):
             w_tag = w_tags.find(attributes={ALIGNMENT:w.id})
             if not w_tag:
                 if unk_handling == None:
-                    w_tag = 'UNK'
+                    tag_str = 'UNK'
                 elif unk_handling == 'noun':
-                    w_tag = 'NOUN'
+                    tag_str = 'NOUN'
                 else:
                     raise ProjectionException('Unknown unk_handling attribute')
+
+            else:
+                tag_str = w_tag.value()
 
             w_content = w.value().lower()
             w_content = surrounding_quotes_and_parens(remove_hyphens(w_content))
@@ -1202,7 +1217,7 @@ class RGIgt(Igt, RecursiveFindMixin):
             w_content = re.sub(punc_re, '', w_content)
 
 
-            seq.append(POSToken(w_content, label=w_tag))
+            seq.append(POSToken(w_content, label=tag_str))
         return seq
 
     # • POS Tag Production -----------------------------------------------------
@@ -2543,7 +2558,7 @@ def strip_enrichment(inst):
         at.delete()
 
 def strip_pos(inst):
-    for pt in inst.findall(type='pos'):
+    for pt in inst.findall(type=POS_TIER_TYPE):
         pt.delete()
 
 

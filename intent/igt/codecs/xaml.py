@@ -10,6 +10,8 @@ Created on Feb 25, 2015
 import logging
 import glob
 import os
+from eval.pos_eval import poseval
+
 
 logging.basicConfig()
 XAML_LOG = logging.getLogger()
@@ -17,8 +19,7 @@ XAML_LOG.setLevel(logging.DEBUG)
 
 from intent.igt.consts import *
 from intent.igt.grams import write_gram
-from intent.igt.rgxigt import gen_tier_id, RGPhraseTier, RGPhrase, \
-    ProjectionTransGlossException, add_word_level_info
+
 from intent.alignment.Alignment import AlignedCorpus, AlignedSent
 from intent.eval.AlignEval import AlignEval
 from intent.utils.env import classifier, tagger_model
@@ -36,7 +37,8 @@ from xigt.ref import ids
 import lxml.etree
 import sys
 from intent.igt.rgxigt import RGCorpus, RGTier, rgp, RGIgt, RGItem, RGWordTier, RGWord,\
-    RGBilingualAlignmentTier, RGTokenTier, RGToken, ProjectionException
+    RGBilingualAlignmentTier, RGTokenTier, RGToken, ProjectionException, gen_tier_id, RGPhraseTier, RGPhrase, \
+    add_word_level_info, ProjectionTransGlossException, GlossLangAlignException, strip_pos
 import re
 from intent.utils.uniqify import uniqify
 
@@ -218,26 +220,24 @@ xaml_ref_re = re.compile('_([\S]+?)}?$')
 def xaml_ref(s):
     return 'xaml'+re.search(xaml_ref_re, s).group(1)
 
-def load(xaml_path):
-    # Load up the document and get the root
-    # element
-    xc = RGCorpus()
 
+def load(xaml_path) -> RGCorpus:
+    """
+
+    :rtype : RGCorpus
+    """
+    xc = RGCorpus()
     xaml = lxml.etree.parse(xaml_path)
     root = xaml.getroot()
-
-    # The default namespace doesn't get a prefix
-    # for some reason, so put that into the dictionary.
-    # Now, let's start by grabbin all the IGT instances
     for i, igt in enumerate(root.findall('.//{*}Igt')):
 
         # Create the new IGT Instance...
-        inst = RGIgt(id='i{}'.format(i+1))
+        inst = RGIgt(id='i{}'.format(i + 1))
 
         seen_id_mapping = {}
 
         # Create the raw tier...
-        tt = RGTier(id=RAW_ID, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE}, igt=inst)
+        tt = RGTier(id=RAW_ID, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE: RAW_STATE}, igt=inst)
 
         # Next, let's gather the text tiers that are not the full raw text tier.
         lines = igt.xpath(".//*[local-name()='TextTier' and not(contains(@TierType,'odin-txt'))]")
@@ -245,21 +245,20 @@ def load(xaml_path):
 
             # Occasionally some broken lines have no text.
             if 'Text' in textitem.attrib:
-
                 tags = re.search('([^\-]+)\-?', textitem.attrib['TierType']).group(1)
 
                 # Enter this id in the seen_id_mapping and give it a better one.
                 item_id = tt.askItemId()
                 seen_id_mapping[xaml_id(textitem)] = item_id
 
-                item = RGItem(id=item_id, attributes={'tag':tags})
+                item = RGItem(id=item_id, attributes={'tag': tags})
                 item.text = textitem.attrib['Text']
                 tt.add(item)
 
         # Add the text tier to the instance.
         inst.append(tt)
 
-        #=======================================================================
+        # =======================================================================
         # Segmentation Tiers. ---
         #=======================================================================
         # Now, we start on the segmentation tiers.
@@ -293,7 +292,8 @@ def load(xaml_path):
                 seg_type = LANG_WORD_TYPE
                 seg_id = LANG_WORD_ID
 
-                pt = RGPhraseTier(id=gen_tier_id(inst, LANG_PHRASE_ID, LANG_PHRASE_TYPE), type=LANG_PHRASE_TYPE, content=segmented_raw_item.tier.id)
+                pt = RGPhraseTier(id=gen_tier_id(inst, LANG_PHRASE_ID, LANG_PHRASE_TYPE), type=LANG_PHRASE_TYPE,
+                                  content=segmented_raw_item.tier.id)
                 pt.add(RGPhrase(id=pt.askItemId(), content=segmented_raw_item.id))
                 inst.append(pt)
 
@@ -306,8 +306,6 @@ def load(xaml_path):
                 seg_type = GLOSS_WORD_TYPE
                 seg_id = GLOSS_WORD_ID
 
-
-
                 word_type = 'gloss'
 
             elif 'T' in tags.split('+'):
@@ -315,7 +313,8 @@ def load(xaml_path):
                 seg_type = TRANS_WORD_TYPE
                 seg_id = TRANS_WORD_ID
 
-                pt = RGPhraseTier(id=gen_tier_id(inst, TRANS_PHRASE_ID, TRANS_PHRASE_TYPE), type=TRANS_PHRASE_TYPE, content=segmented_raw_item.tier.id)
+                pt = RGPhraseTier(id=gen_tier_id(inst, TRANS_PHRASE_ID, TRANS_PHRASE_TYPE), type=TRANS_PHRASE_TYPE,
+                                  content=segmented_raw_item.tier.id)
                 pt.add(RGPhrase(id=pt.askItemId(), content=segmented_raw_item.id))
                 inst.append(pt)
 
@@ -333,14 +332,13 @@ def load(xaml_path):
             wt_id = gen_tier_id(inst, seg_id, seg_type)
             seen_id_mapping[xaml_id(segtier)] = wt_id
 
-            wt = RGWordTier(id=wt_id, type=seg_type, igt=inst, attributes={seg_attr:tier_ref})
+            wt = RGWordTier(id=wt_id, type=seg_type, igt=inst, attributes={seg_attr: tier_ref})
 
             if word_type == 'gloss':
                 add_word_level_info(wt, INTENT_GLOSS_WORD)
 
             # Now, add the segmentation parts.
             for segpart in segtier.findall('.//{*}SegPart'):
-
                 ref_expr = '%s[%s:%s]' % (item_ref, segpart.attrib['FromChar'], segpart.attrib['ToChar'])
 
                 # Get the item ID and cache it...
@@ -348,7 +346,7 @@ def load(xaml_path):
                 seen_id_mapping[xaml_id(segpart)] = w_id
 
                 w = RGWord(id=w_id,
-                           attributes={seg_attr:ref_expr})
+                           attributes={seg_attr: ref_expr})
 
                 wt.add(w)
 
@@ -377,6 +375,7 @@ def load(xaml_path):
 
         #inst.sort()
         xc.append(inst)
+
     return xc
 
 def get_pos_word(tier, i):
@@ -436,9 +435,6 @@ if __name__ == '__main__':
 
         xc = load(path)
 
-
-
-
         # -- 2) Dump out the XIGT docs.
         # xigtxml.dump(open(os.path.join(dir,'{}.xml'.format(lang)), 'w', encoding='utf-8'), xc)
 
@@ -451,7 +447,24 @@ if __name__ == '__main__':
     # Now that we have them all written out, let's go back
     # over and create the classifiers.
 
-    for xc, lang in lang_docs:
+    gold_sents = []
+    ablation_sents = []
+    full_sents = []
+
+    all_feats = os.path.join(dir, 'all.txt')
+    try:
+        os.unlink(all_feats)
+    except Exception: pass
+
+    all_model_path = os.path.join(dir, 'all_feats.classifier')
+
+    os.system("""find {1} -iname "*feats.txt" -exec cat {{}} >> {2} \;  """.format(lang, dir, all_feats))
+    all_model = train_txt(all_feats, all_model_path)
+
+    poseval_f = open(os.path.join(dir, 'pos_results.txt'), 'w', encoding='utf-8')
+
+    for (xc, lang) in lang_docs:
+        assert isinstance(xc, RGCorpus)
 
         missing_lang_file = os.path.join(dir, 'no{}.txt'.format(lang))
         os.unlink(missing_lang_file)
@@ -463,12 +476,73 @@ if __name__ == '__main__':
         noclass_model_path = os.path.join(dir, 'no{}.classifier'.format(lang))
         noclass_feat_path  = os.path.join(dir, 'no{}.txt'.format(lang))
 
-        train_txt(noclass_feat_path, noclass_model_path)
+        # Obtain the classifier trained from all but this language.
+        c = train_txt(noclass_feat_path, noclass_model_path)
 
-        # Reinitialize the classifier and try it out on the
+
+        # Now, use this to classify the gloss for this language and compare.
+        for inst in xc:
+            assert isinstance(inst, RGIgt) # Just some type hinting...
+
+            old_inst = inst.copy()
+
+            not_this_lang = inst.copy()
+            strip_pos(not_this_lang)
+
+            all_langs = inst.copy()
+            strip_pos(all_langs)
+            # Since we're not specifying where we're pulling the annotation, strip it...
 
 
-        sys.exit()
+            # If we can't get the sequence from the gold,
+            # no point in trying to get it ourselves.
+
+            try:
+                lang_seq = old_inst.get_lang_sequence()
+            except ProjectionException as pe:
+                XAML_LOG.warn(pe)
+                continue
+
+
+
+            # now, let's try to get it with this classifier.
+            not_this_lang.classify_gloss_pos(c)
+            all_langs.classify_gloss_pos(all_model)
+
+            assert inst is not old_inst
+
+            try:
+                not_this_lang.project_gloss_to_lang()
+                all_langs.project_gloss_to_lang()
+            except GlossLangAlignException as glae:
+                XAML_LOG.warn(glae)
+                continue
+
+
+            not_this_lang_seq = not_this_lang.get_lang_sequence()
+            all_lang_seq = all_langs.get_lang_sequence()
+
+
+            gold_sents.append(lang_seq)
+            ablation_sents.append(not_this_lang_seq)
+            full_sents.append(all_lang_seq)
+
+
+
+
+        # Finally, evaluate the POS tags
+
+        #print([[l.label for l in class_sent] for class_sent in class_sents])
+        #sys.exit()
+
+
+        poseval_f.write("For language {}:\n".format(lang))
+        poseval(ablation_sents, gold_sents, csv=True, out_f=poseval_f, matrix=False, details=True)
+        poseval(full_sents, gold_sents, csv=True, out_f=poseval_f, matrix=False, details=True)
+
+        continue
+
+
 
         new_xc = xc.copy()
         new_xc.giza_align_t_g()

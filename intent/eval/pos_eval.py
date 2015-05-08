@@ -64,7 +64,10 @@ def simple_tagger_eval(eval_path, gold_path, out_f = sys.stdout, csv=True):
     poseval(eval_c, gold_c, out_f)
 
 
-def poseval(eval_sents, gold_sents, out_f = sys.stdout, csv=True, ansi=False, greedy_1_to_1=False, greedy_n_to_1=False, matrix=False):
+def poseval(eval_sents, gold_sents, out_f = sys.stdout, csv=True,
+            ansi=False, greedy_1_to_1=False, greedy_n_to_1=False,
+            matrix=False, details=False):
+
     if len(eval_sents) != len(gold_sents):
         raise EvalException('Number of eval sents does not match number of gold sents.')
 
@@ -118,8 +121,14 @@ def poseval(eval_sents, gold_sents, out_f = sys.stdout, csv=True, ansi=False, gr
         c.greedy_n_to_1()
         eval_print_helper(out_f, 'GREEDY N-to-1', matrix, c, ansi, csv)
 
-    return c
+    #===========================================================================
+    # If details is specified, just give slightly more detail on
+    #===========================================================================
+    if details:
+        out_f.write('{}\n'.format(c.overall_breakdown()))
+        out_f.write('{}\n'.format(c.breakdown_csv()))
 
+    return c
 
 def eval_print_helper(out_f, title, matrix, c, ansi, csv):
     out_f.write('='*80+'\n')
