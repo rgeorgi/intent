@@ -631,4 +631,28 @@
     <item id="n3" line="1249" tag="T+EX" alignment="c4">I will go to Pampa Hermosa.' (ibid., 554, ex. 9)</item>
   </tier>
 </igt>
+<igt id="igt102379" doc-id="3425" line-range="1239-1242" tag-types="L+CR L+CR G T+EX">
+  <metadata>
+    <meta id="meta1">
+      <dc:subject xsi:type="olac:language" olac:code="ccc">chamicuro</dc:subject>
+      <dc:language xsi:type="olac:language" olac:code="en">English</dc:language>
+    </meta>
+  </metadata>
+  <tier id="r" type="odin" state="raw">
+    <item id="r1" line="1239" tag="L+CR">                              ´             ´</item>
+    <item id="r2" line="1240" tag="L+CR">             b. P-askalat-is ka             camalo.</item>
+    <item id="r3" line="1241" tag="G">                   2-kill-2.PL THE(PAST) bat</item>
+    <item id="r4" line="1242" tag="T+EX">                     `You (plural) killed the bat.' (ibid., ex. 8)</item>
+  </tier>
+  <tier id="c" type="odin" state="cleaned" alignment="r">
+    <item id="c1" line="1239" tag="L+CR" alignment="r1">                              ´             ´</item>
+    <item id="c3" line="1241" tag="G" alignment="r3">                   2-kill-2.PL THE(PAST) bat</item>
+    <item id="c4" line="1242" tag="T+EX" alignment="r4">                     `You (plural) killed the bat.' (ibid., ex. 8)</item>
+  </tier>
+  <tier id="n" type="odin" state="normalized" alignment="c">
+    <item id="n1" line="1239" tag="L+CR" alignment="c1">´             ´</item>
+    <item id="n2" line="1241" tag="G" alignment="c3">2-kill-2.PL THE(PAST) bat</item>
+    <item id="n3" line="1242" tag="T+EX" alignment="c4">You (plural) killed the bat.' (ibid., ex. 8)</item>
+  </tier>
+</igt>
 </xigt-corpus>

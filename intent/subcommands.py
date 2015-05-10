@@ -188,7 +188,10 @@ def enrich(**kwargs):
             except ProjectionException as pe:
                 ENRICH_LOG.warning('No translation POS tags were found for instance "%s". Not projecting POS tags.' % inst.id)
             else:
-                inst.project_gloss_to_lang(tag_method=INTENT_POS_PROJ)
+                try:
+                    inst.project_gloss_to_lang(tag_method=INTENT_POS_PROJ)
+                except GlossLangAlignException as glae:
+                    ENRICH_LOG.warn(glae)
 
 
         # 5) Parse the translation line ----------------------------------------
