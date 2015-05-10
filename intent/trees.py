@@ -771,7 +771,7 @@ class DepTree(IdTree):
         dt = DepTree('ROOT', [], word_index = 0)
 
         roots = [e.head for e in edges if e.head.label == 'ROOT']
-        print(roots)
+
         if not roots:
             raise TreeError("No root for tree {}. Skipping.".format(tree_string))
 

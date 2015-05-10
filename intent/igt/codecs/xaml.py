@@ -427,9 +427,9 @@ if __name__ == '__main__':
     lang_docs = []
 
     # -- 1) Set the output directory for the xigt stuff.
-    dir = '/Users/rgeorgi/Documents/treebanks/annotated_xigt/'
+    dir = '/Users/rgeorgi/Documents/code/treebanks/annotated_xigt/'
 
-    for path in glob.glob('/Users/rgeorgi/Documents/treebanks/xigt_odin/annotated/*-filtered.xml'):
+    for path in glob.glob('/Users/rgeorgi/Documents/code/treebanks/xigt_odin/annotated/*-filtered.xml'):
 
         lang = os.path.basename(path)[0:3]
 
@@ -447,9 +447,7 @@ if __name__ == '__main__':
     # Now that we have them all written out, let's go back
     # over and create the classifiers.
 
-    gold_sents = []
-    ablation_sents = []
-    full_sents = []
+
 
     all_feats = os.path.join(dir, 'all.txt')
     try:
@@ -458,13 +456,20 @@ if __name__ == '__main__':
 
     all_model_path = os.path.join(dir, 'all_feats.classifier')
 
-    os.system("""find {1} -iname "*feats.txt" -exec cat {{}} >> {2} \;  """.format(lang, dir, all_feats))
+    os.system("""find {0} -iname "*feats.txt" -exec cat {{}} >> {1} \;  """.format(dir, all_feats))
     all_model = train_txt(all_feats, all_model_path)
 
     poseval_f = open(os.path.join(dir, 'pos_results.txt'), 'w', encoding='utf-8')
 
+    # Set up the tagger
+    st = StanfordPOSTagger(tagger_model)
+
     for (xc, lang) in lang_docs:
         assert isinstance(xc, RGCorpus)
+
+        gold_sents = []
+        ablation_sents = []
+        full_sents = []
 
         missing_lang_file = os.path.join(dir, 'no{}.txt'.format(lang))
         os.unlink(missing_lang_file)
@@ -486,9 +491,15 @@ if __name__ == '__main__':
 
             old_inst = inst.copy()
 
+            # a) Projection
+            proj_inst = inst.copy()
+            strip_pos(proj_inst)
+
+            # b) Ablation
             not_this_lang = inst.copy()
             strip_pos(not_this_lang)
 
+            # c) All languages
             all_langs = inst.copy()
             strip_pos(all_langs)
             # Since we're not specifying where we're pulling the annotation, strip it...
@@ -502,6 +513,9 @@ if __name__ == '__main__':
             except ProjectionException as pe:
                 XAML_LOG.warn(pe)
                 continue
+
+            # Try projection
+            inst.tag_trans_pos(st)
 
 
 
