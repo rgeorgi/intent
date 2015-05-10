@@ -13,6 +13,7 @@ import string
 
 from intent.utils.logconsts import XIGT_PARSE_LOG_STR
 from intent.utils.logconsts import GIZA_LOG_STR
+from xigt.errors import XigtError
 
 from xigt.model import XigtCorpus, Igt, Item, Tier
 from xigt.metadata import Metadata, Meta
@@ -455,6 +456,11 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                     except (NoGlossLineException, NoLangLineException) as ngle:
                         PARSELOG.warn(ngle)
                         continue
+
+                    # TODO: Figure out why we are getting "g" already in collection.
+                    # But for now, just skip it.
+                    except XigtError as xe:
+                        PARSELOG.warn(xe)
 
         return xc
 
