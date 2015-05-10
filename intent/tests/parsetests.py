@@ -1,7 +1,7 @@
 import os
 from unittest import TestCase
 from intent.subcommands import enrich
-from intent.utils.arg_consts import POS_VAR, POS_LANG_PROJ, ALN_HEUR, ALN_VAR, POS_LANG_CLASS
+from intent.utils.arg_consts import POS_VAR, POS_LANG_PROJ, ALN_HEUR, ALN_VAR, POS_LANG_CLASS, ALN_GIZA
 from intent.utils.env import proj_root
 
 __author__ = 'rgeorgi'
@@ -21,7 +21,7 @@ ctn_file  = os.path.join(test_dir, 'ctn-train-tests.xml')
 
 # Different arguments
 no_enrich_args = {'OUT_FILE':'/dev/null'}
-proj_pos_args  = {'OUT_FILE':'/dev/null', POS_VAR:[POS_LANG_PROJ], ALN_VAR:[ALN_HEUR]}
+proj_pos_args  = {'OUT_FILE':'/dev/null', POS_VAR:[POS_LANG_PROJ], ALN_VAR:[ALN_GIZA]}
 class_pos_args = {'OUT_FILE':'/dev/null', POS_VAR:[POS_LANG_CLASS]}
 
 class ParseTests(TestCase):

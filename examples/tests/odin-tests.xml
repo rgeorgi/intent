@@ -607,30 +607,6 @@
             <item id="tw10" segmentation="t1[40:43]" />
         </tier>
     </igt>
-    <igt id="igt102380" doc-id="3425" line-range="1246-1249" tag-types="L+CR L+CR G T+EX">
-  <metadata>
-    <meta id="meta1">
-      <dc:subject xsi:type="olac:language" olac:code="ccc">chamicuro</dc:subject>
-      <dc:language xsi:type="olac:language" olac:code="en">English</dc:language>
-    </meta>
-  </metadata>
-  <tier id="r" type="odin" state="raw">
-    <item id="r1" line="1246" tag="L+CR">        (63) U--ye na´                   ´              ´</item>
-    <item id="r2" line="1247" tag="L+CR">                                       Pampa Hermosa-sana.</item>
-    <item id="r3" line="1248" tag="G">             1-go-FUT THE(NPST) Pampa Hermosa-LOC</item>
-    <item id="r4" line="1249" tag="T+EX">                 `I will go to Pampa Hermosa.' (ibid., 554, ex. 9)</item>
-  </tier>
-  <tier id="c" type="odin" state="cleaned" alignment="r">
-    <item id="c1" line="1246" tag="L+CR" alignment="r1">        (63) U--ye na´                   ´              ´</item>
-    <item id="c3" line="1248" tag="G" alignment="r3">             1-go-FUT THE(NPST) Pampa Hermosa-LOC</item>
-    <item id="c4" line="1249" tag="T+EX" alignment="r4">                 `I will go to Pampa Hermosa.' (ibid., 554, ex. 9)</item>
-  </tier>
-  <tier id="n" type="odin" state="normalized" alignment="c">
-    <item id="n1" line="1246" tag="L+CR" alignment="c1">U--ye na´                   ´              ´</item>
-    <item id="n2" line="1248" tag="G" alignment="c3">1-go-FUT THE(NPST) Pampa Hermosa-LOC</item>
-    <item id="n3" line="1249" tag="T+EX" alignment="c4">I will go to Pampa Hermosa.' (ibid., 554, ex. 9)</item>
-  </tier>
-</igt>
 <igt id="igt102379" doc-id="3425" line-range="1239-1242" tag-types="L+CR L+CR G T+EX">
   <metadata>
     <meta id="meta1">
@@ -655,4 +631,76 @@
     <item id="n3" line="1242" tag="T+EX" alignment="c4">You (plural) killed the bat.' (ibid., ex. 8)</item>
   </tier>
 </igt>
+<igt id="igt102380" doc-id="3425" line-range="1246-1249" tag-types="L+CR L+CR G T+EX">
+  <metadata>
+    <meta id="meta1">
+      <dc:subject xsi:type="olac:language" olac:code="ccc">chamicuro</dc:subject>
+      <dc:language xsi:type="olac:language" olac:code="en">English</dc:language>
+    </meta>
+  </metadata>
+  <tier id="r" type="odin" state="raw">
+    <item id="r1" line="1246" tag="L+CR">        (63) U--ye na´                   ´              ´</item>
+    <item id="r2" line="1247" tag="L+CR">                                       Pampa Hermosa-sana.</item>
+    <item id="r3" line="1248" tag="G">             1-go-FUT THE(NPST) Pampa Hermosa-LOC</item>
+    <item id="r4" line="1249" tag="T+EX">                 `I will go to Pampa Hermosa.' (ibid., 554, ex. 9)</item>
+  </tier>
+  <tier id="c" type="odin" state="cleaned" alignment="r">
+    <item id="c1" line="1246" tag="L+CR" alignment="r1">        (63) U--ye na´                   ´              ´</item>
+    <item id="c3" line="1248" tag="G" alignment="r3">             1-go-FUT THE(NPST) Pampa Hermosa-LOC</item>
+    <item id="c4" line="1249" tag="T+EX" alignment="r4">                 `I will go to Pampa Hermosa.' (ibid., 554, ex. 9)</item>
+  </tier>
+  <tier id="n" type="odin" state="normalized" alignment="c">
+    <item id="n1" line="1246" tag="L+CR" alignment="c1">U--ye na´                   ´              ´</item>
+    <item id="n2" line="1248" tag="G" alignment="c3">1-go-FUT THE(NPST) Pampa Hermosa-LOC</item>
+    <item id="n3" line="1249" tag="T+EX" alignment="c4">I will go to Pampa Hermosa.' (ibid., 554, ex. 9)</item>
+  </tier>
+</igt>
+
+<igt id="igt78535" doc-id="4034" line-range="979-981" tag-types="L+LN B G">
+  <metadata>
+    <meta id="meta1">
+      <dc:subject xsi:type="olac:language" olac:code="deu">german</dc:subject>
+      <dc:language xsi:type="olac:language" olac:code="en">English</dc:language>
+    </meta>
+  </metadata>
+  <tier id="r" type="odin" state="raw">
+    <item id="r1" line="979" tag="L+LN">  (12)    a.      Du kann-st         nach Hause gehen.                            (German)</item>
+    <item id="r2" line="980" tag="B"></item>
+    <item id="r3" line="981" tag="G">                  you can(2pers.sg) to      home go</item>
+  </tier>
+  <tier id="c" type="odin" state="cleaned" alignment="r">
+    <item id="c1" line="979" tag="L+LN" alignment="r1">  (12)    a.      Du kann-st         nach Hause gehen.                            (German)</item>
+    <item id="c2" line="980" tag="B" alignment="r2"></item>
+    <item id="c3" line="981" tag="G" alignment="r3">                  you can(2pers.sg) to      home go</item>
+  </tier>
+  <tier id="n" type="odin" state="normalized" alignment="c">
+    <item id="n1" line="979" tag="L+LN" alignment="c1">a.      Du kann-st         nach Hause gehen.                            (German</item>
+    <item id="n2" line="980" tag="B" alignment="c2"></item>
+    <item id="n3" line="981" tag="G" alignment="c3">you can(2pers.sg) to      home go</item>
+  </tier>
+</igt>
+<igt id="igt78536" doc-id="4034" line-range="983-985" tag-types="L B G">
+  <metadata>
+    <meta id="meta1">
+      <dc:subject xsi:type="olac:language" olac:code="deu">german</dc:subject>
+      <dc:language xsi:type="olac:language" olac:code="en">English</dc:language>
+    </meta>
+  </metadata>
+  <tier id="r" type="odin" state="raw">
+    <item id="r1" line="983" tag="L">          b.      Ich habe nach Hause gehen können.</item>
+    <item id="r2" line="984" tag="B"></item>
+    <item id="r3" line="985" tag="G">                  I    have to    home go          could</item>
+  </tier>
+  <tier id="c" type="odin" state="cleaned" alignment="r">
+    <item id="c1" line="983" tag="L" alignment="r1">          b.      Ich habe nach Hause gehen können.</item>
+    <item id="c2" line="984" tag="B" alignment="r2"></item>
+    <item id="c3" line="985" tag="G" alignment="r3">                  I    have to    home go          could</item>
+  </tier>
+  <tier id="n" type="odin" state="normalized" alignment="c">
+    <item id="n1" line="983" tag="L" alignment="c1">Ich habe nach Hause gehen können.</item>
+    <item id="n2" line="984" tag="B" alignment="c2"></item>
+    <item id="n3" line="985" tag="G" alignment="c3">I    have to    home go          could</item>
+  </tier>
+</igt>
+
 </xigt-corpus>
