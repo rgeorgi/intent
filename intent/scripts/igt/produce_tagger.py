@@ -5,14 +5,15 @@ Created on Feb 20, 2015
 '''
 
 # Built-in imports -------------------------------------------------------------
-import argparse, os, sys, logging
+import argparse
+import os
+import logging
 
 # Internal imports -------------------------------------------------------------
 from intent.utils.argutils import existsfile, writefile
-from intent.igt.rgxigt import RGCorpus, rgp, ProjectionException, ProjectionTransGlossException
+from intent.igt.rgxigt import RGCorpus, ProjectionTransGlossException
 from intent.utils.argpasser import ArgPasser, argp
 from intent.utils.env import c
-from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.interfaces.mallet_maxent import MalletMaxent
 
 #===============================================================================

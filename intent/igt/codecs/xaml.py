@@ -10,7 +10,7 @@ Created on Feb 25, 2015
 import logging
 import glob
 import os
-from eval.pos_eval import poseval
+
 
 
 logging.basicConfig()
@@ -36,7 +36,7 @@ from xigt.ref import ids
 
 import lxml.etree
 import sys
-from intent.igt.rgxigt import RGCorpus, RGTier, rgp, RGIgt, RGItem, RGWordTier, RGWord,\
+from intent.igt.rgxigt import RGCorpus, RGTier, RGIgt, RGItem, RGWordTier, RGWord,\
     RGBilingualAlignmentTier, RGTokenTier, RGToken, ProjectionException, gen_tier_id, RGPhraseTier, RGPhrase, \
     add_word_level_info, ProjectionTransGlossException, GlossLangAlignException, strip_pos
 import re

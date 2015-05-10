@@ -1,0 +1,2758 @@
+<xigt-corpus xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <igt id="igt1" doc-id="lgcol:ang" line-range="1-3" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="1" tag="M">  author vetted: f</item>
+      <item id="r2" line="2" tag="L">  Ic sl\sp-e.</item>
+      <item id="r3" line="3" tag="G">  I.1sg.NOM sleep-1sg</item>
+      <item id="r4" line="4" tag="T">  'I sleep.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="1" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="2" tag="L">  Ic sl\sp-e.</item>
+      <item id="c3" alignment="r3" line="3" tag="G">  I.1sg.NOM sleep-1sg</item>
+      <item id="c4" alignment="r4" line="4" tag="T">  'I sleep.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="1" tag="M">f</item>
+      <item id="n2" alignment="c2" line="2" tag="L">Ic sl\sp-e.</item>
+      <item id="n3" alignment="c3" line="3" tag="G">I.1sg.NOM sleep-1sg</item>
+      <item id="n4" alignment="c4" line="4" tag="T">I sleep.</item>
+    </tier>
+  </igt>
+  <igt id="igt2" doc-id="lgcol:ang" line-range="5-7" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="5" tag="M">  author vetted: f</item>
+      <item id="r2" line="6" tag="L">  sl\sp-e ic.</item>
+      <item id="r3" line="7" tag="G">  sleep-1sg I.1sg.NOM </item>
+      <item id="r4" line="8" tag="T">  'I sleep.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="5" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="6" tag="L">  sl\sp-e ic.</item>
+      <item id="c3" alignment="r3" line="7" tag="G">  sleep-1sg I.1sg.NOM </item>
+      <item id="c4" alignment="r4" line="8" tag="T">  'I sleep.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="5" tag="M">f</item>
+      <item id="n2" alignment="c2" line="6" tag="L">sl\sp-e ic.</item>
+      <item id="n3" alignment="c3" line="7" tag="G">sleep-1sg I.1sg.NOM</item>
+      <item id="n4" alignment="c4" line="8" tag="T">I sleep.</item>
+    </tier>
+  </igt>
+  <igt id="igt3" doc-id="lgcol:ang" line-range="9-11" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="9" tag="M">  author vetted: f</item>
+      <item id="r2" line="10" tag="L">  Tu sl\sp-est.</item>
+      <item id="r3" line="11" tag="G">  you.2sg.NOM sleep-2sg</item>
+      <item id="r4" line="12" tag="T">  'You sleep.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="9" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="10" tag="L">  Tu sl\sp-est.</item>
+      <item id="c3" alignment="r3" line="11" tag="G">  you.2sg.NOM sleep-2sg</item>
+      <item id="c4" alignment="r4" line="12" tag="T">  'You sleep.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="9" tag="M">f</item>
+      <item id="n2" alignment="c2" line="10" tag="L">Tu sl\sp-est.</item>
+      <item id="n3" alignment="c3" line="11" tag="G">you.2sg.NOM sleep-2sg</item>
+      <item id="n4" alignment="c4" line="12" tag="T">You sleep.</item>
+    </tier>
+  </igt>
+  <igt id="igt4" doc-id="lgcol:ang" line-range="13-15" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="13" tag="M">  author vetted: f</item>
+      <item id="r2" line="14" tag="L">  He sl\sp-eT.</item>
+      <item id="r3" line="15" tag="G">  he.3sg.NOM sleep-3sg</item>
+      <item id="r4" line="16" tag="T">  'I sleep.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="13" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="14" tag="L">  He sl\sp-eT.</item>
+      <item id="c3" alignment="r3" line="15" tag="G">  he.3sg.NOM sleep-3sg</item>
+      <item id="c4" alignment="r4" line="16" tag="T">  'I sleep.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="13" tag="M">f</item>
+      <item id="n2" alignment="c2" line="14" tag="L">He sl\sp-eT.</item>
+      <item id="n3" alignment="c3" line="15" tag="G">he.3sg.NOM sleep-3sg</item>
+      <item id="n4" alignment="c4" line="16" tag="T">I sleep.</item>
+    </tier>
+  </igt>
+  <igt id="igt5" doc-id="lgcol:ang" line-range="17-19" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="17" tag="M">  author vetted: f</item>
+      <item id="r2" line="18" tag="L">  Ic sl\sp-aT.</item>
+      <item id="r3" line="19" tag="G">  We.1pl.NOM sleep-pl</item>
+      <item id="r4" line="20" tag="T">  'We sleep.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="17" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="18" tag="L">  Ic sl\sp-aT.</item>
+      <item id="c3" alignment="r3" line="19" tag="G">  We.1pl.NOM sleep-pl</item>
+      <item id="c4" alignment="r4" line="20" tag="T">  'We sleep.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="17" tag="M">f</item>
+      <item id="n2" alignment="c2" line="18" tag="L">Ic sl\sp-aT.</item>
+      <item id="n3" alignment="c3" line="19" tag="G">We.1pl.NOM sleep-pl</item>
+      <item id="n4" alignment="c4" line="20" tag="T">We sleep.</item>
+    </tier>
+  </igt>
+  <igt id="igt6" doc-id="lgcol:ang" line-range="21-23" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="21" tag="M">  author vetted: s</item>
+      <item id="r2" line="22" tag="L">  Ic eom Apollonius.</item>
+      <item id="r3" line="23" tag="G">  I.1sg.NOM am.1sg Apollonius</item>
+      <item id="r4" line="24" tag="T">  'I am Apollonius.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="21" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="22" tag="L">  Ic eom Apollonius.</item>
+      <item id="c3" alignment="r3" line="23" tag="G">  I.1sg.NOM am.1sg Apollonius</item>
+      <item id="c4" alignment="r4" line="24" tag="T">  'I am Apollonius.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="21" tag="M">s</item>
+      <item id="n2" alignment="c2" line="22" tag="L">Ic eom Apollonius.</item>
+      <item id="n3" alignment="c3" line="23" tag="G">I.1sg.NOM am.1sg Apollonius</item>
+      <item id="n4" alignment="c4" line="24" tag="T">I am Apollonius.</item>
+    </tier>
+  </igt>
+  <igt id="igt7" doc-id="lgcol:ang" line-range="25-27" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="25" tag="M">  author vetted: f</item>
+      <item id="r2" line="26" tag="L">  Apollonius Eom ic.</item>
+      <item id="r3" line="27" tag="G">  Apollonius am.1sg.NOM I.1sg</item>
+      <item id="r4" line="28" tag="T">  'I am Apollonius.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="25" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="26" tag="L">  Apollonius Eom ic.</item>
+      <item id="c3" alignment="r3" line="27" tag="G">  Apollonius am.1sg.NOM I.1sg</item>
+      <item id="c4" alignment="r4" line="28" tag="T">  'I am Apollonius.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="25" tag="M">f</item>
+      <item id="n2" alignment="c2" line="26" tag="L">Apollonius Eom ic.</item>
+      <item id="n3" alignment="c3" line="27" tag="G">Apollonius am.1sg.NOM I.1sg</item>
+      <item id="n4" alignment="c4" line="28" tag="T">I am Apollonius.</item>
+    </tier>
+  </igt>
+  <igt id="igt8" doc-id="lgcol:ang" line-range="33-35" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="33" tag="M">  author vetted: f</item>
+      <item id="r2" line="34" tag="L">  Du eart Apollonius.</item>
+      <item id="r3" line="35" tag="G">  you.2sg.NOM are.2sg Apollonius</item>
+      <item id="r4" line="36" tag="T">  'You are Apollonius.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="33" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="34" tag="L">  Du eart Apollonius.</item>
+      <item id="c3" alignment="r3" line="35" tag="G">  you.2sg.NOM are.2sg Apollonius</item>
+      <item id="c4" alignment="r4" line="36" tag="T">  'You are Apollonius.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="33" tag="M">f</item>
+      <item id="n2" alignment="c2" line="34" tag="L">Du eart Apollonius.</item>
+      <item id="n3" alignment="c3" line="35" tag="G">you.2sg.NOM are.2sg Apollonius</item>
+      <item id="n4" alignment="c4" line="36" tag="T">You are Apollonius.</item>
+    </tier>
+  </igt>
+  <igt id="igt9" doc-id="lgcol:ang" line-range="37-39" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="37" tag="M">  author vetted: f</item>
+      <item id="r2" line="38" tag="L">  He is Apollonius.</item>
+      <item id="r3" line="39" tag="G">  he.3sg.NOM is.3sg Apollonius</item>
+      <item id="r4" line="40" tag="T">  'He is Apollonius.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="37" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="38" tag="L">  He is Apollonius.</item>
+      <item id="c3" alignment="r3" line="39" tag="G">  he.3sg.NOM is.3sg Apollonius</item>
+      <item id="c4" alignment="r4" line="40" tag="T">  'He is Apollonius.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="37" tag="M">f</item>
+      <item id="n2" alignment="c2" line="38" tag="L">He is Apollonius.</item>
+      <item id="n3" alignment="c3" line="39" tag="G">he.3sg.NOM is.3sg Apollonius</item>
+      <item id="n4" alignment="c4" line="40" tag="T">He is Apollonius.</item>
+    </tier>
+  </igt>
+  <igt id="igt10" doc-id="lgcol:ang" line-range="41-43" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="41" tag="M">  author vetted: f</item>
+      <item id="r2" line="42" tag="L">  Apollonius is he.</item>
+      <item id="r3" line="43" tag="G">  Apollonius is.3sg he.2sg.NOM</item>
+      <item id="r4" line="44" tag="T">  'He is Apollonius.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="41" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="42" tag="L">  Apollonius is he.</item>
+      <item id="c3" alignment="r3" line="43" tag="G">  Apollonius is.3sg he.2sg.NOM</item>
+      <item id="c4" alignment="r4" line="44" tag="T">  'He is Apollonius.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="41" tag="M">f</item>
+      <item id="n2" alignment="c2" line="42" tag="L">Apollonius is he.</item>
+      <item id="n3" alignment="c3" line="43" tag="G">Apollonius is.3sg he.2sg.NOM</item>
+      <item id="n4" alignment="c4" line="44" tag="T">He is Apollonius.</item>
+    </tier>
+  </igt>
+  <igt id="igt11" doc-id="lgcol:ang" line-range="45-47" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="45" tag="M">  author vetted: f</item>
+      <item id="r2" line="46" tag="L">  Heo is Apollonius.</item>
+      <item id="r3" line="47" tag="G">  she.3sg.NOM is.3sg Apollonius</item>
+      <item id="r4" line="48" tag="T">  'She is Apollonius.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="45" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="46" tag="L">  Heo is Apollonius.</item>
+      <item id="c3" alignment="r3" line="47" tag="G">  she.3sg.NOM is.3sg Apollonius</item>
+      <item id="c4" alignment="r4" line="48" tag="T">  'She is Apollonius.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="45" tag="M">f</item>
+      <item id="n2" alignment="c2" line="46" tag="L">Heo is Apollonius.</item>
+      <item id="n3" alignment="c3" line="47" tag="G">she.3sg.NOM is.3sg Apollonius</item>
+      <item id="n4" alignment="c4" line="48" tag="T">She is Apollonius.</item>
+    </tier>
+  </igt>
+  <igt id="igt12" doc-id="lgcol:ang" line-range="49-51" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="49" tag="M">  author vetted: f</item>
+      <item id="r2" line="50" tag="L">  Hit is Apollonius.</item>
+      <item id="r3" line="51" tag="G">  it.3sg.NOM is.3sg Apollonius</item>
+      <item id="r4" line="52" tag="T">  'It is Apollonius.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="49" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="50" tag="L">  Hit is Apollonius.</item>
+      <item id="c3" alignment="r3" line="51" tag="G">  it.3sg.NOM is.3sg Apollonius</item>
+      <item id="c4" alignment="r4" line="52" tag="T">  'It is Apollonius.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="49" tag="M">f</item>
+      <item id="n2" alignment="c2" line="50" tag="L">Hit is Apollonius.</item>
+      <item id="n3" alignment="c3" line="51" tag="G">it.3sg.NOM is.3sg Apollonius</item>
+      <item id="n4" alignment="c4" line="52" tag="T">It is Apollonius.</item>
+    </tier>
+  </igt>
+  <igt id="igt13" doc-id="lgcol:ang" line-range="53-55" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="53" tag="M">  author vetted: f</item>
+      <item id="r2" line="54" tag="L">  We sindon Apollonius.</item>
+      <item id="r3" line="55" tag="G">  we.1pl.NOM are.pl Apollonius</item>
+      <item id="r4" line="56" tag="T">  'We are Apollonius.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="53" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="54" tag="L">  We sindon Apollonius.</item>
+      <item id="c3" alignment="r3" line="55" tag="G">  we.1pl.NOM are.pl Apollonius</item>
+      <item id="c4" alignment="r4" line="56" tag="T">  'We are Apollonius.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="53" tag="M">f</item>
+      <item id="n2" alignment="c2" line="54" tag="L">We sindon Apollonius.</item>
+      <item id="n3" alignment="c3" line="55" tag="G">we.1pl.NOM are.pl Apollonius</item>
+      <item id="n4" alignment="c4" line="56" tag="T">We are Apollonius.</item>
+    </tier>
+  </igt>
+  <igt id="igt14" doc-id="lgcol:ang" line-range="57-59" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="57" tag="M">  author vetted: f</item>
+      <item id="r2" line="58" tag="L">  Ge sindon Apollonius.</item>
+      <item id="r3" line="59" tag="G">  you.2pl.NOM are.pl Apollonius</item>
+      <item id="r4" line="60" tag="T">  'You (all) are Apollonius.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="57" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="58" tag="L">  Ge sindon Apollonius.</item>
+      <item id="c3" alignment="r3" line="59" tag="G">  you.2pl.NOM are.pl Apollonius</item>
+      <item id="c4" alignment="r4" line="60" tag="T">  'You (all) are Apollonius.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="57" tag="M">f</item>
+      <item id="n2" alignment="c2" line="58" tag="L">Ge sindon Apollonius.</item>
+      <item id="n3" alignment="c3" line="59" tag="G">you.2pl.NOM are.pl Apollonius</item>
+      <item id="n4" alignment="c4" line="60" tag="T">You (all) are Apollonius.</item>
+    </tier>
+  </igt>
+  <igt id="igt15" doc-id="lgcol:ang" line-range="61-63" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="61" tag="M">  author vetted: f</item>
+      <item id="r2" line="62" tag="L">  Hie sindon Apollonius.</item>
+      <item id="r3" line="63" tag="G">  they.3pl.NOM are.pl Apollonius.'</item>
+      <item id="r4" line="64" tag="T">  'They are Apollonius.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="61" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="62" tag="L">  Hie sindon Apollonius.</item>
+      <item id="c3" alignment="r3" line="63" tag="G">  they.3pl.NOM are.pl Apollonius.'</item>
+      <item id="c4" alignment="r4" line="64" tag="T">  'They are Apollonius.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="61" tag="M">f</item>
+      <item id="n2" alignment="c2" line="62" tag="L">Hie sindon Apollonius.</item>
+      <item id="n3" alignment="c3" line="63" tag="G">they.3pl.NOM are.pl Apollonius.</item>
+      <item id="n4" alignment="c4" line="64" tag="T">They are Apollonius.</item>
+    </tier>
+  </igt>
+  <igt id="igt16" doc-id="lgcol:ang" line-range="65-67" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="65" tag="M">  author vetted: f</item>
+      <item id="r2" line="66" tag="L">  Ic lufi-e Done stan.</item>
+      <item id="r3" line="67" tag="G">  I.1sg.NOM love-1sg the.3sg.masc.ACC stone.sg.masc.ACC</item>
+      <item id="r4" line="68" tag="T">  'i love the stone.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="65" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="66" tag="L">  Ic lufi-e Done stan.</item>
+      <item id="c3" alignment="r3" line="67" tag="G">  I.1sg.NOM love-1sg the.3sg.masc.ACC stone.sg.masc.ACC</item>
+      <item id="c4" alignment="r4" line="68" tag="T">  'i love the stone.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="65" tag="M">f</item>
+      <item id="n2" alignment="c2" line="66" tag="L">Ic lufi-e Done stan.</item>
+      <item id="n3" alignment="c3" line="67" tag="G">I.1sg.NOM love-1sg the.3sg.masc.ACC stone.sg.masc.ACC</item>
+      <item id="n4" alignment="c4" line="68" tag="T">i love the stone.</item>
+    </tier>
+  </igt>
+  <igt id="igt17" doc-id="lgcol:ang" line-range="77-79" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="77" tag="M">  author vetted: f</item>
+      <item id="r2" line="78" tag="L">  Tu luf-ast min stan.</item>
+      <item id="r3" line="79" tag="G">  you.2sg.NOM love-2sg my stone.sg.masc.ACC</item>
+      <item id="r4" line="80" tag="T">  'You love my stone.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="77" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="78" tag="L">  Tu luf-ast min stan.</item>
+      <item id="c3" alignment="r3" line="79" tag="G">  you.2sg.NOM love-2sg my stone.sg.masc.ACC</item>
+      <item id="c4" alignment="r4" line="80" tag="T">  'You love my stone.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="77" tag="M">f</item>
+      <item id="n2" alignment="c2" line="78" tag="L">Tu luf-ast min stan.</item>
+      <item id="n3" alignment="c3" line="79" tag="G">you.2sg.NOM love-2sg my stone.sg.masc.ACC</item>
+      <item id="n4" alignment="c4" line="80" tag="T">You love my stone.</item>
+    </tier>
+  </igt>
+  <igt id="igt18" doc-id="lgcol:ang" line-range="89-91" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="89" tag="M">  author vetted: f</item>
+      <item id="r2" line="90" tag="L">  Te luf-aT se stan.</item>
+      <item id="r3" line="91" tag="G">  you.2sg.ACC love-3sg the.sg.masc.NOM stone.sg.masc.NOM</item>
+      <item id="r4" line="92" tag="T">  'The stone loves you.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="89" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="90" tag="L">  Te luf-aT se stan.</item>
+      <item id="c3" alignment="r3" line="91" tag="G">  you.2sg.ACC love-3sg the.sg.masc.NOM stone.sg.masc.NOM</item>
+      <item id="c4" alignment="r4" line="92" tag="T">  'The stone loves you.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="89" tag="M">f</item>
+      <item id="n2" alignment="c2" line="90" tag="L">Te luf-aT se stan.</item>
+      <item id="n3" alignment="c3" line="91" tag="G">you.2sg.ACC love-3sg the.sg.masc.NOM stone.sg.masc.NOM</item>
+      <item id="n4" alignment="c4" line="92" tag="T">The stone loves you.</item>
+    </tier>
+  </igt>
+  <igt id="igt19" doc-id="lgcol:ang" line-range="97-99" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="97" tag="M">  author vetted: f</item>
+      <item id="r2" line="98" tag="L">  He luf-aT Tin stan.</item>
+      <item id="r3" line="99" tag="G">  he.3sg.NOM loves-3sg your stone.sg.masc.ACC</item>
+      <item id="r4" line="100" tag="T">  'He loves your stone.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="97" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="98" tag="L">  He luf-aT Tin stan.</item>
+      <item id="c3" alignment="r3" line="99" tag="G">  he.3sg.NOM loves-3sg your stone.sg.masc.ACC</item>
+      <item id="c4" alignment="r4" line="100" tag="T">  'He loves your stone.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="97" tag="M">f</item>
+      <item id="n2" alignment="c2" line="98" tag="L">He luf-aT Tin stan.</item>
+      <item id="n3" alignment="c3" line="99" tag="G">he.3sg.NOM loves-3sg your stone.sg.masc.ACC</item>
+      <item id="n4" alignment="c4" line="100" tag="T">He loves your stone.</item>
+    </tier>
+  </igt>
+  <igt id="igt20" doc-id="lgcol:ang" line-range="113-115" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="113" tag="M">  author vetted: f</item>
+      <item id="r2" line="114" tag="L">  We lufi-aT sin stan.</item>
+      <item id="r3" line="115" tag="G">  we.1pl.NOM love-pl her stone.sg.masc.ACC</item>
+      <item id="r4" line="116" tag="T">  'We love her stone.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="113" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="114" tag="L">  We lufi-aT sin stan.</item>
+      <item id="c3" alignment="r3" line="115" tag="G">  we.1pl.NOM love-pl her stone.sg.masc.ACC</item>
+      <item id="c4" alignment="r4" line="116" tag="T">  'We love her stone.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="113" tag="M">f</item>
+      <item id="n2" alignment="c2" line="114" tag="L">We lufi-aT sin stan.</item>
+      <item id="n3" alignment="c3" line="115" tag="G">we.1pl.NOM love-pl her stone.sg.masc.ACC</item>
+      <item id="n4" alignment="c4" line="116" tag="T">We love her stone.</item>
+    </tier>
+  </igt>
+  <igt id="igt21" doc-id="lgcol:ang" line-range="117-119" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="117" tag="M">  author vetted: f</item>
+      <item id="r2" line="118" tag="L">  Ge lufi-aT Da stan-as.</item>
+      <item id="r3" line="119" tag="G">  you.2pl.NOM love-pl the.pl.masc.ACC stones-pl.masc.ACC</item>
+      <item id="r4" line="120" tag="T">  'You all love the stones.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="117" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="118" tag="L">  Ge lufi-aT Da stan-as.</item>
+      <item id="c3" alignment="r3" line="119" tag="G">  you.2pl.NOM love-pl the.pl.masc.ACC stones-pl.masc.ACC</item>
+      <item id="c4" alignment="r4" line="120" tag="T">  'You all love the stones.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="117" tag="M">f</item>
+      <item id="n2" alignment="c2" line="118" tag="L">Ge lufi-aT Da stan-as.</item>
+      <item id="n3" alignment="c3" line="119" tag="G">you.2pl.NOM love-pl the.pl.masc.ACC stones-pl.masc.ACC</item>
+      <item id="n4" alignment="c4" line="120" tag="T">You all love the stones.</item>
+    </tier>
+  </igt>
+  <igt id="igt22" doc-id="lgcol:ang" line-range="121-123" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="121" tag="M">  author vetted: f</item>
+      <item id="r2" line="122" tag="L">  Hie lufi-aT me.</item>
+      <item id="r3" line="123" tag="G">  they.3pl.NOM love-pl me.1sg.ACC</item>
+      <item id="r4" line="124" tag="T">  'They love me.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="121" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="122" tag="L">  Hie lufi-aT me.</item>
+      <item id="c3" alignment="r3" line="123" tag="G">  they.3pl.NOM love-pl me.1sg.ACC</item>
+      <item id="c4" alignment="r4" line="124" tag="T">  'They love me.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="121" tag="M">f</item>
+      <item id="n2" alignment="c2" line="122" tag="L">Hie lufi-aT me.</item>
+      <item id="n3" alignment="c3" line="123" tag="G">they.3pl.NOM love-pl me.1sg.ACC</item>
+      <item id="n4" alignment="c4" line="124" tag="T">They love me.</item>
+    </tier>
+  </igt>
+  <igt id="igt23" doc-id="lgcol:ang" line-range="125-127" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="125" tag="M">  author vetted: f</item>
+      <item id="r2" line="126" tag="L">  Ic lufi-e hie.</item>
+      <item id="r3" line="127" tag="G">  I.1sg.NOM love-1sg them.3pl.ACC</item>
+      <item id="r4" line="128" tag="T">  'I love them.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="125" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="126" tag="L">  Ic lufi-e hie.</item>
+      <item id="c3" alignment="r3" line="127" tag="G">  I.1sg.NOM love-1sg them.3pl.ACC</item>
+      <item id="c4" alignment="r4" line="128" tag="T">  'I love them.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="125" tag="M">f</item>
+      <item id="n2" alignment="c2" line="126" tag="L">Ic lufi-e hie.</item>
+      <item id="n3" alignment="c3" line="127" tag="G">I.1sg.NOM love-1sg them.3pl.ACC</item>
+      <item id="n4" alignment="c4" line="128" tag="T">I love them.</item>
+    </tier>
+  </igt>
+  <igt id="igt24" doc-id="lgcol:ang" line-range="129-131" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="129" tag="M">  author vetted: f</item>
+      <item id="r2" line="130" tag="L">  Hie lufi-e ic.</item>
+      <item id="r3" line="131" tag="G">  them.3pl.ACC love-1sg I.1sg.NOM </item>
+      <item id="r4" line="132" tag="T">  'I love them.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="129" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="130" tag="L">  Hie lufi-e ic.</item>
+      <item id="c3" alignment="r3" line="131" tag="G">  them.3pl.ACC love-1sg I.1sg.NOM </item>
+      <item id="c4" alignment="r4" line="132" tag="T">  'I love them.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="129" tag="M">f</item>
+      <item id="n2" alignment="c2" line="130" tag="L">Hie lufi-e ic.</item>
+      <item id="n3" alignment="c3" line="131" tag="G">them.3pl.ACC love-1sg I.1sg.NOM</item>
+      <item id="n4" alignment="c4" line="132" tag="T">I love them.</item>
+    </tier>
+  </igt>
+  <igt id="igt25" doc-id="lgcol:ang" line-range="133-135" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="133" tag="M">  author vetted: f</item>
+      <item id="r2" line="134" tag="L">  Tu luf-ast user stan-as.</item>
+      <item id="r3" line="135" tag="G">  you.2sg.NOM love-2sg our stones-pl.masc.ACC</item>
+      <item id="r4" line="136" tag="T">  'You love our stones.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="133" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="134" tag="L">  Tu luf-ast user stan-as.</item>
+      <item id="c3" alignment="r3" line="135" tag="G">  you.2sg.NOM love-2sg our stones-pl.masc.ACC</item>
+      <item id="c4" alignment="r4" line="136" tag="T">  'You love our stones.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="133" tag="M">f</item>
+      <item id="n2" alignment="c2" line="134" tag="L">Tu luf-ast user stan-as.</item>
+      <item id="n3" alignment="c3" line="135" tag="G">you.2sg.NOM love-2sg our stones-pl.masc.ACC</item>
+      <item id="n4" alignment="c4" line="136" tag="T">You love our stones.</item>
+    </tier>
+  </igt>
+  <igt id="igt26" doc-id="lgcol:ang" line-range="137-139" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="137" tag="M">  author vetted: f</item>
+      <item id="r2" line="138" tag="L">  Tu luf-ast eower stan-as.</item>
+      <item id="r3" line="139" tag="G">  you.2sg.NOM love-2sg your stones-pl.masc.ACC</item>
+      <item id="r4" line="140" tag="T">  'You love your stones.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="137" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="138" tag="L">  Tu luf-ast eower stan-as.</item>
+      <item id="c3" alignment="r3" line="139" tag="G">  you.2sg.NOM love-2sg your stones-pl.masc.ACC</item>
+      <item id="c4" alignment="r4" line="140" tag="T">  'You love your stones.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="137" tag="M">f</item>
+      <item id="n2" alignment="c2" line="138" tag="L">Tu luf-ast eower stan-as.</item>
+      <item id="n3" alignment="c3" line="139" tag="G">you.2sg.NOM love-2sg your stones-pl.masc.ACC</item>
+      <item id="n4" alignment="c4" line="140" tag="T">You love your stones.</item>
+    </tier>
+  </igt>
+  <igt id="igt27" doc-id="lgcol:ang" line-range="141-143" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="141" tag="M">  author vetted: f</item>
+      <item id="r2" line="142" tag="L">  Seo D\st tungol.</item>
+      <item id="r3" line="143" tag="G">  see.1sg the.sg.neut.ACC star.sg.neut.ACC</item>
+      <item id="r4" line="144" tag="T">  'I see the star.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="141" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="142" tag="L">  Seo D\st tungol.</item>
+      <item id="c3" alignment="r3" line="143" tag="G">  see.1sg the.sg.neut.ACC star.sg.neut.ACC</item>
+      <item id="c4" alignment="r4" line="144" tag="T">  'I see the star.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="141" tag="M">f</item>
+      <item id="n2" alignment="c2" line="142" tag="L">Seo D\st tungol.</item>
+      <item id="n3" alignment="c3" line="143" tag="G">see.1sg the.sg.neut.ACC star.sg.neut.ACC</item>
+      <item id="n4" alignment="c4" line="144" tag="T">I see the star.</item>
+    </tier>
+  </igt>
+  <igt id="igt28" doc-id="lgcol:ang" line-range="161-163" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="161" tag="M">  author vetted: f</item>
+      <item id="r2" line="162" tag="L">  Sieh-st D\s tungol.</item>
+      <item id="r3" line="163" tag="G">  see-2sg the.pl.neut.ACC stars.pl.neutr.ACC</item>
+      <item id="r4" line="164" tag="T">  'You see the stars.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="161" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="162" tag="L">  Sieh-st D\s tungol.</item>
+      <item id="c3" alignment="r3" line="163" tag="G">  see-2sg the.pl.neut.ACC stars.pl.neutr.ACC</item>
+      <item id="c4" alignment="r4" line="164" tag="T">  'You see the stars.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="161" tag="M">f</item>
+      <item id="n2" alignment="c2" line="162" tag="L">Sieh-st D\s tungol.</item>
+      <item id="n3" alignment="c3" line="163" tag="G">see-2sg the.pl.neut.ACC stars.pl.neutr.ACC</item>
+      <item id="n4" alignment="c4" line="164" tag="T">You see the stars.</item>
+    </tier>
+  </igt>
+  <igt id="igt29" doc-id="lgcol:ang" line-range="169-171" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="169" tag="M">  author vetted: f</item>
+      <item id="r2" line="170" tag="L">  Sieh-T T\st tungol.</item>
+      <item id="r3" line="171" tag="G">  see-3sg that.sg.neut.ACC star.sg.neut.ACC</item>
+      <item id="r4" line="172" tag="T">  'He/she/it sees that star.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="169" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="170" tag="L">  Sieh-T T\st tungol.</item>
+      <item id="c3" alignment="r3" line="171" tag="G">  see-3sg that.sg.neut.ACC star.sg.neut.ACC</item>
+      <item id="c4" alignment="r4" line="172" tag="T">  'He/she/it sees that star.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="169" tag="M">f</item>
+      <item id="n2" alignment="c2" line="170" tag="L">Sieh-T T\st tungol.</item>
+      <item id="n3" alignment="c3" line="171" tag="G">see-3sg that.sg.neut.ACC star.sg.neut.ACC</item>
+      <item id="n4" alignment="c4" line="172" tag="T">He/she/it sees that star.</item>
+    </tier>
+  </igt>
+  <igt id="igt30" doc-id="lgcol:ang" line-range="173-175" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="173" tag="M">  author vetted: f</item>
+      <item id="r2" line="174" tag="L">  SeoT Tis tungol.</item>
+      <item id="r3" line="175" tag="G">  see.1pl this.sg.neut.ACC star.sg.neut.ACC</item>
+      <item id="r4" line="176" tag="T">  'We see this star.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="173" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="174" tag="L">  SeoT Tis tungol.</item>
+      <item id="c3" alignment="r3" line="175" tag="G">  see.1pl this.sg.neut.ACC star.sg.neut.ACC</item>
+      <item id="c4" alignment="r4" line="176" tag="T">  'We see this star.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="173" tag="M">f</item>
+      <item id="n2" alignment="c2" line="174" tag="L">SeoT Tis tungol.</item>
+      <item id="n3" alignment="c3" line="175" tag="G">see.1pl this.sg.neut.ACC star.sg.neut.ACC</item>
+      <item id="n4" alignment="c4" line="176" tag="T">We see this star.</item>
+    </tier>
+  </igt>
+  <igt id="igt31" doc-id="lgcol:ang" line-range="177-179" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="177" tag="M">  author vetted: f</item>
+      <item id="r2" line="178" tag="L">  Beorg-e him.</item>
+      <item id="r3" line="179" tag="G">  save-1sg him.3sg.masc.DAT</item>
+      <item id="r4" line="180" tag="T">  'I save him.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="177" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="178" tag="L">  Beorg-e him.</item>
+      <item id="c3" alignment="r3" line="179" tag="G">  save-1sg him.3sg.masc.DAT</item>
+      <item id="c4" alignment="r4" line="180" tag="T">  'I save him.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="177" tag="M">f</item>
+      <item id="n2" alignment="c2" line="178" tag="L">Beorg-e him.</item>
+      <item id="n3" alignment="c3" line="179" tag="G">save-1sg him.3sg.masc.DAT</item>
+      <item id="n4" alignment="c4" line="180" tag="T">I save him.</item>
+    </tier>
+  </igt>
+  <igt id="igt32" doc-id="lgcol:ang" line-range="181-183" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="181" tag="M">  author vetted: f</item>
+      <item id="r2" line="182" tag="L">  Beorg-est hiere.</item>
+      <item id="r3" line="183" tag="G">  save-2sg her.3sg.fem.DAT</item>
+      <item id="r4" line="184" tag="T">  'You save her.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="181" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="182" tag="L">  Beorg-est hiere.</item>
+      <item id="c3" alignment="r3" line="183" tag="G">  save-2sg her.3sg.fem.DAT</item>
+      <item id="c4" alignment="r4" line="184" tag="T">  'You save her.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="181" tag="M">f</item>
+      <item id="n2" alignment="c2" line="182" tag="L">Beorg-est hiere.</item>
+      <item id="n3" alignment="c3" line="183" tag="G">save-2sg her.3sg.fem.DAT</item>
+      <item id="n4" alignment="c4" line="184" tag="T">You save her.</item>
+    </tier>
+  </igt>
+  <igt id="igt33" doc-id="lgcol:ang" line-range="185-187" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="185" tag="M">  author vetted: f</item>
+      <item id="r2" line="186" tag="L">  Beorg-eT him.</item>
+      <item id="r3" line="187" tag="G">  save-3sg him.3sg.masc.DAT</item>
+      <item id="r4" line="188" tag="T">  'He/she/it saves him.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="185" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="186" tag="L">  Beorg-eT him.</item>
+      <item id="c3" alignment="r3" line="187" tag="G">  save-3sg him.3sg.masc.DAT</item>
+      <item id="c4" alignment="r4" line="188" tag="T">  'He/she/it saves him.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="185" tag="M">f</item>
+      <item id="n2" alignment="c2" line="186" tag="L">Beorg-eT him.</item>
+      <item id="n3" alignment="c3" line="187" tag="G">save-3sg him.3sg.masc.DAT</item>
+      <item id="n4" alignment="c4" line="188" tag="T">He/she/it saves him.</item>
+    </tier>
+  </igt>
+  <igt id="igt34" doc-id="lgcol:ang" line-range="189-191" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="189" tag="M">  author vetted: f</item>
+      <item id="r2" line="190" tag="L">  Beorg-eT him.</item>
+      <item id="r3" line="191" tag="G">  save-3sg it.3sg.neut.DAT</item>
+      <item id="r4" line="192" tag="T">  'He/she/it saves it.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="189" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="190" tag="L">  Beorg-eT him.</item>
+      <item id="c3" alignment="r3" line="191" tag="G">  save-3sg it.3sg.neut.DAT</item>
+      <item id="c4" alignment="r4" line="192" tag="T">  'He/she/it saves it.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="189" tag="M">f</item>
+      <item id="n2" alignment="c2" line="190" tag="L">Beorg-eT him.</item>
+      <item id="n3" alignment="c3" line="191" tag="G">save-3sg it.3sg.neut.DAT</item>
+      <item id="n4" alignment="c4" line="192" tag="T">He/she/it saves it.</item>
+    </tier>
+  </igt>
+  <igt id="igt35" doc-id="lgcol:ang" line-range="193-195" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="193" tag="M">  author vetted: f</item>
+      <item id="r2" line="194" tag="L">  Beorg-eT him.</item>
+      <item id="r3" line="195" tag="G">  save-3sg them.3pl.DAT</item>
+      <item id="r4" line="196" tag="T">  'He/she/it saves them.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="193" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="194" tag="L">  Beorg-eT him.</item>
+      <item id="c3" alignment="r3" line="195" tag="G">  save-3sg them.3pl.DAT</item>
+      <item id="c4" alignment="r4" line="196" tag="T">  'He/she/it saves them.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="193" tag="M">f</item>
+      <item id="n2" alignment="c2" line="194" tag="L">Beorg-eT him.</item>
+      <item id="n3" alignment="c3" line="195" tag="G">save-3sg them.3pl.DAT</item>
+      <item id="n4" alignment="c4" line="196" tag="T">He/she/it saves them.</item>
+    </tier>
+  </igt>
+  <igt id="igt36" doc-id="lgcol:ang" line-range="197-199" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="197" tag="M">  author vetted: f</item>
+      <item id="r2" line="198" tag="L">  Beorg-e Te.</item>
+      <item id="r3" line="199" tag="G">  save-1sg you.2sg.DAT</item>
+      <item id="r4" line="200" tag="T">  'I save you'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="197" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="198" tag="L">  Beorg-e Te.</item>
+      <item id="c3" alignment="r3" line="199" tag="G">  save-1sg you.2sg.DAT</item>
+      <item id="c4" alignment="r4" line="200" tag="T">  'I save you'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="197" tag="M">f</item>
+      <item id="n2" alignment="c2" line="198" tag="L">Beorg-e Te.</item>
+      <item id="n3" alignment="c3" line="199" tag="G">save-1sg you.2sg.DAT</item>
+      <item id="n4" alignment="c4" line="200" tag="T">I save you</item>
+    </tier>
+  </igt>
+  <igt id="igt37" doc-id="lgcol:ang" line-range="201-203" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="201" tag="M">  author vetted: f</item>
+      <item id="r2" line="202" tag="L">  Beorg-e eow.</item>
+      <item id="r3" line="203" tag="G">  save-1sg you.2pl.DAT</item>
+      <item id="r4" line="204" tag="T">  'I save you all'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="201" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="202" tag="L">  Beorg-e eow.</item>
+      <item id="c3" alignment="r3" line="203" tag="G">  save-1sg you.2pl.DAT</item>
+      <item id="c4" alignment="r4" line="204" tag="T">  'I save you all'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="201" tag="M">f</item>
+      <item id="n2" alignment="c2" line="202" tag="L">Beorg-e eow.</item>
+      <item id="n3" alignment="c3" line="203" tag="G">save-1sg you.2pl.DAT</item>
+      <item id="n4" alignment="c4" line="204" tag="T">I save you all</item>
+    </tier>
+  </igt>
+  <igt id="igt38" doc-id="lgcol:ang" line-range="205-207" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="205" tag="M">  author vetted: f</item>
+      <item id="r2" line="206" tag="L">  Tu beorg-est D\sm stan-e.</item>
+      <item id="r3" line="207" tag="G">  you.2sg.NOM save-2sg the.sg.masc.DAT stone-sg.masc.DAT</item>
+      <item id="r4" line="208" tag="T">  'You save the stone.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="205" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="206" tag="L">  Tu beorg-est D\sm stan-e.</item>
+      <item id="c3" alignment="r3" line="207" tag="G">  you.2sg.NOM save-2sg the.sg.masc.DAT stone-sg.masc.DAT</item>
+      <item id="c4" alignment="r4" line="208" tag="T">  'You save the stone.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="205" tag="M">f</item>
+      <item id="n2" alignment="c2" line="206" tag="L">Tu beorg-est D\sm stan-e.</item>
+      <item id="n3" alignment="c3" line="207" tag="G">you.2sg.NOM save-2sg the.sg.masc.DAT stone-sg.masc.DAT</item>
+      <item id="n4" alignment="c4" line="208" tag="T">You save the stone.</item>
+    </tier>
+  </igt>
+  <igt id="igt39" doc-id="lgcol:ang" line-range="229-231" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="229" tag="M">  author vetted: f</item>
+      <item id="r2" line="230" tag="L">  Tu beorg-est D\sm stan-um.</item>
+      <item id="r3" line="231" tag="G">  you.2sg.NOM save-2sg the.pl.masc.DAT stones-pl.masc.DAT</item>
+      <item id="r4" line="232" tag="T">  'You save the stones.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="229" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="230" tag="L">  Tu beorg-est D\sm stan-um.</item>
+      <item id="c3" alignment="r3" line="231" tag="G">  you.2sg.NOM save-2sg the.pl.masc.DAT stones-pl.masc.DAT</item>
+      <item id="c4" alignment="r4" line="232" tag="T">  'You save the stones.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="229" tag="M">f</item>
+      <item id="n2" alignment="c2" line="230" tag="L">Tu beorg-est D\sm stan-um.</item>
+      <item id="n3" alignment="c3" line="231" tag="G">you.2sg.NOM save-2sg the.pl.masc.DAT stones-pl.masc.DAT</item>
+      <item id="n4" alignment="c4" line="232" tag="T">You save the stones.</item>
+    </tier>
+  </igt>
+  <igt id="igt40" doc-id="lgcol:ang" line-range="233-235" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="233" tag="M">  author vetted: f</item>
+      <item id="r2" line="234" tag="L">  He beorg-eT D\sre gief-e.</item>
+      <item id="r3" line="235" tag="G">  he.3sg.masc.NOM saves-3sg the.sg.fem.DAT gift-sg.fem.DAT</item>
+      <item id="r4" line="236" tag="T">  'He saves the gift.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="233" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="234" tag="L">  He beorg-eT D\sre gief-e.</item>
+      <item id="c3" alignment="r3" line="235" tag="G">  he.3sg.masc.NOM saves-3sg the.sg.fem.DAT gift-sg.fem.DAT</item>
+      <item id="c4" alignment="r4" line="236" tag="T">  'He saves the gift.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="233" tag="M">f</item>
+      <item id="n2" alignment="c2" line="234" tag="L">He beorg-eT D\sre gief-e.</item>
+      <item id="n3" alignment="c3" line="235" tag="G">he.3sg.masc.NOM saves-3sg the.sg.fem.DAT gift-sg.fem.DAT</item>
+      <item id="n4" alignment="c4" line="236" tag="T">He saves the gift.</item>
+    </tier>
+  </igt>
+  <igt id="igt41" doc-id="lgcol:ang" line-range="237-239" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="237" tag="M">  author vetted: f</item>
+      <item id="r2" line="238" tag="L">  Heo beorg-eT D\sm gief-um.</item>
+      <item id="r3" line="239" tag="G">  she.3sg.fem.NOM saves-3sg the.pl.fem.DAT gifts-pl.fem.DAT</item>
+      <item id="r4" line="240" tag="T">  'She saves the gifts.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="237" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="238" tag="L">  Heo beorg-eT D\sm gief-um.</item>
+      <item id="c3" alignment="r3" line="239" tag="G">  she.3sg.fem.NOM saves-3sg the.pl.fem.DAT gifts-pl.fem.DAT</item>
+      <item id="c4" alignment="r4" line="240" tag="T">  'She saves the gifts.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="237" tag="M">f</item>
+      <item id="n2" alignment="c2" line="238" tag="L">Heo beorg-eT D\sm gief-um.</item>
+      <item id="n3" alignment="c3" line="239" tag="G">she.3sg.fem.NOM saves-3sg the.pl.fem.DAT gifts-pl.fem.DAT</item>
+      <item id="n4" alignment="c4" line="240" tag="T">She saves the gifts.</item>
+    </tier>
+  </igt>
+  <igt id="igt42" doc-id="lgcol:ang" line-range="249-251" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="249" tag="M">  author vetted: f</item>
+      <item id="r2" line="250" tag="L">  Heo beorg-eT him.</item>
+      <item id="r3" line="251" tag="G">  She.3sg.fem.NOM saves-3sg him.3sg.masc.DAT</item>
+      <item id="r4" line="252" tag="T">  'She saves him.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="249" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="250" tag="L">  Heo beorg-eT him.</item>
+      <item id="c3" alignment="r3" line="251" tag="G">  She.3sg.fem.NOM saves-3sg him.3sg.masc.DAT</item>
+      <item id="c4" alignment="r4" line="252" tag="T">  'She saves him.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="249" tag="M">f</item>
+      <item id="n2" alignment="c2" line="250" tag="L">Heo beorg-eT him.</item>
+      <item id="n3" alignment="c3" line="251" tag="G">She.3sg.fem.NOM saves-3sg him.3sg.masc.DAT</item>
+      <item id="n4" alignment="c4" line="252" tag="T">She saves him.</item>
+    </tier>
+  </igt>
+  <igt id="igt43" doc-id="lgcol:ang" line-range="257-259" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="257" tag="M">  author vetted: f</item>
+      <item id="r2" line="258" tag="L">  Hie beorg-aT D\sm gief-um.</item>
+      <item id="r3" line="259" tag="G">  You.2pl.NOM save-pl the.pl.fem.DAT gifts-pl.fem.DAT</item>
+      <item id="r4" line="260" tag="T">  'You all save the gifts.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="257" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="258" tag="L">  Hie beorg-aT D\sm gief-um.</item>
+      <item id="c3" alignment="r3" line="259" tag="G">  You.2pl.NOM save-pl the.pl.fem.DAT gifts-pl.fem.DAT</item>
+      <item id="c4" alignment="r4" line="260" tag="T">  'You all save the gifts.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="257" tag="M">f</item>
+      <item id="n2" alignment="c2" line="258" tag="L">Hie beorg-aT D\sm gief-um.</item>
+      <item id="n3" alignment="c3" line="259" tag="G">You.2pl.NOM save-pl the.pl.fem.DAT gifts-pl.fem.DAT</item>
+      <item id="n4" alignment="c4" line="260" tag="T">You all save the gifts.</item>
+    </tier>
+  </igt>
+  <igt id="igt44" doc-id="lgcol:ang" line-range="261-263" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="261" tag="M">  author vetted: f</item>
+      <item id="r2" line="262" tag="L">  Ic beorg-e D\st tungol.</item>
+      <item id="r3" line="263" tag="G">  I.1sg.NOM save-1sg the.sg.neut.DAT star.sg.neut.DAT</item>
+      <item id="r4" line="264" tag="T">  'I save the star.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="261" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="262" tag="L">  Ic beorg-e D\st tungol.</item>
+      <item id="c3" alignment="r3" line="263" tag="G">  I.1sg.NOM save-1sg the.sg.neut.DAT star.sg.neut.DAT</item>
+      <item id="c4" alignment="r4" line="264" tag="T">  'I save the star.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="261" tag="M">f</item>
+      <item id="n2" alignment="c2" line="262" tag="L">Ic beorg-e D\st tungol.</item>
+      <item id="n3" alignment="c3" line="263" tag="G">I.1sg.NOM save-1sg the.sg.neut.DAT star.sg.neut.DAT</item>
+      <item id="n4" alignment="c4" line="264" tag="T">I save the star.</item>
+    </tier>
+  </igt>
+  <igt id="igt45" doc-id="lgcol:ang" line-range="265-267" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="265" tag="M">  author vetted: f</item>
+      <item id="r2" line="266" tag="L">  Ic beorg-e D\sm tungl-um.</item>
+      <item id="r3" line="267" tag="G">  I.1sg.NOM save-1sg the.pl.neut.DAT star-pl.neut.DAT</item>
+      <item id="r4" line="268" tag="T">  'I save the stars.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="265" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="266" tag="L">  Ic beorg-e D\sm tungl-um.</item>
+      <item id="c3" alignment="r3" line="267" tag="G">  I.1sg.NOM save-1sg the.pl.neut.DAT star-pl.neut.DAT</item>
+      <item id="c4" alignment="r4" line="268" tag="T">  'I save the stars.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="265" tag="M">f</item>
+      <item id="n2" alignment="c2" line="266" tag="L">Ic beorg-e D\sm tungl-um.</item>
+      <item id="n3" alignment="c3" line="267" tag="G">I.1sg.NOM save-1sg the.pl.neut.DAT star-pl.neut.DAT</item>
+      <item id="n4" alignment="c4" line="268" tag="T">I save the stars.</item>
+    </tier>
+  </igt>
+  <igt id="igt46" doc-id="lgcol:ang" line-range="269-271" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="269" tag="M">  author vetted: f</item>
+      <item id="r2" line="270" tag="L">  We beorg-aT inc.</item>
+      <item id="r3" line="271" tag="G">  We.1pl.NOM save-pl you.2du.DAT</item>
+      <item id="r4" line="272" tag="T">  'We save you two.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="269" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="270" tag="L">  We beorg-aT inc.</item>
+      <item id="c3" alignment="r3" line="271" tag="G">  We.1pl.NOM save-pl you.2du.DAT</item>
+      <item id="c4" alignment="r4" line="272" tag="T">  'We save you two.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="269" tag="M">f</item>
+      <item id="n2" alignment="c2" line="270" tag="L">We beorg-aT inc.</item>
+      <item id="n3" alignment="c3" line="271" tag="G">We.1pl.NOM save-pl you.2du.DAT</item>
+      <item id="n4" alignment="c4" line="272" tag="T">We save you two.</item>
+    </tier>
+  </igt>
+  <igt id="igt47" doc-id="lgcol:ang" line-range="273-275" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="273" tag="M">  author vetted: f</item>
+      <item id="r2" line="274" tag="L">  Tu beorg-est unc.</item>
+      <item id="r3" line="275" tag="G">  You.1sg.NOM save-2sg us.1du.DAT</item>
+      <item id="r4" line="276" tag="T">  'You save us two.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="273" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="274" tag="L">  Tu beorg-est unc.</item>
+      <item id="c3" alignment="r3" line="275" tag="G">  You.1sg.NOM save-2sg us.1du.DAT</item>
+      <item id="c4" alignment="r4" line="276" tag="T">  'You save us two.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="273" tag="M">f</item>
+      <item id="n2" alignment="c2" line="274" tag="L">Tu beorg-est unc.</item>
+      <item id="n3" alignment="c3" line="275" tag="G">You.1sg.NOM save-2sg us.1du.DAT</item>
+      <item id="n4" alignment="c4" line="276" tag="T">You save us two.</item>
+    </tier>
+  </igt>
+  <igt id="igt48" doc-id="lgcol:ang" line-range="277-279" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="277" tag="M">  author vetted: f</item>
+      <item id="r2" line="278" tag="L">  He beorg-eT us.</item>
+      <item id="r3" line="279" tag="G">  he.3sg.masc.NOM saves-3sg us.1pl.DAT</item>
+      <item id="r4" line="280" tag="T">  'He saves us.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="277" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="278" tag="L">  He beorg-eT us.</item>
+      <item id="c3" alignment="r3" line="279" tag="G">  he.3sg.masc.NOM saves-3sg us.1pl.DAT</item>
+      <item id="c4" alignment="r4" line="280" tag="T">  'He saves us.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="277" tag="M">f</item>
+      <item id="n2" alignment="c2" line="278" tag="L">He beorg-eT us.</item>
+      <item id="n3" alignment="c3" line="279" tag="G">he.3sg.masc.NOM saves-3sg us.1pl.DAT</item>
+      <item id="n4" alignment="c4" line="280" tag="T">He saves us.</item>
+    </tier>
+  </igt>
+  <igt id="igt49" doc-id="lgcol:ang" line-range="281-283" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="281" tag="M">  author vetted: f</item>
+      <item id="r2" line="282" tag="L">  Bid-e D\ss stan-es.</item>
+      <item id="r3" line="283" tag="G">  await-1sg the.sg.masc.GEN stone-sg.masc.GEN</item>
+      <item id="r4" line="284" tag="T">  'I await the stone.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="281" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="282" tag="L">  Bid-e D\ss stan-es.</item>
+      <item id="c3" alignment="r3" line="283" tag="G">  await-1sg the.sg.masc.GEN stone-sg.masc.GEN</item>
+      <item id="c4" alignment="r4" line="284" tag="T">  'I await the stone.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="281" tag="M">f</item>
+      <item id="n2" alignment="c2" line="282" tag="L">Bid-e D\ss stan-es.</item>
+      <item id="n3" alignment="c3" line="283" tag="G">await-1sg the.sg.masc.GEN stone-sg.masc.GEN</item>
+      <item id="n4" alignment="c4" line="284" tag="T">I await the stone.</item>
+    </tier>
+  </igt>
+  <igt id="igt50" doc-id="lgcol:ang" line-range="285-287" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="285" tag="M">  author vetted: f</item>
+      <item id="r2" line="286" tag="L">  Bid-est Dara stan-a.</item>
+      <item id="r3" line="287" tag="G">  await-2sg the.pl.masc.GEN stone-pl.masc.GEN</item>
+      <item id="r4" line="288" tag="T">  'You await the stone.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="285" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="286" tag="L">  Bid-est Dara stan-a.</item>
+      <item id="c3" alignment="r3" line="287" tag="G">  await-2sg the.pl.masc.GEN stone-pl.masc.GEN</item>
+      <item id="c4" alignment="r4" line="288" tag="T">  'You await the stone.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="285" tag="M">f</item>
+      <item id="n2" alignment="c2" line="286" tag="L">Bid-est Dara stan-a.</item>
+      <item id="n3" alignment="c3" line="287" tag="G">await-2sg the.pl.masc.GEN stone-pl.masc.GEN</item>
+      <item id="n4" alignment="c4" line="288" tag="T">You await the stone.</item>
+    </tier>
+  </igt>
+  <igt id="igt51" doc-id="lgcol:ang" line-range="289-291" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="289" tag="M">  author vetted: f</item>
+      <item id="r2" line="290" tag="L">  Bid-eT D\sre gief-e.</item>
+      <item id="r3" line="291" tag="G">  awaits-3sg the.sg.fem.GEN gift-sg.fem.GEN</item>
+      <item id="r4" line="292" tag="T">  'He awaits the gift.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="289" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="290" tag="L">  Bid-eT D\sre gief-e.</item>
+      <item id="c3" alignment="r3" line="291" tag="G">  awaits-3sg the.sg.fem.GEN gift-sg.fem.GEN</item>
+      <item id="c4" alignment="r4" line="292" tag="T">  'He awaits the gift.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="289" tag="M">f</item>
+      <item id="n2" alignment="c2" line="290" tag="L">Bid-eT D\sre gief-e.</item>
+      <item id="n3" alignment="c3" line="291" tag="G">awaits-3sg the.sg.fem.GEN gift-sg.fem.GEN</item>
+      <item id="n4" alignment="c4" line="292" tag="T">He awaits the gift.</item>
+    </tier>
+  </igt>
+  <igt id="igt52" doc-id="lgcol:ang" line-range="297-299" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="297" tag="M">  author vetted: f</item>
+      <item id="r2" line="298" tag="L">  Bid-aT Dara gief-e.</item>
+      <item id="r3" line="299" tag="G">  await-pl the.pl.fem.GEN gifts-pl.fem.GEN</item>
+      <item id="r4" line="300" tag="T">  'We await the gifts.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="297" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="298" tag="L">  Bid-aT Dara gief-e.</item>
+      <item id="c3" alignment="r3" line="299" tag="G">  await-pl the.pl.fem.GEN gifts-pl.fem.GEN</item>
+      <item id="c4" alignment="r4" line="300" tag="T">  'We await the gifts.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="297" tag="M">f</item>
+      <item id="n2" alignment="c2" line="298" tag="L">Bid-aT Dara gief-e.</item>
+      <item id="n3" alignment="c3" line="299" tag="G">await-pl the.pl.fem.GEN gifts-pl.fem.GEN</item>
+      <item id="n4" alignment="c4" line="300" tag="T">We await the gifts.</item>
+    </tier>
+  </igt>
+  <igt id="igt53" doc-id="lgcol:ang" line-range="301-303" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="301" tag="M">  author vetted: f</item>
+      <item id="r2" line="302" tag="L">  We bid-aT Dara gief-e.</item>
+      <item id="r3" line="303" tag="G">  we.1pl await-pl the.pl.fem.GEN gifts-pl.fem.GEN</item>
+      <item id="r4" line="304" tag="T">  'We await the gifts.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="301" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="302" tag="L">  We bid-aT Dara gief-e.</item>
+      <item id="c3" alignment="r3" line="303" tag="G">  we.1pl await-pl the.pl.fem.GEN gifts-pl.fem.GEN</item>
+      <item id="c4" alignment="r4" line="304" tag="T">  'We await the gifts.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="301" tag="M">f</item>
+      <item id="n2" alignment="c2" line="302" tag="L">We bid-aT Dara gief-e.</item>
+      <item id="n3" alignment="c3" line="303" tag="G">we.1pl await-pl the.pl.fem.GEN gifts-pl.fem.GEN</item>
+      <item id="n4" alignment="c4" line="304" tag="T">We await the gifts.</item>
+    </tier>
+  </igt>
+  <igt id="igt54" doc-id="lgcol:ang" line-range="309-311" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="309" tag="M">  author vetted: f</item>
+      <item id="r2" line="310" tag="L">  Bid-aT ge D\st tungl-es.</item>
+      <item id="r3" line="311" tag="G">  await-pl you.2pl.NOM the.sg.neut.GEN star-sg.neut.GEN</item>
+      <item id="r4" line="312" tag="T">  'You all await the star.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="309" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="310" tag="L">  Bid-aT ge D\st tungl-es.</item>
+      <item id="c3" alignment="r3" line="311" tag="G">  await-pl you.2pl.NOM the.sg.neut.GEN star-sg.neut.GEN</item>
+      <item id="c4" alignment="r4" line="312" tag="T">  'You all await the star.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="309" tag="M">f</item>
+      <item id="n2" alignment="c2" line="310" tag="L">Bid-aT ge D\st tungl-es.</item>
+      <item id="n3" alignment="c3" line="311" tag="G">await-pl you.2pl.NOM the.sg.neut.GEN star-sg.neut.GEN</item>
+      <item id="n4" alignment="c4" line="312" tag="T">You all await the star.</item>
+    </tier>
+  </igt>
+  <igt id="igt55" doc-id="lgcol:ang" line-range="317-319" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="317" tag="M">  author vetted: f</item>
+      <item id="r2" line="318" tag="L">  Ge bid-aT T\ss.</item>
+      <item id="r3" line="319" tag="G">  you.2pl await-pl those.neut.GEN</item>
+      <item id="r4" line="320" tag="T">  'You all await him.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="317" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="318" tag="L">  Ge bid-aT T\ss.</item>
+      <item id="c3" alignment="r3" line="319" tag="G">  you.2pl await-pl those.neut.GEN</item>
+      <item id="c4" alignment="r4" line="320" tag="T">  'You all await him.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="317" tag="M">f</item>
+      <item id="n2" alignment="c2" line="318" tag="L">Ge bid-aT T\ss.</item>
+      <item id="n3" alignment="c3" line="319" tag="G">you.2pl await-pl those.neut.GEN</item>
+      <item id="n4" alignment="c4" line="320" tag="T">You all await him.</item>
+    </tier>
+  </igt>
+  <igt id="igt56" doc-id="lgcol:ang" line-range="333-335" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="333" tag="M">  author vetted: f</item>
+      <item id="r2" line="334" tag="L">  Ic bid-e T\sre.</item>
+      <item id="r3" line="335" tag="G">  I.1sg await-1sg her.sg.fem.GEN</item>
+      <item id="r4" line="336" tag="T">  'I await her.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="333" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="334" tag="L">  Ic bid-e T\sre.</item>
+      <item id="c3" alignment="r3" line="335" tag="G">  I.1sg await-1sg her.sg.fem.GEN</item>
+      <item id="c4" alignment="r4" line="336" tag="T">  'I await her.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="333" tag="M">f</item>
+      <item id="n2" alignment="c2" line="334" tag="L">Ic bid-e T\sre.</item>
+      <item id="n3" alignment="c3" line="335" tag="G">I.1sg await-1sg her.sg.fem.GEN</item>
+      <item id="n4" alignment="c4" line="336" tag="T">I await her.</item>
+    </tier>
+  </igt>
+  <igt id="igt57" doc-id="lgcol:ang" line-range="337-339" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="337" tag="M">  author vetted: f</item>
+      <item id="r2" line="338" tag="L">  Bid-aT D\sra tungl-a.</item>
+      <item id="r3" line="339" tag="G">  await-pl the.pl.neut.GEN star-pl.neut.GEN</item>
+      <item id="r4" line="340" tag="T">  'They await the star.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="337" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="338" tag="L">  Bid-aT D\sra tungl-a.</item>
+      <item id="c3" alignment="r3" line="339" tag="G">  await-pl the.pl.neut.GEN star-pl.neut.GEN</item>
+      <item id="c4" alignment="r4" line="340" tag="T">  'They await the star.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="337" tag="M">f</item>
+      <item id="n2" alignment="c2" line="338" tag="L">Bid-aT D\sra tungl-a.</item>
+      <item id="n3" alignment="c3" line="339" tag="G">await-pl the.pl.neut.GEN star-pl.neut.GEN</item>
+      <item id="n4" alignment="c4" line="340" tag="T">They await the star.</item>
+    </tier>
+  </igt>
+  <igt id="igt58" doc-id="lgcol:ang" line-range="341-343" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="341" tag="M">  author vetted: f</item>
+      <item id="r2" line="342" tag="L">  D\sra tungl-a Bid-aT.</item>
+      <item id="r3" line="343" tag="G">  the.pl.neut.GEN star-pl.neut.GEN await-pl</item>
+      <item id="r4" line="344" tag="T">  'They await the star.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="341" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="342" tag="L">  D\sra tungl-a Bid-aT.</item>
+      <item id="c3" alignment="r3" line="343" tag="G">  the.pl.neut.GEN star-pl.neut.GEN await-pl</item>
+      <item id="c4" alignment="r4" line="344" tag="T">  'They await the star.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="341" tag="M">f</item>
+      <item id="n2" alignment="c2" line="342" tag="L">D\sra tungl-a Bid-aT.</item>
+      <item id="n3" alignment="c3" line="343" tag="G">the.pl.neut.GEN star-pl.neut.GEN await-pl</item>
+      <item id="n4" alignment="c4" line="344" tag="T">They await the star.</item>
+    </tier>
+  </igt>
+  <igt id="igt59" doc-id="lgcol:ang" line-range="345-347" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="345" tag="M">  author vetted: s</item>
+      <item id="r2" line="346" tag="L">  Ne mot ic don T\st ic wylle.</item>
+      <item id="r3" line="347" tag="G">  not can.1sg.NOM I.1sg.NOM do what I.1sg.NOM wish.1sg.NOM</item>
+      <item id="r4" line="348" tag="T">  'I cannot do what I wish."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="345" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="346" tag="L">  Ne mot ic don T\st ic wylle.</item>
+      <item id="c3" alignment="r3" line="347" tag="G">  not can.1sg.NOM I.1sg.NOM do what I.1sg.NOM wish.1sg.NOM</item>
+      <item id="c4" alignment="r4" line="348" tag="T">  'I cannot do what I wish."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="345" tag="M">s</item>
+      <item id="n2" alignment="c2" line="346" tag="L">Ne mot ic don T\st ic wylle.</item>
+      <item id="n3" alignment="c3" line="347" tag="G">not can.1sg.NOM I.1sg.NOM do what I.1sg.NOM wish.1sg.NOM</item>
+      <item id="n4" alignment="c4" line="348" tag="T">I cannot do what I wish.</item>
+    </tier>
+  </igt>
+  <igt id="igt60" doc-id="lgcol:ang" line-range="349-351" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="349" tag="M">  author vetted: s</item>
+      <item id="r2" line="350" tag="L">  T\sr ic mot wunian.</item>
+      <item id="r3" line="351" tag="G">  there I.1sg.NOM can.1sg.NOM continue</item>
+      <item id="r4" line="352" tag="T">  'There I can continue.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="349" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="350" tag="L">  T\sr ic mot wunian.</item>
+      <item id="c3" alignment="r3" line="351" tag="G">  there I.1sg.NOM can.1sg.NOM continue</item>
+      <item id="c4" alignment="r4" line="352" tag="T">  'There I can continue.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="349" tag="M">s</item>
+      <item id="n2" alignment="c2" line="350" tag="L">T\sr ic mot wunian.</item>
+      <item id="n3" alignment="c3" line="351" tag="G">there I.1sg.NOM can.1sg.NOM continue</item>
+      <item id="n4" alignment="c4" line="352" tag="T">There I can continue.</item>
+    </tier>
+  </igt>
+  <igt id="igt61" doc-id="lgcol:ang" line-range="353-355" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="353" tag="M">  author vetted: s</item>
+      <item id="r2" line="354" tag="L">  Hit is wyrse De uncer naDor hit ne-h\sbbe.</item>
+      <item id="r3" line="355" tag="G">  It.3sg.neut.NOM is.3sg.NOM worse that us.1du.GEN neither it.3sg.neut.ACC not-have</item>
+      <item id="r4" line="356" tag="T">  'It is worse that neither of us have it.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="353" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="354" tag="L">  Hit is wyrse De uncer naDor hit ne-h\sbbe.</item>
+      <item id="c3" alignment="r3" line="355" tag="G">  It.3sg.neut.NOM is.3sg.NOM worse that us.1du.GEN neither it.3sg.neut.ACC not-have</item>
+      <item id="c4" alignment="r4" line="356" tag="T">  'It is worse that neither of us have it.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="353" tag="M">s</item>
+      <item id="n2" alignment="c2" line="354" tag="L">Hit is wyrse De uncer naDor hit ne-h\sbbe.</item>
+      <item id="n3" alignment="c3" line="355" tag="G">It.3sg.neut.NOM is.3sg.NOM worse that us.1du.GEN neither it.3sg.neut.ACC not-have</item>
+      <item id="n4" alignment="c4" line="356" tag="T">It is worse that neither of us have it.</item>
+    </tier>
+  </igt>
+  <igt id="igt62" doc-id="lgcol:ang" line-range="357-359" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="357" tag="M">  author vetted: s</item>
+      <item id="r2" line="358" tag="L">  He s\sg-de T\st hine hingre-de.</item>
+      <item id="r3" line="359" tag="G">  He.3sg.masc.NOM said-3sg.PST that he.3sg.masc.ACC hungry-3sg.PST</item>
+      <item id="r4" line="360" tag="T">  "He said that he was hungry"</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="357" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="358" tag="L">  He s\sg-de T\st hine hingre-de.</item>
+      <item id="c3" alignment="r3" line="359" tag="G">  He.3sg.masc.NOM said-3sg.PST that he.3sg.masc.ACC hungry-3sg.PST</item>
+      <item id="c4" alignment="r4" line="360" tag="T">  "He said that he was hungry"</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="357" tag="M">s</item>
+      <item id="n2" alignment="c2" line="358" tag="L">He s\sg-de T\st hine hingre-de.</item>
+      <item id="n3" alignment="c3" line="359" tag="G">He.3sg.masc.NOM said-3sg.PST that he.3sg.masc.ACC hungry-3sg.PST</item>
+      <item id="n4" alignment="c4" line="360" tag="T">He said that he was hungry</item>
+    </tier>
+  </igt>
+  <igt id="igt63" doc-id="lgcol:ang" line-range="361-363" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="361" tag="M">  author vetted: s</item>
+      <item id="r2" line="362" tag="L">  Him hungr-ode.</item>
+      <item id="r3" line="363" tag="G">  He.3sg.masc.DAT hungry-3sg.PST</item>
+      <item id="r4" line="364" tag="T">  "He hungered."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="361" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="362" tag="L">  Him hungr-ode.</item>
+      <item id="c3" alignment="r3" line="363" tag="G">  He.3sg.masc.DAT hungry-3sg.PST</item>
+      <item id="c4" alignment="r4" line="364" tag="T">  "He hungered."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="361" tag="M">s</item>
+      <item id="n2" alignment="c2" line="362" tag="L">Him hungr-ode.</item>
+      <item id="n3" alignment="c3" line="363" tag="G">He.3sg.masc.DAT hungry-3sg.PST</item>
+      <item id="n4" alignment="c4" line="364" tag="T">He hungered.</item>
+    </tier>
+  </igt>
+  <igt id="igt64" doc-id="lgcol:ang" line-range="365-367" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="365" tag="M">  author vetted: s</item>
+      <item id="r2" line="366" tag="L">  Me hingrode.</item>
+      <item id="r3" line="367" tag="G">  I.1sg.DAT hungry.3sg.PST</item>
+      <item id="r4" line="368" tag="T">  "I hungered."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="365" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="366" tag="L">  Me hingrode.</item>
+      <item id="c3" alignment="r3" line="367" tag="G">  I.1sg.DAT hungry.3sg.PST</item>
+      <item id="c4" alignment="r4" line="368" tag="T">  "I hungered."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="365" tag="M">s</item>
+      <item id="n2" alignment="c2" line="366" tag="L">Me hingrode.</item>
+      <item id="n3" alignment="c3" line="367" tag="G">I.1sg.DAT hungry.3sg.PST</item>
+      <item id="n4" alignment="c4" line="368" tag="T">I hungered.</item>
+    </tier>
+  </igt>
+  <igt id="igt65" doc-id="lgcol:ang" line-range="369-371" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="369" tag="M">  author vetted: s</item>
+      <item id="r2" line="370" tag="L">  Ongan hine hingrian.</item>
+      <item id="r3" line="371" tag="G">  Began he.3sg.ACC to.hunger</item>
+      <item id="r4" line="372" tag="T">  "He began to hunger."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="369" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="370" tag="L">  Ongan hine hingrian.</item>
+      <item id="c3" alignment="r3" line="371" tag="G">  Began he.3sg.ACC to.hunger</item>
+      <item id="c4" alignment="r4" line="372" tag="T">  "He began to hunger."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="369" tag="M">s</item>
+      <item id="n2" alignment="c2" line="370" tag="L">Ongan hine hingrian.</item>
+      <item id="n3" alignment="c3" line="371" tag="G">Began he.3sg.ACC to.hunger</item>
+      <item id="n4" alignment="c4" line="372" tag="T">He began to hunger.</item>
+    </tier>
+  </igt>
+  <igt id="igt66" doc-id="lgcol:ang" line-range="373-375" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="373" tag="M">  author vetted: f</item>
+      <item id="r2" line="374" tag="L">  S\sg-de D\st Ne Tyrst Tone.</item>
+      <item id="r3" line="375" tag="G">  Say-PST that not thirst one</item>
+      <item id="r4" line="376" tag="T">  "He said that one shall not thirst."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="373" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="374" tag="L">  S\sg-de D\st Ne Tyrst Tone.</item>
+      <item id="c3" alignment="r3" line="375" tag="G">  Say-PST that not thirst one</item>
+      <item id="c4" alignment="r4" line="376" tag="T">  "He said that one shall not thirst."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="373" tag="M">f</item>
+      <item id="n2" alignment="c2" line="374" tag="L">S\sg-de D\st Ne Tyrst Tone.</item>
+      <item id="n3" alignment="c3" line="375" tag="G">Say-PST that not thirst one</item>
+      <item id="n4" alignment="c4" line="376" tag="T">He said that one shall not thirst.</item>
+    </tier>
+  </igt>
+  <igt id="igt67" doc-id="lgcol:ang" line-range="377-379" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="377" tag="M">  author vetted: f</item>
+      <item id="r2" line="378" tag="L">  s\sg-de D\st he nan ryhtre geDencan ne meah-te.</item>
+      <item id="r3" line="379" tag="G">  Say-PST Tat he.3sg.masc.NOM not right conceive not could-PST</item>
+      <item id="r4" line="380" tag="T">  "He said that he could not conceive nothing more right"</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="377" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="378" tag="L">  s\sg-de D\st he nan ryhtre geDencan ne meah-te.</item>
+      <item id="c3" alignment="r3" line="379" tag="G">  Say-PST Tat he.3sg.masc.NOM not right conceive not could-PST</item>
+      <item id="c4" alignment="r4" line="380" tag="T">  "He said that he could not conceive nothing more right"</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="377" tag="M">f</item>
+      <item id="n2" alignment="c2" line="378" tag="L">s\sg-de D\st he nan ryhtre geDencan ne meah-te.</item>
+      <item id="n3" alignment="c3" line="379" tag="G">Say-PST Tat he.3sg.masc.NOM not right conceive not could-PST</item>
+      <item id="n4" alignment="c4" line="380" tag="T">He said that he could not conceive nothing more right</item>
+    </tier>
+  </igt>
+  <igt id="igt68" doc-id="lgcol:ang" line-range="381-383" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="381" tag="M">  author vetted: f</item>
+      <item id="r2" line="382" tag="L">  Gif hio Donne bearn ne-habbe, Ic sceal r\sdan tomerigen.</item>
+      <item id="r3" line="383" tag="G">  If  she.3sg.fem.NOM than child not-have.3sg, I.1sg.NOM shall.1sg read tomorrow</item>
+      <item id="r4" line="384" tag="T">  "If she does not have a child, then I shall read tomorrow."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="381" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="382" tag="L">  Gif hio Donne bearn ne-habbe, Ic sceal r\sdan tomerigen.</item>
+      <item id="c3" alignment="r3" line="383" tag="G">  If  she.3sg.fem.NOM than child not-have.3sg, I.1sg.NOM shall.1sg read tomorrow</item>
+      <item id="c4" alignment="r4" line="384" tag="T">  "If she does not have a child, then I shall read tomorrow."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="381" tag="M">f</item>
+      <item id="n2" alignment="c2" line="382" tag="L">Gif hio Donne bearn ne-habbe, Ic sceal r\sdan tomerigen.</item>
+      <item id="n3" alignment="c3" line="383" tag="G">If  she.3sg.fem.NOM than child not-have.3sg, I.1sg.NOM shall.1sg read tomorrow</item>
+      <item id="n4" alignment="c4" line="384" tag="T">If she does not have a child, then I shall read tomorrow.</item>
+    </tier>
+  </igt>
+  <igt id="igt69" doc-id="lgcol:ang" line-range="385-387" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="385" tag="M">  author vetted: f</item>
+      <item id="r2" line="386" tag="L">  Gif Du w\sr-e her, ne-w\sre min broDor dead.</item>
+      <item id="r3" line="387" tag="G">  If you.2sg.NOM were-2sg.PST here, not-be.3sg my brother dead</item>
+      <item id="r4" line="388" tag="T">  "If you had been here, then my brother would not be dead"</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="385" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="386" tag="L">  Gif Du w\sr-e her, ne-w\sre min broDor dead.</item>
+      <item id="c3" alignment="r3" line="387" tag="G">  If you.2sg.NOM were-2sg.PST here, not-be.3sg my brother dead</item>
+      <item id="c4" alignment="r4" line="388" tag="T">  "If you had been here, then my brother would not be dead"</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="385" tag="M">f</item>
+      <item id="n2" alignment="c2" line="386" tag="L">Gif Du w\sr-e her, ne-w\sre min broDor dead.</item>
+      <item id="n3" alignment="c3" line="387" tag="G">If you.2sg.NOM were-2sg.PST here, not-be.3sg my brother dead</item>
+      <item id="n4" alignment="c4" line="388" tag="T">If you had been here, then my brother would not be dead</item>
+    </tier>
+  </igt>
+  <igt id="igt70" doc-id="lgcol:ang" line-range="389-391" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="389" tag="M">  author vetted: f</item>
+      <item id="r2" line="390" tag="L">  Ic        sceal     r\sdan tomerigen.</item>
+      <item id="r3" line="391" tag="G">  I.1sg.NOM shall.1sg read  tomorrow</item>
+      <item id="r4" line="392" tag="T">  "I shall read tomorrow."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="389" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="390" tag="L">  Ic        sceal     r\sdan tomerigen.</item>
+      <item id="c3" alignment="r3" line="391" tag="G">  I.1sg.NOM shall.1sg read  tomorrow</item>
+      <item id="c4" alignment="r4" line="392" tag="T">  "I shall read tomorrow."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="389" tag="M">f</item>
+      <item id="n2" alignment="c2" line="390" tag="L">Ic        sceal     r\sdan tomerigen.</item>
+      <item id="n3" alignment="c3" line="391" tag="G">I.1sg.NOM shall.1sg read  tomorrow</item>
+      <item id="n4" alignment="c4" line="392" tag="T">I shall read tomorrow.</item>
+    </tier>
+  </igt>
+  <igt id="igt71" doc-id="lgcol:ang" line-range="393-395" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="393" tag="M">  author vetted: s</item>
+      <item id="r2" line="394" tag="L">  EorDe m\sg     wiD     ealra    wihta           gehwilce.</item>
+      <item id="r3" line="395" tag="G">  Earth can.3sg against every.pl creature.pl.GEN whatsoever. </item>
+      <item id="r4" line="396" tag="T">  "Earth prevails against every creature"</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="393" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="394" tag="L">  EorDe m\sg     wiD     ealra    wihta           gehwilce.</item>
+      <item id="c3" alignment="r3" line="395" tag="G">  Earth can.3sg against every.pl creature.pl.GEN whatsoever. </item>
+      <item id="c4" alignment="r4" line="396" tag="T">  "Earth prevails against every creature"</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="393" tag="M">s</item>
+      <item id="n2" alignment="c2" line="394" tag="L">EorDe m\sg     wiD     ealra    wihta           gehwilce.</item>
+      <item id="n3" alignment="c3" line="395" tag="G">Earth can.3sg against every.pl creature.pl.GEN whatsoever.</item>
+      <item id="n4" alignment="c4" line="396" tag="T">Earth prevails against every creature</item>
+    </tier>
+  </igt>
+  <igt id="igt72" doc-id="lgcol:ang" line-range="397-399" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="397" tag="M">  author vetted: s</item>
+      <item id="r2" line="398" tag="L">  Ne  mih-t   Tu          leng tunscire    bewitan.</item>
+      <item id="r3" line="399" tag="G">  Not can-2sg you.2sg.NOM long stewardship hold</item>
+      <item id="r4" line="400" tag="T">  "You can no longer hold the stewardship."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="397" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="398" tag="L">  Ne  mih-t   Tu          leng tunscire    bewitan.</item>
+      <item id="c3" alignment="r3" line="399" tag="G">  Not can-2sg you.2sg.NOM long stewardship hold</item>
+      <item id="c4" alignment="r4" line="400" tag="T">  "You can no longer hold the stewardship."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="397" tag="M">s</item>
+      <item id="n2" alignment="c2" line="398" tag="L">Ne  mih-t   Tu          leng tunscire    bewitan.</item>
+      <item id="n3" alignment="c3" line="399" tag="G">Not can-2sg you.2sg.NOM long stewardship hold</item>
+      <item id="n4" alignment="c4" line="400" tag="T">You can no longer hold the stewardship.</item>
+    </tier>
+  </igt>
+  <igt id="igt73" doc-id="lgcol:ang" line-range="401-403" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="401" tag="M">  author vetted: s</item>
+      <item id="r2" line="402" tag="L">  N\snig manna       is     D\stte areccan m\sg.</item>
+      <item id="r3" line="403" tag="G">  No    man.3sg.NOM is.3sg that  relate  may.3sg</item>
+      <item id="r4" line="404" tag="T">  "There is no man that he may relate."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="401" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="402" tag="L">  N\snig manna       is     D\stte areccan m\sg.</item>
+      <item id="c3" alignment="r3" line="403" tag="G">  No    man.3sg.NOM is.3sg that  relate  may.3sg</item>
+      <item id="c4" alignment="r4" line="404" tag="T">  "There is no man that he may relate."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="401" tag="M">s</item>
+      <item id="n2" alignment="c2" line="402" tag="L">N\snig manna       is     D\stte areccan m\sg.</item>
+      <item id="n3" alignment="c3" line="403" tag="G">No    man.3sg.NOM is.3sg that  relate  may.3sg</item>
+      <item id="n4" alignment="c4" line="404" tag="T">There is no man that he may relate.</item>
+    </tier>
+  </igt>
+  <igt id="igt74" doc-id="lgcol:ang" line-range="405-407" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="405" tag="M">  author vetted: s</item>
+      <item id="r2" line="406" tag="L">  Ic        an T\ss              landes       \st Ingepenne ofer  minne d\sg.</item>
+      <item id="r3" line="407" tag="G">  I.1sg.NOM to the.3sg.masc.GEN land.3sg.GEN at Inkpen    after my    day.3sg.ACC</item>
+      <item id="r4" line="408" tag="T">  "I grant the land at Inkpen after my day."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="405" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="406" tag="L">  Ic        an T\ss              landes       \st Ingepenne ofer  minne d\sg.</item>
+      <item id="c3" alignment="r3" line="407" tag="G">  I.1sg.NOM to the.3sg.masc.GEN land.3sg.GEN at Inkpen    after my    day.3sg.ACC</item>
+      <item id="c4" alignment="r4" line="408" tag="T">  "I grant the land at Inkpen after my day."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="405" tag="M">s</item>
+      <item id="n2" alignment="c2" line="406" tag="L">Ic        an T\ss              landes       \st Ingepenne ofer  minne d\sg.</item>
+      <item id="n3" alignment="c3" line="407" tag="G">I.1sg.NOM to the.3sg.masc.GEN land.3sg.GEN at Inkpen    after my    day.3sg.ACC</item>
+      <item id="n4" alignment="c4" line="408" tag="T">I grant the land at Inkpen after my day.</item>
+    </tier>
+  </igt>
+  <igt id="igt75" doc-id="lgcol:ang" line-range="409-411" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="409" tag="M">  author vetted: f</item>
+      <item id="r2" line="410" tag="L">  Ic.1sg.NOM deme.1sg nan  T\sra       cyninga  De  cum-aD  \sfter me.</item>
+      <item id="r3" line="411" tag="G">  I          judge    none the.pl.GEN kings.pl who come-pl after me.1sg.DAT</item>
+      <item id="r4" line="412" tag="T">  "I judge none of those kings who (will) come after me."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="409" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="410" tag="L">  Ic.1sg.NOM deme.1sg nan  T\sra       cyninga  De  cum-aD  \sfter me.</item>
+      <item id="c3" alignment="r3" line="411" tag="G">  I          judge    none the.pl.GEN kings.pl who come-pl after me.1sg.DAT</item>
+      <item id="c4" alignment="r4" line="412" tag="T">  "I judge none of those kings who (will) come after me."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="409" tag="M">f</item>
+      <item id="n2" alignment="c2" line="410" tag="L">Ic.1sg.NOM deme.1sg nan  T\sra       cyninga  De  cum-aD  \sfter me.</item>
+      <item id="n3" alignment="c3" line="411" tag="G">I          judge    none the.pl.GEN kings.pl who come-pl after me.1sg.DAT</item>
+      <item id="n4" alignment="c4" line="412" tag="T">I judge none of those kings who (will) come after me.</item>
+    </tier>
+  </igt>
+  <igt id="igt76" doc-id="lgcol:ang" line-range="413-415" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="413" tag="M">  author vetted: s</item>
+      <item id="r2" line="414" tag="L">  Ne  com      se               here.</item>
+      <item id="r3" line="415" tag="G">  Not come.3sg the.3sg.masc.NOM army.3sg.masc.NOM</item>
+      <item id="r4" line="416" tag="T">  "The army did not come."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="413" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="414" tag="L">  Ne  com      se               here.</item>
+      <item id="c3" alignment="r3" line="415" tag="G">  Not come.3sg the.3sg.masc.NOM army.3sg.masc.NOM</item>
+      <item id="c4" alignment="r4" line="416" tag="T">  "The army did not come."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="413" tag="M">s</item>
+      <item id="n2" alignment="c2" line="414" tag="L">Ne  com      se               here.</item>
+      <item id="n3" alignment="c3" line="415" tag="G">Not come.3sg the.3sg.masc.NOM army.3sg.masc.NOM</item>
+      <item id="n4" alignment="c4" line="416" tag="T">The army did not come.</item>
+    </tier>
+  </igt>
+  <igt id="igt77" doc-id="lgcol:ang" line-range="417-419" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="417" tag="M">  author vetted: f</item>
+      <item id="r2" line="418" tag="L">  Gif hit        T\st               ne  sio             Tonne sell-e   hio         him	</item>
+      <item id="r3" line="419" tag="G">  If  it.3sg.NOM that.3sg.neut.ACC not she.3sg.fem.NOM then  give-3sg them.pl.ACC him.3sg.masc.DAT</item>
+      <item id="r4" line="420" tag="T">  "If it may not be that, then she is to give to him them."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="417" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="418" tag="L">  Gif hit        T\st               ne  sio             Tonne sell-e   hio         him	</item>
+      <item id="c3" alignment="r3" line="419" tag="G">  If  it.3sg.NOM that.3sg.neut.ACC not she.3sg.fem.NOM then  give-3sg them.pl.ACC him.3sg.masc.DAT</item>
+      <item id="c4" alignment="r4" line="420" tag="T">  "If it may not be that, then she is to give to him them."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="417" tag="M">f</item>
+      <item id="n2" alignment="c2" line="418" tag="L">Gif hit        T\st               ne  sio             Tonne sell-e   hio         him</item>
+      <item id="n3" alignment="c3" line="419" tag="G">If  it.3sg.NOM that.3sg.neut.ACC not she.3sg.fem.NOM then  give-3sg them.pl.ACC him.3sg.masc.DAT</item>
+      <item id="n4" alignment="c4" line="420" tag="T">If it may not be that, then she is to give to him them.</item>
+    </tier>
+  </igt>
+  <igt id="igt78" doc-id="lgcol:ang" line-range="421-423" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="421" tag="M">  author vetted: s</item>
+      <item id="r2" line="422" tag="L">  Gehyr-st Tu,         s\slida?</item>
+      <item id="r3" line="423" tag="G">  Hear-2sg you.2sg.NOM sailor?</item>
+      <item id="r4" line="424" tag="T">  "Do you hear, sailor?"</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="421" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="422" tag="L">  Gehyr-st Tu,         s\slida?</item>
+      <item id="c3" alignment="r3" line="423" tag="G">  Hear-2sg you.2sg.NOM sailor?</item>
+      <item id="c4" alignment="r4" line="424" tag="T">  "Do you hear, sailor?"</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="421" tag="M">s</item>
+      <item id="n2" alignment="c2" line="422" tag="L">Gehyr-st Tu,         s\slida?</item>
+      <item id="n3" alignment="c3" line="423" tag="G">Hear-2sg you.2sg.NOM sailor?</item>
+      <item id="n4" alignment="c4" line="424" tag="T">Do you hear, sailor?</item>
+    </tier>
+  </igt>
+  <igt id="igt79" doc-id="lgcol:ang" line-range="425-427" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="425" tag="M">  author vetted: s</item>
+      <item id="r2" line="426" tag="L">  Ne  seow-e Tu           god  s\sd          on Tin-um   \scer-e?</item>
+      <item id="r3" line="427" tag="G">  Not sow-2sg you.2sg.NOM good seed.3sg.ACC in your-DAT field-3sg.DAT</item>
+      <item id="r4" line="428" tag="T">  "Did you not sow good seed in your field?"</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="425" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="426" tag="L">  Ne  seow-e Tu           god  s\sd          on Tin-um   \scer-e?</item>
+      <item id="c3" alignment="r3" line="427" tag="G">  Not sow-2sg you.2sg.NOM good seed.3sg.ACC in your-DAT field-3sg.DAT</item>
+      <item id="c4" alignment="r4" line="428" tag="T">  "Did you not sow good seed in your field?"</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="425" tag="M">s</item>
+      <item id="n2" alignment="c2" line="426" tag="L">Ne  seow-e Tu           god  s\sd          on Tin-um   \scer-e?</item>
+      <item id="n3" alignment="c3" line="427" tag="G">Not sow-2sg you.2sg.NOM good seed.3sg.ACC in your-DAT field-3sg.DAT</item>
+      <item id="n4" alignment="c4" line="428" tag="T">Did you not sow good seed in your field?</item>
+    </tier>
+  </igt>
+  <igt id="igt80" doc-id="lgcol:ang" line-range="429-431" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="429" tag="M">  author vetted: s</item>
+      <item id="r2" line="430" tag="L">  Hw\sDer  ic         mot-e   lybban oDT\st ic.1sg.NOM hine        gese-o?</item>
+      <item id="r3" line="431" tag="G">  Whether I.1sg.NOM  may-1sg live   until I          him.3sg.ACC see-3sg?</item>
+      <item id="r4" line="432" tag="T">  "May I live until I see him?"</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="429" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="430" tag="L">  Hw\sDer  ic         mot-e   lybban oDT\st ic.1sg.NOM hine        gese-o?</item>
+      <item id="c3" alignment="r3" line="431" tag="G">  Whether I.1sg.NOM  may-1sg live   until I          him.3sg.ACC see-3sg?</item>
+      <item id="c4" alignment="r4" line="432" tag="T">  "May I live until I see him?"</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="429" tag="M">s</item>
+      <item id="n2" alignment="c2" line="430" tag="L">Hw\sDer  ic         mot-e   lybban oDT\st ic.1sg.NOM hine        gese-o?</item>
+      <item id="n3" alignment="c3" line="431" tag="G">Whether I.1sg.NOM  may-1sg live   until I          him.3sg.ACC see-3sg?</item>
+      <item id="n4" alignment="c4" line="432" tag="T">May I live until I see him?</item>
+    </tier>
+  </igt>
+  <igt id="igt81" doc-id="lgcol:ang" line-range="433-435" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="433" tag="M">  author vetted: f</item>
+      <item id="r2" line="434" tag="L">  Her swutel-aD T\st docga-s bedrif-aT catte.</item>
+      <item id="r3" line="435" tag="G">  Here declare-3pl that dogs-3pl.masc.NOM chase-3pl cats.3pl.ACC</item>
+      <item id="r4" line="436" tag="T">  "Here is declared that dogs chase cats."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="433" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="434" tag="L">  Her swutel-aD T\st docga-s bedrif-aT catte.</item>
+      <item id="c3" alignment="r3" line="435" tag="G">  Here declare-3pl that dogs-3pl.masc.NOM chase-3pl cats.3pl.ACC</item>
+      <item id="c4" alignment="r4" line="436" tag="T">  "Here is declared that dogs chase cats."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="433" tag="M">f</item>
+      <item id="n2" alignment="c2" line="434" tag="L">Her swutel-aD T\st docga-s bedrif-aT catte.</item>
+      <item id="n3" alignment="c3" line="435" tag="G">Here declare-3pl that dogs-3pl.masc.NOM chase-3pl cats.3pl.ACC</item>
+      <item id="n4" alignment="c4" line="436" tag="T">Here is declared that dogs chase cats.</item>
+    </tier>
+  </igt>
+  <igt id="igt82" doc-id="lgcol:ang" line-range="437-439" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="437" tag="M">  author vetted: s</item>
+      <item id="r2" line="438" tag="L">  Ic        will-e   T\st  man         nim-e    T\st.3sg.neut.ACC  feoh.3sg.neut.ACC.</item>
+      <item id="r3" line="439" tag="G">  I.1sg.NOM wish-1sg that one.3sg.NOM take-3sg that              property</item>
+      <item id="r4" line="440" tag="T">  'I wish that one take that property'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="437" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="438" tag="L">  Ic        will-e   T\st  man         nim-e    T\st.3sg.neut.ACC  feoh.3sg.neut.ACC.</item>
+      <item id="c3" alignment="r3" line="439" tag="G">  I.1sg.NOM wish-1sg that one.3sg.NOM take-3sg that              property</item>
+      <item id="c4" alignment="r4" line="440" tag="T">  'I wish that one take that property'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="437" tag="M">s</item>
+      <item id="n2" alignment="c2" line="438" tag="L">Ic        will-e   T\st  man         nim-e    T\st.3sg.neut.ACC  feoh.3sg.neut.ACC.</item>
+      <item id="n3" alignment="c3" line="439" tag="G">I.1sg.NOM wish-1sg that one.3sg.NOM take-3sg that              property</item>
+      <item id="n4" alignment="c4" line="440" tag="T">I wish that one take that property</item>
+    </tier>
+  </igt>
+  <igt id="igt83" doc-id="lgcol:ang" line-range="441-443" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="441" tag="M">  author vetted: s</item>
+      <item id="r2" line="442" tag="L">  Ic        h\sbb-e   geleauan   T\st  Tu          ne-wille.</item>
+      <item id="r3" line="443" tag="G">  I.1sg.NOM have-1sg confidence that you.2sg.NOM not-will.2sg</item>
+      <item id="r4" line="444" tag="T">  "I have confidence that you will not."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="441" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="442" tag="L">  Ic        h\sbb-e   geleauan   T\st  Tu          ne-wille.</item>
+      <item id="c3" alignment="r3" line="443" tag="G">  I.1sg.NOM have-1sg confidence that you.2sg.NOM not-will.2sg</item>
+      <item id="c4" alignment="r4" line="444" tag="T">  "I have confidence that you will not."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="441" tag="M">s</item>
+      <item id="n2" alignment="c2" line="442" tag="L">Ic        h\sbb-e   geleauan   T\st  Tu          ne-wille.</item>
+      <item id="n3" alignment="c3" line="443" tag="G">I.1sg.NOM have-1sg confidence that you.2sg.NOM not-will.2sg</item>
+      <item id="n4" alignment="c4" line="444" tag="T">I have confidence that you will not.</item>
+    </tier>
+  </igt>
+  <igt id="igt84" doc-id="lgcol:ang" line-range="445-447" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="445" tag="M">  author vetted: s</item>
+      <item id="r2" line="446" tag="L">  Ic        h\sbb-e   allum Dingum               De to lond-um belimp-aD.</item>
+      <item id="r3" line="447" tag="G">  I.1sg.NOM have-1sg all.3pl.GEN things.3pl.GEN which to land-3sg.GEN belong-3sg</item>
+      <item id="r4" line="448" tag="T">  "I have all the things which belong to the land."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="445" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="446" tag="L">  Ic        h\sbb-e   allum Dingum               De to lond-um belimp-aD.</item>
+      <item id="c3" alignment="r3" line="447" tag="G">  I.1sg.NOM have-1sg all.3pl.GEN things.3pl.GEN which to land-3sg.GEN belong-3sg</item>
+      <item id="c4" alignment="r4" line="448" tag="T">  "I have all the things which belong to the land."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="445" tag="M">s</item>
+      <item id="n2" alignment="c2" line="446" tag="L">Ic        h\sbb-e   allum Dingum               De to lond-um belimp-aD.</item>
+      <item id="n3" alignment="c3" line="447" tag="G">I.1sg.NOM have-1sg all.3pl.GEN things.3pl.GEN which to land-3sg.GEN belong-3sg</item>
+      <item id="n4" alignment="c4" line="448" tag="T">I have all the things which belong to the land.</item>
+    </tier>
+  </igt>
+  <igt id="igt85" doc-id="lgcol:ang" line-range="449-451" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="449" tag="M">  author vetted: s</item>
+      <item id="r2" line="450" tag="L">  Da Doht-e    he              D\st  he              wold-e    gesecan hell-e        godu.</item>
+      <item id="r3" line="451" tag="G">  Then thought-? he.3sg.masc.NOM that he.3sg.masc.NOM would-3sg seek    hell-3sg.GEN gods.3pl.ACC</item>
+      <item id="r4" line="452" tag="T">  "then he thought that he would seek the gods of hell"</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="449" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="450" tag="L">  Da Doht-e    he              D\st  he              wold-e    gesecan hell-e        godu.</item>
+      <item id="c3" alignment="r3" line="451" tag="G">  Then thought-? he.3sg.masc.NOM that he.3sg.masc.NOM would-3sg seek    hell-3sg.GEN gods.3pl.ACC</item>
+      <item id="c4" alignment="r4" line="452" tag="T">  "then he thought that he would seek the gods of hell"</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="449" tag="M">s</item>
+      <item id="n2" alignment="c2" line="450" tag="L">Da Doht-e    he              D\st  he              wold-e    gesecan hell-e        godu.</item>
+      <item id="n3" alignment="c3" line="451" tag="G">Then thought-? he.3sg.masc.NOM that he.3sg.masc.NOM would-3sg seek    hell-3sg.GEN gods.3pl.ACC</item>
+      <item id="n4" alignment="c4" line="452" tag="T">then he thought that he would seek the gods of hell</item>
+    </tier>
+  </igt>
+  <igt id="igt86" doc-id="lgcol:ang" line-range="453-455" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="453" tag="M">  author vetted: s</item>
+      <item id="r2" line="454" tag="L">  Ic        wen-e       D\stte noht monige begiondan Humbre ne-w\sren.</item>
+      <item id="r3" line="455" tag="G">  I.1sg.NOM believe-1sg that  not  many   beyond    Humber  not-were.3sg</item>
+      <item id="r4" line="456" tag="T">  "I believe that there were not many beyond the Humber." </item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="453" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="454" tag="L">  Ic        wen-e       D\stte noht monige begiondan Humbre ne-w\sren.</item>
+      <item id="c3" alignment="r3" line="455" tag="G">  I.1sg.NOM believe-1sg that  not  many   beyond    Humber  not-were.3sg</item>
+      <item id="c4" alignment="r4" line="456" tag="T">  "I believe that there were not many beyond the Humber." </item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="453" tag="M">s</item>
+      <item id="n2" alignment="c2" line="454" tag="L">Ic        wen-e       D\stte noht monige begiondan Humbre ne-w\sren.</item>
+      <item id="n3" alignment="c3" line="455" tag="G">I.1sg.NOM believe-1sg that  not  many   beyond    Humber  not-were.3sg</item>
+      <item id="n4" alignment="c4" line="456" tag="T">I believe that there were not many beyond the Humber.</item>
+    </tier>
+  </igt>
+  <igt id="igt87" doc-id="lgcol:ang" line-range="457-459" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="457" tag="M">  author vetted: s</item>
+      <item id="r2" line="458" tag="L">  Ic        wat      he         minne hige              cuD-e.</item>
+      <item id="r3" line="459" tag="G">  I.1sg.NOM know.1sg he.1sg.NOM my    intention.3sg.ACC perceived-3sg.PST</item>
+      <item id="r4" line="460" tag="T">  "I know he perceived my intention."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="457" tag="M">  author vetted: s</item>
+      <item id="c2" alignment="r2" line="458" tag="L">  Ic        wat      he         minne hige              cuD-e.</item>
+      <item id="c3" alignment="r3" line="459" tag="G">  I.1sg.NOM know.1sg he.1sg.NOM my    intention.3sg.ACC perceived-3sg.PST</item>
+      <item id="c4" alignment="r4" line="460" tag="T">  "I know he perceived my intention."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="457" tag="M">s</item>
+      <item id="n2" alignment="c2" line="458" tag="L">Ic        wat      he         minne hige              cuD-e.</item>
+      <item id="n3" alignment="c3" line="459" tag="G">I.1sg.NOM know.1sg he.1sg.NOM my    intention.3sg.ACC perceived-3sg.PST</item>
+      <item id="n4" alignment="c4" line="460" tag="T">I know he perceived my intention.</item>
+    </tier>
+  </igt>
+  <igt id="igt88" doc-id="lgcol:ang" line-range="461-463" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="461" tag="M">  author vetted: f</item>
+      <item id="r2" line="462" tag="L">  Ic.1sg.NOM think.1sg T\st  docga-s           bedrif-en      catt-e.</item>
+      <item id="r3" line="463" tag="G">  I         think     that dogs-3pl.masc.NOM chase-3pl.SUBJ cats-3pl.fem.ACC</item>
+      <item id="r4" line="464" tag="T">  "I think that dogs chase cats."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="461" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="462" tag="L">  Ic.1sg.NOM think.1sg T\st  docga-s           bedrif-en      catt-e.</item>
+      <item id="c3" alignment="r3" line="463" tag="G">  I         think     that dogs-3pl.masc.NOM chase-3pl.SUBJ cats-3pl.fem.ACC</item>
+      <item id="c4" alignment="r4" line="464" tag="T">  "I think that dogs chase cats."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="461" tag="M">f</item>
+      <item id="n2" alignment="c2" line="462" tag="L">Ic.1sg.NOM think.1sg T\st  docga-s           bedrif-en      catt-e.</item>
+      <item id="n3" alignment="c3" line="463" tag="G">I         think     that dogs-3pl.masc.NOM chase-3pl.SUBJ cats-3pl.fem.ACC</item>
+      <item id="n4" alignment="c4" line="464" tag="T">I think that dogs chase cats.</item>
+    </tier>
+  </igt>
+  <igt id="igt89" doc-id="lgcol:ang" line-range="465-467" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="465" tag="M">  author vetted: f</item>
+      <item id="r2" line="466" tag="L">  Ic.1sg.NOM cann.1sg T\st  docga-s           bedrif-aT catt-e.</item>
+      <item id="r3" line="467" tag="G">  I         know     that dogs-3pl.masc.NOM chase-3pl cats-3pl.fem.ACC</item>
+      <item id="r4" line="468" tag="T">  "I know that dogs chase cats."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="465" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="466" tag="L">  Ic.1sg.NOM cann.1sg T\st  docga-s           bedrif-aT catt-e.</item>
+      <item id="c3" alignment="r3" line="467" tag="G">  I         know     that dogs-3pl.masc.NOM chase-3pl cats-3pl.fem.ACC</item>
+      <item id="c4" alignment="r4" line="468" tag="T">  "I know that dogs chase cats."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="465" tag="M">f</item>
+      <item id="n2" alignment="c2" line="466" tag="L">Ic.1sg.NOM cann.1sg T\st  docga-s           bedrif-aT catt-e.</item>
+      <item id="n3" alignment="c3" line="467" tag="G">I         know     that dogs-3pl.masc.NOM chase-3pl cats-3pl.fem.ACC</item>
+      <item id="n4" alignment="c4" line="468" tag="T">I know that dogs chase cats.</item>
+    </tier>
+  </igt>
+  <igt id="igt90" doc-id="lgcol:ang" line-range="469-471" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="469" tag="M">  author vetted: f</item>
+      <item id="r2" line="470" tag="L">  Docga-s sl\sp-aT.</item>
+      <item id="r3" line="471" tag="G">  Dogs-3pl.masc.NOM sleep-3sg</item>
+      <item id="r4" line="472" tag="T">  "Dogs sleep"</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="469" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="470" tag="L">  Docga-s sl\sp-aT.</item>
+      <item id="c3" alignment="r3" line="471" tag="G">  Dogs-3pl.masc.NOM sleep-3sg</item>
+      <item id="c4" alignment="r4" line="472" tag="T">  "Dogs sleep"</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="469" tag="M">f</item>
+      <item id="n2" alignment="c2" line="470" tag="L">Docga-s sl\sp-aT.</item>
+      <item id="n3" alignment="c3" line="471" tag="G">Dogs-3pl.masc.NOM sleep-3sg</item>
+      <item id="n4" alignment="c4" line="472" tag="T">Dogs sleep</item>
+    </tier>
+  </igt>
+  <igt id="igt91" doc-id="lgcol:ang" line-range="473-475" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="473" tag="M">  author vetted: f</item>
+      <item id="r2" line="474" tag="L">  Docga-s bedrif-aT carbunclas.</item>
+      <item id="r3" line="475" tag="G">  Dogs-3pl.masc.NOM chase-3pl carbuncles</item>
+      <item id="r4" line="476" tag="T">  "Dogs             chase     carbuncles."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="473" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="474" tag="L">  Docga-s bedrif-aT carbunclas.</item>
+      <item id="c3" alignment="r3" line="475" tag="G">  Dogs-3pl.masc.NOM chase-3pl carbuncles</item>
+      <item id="c4" alignment="r4" line="476" tag="T">  "Dogs             chase     carbuncles."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="473" tag="M">f</item>
+      <item id="n2" alignment="c2" line="474" tag="L">Docga-s bedrif-aT carbunclas.</item>
+      <item id="n3" alignment="c3" line="475" tag="G">Dogs-3pl.masc.NOM chase-3pl carbuncles</item>
+      <item id="n4" alignment="c4" line="476" tag="T">Dogs             chase     carbuncles.</item>
+    </tier>
+  </igt>
+  <igt id="igt92" doc-id="lgcol:ang" line-range="477-479" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="477" tag="M">  author vetted: f</item>
+      <item id="r2" line="478" tag="L">  Ic        bedrif-e  Tec.</item>
+      <item id="r3" line="479" tag="G">  I.1sg.NOM chase-1sg you.2sg.ACC</item>
+      <item id="r4" line="480" tag="T">  "I chase you."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="477" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="478" tag="L">  Ic        bedrif-e  Tec.</item>
+      <item id="c3" alignment="r3" line="479" tag="G">  I.1sg.NOM chase-1sg you.2sg.ACC</item>
+      <item id="c4" alignment="r4" line="480" tag="T">  "I chase you."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="477" tag="M">f</item>
+      <item id="n2" alignment="c2" line="478" tag="L">Ic        bedrif-e  Tec.</item>
+      <item id="n3" alignment="c3" line="479" tag="G">I.1sg.NOM chase-1sg you.2sg.ACC</item>
+      <item id="n4" alignment="c4" line="480" tag="T">I chase you.</item>
+    </tier>
+  </igt>
+  <igt id="igt93" doc-id="lgcol:ang" line-range="481-483" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="481" tag="M">  author vetted: f</item>
+      <item id="r2" line="482" tag="L">  T\ss               docga-s           sl\sp-aT.</item>
+      <item id="r3" line="483" tag="G">  These.pl.masc.NOM dogs-3pl.masc.NOM sleep-3pl</item>
+      <item id="r4" line="484" tag="T">  "These dogs sleep."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="481" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="482" tag="L">  T\ss               docga-s           sl\sp-aT.</item>
+      <item id="c3" alignment="r3" line="483" tag="G">  These.pl.masc.NOM dogs-3pl.masc.NOM sleep-3pl</item>
+      <item id="c4" alignment="r4" line="484" tag="T">  "These dogs sleep."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="481" tag="M">f</item>
+      <item id="n2" alignment="c2" line="482" tag="L">T\ss               docga-s           sl\sp-aT.</item>
+      <item id="n3" alignment="c3" line="483" tag="G">These.pl.masc.NOM dogs-3pl.masc.NOM sleep-3pl</item>
+      <item id="n4" alignment="c4" line="484" tag="T">These dogs sleep.</item>
+    </tier>
+  </igt>
+  <igt id="igt94" doc-id="lgcol:ang" line-range="485-487" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="485" tag="M">  author vetted: f</item>
+      <item id="r2" line="486" tag="L">  Docga-s           abruc-aT.</item>
+      <item id="r3" line="487" tag="G">  Dogs-3pl.masc.NOM eat-3pl</item>
+      <item id="r4" line="488" tag="T">  "Dogs eat."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="485" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="486" tag="L">  Docga-s           abruc-aT.</item>
+      <item id="c3" alignment="r3" line="487" tag="G">  Dogs-3pl.masc.NOM eat-3pl</item>
+      <item id="c4" alignment="r4" line="488" tag="T">  "Dogs eat."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="485" tag="M">f</item>
+      <item id="n2" alignment="c2" line="486" tag="L">Docga-s           abruc-aT.</item>
+      <item id="n3" alignment="c3" line="487" tag="G">Dogs-3pl.masc.NOM eat-3pl</item>
+      <item id="n4" alignment="c4" line="488" tag="T">Dogs eat.</item>
+    </tier>
+  </igt>
+  <igt id="igt95" doc-id="lgcol:ang" line-range="489-491" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="489" tag="M">  author vetted: f</item>
+      <item id="r2" line="490" tag="L">  Ic        mot     abrucan gl\ss.</item>
+      <item id="r3" line="491" tag="G">  I.1sg.NOM can.1sg eat     glass.</item>
+      <item id="r4" line="492" tag="T">  "I can eat glass."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="489" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="490" tag="L">  Ic        mot     abrucan gl\ss.</item>
+      <item id="c3" alignment="r3" line="491" tag="G">  I.1sg.NOM can.1sg eat     glass.</item>
+      <item id="c4" alignment="r4" line="492" tag="T">  "I can eat glass."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="489" tag="M">f</item>
+      <item id="n2" alignment="c2" line="490" tag="L">Ic        mot     abrucan gl\ss.</item>
+      <item id="n3" alignment="c3" line="491" tag="G">I.1sg.NOM can.1sg eat     glass.</item>
+      <item id="n4" alignment="c4" line="492" tag="T">I can eat glass.</item>
+    </tier>
+  </igt>
+  <igt id="igt96" doc-id="lgcol:ang" line-range="493-495" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="493" tag="M">  author vetted: f</item>
+      <item id="r2" line="494" tag="L">  Ne aderi-e me.</item>
+      <item id="r3" line="495" tag="G">  Not hurt-3sg me.1sg.DAT</item>
+      <item id="r4" line="496" tag="T">  "It doesn't hurt me"</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="493" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="494" tag="L">  Ne aderi-e me.</item>
+      <item id="c3" alignment="r3" line="495" tag="G">  Not hurt-3sg me.1sg.DAT</item>
+      <item id="c4" alignment="r4" line="496" tag="T">  "It doesn't hurt me"</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="493" tag="M">f</item>
+      <item id="n2" alignment="c2" line="494" tag="L">Ne aderi-e me.</item>
+      <item id="n3" alignment="c3" line="495" tag="G">Not hurt-3sg me.1sg.DAT</item>
+      <item id="n4" alignment="c4" line="496" tag="T">It doesn't hurt me</item>
+    </tier>
+  </igt>
+  <igt id="igt97" doc-id="lgcol:ang" line-range="497-499" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="497" tag="M">  author vetted: f</item>
+      <item id="r2" line="498" tag="L">  Da docga-s bedrif-aT carbunclas.</item>
+      <item id="r3" line="499" tag="G">  The.3pl.masc.NOM dogs-3pl.masc.NOM chase-3pl carbuncles</item>
+      <item id="r4" line="500" tag="T">  "The dogs chase carbuncles."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="497" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="498" tag="L">  Da docga-s bedrif-aT carbunclas.</item>
+      <item id="c3" alignment="r3" line="499" tag="G">  The.3pl.masc.NOM dogs-3pl.masc.NOM chase-3pl carbuncles</item>
+      <item id="c4" alignment="r4" line="500" tag="T">  "The dogs chase carbuncles."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="497" tag="M">f</item>
+      <item id="n2" alignment="c2" line="498" tag="L">Da docga-s bedrif-aT carbunclas.</item>
+      <item id="n3" alignment="c3" line="499" tag="G">The.3pl.masc.NOM dogs-3pl.masc.NOM chase-3pl carbuncles</item>
+      <item id="n4" alignment="c4" line="500" tag="T">The dogs chase carbuncles.</item>
+    </tier>
+  </igt>
+  <igt id="igt98" doc-id="lgcol:ang" line-range="501-503" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="501" tag="M">  author vetted: f</item>
+      <item id="r2" line="502" tag="L">  Ic        hycg-e    T\st  Tu          cann-e       T\st  docga-s           bedrif-aT catte.</item>
+      <item id="r3" line="503" tag="G">  I.1sg.NOM think-1sg that you.2sg.NOM know-2sg.SUB that dogs-3pl.masc.NOM chase-3pl cats.3pl.ACC.</item>
+      <item id="r4" line="504" tag="T">  "I think that you know that dogs chase cats."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="501" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="502" tag="L">  Ic        hycg-e    T\st  Tu          cann-e       T\st  docga-s           bedrif-aT catte.</item>
+      <item id="c3" alignment="r3" line="503" tag="G">  I.1sg.NOM think-1sg that you.2sg.NOM know-2sg.SUB that dogs-3pl.masc.NOM chase-3pl cats.3pl.ACC.</item>
+      <item id="c4" alignment="r4" line="504" tag="T">  "I think that you know that dogs chase cats."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="501" tag="M">f</item>
+      <item id="n2" alignment="c2" line="502" tag="L">Ic        hycg-e    T\st  Tu          cann-e       T\st  docga-s           bedrif-aT catte.</item>
+      <item id="n3" alignment="c3" line="503" tag="G">I.1sg.NOM think-1sg that you.2sg.NOM know-2sg.SUB that dogs-3pl.masc.NOM chase-3pl cats.3pl.ACC.</item>
+      <item id="n4" alignment="c4" line="504" tag="T">I think that you know that dogs chase cats.</item>
+    </tier>
+  </igt>
+  <igt id="igt99" doc-id="lgcol:ang" line-range="505-507" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="505" tag="M">  author vetted: f</item>
+      <item id="r2" line="506" tag="L">  Ic        fr\sg-e  hw\sDer  Tu          T\st  docga-s            bedrif-aT catte            can-st.</item>
+      <item id="r3" line="507" tag="G">  I.1sg.NOM ask-1sg whether you.2sg.NOM that dogs-1pl.masc.NOM chase-1pl cats.3pl.fem.ACC know-2sg</item>
+      <item id="r4" line="508" tag="T">  "I ask whether you know that dogs chase cars."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="505" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="506" tag="L">  Ic        fr\sg-e  hw\sDer  Tu          T\st  docga-s            bedrif-aT catte            can-st.</item>
+      <item id="c3" alignment="r3" line="507" tag="G">  I.1sg.NOM ask-1sg whether you.2sg.NOM that dogs-1pl.masc.NOM chase-1pl cats.3pl.fem.ACC know-2sg</item>
+      <item id="c4" alignment="r4" line="508" tag="T">  "I ask whether you know that dogs chase cars."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="505" tag="M">f</item>
+      <item id="n2" alignment="c2" line="506" tag="L">Ic        fr\sg-e  hw\sDer  Tu          T\st  docga-s            bedrif-aT catte            can-st.</item>
+      <item id="n3" alignment="c3" line="507" tag="G">I.1sg.NOM ask-1sg whether you.2sg.NOM that dogs-1pl.masc.NOM chase-1pl cats.3pl.fem.ACC know-2sg</item>
+      <item id="n4" alignment="c4" line="508" tag="T">I ask whether you know that dogs chase cars.</item>
+    </tier>
+  </igt>
+  <igt id="igt100" doc-id="lgcol:ang" line-range="509-511" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="509" tag="M">  author vetted: f</item>
+      <item id="r2" line="510" tag="L">  Catte            and docga-s           bedrif-aT carbunclas.</item>
+      <item id="r3" line="511" tag="G">  Cats.3pl.fem.NOM and dogs-3pl.masc.NOM chase-3pl carbuncles.</item>
+      <item id="r4" line="512" tag="T">  "Cats and dogs chase carbuncles."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="509" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="510" tag="L">  Catte            and docga-s           bedrif-aT carbunclas.</item>
+      <item id="c3" alignment="r3" line="511" tag="G">  Cats.3pl.fem.NOM and dogs-3pl.masc.NOM chase-3pl carbuncles.</item>
+      <item id="c4" alignment="r4" line="512" tag="T">  "Cats and dogs chase carbuncles."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="509" tag="M">f</item>
+      <item id="n2" alignment="c2" line="510" tag="L">Catte            and docga-s           bedrif-aT carbunclas.</item>
+      <item id="n3" alignment="c3" line="511" tag="G">Cats.3pl.fem.NOM and dogs-3pl.masc.NOM chase-3pl carbuncles.</item>
+      <item id="n4" alignment="c4" line="512" tag="T">Cats and dogs chase carbuncles.</item>
+    </tier>
+  </igt>
+  <igt id="igt101" doc-id="lgcol:ang" line-range="513-515" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="513" tag="M">  author vetted: f</item>
+      <item id="r2" line="514" tag="L">  Docga-s           bedrif-aT carbunclas and catte            bedrif-aT docga-s.</item>
+      <item id="r3" line="515" tag="G">  Dogs-3pl.masc.NOM chase-3pl carbuncles and cats.3pl.fem.NOM chase-3pl dogs-3pl.masc.ACC</item>
+      <item id="r4" line="516" tag="T">  "Dogs chase carbuncles and cats chase dogs."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="513" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="514" tag="L">  Docga-s           bedrif-aT carbunclas and catte            bedrif-aT docga-s.</item>
+      <item id="c3" alignment="r3" line="515" tag="G">  Dogs-3pl.masc.NOM chase-3pl carbuncles and cats.3pl.fem.NOM chase-3pl dogs-3pl.masc.ACC</item>
+      <item id="c4" alignment="r4" line="516" tag="T">  "Dogs chase carbuncles and cats chase dogs."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="513" tag="M">f</item>
+      <item id="n2" alignment="c2" line="514" tag="L">Docga-s           bedrif-aT carbunclas and catte            bedrif-aT docga-s.</item>
+      <item id="n3" alignment="c3" line="515" tag="G">Dogs-3pl.masc.NOM chase-3pl carbuncles and cats.3pl.fem.NOM chase-3pl dogs-3pl.masc.ACC</item>
+      <item id="n4" alignment="c4" line="516" tag="T">Dogs chase carbuncles and cats chase dogs.</item>
+    </tier>
+  </igt>
+  <igt id="igt102" doc-id="lgcol:ang" line-range="517-519" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="517" tag="M">  author vetted: f</item>
+      <item id="r2" line="518" tag="L">  Catte bedrif-aT docga-s and sl\sp-aT.</item>
+      <item id="r3" line="519" tag="G">  Cats.3pl.fem.NOM chase-3pl dogs-3pl.masc.ACC and sleep-3pl</item>
+      <item id="r4" line="520" tag="T">  "Cats chase dogs and sleep."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="517" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="518" tag="L">  Catte bedrif-aT docga-s and sl\sp-aT.</item>
+      <item id="c3" alignment="r3" line="519" tag="G">  Cats.3pl.fem.NOM chase-3pl dogs-3pl.masc.ACC and sleep-3pl</item>
+      <item id="c4" alignment="r4" line="520" tag="T">  "Cats chase dogs and sleep."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="517" tag="M">f</item>
+      <item id="n2" alignment="c2" line="518" tag="L">Catte bedrif-aT docga-s and sl\sp-aT.</item>
+      <item id="n3" alignment="c3" line="519" tag="G">Cats.3pl.fem.NOM chase-3pl dogs-3pl.masc.ACC and sleep-3pl</item>
+      <item id="n4" alignment="c4" line="520" tag="T">Cats chase dogs and sleep.</item>
+    </tier>
+  </igt>
+  <igt id="igt103" doc-id="lgcol:ang" line-range="521-523" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="521" tag="M">  author vetted: f</item>
+      <item id="r2" line="522" tag="L">  Bedrif-aT catte            docga-s?</item>
+      <item id="r3" line="523" tag="G">  Chase-3pl cats.3pl.fem.NOM dogs-3pl.masc.ACC</item>
+      <item id="r4" line="524" tag="T">  "Do cats chase dogs?"</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="521" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="522" tag="L">  Bedrif-aT catte            docga-s?</item>
+      <item id="c3" alignment="r3" line="523" tag="G">  Chase-3pl cats.3pl.fem.NOM dogs-3pl.masc.ACC</item>
+      <item id="c4" alignment="r4" line="524" tag="T">  "Do cats chase dogs?"</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="521" tag="M">f</item>
+      <item id="n2" alignment="c2" line="522" tag="L">Bedrif-aT catte            docga-s?</item>
+      <item id="n3" alignment="c3" line="523" tag="G">Chase-3pl cats.3pl.fem.NOM dogs-3pl.masc.ACC</item>
+      <item id="n4" alignment="c4" line="524" tag="T">Do cats chase dogs?</item>
+    </tier>
+  </igt>
+  <igt id="igt104" doc-id="lgcol:ang" line-range="525-527" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="525" tag="M">  author vetted: f</item>
+      <item id="r2" line="526" tag="L">  Bedrif        se           docga!</item>
+      <item id="r3" line="527" tag="G">  Chase.2sg.IMP the.3sg.masc dog.3sg.masc</item>
+      <item id="r4" line="528" tag="T">  "Chase the dog!"</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="525" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="526" tag="L">  Bedrif        se           docga!</item>
+      <item id="c3" alignment="r3" line="527" tag="G">  Chase.2sg.IMP the.3sg.masc dog.3sg.masc</item>
+      <item id="c4" alignment="r4" line="528" tag="T">  "Chase the dog!"</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="525" tag="M">f</item>
+      <item id="n2" alignment="c2" line="526" tag="L">Bedrif        se           docga!</item>
+      <item id="n3" alignment="c3" line="527" tag="G">Chase.2sg.IMP the.3sg.masc dog.3sg.masc</item>
+      <item id="n4" alignment="c4" line="528" tag="T">Chase the dog!</item>
+    </tier>
+  </igt>
+  <igt id="igt105" doc-id="lgcol:ang" line-range="529-531" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="529" tag="M">  author vetted: f</item>
+      <item id="r2" line="530" tag="L">  Hungrig-e docga-s abruc-aT.</item>
+      <item id="r3" line="531" tag="G">  Hungry-3pl.masc.NOM dogs-3pl.masc.NOM eat-3pl</item>
+      <item id="r4" line="532" tag="T">  "Hungry dogs eat."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="529" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="530" tag="L">  Hungrig-e docga-s abruc-aT.</item>
+      <item id="c3" alignment="r3" line="531" tag="G">  Hungry-3pl.masc.NOM dogs-3pl.masc.NOM eat-3pl</item>
+      <item id="c4" alignment="r4" line="532" tag="T">  "Hungry dogs eat."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="529" tag="M">f</item>
+      <item id="n2" alignment="c2" line="530" tag="L">Hungrig-e docga-s abruc-aT.</item>
+      <item id="n3" alignment="c3" line="531" tag="G">Hungry-3pl.masc.NOM dogs-3pl.masc.NOM eat-3pl</item>
+      <item id="n4" alignment="c4" line="532" tag="T">Hungry dogs eat.</item>
+    </tier>
+  </igt>
+  <igt id="igt106" doc-id="lgcol:ang" line-range="533-535" tag-types="M L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="und" xsi:type="olac:language" />
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="533" tag="M">  author vetted: f</item>
+      <item id="r2" line="534" tag="L">  Hungrig-e docga-s abruc-aT gearwe.</item>
+      <item id="r3" line="535" tag="G">  Hungry-3pl.masc.NOM dogs-3pl.masc.NOM eat-3pl gearwe.</item>
+      <item id="r4" line="536" tag="T">  "Hungry dogs eat quickly."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="533" tag="M">  author vetted: f</item>
+      <item id="c2" alignment="r2" line="534" tag="L">  Hungrig-e docga-s abruc-aT gearwe.</item>
+      <item id="c3" alignment="r3" line="535" tag="G">  Hungry-3pl.masc.NOM dogs-3pl.masc.NOM eat-3pl gearwe.</item>
+      <item id="c4" alignment="r4" line="536" tag="T">  "Hungry dogs eat quickly."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="533" tag="M">f</item>
+      <item id="n2" alignment="c2" line="534" tag="L">Hungrig-e docga-s abruc-aT gearwe.</item>
+      <item id="n3" alignment="c3" line="535" tag="G">Hungry-3pl.masc.NOM dogs-3pl.masc.NOM eat-3pl gearwe.</item>
+      <item id="n4" alignment="c4" line="536" tag="T">Hungry dogs eat quickly.</item>
+    </tier>
+  </igt>
+</xigt-corpus>

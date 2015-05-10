@@ -36,7 +36,7 @@ from xigt.codecs import xigtxml
 
 # INTERNAL imports -------------------------------------------------------------
 from .igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
-    clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re, rgencode, resolve_objects
+    clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re, rgencode, resolve_objects, rgp
 
 from .consts import *
 
@@ -2204,6 +2204,14 @@ def retrieve_lang_words(inst):
 
 
 def odin_ancestor(obj):
+    """
+    This function is designed to backtrack until the original
+     ODIN item that the annotating element was created from
+     is found and return it, otherwise return None.
+
+    :param obj:
+    :return: :raise Exception:
+    """
 
     # If we are at an ODIN item, return.
     if isinstance(obj, Item) and obj.tier.type == ODIN_TYPE:
@@ -2214,12 +2222,32 @@ def odin_ancestor(obj):
         return None
 
     else:
+        # First, look to see if it uses a segmentation...
         if SEGMENTATION in obj.attributes:
             ref_attr = SEGMENTATION
+
+        # If not, try content...
         elif CONTENT in obj.attributes:
             ref_attr = CONTENT
+
+        # If it has neither, it has no valid alignment expression.
+        # stop here and return None.
         else:
             return None
+
+        # These tier types annotate other tiers, so
+        # use their alignment attr instead of their individual
+        # items.
+        if isinstance(obj, Tier):
+            if obj.type in [PS_TIER_TYPE, POS_TIER_TYPE]:
+                id = obj.attributes[ref_attr]
+                t = obj.igt.find(id=id)
+                return odin_ancestor(t)
+
+        # The tier instances we are interested in are ones that segment
+        # the same item, like:
+        #   segmentation="p1[7:15]"
+        #   segmentation="p1[16:22]"
 
         if isinstance(obj, Tier):
             id = [ids(i.attributes[ref_attr])[0] for i in obj][0]

@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xigt-corpus xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <metadata type="xigt-meta">
+        <meta type="language" tiers="phrases, glosses, morphemes" iso-639-3="ctn" name="Chintang" />
+        <meta type="language" tiers="glosses, translations" iso-639-3="eng" name="English" />
+    </metadata>
+    <igt doc-id="ctn splits" id="i8">
+        <tier type="odin" id="o" state="raw">
+            <item id="o1" tag="L" line="104">ani to-patti pa-ce-ko</item>
+            <item id="o2" tag="G" line="105">and DEM.UP-LAT man-ns-GEN</item>
+            <item id="o3" tag="T" line="106">And the upper floor belongs to the boys.</item>
+        </tier>
+        <tier type="phrases" id="p" content="n">
+            <item type="transliteration" id="p1" content="n1" />
+        </tier>
+        <tier type="odin" id="n" state="normalized">
+            <item id="n1" tag="L" line="104">ani to-patti pa-ce-ko</item>
+            <item id="n2" tag="G" line="105">and DEM.UP-LAT man-ns-GEN</item>
+            <item id="n3" tag="T" line="106">And the upper floor belongs to the boys.</item>
+        </tier>
+        <tier type="words" id="w" segmentation="p">
+            <item id="w1" segmentation="p1[0:3]" />
+            <item id="w2" segmentation="p1[4:12]" />
+            <item id="w3" segmentation="p1[13:21]" />
+        </tier>
+        <tier type="morphemes" id="m" segmentation="w">
+            <item type="Root" id="m1.1" segmentation="w1[0:3]" />
+            <item type="Root" id="m2.1" segmentation="w2[0:2]" />
+            <item type="Suffix" id="m2.2" segmentation="w2[3:8]" />
+            <item type="Root" id="m3.1" segmentation="w3[0:2]" />
+            <item type="Suffix" id="m3.2" segmentation="w3[3:5]" />
+            <item type="Suffix" id="m3.3" segmentation="w3[6:8]" />
+        </tier>
+        <tier type="glosses" id="g" alignment="m" content="n">
+            <item id="g1.1" alignment="m1.1" content="n2[0:3]" />
+            <item id="g2.1" alignment="m2.1" content="n2[4:10]" />
+            <item id="g2.2" alignment="m2.2" content="n2[11:14]" />
+            <item id="g3.1" alignment="m3.1" content="n2[15:18]" />
+            <item id="g3.2" alignment="m3.2" content="n2[19:21]" />
+            <item id="g3.3" alignment="m3.3" content="n2[22:25]" />
+        </tier>
+        <tier type="pos" id="w-pos" alignment="w">
+            <item id="w-pos1" alignment="w1">gm</item>
+            <item id="w-pos2" alignment="w2">gm</item>
+            <item id="w-pos3" alignment="w3">n</item>
+        </tier>
+        <tier type="translations" id="t" alignment="p" content="n">
+            <item id="t1" alignment="p1" content="n3" />
+        </tier>
+        <tier type="words" id="tw" segmentation="t">
+            <item id="tw1" segmentation="t1[0:3]" />
+            <item id="tw2" segmentation="t1[4:7]" />
+            <item id="tw3" segmentation="t1[8:13]" />
+            <item id="tw4" segmentation="t1[14:19]" />
+            <item id="tw5" segmentation="t1[20:27]" />
+            <item id="tw6" segmentation="t1[28:30]" />
+            <item id="tw7" segmentation="t1[31:34]" />
+            <item id="tw8" segmentation="t1[35:40]" />
+        </tier>
+    </igt>
+    <igt doc-id="ctn splits" id="i55">
+        <tier type="odin" id="o" state="raw">
+            <item id="o1" tag="L" line="715">sa-lo sa-lo</item>
+            <item id="o2" tag="G" line="716">who-NOM who-NOM</item>
+            <item id="o3" tag="T" line="717">Who else?</item>
+        </tier>
+        <tier type="phrases" id="p" content="n">
+            <item type="transliteration" id="p1" content="n1" />
+        </tier>
+        <tier type="odin" id="n" state="normalized">
+            <item id="n1" tag="L" line="715">sa-lo sa-lo</item>
+            <item id="n2" tag="G" line="716">who-NOM who-NOM</item>
+            <item id="n3" tag="T" line="717">Who else?</item>
+        </tier>
+        <tier type="words" id="w" segmentation="p">
+            <item id="w1" segmentation="p1[0:5]" />
+            <item id="w2" segmentation="p1[6:11]" />
+        </tier>
+        <tier type="morphemes" id="m" segmentation="w">
+            <item type="Root" id="m1.1" segmentation="w1[0:2]" />
+            <item type="Suffix" id="m1.2" segmentation="w1[3:5]" />
+            <item type="Root" id="m2.1" segmentation="w2[0:2]" />
+            <item type="Suffix" id="m2.2" segmentation="w2[3:5]" />
+        </tier>
+        <tier type="glosses" id="g" alignment="m" content="n">
+            <item id="g1.1" alignment="m1.1" content="n2[0:3]" />
+            <item id="g1.2" alignment="m1.2" content="n2[4:7]" />
+            <item id="g2.1" alignment="m2.1" content="n2[8:11]" />
+            <item id="g2.2" alignment="m2.2" content="n2[12:15]" />
+        </tier>
+        <tier type="pos" id="w-pos" alignment="w">
+            <item id="w-pos1" alignment="w1">pro</item>
+            <item id="w-pos2" alignment="w2">pro</item>
+        </tier>
+        <tier type="translations" id="t" alignment="p" content="n">
+            <item id="t1" alignment="p1" content="n3" />
+        </tier>
+        <tier type="words" id="tw" segmentation="t">
+            <item id="tw1" segmentation="t1[0:3]" />
+            <item id="tw2" segmentation="t1[4:9]" />
+        </tier>
+    </igt>
+    <igt doc-id="ctn splits" id="i690">
+        <tier type="odin" id="o" state="raw">
+            <item id="o1" tag="L" line="8984">chitt-u-m hola ni hou chitt-u-m</item>
+            <item id="o2" tag="G" line="8985">find-3P-1/2nsA probably EMPH AFF find-3P-1/2nsA</item>
+            <item id="o3" tag="T" line="8986">Probably you find something.</item>
+        </tier>
+        <tier type="phrases" id="p" content="n">
+            <item type="transliteration" id="p1" content="n1" />
+        </tier>
+        <tier type="odin" id="n" state="normalized">
+            <item id="n1" tag="L" line="8984">chitt-u-m hola ni hou chitt-u-m</item>
+            <item id="n2" tag="G" line="8985">find-3P-1/2nsA probably EMPH AFF find-3P-1/2nsA</item>
+            <item id="n3" tag="T" line="8986">Probably you find something.</item>
+        </tier>
+        <tier type="words" id="w" segmentation="p">
+            <item id="w1" segmentation="p1[0:9]" />
+            <item id="w2" segmentation="p1[10:14]" />
+            <item id="w3" segmentation="p1[15:17]" />
+            <item id="w4" segmentation="p1[18:21]" />
+            <item id="w5" segmentation="p1[22:31]" />
+        </tier>
+        <tier type="morphemes" id="m" segmentation="w">
+            <item type="Root" id="m1.1" segmentation="w1[0:5]" />
+            <item type="Suffix" id="m1.2" segmentation="w1[6:7]" />
+            <item type="Suffix" id="m1.3" segmentation="w1[8:9]" />
+            <item type="Root" id="m2.1" segmentation="w2[0:4]" />
+            <item type="Root" id="m3.1" segmentation="w3[0:2]" />
+            <item type="Root" id="m4.1" segmentation="w4[0:3]" />
+            <item type="Root" id="m5.1" segmentation="w5[0:5]" />
+            <item type="Suffix" id="m5.2" segmentation="w5[6:7]" />
+            <item type="Suffix" id="m5.3" segmentation="w5[8:9]" />
+        </tier>
+        <tier type="glosses" id="g" alignment="m" content="n">
+            <item id="g1.1" alignment="m1.1" content="n2[0:4]" />
+            <item id="g1.2" alignment="m1.2" content="n2[5:7]" />
+            <item id="g1.3" alignment="m1.3" content="n2[8:14]" />
+            <item id="g2.1" alignment="m2.1" content="n2[15:23]" />
+            <item id="g3.1" alignment="m3.1" content="n2[24:28]" />
+            <item id="g4.1" alignment="m4.1" content="n2[29:32]" />
+            <item id="g5.1" alignment="m5.1" content="n2[33:37]" />
+            <item id="g5.2" alignment="m5.2" content="n2[38:40]" />
+            <item id="g5.3" alignment="m5.3" content="n2[41:47]" />
+        </tier>
+        <tier type="pos" id="w-pos" alignment="w">
+            <item id="w-pos1" alignment="w1">vt</item>
+            <item id="w-pos2" alignment="w2">adv</item>
+            <item id="w-pos3" alignment="w3">gm</item>
+            <item id="w-pos4" alignment="w4">gm</item>
+            <item id="w-pos5" alignment="w5">vt</item>
+        </tier>
+        <tier type="translations" id="t" alignment="p" content="n">
+            <item id="t1" alignment="p1" content="n3" />
+        </tier>
+        <tier type="words" id="tw" segmentation="t">
+            <item id="tw1" segmentation="t1[0:8]" />
+            <item id="tw2" segmentation="t1[9:12]" />
+            <item id="tw3" segmentation="t1[13:17]" />
+            <item id="tw4" segmentation="t1[18:28]" />
+        </tier>
+    </igt>
+    <igt doc-id="ctn splits" id="i1197">
+        <tier type="odin" id="o" state="raw">
+            <item id="o1" tag="L" line="15666">hokke ek sal ta pas gar-i-ch-a mo cekt-ma-kha na</item>
+            <item id="o2" tag="G" line="15667">where one year FOC pass do-PASS-NPST-3s CIT say-INF-BGR TOP</item>
+            <item id="o3" tag="T" line="15668">How can one say I can pass in one yearǃ</item>
+        </tier>
+        <tier type="phrases" id="p" content="n">
+            <item type="transliteration" id="p1" content="n1" />
+        </tier>
+        <tier type="odin" id="n" state="normalized">
+            <item id="n1" tag="L" line="15666">hokke ek sal ta pas gar-i-ch-a mo cekt-ma-kha na</item>
+            <item id="n2" tag="G" line="15667">where one year FOC pass do-PASS-NPST-3s CIT say-INF-BGR TOP</item>
+            <item id="n3" tag="T" line="15668">How can one say I can pass in one yearǃ</item>
+        </tier>
+        <tier type="words" id="w" segmentation="p">
+            <item id="w1" segmentation="p1[0:5]" />
+            <item id="w2" segmentation="p1[6:8]" />
+            <item id="w3" segmentation="p1[9:12]" />
+            <item id="w4" segmentation="p1[13:15]" />
+            <item id="w5" segmentation="p1[16:19]" />
+            <item id="w6" segmentation="p1[20:30]" />
+            <item id="w7" segmentation="p1[31:33]" />
+            <item id="w8" segmentation="p1[34:45]" />
+            <item id="w9" segmentation="p1[46:48]" />
+        </tier>
+        <tier type="morphemes" id="m" segmentation="w">
+            <item type="Root" id="m1.1" segmentation="w1[0:5]" />
+            <item type="Root" id="m2.1" segmentation="w2[0:2]" />
+            <item type="Root" id="m3.1" segmentation="w3[0:3]" />
+            <item type="Root" id="m4.1" segmentation="w4[0:2]" />
+            <item type="Root" id="m5.1" segmentation="w5[0:3]" />
+            <item type="Root" id="m6.1" segmentation="w6[0:3]" />
+            <item type="Suffix" id="m6.2" segmentation="w6[4:5]" />
+            <item type="Suffix" id="m6.3" segmentation="w6[6:8]" />
+            <item type="Suffix" id="m6.4" segmentation="w6[9:10]" />
+            <item type="Root" id="m7.1" segmentation="w7[0:2]" />
+            <item type="Root" id="m8.1" segmentation="w8[0:4]" />
+            <item type="Suffix" id="m8.2" segmentation="w8[5:7]" />
+            <item type="Suffix" id="m8.3" segmentation="w8[8:11]" />
+            <item type="Root" id="m9.1" segmentation="w9[0:2]" />
+        </tier>
+        <tier type="glosses" id="g" alignment="m" content="n">
+            <item id="g1.1" alignment="m1.1" content="n2[0:5]" />
+            <item id="g2.1" alignment="m2.1" content="n2[6:9]" />
+            <item id="g3.1" alignment="m3.1" content="n2[10:14]" />
+            <item id="g4.1" alignment="m4.1" content="n2[15:18]" />
+            <item id="g5.1" alignment="m5.1" content="n2[19:23]" />
+            <item id="g6.1" alignment="m6.1" content="n2[24:26]" />
+            <item id="g6.2" alignment="m6.2" content="n2[27:31]" />
+            <item id="g6.3" alignment="m6.3" content="n2[32:36]" />
+            <item id="g6.4" alignment="m6.4" content="n2[37:39]" />
+            <item id="g7.1" alignment="m7.1" content="n2[40:43]" />
+            <item id="g8.1" alignment="m8.1" content="n2[44:47]" />
+            <item id="g8.2" alignment="m8.2" content="n2[48:51]" />
+            <item id="g8.3" alignment="m8.3" content="n2[52:55]" />
+            <item id="g9.1" alignment="m9.1" content="n2[56:59]" />
+        </tier>
+        <tier type="pos" id="w-pos" alignment="w">
+            <item id="w-pos1" alignment="w1">adv</item>
+            <item id="w-pos2" alignment="w2">num</item>
+            <item id="w-pos3" alignment="w3">NoPOS</item>
+            <item id="w-pos4" alignment="w4">gm</item>
+            <item id="w-pos5" alignment="w5">vi</item>
+            <item id="w-pos6" alignment="w6">vt</item>
+            <item id="w-pos7" alignment="w7">gm</item>
+            <item id="w-pos8" alignment="w8">vt</item>
+            <item id="w-pos9" alignment="w9">gm</item>
+        </tier>
+        <tier type="translations" id="t" alignment="p" content="n">
+            <item id="t1" alignment="p1" content="n3" />
+        </tier>
+        <tier type="words" id="tw" segmentation="t">
+            <item id="tw1" segmentation="t1[0:3]" />
+            <item id="tw2" segmentation="t1[4:7]" />
+            <item id="tw3" segmentation="t1[8:11]" />
+            <item id="tw4" segmentation="t1[12:15]" />
+            <item id="tw5" segmentation="t1[16:17]" />
+            <item id="tw6" segmentation="t1[18:21]" />
+            <item id="tw7" segmentation="t1[22:26]" />
+            <item id="tw8" segmentation="t1[27:29]" />
+            <item id="tw9" segmentation="t1[30:33]" />
+            <item id="tw10" segmentation="t1[34:39]" />
+        </tier>
+    </igt>
+    <igt doc-id="ctn splits" id="i8863">
+        <tier type="odin" id="o" state="raw">
+            <item id="o1" tag="L" line="125251">tubasa taŋphusa taŋma na a-lis-e</item>
+            <item id="o2" tag="G" line="125252">grandfather noble great.goddess TOP 2S/A-be-IND.PST</item>
+            <item id="o3" tag="T" line="125253">You are the great ancestors.</item>
+        </tier>
+        <tier type="phrases" id="p" content="n">
+            <item type="transliteration" id="p1" content="n1" />
+        </tier>
+        <tier type="odin" id="n" state="normalized">
+            <item id="n1" tag="L" line="125251">tubasa taŋphusa taŋma na a-lis-e</item>
+            <item id="n2" tag="G" line="125252">grandfather noble great.goddess TOP 2S/A-be-IND.PST</item>
+            <item id="n3" tag="T" line="125253">You are the great ancestors.</item>
+        </tier>
+        <tier type="words" id="w" segmentation="p">
+            <item id="w1" segmentation="p1[0:6]" />
+            <item id="w2" segmentation="p1[7:15]" />
+            <item id="w3" segmentation="p1[16:21]" />
+            <item id="w4" segmentation="p1[22:24]" />
+            <item id="w5" segmentation="p1[25:32]" />
+        </tier>
+        <tier type="morphemes" id="m" segmentation="w">
+            <item type="Root" id="m1.1" segmentation="w1[0:6]" />
+            <item type="Root" id="m2.1" segmentation="w2[0:8]" />
+            <item type="Root" id="m3.1" segmentation="w3[0:5]" />
+            <item type="Root" id="m4.1" segmentation="w4[0:2]" />
+            <item type="Prefix" id="m5.1" segmentation="w5[0:1]" />
+            <item type="Root" id="m5.2" segmentation="w5[2:5]" />
+            <item type="Suffix" id="m5.3" segmentation="w5[6:7]" />
+        </tier>
+        <tier type="glosses" id="g" alignment="m" content="n">
+            <item id="g1.1" alignment="m1.1" content="n2[0:11]" />
+            <item id="g2.1" alignment="m2.1" content="n2[12:17]" />
+            <item id="g3.1" alignment="m3.1" content="n2[18:31]" />
+            <item id="g4.1" alignment="m4.1" content="n2[32:35]" />
+            <item id="g5.1" alignment="m5.1" content="n2[36:40]" />
+            <item id="g5.2" alignment="m5.2" content="n2[41:43]" />
+            <item id="g5.3" alignment="m5.3" content="n2[44:51]" />
+        </tier>
+        <tier type="pos" id="w-pos" alignment="w">
+            <item id="w-pos1" alignment="w1">n</item>
+            <item id="w-pos2" alignment="w2">adj</item>
+            <item id="w-pos3" alignment="w3">n</item>
+            <item id="w-pos4" alignment="w4">gm</item>
+            <item id="w-pos5" alignment="w5">vi</item>
+        </tier>
+        <tier type="translations" id="t" alignment="p" content="n">
+            <item id="t1" alignment="p1" content="n3" />
+        </tier>
+        <tier type="words" id="tw" segmentation="t">
+            <item id="tw1" segmentation="t1[0:3]" />
+            <item id="tw2" segmentation="t1[4:7]" />
+            <item id="tw3" segmentation="t1[8:11]" />
+            <item id="tw4" segmentation="t1[12:17]" />
+            <item id="tw5" segmentation="t1[18:28]" />
+        </tier>
+    </igt>
+    <igt doc-id="ctn splits" id="i1">
+        <tier type="odin" id="o" state="raw">
+            <item id="o1" tag="L" line="1">tup-i-ŋs-i ghari ŋis-ka-ni lus-i rett-i-ne cekt-i-ne</item>
+            <item id="o2" tag="G" line="2">meet-1/2pS/P-PRF-1/2pS/P moment know-RECP-2/3p speak-1/2pS/P laugh-1/2pS/P-OPT speak-1/2pS/P-OPT</item>
+            <item id="o3" tag="T" line="3">When we meet let's get to know each other, let's laugh, let's talk.</item>
+        </tier>
+        <tier type="phrases" id="p" content="n">
+            <item type="transliteration" id="p1" content="n1" />
+        </tier>
+        <tier type="odin" id="n" state="normalized">
+            <item id="n1" tag="L" line="1">tup-i-ŋs-i ghari ŋis-ka-ni lus-i rett-i-ne cekt-i-ne</item>
+            <item id="n2" tag="G" line="2">meet-1/2pS/P-PRF-1/2pS/P moment know-RECP-2/3p speak-1/2pS/P laugh-1/2pS/P-OPT speak-1/2pS/P-OPT</item>
+            <item id="n3" tag="T" line="3">When we meet let's get to know each other, let's laugh, let's talk.</item>
+        </tier>
+        <tier type="words" id="w" segmentation="p">
+            <item id="w1" segmentation="p1[0:10]" />
+            <item id="w2" segmentation="p1[11:16]" />
+            <item id="w3" segmentation="p1[17:26]" />
+            <item id="w4" segmentation="p1[27:32]" />
+            <item id="w5" segmentation="p1[33:42]" />
+            <item id="w6" segmentation="p1[43:52]" />
+        </tier>
+        <tier type="morphemes" id="m" segmentation="w">
+            <item type="Root" id="m1.1" segmentation="w1[0:3]" />
+            <item type="Suffix" id="m1.2" segmentation="w1[4:5]" />
+            <item type="Suffix" id="m1.3" segmentation="w1[6:8]" />
+            <item type="Suffix" id="m1.4" segmentation="w1[9:10]" />
+            <item type="Root" id="m2.1" segmentation="w2[0:5]" />
+            <item type="Root" id="m3.1" segmentation="w3[0:3]" />
+            <item type="Suffix" id="m3.2" segmentation="w3[4:6]" />
+            <item type="Suffix" id="m3.3" segmentation="w3[7:9]" />
+            <item type="Root" id="m4.1" segmentation="w4[0:3]" />
+            <item type="Suffix" id="m4.2" segmentation="w4[4:5]" />
+            <item type="Root" id="m5.1" segmentation="w5[0:4]" />
+            <item type="Suffix" id="m5.2" segmentation="w5[5:6]" />
+            <item type="Suffix" id="m5.3" segmentation="w5[7:9]" />
+            <item type="Root" id="m6.1" segmentation="w6[0:4]" />
+            <item type="Suffix" id="m6.2" segmentation="w6[5:6]" />
+            <item type="Suffix" id="m6.3" segmentation="w6[7:9]" />
+        </tier>
+        <tier type="glosses" id="g" alignment="m" content="n">
+            <item id="g1.1" alignment="m1.1" content="n2[0:4]" />
+            <item id="g1.2" alignment="m1.2" content="n2[5:12]" />
+            <item id="g1.3" alignment="m1.3" content="n2[13:16]" />
+            <item id="g1.4" alignment="m1.4" content="n2[17:24]" />
+            <item id="g2.1" alignment="m2.1" content="n2[25:31]" />
+            <item id="g3.1" alignment="m3.1" content="n2[32:36]" />
+            <item id="g3.2" alignment="m3.2" content="n2[37:41]" />
+            <item id="g3.3" alignment="m3.3" content="n2[42:46]" />
+            <item id="g4.1" alignment="m4.1" content="n2[47:52]" />
+            <item id="g4.2" alignment="m4.2" content="n2[53:60]" />
+            <item id="g5.1" alignment="m5.1" content="n2[61:66]" />
+            <item id="g5.2" alignment="m5.2" content="n2[67:74]" />
+            <item id="g5.3" alignment="m5.3" content="n2[75:78]" />
+            <item id="g6.1" alignment="m6.1" content="n2[79:84]" />
+            <item id="g6.2" alignment="m6.2" content="n2[85:92]" />
+            <item id="g6.3" alignment="m6.3" content="n2[93:96]" />
+        </tier>
+        <tier type="pos" id="w-pos" alignment="w">
+            <item id="w-pos1" alignment="w1">vt</item>
+            <item id="w-pos2" alignment="w2">n</item>
+            <item id="w-pos3" alignment="w3">vt</item>
+            <item id="w-pos4" alignment="w4">vi</item>
+            <item id="w-pos5" alignment="w5">vt</item>
+            <item id="w-pos6" alignment="w6">vt</item>
+        </tier>
+        <tier type="translations" id="t" alignment="p" content="n">
+            <item id="t1" alignment="p1" content="n3" />
+        </tier>
+        <tier type="words" id="tw" segmentation="t">
+            <item id="tw1" segmentation="t1[0:4]" />
+            <item id="tw2" segmentation="t1[5:7]" />
+            <item id="tw3" segmentation="t1[8:12]" />
+            <item id="tw4" segmentation="t1[13:18]" />
+            <item id="tw5" segmentation="t1[19:22]" />
+            <item id="tw6" segmentation="t1[23:25]" />
+            <item id="tw7" segmentation="t1[26:30]" />
+            <item id="tw8" segmentation="t1[31:35]" />
+            <item id="tw9" segmentation="t1[36:42]" />
+            <item id="tw10" segmentation="t1[43:48]" />
+            <item id="tw11" segmentation="t1[49:55]" />
+            <item id="tw12" segmentation="t1[56:61]" />
+            <item id="tw13" segmentation="t1[62:67]" />
+        </tier>
+    </igt>
+    <igt doc-id="ctn splits" id="i35">
+        <tier type="odin" id="o" state="raw">
+            <item id="o1" tag="L" line="455">akhil-ko mo u-mitt-e kina</item>
+            <item id="o2" tag="G" line="456">political.party-GEN CIT 3nsS/A-remember-IND.PST SEQ</item>
+            <item id="o3" tag="T" line="457">Remembering the Akhil (section of communist party).</item>
+        </tier>
+        <tier type="phrases" id="p" content="n">
+            <item type="transliteration" id="p1" content="n1" />
+        </tier>
+        <tier type="odin" id="n" state="normalized">
+            <item id="n1" tag="L" line="455">akhil-ko mo u-mitt-e kina</item>
+            <item id="n2" tag="G" line="456">political.party-GEN CIT 3nsS/A-remember-IND.PST SEQ</item>
+            <item id="n3" tag="T" line="457">Remembering the Akhil (section of communist party).</item>
+        </tier>
+        <tier type="words" id="w" segmentation="p">
+            <item id="w1" segmentation="p1[0:8]" />
+            <item id="w2" segmentation="p1[9:11]" />
+            <item id="w3" segmentation="p1[12:20]" />
+            <item id="w4" segmentation="p1[21:25]" />
+        </tier>
+        <tier type="morphemes" id="m" segmentation="w">
+            <item type="Root" id="m1.1" segmentation="w1[0:5]" />
+            <item type="Suffix" id="m1.2" segmentation="w1[6:8]" />
+            <item type="Root" id="m2.1" segmentation="w2[0:2]" />
+            <item type="Prefix" id="m3.1" segmentation="w3[0:1]" />
+            <item type="Root" id="m3.2" segmentation="w3[2:6]" />
+            <item type="Suffix" id="m3.3" segmentation="w3[7:8]" />
+            <item type="Root" id="m4.1" segmentation="w4[0:4]" />
+        </tier>
+        <tier type="glosses" id="g" alignment="m" content="n">
+            <item id="g1.1" alignment="m1.1" content="n2[0:15]" />
+            <item id="g1.2" alignment="m1.2" content="n2[16:19]" />
+            <item id="g2.1" alignment="m2.1" content="n2[20:23]" />
+            <item id="g3.1" alignment="m3.1" content="n2[24:30]" />
+            <item id="g3.2" alignment="m3.2" content="n2[31:39]" />
+            <item id="g3.3" alignment="m3.3" content="n2[40:47]" />
+            <item id="g4.1" alignment="m4.1" content="n2[48:51]" />
+        </tier>
+        <tier type="pos" id="w-pos" alignment="w">
+            <item id="w-pos1" alignment="w1">n</item>
+            <item id="w-pos2" alignment="w2">gm</item>
+            <item id="w-pos3" alignment="w3">vt</item>
+            <item id="w-pos4" alignment="w4">gm</item>
+        </tier>
+        <tier type="translations" id="t" alignment="p" content="n">
+            <item id="t1" alignment="p1" content="n3" />
+        </tier>
+        <tier type="words" id="tw" segmentation="t">
+            <item id="tw1" segmentation="t1[0:11]" />
+            <item id="tw2" segmentation="t1[12:15]" />
+            <item id="tw3" segmentation="t1[16:21]" />
+            <item id="tw4" segmentation="t1[22:30]" />
+            <item id="tw5" segmentation="t1[31:33]" />
+            <item id="tw6" segmentation="t1[34:43]" />
+            <item id="tw7" segmentation="t1[44:51]" />
+        </tier>
+    </igt>
+    <igt doc-id="ctn splits" id="i88">
+        <tier type="odin" id="o" state="raw">
+            <item id="o1" tag="L" line="1144">loĩs-ma yaŋ hunci-suma kat-a-ŋs-e kina u-tus-u-kV-nɨŋ</item>
+            <item id="o2" tag="G" line="1145">take.out-INF ADD 3nsPOSS-laziness be.felt-PST-PRF-IND.PST SEQ 3nsS/A-dig-3P-IND.NPST-NEG</item>
+            <item id="o3" tag="T" line="1146">They are also too lazy to take it out, and so they do not drink it.</item>
+        </tier>
+        <tier type="phrases" id="p" content="n">
+            <item type="transliteration" id="p1" content="n1" />
+        </tier>
+        <tier type="odin" id="n" state="normalized">
+            <item id="n1" tag="L" line="1144">loĩs-ma yaŋ hunci-suma kat-a-ŋs-e kina u-tus-u-kV-nɨŋ</item>
+            <item id="n2" tag="G" line="1145">take.out-INF ADD 3nsPOSS-laziness be.felt-PST-PRF-IND.PST SEQ 3nsS/A-dig-3P-IND.NPST-NEG</item>
+            <item id="n3" tag="T" line="1146">They are also too lazy to take it out, and so they do not drink it.</item>
+        </tier>
+        <tier type="words" id="w" segmentation="p">
+            <item id="w1" segmentation="p1[0:8]" />
+            <item id="w2" segmentation="p1[9:12]" />
+            <item id="w3" segmentation="p1[13:23]" />
+            <item id="w4" segmentation="p1[24:34]" />
+            <item id="w5" segmentation="p1[35:39]" />
+            <item id="w6" segmentation="p1[40:54]" />
+        </tier>
+        <tier type="morphemes" id="m" segmentation="w">
+            <item type="Root" id="m1.1" segmentation="w1[0:5]" />
+            <item type="Suffix" id="m1.2" segmentation="w1[6:8]" />
+            <item type="Root" id="m2.1" segmentation="w2[0:3]" />
+            <item type="Prefix" id="m3.1" segmentation="w3[0:5]" />
+            <item type="Root" id="m3.2" segmentation="w3[6:10]" />
+            <item type="Root" id="m4.1" segmentation="w4[0:3]" />
+            <item type="Suffix" id="m4.2" segmentation="w4[4:5]" />
+            <item type="Suffix" id="m4.3" segmentation="w4[6:8]" />
+            <item type="Suffix" id="m4.4" segmentation="w4[9:10]" />
+            <item type="Root" id="m5.1" segmentation="w5[0:4]" />
+            <item type="Prefix" id="m6.1" segmentation="w6[0:1]" />
+            <item type="Root" id="m6.2" segmentation="w6[2:5]" />
+            <item type="Suffix" id="m6.3" segmentation="w6[6:7]" />
+            <item type="Suffix" id="m6.4" segmentation="w6[8:10]" />
+            <item type="Suffix" id="m6.5" segmentation="w6[11:14]" />
+        </tier>
+        <tier type="glosses" id="g" alignment="m" content="n">
+            <item id="g1.1" alignment="m1.1" content="n2[0:8]" />
+            <item id="g1.2" alignment="m1.2" content="n2[9:12]" />
+            <item id="g2.1" alignment="m2.1" content="n2[13:16]" />
+            <item id="g3.1" alignment="m3.1" content="n2[17:24]" />
+            <item id="g3.2" alignment="m3.2" content="n2[25:33]" />
+            <item id="g4.1" alignment="m4.1" content="n2[34:41]" />
+            <item id="g4.2" alignment="m4.2" content="n2[42:45]" />
+            <item id="g4.3" alignment="m4.3" content="n2[46:49]" />
+            <item id="g4.4" alignment="m4.4" content="n2[50:57]" />
+            <item id="g5.1" alignment="m5.1" content="n2[58:61]" />
+            <item id="g6.1" alignment="m6.1" content="n2[62:68]" />
+            <item id="g6.2" alignment="m6.2" content="n2[69:72]" />
+            <item id="g6.3" alignment="m6.3" content="n2[73:75]" />
+            <item id="g6.4" alignment="m6.4" content="n2[76:84]" />
+            <item id="g6.5" alignment="m6.5" content="n2[85:88]" />
+        </tier>
+        <tier type="pos" id="w-pos" alignment="w">
+            <item id="w-pos1" alignment="w1">vt</item>
+            <item id="w-pos2" alignment="w2">gm</item>
+            <item id="w-pos3" alignment="w3">n</item>
+            <item id="w-pos4" alignment="w4">vi</item>
+            <item id="w-pos5" alignment="w5">gm</item>
+            <item id="w-pos6" alignment="w6">vt</item>
+        </tier>
+        <tier type="translations" id="t" alignment="p" content="n">
+            <item id="t1" alignment="p1" content="n3" />
+        </tier>
+        <tier type="words" id="tw" segmentation="t">
+            <item id="tw1" segmentation="t1[0:4]" />
+            <item id="tw2" segmentation="t1[5:8]" />
+            <item id="tw3" segmentation="t1[9:13]" />
+            <item id="tw4" segmentation="t1[14:17]" />
+            <item id="tw5" segmentation="t1[18:22]" />
+            <item id="tw6" segmentation="t1[23:25]" />
+            <item id="tw7" segmentation="t1[26:30]" />
+            <item id="tw8" segmentation="t1[31:33]" />
+            <item id="tw9" segmentation="t1[34:38]" />
+            <item id="tw10" segmentation="t1[39:42]" />
+            <item id="tw11" segmentation="t1[43:45]" />
+            <item id="tw12" segmentation="t1[46:50]" />
+            <item id="tw13" segmentation="t1[51:53]" />
+            <item id="tw14" segmentation="t1[54:57]" />
+            <item id="tw15" segmentation="t1[58:63]" />
+            <item id="tw16" segmentation="t1[64:67]" />
+        </tier>
+    </igt>
+    <igt doc-id="ctn splits" id="i202">
+        <tier type="odin" id="o" state="raw">
+            <item id="o1" tag="L" line="2630">kina hun-ko din-a ta kok a-thukt-a-ca-a-ce-e</item>
+            <item id="o2" tag="G" line="2631">SEQ DEM-NMLZ day-NTVZ FOC rice 2S/A-cook-PST-do.and.eat-PST-d-IND.PST</item>
+            <item id="o3" tag="T" line="2632">And did you make rice that day, and eat it?</item>
+        </tier>
+        <tier type="phrases" id="p" content="n">
+            <item type="transliteration" id="p1" content="n1" />
+        </tier>
+        <tier type="odin" id="n" state="normalized">
+            <item id="n1" tag="L" line="2630">kina hun-ko din-a ta kok a-thukt-a-ca-a-ce-e</item>
+            <item id="n2" tag="G" line="2631">SEQ DEM-NMLZ day-NTVZ FOC rice 2S/A-cook-PST-do.and.eat-PST-d-IND.PST</item>
+            <item id="n3" tag="T" line="2632">And did you make rice that day, and eat it?</item>
+        </tier>
+        <tier type="words" id="w" segmentation="p">
+            <item id="w1" segmentation="p1[0:4]" />
+            <item id="w2" segmentation="p1[5:11]" />
+            <item id="w3" segmentation="p1[12:17]" />
+            <item id="w4" segmentation="p1[18:20]" />
+            <item id="w5" segmentation="p1[21:24]" />
+            <item id="w6" segmentation="p1[25:44]" />
+        </tier>
+        <tier type="morphemes" id="m" segmentation="w">
+            <item type="Root" id="m1.1" segmentation="w1[0:4]" />
+            <item type="Root" id="m2.1" segmentation="w2[0:3]" />
+            <item type="Suffix" id="m2.2" segmentation="w2[4:6]" />
+            <item type="Root" id="m3.1" segmentation="w3[0:3]" />
+            <item type="Suffix" id="m3.2" segmentation="w3[4:5]" />
+            <item type="Root" id="m4.1" segmentation="w4[0:2]" />
+            <item type="Root" id="m5.1" segmentation="w5[0:3]" />
+            <item type="Prefix" id="m6.1" segmentation="w6[0:1]" />
+            <item type="Root" id="m6.2" segmentation="w6[2:7]" />
+            <item type="Suffix" id="m6.3" segmentation="w6[8:9]" />
+            <item type="Suffix" id="m6.4" segmentation="w6[10:12]" />
+            <item type="Suffix" id="m6.5" segmentation="w6[13:14]" />
+            <item type="Suffix" id="m6.6" segmentation="w6[15:17]" />
+            <item type="Suffix" id="m6.7" segmentation="w6[18:19]" />
+        </tier>
+        <tier type="glosses" id="g" alignment="m" content="n">
+            <item id="g1.1" alignment="m1.1" content="n2[0:3]" />
+            <item id="g2.1" alignment="m2.1" content="n2[4:7]" />
+            <item id="g2.2" alignment="m2.2" content="n2[8:12]" />
+            <item id="g3.1" alignment="m3.1" content="n2[13:16]" />
+            <item id="g3.2" alignment="m3.2" content="n2[17:21]" />
+            <item id="g4.1" alignment="m4.1" content="n2[22:25]" />
+            <item id="g5.1" alignment="m5.1" content="n2[26:30]" />
+            <item id="g6.1" alignment="m6.1" content="n2[31:35]" />
+            <item id="g6.2" alignment="m6.2" content="n2[36:40]" />
+            <item id="g6.3" alignment="m6.3" content="n2[41:44]" />
+            <item id="g6.4" alignment="m6.4" content="n2[45:55]" />
+            <item id="g6.5" alignment="m6.5" content="n2[56:59]" />
+            <item id="g6.6" alignment="m6.6" content="n2[60:61]" />
+            <item id="g6.7" alignment="m6.7" content="n2[62:69]" />
+        </tier>
+        <tier type="pos" id="w-pos" alignment="w">
+            <item id="w-pos1" alignment="w1">gm</item>
+            <item id="w-pos2" alignment="w2">pro</item>
+            <item id="w-pos3" alignment="w3">n</item>
+            <item id="w-pos4" alignment="w4">gm</item>
+            <item id="w-pos5" alignment="w5">n</item>
+            <item id="w-pos6" alignment="w6">vt</item>
+        </tier>
+        <tier type="translations" id="t" alignment="p" content="n">
+            <item id="t1" alignment="p1" content="n3" />
+        </tier>
+        <tier type="words" id="tw" segmentation="t">
+            <item id="tw1" segmentation="t1[0:3]" />
+            <item id="tw2" segmentation="t1[4:7]" />
+            <item id="tw3" segmentation="t1[8:11]" />
+            <item id="tw4" segmentation="t1[12:16]" />
+            <item id="tw5" segmentation="t1[17:21]" />
+            <item id="tw6" segmentation="t1[22:26]" />
+            <item id="tw7" segmentation="t1[27:31]" />
+            <item id="tw8" segmentation="t1[32:35]" />
+            <item id="tw9" segmentation="t1[36:39]" />
+            <item id="tw10" segmentation="t1[40:43]" />
+        </tier>
+    </igt>
+    <igt id="igt102380" doc-id="3425" line-range="1246-1249" tag-types="L+CR L+CR G T+EX">
+  <metadata>
+    <meta id="meta1">
+      <dc:subject xsi:type="olac:language" olac:code="ccc">chamicuro</dc:subject>
+      <dc:language xsi:type="olac:language" olac:code="en">English</dc:language>
+    </meta>
+  </metadata>
+  <tier id="r" type="odin" state="raw">
+    <item id="r1" line="1246" tag="L+CR">        (63) U--ye na´                   ´              ´</item>
+    <item id="r2" line="1247" tag="L+CR">                                       Pampa Hermosa-sana.</item>
+    <item id="r3" line="1248" tag="G">             1-go-FUT THE(NPST) Pampa Hermosa-LOC</item>
+    <item id="r4" line="1249" tag="T+EX">                 `I will go to Pampa Hermosa.' (ibid., 554, ex. 9)</item>
+  </tier>
+  <tier id="c" type="odin" state="cleaned" alignment="r">
+    <item id="c1" line="1246" tag="L+CR" alignment="r1">        (63) U--ye na´                   ´              ´</item>
+    <item id="c3" line="1248" tag="G" alignment="r3">             1-go-FUT THE(NPST) Pampa Hermosa-LOC</item>
+    <item id="c4" line="1249" tag="T+EX" alignment="r4">                 `I will go to Pampa Hermosa.' (ibid., 554, ex. 9)</item>
+  </tier>
+  <tier id="n" type="odin" state="normalized" alignment="c">
+    <item id="n1" line="1246" tag="L+CR" alignment="c1">U--ye na´                   ´              ´</item>
+    <item id="n2" line="1248" tag="G" alignment="c3">1-go-FUT THE(NPST) Pampa Hermosa-LOC</item>
+    <item id="n3" line="1249" tag="T+EX" alignment="c4">I will go to Pampa Hermosa.' (ibid., 554, ex. 9)</item>
+  </tier>
+</igt>
+</xigt-corpus>
