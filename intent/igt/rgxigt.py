@@ -452,7 +452,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                         inst.add_gloss_lang_alignments()
                     except GlossLangAlignException as glae:
                         PARSELOG.warn(glae)
-                    except NoGlossLineException as ngle:
+                    except (NoGlossLineException, NoLangLineException) as ngle:
                         PARSELOG.warn(ngle)
                         continue
 

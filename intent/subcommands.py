@@ -11,8 +11,7 @@ from io import StringIO
 from intent.igt.consts import INTENT_POS_CLASS, INTENT_POS_PROJ, ODIN_GLOSS_TAG, ODIN_LANG_TAG, ODIN_TRANS_TAG
 from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
     PhraseStructureProjectionException, ProjectionException,\
-    ProjectionTransGlossException, word_align, MultipleNormLineException, retrieve_normal_line, NoNormLineException, \
-    NoLangLineException, NoTransLineException, NoGlossLineException
+    ProjectionTransGlossException, word_align, retrieve_normal_line, NoNormLineException
 from intent.utils.arg_consts import PARSE_VAR, PARSE_TRANS, POS_VAR, ALN_VAR, POS_LANG_CLASS, ALN_HEUR, \
     ALN_GIZA, POS_LANG_PROJ, PARSE_LANG_PROJ, POS_TRANS
 from intent.utils.env import c, classifier, posdict, odin_data
