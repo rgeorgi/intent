@@ -534,7 +534,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         # Let's keep track of which instances we have available, so that we can
         # align a whole XIGT file without having to filter out the instances that didn't
         # have gloss or translation lines.
-        aln_list = []
+        aln_id_list = []
 
         for inst in self:
             g_sent = []
@@ -548,7 +548,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
             # If unable to access, log the error and skip processing the
             # instance.
-            except (NoGlossLineException, NoTransLineException) as nle:
+            except (NoGlossLineException, NoTransLineException, MultipleNormLineException) as nle:
                 GIZA_LOG.info(nle)
                 continue
 
@@ -556,7 +556,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
                 # Otherwise, add the id of the aligned instance to the list
                 # so that the alignment can be added later.
-                aln_list.append(inst.id)
+                aln_id_list.append(inst.id)
 
                 for gloss in inst.glosses.tokens():
                     g_sent.append(re.sub('\s+','', gloss.value().lower()))
@@ -586,13 +586,13 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
         # Before continuing, make sure that we have the same number of alignments as we
         # did instances with valid gloss/translation.
-        if len(g_t_asents) != len(aln_list):
-            raise GizaAlignerError("Giza returned {} alignments, rather than the correct amount ({}).".format(len(g_t_asents), len(aln_list)))
+        if len(g_t_asents) != len(aln_id_list):
+            raise GizaAlignerError("Giza returned {} alignments, rather than the correct amount ({}).".format(len(g_t_asents), len(aln_id_list)))
 
 
         # Next, iterate through the aligned sentences and assign their alignments
         # to the instance.
-        for g_t_asent, igt_id in zip(g_t_asents, aln_list):
+        for g_t_asent, igt_id in zip(g_t_asents, aln_id_list):
             t_g_aln = g_t_asent.aln.flip()
 
             # Find the igt instance using the provided id...
