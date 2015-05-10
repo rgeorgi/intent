@@ -548,7 +548,8 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
             # If unable to access, log the error and skip processing the
             # instance.
-            except (NoGlossLineException, NoTransLineException, MultipleNormLineException) as nle:
+            # TODO FIXME: XigtError? ... sigh
+            except (NoGlossLineException, NoTransLineException, MultipleNormLineException, XigtError) as nle:
                 GIZA_LOG.info(nle)
                 continue
 
