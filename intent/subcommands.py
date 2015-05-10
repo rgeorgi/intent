@@ -130,94 +130,97 @@ def enrich(**kwargs):
     # -- 2) Iterate through the corpus -----------------------------------------------
     for inst in corp:
 
-        has_gloss = True
-        has_trans = True
-        has_lang  = True
-
-        has_all = lambda: (has_gloss and has_trans and has_lang)
-
-        # -- A) Language Lines
         try:
-            retrieve_normal_line(inst, ODIN_LANG_TAG)
-        except NoNormLineException as e:
-            has_lang = False
+            has_gloss = True
+            has_trans = True
+            has_lang  = True
 
-        # -- B) Gloss Lines
-        try:
-            retrieve_normal_line(inst, ODIN_GLOSS_TAG)
-        except NoNormLineException as e:
-            has_gloss = False
+            has_all = lambda: (has_gloss and has_trans and has_lang)
 
-        # -- C) Trans Lines
-        try:
-            retrieve_normal_line(inst, ODIN_TRANS_TAG)
-        except NoNormLineException as e:
-            has_trans = False
-
-
-        # Attempt to align the gloss and language lines if requested... --------
-        if has_gloss and has_trans:
+            # -- A) Language Lines
             try:
-                word_align(inst.gloss, inst.lang)
-            except GlossLangAlignException as glae:
-                ENRICH_LOG.warn(str(glae))
+                retrieve_normal_line(inst, ODIN_LANG_TAG)
+            except NoNormLineException as e:
+                has_lang = False
 
-
-        # 3) POS tag the translation line --------------------------------------
-        if POS_LANG_PROJ in pos_args and has_trans:
+            # -- B) Gloss Lines
             try:
-                inst.tag_trans_pos(s)
-            except CriticalTaggerError as cte:
-                ENRICH_LOG.critical(str(cte))
-                sys.exit(2)
+                retrieve_normal_line(inst, ODIN_GLOSS_TAG)
+            except NoNormLineException as e:
+                has_gloss = False
 
-
-        # 4) POS tag the gloss line --------------------------------------------
-        if POS_LANG_CLASS in pos_args and has_gloss and has_lang:
-            inst.classify_gloss_pos(m, posdict=p)
+            # -- C) Trans Lines
             try:
-                inst.project_gloss_to_lang(tag_method=INTENT_POS_CLASS)
-            except GlossLangAlignException:
-                ENRICH_LOG.warning('The gloss and language lines for instance id "%s" do not align. Language line not POS tagged.' % inst.id)
+                retrieve_normal_line(inst, ODIN_TRANS_TAG)
+            except NoNormLineException as e:
+                has_trans = False
 
-        if POS_LANG_PROJ in pos_args and has_all():
-            try:
-                inst.project_trans_to_gloss()
-            except ProjectionTransGlossException as ptge:
-                ENRICH_LOG.warning('No alignment between translation and gloss lines found for instance "%s". Not projecting POS tags.' % inst.id)
-            except ProjectionException as pe:
-                ENRICH_LOG.warning('No translation POS tags were found for instance "%s". Not projecting POS tags.' % inst.id)
-            else:
+
+            # Attempt to align the gloss and language lines if requested... --------
+            if has_gloss and has_trans:
                 try:
-                    inst.project_gloss_to_lang(tag_method=INTENT_POS_PROJ)
+                    word_align(inst.gloss, inst.lang)
                 except GlossLangAlignException as glae:
-                    ENRICH_LOG.warn(glae)
+                    ENRICH_LOG.warn(str(glae))
 
 
-        # 5) Parse the translation line ----------------------------------------
-        if PARSE_TRANS in parse_args and has_trans:
-            # try:
-            inst.parse_translation_line(sp, pt=True, dt=True)
-            # except Exception as ve:
-                # pass
-                # ENRICH_LOG.critical("Unknown parse error in instance {}".format(inst.id))
-                # ENRICH_LOG.critical(str(ve))
+            # 3) POS tag the translation line --------------------------------------
+            if POS_LANG_PROJ in pos_args and has_trans:
+                try:
+                    inst.tag_trans_pos(s)
+                except CriticalTaggerError as cte:
+                    ENRICH_LOG.critical(str(cte))
+                    sys.exit(2)
 
-        # If parse tree projection is enabled... -------------------------------
-        if PARSE_LANG_PROJ in parse_args and has_all():
-            try:
-                inst.project_pt()
-            except PhraseStructureProjectionException as pspe:
-                ENRICH_LOG.warning('A parse for the translation line was not found for instance "%s", not projecting phrase structure.' % inst.id)
-            except ProjectionTransGlossException as ptge:
-                ENRICH_LOG.warning('Alignment between translation and gloss lines was not found for instance "%s". Not projecting phrase structure.' % inst.id)
-            # except Exception as ie:
-            #     ENRICH_LOG.critical("Unknown projection error in instance {}".format(inst.id))
-            #     ENRICH_LOG.critical(str(ie))
 
-        # Sort the tiers... ----------------------------------------------------
-        inst.sort()
+            # 4) POS tag the gloss line --------------------------------------------
+            if POS_LANG_CLASS in pos_args and has_gloss and has_lang:
+                inst.classify_gloss_pos(m, posdict=p)
+                try:
+                    inst.project_gloss_to_lang(tag_method=INTENT_POS_CLASS)
+                except GlossLangAlignException:
+                    ENRICH_LOG.warning('The gloss and language lines for instance id "%s" do not align. Language line not POS tagged.' % inst.id)
 
+            if POS_LANG_PROJ in pos_args and has_all():
+                try:
+                    inst.project_trans_to_gloss()
+                except ProjectionTransGlossException as ptge:
+                    ENRICH_LOG.warning('No alignment between translation and gloss lines found for instance "%s". Not projecting POS tags.' % inst.id)
+                except ProjectionException as pe:
+                    ENRICH_LOG.warning('No translation POS tags were found for instance "%s". Not projecting POS tags.' % inst.id)
+                else:
+                    try:
+                        inst.project_gloss_to_lang(tag_method=INTENT_POS_PROJ)
+                    except GlossLangAlignException as glae:
+                        ENRICH_LOG.warn(glae)
+
+
+            # 5) Parse the translation line ----------------------------------------
+            if PARSE_TRANS in parse_args and has_trans:
+                # try:
+                inst.parse_translation_line(sp, pt=True, dt=True)
+                # except Exception as ve:
+                    # pass
+                    # ENRICH_LOG.critical("Unknown parse error in instance {}".format(inst.id))
+                    # ENRICH_LOG.critical(str(ve))
+
+            # If parse tree projection is enabled... -------------------------------
+            if PARSE_LANG_PROJ in parse_args and has_all():
+                try:
+                    inst.project_pt()
+                except PhraseStructureProjectionException as pspe:
+                    ENRICH_LOG.warning('A parse for the translation line was not found for instance "%s", not projecting phrase structure.' % inst.id)
+                except ProjectionTransGlossException as ptge:
+                    ENRICH_LOG.warning('Alignment between translation and gloss lines was not found for instance "%s". Not projecting phrase structure.' % inst.id)
+                # except Exception as ie:
+                #     ENRICH_LOG.critical("Unknown projection error in instance {}".format(inst.id))
+                #     ENRICH_LOG.critical(str(ie))
+
+            # Sort the tiers... ----------------------------------------------------
+            inst.sort()
+        except Exception as e:
+            ENRICH_LOG.warn("Unknown Error occurred processing instance {}".format(inst.id))
+            ENRICH_LOG.warn(e)
 
     print('Writing output file...', end=' ')
     xigtxml.dump(writefile(kwargs.get('OUT_FILE')), corp)
