@@ -83,6 +83,8 @@ def enrich(**kwargs):
     print('Loading input file...')
     corp = RGCorpus.load(inpath, basic_processing=True)
 
+    print("{} instances loaded...".format(len(corp)))
+
     #===========================================================================
     # If the tagger is asked for, initialize it.
     #===========================================================================
@@ -129,41 +131,57 @@ def enrich(**kwargs):
     # -- 2) Iterate through the corpus -----------------------------------------------
     for inst in corp:
 
-        # TODO: Clean up this exception handling?
-        # Currently, just skip multiple normalized lines...
+        has_gloss = True
+        has_trans = True
+        has_lang  = True
+
+        has_all = lambda: (has_gloss and has_trans and has_lang)
+
+        # -- A) Language Lines
         try:
             retrieve_normal_line(inst, ODIN_LANG_TAG)
+        except NoNormLineException as e:
+            has_lang = False
+
+        # -- B) Gloss Lines
+        try:
             retrieve_normal_line(inst, ODIN_GLOSS_TAG)
+        except NoNormLineException as e:
+            has_gloss = False
+
+        # -- C) Trans Lines
+        try:
             retrieve_normal_line(inst, ODIN_TRANS_TAG)
-        except MultipleNormLineException as mnle:
-            ENRICH_LOG.warn(str(mnle))
-            continue
-        except (NoNormLineException, NoGlossLineException, NoTransLineException, NoLangLineException) as e:
-            pass
+        except NoNormLineException as e:
+            has_trans = False
+
 
         # Attempt to align the gloss and language lines if requested... --------
-        try:
-            word_align(inst.gloss, inst.lang)
-        except GlossLangAlignException as glae:
-            ENRICH_LOG.warn(str(glae))
+        if has_gloss and has_trans:
+            try:
+                word_align(inst.gloss, inst.lang)
+            except GlossLangAlignException as glae:
+                ENRICH_LOG.warn(str(glae))
+
 
         # 3) POS tag the translation line --------------------------------------
-        if POS_LANG_PROJ in pos_args:
+        if POS_LANG_PROJ in pos_args and has_trans:
             try:
                 inst.tag_trans_pos(s)
             except CriticalTaggerError as cte:
                 ENRICH_LOG.critical(str(cte))
                 sys.exit(2)
 
+
         # 4) POS tag the gloss line --------------------------------------------
-        if POS_LANG_CLASS in pos_args:
+        if POS_LANG_CLASS in pos_args and has_gloss and has_lang:
             inst.classify_gloss_pos(m, posdict=p)
             try:
                 inst.project_gloss_to_lang(tag_method=INTENT_POS_CLASS)
             except GlossLangAlignException:
                 ENRICH_LOG.warning('The gloss and language lines for instance id "%s" do not align. Language line not POS tagged.' % inst.id)
 
-        if POS_LANG_PROJ in pos_args:
+        if POS_LANG_PROJ in pos_args and has_all():
             try:
                 inst.project_trans_to_gloss()
             except ProjectionTransGlossException as ptge:
@@ -175,7 +193,7 @@ def enrich(**kwargs):
 
 
         # 5) Parse the translation line ----------------------------------------
-        if PARSE_TRANS in parse_args:
+        if PARSE_TRANS in parse_args and has_trans:
             # try:
             inst.parse_translation_line(sp, pt=True, dt=True)
             # except Exception as ve:
@@ -184,7 +202,7 @@ def enrich(**kwargs):
                 # ENRICH_LOG.critical(str(ve))
 
         # If parse tree projection is enabled... -------------------------------
-        if PARSE_LANG_PROJ in parse_args:
+        if PARSE_LANG_PROJ in parse_args and has_all():
             try:
                 inst.project_pt()
             except PhraseStructureProjectionException as pspe:
@@ -202,3 +220,4 @@ def enrich(**kwargs):
     print('Writing output file...', end=' ')
     xigtxml.dump(writefile(kwargs.get('OUT_FILE')), corp)
     print('Done.')
+    print("{} instances written.".format(len(corp)))

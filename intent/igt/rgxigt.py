@@ -11,6 +11,7 @@ import re
 import copy
 import string
 import sys
+from logconsts import GIZA_LOG_STR, XIGT_PARSE_LOG_STR
 
 from xigt.model import XigtCorpus, Igt, Item, Tier
 from xigt.metadata import Metadata, Meta
@@ -25,7 +26,8 @@ from xigt import ref
 # Set up logging ---------------------------------------------------------------
 from xigt.ref import dereference, ids
 
-PARSELOG = logging.getLogger(__name__)
+PARSELOG = logging.getLogger(XIGT_PARSE_LOG_STR)
+GIZA_LOG = logging.getLogger(GIZA_LOG_STR)
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
@@ -71,13 +73,12 @@ class NoODINRawException(XigtFormatException):	pass
 # • Alignment and Projection Exceptions ------------------------------------------
 
 class GlossLangAlignException(RGXigtException):	pass
-
 class ProjectionException(RGXigtException): pass
-
 class ProjectionTransGlossException(ProjectionException): pass
-
 class PhraseStructureProjectionException(RGXigtException): pass
 
+class AlignerError(Exception): pass
+class GizaAlignerError(Exception): pass
 
 def project_creator_except(msg_start, msg_end, created_by):
 
@@ -440,12 +441,18 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                     inst.basic_processing()
                 except XigtFormatException as xfe:
                     PARSELOG.warn("Basic processing failed for instance {}".format(inst.id))
+                except GlossLangAlignException as glae:
+                    PARSELOG.warn(glae)
+                    continue
 
                 else:
                     try:
                         inst.add_gloss_lang_alignments()
                     except GlossLangAlignException as glae:
                         PARSELOG.warn(glae)
+                    except NoGlossLineException as ngle:
+                        PARSELOG.warn(ngle)
+                        continue
 
         return xc
 
@@ -511,20 +518,46 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         g_sents = []
         t_sents = []
 
+        # Let's keep track of which instances we have available, so that we can
+        # align a whole XIGT file without having to filter out the instances that didn't
+        # have gloss or translation lines.
+        aln_list = []
+
         for inst in self:
             g_sent = []
             t_sent = []
 
-            for gloss in inst.glosses.tokens():
-                g_sent.append(re.sub('\s+','', gloss.value().lower()))
-            g_sents.append(' '.join(g_sent))
+            # Try to access the gloss morphs and
+            # translation line.
+            try:
+                inst.glosses
+                inst.trans
 
-            for trans in inst.trans.tokens():
-                t_sent.append(re.sub('\s+', '', trans.value().lower()))
-            t_sents.append(' '.join(t_sent))
+            # If unable to access, log the error and skip processing the
+            # instance.
+            except (NoGlossLineException, NoTransLineException) as nle:
+                GIZA_LOG.info(nle)
+                continue
+
+            else:
+
+                # Otherwise, add the id of the aligned instance to the list
+                # so that the alignment can be added later.
+                aln_list.append(inst.id)
+
+                for gloss in inst.glosses.tokens():
+                    g_sent.append(re.sub('\s+','', gloss.value().lower()))
+                g_sents.append(' '.join(g_sent))
+
+                for trans in inst.trans.tokens():
+                    t_sent.append(re.sub('\s+', '', trans.value().lower()))
+                t_sents.append(' '.join(t_sent))
 
 
-        PARSELOG.info('Attempting to align instance "{}" with giza'.format(inst.id))
+
+
+
+        GIZA_LOG.info('Attempting to align instance "{}" with giza'.format(inst.id))
 
         if resume:
             # Next, load up the saved gloss-trans giza alignment model
@@ -538,13 +571,21 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
             ga = GizaAligner()
             g_t_asents = ga.temp_train(g_sents, t_sents)
 
-        # Before continuing, make sure that we have the same number of alignments as we do instances.
-        assert len(g_t_asents) == len(self), 'giza: %s -- self: %s' % (len(g_t_asents), len(self))
+        # Before continuing, make sure that we have the same number of alignments as we
+        # did instances with valid gloss/translation.
+        if len(g_t_asents) != len(aln_list):
+            raise GizaAlignerError("Giza returned {} alignments, rather than the correct amount ({}).".format(len(g_t_asents), len(aln_list)))
+
 
         # Next, iterate through the aligned sentences and assign their alignments
         # to the instance.
-        for g_t_asent, igt in zip(g_t_asents, self):
+        for g_t_asent, igt_id in zip(g_t_asents, aln_list):
             t_g_aln = g_t_asent.aln.flip()
+
+            # Find the igt instance using the provided id...
+            igt = self.find(id=igt_id)
+
+            # And then set its alignment to the one provided by giza.
             igt.set_bilingual_alignment(igt.trans, igt.glosses, t_g_aln, aln_method = INTENT_ALN_GIZA)
 
     def giza_align_l_t(self):
@@ -1562,9 +1603,11 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         trans_tree = read_pt(trans_parse_tier)
 
-        # This might raise a ProjectionTransGlossException if the trans and gloss
-        # alignments don't exist.
+
         tl_aln = self.get_trans_gloss_lang_alignment()
+        print(tl_aln)
+        if not tl_aln:
+            raise ProjectionTransGlossException("No alignment between source and target trees found in instance {}".format(self.id))
 
         # Do the actual tree projection and create a tree object
         proj_tree = project_ps(trans_tree, self.lang, tl_aln)
@@ -2266,7 +2309,7 @@ def retrieve_normal_line(inst, tag):
     lines = [l for l in n if tag in l.attributes['tag'].split('+')]
 
     if len(lines) < 1:
-        raise NoNormLineException()
+        raise NoNormLineException("No normalized line found for tag {}".format(tag))
     elif len(lines) > 1:
         raise MultipleNormLineException('Multiple normalized lines found for tag "{}" in instance {}'.format(tag, inst.id))
     else:
