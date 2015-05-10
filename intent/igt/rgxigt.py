@@ -447,6 +447,11 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                 except GlossLangAlignException as glae:
                     PARSELOG.warn(glae)
                     continue
+                # TODO FIXME: Revisit this after we've gathered the different
+                # errors that are occurring.
+                except Exception as e:
+                    PARSELOG.warn("An unknown error occurred during basic processing of instance {}".format(inst.id))
+                    PARSELOG.warn(e)
 
                 else:
                     try:
