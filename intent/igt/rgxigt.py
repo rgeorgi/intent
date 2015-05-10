@@ -10,8 +10,9 @@ import logging
 import re
 import copy
 import string
-import sys
-from logconsts import GIZA_LOG_STR, XIGT_PARSE_LOG_STR
+
+from intent.utils.logconsts import XIGT_PARSE_LOG_STR
+from intent.utils.logconsts import GIZA_LOG_STR
 
 from xigt.model import XigtCorpus, Igt, Item, Tier
 from xigt.metadata import Metadata, Meta
@@ -23,8 +24,9 @@ from xigt import ref
 
 
 
+
 # Set up logging ---------------------------------------------------------------
-from xigt.ref import dereference, ids
+from xigt.ref import ids
 
 PARSELOG = logging.getLogger(XIGT_PARSE_LOG_STR)
 GIZA_LOG = logging.getLogger(GIZA_LOG_STR)
@@ -34,7 +36,7 @@ from xigt.codecs import xigtxml
 
 # INTERNAL imports -------------------------------------------------------------
 from .igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
-    clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re, rgencode, rgp, resolve_objects
+    clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re, rgencode, resolve_objects
 
 from .consts import *
 
