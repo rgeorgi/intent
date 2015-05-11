@@ -548,9 +548,13 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
             # If unable to access, log the error and skip processing the
             # instance.
-            # TODO FIXME: XigtError? ... sigh
-            except (NoGlossLineException, NoTransLineException, MultipleNormLineException, XigtError) as nle:
+            except (NoGlossLineException, NoTransLineException, MultipleNormLineException) as nle:
                 GIZA_LOG.info(nle)
+                continue
+
+            except Exception as e:
+                GIZA_LOG.warn("The aligner encountered an unknown error in instance {}".format(inst.id))
+                GIZA_LOG.warn(e)
                 continue
 
             else:
