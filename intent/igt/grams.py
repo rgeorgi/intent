@@ -136,7 +136,7 @@ def write_gram(token, **kwargs):
         #===================================================================
         # Previous gram
         #===================================================================
-        if prev_gram:
+        if prev_gram and kwargs.get('feat_prev_gram', True, bool):
             prev_gram = prev_gram.lower() if lower else prev_gram
 
             # And then tokenize...
@@ -157,7 +157,7 @@ def write_gram(token, **kwargs):
         #===================================================================
         # Next gram
         #===================================================================
-        if next_gram:
+        if next_gram and kwargs.get('feat_next_gram', True, bool):
             next_gram = next_gram.lower() if lower else next_gram
             for token in intent.utils.token.tokenize_string(next_gram, intent.utils.token.morpheme_tokenizer):
 
