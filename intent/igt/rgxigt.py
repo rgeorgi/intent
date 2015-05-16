@@ -26,6 +26,7 @@ from xigt import ref
 from xigt.ref import dereference, ids
 
 PARSELOG = logging.getLogger(__name__)
+ALIGN_LOG = logging.getLogger('GIZA_LN')
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
@@ -39,7 +40,7 @@ from .consts import *
 import intent.utils.token
 from intent.utils.env import c
 from intent.alignment.Alignment import Alignment, heur_alignments
-from intent.utils.token import Token, POSToken
+from intent.utils.token import Token, POSToken, sentence_tokenizer, whitespace_tokenizer
 from intent.interfaces.giza import GizaAligner
 from intent.utils.dicts import DefaultOrderedDict
 
@@ -428,8 +429,19 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         xc._finish_load()
         return xc
 
+    def __iter__(self):
+        """
+
+        :rtype : RGIgt
+        """
+        return super().__iter__()
+
     @classmethod
     def load(cls, path, basic_processing = False):
+        """
+
+        :rtype : RGCorpus
+        """
         xc = xigtxml.load(path)
         xc.__class__ = RGCorpus
         xc._finish_load()
@@ -529,7 +541,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         PARSELOG.info('Attempting to align instance "{}" with giza'.format(inst.id))
 
         if resume:
-            ALIG.info('Using pre-saved giza alignment.')
+            ALIGN_LOG.info('Using pre-saved giza alignment.')
             # Next, load up the saved gloss-trans giza alignment model
             ga = GizaAligner.load(c.getpath('g_t_prefix'), c.getpath('g_path'), c.getpath('t_path'))
 
@@ -2087,7 +2099,7 @@ def retrieve_phrase(inst, tag, id, type):
 # • Word Tier Creation ---
 #===============================================================================
 
-def create_words_tier(cur_item, word_id, word_type, aln_attribute = SEGMENTATION):
+def create_words_tier(cur_item, word_id, word_type, aln_attribute = SEGMENTATION, tokenizer=whitespace_tokenizer):
     """
     Create a words tier from an ODIN line type item.
 
@@ -2103,7 +2115,7 @@ def create_words_tier(cur_item, word_id, word_type, aln_attribute = SEGMENTATION
 
 
     # Tokenize the words in this phrase...
-    words = intent.utils.token.tokenize_item(cur_item)
+    words = intent.utils.token.tokenize_item(cur_item, tokenizer=tokenizer)
 
     # Create a new word tier to hold the tokenized words...
     wt = RGWordTier(id = word_id, type=word_type, attributes={aln_attribute:cur_item.tier.id}, igt=cur_item.igt)
@@ -2132,7 +2144,7 @@ def retrieve_trans_words(inst):
                 segmentation=tpt.id)
 
     if not twt:
-        twt = create_words_tier(tpt[0], TRANS_WORD_ID, TRANS_WORD_TYPE)
+        twt = create_words_tier(tpt[0], TRANS_WORD_ID, TRANS_WORD_TYPE, tokenizer=sentence_tokenizer)
         inst.append(twt)
     else:
         twt.__class__ = RGWordTier

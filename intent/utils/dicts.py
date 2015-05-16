@@ -253,10 +253,16 @@ class POSEvalDict(TwoLevelCountDict):
 
 
     def breakdown_csv(self):
-        ret_s = 'TAG,PRECISION,RECALL,F_1\n'
+        ret_s = 'TAG,PRECISION,RECALL,F_1,IN_GOLD,IN_EVAL,MATCHES\n'
 
         for label in self.keys():
-            ret_s += '%s,%.2f,%.2f,%.2f\n' % (label, self.tag_precision(label), self.tag_recall(label), self.tag_fmeasure(label))
+            ret_s += '%s,%.2f,%.2f,%.2f,%d,%d,%d\n' % (label,
+                                                       self.tag_precision(label),
+                                                       self.tag_recall(label),
+                                                       self.tag_fmeasure(label),
+                                                       self.total(label),
+                                                       self.col_total(label),
+                                                       self.matches(label))
         return ret_s
 
     def tag_recall(self, t):

@@ -6,6 +6,7 @@ import logging
 
 
 # Start the logger and set it up. ----------------------------------------------
+from intent.scripts.basic.corpus_stats import igt_stats
 from intent.utils.arg_consts import PARSE_LANG_PROJ, PARSE_TRANS, POS_TYPES, PARSE_TYPES, ALN_TYPES, ALN_VAR, POS_VAR, \
     PARSE_VAR
 
@@ -40,6 +41,8 @@ if import_errors:
 #===============================================================================
 
 import intent.utils.env
+
+from intent.utils.env import classifier
 
 from intent.utils.argutils import DefaultHelpParser, existsfile, \
     PathArgException, csv_choices
@@ -84,6 +87,8 @@ enrich.add_argument('--parse', dest=PARSE_VAR,
                     type=csv_choices(PARSE_TYPES), default=[],
                     help='List of parses to create. {}'.format(PARSE_TYPES))
 
+enrich.add_argument('--class', dest='class_path', default=classifier)
+
 #===============================================================================
 # ODIN subcommand
 #===============================================================================
@@ -95,6 +100,17 @@ odin.add_argument('LNG', help='ISO 639-3 code for a language')
 odin.add_argument('OUT_FILE', help='Output path for the output file.')
 odin.add_argument('--limit', help="Limit number of instances written.", type=int)
 odin.add_argument('--randomize', action='store_true', help='Randomly select the instances')
+
+#===============================================================================
+# STATS subcommand
+#
+# Get statistics (# sents, # tokens, tags/token, etc) for a XIGT file.
+#===============================================================================
+stats = subparsers.add_parser('stats', help='Get corpus statistics for a set of XIGT files.')
+
+stats.add_argument('FILE', nargs='+', help='Files from which to gather statistics.')
+stats.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
+
 
 
 # Parse the args. --------------------------------------------------------------
@@ -119,3 +135,5 @@ if args.subcommand == 'enrich':
     subcommands.enrich(**vars(args))
 elif args.subcommand == 'odin':
     subcommands.odin(**vars(args))
+elif args.subcommand == 'stats':
+    igt_stats(args.FILE, type='xigt')

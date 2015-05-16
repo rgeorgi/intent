@@ -166,6 +166,11 @@ def whitespace_tokenizer(st):
         yield Token(match.group(0), start=match.start(), stop=match.end(), index=i)
         i += 1
 
+def sentence_tokenizer(st):
+    i = 1
+    for match in re.finditer('[\w\']+|\$[\d\.]+|\S+', st, re.UNICODE):
+        yield Token(match.group(0), start=match.start(), stop=match.end(), index=i)
+        i += 1
 
 def morpheme_tokenizer(st):
     """
