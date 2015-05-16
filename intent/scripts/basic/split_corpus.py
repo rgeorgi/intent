@@ -41,7 +41,14 @@ class WordCount():
         :param wordnum: The index of the word
         :type wordnum: int
         """
-        return self._word_dict[wordnum]
+        n = 0
+        for sntnum in self._sent_dict.keys():
+            n += self._sent_dict[sntnum]
+            if wordnum <= n:
+                return sntnum
+
+        return sntnum + 1
+
 
     @property
     def num_snts(self):
@@ -98,9 +105,9 @@ def split_corpus(filelist, train=0.8, dev=0.1, test=0.1, prefix='', overwrite=Fa
     test_path  = outpath_name(prefix, 'test')
 
     # -- 6) Write out the output files.
-    write_instances(train_instances, train_path, 'train')
-    write_instances(dev_instances, dev_path, 'dev')
-    write_instances(test_instances, test_path, 'test')
+    write_instances(train_instances, train_path, 'train', overwrite)
+    write_instances(dev_instances, dev_path, 'dev', overwrite)
+    write_instances(test_instances, test_path, 'test', overwrite)
 
 def outpath_name(prefix, type):
     if prefix:
