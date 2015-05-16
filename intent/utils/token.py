@@ -186,7 +186,11 @@ def tag_tokenizer(st, delimeter='/'):
 
 
 def tokenize_item(it, tokenizer=whitespace_tokenizer):
-    tokens = tokenize_string(it.get_content(), tokenizer)
+    """
+
+    :rtype : __generator[Token]
+    """
+    tokens = tokenize_string(it.value(), tokenizer)
     return tokens
 
 

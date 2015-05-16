@@ -3,6 +3,7 @@ Created on Aug 26, 2013
 
 :author: rgeorgi
 """
+from glob import glob
 import sys
 import os
 import argparse
@@ -140,6 +141,8 @@ def csv_choices(choice_list):
 
     return in_choices
 
+def globfiles(file_arg):
+    return glob(file_arg)
 
 # ===============================================================================
 # Default to showing help for an argparser

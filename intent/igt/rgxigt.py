@@ -151,6 +151,8 @@ class FindMixin():
                 filters += [attr_match(val)]
             elif kw == 'type':
                 filters += [type_match(val)]
+            elif kw == 'alignment':
+                filters += [aln_match(val)]
 
             elif kw == 'others': # Append any other filters...
                 filters += val
@@ -527,6 +529,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         PARSELOG.info('Attempting to align instance "{}" with giza'.format(inst.id))
 
         if resume:
+            ALIG.info('Using pre-saved giza alignment.')
             # Next, load up the saved gloss-trans giza alignment model
             ga = GizaAligner.load(c.getpath('g_t_prefix'), c.getpath('g_path'), c.getpath('t_path'))
 
@@ -1286,7 +1289,10 @@ class RGIgt(Igt, RecursiveFindMixin):
                 # obtain the highest weight.
                 result = classifier.classify_string(gloss_token, **kwargs)
 
-                best = result.largest()
+                if len(result) == 0:
+                    best = 'UNK'
+                else:
+                    best = result.largest()
 
                 # Return the POS tags
                 tags.append(best[0])
@@ -1990,9 +1996,6 @@ class RGMetadata(Metadata): pass
 class RGMeta(Meta): pass
 
 
-
-
-
 #===============================================================================
 # • Basic Functions
 #===============================================================================
@@ -2157,6 +2160,9 @@ def retrieve_lang_words(inst):
 
     return lwt
 
+#===============================================================================
+# • Finding References ---
+#===============================================================================
 
 def odin_ancestor(obj):
 
@@ -2203,8 +2209,6 @@ def aligned_tags(obj):
         return a.attributes['tag'].split('+')
     else:
         return []
-
-
 
 
 def retrieve_gloss_words(inst):
