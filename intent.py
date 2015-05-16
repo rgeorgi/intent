@@ -7,8 +7,10 @@ import logging
 
 # Start the logger and set it up. ----------------------------------------------
 from intent.scripts.basic.corpus_stats import igt_stats
+from intent.scripts.basic.split_corpus import split_corpus
 from intent.utils.arg_consts import PARSE_LANG_PROJ, PARSE_TRANS, POS_TYPES, PARSE_TYPES, ALN_TYPES, ALN_VAR, POS_VAR, \
     PARSE_VAR
+from intent.utils.listutils import flatten_list
 
 logging.basicConfig(format=logging.BASIC_FORMAT)
 MAIN_LOG = logging.getLogger('INTENT')
@@ -45,7 +47,7 @@ import intent.utils.env
 from intent.utils.env import classifier
 
 from intent.utils.argutils import DefaultHelpParser, existsfile, \
-    PathArgException, csv_choices
+    PathArgException, csv_choices, proportion, globfiles
 
 #===============================================================================
 # Now, intialize the subcommands.
@@ -111,7 +113,20 @@ stats = subparsers.add_parser('stats', help='Get corpus statistics for a set of 
 stats.add_argument('FILE', nargs='+', help='Files from which to gather statistics.')
 stats.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
+#===============================================================================
+# SPLIT subcommand
+#
+# Split XIGT file into train/dev/test
+#===============================================================================
+split = subparsers.add_parser('split', help='Command to split input file(s) into train/dev/test instances.')
 
+split.add_argument('FILE', nargs='+', help='XIGT files to gather together in order to generate the train/dev/test split', type=globfiles)
+split.add_argument('--train', default=0.8, help='The proportion of the data to set aside for training.', type=proportion)
+split.add_argument('--dev', default=0.1, help='The proportion of data to set aside for development.', type=proportion)
+split.add_argument('--test', default=0.1, help='The proportion of data to set aside for testing.', type=proportion)
+split.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
+split.add_argument('-o', dest='prefix', default=None, help='Destination prefix for the output.')
+split.add_argument('-f', dest='overwrite', action='store_true', help='Force overwrite of existing files.')
 
 # Parse the args. --------------------------------------------------------------
 try:
@@ -136,4 +151,6 @@ if args.subcommand == 'enrich':
 elif args.subcommand == 'odin':
     subcommands.odin(**vars(args))
 elif args.subcommand == 'stats':
-    igt_stats(args.FILE, type='xigt')
+    igt_stats(flatten_list(args.FILE), type='xigt')
+elif args.subcommand == 'split':
+    split_corpus(flatten_list(args.FILE), args.train, args.dev, args.test, prefix=args.prefix, overwrite=args.overwrite)
