@@ -454,6 +454,8 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                     inst.basic_processing()
                 except XigtFormatException as xfe:
                     PARSELOG.warn("Basic processing failed for instance {}".format(inst.id))
+                except GlossLangAlignException as gae:
+                    PARSELOG.warn("Gloss and language did not align for instance {}.".format(inst.id))
 
                 else:
                     try:
@@ -1188,7 +1190,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         if tag_method:
             filters = [lambda x: get_intent_method(x) == tag_method]
 
-        pos_tier = self.find(attributes={ALIGNMENT:tier_id}, type=POS_TIER_TYPE, others = filters)
+        pos_tier = self.find(alignment=tier_id, type=POS_TIER_TYPE, others = filters)
 
         # If we found a tier, return it with the token methods...
         if pos_tier is not None:
@@ -1302,7 +1304,7 @@ class RGIgt(Igt, RecursiveFindMixin):
                 result = classifier.classify_string(gloss_token, **kwargs)
 
                 if len(result) == 0:
-                    best = 'UNK'
+                    best = ['UNK']
                 else:
                     best = result.largest()
 

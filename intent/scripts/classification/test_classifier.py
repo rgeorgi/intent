@@ -50,7 +50,7 @@ def test_classifier(c, inst_list):
         gold_sents.append(gold_tokens)
         eval_sents.append(tag_tokens)
 
-    return poseval(eval_sents, gold_sents, details=True,csv=True)
+    return poseval(eval_sents, gold_sents, matrix=True, details=True,csv=True, ansi=True)
 
 
 def load_xaml_data():
