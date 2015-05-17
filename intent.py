@@ -7,6 +7,7 @@ import logging
 
 # Start the logger and set it up. ----------------------------------------------
 from intent.scripts.basic.corpus_stats import igt_stats
+from intent.scripts.basic.filter_corpus import filter_corpus
 from intent.scripts.basic.split_corpus import split_corpus
 from intent.utils.arg_consts import PARSE_LANG_PROJ, PARSE_TRANS, POS_TYPES, PARSE_TYPES, ALN_TYPES, ALN_VAR, POS_VAR, \
     PARSE_VAR
@@ -128,6 +129,23 @@ split.add_argument('-v', '--verbose', action='count', help='Set the verbosity le
 split.add_argument('-o', dest='prefix', default=None, help='Destination prefix for the output.')
 split.add_argument('-f', dest='overwrite', action='store_true', help='Force overwrite of existing files.')
 
+#===============================================================================
+# FILTER subcommand
+#
+# Filter XIGT files for L,G,T lines, 1-to-1 alignment, etc.
+#===============================================================================
+
+filter_p = subparsers.add_parser('filter', help='Command to filter input file(s) for instances')
+
+filter_p.add_argument('FILE', nargs='+', help='XIGT files to filter.', type=globfiles)
+filter_p.add_argument('-o', '--output', help='Output file (Combine from inputs)')
+filter_p.add_argument('--require-lang', help='Require instances to have language line', choices=['true','false'], default='true')
+filter_p.add_argument('--require-gloss', help='Require instances to have gloss line', choices=['true', 'false'], default='true')
+filter_p.add_argument('--require-trans', help='Require instances to have trans line', choices=['true', 'false'], default='true')
+
+filter_p.add_argument('--require-aln', help='Require instances to have 1-to-1 gloss/lang alignment.', choices=['true','false'], default='true')
+filter_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
+
 # Parse the args. --------------------------------------------------------------
 try:
     args = main.parse_args()
@@ -154,3 +172,5 @@ elif args.subcommand == 'stats':
     igt_stats(flatten_list(args.FILE), type='xigt')
 elif args.subcommand == 'split':
     split_corpus(flatten_list(args.FILE), args.train, args.dev, args.test, prefix=args.prefix, overwrite=args.overwrite)
+elif args.subcommand == 'filter':
+    filter_corpus(flatten_list(args.FILE), args.output, args.require_lang, args.require_gloss, args.require_trans, args.require_aln)
