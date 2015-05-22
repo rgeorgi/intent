@@ -11,7 +11,9 @@ that each make up of things.
 
 # Set up logging.
 import logging
+from multiprocessing.pool import Pool
 import os, argparse, sys
+import intent.utils.env
 from intent.igt.igtutils import rgp
 
 
@@ -40,6 +42,53 @@ xigt_logger.addHandler(sh)
 xigt_logger.setLevel(logging.ERROR)
 
 #  -----------------------------------------------------------------------------
+
+def inst_stats(igt):
+
+    igts = defaultdict(int)
+    types = defaultdict(lambda: defaultdict(int))
+
+    #=======================================================================
+    # Count the text on the lines
+    #=======================================================================
+    def igt_line_count(igt, attr):
+        try:
+            line = getattr(igt, attr)
+        except XigtFormatException as tpe:
+            line = False
+
+        if line:
+            igts[attr+'_lines'] += 1
+            igts[attr+'_tokens'] += len(line)
+            for token in line:
+                types[attr+'_types'][token.get_content().lower()] += 1
+
+    dict = {}
+    # Count the language lines -----------------------------------------
+    igt_line_count(igt, 'lang')
+    igt_line_count(igt, 'gloss')
+    igt_line_count(igt, 'trans')
+
+    try:
+        igt.trans
+        igt.gloss
+        igt.lang
+    except XigtFormatException as tpe:
+        pass
+    else:
+        igts['all_lines'] += 1
+        try:
+            igt.get_gloss_lang_alignment()
+        except GlossLangAlignException as glae:
+            pass
+        else:
+            igts['1-to-1'] += 1
+
+    igts['instances'] += 1
+
+    return (types, igts)
+
+
 
 def igt_stats(filelist, type='text', logpath=None):
 
@@ -70,46 +119,25 @@ def igt_stats(filelist, type='text', logpath=None):
             rc = RGCorpus.from_txt(path, require_1_to_1=False)
 
 
+        def merge_dicts(result):
+            # Unpack the result...
+            new_types, new_igts = result
 
-        #=======================================================================
-        # Count the text on the lines
-        #=======================================================================
-        def igt_line_count(igt, attr):
-            try:
-                line = getattr(igt, attr)
-            except XigtFormatException as tpe:
-                line = False
+            # Now, add the dicts together...
+            igts['all_lines'] += new_igts['all_lines']
+            igts['instances'] += new_igts['instances']
+            igts['1-to-1'] += new_igts['1-to-1']
+            for attr in ['lang','gloss','trans']:
+                igts[attr+'_lines'] += new_igts[attr+'_lines']
+                igts[attr+'_tokens'] += new_igts[attr+'_tokens']
+                types[attr+'_types'] += new_types[attr+'_types']
 
-            if line:
-                igts[attr+'_lines'] += 1
-                igts[attr+'_tokens'] += len(line)
-                for token in line:
-                    types[attr+'_types'][token.get_content().lower()] += 1
-
-
+        pool = Pool(8)
         for igt in rc:
+            pool.apply_async(inst_stats, args=[igt], callback=merge_dicts)
 
-            # Count the language lines -----------------------------------------
-            igt_line_count(igt, 'lang')
-            igt_line_count(igt, 'gloss')
-            igt_line_count(igt, 'trans')
-
-            try:
-                igt.trans
-                igt.gloss
-                igt.lang
-            except XigtFormatException as tpe:
-                pass
-            else:
-                igts['all_lines'] += 1
-                try:
-                    igt.get_gloss_lang_alignment()
-                except GlossLangAlignException as glae:
-                    pass
-                else:
-                    igts['1-to-1'] += 1
-
-            igts['instances'] += 1
+        pool.close()
+        pool.join()
 
 
         row += [igts['instances'], igts['all_lines'], igts['1-to-1']]
@@ -123,13 +151,7 @@ def igt_stats(filelist, type='text', logpath=None):
         # Make them all into strings
         row = [str(i) for i in row]
 
-
         print(','.join(row))
-
-
-
-
-
 
 
 def pos_stats(filelist, tagged, log_file = sys.stdout, csv=False):
