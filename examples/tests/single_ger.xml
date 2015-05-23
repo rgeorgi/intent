@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xigt-corpus>
+<igt id="i1" doc-id="14.txt" line-range="13 15" tag-types="L G T">
+  <metadata type="xigt-meta">
+    <meta type="language" tiers="glosses translations" name="english" iso-639-3="eng"/>
+  </metadata>
+  <tier id="r" type="odin" state="raw">
+    <item id="r1" line="13" tag="L">      (1)    a. Was glaubst Du, wer angerufen hat?</item>
+    <item id="r2" line="14" tag="G">                What believe you who called      has</item>
+    <item id="r3" line="15" tag="T">                `Who do you believe called?'</item>
+  </tier>
+</igt>
+</xigt-corpus>
