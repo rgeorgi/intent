@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xigt-corpus>
+<igt id="igt6" tag-types="M L G T" line-range="49-51" doc-id="lgcol:isl">
+  <metadata>
+    <meta id="meta1">
+        <dc:subject xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns1="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ns1:code="und" xsi:type="olac:language" />
+        <dc:language xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns1="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ns1:code="en" xsi:type="olac:language">English</dc:language>
+    </meta>
+  </metadata>
+  <tier id="r" type="odin" state="raw">
+    <item id="r1" tag="M" line="49">  author vetted: f</item>
+    <item id="r2" tag="L" line="50">  Köttur-inn mjálma-r</item>
+    <item id="r3" tag="G" line="51">  cat.MASC.NOM-the.MASC.NOM.sg meow-3sg</item>
+    <item id="r4" tag="T" line="52">  'The cat meows'</item>
+  </tier>
+  <tier id="c" type="odin" state="cleaned" alignment="r">
+    <item id="c1" alignment="r1" tag="M" line="49">  author vetted: f</item>
+    <item id="c2" alignment="r2" tag="L" line="50">  Köttur-inn mjálma-r</item>
+    <item id="c3" alignment="r3" tag="G" line="51">  cat.MASC.NOM-the.MASC.NOM.sg meow-3sg</item>
+    <item id="c4" alignment="r4" tag="T" line="52">  'The cat meows'</item>
+  </tier>
+  <tier id="n" type="odin" state="normalized" alignment="c">
+    <item id="n1" alignment="c1" tag="M" line="49">f</item>
+    <item id="n2" alignment="c2" tag="L" line="50">Köttur-inn mjálma-r</item>
+    <item id="n3" alignment="c3" tag="G" line="51">cat.MASC.NOM-the.MASC.NOM.sg meow-3sg</item>
+    <item id="n4" alignment="c4" tag="T" line="52">The cat meows</item>
+  </tier>
+  <tier id="p" type="phrases" content="n">
+    <item id="p1" content="n2"/>
+  </tier>
+  <tier id="t" type="translations" content="n" alignment="p">
+    <item id="t1" content="n4" alignment="p1"/>
+  </tier>
+  <tier id="w" type="words" segmentation="p">
+    <item id="w1" segmentation="p1[0:10]"/>
+    <item id="w2" segmentation="p1[11:19]"/>
+  </tier>
+  <tier id="tw" type="words" segmentation="t">
+    <item id="tw1" segmentation="t1[0:3]"/>
+    <item id="tw2" segmentation="t1[4:7]"/>
+    <item id="tw3" segmentation="t1[8:13]"/>
+  </tier>
+  <tier id="gw" type="glosses" content="n" alignment="w">
+    <item id="gw1" content="n3[0:28]" alignment="w1"/>
+    <item id="gw2" content="n3[29:37]" alignment="w2"/>
+  </tier>
+</igt>
+</xigt-corpus>

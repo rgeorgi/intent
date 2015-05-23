@@ -2374,7 +2374,7 @@ def find_lang_word(inst, morph):
     return inst.find(id = ids.pop())
 
 
-def odin_span(inst, item):
+def odin_span(item):
     """
     Follow this item's segmentation all the way
     back to the raw odin item it originates from.
@@ -2402,12 +2402,12 @@ def odin_span(inst, item):
 
         spans = []
 
-        for aligned_object, span in resolve_objects(inst, aln_expr):
+        for aligned_object, span in resolve_objects(item.igt, aln_expr):
             if span is None:
-                spans.extend(odin_span(inst, aligned_object))
+                spans.extend(odin_span(aligned_object))
             else:
                 aln_start, aln_stop = span
-                for start, stop in odin_span(inst, aligned_object):
+                for start, stop in odin_span(aligned_object):
                     spans.extend([(start+aln_start, start+aln_stop)])
 
         return spans
@@ -2417,7 +2417,7 @@ def odin_span(inst, item):
 
 
 def x_contains_y(inst, x_item, y_item):
-    return x_span_contains_y(odin_span(inst, x_item), odin_span(inst, y_item))
+    return x_span_contains_y(odin_span(x_item), odin_span(y_item))
 
 def x_span_contains_y(x_spans, y_spans):
     """
