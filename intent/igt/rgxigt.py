@@ -11,6 +11,7 @@ import re
 import copy
 import string
 import sys
+from xigt.errors import XigtError
 
 from xigt.model import XigtCorpus, Igt, Item, Tier
 from xigt.metadata import Metadata, Meta
@@ -462,6 +463,8 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                         inst.add_gloss_lang_alignments()
                     except GlossLangAlignException as glae:
                         PARSELOG.warn(glae)
+                    except XigtError as xe:
+                        PARSELOG.warn(xe)
 
         return xc
 
@@ -755,8 +758,6 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         if not self.gloss.alignment:
             word_align(self.gloss, self.lang)
-
-
 
     # • Basic Tier Creation ------------------------------------------------------------
 
@@ -2290,6 +2291,32 @@ def retrieve_normal_line(inst, tag):
     else:
         return lines[0]
 
+
+def intervening_characters(item_a, item_b):
+    """
+    Given two items that segment the same line, return the characters that
+    occur between the two.
+
+    :param item_a: First item that segments
+    :param item_b: Second item that segments
+    """
+
+    # Assert that both items segment the same ODIN line
+    assert odin_ancestor(item_a) == odin_ancestor(item_b)
+
+    ancestor = odin_ancestor(item_a)
+
+    # Get the spans of the two items.
+    span_a = odin_span(item_a)
+    span_b = odin_span(item_b)
+
+    # Take the last index of the first item, and the
+    # first index of the second item, and retrieve
+    # the string from inside
+    span_a_last = span_a[-1][-1]
+    span_b_first = span_b[0][0]
+
+    return ancestor.value()[span_a_last:span_b_first]
 
 
 #===============================================================================
