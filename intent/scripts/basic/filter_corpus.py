@@ -40,7 +40,7 @@ def filter_instance(path, require_lang, require_gloss, require_trans, require_al
 def filter_corpus(filelist, outpath, require_lang=True, require_gloss=True, require_trans=True, require_aln=True):
     new_corp = RGCorpus()
 
-    pool = Pool(8)
+    pool = Pool(4)
 
     def merge_to_new_corp(inst_list):
         for inst in inst_list:
@@ -53,8 +53,19 @@ def filter_corpus(filelist, outpath, require_lang=True, require_gloss=True, requ
     pool.close()
     pool.join()
 
-    f = open(outpath, 'w', encoding='utf-8')
+    try:
+        os.makedirs(os.path.dirname(outpath))
+    except FileExistsError as fee:
+        pass
 
-    print("Writing out {} instances...".foramt(len(new_corp)))
-    xigtxml.dump(f, new_corp)
-    f.close()
+    # Only create a file if there are some instances to create...
+    if len(new_corp) > 0:
+
+        f = open(outpath, 'w', encoding='utf-8')
+
+        print("Writing out {} instances...".format(len(new_corp)))
+        xigtxml.dump(f, new_corp)
+        f.close()
+
+    else:
+        print("No instances remain after filtering. Skipping.")
