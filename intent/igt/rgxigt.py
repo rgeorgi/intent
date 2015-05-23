@@ -542,7 +542,6 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                 t_sent.append(re.sub('\s+', '', trans.value().lower()))
             t_sents.append(' '.join(t_sent))
 
-
         PARSELOG.info('Attempting to align instance "{}" with giza'.format(inst.id))
 
         if resume:
@@ -832,7 +831,6 @@ class RGIgt(Igt, RecursiveFindMixin):
             self.append(clean_tier)
             return clean_tier
 
-
     # • Word Tier Creation -----------------------------------
 
     def add_normal_line(self, tier, tag, func):
@@ -866,7 +864,6 @@ class RGIgt(Igt, RecursiveFindMixin):
                 normal_tier = RGLineTier(id = NORM_ID, type=ODIN_TYPE,
                                          attributes={STATE_ATTRIBUTE:NORM_STATE, ALIGNMENT:self.clean_tier().id})
 
-
                 # Get one item per...
                 self.add_normal_line(normal_tier, ODIN_LANG_TAG, clean_lang_string)
                 self.add_normal_line(normal_tier, ODIN_GLOSS_TAG, clean_gloss_string)
@@ -874,10 +871,6 @@ class RGIgt(Igt, RecursiveFindMixin):
 
                 self.append(normal_tier)
                 return normal_tier
-
-
-
-
 
     # • Words Tiers ------------------------------------------------------------
 
@@ -908,9 +901,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         else:
             return tt
 
-
     # • Morpheme / Sub-Token Tiers -------------------------------------------------------------
-
 
     @property
     def glosses(self):
