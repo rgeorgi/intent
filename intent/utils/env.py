@@ -14,6 +14,8 @@ ENV_LOG = logging.getLogger(__name__)
 # 2) Determine the project root directory --------------------------------------
 proj_root = dir_above(__file__, 3)
 
+testfile_dir = os.path.join(proj_root, "examples/tests")
+
 # 3) Load the "env.conf" file. -------------------------------------------------
 env_path = os.path.join(proj_root, 'env.conf')
 if not os.path.exists(env_path):

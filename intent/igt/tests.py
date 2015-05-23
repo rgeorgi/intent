@@ -9,16 +9,16 @@ from intent.igt.consts import INTENT_ALN_HEUR, INTENT_ALN_GIZA
 
 from intent.igt.rgxigt import RGCorpus, GlossLangAlignException, RGIgt
 from intent.alignment.Alignment import Alignment
-from intent.utils.env import posdict, classifier, tagger_model, xigt_dir, proj_root
+from intent.utils.env import posdict, classifier, tagger_model, xigt_dir, proj_root, testfile_dir
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 
-xc = RGCorpus.load(os.path.join(proj_root, "./examples/kor-ex.xml"))
+xc = RGCorpus.load(os.path.join(testfile_dir, "kor-ex.xml"))
 
 class GlossAlignTest(TestCase):
 
     def test_gloss_align(self):
-        xc = RGCorpus.load(os.path.join(proj_root, "./examples/project_gloss_lang_tests.xml"))
+        xc = RGCorpus.load(os.path.join(testfile_dir, "project_gloss_lang_tests.xml"))
         igt = xc.igts[0]
         self.assertRaises(GlossLangAlignException, igt.project_gloss_to_lang)
 
@@ -89,7 +89,7 @@ class XigtParseTest(TestCase):
     Testcase to make sure we can load from XIGT objects.
     """
     def setUp(self):
-        self.xc = RGCorpus.load(os.path.join(proj_root, './examples/kor-ex.xml'))
+        self.xc = RGCorpus.load(os.path.join(testfile_dir, 'kor-ex.xml'))
 
     def xigt_load_test(self):
         pass

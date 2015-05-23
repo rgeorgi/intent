@@ -616,13 +616,8 @@ class GizaAligner(object):
         ga.tf = GizaFiles(prefix, e, f)
         return ga
 
-
-
-
         # After training, return the aligned sentences:
 
-
-# 	
 # 	intersected = combine_corpora(g_t_giza_ac, t_g_giza_ac, method='intersect')
 # 	union = combine_corpora(g_t_giza_ac, t_g_giza_ac, method='union')
 # 	refined = combine_corpora(g_t_giza_ac, t_g_giza_ac, method='refined')

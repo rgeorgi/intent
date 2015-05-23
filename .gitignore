@@ -2,7 +2,11 @@
 *.DS_Store
 temp*.x
 __MACOSX
+bylang
+by-doc-id
+bylang-filtered
 conf
+bylang-enriched
 by-doc-id-enriched
 by-doc-id
 data/ablation

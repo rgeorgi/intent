@@ -10,9 +10,8 @@ import logging
 import re
 import copy
 import string
-
-from intent.utils.logconsts import XIGT_PARSE_LOG_STR
-from intent.utils.logconsts import GIZA_LOG_STR
+import sys
+from intent.consts.grammatical import morpheme_boundary_chars
 from xigt.errors import XigtError
 
 from xigt.model import XigtCorpus, Igt, Item, Tier
@@ -25,26 +24,25 @@ from xigt import ref
 
 
 
-
 # Set up logging ---------------------------------------------------------------
-from xigt.ref import ids
+from xigt.ref import dereference, ids
 
-PARSELOG = logging.getLogger(XIGT_PARSE_LOG_STR)
-GIZA_LOG = logging.getLogger(GIZA_LOG_STR)
+PARSELOG = logging.getLogger(__name__)
+ALIGN_LOG = logging.getLogger('GIZA_LN')
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
 
 # INTERNAL imports -------------------------------------------------------------
 from .igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
-    clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re, rgencode, resolve_objects, rgp
+    clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re, rgencode, rgp, resolve_objects
 
 from .consts import *
 
 import intent.utils.token
 from intent.utils.env import c
 from intent.alignment.Alignment import Alignment, heur_alignments
-from intent.utils.token import Token, POSToken
+from intent.utils.token import Token, POSToken, sentence_tokenizer, whitespace_tokenizer
 from intent.interfaces.giza import GizaAligner
 from intent.utils.dicts import DefaultOrderedDict
 
@@ -76,12 +74,13 @@ class NoODINRawException(XigtFormatException):	pass
 # • Alignment and Projection Exceptions ------------------------------------------
 
 class GlossLangAlignException(RGXigtException):	pass
+
 class ProjectionException(RGXigtException): pass
+
 class ProjectionTransGlossException(ProjectionException): pass
+
 class PhraseStructureProjectionException(RGXigtException): pass
 
-class AlignerError(Exception): pass
-class GizaAlignerError(Exception): pass
 
 def project_creator_except(msg_start, msg_end, created_by):
 
@@ -155,6 +154,8 @@ class FindMixin():
                 filters += [attr_match(val)]
             elif kw == 'type':
                 filters += [type_match(val)]
+            elif kw == 'alignment':
+                filters += [aln_match(val)]
 
             elif kw == 'others': # Append any other filters...
                 filters += val
@@ -430,8 +431,19 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         xc._finish_load()
         return xc
 
+    def __iter__(self):
+        """
+
+        :rtype : RGIgt
+        """
+        return super().__iter__()
+
     @classmethod
     def load(cls, path, basic_processing = False):
+        """
+
+        :rtype : RGCorpus
+        """
         xc = xigtxml.load(path)
         xc.__class__ = RGCorpus
         xc._finish_load()
@@ -444,26 +456,14 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                     inst.basic_processing()
                 except XigtFormatException as xfe:
                     PARSELOG.warn("Basic processing failed for instance {}".format(inst.id))
-                except GlossLangAlignException as glae:
-                    PARSELOG.warn(glae)
-                    continue
-                # TODO FIXME: Revisit this after we've gathered the different
-                # errors that are occurring.
-                except Exception as e:
-                    PARSELOG.warn("An unknown error occurred during basic processing of instance {}".format(inst.id))
-                    PARSELOG.warn(e)
+                except GlossLangAlignException as gae:
+                    PARSELOG.warn("Gloss and language did not align for instance {}.".format(inst.id))
 
                 else:
                     try:
                         inst.add_gloss_lang_alignments()
                     except GlossLangAlignException as glae:
                         PARSELOG.warn(glae)
-                    except (NoGlossLineException, NoLangLineException) as ngle:
-                        PARSELOG.warn(ngle)
-                        continue
-
-                    # TODO: Figure out why we are getting "g" already in collection.
-                    # But for now, just skip it.
                     except XigtError as xe:
                         PARSELOG.warn(xe)
 
@@ -531,53 +531,22 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         g_sents = []
         t_sents = []
 
-        # Let's keep track of which instances we have available, so that we can
-        # align a whole XIGT file without having to filter out the instances that didn't
-        # have gloss or translation lines.
-        aln_id_list = []
-
         for inst in self:
             g_sent = []
             t_sent = []
 
-            # Try to access the gloss morphs and
-            # translation line.
-            try:
-                inst.glosses
-                inst.trans
+            for gloss in inst.glosses.tokens():
+                g_sent.append(re.sub('\s+','', gloss.value().lower()))
+            g_sents.append(' '.join(g_sent))
 
-            # If unable to access, log the error and skip processing the
-            # instance.
-            except (NoGlossLineException, NoTransLineException, MultipleNormLineException) as nle:
-                GIZA_LOG.info(nle)
-                continue
+            for trans in inst.trans.tokens():
+                t_sent.append(re.sub('\s+', '', trans.value().lower()))
+            t_sents.append(' '.join(t_sent))
 
-            except Exception as e:
-                GIZA_LOG.warn("The aligner encountered an unknown error in instance {}".format(inst.id))
-                GIZA_LOG.warn(e)
-                continue
-
-            else:
-
-                # Otherwise, add the id of the aligned instance to the list
-                # so that the alignment can be added later.
-                aln_id_list.append(inst.id)
-
-                for gloss in inst.glosses.tokens():
-                    g_sent.append(re.sub('\s+','', gloss.value().lower()))
-                g_sents.append(' '.join(g_sent))
-
-                for trans in inst.trans.tokens():
-                    t_sent.append(re.sub('\s+', '', trans.value().lower()))
-                t_sents.append(' '.join(t_sent))
-
-
-
-
-
-        GIZA_LOG.info('Attempting to align instance "{}" with giza'.format(inst.id))
+        PARSELOG.info('Attempting to align instance "{}" with giza'.format(inst.id))
 
         if resume:
+            ALIGN_LOG.info('Using pre-saved giza alignment.')
             # Next, load up the saved gloss-trans giza alignment model
             ga = GizaAligner.load(c.getpath('g_t_prefix'), c.getpath('g_path'), c.getpath('t_path'))
 
@@ -589,21 +558,13 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
             ga = GizaAligner()
             g_t_asents = ga.temp_train(g_sents, t_sents)
 
-        # Before continuing, make sure that we have the same number of alignments as we
-        # did instances with valid gloss/translation.
-        if len(g_t_asents) != len(aln_id_list):
-            raise GizaAlignerError("Giza returned {} alignments, rather than the correct amount ({}).".format(len(g_t_asents), len(aln_id_list)))
-
+        # Before continuing, make sure that we have the same number of alignments as we do instances.
+        assert len(g_t_asents) == len(self), 'giza: %s -- self: %s' % (len(g_t_asents), len(self))
 
         # Next, iterate through the aligned sentences and assign their alignments
         # to the instance.
-        for g_t_asent, igt_id in zip(g_t_asents, aln_id_list):
+        for g_t_asent, igt in zip(g_t_asents, self):
             t_g_aln = g_t_asent.aln.flip()
-
-            # Find the igt instance using the provided id...
-            igt = self.find(id=igt_id)
-
-            # And then set its alignment to the one provided by giza.
             igt.set_bilingual_alignment(igt.trans, igt.glosses, t_g_aln, aln_method = INTENT_ALN_GIZA)
 
     def giza_align_l_t(self):
@@ -798,8 +759,6 @@ class RGIgt(Igt, RecursiveFindMixin):
         if not self.gloss.alignment:
             word_align(self.gloss, self.lang)
 
-
-
     # • Basic Tier Creation ------------------------------------------------------------
 
     def raw_tier(self):
@@ -873,7 +832,6 @@ class RGIgt(Igt, RecursiveFindMixin):
             self.append(clean_tier)
             return clean_tier
 
-
     # • Word Tier Creation -----------------------------------
 
     def add_normal_line(self, tier, tag, func):
@@ -907,7 +865,6 @@ class RGIgt(Igt, RecursiveFindMixin):
                 normal_tier = RGLineTier(id = NORM_ID, type=ODIN_TYPE,
                                          attributes={STATE_ATTRIBUTE:NORM_STATE, ALIGNMENT:self.clean_tier().id})
 
-
                 # Get one item per...
                 self.add_normal_line(normal_tier, ODIN_LANG_TAG, clean_lang_string)
                 self.add_normal_line(normal_tier, ODIN_GLOSS_TAG, clean_gloss_string)
@@ -915,10 +872,6 @@ class RGIgt(Igt, RecursiveFindMixin):
 
                 self.append(normal_tier)
                 return normal_tier
-
-
-
-
 
     # • Words Tiers ------------------------------------------------------------
 
@@ -949,9 +902,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         else:
             return tt
 
-
     # • Morpheme / Sub-Token Tiers -------------------------------------------------------------
-
 
     @property
     def glosses(self):
@@ -1232,7 +1183,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         if tag_method:
             filters = [lambda x: get_intent_method(x) == tag_method]
 
-        pos_tier = self.find(attributes={ALIGNMENT:tier_id}, type=POS_TIER_TYPE, others = filters)
+        pos_tier = self.find(alignment=tier_id, type=POS_TIER_TYPE, others = filters)
 
         # If we found a tier, return it with the token methods...
         if pos_tier is not None:
@@ -1345,7 +1296,10 @@ class RGIgt(Igt, RecursiveFindMixin):
                 # obtain the highest weight.
                 result = classifier.classify_string(gloss_token, **kwargs)
 
-                best = result.largest()
+                if len(result) == 0:
+                    best = ['UNK']
+                else:
+                    best = result.largest()
 
                 # Return the POS tags
                 tags.append(best[0])
@@ -1621,11 +1575,9 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         trans_tree = read_pt(trans_parse_tier)
 
-
+        # This might raise a ProjectionTransGlossException if the trans and gloss
+        # alignments don't exist.
         tl_aln = self.get_trans_gloss_lang_alignment()
-        print(tl_aln)
-        if not tl_aln:
-            raise ProjectionTransGlossException("No alignment between source and target trees found in instance {}".format(self.id))
 
         # Do the actual tree projection and create a tree object
         proj_tree = project_ps(trans_tree, self.lang, tl_aln)
@@ -2051,9 +2003,6 @@ class RGMetadata(Metadata): pass
 class RGMeta(Meta): pass
 
 
-
-
-
 #===============================================================================
 # • Basic Functions
 #===============================================================================
@@ -2145,7 +2094,7 @@ def retrieve_phrase(inst, tag, id, type):
 # • Word Tier Creation ---
 #===============================================================================
 
-def create_words_tier(cur_item, word_id, word_type, aln_attribute = SEGMENTATION):
+def create_words_tier(cur_item, word_id, word_type, aln_attribute = SEGMENTATION, tokenizer=whitespace_tokenizer):
     """
     Create a words tier from an ODIN line type item.
 
@@ -2161,7 +2110,7 @@ def create_words_tier(cur_item, word_id, word_type, aln_attribute = SEGMENTATION
 
 
     # Tokenize the words in this phrase...
-    words = intent.utils.token.tokenize_item(cur_item)
+    words = intent.utils.token.tokenize_item(cur_item, tokenizer=tokenizer)
 
     # Create a new word tier to hold the tokenized words...
     wt = RGWordTier(id = word_id, type=word_type, attributes={aln_attribute:cur_item.tier.id}, igt=cur_item.igt)
@@ -2190,7 +2139,7 @@ def retrieve_trans_words(inst):
                 segmentation=tpt.id)
 
     if not twt:
-        twt = create_words_tier(tpt[0], TRANS_WORD_ID, TRANS_WORD_TYPE)
+        twt = create_words_tier(tpt[0], TRANS_WORD_ID, TRANS_WORD_TYPE, tokenizer=sentence_tokenizer)
         inst.append(twt)
     else:
         twt.__class__ = RGWordTier
@@ -2218,16 +2167,11 @@ def retrieve_lang_words(inst):
 
     return lwt
 
+#===============================================================================
+# • Finding References ---
+#===============================================================================
 
 def odin_ancestor(obj):
-    """
-    This function is designed to backtrack until the original
-     ODIN item that the annotating element was created from
-     is found and return it, otherwise return None.
-
-    :param obj:
-    :return: :raise Exception:
-    """
 
     # If we are at an ODIN item, return.
     if isinstance(obj, Item) and obj.tier.type == ODIN_TYPE:
@@ -2238,32 +2182,12 @@ def odin_ancestor(obj):
         return None
 
     else:
-        # First, look to see if it uses a segmentation...
         if SEGMENTATION in obj.attributes:
             ref_attr = SEGMENTATION
-
-        # If not, try content...
         elif CONTENT in obj.attributes:
             ref_attr = CONTENT
-
-        # If it has neither, it has no valid alignment expression.
-        # stop here and return None.
         else:
             return None
-
-        # These tier types annotate other tiers, so
-        # use their alignment attr instead of their individual
-        # items.
-        if isinstance(obj, Tier):
-            if obj.type in [PS_TIER_TYPE, POS_TIER_TYPE]:
-                id = obj.attributes[ref_attr]
-                t = obj.igt.find(id=id)
-                return odin_ancestor(t)
-
-        # The tier instances we are interested in are ones that segment
-        # the same item, like:
-        #   segmentation="p1[7:15]"
-        #   segmentation="p1[16:22]"
 
         if isinstance(obj, Tier):
             id = [ids(i.attributes[ref_attr])[0] for i in obj][0]
@@ -2292,8 +2216,6 @@ def aligned_tags(obj):
         return a.attributes['tag'].split('+')
     else:
         return []
-
-
 
 
 def retrieve_gloss_words(inst):
@@ -2355,12 +2277,38 @@ def retrieve_normal_line(inst, tag):
     lines = [l for l in n if tag in l.attributes['tag'].split('+')]
 
     if len(lines) < 1:
-        raise NoNormLineException("No normalized line found for tag {}".format(tag))
+        raise NoNormLineException()
     elif len(lines) > 1:
         raise MultipleNormLineException('Multiple normalized lines found for tag "{}" in instance {}'.format(tag, inst.id))
     else:
         return lines[0]
 
+
+def intervening_characters(item_a, item_b):
+    """
+    Given two items that segment the same line, return the characters that
+    occur between the two.
+
+    :param item_a: First item that segments
+    :param item_b: Second item that segments
+    """
+
+    # Assert that both items segment the same ODIN line
+    assert odin_ancestor(item_a) == odin_ancestor(item_b)
+
+    ancestor = odin_ancestor(item_a)
+
+    # Get the spans of the two items.
+    span_a = odin_span(item_a)
+    span_b = odin_span(item_b)
+
+    # Take the last index of the first item, and the
+    # first index of the second item, and retrieve
+    # the string from inside
+    span_a_last = span_a[-1][-1]
+    span_b_first = span_b[0][0]
+
+    return ancestor.value()[span_a_last:span_b_first]
 
 
 #===============================================================================
@@ -2391,7 +2339,13 @@ def word_align(this, other):
         remove_word_level_info(other)
 
 def morph_align(gloss_tier, morph_tier):
+    """
+    Given the gloss morphemes and language morphemes, add
+    the alignment attributes to the gloss line tokens.
 
+    :param gloss_tier:
+    :param morph_tier:
+    """
     # First, set the alignment...
     gloss_tier.alignment = morph_tier.id
 
@@ -2407,24 +2361,52 @@ def morph_align(gloss_tier, morph_tier):
     # FIXME: Somewhere here, we are adding alignment to morphemes instead of glosses.
 
     # Now, iterate over our morphs.
-    for gloss in gloss_tier:
+    for i, gloss in enumerate(gloss_tier):
 
+        # Find the word that this gloss aligns to...
         gloss_word = find_gloss_word(gloss_tier.igt, gloss)
-        word_id = gloss_word.alignment
+        word_id = gloss_word.alignment # And the id of the lang word
 
         # Next, let's see what unaligned morphs there are
         aligned_lang_morphs = lang_word_dict[word_id]
 
-        # If there's only one morph left, align with that.
-        if len(aligned_lang_morphs) == 1:
-            gloss.alignment = aligned_lang_morphs[0].id
+        # If we don't have any aligned morphs,
+        # just skip.
+        if len(aligned_lang_morphs) >= 1:
+            # If this isn't the last morph, try and see if we are
+            # at a morpheme boundary...
+            if i < len(gloss_tier)-1:
+                split_chars = intervening_characters(gloss_tier[i], gloss_tier[i+1]).strip()
 
-        # If there's more, pop one off the beginning of the list and use that.
-        # This will cause subsequent morphs to align to the rightmost morph
-        # that also aligns to the same word
-        elif len(aligned_lang_morphs) > 1:
-            lang_morph = aligned_lang_morphs.pop(0)
+                # If the character following this morph is a morpheme bounadry
+                # character or whitespace, then "pop" the morph. Otherwise,
+                # don't pop it.
+                if len(aligned_lang_morphs) == 1:
+                    lang_morph = aligned_lang_morphs[0]
+                elif split_chars == '' or split_chars in morpheme_boundary_chars:
+                    lang_morph = aligned_lang_morphs.pop(0)
+                else:
+                    lang_morph = aligned_lang_morphs[0]
+
+            # Otherwise, we are at the last gloss. Just assign it to the
+            # last remaining lang morph.
+            else:
+                lang_morph = aligned_lang_morphs.pop(0)
+
             gloss.alignment = lang_morph.id
+
+
+        # # If there's only one morph left, align with that.
+        # if len(aligned_lang_morphs) == 1:
+        #     gloss.alignment = aligned_lang_morphs[0].id
+
+
+        # # If there's more, pop one off the beginning of the list and use that.
+        # # This will cause subsequent morphs to align to the rightmost morph
+        # # that also aligns to the same word
+        # elif len(aligned_lang_morphs) > 1:
+        #     lang_morph = aligned_lang_morphs.pop(0)
+        #     gloss.alignment = lang_morph.id
 
 #===============================================================================
 # • Searching ---
@@ -2445,7 +2427,7 @@ def find_lang_word(inst, morph):
     return inst.find(id = ids.pop())
 
 
-def odin_span(inst, item):
+def odin_span(item):
     """
     Follow this item's segmentation all the way
     back to the raw odin item it originates from.
@@ -2473,12 +2455,12 @@ def odin_span(inst, item):
 
         spans = []
 
-        for aligned_object, span in resolve_objects(inst, aln_expr):
+        for aligned_object, span in resolve_objects(item.igt, aln_expr):
             if span is None:
-                spans.extend(odin_span(inst, aligned_object))
+                spans.extend(odin_span(aligned_object))
             else:
                 aln_start, aln_stop = span
-                for start, stop in odin_span(inst, aligned_object):
+                for start, stop in odin_span(aligned_object):
                     spans.extend([(start+aln_start, start+aln_stop)])
 
         return spans
@@ -2488,7 +2470,7 @@ def odin_span(inst, item):
 
 
 def x_contains_y(inst, x_item, y_item):
-    return x_span_contains_y(odin_span(inst, x_item), odin_span(inst, y_item))
+    return x_span_contains_y(odin_span(x_item), odin_span(y_item))
 
 def x_span_contains_y(x_spans, y_spans):
     """

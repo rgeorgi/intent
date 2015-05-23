@@ -3,6 +3,7 @@ Created on Aug 26, 2013
 
 :author: rgeorgi
 """
+from glob import glob
 import sys
 import os
 import argparse
@@ -140,6 +141,20 @@ def csv_choices(choice_list):
 
     return in_choices
 
+def globfiles(file_arg):
+    return glob(file_arg)
+
+def proportion(arg):
+    try:
+        float(arg)
+    except Exception as e:
+        raise argparse.ArgumentError("Invalid format for proportion: {}".format(arg))
+
+    p = float(arg)
+    if p < 0 or p > 1.0:
+        raise argparse.ArgumentError('Proportion arguments should be between 0 and 1.0. Argument "{}" is invalid.'.format(p))
+
+    return p
 
 # ===============================================================================
 # Default to showing help for an argparser

@@ -2,14 +2,14 @@ import os
 from unittest import TestCase
 from intent.igt.igtutils import rgp, resolve_objects
 from intent.igt.rgxigt import RGCorpus, odin_span, x_span_contains_y, x_contains_y
-from intent.utils.env import proj_root
+from intent.utils.env import proj_root, testfile_dir
 from xigt.model import Item
 
 __author__ = 'rgeorgi'
 
 class span_test(TestCase):
     def setUp(self):
-        self.xc1 = RGCorpus.load(os.path.join(proj_root, './examples/kor-ex.xml'))
+        self.xc1 = RGCorpus.load(os.path.join(testfile_dir, 'kor-ex.xml'))
         self.inst = self.xc1[0]
         self.g1_2 = self.inst.find(id='g1.2')
         self.m2_1 = self.inst.find(id="m2.1")
@@ -19,11 +19,11 @@ class span_test(TestCase):
         self.new_m = Item(id="m5", tier=self.m_tier, segmentation="w1[0:2]+w4[2:3]")
 
     def test_spans(self):
-        self.assertEqual(odin_span(self.inst, self.p1), [(0,35)])
-        self.assertEqual(odin_span(self.inst, self.g1_2), [(2,5)])
-        self.assertEqual(odin_span(self.inst, self.m2_1), [(7,9)])
-        self.assertEqual(odin_span(self.inst, self.w1), [(0,6)])
-        self.assertEqual(odin_span(self.inst, self.new_m), [(0,2),(25,26)])
+        self.assertEqual(odin_span(self.p1), [(0,35)])
+        self.assertEqual(odin_span(self.g1_2), [(2,5)])
+        self.assertEqual(odin_span(self.m2_1), [(7,9)])
+        self.assertEqual(odin_span(self.w1), [(0,6)])
+        self.assertEqual(odin_span(self.new_m), [(0,2),(25,26)])
 
     def test_contains(self):
         self.assertTrue(x_contains_y(self.inst, self.p1, self.m2_1))

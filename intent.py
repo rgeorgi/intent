@@ -6,8 +6,12 @@ import logging
 
 
 # Start the logger and set it up. ----------------------------------------------
+from intent.scripts.basic.corpus_stats import igt_stats
+from intent.scripts.basic.filter_corpus import filter_corpus
+from intent.scripts.basic.split_corpus import split_corpus
 from intent.utils.arg_consts import PARSE_LANG_PROJ, PARSE_TRANS, POS_TYPES, PARSE_TYPES, ALN_TYPES, ALN_VAR, POS_VAR, \
     PARSE_VAR
+from intent.utils.listutils import flatten_list
 
 logging.basicConfig(format=logging.BASIC_FORMAT)
 MAIN_LOG = logging.getLogger('INTENT')
@@ -41,8 +45,10 @@ if import_errors:
 
 import intent.utils.env
 
+from intent.utils.env import classifier
+
 from intent.utils.argutils import DefaultHelpParser, existsfile, \
-    PathArgException, csv_choices
+    PathArgException, csv_choices, proportion, globfiles
 
 #===============================================================================
 # Now, intialize the subcommands.
@@ -84,6 +90,8 @@ enrich.add_argument('--parse', dest=PARSE_VAR,
                     type=csv_choices(PARSE_TYPES), default=[],
                     help='List of parses to create. {}'.format(PARSE_TYPES))
 
+enrich.add_argument('--class', dest='class_path', default=classifier)
+
 #===============================================================================
 # ODIN subcommand
 #===============================================================================
@@ -96,6 +104,47 @@ odin.add_argument('OUT_FILE', help='Output path for the output file.')
 odin.add_argument('--limit', help="Limit number of instances written.", type=int)
 odin.add_argument('--randomize', action='store_true', help='Randomly select the instances')
 
+#===============================================================================
+# STATS subcommand
+#
+# Get statistics (# sents, # tokens, tags/token, etc) for a XIGT file.
+#===============================================================================
+stats = subparsers.add_parser('stats', help='Get corpus statistics for a set of XIGT files.')
+
+stats.add_argument('FILE', nargs='+', help='Files from which to gather statistics.')
+stats.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
+
+#===============================================================================
+# SPLIT subcommand
+#
+# Split XIGT file into train/dev/test
+#===============================================================================
+split = subparsers.add_parser('split', help='Command to split input file(s) into train/dev/test instances.')
+
+split.add_argument('FILE', nargs='+', help='XIGT files to gather together in order to generate the train/dev/test split', type=globfiles)
+split.add_argument('--train', default=0.8, help='The proportion of the data to set aside for training.', type=proportion)
+split.add_argument('--dev', default=0.1, help='The proportion of data to set aside for development.', type=proportion)
+split.add_argument('--test', default=0.1, help='The proportion of data to set aside for testing.', type=proportion)
+split.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
+split.add_argument('-o', dest='prefix', default=None, help='Destination prefix for the output.')
+split.add_argument('-f', dest='overwrite', action='store_true', help='Force overwrite of existing files.')
+
+#===============================================================================
+# FILTER subcommand
+#
+# Filter XIGT files for L,G,T lines, 1-to-1 alignment, etc.
+#===============================================================================
+
+filter_p = subparsers.add_parser('filter', help='Command to filter input file(s) for instances')
+
+filter_p.add_argument('FILE', nargs='+', help='XIGT files to filter.', type=globfiles)
+filter_p.add_argument('-o', '--output', help='Output file (Combine from inputs)')
+filter_p.add_argument('--require-lang', help='Require instances to have language line', choices=['true','false'], default='true')
+filter_p.add_argument('--require-gloss', help='Require instances to have gloss line', choices=['true', 'false'], default='true')
+filter_p.add_argument('--require-trans', help='Require instances to have trans line', choices=['true', 'false'], default='true')
+
+filter_p.add_argument('--require-aln', help='Require instances to have 1-to-1 gloss/lang alignment.', choices=['true','false'], default='true')
+filter_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 # Parse the args. --------------------------------------------------------------
 try:
@@ -119,3 +168,9 @@ if args.subcommand == 'enrich':
     subcommands.enrich(**vars(args))
 elif args.subcommand == 'odin':
     subcommands.odin(**vars(args))
+elif args.subcommand == 'stats':
+    igt_stats(flatten_list(args.FILE), type='xigt')
+elif args.subcommand == 'split':
+    split_corpus(flatten_list(args.FILE), args.train, args.dev, args.test, prefix=args.prefix, overwrite=args.overwrite)
+elif args.subcommand == 'filter':
+    filter_corpus(flatten_list(args.FILE), args.output, args.require_lang, args.require_gloss, args.require_trans, args.require_aln)
