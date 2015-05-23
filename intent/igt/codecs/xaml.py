@@ -10,7 +10,7 @@ Created on Feb 25, 2015
 import logging
 import glob
 import os
-from eval.pos_eval import poseval
+from intent.eval.pos_eval import poseval
 
 
 logging.basicConfig()

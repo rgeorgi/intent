@@ -11,6 +11,7 @@ import re
 import copy
 import string
 import sys
+from intent.consts.grammatical import morpheme_boundary_chars
 from xigt.errors import XigtError
 
 from xigt.model import XigtCorpus, Igt, Item, Tier
@@ -2338,7 +2339,13 @@ def word_align(this, other):
         remove_word_level_info(other)
 
 def morph_align(gloss_tier, morph_tier):
+    """
+    Given the gloss morphemes and language morphemes, add
+    the alignment attributes to the gloss line tokens.
 
+    :param gloss_tier:
+    :param morph_tier:
+    """
     # First, set the alignment...
     gloss_tier.alignment = morph_tier.id
 
@@ -2354,24 +2361,52 @@ def morph_align(gloss_tier, morph_tier):
     # FIXME: Somewhere here, we are adding alignment to morphemes instead of glosses.
 
     # Now, iterate over our morphs.
-    for gloss in gloss_tier:
+    for i, gloss in enumerate(gloss_tier):
 
+        # Find the word that this gloss aligns to...
         gloss_word = find_gloss_word(gloss_tier.igt, gloss)
-        word_id = gloss_word.alignment
+        word_id = gloss_word.alignment # And the id of the lang word
 
         # Next, let's see what unaligned morphs there are
         aligned_lang_morphs = lang_word_dict[word_id]
 
-        # If there's only one morph left, align with that.
-        if len(aligned_lang_morphs) == 1:
-            gloss.alignment = aligned_lang_morphs[0].id
+        # If we don't have any aligned morphs,
+        # just skip.
+        if len(aligned_lang_morphs) >= 1:
+            # If this isn't the last morph, try and see if we are
+            # at a morpheme boundary...
+            if i < len(gloss_tier)-1:
+                split_chars = intervening_characters(gloss_tier[i], gloss_tier[i+1]).strip()
 
-        # If there's more, pop one off the beginning of the list and use that.
-        # This will cause subsequent morphs to align to the rightmost morph
-        # that also aligns to the same word
-        elif len(aligned_lang_morphs) > 1:
-            lang_morph = aligned_lang_morphs.pop(0)
+                # If the character following this morph is a morpheme bounadry
+                # character or whitespace, then "pop" the morph. Otherwise,
+                # don't pop it.
+                if len(aligned_lang_morphs) == 1:
+                    lang_morph = aligned_lang_morphs[0]
+                elif split_chars == '' or split_chars in morpheme_boundary_chars:
+                    lang_morph = aligned_lang_morphs.pop(0)
+                else:
+                    lang_morph = aligned_lang_morphs[0]
+
+            # Otherwise, we are at the last gloss. Just assign it to the
+            # last remaining lang morph.
+            else:
+                lang_morph = aligned_lang_morphs.pop(0)
+
             gloss.alignment = lang_morph.id
+
+
+        # # If there's only one morph left, align with that.
+        # if len(aligned_lang_morphs) == 1:
+        #     gloss.alignment = aligned_lang_morphs[0].id
+
+
+        # # If there's more, pop one off the beginning of the list and use that.
+        # # This will cause subsequent morphs to align to the rightmost morph
+        # # that also aligns to the same word
+        # elif len(aligned_lang_morphs) > 1:
+        #     lang_morph = aligned_lang_morphs.pop(0)
+        #     gloss.alignment = lang_morph.id
 
 #===============================================================================
 # • Searching ---
