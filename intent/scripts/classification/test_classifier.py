@@ -23,7 +23,7 @@ The purpose of this module is to evaluate the POS-line classifiers trained on
 """
 
 
-def test_classifier(c, inst_list):
+def eval_classifier(c, inst_list):
     """
 
     :param c: The classifier
@@ -130,11 +130,11 @@ def nfold_xaml():
 
         # Aaaand the ODIN-based classifier...
 
-        test_classifier(same_c, lang_holdout)
-        test_classifier(other_c, lang_holdout)
-        test_classifier(full_c, lang_holdout)
+        eval_classifier(same_c, lang_holdout)
+        eval_classifier(other_c, lang_holdout)
+        eval_classifier(full_c, lang_holdout)
 
-        test_classifier(odin_c, lang_holdout)
+        eval_classifier(odin_c, lang_holdout)
 
         shutil.rmtree(tmp_dir)
 

@@ -45,7 +45,7 @@ The purpose of this module is to evaluate the POS-line classifiers trained on
 """
 
 
-def test_classifier(c, inst_list):
+def eval_classifier(c, inst_list):
     """
 
     :param c: The classifier
@@ -292,13 +292,13 @@ def eval_ctn():
     # sys.exit()
 
     dev_classifier = instances_to_classifier(dev_c, os.path.join(proj_root, 'ctn_dev.classifier'))
-    test_classifier(dev_classifier, dev_c)
+    eval_classifier(dev_classifier, dev_c)
 
     devtrain_classifier = instances_to_classifier(devtrain_c, os.path.join(proj_root, 'ctn_devtrain.classifier'))
-    test_classifier(devtrain_classifier, dev_c)
+    eval_classifier(devtrain_classifier, dev_c)
 
     train_classifier = instances_to_classifier(train_c, os.path.join(proj_root, 'ctn_train.classifier'))
-    test_classifier(train_classifier, dev_c)
+    eval_classifier(train_classifier, dev_c)
 
     #xigtxml.dump(open(os.path.join(proj_root, 'ctn_dump.xml'), 'w', encoding='utf-8'), xc)
     sys.exit()
@@ -349,11 +349,11 @@ def eval_ctn():
 
         # Aaaand the ODIN-based classifier...
 
-        test_classifier(same_c, lang_holdout)
-        test_classifier(other_c, lang_holdout)
-        test_classifier(full_c, lang_holdout)
+        eval_classifier(same_c, lang_holdout)
+        eval_classifier(other_c, lang_holdout)
+        eval_classifier(full_c, lang_holdout)
 
-        test_classifier(odin_c, lang_holdout)
+        eval_classifier(odin_c, lang_holdout)
 
         shutil.rmtree(tmp_dir)
 
