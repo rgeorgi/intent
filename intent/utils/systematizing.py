@@ -1,31 +1,28 @@
-'''
+"""
 Created on Oct 22, 2013
 
 @author: rgeorgi
-'''
-# import pygame
-import time
-# 
+"""
 import subprocess
 import sys
 import logging
 from threading import Thread
 from queue import Empty, Queue
-from _testcapi import the_number_three
 from unittest.case import TestCase
-
 
 def enqueue_output(out, queue):
     for line in iter(out.readline, b''):
         queue.put(line)
     out.close()
 
+
 def thread_handler(out, func):
     for line in iter(out.readline, b''):
         func(line.decode('utf-8').strip())
 
+
 def handle_stderr(p, queue, func):
-    while p.poll() == None:
+    while p.poll() is None:
         try:
             data = queue.get_nowait()
         except Empty:
@@ -33,24 +30,25 @@ def handle_stderr(p, queue, func):
         else:
             func(data.decode('utf-8'))
 
+
 class ProcessCommunicator(object):
-    '''
+    """
     This is a class to make communicating between a commandline program easier.
     It will make available stdin and stdout pipes, while allowing for the stderr
     to be handled by a custom handler.
-    '''
+    """
 
-    def __init__(self, cmd, stdout_func = None, stderr_func=None, shell=False):
-        '''
+    def __init__(self, cmd, stdout_func=None, stderr_func=None, shell=False):
+        """
         Execute a command, ``cmd`` and save the stdin/stdout for communication,
         but allow the stderr to be read in a non-blocking manner and printed using
         stderr_func.
 
         :param cmd: Command to be run
-        :type cmd: str
+        :type cmd: str or list
         :param stderr_func: Function to handle the stderr strings.
         :type stderr_func: func
-        '''
+        """
 
         # 1) Initialize the subprocess ---------------------------------------------
         self.p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1,
@@ -65,7 +63,6 @@ class ProcessCommunicator(object):
             stdout_t = Thread(target=thread_handler, args=(self.p.stdout, stdout_func))
             stdout_t.daemon = True
             stdout_t.start()
-
 
     def wait(self):
         return self.p.wait()
@@ -89,8 +86,8 @@ class ProcessCommunicator(object):
         return self.p.stdin
 
 
-def piperunner(cmd, log_name = None):
-    '''
+def piperunner(cmd, log_name=None):
+    """
     Fancy way to call a blocking subprocess and log its activity, while
 
 
@@ -98,8 +95,7 @@ def piperunner(cmd, log_name = None):
     :type cmd:
     :param log_name:
     :type log_name:
-    '''
-
+    """
 
     if not log_name:
         out_func = sys.stdout.write
@@ -116,14 +112,13 @@ def piperunner(cmd, log_name = None):
     t.daemon = True
     t.start()
 
-    while p.poll() == None:
+    while p.poll() is None:
         try:
             data = q.get_nowait()
         except Empty:
             pass
         else:
             out_func(data.decode('utf-8').strip())
-
 
     return p.returncode
 
@@ -134,5 +129,5 @@ def piperunner(cmd, log_name = None):
 class ProcessCommunicatorTest(TestCase):
 
     def error_test(self):
-        self.pc = ProcessCommunicator(['echo', 'asdf '], stdout_func = print)
+        self.pc = ProcessCommunicator(['echo', 'asdf '], stdout_func=print)
         print(self.pc.wait())
