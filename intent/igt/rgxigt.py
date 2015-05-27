@@ -423,13 +423,19 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         # Return the corpus
         return xc
 
-
     @classmethod
     def loads(cls, s):
         xc = xigtxml.loads(s)
         xc.__class__ = RGCorpus
         xc._finish_load()
         return xc
+
+    def __getitem__(self, item):
+        """
+
+        :rtype : RGIgt
+        """
+        return super().__getitem__(item)
 
     def __iter__(self):
         """

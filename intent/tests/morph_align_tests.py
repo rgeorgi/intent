@@ -56,3 +56,22 @@ class MorphAlignTests(TestCase):
         self.assertEqual(glosses[7].alignment, morphs[2].id)
         self.assertEqual(glosses[8].alignment, morphs[3].id)
 
+    def more_morph_align_test(self):
+        inst = self.xc[1]
+
+        # Align the gloss/lang words (Needed for aligning morphs)
+        inst.add_gloss_lang_alignments()
+
+        glosses = inst.glosses
+        morphs = inst.morphemes
+
+        # Do the alignment
+        morph_align(glosses, morphs)
+
+        # Assert that the glosses are aligned...
+        self.assertIsNotNone(glosses[0].alignment)
+
+        self.assertEquals(glosses[11].alignment, morphs[6].id)
+        self.assertEquals(glosses[12].alignment, morphs[6].id)
+        self.assertEquals(glosses[13].alignment, morphs[7].id)
+        self.assertEquals(glosses[14].alignment, morphs[7].id)

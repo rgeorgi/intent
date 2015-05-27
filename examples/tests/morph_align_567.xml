@@ -45,4 +45,30 @@
     <item id="gw2" content="n3[29:37]" alignment="w2"/>
   </tier>
 </igt>
+<igt id="igt126" doc-id="lgcol:pbt" line-range="933-935" tag-types="M L G T">
+  <metadata>
+    <meta id="meta1">
+        <dc:subject xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns1="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ns1:code="und" xsi:type="olac:language" />
+        <dc:language xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns1="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ns1:code="en" xsi:type="olac:language">English</dc:language>
+    </meta>
+  </metadata>
+  <tier id="r" type="odin" state="raw">
+    <item id="r1" tag="M" line="933">  author:scott vetted: f</item>
+    <item id="r2" tag="L" line="934">  ze               shish-a          khwarr-el-ay    s-em</item>
+    <item id="r3" tag="G" line="935">  pronoun:1SG.ABS  glass-F.3SG.ABS  eat:TR-INF-POT  can:AUX-1SG.PRS</item>
+    <item id="r4" tag="T" line="936">  'I can eat glass.'</item>
+  </tier>
+  <tier id="c" type="odin" state="cleaned" alignment="r">
+    <item id="c1" alignment="r1" tag="M" line="933">  author:scott vetted: f</item>
+    <item id="c2" alignment="r2" tag="L" line="934">  ze               shish-a          khwarr-el-ay    s-em</item>
+    <item id="c3" alignment="r3" tag="G" line="935">  pronoun:1SG.ABS  glass-F.3SG.ABS  eat:TR-INF-POT  can:AUX-1SG.PRS</item>
+    <item id="c4" alignment="r4" tag="T" line="936">  'I can eat glass.'</item>
+  </tier>
+  <tier id="n" type="odin" state="normalized" alignment="c">
+    <item id="n1" alignment="c1" tag="M" line="933">author:scott vetted: f</item>
+    <item id="n2" alignment="c2" tag="L" line="934">ze               shish-a          khwarr-el-ay    s-em</item>
+    <item id="n3" alignment="c3" tag="G" line="935">pronoun:1SG.ABS  glass-F.3SG.ABS  eat:TR-INF-POT  can:AUX-1SG.PRS</item>
+    <item id="n4" alignment="c4" tag="T" line="936">I can eat glass.</item>
+  </tier>
+</igt>
 </xigt-corpus>

@@ -62,16 +62,15 @@ class StanfordPOSTagger(object):
             raise TaggerError('Path to the stanford tagger .jar file is not defined.')
 
         self.st = ProcessCommunicator([java_bin,
-                                    '-cp', tagger_jar,
-                                    'edu.stanford.nlp.tagger.maxent.MaxentTagger',
-                                    '-model', model,
-                                    '-tokenize', 'false'], stderr_func=stanford_stderr_handler)
-
+                                       '-cp', tagger_jar,
+                                       'edu.stanford.nlp.tagger.maxent.MaxentTagger',
+                                       '-model', model,
+                                       '-sentenceDelimiter', 'newline',
+                                       '-tokenize', 'false'], stderr_func=stanford_stderr_handler)
 
 
     def tag_tokenization(self, tokenization, **kwargs):
         return self.tag(tokenization.text(), **kwargs)
-
 
     def tag(self, s, **kwargs):
 
@@ -92,24 +91,10 @@ class StanfordPOSTagger(object):
         #=======================================================================
         word_count = 0
         input_len = len(s.split())
-        output_str = ''
 
-
-        while True:
-            char = self.st.stdout.read(1).decode('utf-8', errors='replace')
-
-            if char == '\n':
-                word_count = len(output_str.split())
-                if word_count == input_len:
-                    break
-                else:
-                    output_str += ' '
-            else:
-                output_str += char
-
-        # Advance past the newline
-        self.st.stdout.readline()
-
+        # We are now using a version of the stanford tagger which finally respects
+        # the sentence_delimiter argument. So we only need one readline() for the sentence.
+        output_str = self.st.stdout.readline().decode('utf-8', errors='replace')
 
 
 
@@ -200,7 +185,10 @@ class TestPeriodTagging(unittest.TestCase):
     def runTest(self, result=None):
         p = StanfordPOSTagger(tagger_model)
 
-        self.assertEqual(len(p.tag('this is a test . with a period in the middle\n')), 11)
-        self.assertEqual(len(p.tag('and a second . to make sure the feed advances.\n')), 10)
+        first_tagged = p.tag('this is a test . with a period in the middle\n')
+        second_tagged= p.tag('and a second . to make sure the feed advances.\n')
+
+        self.assertEqual(len(first_tagged), 11)
+        self.assertEqual(len(second_tagged), 10)
 
 
