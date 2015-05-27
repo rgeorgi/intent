@@ -28,6 +28,7 @@ c = ConfigFile(os.path.join(proj_root, 'env.conf'))
 # Now, have the variables conveniently made available. 
 #===============================================================================
 
+java_bin         = c.getpath('java_bin')
 classifier       = c.getpath('classifier_model')
 mgiza            = c.getpath('mgiza')
 mallet           = c.getpath('mallet')

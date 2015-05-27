@@ -15,7 +15,7 @@ from intent.utils.ConfigFile import ConfigFile
 from intent.eval.pos_eval import slashtags_eval
 from intent.utils.token import tag_tokenizer, tokenize_string
 
-from intent.utils.env import c, tagger_jar, tagger_model
+from intent.utils.env import c, tagger_jar, tagger_model, java_bin
 
 # Logging ----------------------------------------------------------------------
 TAG_LOG = logging.getLogger(__name__)
@@ -61,7 +61,7 @@ class StanfordPOSTagger(object):
             TAG_LOG.critical('Path to the stanford tagger .jar file is not defined.')
             raise TaggerError('Path to the stanford tagger .jar file is not defined.')
 
-        self.st = ProcessCommunicator(['java',
+        self.st = ProcessCommunicator([java_bin,
                                     '-cp', tagger_jar,
                                     'edu.stanford.nlp.tagger.maxent.MaxentTagger',
                                     '-model', model,
@@ -129,13 +129,13 @@ def train(train_file, model_path, delimeter = '/'):
     # If the model path doesn't exists, create it
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
 
-    cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (tagger_jar, model_path, train_file, delimeter)
+    cmd = '%s -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (java_bin, tagger_jar, model_path, train_file, delimeter)
 
     piperunner(cmd, 'stanford_tagger')
 
 def eval(test_file, model_path, delimeter = '/'):
     global stanford_jar
-    cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s' % (stanford_jar, model_path, test_file, delimeter )
+    cmd = '%s -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s' % (java_bin, stanford_jar, model_path, test_file, delimeter )
     piperunner(cmd, 'stanford_tagger')
 
 
@@ -148,7 +148,7 @@ def test(test_file, model_path, out_file, delimeter = '/'):
     # If the folder for the output file doesn't exist, create it.
     os.makedirs(os.path.dirname(out_file), exist_ok=True)
 
-    cmd = 'java -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s -outputFormat slashTags -outputFile %s' % (stanford_jar, model_path, test_file, delimeter, out_file)
+    cmd = '%s -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s -outputFormat slashTags -outputFile %s' % (java_bin, stanford_jar, model_path, test_file, delimeter, out_file)
     piperunner(cmd, 'stanford_tagger')
 
 # Make sure nosetests doesn't think this is a unit test
