@@ -465,13 +465,6 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                 except GlossLangAlignException as gae:
                     PARSELOG.warn("Gloss and language did not align for instance {}.".format(inst.id))
 
-                else:
-                    try:
-                        inst.add_gloss_lang_alignments()
-                    except GlossLangAlignException as glae:
-                        PARSELOG.warn(glae)
-                    except XigtError as xe:
-                        PARSELOG.warn(xe)
 
         return xc
 
@@ -755,6 +748,10 @@ class RGIgt(Igt, RecursiveFindMixin):
         # And do word-to-word alignment if it's not already done.
         if hasgloss and haslang and not self.gloss.alignment:
             word_align(self.gloss, self.lang)
+
+        if hasgloss and haslang:
+            self.add_gloss_lang_alignments()
+
 
     def add_gloss_lang_alignments(self):
         # Finally, do morpheme-to-morpheme alignment between gloss
