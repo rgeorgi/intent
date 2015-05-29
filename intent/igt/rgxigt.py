@@ -947,15 +947,19 @@ class RGIgt(Igt, RecursiveFindMixin):
         """
         # If we already have this alignment, just return it.
         trans_gloss = self.get_bilingual_alignment(self.trans.id, self.gloss.id, aln_method)
-        if trans_gloss:
+        if trans_gloss is not None:
             return trans_gloss
 
         # Otherwise, let's create it from the glosses alignment
         else:
             trans_glosses = self.get_bilingual_alignment(self.trans.id, self.glosses.id, aln_method)
 
-            if not trans_glosses:
-                raise ProjectionTransGlossException("Trans-to-gloss alignment must already exist, otherwise create with giza or heur")
+            if trans_glosses is None:
+                if aln_method is None:
+                    raise ProjectionTransGlossException('No trans/gloss alignment exists for instance "{}"'.format(self.id))
+                else:
+                    raise ProjectionTransGlossException(
+                        'No trans/gloss alignment exists for requested method "{}" in instance "{}"'.format(aln_method, self.id))
 
             new_trans_gloss = Alignment()
 
@@ -1036,7 +1040,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         """
 
         ba_tier = self.get_bilingual_alignment_tier(src_id, tgt_id, aln_method)
-        if not ba_tier:
+        if ba_tier is None:
             return None
         else:
             ba_tier.__class__ = RGBilingualAlignmentTier
@@ -1243,7 +1247,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         self.add_pos_tags(self.trans.id, trans_tags, tag_method=INTENT_POS_TAGGER)
         return trans_tags
 
-    def classify_gloss_pos(self, classifier, tag_method=None, **kwargs):
+    def classify_gloss_pos(self, classifier, **kwargs):
         """
         Run the classifier on the gloss words and return the POS tags.
 
@@ -1254,7 +1258,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         attributes = {ALIGNMENT:self.gloss.id}
 
         # Search for a previous run and remove if found...
-        prev_tier = self.get_pos_tags(self.gloss.id, tag_method = tag_method)
+        prev_tier = self.get_pos_tags(self.gloss.id, tag_method = INTENT_POS_CLASS)
 
         if prev_tier:
             prev_tier.delete()
@@ -1278,7 +1282,6 @@ class RGIgt(Igt, RecursiveFindMixin):
 
                 # lowercase the token...
                 gloss_token = gloss_token.lower()
-
 
                 #===================================================================
                 # Make sure to set up the next and previous tokens for the classifier
@@ -1305,7 +1308,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         return tags
 
     # • POS Tag Projection -----------------------------------------------------
-    def project_trans_to_gloss(self, tag_method=None):
+    def project_trans_to_gloss(self, aln_method=None, tag_source=None):
         """
         Project POS tags from the translation words to the gloss words.
         """
@@ -1314,19 +1317,19 @@ class RGIgt(Igt, RecursiveFindMixin):
         attributes = {ALIGNMENT:self.gloss.id}
 
         # Remove the previous tags if they are present...
-        prev_t = self.get_pos_tags(self.gloss.id, tag_method=tag_method)
+        prev_t = self.get_pos_tags(self.gloss.id, tag_method=INTENT_POS_PROJ)
         if prev_t: prev_t.delete()
 
         # Get the trans tags...
-        trans_tags = self.get_pos_tags(self.trans.id)
+        trans_tags = self.get_pos_tags(self.trans.id, tag_method=tag_source)
 
         # If we don't get any trans tags back, throw an exception:
         if not trans_tags:
             project_creator_except("There were no translation-line POS tags found",
                                    "Please create the appropriate translation-line POS tags before projecting.",
-                                   tag_method)
+                                   INTENT_POS_PROJ)
 
-        t_g_aln = sorted(self.get_trans_gloss_alignment())
+        t_g_aln = sorted(self.get_trans_gloss_alignment(aln_method=aln_method))
 
         # Create the new pos tier.
         # TODO: There should be a more unified approach to transferring tags.
@@ -1346,7 +1349,8 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             # TODO: Implement order of precedence here.
 
-            pt.add(RGToken(id=pt.askItemId(), alignment=g_word.id, text=t_tag.value()))
+            if pt.find(alignment=g_word.id) is None:
+                pt.add(RGToken(id=pt.askItemId(), alignment=g_word.id, text=t_tag.value()))
 
         self.append(pt)
 
