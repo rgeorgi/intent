@@ -346,7 +346,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
 
     @classmethod
-    def from_txt(cls, text, require_trans = True, require_gloss = True, require_lang = True, require_1_to_1 = True, limit = None):
+    def from_txt(cls, text, require_trans = True, require_gloss = True, require_lang = True, limit = None):
         """
         Read in a odin-style textfile to create the xigt corpus.
 
@@ -375,7 +375,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
             # Handle the requirement for 1_to_1 alignment.
             try:
-                i = RGIgt.fromString(inst_txt, corpus=xc, require_1_to_1=require_1_to_1, idnum=inst_num)
+                i = RGIgt.fromString(inst_txt, corpus=xc, idnum=inst_num)
             except GlossLangAlignException as glae:
                 PARSELOG.warn('Gloss and language could not be automatically aligned for instance "%s". Skipping' % gen_item_id('i', inst_num))
                 continue
@@ -636,7 +636,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         #self.metadata = mdt
 
     @classmethod
-    def fromString(cls, string, corpus = None, require_1_to_1 = True, idnum=None):
+    def fromString(cls, string, corpus = None, idnum=None):
         """
         Method to parse and create an IGT instance from odin-style text.
         """
@@ -672,13 +672,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         # --- 4) Do the enriching if necessary
 
-        inst.basic_processing(require_1_to_1 = require_1_to_1)
-        # TODO: Clean up this exception handling
-        try:
-            inst.add_gloss_lang_alignments()
-        except XigtFormatException as ngle:
-            PARSELOG.warning(ngle)
-
+        inst.basic_processing()
 
         return inst
 
@@ -707,7 +701,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
     # • Processing of newly created instances ----------------------------------
 
-    def basic_processing(self, require_1_to_1 = True):
+    def basic_processing(self):
         # Create the clean tier
         """
         Finish the loading actions of an IGT instance. (Create the normal and

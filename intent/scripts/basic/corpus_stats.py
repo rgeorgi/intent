@@ -116,7 +116,7 @@ def igt_stats(filelist, type='text', logpath=None):
 
         elif type == 'text':
             STATS_LOGGER.info('Processing text file: "%s"' % path)
-            rc = RGCorpus.from_txt(path, require_1_to_1=False)
+            rc = RGCorpus.from_txt(path)
 
 
         def merge_dicts(result):
