@@ -1,6 +1,6 @@
 import logging
-from tempfile import NamedTemporaryFile
-import sys
+from multiprocessing.pool import Pool
+
 from intent.igt.consts import POS_TIER_TYPE, GLOSS_WORD_ID
 from intent.igt.grams import write_gram
 from intent.interfaces.mallet_maxent import train_txt
@@ -35,18 +35,20 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_path=No
     if classifier_prefix:
         print("Gathering statistics on POS tags...")
 
+    # Define the callback to merge the parallel calls' results.
+    def _merge_dicts(tup):
+        new_wt, new_gt = tup
+        _merge_tlcd(word_tag_dict, new_wt)
+        _merge_tlcd(gram_tag_dict, new_gt)
+
+    p = Pool(8)
+
     # Start by loading each of the files in the input files...
     for path in input_filelist:
-        EXTRACT_LOG.info('Opening "{}"...'.format(path))
-        xc = RGCorpus.load(path)
+        p.apply_async(_process_file, args=[path], callback=_merge_dicts)
 
-        # Now, iterate through each instance in the corpus...
-        for inst in xc:
-
-            # Only work with the gloss POS tags if we ask for them...
-            if classifier_prefix is not None:
-                gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict)
-
+    p.close()
+    p.join()
 
     # Finally, try training the classifier on this file...
     if classifier_prefix is not None:
@@ -61,6 +63,34 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_path=No
         train_txt(feat_path, class_path)
         print("Complete.")
 
+
+# =============================================================================
+# Parallelization
+#
+# Functions to handle single files in parallel, and the callback to merge their
+# results.
+# =============================================================================
+
+def _process_file(path):
+
+    cur_word_tag_dict = TwoLevelCountDict()
+    cur_gram_tag_dict = TwoLevelCountDict()
+
+    EXTRACT_LOG.info('Opening "{}"...'.format(path))
+    xc = RGCorpus.load(path)
+
+    # Now, iterate through each instance in the corpus...
+    for inst in xc:
+
+        # Only work with the gloss POS tags if we ask for them...
+        gather_gloss_pos_stats(inst, cur_word_tag_dict, cur_gram_tag_dict)
+
+    return cur_word_tag_dict, cur_gram_tag_dict
+
+def _merge_tlcd(old, new):
+    for key_a in new.keys():
+        for key_b in new[key_a].keys():
+            old.add(key_a, key_b, new[key_a][key_b])
 
 # =============================================================================
 # Preprocessing
