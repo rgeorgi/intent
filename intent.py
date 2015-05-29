@@ -9,6 +9,7 @@ import logging
 from intent.scripts.basic.corpus_stats import igt_stats
 from intent.scripts.basic.filter_corpus import filter_corpus
 from intent.scripts.basic.split_corpus import split_corpus
+from intent.scripts.extraction import extract_from_xigt
 from intent.utils.arg_consts import PARSE_LANG_PROJ, PARSE_TRANS, POS_TYPES, PARSE_TYPES, ALN_TYPES, ALN_VAR, POS_VAR, \
     PARSE_VAR
 from intent.utils.listutils import flatten_list
@@ -146,6 +147,20 @@ filter_p.add_argument('--require-trans', help='Require instances to have trans l
 filter_p.add_argument('--require-aln', help='Require instances to have 1-to-1 gloss/lang alignment.', choices=['true','false'], default='true')
 filter_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
+#===============================================================================
+# EXTRACT subcommand
+#
+# Extract useful things from a series of enriched XIGT-XML files, such as
+# a POS classifier for the gloss line, or CFG rules from projected trees, etc.
+#===============================================================================
+
+extract_p = subparsers.add_parser('extract', help='Command to extract data from enriched XIGT-XML files')
+
+extract_p.add_argument('FILE', nargs='+', help='XIGT files to include.', type=globfiles)
+extract_p.add_argument('--gloss-classifier', help='Output prefix for gloss-line classifier (No extension).')
+extract_p.add_argument('--cfg-rules', help='Output path for cfg-rules.')
+extract_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
+
 # Parse the args. --------------------------------------------------------------
 try:
     args = main.parse_args()
@@ -174,3 +189,5 @@ elif args.subcommand == 'split':
     split_corpus(flatten_list(args.FILE), args.train, args.dev, args.test, prefix=args.prefix, overwrite=args.overwrite)
 elif args.subcommand == 'filter':
     filter_corpus(flatten_list(args.FILE), args.output, args.require_lang, args.require_gloss, args.require_trans, args.require_aln)
+elif args.subcommand == 'extract':
+    extract_from_xigt(flatten_list(args.FILE), args.gloss_classifier, args.cfg_rules)
