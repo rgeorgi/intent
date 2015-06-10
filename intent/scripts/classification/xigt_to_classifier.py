@@ -18,12 +18,13 @@ LOG.setLevel(logging.DEBUG)
 
 from intent.igt.consts import POS_TIER_TYPE
 from intent.igt.consts import GLOSS_WORD_ID
-from intent.igt.rgxigt import RGCorpus
+from intent.igt.rgxigt import RGCorpus, RGIgt
 from intent.utils.argutils import globfiles
 from intent.utils.dicts import CountDict, TwoLevelCountDict
 from xigt.consts import ALIGNMENT
 
 
+class ClassifierException(Exception): pass
 
 __author__ = 'rgeorgi'
 
@@ -141,11 +142,12 @@ def process_dicts(class_path):
     train_txt(out_path, class_path)
 
 
-def instances_to_classifier(instances, class_out_path):
+def instances_to_classifier(instances, class_out_path, tag_method=None):
     """
     Given a list of IGT instances, create a gloss-line classifier from them.
 
     :param instances: List of IGT instances.
+    :type instances: list[RGIgt]
     :param class_out_path: Output path for the classifier model to train.
     """
 
@@ -154,7 +156,7 @@ def instances_to_classifier(instances, class_out_path):
     num_instances = 0
 
     for inst in instances:
-        gpos_tier = inst.find(alignment=GLOSS_WORD_ID, type=POS_TIER_TYPE)
+        gpos_tier = inst.get_pos_tags(GLOSS_WORD_ID, tag_method=tag_method)
         if gpos_tier:
             num_instances += 1
             for gp in gpos_tier:
@@ -169,6 +171,9 @@ def instances_to_classifier(instances, class_out_path):
                 # Write out features...
                 t = GoldTagPOSToken(word, goldlabel=tag)
                 write_gram(t, feat_prev_gram=False, feat_next_gram=False, lowercase=True, output=ntf)
+
+    if num_instances == 0:
+        raise ClassifierException("No gloss POS tags found!")
 
     return train_txt(ntf.name, class_out_path)
     ntf.close()

@@ -31,6 +31,11 @@ class TagMap(object):
             self.mapping[fine] = course
 
 
+    def get(self, original):
+        """
+        :rtype : str
+        """
+        return self[original]
 
     def __getitem__(self, key):
         if key not in self.mapping:

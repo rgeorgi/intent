@@ -12,6 +12,7 @@ import copy
 import string
 import sys
 from intent.consts.grammatical import morpheme_boundary_chars
+from intent.pos.TagMap import TagMap
 from xigt.errors import XigtError
 
 from xigt.model import XigtCorpus, Igt, Item, Tier
@@ -481,7 +482,20 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                     item.index = i+1
 
 
-    def filter(self, attr):
+    def filter(self, func):
+        new_igts = []
+        for i in self:
+            try:
+                val = func(i)
+            except Exception:
+                pass
+            else:
+                if val not in [None, False]:
+                    new_igts.append(i)
+
+        self.igts = new_igts
+
+    def attr_filter(self, attr):
         new_igts = []
         for i in self:
             try:
@@ -494,13 +508,13 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         self.igts = new_igts
 
     def require_trans_lines(self):
-        self.filter('trans')
+        self.attr_filter('trans')
 
     def require_gloss_lines(self):
-        self.filter('gloss')
+        self.attr_filter('gloss')
 
     def require_lang_lines(self):
-        self.filter('lang')
+        self.attr_filter('lang')
 
     def require_one_to_one(self):
         self.require_gloss_lines()
@@ -513,6 +527,8 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                 PARSELOG.info('Filtered out "%s" because gloss and lang not same length.')
         self.igts = new_igts
 
+    def require_gloss_pos(self):
+        self.filter(lambda inst: inst.get_pos_tags(GLOSS_WORD_ID) is not None)
 
 
     def giza_align_t_g(self, resume = True):
@@ -1349,10 +1365,77 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             # TODO: Implement order of precedence here.
 
-            if pt.find(alignment=g_word.id) is None:
+            # Order of precedence:
+            # NOUN > VERB > ADJ > ADV > PRON > DET > ADP > CONJ > PRT > NUM > PUNC > X
+
+            precedence = ['NOUN','VERB', 'ADJ', 'ADV', 'PRON', 'DET', 'ADP', 'CONJ', 'PRT', 'NUM', 'PUNC', 'X']
+
+            # Look for a tag that aligns with the given word.
+            g_tag = pt.find(alignment=g_word.id)
+
+            # If it isn't already specified, go ahead and insert it.
+            if g_tag is None:
                 pt.add(RGToken(id=pt.askItemId(), alignment=g_word.id, text=t_tag.value()))
 
+            # If it has been specified, see if it has higher precedence than the tag
+            # that already exists and replace it if it does.
+            elif g_tag.value() in precedence and t_tag.value() in precedence:
+                old_index = precedence.index(g_tag.value())
+                new_index = precedence.index(t_tag.value())
+                if new_index < old_index:
+                    g_tag.text = t_tag.value()
+
+
         self.append(pt)
+
+    def project_lang_to_gloss(self, tagmap=None):
+        """
+        This function serves the purpose of transferring language-line POS tags to the gloss line
+         (needed with the CTN data, for instance).
+
+        :type tagmap: TagMap
+        :param tag_method:
+        """
+
+        lang_tags = self.get_pos_tags(self.lang.id)
+        if not lang_tags:
+            project_creator_except("No lang-line POS tags found.", None, None)
+
+        # Get the lang-gloss alignment...
+        alignment = self.gloss.get_aligned_tokens()
+
+        # Retrieve the tagset mapping.
+        if tagmap:
+            tm = TagMap(tagmap)
+
+        # Create the POS tier
+        new_id = gen_tier_id(self, POS_TIER_ID, alignment=self.gloss.id)
+
+        pt = RGTokenTier(type=POS_TIER_TYPE, id=new_id, alignment=self.gloss.id)
+
+
+        # And add the metadata for the source (intent) and tagging method
+        set_intent_method(pt, MANUAL_POS)
+
+        for lang_tag in lang_tags:
+            # Get the gloss word related to this tag. It should share
+            # an alignment with the lang_tag...
+            gloss_word = self.find(alignment=lang_tag.alignment,
+                                   # And it's parent tier should be the GLOSS_WORD_TYPE.
+                                   others=[lambda x: hasattr(x, 'tier') and x.tier.type == GLOSS_WORD_TYPE])
+
+            # Do the tag mapping...
+            if tagmap:
+                postag = tm.get(lang_tag.value())
+            else:
+                postag = lang_tag.value()
+
+
+            gpos = RGToken(id=pt.askItemId(), alignment = gloss_word.id, text=postag)
+            pt.append(gpos)
+
+        self.append(pt)
+
 
     def project_gloss_to_lang(self, tag_method = None, unk_handling=None, classifier=None, posdict=None):
         """

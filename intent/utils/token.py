@@ -8,7 +8,7 @@ import re
 
 # ===============================================================================
 # Main Token Class
-#===============================================================================
+# ===============================================================================
 
 class Token(object):
     def __init__(self, content, **kwargs):
@@ -61,7 +61,6 @@ class Token(object):
             if kwargs.get('lowercase'):
                 morph = Morph(morph.seq.lower(), morph.span, morph.parent)
             yield morph
-
 
     def morphed_tokens(self):
         morphs = list(tokenize_string(self.seq, morpheme_tokenizer))
@@ -200,6 +199,10 @@ def tokenize_item(it, tokenizer=whitespace_tokenizer):
 
 
 def tokenize_string(st, tokenizer=whitespace_tokenizer):
+    """
+
+    :rtype : Tokenization
+    """
     tokens = Tokenization()
     iter = tokenizer(st)
 
@@ -220,12 +223,18 @@ class Tokenization(list):
     Container class for a tokenization.
     """
 
-    def __init__(self, seq=[], original=''):
+    def __init__(self, seq=list([]), original=''):
         self.original = original
         list.__init__(self, seq)
 
     def text(self):
         return ' '.join([t.seq for t in self])
+
+    def __getitem__(self, item):
+        """
+        :rtype : Token
+        """
+        return super().__getitem__(item)
 
 
 class Span(object):

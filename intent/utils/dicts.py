@@ -20,6 +20,10 @@ class CountDict(object):
     def __repr__(self):
         return self._dict.__repr__()
 
+    def distribution(self, use_keys = list, add_n = 0):
+        return {k:(self[k] + add_n)/(self.total()*add_n) for k in self.keys()}
+
+
     def total(self):
         values = self._dict.values()
         total = 0
@@ -76,11 +80,20 @@ class CountDict(object):
 
         return ret_items
 
-    def most_frequent_count(self, minimum = 0, num = 1):
+    def most_frequent_counts(self, minimum = 0, num = 1):
         most_frequent_keys = self.most_frequent(minimum, num)
-        most_frequent_values = map(lambda key: self[key], most_frequent_keys)
-        return most_frequent_values
+        return [(key, self[key]) for key in most_frequent_keys]
 
+
+    def __add__(self, other):
+        d = self.__class__()
+
+        for key in self.keys():
+            d.add(key, self[key])
+        for key in other.keys():
+            d.add(key, other[key])
+
+        return d
 class DefaultOrderedDict(OrderedDict):
     # Source: http://stackoverflow.com/a/6190500/562769
     def __init__(self, default_factory=None, *a, **kw):
@@ -128,6 +141,19 @@ class TwoLevelCountDict(object):
     def __init__(self):
         self._dict = defaultdict(CountDict)
 
+    def __add__(self, other):
+        new = self.__class__()
+
+        for key_a in other.keys():
+            for key_b in other[key_a].keys():
+                new.add(key_a, key_b, other[key_a][key_b])
+
+        for key_a in self.keys():
+            for key_b in self[key_a].keys():
+                new.add(key_a, key_b, self[key_a][key_b])
+
+        return new
+
     def add(self, key_a, key_b, value=1):
         self[key_a][key_b] += value
 
@@ -157,11 +183,6 @@ class TwoLevelCountDict(object):
 
         return most_frequent
 
-
-
-
-
-
     def fulltotal(self):
         total = 0
         for key in self.keys():
@@ -174,22 +195,24 @@ class TwoLevelCountDict(object):
             count += self[key][key2]
         return count
 
-
-    def distribution(self, key, use_keys=[], add_n = 0):
-        dist_set = set([])
-
-        if not use_keys:
-            use_keys = self[key].keys()
-
-        total = 0
-        for key2 in use_keys:
-            total += self[key][key2] + add_n
-
-        for key2 in use_keys:
-            dist_set.add((key2, (self[key][key2]+add_n) / float(total)))
+    def distribution(self, as_string = False, as_csv = False):
+        d = {k:self.total(k)/self.fulltotal() for k in self.keys()}
+        if not (as_string or as_csv):
+            return d
+        else:
+            rs = ''
+            for key, value in d.items():
+                if as_csv:
+                    key += ','
+                rs += '{:<8s}{:>8.2f}\n'.format(key, value)
+            return rs
 
 
-        return dist_set
+    def sub_distribution(self, key, use_keys=list, add_n = 0):
+
+        d = self[key]
+        return d.distribution(use_keys=use_keys, add_n=add_n)
+
 
     #===========================================================================
     # Stuff that should've been inherited
@@ -199,6 +222,10 @@ class TwoLevelCountDict(object):
         return self._dict.__str__()
 
     def __getitem__(self, k):
+        """
+
+        :rtype : CountDict
+        """
         return self._dict.__getitem__(k)
 
     def __setitem__(self, k, v):
@@ -250,7 +277,8 @@ class POSEvalDict(TwoLevelCountDict):
         ret_s += '%.2f,%s,%s\n' % (self.accuracy(), self.all_matches(), self.fulltotal())
         return ret_s
 
-
+    def unaligned(self, unaligned_tag = 'UNK'):
+        return float(self.col_total(unaligned_tag)) / self.fulltotal() * 100
 
     def breakdown_csv(self):
         ret_s = 'TAG,PRECISION,RECALL,F_1,IN_GOLD,IN_EVAL,MATCHES\n'
@@ -578,9 +606,9 @@ class GreedyTest(unittest.TestCase):
 
 
 class StatDict(defaultdict):
-    '''
+    """
 
-    '''
+    """
 
     def __init__(self, type=int):
         '''

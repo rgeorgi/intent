@@ -9,6 +9,7 @@ import logging
 from intent.scripts.basic.corpus_stats import igt_stats
 from intent.scripts.basic.filter_corpus import filter_corpus
 from intent.scripts.basic.split_corpus import split_corpus
+from intent.scripts.evaluation import evaluate_intent
 from intent.scripts.extraction import extract_from_xigt
 from intent.utils.arg_consts import PARSE_LANG_PROJ, PARSE_TRANS, POS_TYPES, PARSE_TYPES, ALN_TYPES, ALN_VAR, POS_VAR, \
     PARSE_VAR
@@ -127,7 +128,7 @@ split.add_argument('--train', default=0.8, help='The proportion of the data to s
 split.add_argument('--dev', default=0.1, help='The proportion of data to set aside for development.', type=proportion)
 split.add_argument('--test', default=0.1, help='The proportion of data to set aside for testing.', type=proportion)
 split.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
-split.add_argument('-o', dest='prefix', default=None, help='Destination prefix for the output.')
+split.add_argument('-o', dest='prefix', default=None, help='Destination prefix for the output.', required=True)
 split.add_argument('-f', dest='overwrite', action='store_true', help='Force overwrite of existing files.')
 
 #===============================================================================
@@ -139,10 +140,12 @@ split.add_argument('-f', dest='overwrite', action='store_true', help='Force over
 filter_p = subparsers.add_parser('filter', help='Command to filter input file(s) for instances')
 
 filter_p.add_argument('FILE', nargs='+', help='XIGT files to filter.', type=globfiles)
-filter_p.add_argument('-o', '--output', help='Output file (Combine from inputs)')
+filter_p.add_argument('-o', '--output', help='Output file (Combine from inputs)', required=True)
 filter_p.add_argument('--require-lang', help='Require instances to have language line', choices=['true','false'], default='true')
 filter_p.add_argument('--require-gloss', help='Require instances to have gloss line', choices=['true', 'false'], default='true')
 filter_p.add_argument('--require-trans', help='Require instances to have trans line', choices=['true', 'false'], default='true')
+
+filter_p.add_argument('--require-gloss-pos', help='Require instance to have gloss pos tags', choices=['true', 'false'], default='false')
 
 filter_p.add_argument('--require-aln', help='Require instances to have 1-to-1 gloss/lang alignment.', choices=['true','false'], default='true')
 filter_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
@@ -160,6 +163,21 @@ extract_p.add_argument('FILE', nargs='+', help='XIGT files to include.', type=gl
 extract_p.add_argument('--gloss-classifier', help='Output prefix for gloss-line classifier (No extension).')
 extract_p.add_argument('--cfg-rules', help='Output path for cfg-rules.')
 extract_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
+
+#===============================================================================
+# EVAL subcommand
+#
+# Used for evaluating different portions of INTENT's functions against a gold-standard
+# XIGT-XML file.
+#===============================================================================
+
+eval_p = subparsers.add_parser('eval', help='Command to eval INTENT functions against a gold-standard XIGT-XML.')
+
+eval_p.add_argument('FILE', nargs='+', help='XIGT files to test against.', type=globfiles)
+eval_p.add_argument('--classifier', help='Specify a gloss-line POS classifier to test.')
+eval_p.add_argument('--alignment', help='Test alignment methods against the alignment provided in the file.')
+
+eval_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 # Parse the args. --------------------------------------------------------------
 try:
@@ -188,6 +206,8 @@ elif args.subcommand == 'stats':
 elif args.subcommand == 'split':
     split_corpus(flatten_list(args.FILE), args.train, args.dev, args.test, prefix=args.prefix, overwrite=args.overwrite)
 elif args.subcommand == 'filter':
-    filter_corpus(flatten_list(args.FILE), args.output, args.require_lang, args.require_gloss, args.require_trans, args.require_aln)
+    filter_corpus(flatten_list(args.FILE), args.output, args.require_lang, args.require_gloss, args.require_trans, args.require_aln, args.require_gloss_pos)
 elif args.subcommand == 'extract':
     extract_from_xigt(flatten_list(args.FILE), args.gloss_classifier, args.cfg_rules)
+elif args.subcommand == 'eval':
+    evaluate_intent(flatten_list(args.FILE), args.classifier, args.alignment)

@@ -1,157 +1,74 @@
-from argparse import ArgumentParser
 from collections import defaultdict
-import glob
+from glob import glob
 import os
-from random import shuffle, seed, Random
-import sys
-from tempfile import mkdtemp
-import shutil
-
-from intent.eval.pos_eval import poseval
-from intent.igt.consts import GLOSS_WORD_ID, POS_TIER_TYPE
-from intent.igt.rgxigt import RGCorpus, strip_pos, RGIgt
+from intent.igt.rgxigt import RGCorpus
 from intent.interfaces.mallet_maxent import MalletMaxent
-from intent.scripts.classification.xigt_to_classifier import instances_to_classifier
-from intent.utils.env import proj_root
-from intent.utils.token import POSToken
+from intent.interfaces.stanford_tagger import StanfordPOSTagger
+from intent.scripts.basic.split_corpus import split_instances
+from intent.scripts.evaluation import evaluate_classifier_on_instances
+from intent.scripts.extraction import extract_from_instances
+from intent.utils.dicts import POSEvalDict
+from intent.utils.env import tagger_model
 
-
-__author__ = 'rgeorgi'
-
-"""
-The purpose of this module is to evaluate the POS-line classifiers trained on
-"""
-
-
-def eval_classifier(c, inst_list):
-    """
-
-    :param c: The classifier
-    :param inst_list: A list of Igt instances to test against. Must already have POS tags.
-    """
-
-    gold_sents = []
-    eval_sents = []
-
-    for inst in inst_list:
-        assert isinstance(inst, RGIgt)
-        to_tag = inst.copy()
-        strip_pos(to_tag)
-
-        tags_to_eval = to_tag.classify_gloss_pos(c, lowercase=False, feat_next_gram=False, feat_prev_gram=False)
-        gold_tags = [v.value() for v in inst.get_pos_tags(GLOSS_WORD_ID)]
-
-        tag_tokens = [POSToken('a', label=l) for l in tags_to_eval]
-        gold_tokens= [POSToken('a', label=l) for l in gold_tags]
-
-        if not len(tag_tokens) == len(gold_tokens):
-            continue
-
-        gold_sents.append(gold_tokens)
-        eval_sents.append(tag_tokens)
-
-    return poseval(eval_sents, gold_sents, matrix=True, details=True,csv=True, ansi=True)
-
-
-def load_xaml_data():
-    instances = []
-
-    for f in glob.glob('/Users/rgeorgi/Documents/code/treebanks/annotated_xigt/*.xml'):
-        xc = RGCorpus.load(f)
-        # For each instance in the xaml data, look for a gloss POS tier.
-        for igt in xc:
-            gpos_tier = igt.find(alignment=GLOSS_WORD_ID, type=POS_TIER_TYPE)
-
-            # If it has gloss POS tags, let's pull them to compare against.
-            if gpos_tier:
-                instances.append(igt)
-
-    return instances
 
 def nfold_xaml():
+    xaml_paths = glob("/Users/rgeorgi/Documents/code/dissertation/data/annotation/filtered/*.xml")
 
-    lang_dict = defaultdict(list)
+    lang_test = {}
+    lang_train = {}
+    lang_all  = {}
 
-    # -- 1) Build up the instances with POS tags, separated by language.
-
-    for f in glob.glob('/Users/rgeorgi/Documents/code/treebanks/annotated_xigt/*.xml'):
-        lang = os.path.basename(f)[:3]
-
-        xc = RGCorpus.load(f)
-
-        for inst in xc:
-            gpos_tier = inst.find(alignment=GLOSS_WORD_ID, type=POS_TIER_TYPE)
-            if gpos_tier:
-                lang_dict[lang].append(inst)
+    tagger = StanfordPOSTagger(tagger_model)
 
 
-    # -- 2) Create three classifiers:
-    #        a) One that contains only the given language
-    #        b) One that contains all but the given language
-    #        c) One that contains everything but a holdout from the given language.
+    for xaml_path in xaml_paths:
+        lang = os.path.basename(xaml_path)[:3]
+        xc = RGCorpus.load(xaml_path)
 
+        train, dev, test = split_instances(xc, train=0.5, test=0.5, dev=0.0)
 
+        lang_train[lang] = train
+        lang_all[lang] = train+test
+        lang_test[lang] = test
 
-    odin_c = MalletMaxent('/Users/rgeorgi/Documents/code/dissertation/odin_class.classifier')
+    # Now, build our classifiers...
 
-    num_splits = 2
+    all_other = POSEvalDict()
+    all_all   = POSEvalDict()
+    all_odin  = POSEvalDict()
+    all_proj  = POSEvalDict()
 
-    for lang in sorted(lang_dict.keys()):
+    for lang in lang_all.keys():
 
-        tmp_dir = mkdtemp()
+        other_lang_instances = []
+        all_lang_instances   = lang_train[lang]
 
-        instances = lang_dict[lang]
-
-        # Randomize the instances...
-        shuffle(instances, random=seed(34))
-
-
-        # Now, take a portion to hold out.
-        split_index = int(len(instances)/2)
-        lang_holdout = instances[:split_index]
-        lang_rest    = instances[split_index:]
-
-        # Now, get the other languages...
-        other_langs  = []
-        for other_lang in lang_dict.keys():
+        for other_lang in lang_all.keys():
             if other_lang != lang:
-                other_langs.extend(lang_dict[other_lang])
+                other_lang_instances.extend(lang_all[other_lang])
+                all_lang_instances.extend(lang_all[other_lang])
 
-        # Now, let's train a separate classifier for each instance.
-        same_class_path  = os.path.join(tmp_dir, 'same.class')
-        other_class_path = os.path.join(tmp_dir, 'other.class')
-        full_class_path  = os.path.join(tmp_dir, 'full.class')
-
-        same_c  = instances_to_classifier(lang_rest, same_class_path)
-        other_c = instances_to_classifier(other_langs, other_class_path)
-        full_c  = instances_to_classifier(lang_rest+other_langs, full_class_path)
-
-        print('{} {}'.format(lang, '*'*80))
-
-        # Aaaand the ODIN-based classifier...
-
-        eval_classifier(same_c, lang_holdout)
-        eval_classifier(other_c, lang_holdout)
-        eval_classifier(full_c, lang_holdout)
-
-        eval_classifier(odin_c, lang_holdout)
-
-        shutil.rmtree(tmp_dir)
+        other_lang_classifier = extract_from_instances(other_lang_instances, 'test.class', 'test.feats', '/dev/null')
+        all_lang_classifier = extract_from_instances(all_lang_instances, 'all.class', 'all.feats', '/dev/null')
 
 
+        test_instances = lang_test[lang]
+
+        print(lang)
+        prj_other_eval, cls_other_eval = evaluate_classifier_on_instances(test_instances, other_lang_classifier, tagger)
+        prj_all_eval, cls_all_eval = evaluate_classifier_on_instances(test_instances, all_lang_classifier, tagger)
+        prj_odin_eval, cls_odin_eval = evaluate_classifier_on_instances(test_instances, MalletMaxent('/Users/rgeorgi/Documents/code/dissertation/gc.classifier'), tagger)
+
+        all_other += cls_other_eval
+        all_all   += cls_all_eval
+        all_odin  += cls_odin_eval
+        all_proj  += prj_all_eval
+
+    print('ALL')
+    print('{:.2f},{:.2f},{:.2f},{:.2f},{:.2f}'.format(all_proj.precision(), all_proj.unaligned(), all_other.accuracy(), all_all.accuracy(), all_odin.accuracy()))
+    print(all_proj.error_matrix(csv=True))
 
 
 
 
-if __name__ == '__main__':
-    p = ArgumentParser()
-    p.add_argument('-c', dest='classifier', help="Path to the classifier model", required=True)
-
-
-    args = p.parse_args()
-
-    #instances = load_xaml_data()
-
-    #classifier = MalletMaxent(args.classifier)
-    #test_classifier(classifier, instances)
-    nfold_xaml()
+nfold_xaml()

@@ -29,9 +29,9 @@ from xigt.consts import ALIGNMENT
 
 from intent.eval.pos_eval import poseval
 from intent.igt.consts import GLOSS_WORD_ID, POS_TIER_TYPE, LANG_WORD_ID, GLOSS_WORD_TYPE, POS_TIER_ID, \
-    INTENT_TOKEN_TYPE, INTENT_POS_PROJ, LANG_WORD_TYPE, TRANS_WORD_TYPE, TRANS_WORD_ID, MANUAL_POS
+    INTENT_TOKEN_TYPE, INTENT_POS_PROJ, LANG_WORD_TYPE, TRANS_WORD_TYPE, TRANS_WORD_ID, MANUAL_POS, INTENT_POS_CLASS
 from intent.igt.rgxigt import RGCorpus, strip_pos, RGIgt, RGTokenTier, RGTier, gen_tier_id, RGToken, \
-    ProjectionTransGlossException
+    ProjectionTransGlossException, word_align
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.scripts.classification.xigt_to_classifier import instances_to_classifier
 from intent.utils.token import POSToken, GoldTagPOSToken
@@ -60,11 +60,19 @@ def eval_classifier(c, inst_list):
         to_tag = inst.copy()
         strip_pos(to_tag)
 
-        tags_to_eval = to_tag.classify_gloss_pos(c, lowercase=True, feat_next_gram=False, feat_prev_gram=False)
+        # Do the classification.
+        to_tag.classify_gloss_pos(c, lowercase=True, feat_next_gram=False, feat_prev_gram=False)
+
+
+        # Fix the tags...
+        #fix_ctn_gloss_line(to_tag, tag_method=INTENT_POS_CLASS)
+
+        # Now, retrieve eval/gold.
+        eval_tags = [v.value() for v in to_tag.get_pos_tags(GLOSS_WORD_ID, tag_method=INTENT_POS_CLASS)]
         gold_tags = [v.value() for v in inst.get_pos_tags(GLOSS_WORD_ID, tag_method=MANUAL_POS)]
 
 
-        tag_tokens = [POSToken('a', label=l) for l in tags_to_eval]
+        tag_tokens = [POSToken('a', label=l) for l in eval_tags]
         gold_tokens= [POSToken('a', label=l) for l in gold_tags]
 
         if not len(tag_tokens) == len(gold_tokens):
@@ -74,23 +82,8 @@ def eval_classifier(c, inst_list):
         gold_sents.append(gold_tokens)
         eval_sents.append(tag_tokens)
 
-    return poseval(eval_sents, gold_sents, details=True,csv=True)
+    return poseval(eval_sents, gold_sents, details=True,csv=True, matrix=True)
 
-
-def load_xaml_data():
-    instances = []
-
-    for f in glob.glob('/Users/rgeorgi/Documents/code/treebanks/annotated_xigt/*.xml'):
-        xc = RGCorpus.load(f, basic_processing=True)
-        # For each instance in the xaml data, look for a gloss POS tier.
-        for igt in xc:
-            gpos_tier = igt.find(alignment=GLOSS_WORD_ID, type=POS_TIER_TYPE)
-
-            # If it has gloss POS tags, let's pull them to compare against.
-            if gpos_tier:
-                instances.append(igt)
-
-    return instances
 
 def eval_pos_tiers(eval_tier, gold_tier):
     """
@@ -217,6 +210,7 @@ def eval_proj(xc):
     sup_sents = []
 
     for inst in xc:
+        fix_ctn_gloss_line(inst, tag_method=INTENT_POS_PROJ)
         # Do the projection comparison
         sup = inst.get_pos_tags(GLOSS_WORD_ID, tag_method=MANUAL_POS)
         prj = inst.get_pos_tags(GLOSS_WORD_ID, tag_method=INTENT_POS_PROJ)
@@ -360,20 +354,82 @@ def eval_ctn():
 
 
 
+def fix_ctn_gloss_line(inst, tag_method=None):
+    """
+    Given a CTN gloss line, do some specific fixes to attempt to fix the CTN tag mapping.
+
+    :param inst:
+    :type inst:RGIgt
+    """
+
+    gpos_tier = inst.get_pos_tags(GLOSS_WORD_ID, tag_method=tag_method)
+
+    # Get the gloss words
+    for gw in inst.gloss:
+        new_tag = None
+        if gw.value().lower() in ['foc','top','seq','add','emph','cit','rep']:
+            new_tag = 'PRT'
+        elif gw.value().lower() in ['but','and','or']:
+            new_tag = 'CONJ'
+        elif 'dem' in gw.value().lower():
+            new_tag = 'PRON'
+        elif gw.value().lower() in ['for','in']:
+            new_tag = 'ADP'
+
+        if new_tag:
+            gpos = gpos_tier.find(alignment=gw.id)
+            if not gpos:
+                gpt = RGToken(id=gpos_tier.askItemId(), alignment=gw.id, text=new_tag)
+                gpos_tier.add(gpt)
+            else:
+                gpos.text = new_tag
+
 
 
 if __name__ == '__main__':
-    p = ArgumentParser()
-    p.add_argument('-c', dest='classifier', help="Path to the classifier model", required=True)
+
+    ctn_train =  '/Users/rgeorgi/Documents/code/dissertation/data/xml-files/ctn/ctn_train.xml'
+    ctn_dev   =  '/Users/rgeorgi/Documents/code/dissertation/data/xml-files/ctn/ctn_dev.xml'
+
+    # train_xc  = RGCorpus.load(ctn_train)
+    train_xc    = RGCorpus.load(ctn_dev)
+    dev_xc    = RGCorpus.load(ctn_dev)
+
+    tagger = StanfordPOSTagger(tagger_model)
+
+    # Get the language line words projected onto the gloss...
+    for inst in train_xc:
+        word_align(inst.gloss, inst.lang)
+        inst.project_lang_to_gloss(tagmap = '/Users/rgeorgi/Documents/code/dissertation/data/tagset_mappings/ctn.txt')
+
+        inst.tag_trans_pos(tagger)
+        inst.heur_align()
+        inst.project_trans_to_gloss()
+        fix_ctn_gloss_line(inst, INTENT_POS_PROJ)
 
 
-    args = p.parse_args()
 
-    #instances = load_xaml_data()
+
+    for inst in dev_xc:
+        word_align(inst.gloss, inst.lang)
+        inst.project_lang_to_gloss(tagmap = '/Users/rgeorgi/Documents/code/dissertation/data/tagset_mappings/ctn.txt')
+        fix_ctn_gloss_line(inst)
+        inst.tag_trans_pos(tagger)
+        inst.heur_align()
+        inst.project_trans_to_gloss()
+
+
+    c = instances_to_classifier(train_xc, '/Users/rgeorgi/Documents/code/dissertation/ctn-train.class', tag_method=INTENT_POS_PROJ)
+
+    #c = MalletMaxent('/Users/rgeorgi/Documents/code/dissertation/gc.classifier')
+
+    eval_classifier(c, dev_xc)
+    eval_proj(dev_xc)
+
 
     #classifier = MalletMaxent(args.classifier)
-    #test_classifier(classifier, instances)
+    # test_classifier(classifier, instances)
     CTN_LOG.setLevel(logging.DEBUG)
     #enrich_all_ctn()
 
-    eval_ctn()
+    # eval_ctn()

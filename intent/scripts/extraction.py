@@ -1,20 +1,25 @@
 import logging
 from multiprocessing.pool import Pool
+from multiprocessing import cpu_count
 
 from intent.igt.consts import POS_TIER_TYPE, GLOSS_WORD_ID
 from intent.igt.grams import write_gram
 from intent.interfaces.mallet_maxent import train_txt
+from intent.utils.listutils import chunkIt
 from intent.utils.token import GoldTagPOSToken, tokenize_string, morpheme_tokenizer
 from xigt.consts import ALIGNMENT
 
 EXTRACT_LOG = logging.getLogger("EXTRACT")
 
-from intent.igt.rgxigt import RGCorpus
+from intent.igt.rgxigt import RGCorpus, RGIgt
 from intent.utils.dicts import TwoLevelCountDict
 
 __author__ = 'rgeorgi'
 
-
+def merge_dicts(tup, old_wtd, old_gtd):
+    new_wt, new_gt = tup
+    _merge_tlcd(old_wtd, new_wt)
+    _merge_tlcd(old_gtd, new_gt)
 
 def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_path=None):
     """
@@ -35,17 +40,12 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_path=No
     if classifier_prefix:
         print("Gathering statistics on POS tags...")
 
-    # Define the callback to merge the parallel calls' results.
-    def _merge_dicts(tup):
-        new_wt, new_gt = tup
-        _merge_tlcd(word_tag_dict, new_wt)
-        _merge_tlcd(gram_tag_dict, new_gt)
-
-    p = Pool(8)
+    cpus = cpu_count()
+    p = Pool(cpus)
 
     # Start by loading each of the files in the input files...
     for path in input_filelist:
-        p.apply_async(_process_file, args=[path], callback=_merge_dicts)
+        p.apply_async(process_file, args=[path], callback=lambda x: merge_dicts(x, word_tag_dict, gram_tag_dict))
 
     p.close()
     p.join()
@@ -63,6 +63,34 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_path=No
         train_txt(feat_path, class_path)
         print("Complete.")
 
+def extract_from_instances(inst_list, class_out_path, feat_out_path, cfg_out_path, threshold=1):
+    """
+    Given a list of instances, extract the specified items.
+
+    :param inst_list:
+    :param class_out_path:
+    :param feat_out_path:
+    :param cfg_out_path:
+    :param threshold:
+    """
+    cpus = cpu_count()
+    p = Pool(cpus)
+
+    wtd = TwoLevelCountDict()
+    gtd = TwoLevelCountDict()
+
+    for chunk in chunkIt(inst_list, cpus):
+        p.apply_async(process_instances, args=[chunk], callback=lambda x: merge_dicts(x, wtd, gtd))
+
+    p.close()
+    p.join()
+
+
+    # Write out the features...
+    write_out_gram_dict(wtd, feat_out_path, threshold=threshold)
+
+    # Write out the classifier...
+    return train_txt(feat_out_path, class_out_path)
 
 # =============================================================================
 # Parallelization
@@ -71,26 +99,38 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_path=No
 # results.
 # =============================================================================
 
-def _process_file(path):
+def process_file(path):
+    """
+    Given a XIGT-XML file, load it and do preprocessing.
 
-    cur_word_tag_dict = TwoLevelCountDict()
-    cur_gram_tag_dict = TwoLevelCountDict()
-
+    :param path:
+    :return:
+    """
     EXTRACT_LOG.info('Opening "{}"...'.format(path))
     xc = RGCorpus.load(path)
 
     # Now, iterate through each instance in the corpus...
-    for inst in xc:
-
-        # Only work with the gloss POS tags if we ask for them...
-        gather_gloss_pos_stats(inst, cur_word_tag_dict, cur_gram_tag_dict)
-
-    return cur_word_tag_dict, cur_gram_tag_dict
+    return process_instances(xc)
 
 def _merge_tlcd(old, new):
     for key_a in new.keys():
         for key_b in new[key_a].keys():
             old.add(key_a, key_b, new[key_a][key_b])
+
+def process_instances(inst_list):
+    """
+    Given a list of instances, gather the necessary stats to train a classifier.
+
+    :param inst_list: list[RGIgt]
+    :return:
+    """
+    cur_word_tag_dict = TwoLevelCountDict()
+    cur_gram_tag_dict = TwoLevelCountDict()
+
+    for inst in inst_list:
+        gather_gloss_pos_stats(inst, cur_word_tag_dict, cur_gram_tag_dict)
+
+    return cur_word_tag_dict, cur_gram_tag_dict
 
 # =============================================================================
 # Preprocessing
@@ -146,7 +186,7 @@ def gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict):
 # that have been seen enough to meet our threshold, and train the classifier.
 # =============================================================================
 
-def write_out_gram_dict(gram_tag_dict, feat_path, threshold = 3):
+def write_out_gram_dict(gram_tag_dict, feat_path, threshold = 1):
     """
     Given the gram+tag dict, write out grams for those that have been seen enough to
     meet our threshold.

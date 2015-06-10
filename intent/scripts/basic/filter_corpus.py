@@ -9,7 +9,7 @@ import logging
 logging.getLogger()
 FILTER_LOG = logging.getLogger('FILTERING')
 
-def filter_instance(path, require_lang, require_gloss, require_trans, require_aln):
+def filter_instance(path, require_lang, require_gloss, require_trans, require_aln, require_gloss_pos):
 
     filtered_instances = []
 
@@ -26,6 +26,8 @@ def filter_instance(path, require_lang, require_gloss, require_trans, require_al
         xc.require_lang_lines()
     if require_aln:
         xc.require_one_to_one()
+    if require_gloss_pos:
+        xc.require_gloss_pos()
 
     for inst in xc:
         filtered_instances.append(inst)
@@ -37,7 +39,7 @@ def filter_instance(path, require_lang, require_gloss, require_trans, require_al
 
 
 
-def filter_corpus(filelist, outpath, require_lang=True, require_gloss=True, require_trans=True, require_aln=True):
+def filter_corpus(filelist, outpath, require_lang=True, require_gloss=True, require_trans=True, require_aln=True, require_gloss_pos=False):
     new_corp = RGCorpus()
 
     pool = Pool(4)
@@ -47,15 +49,14 @@ def filter_corpus(filelist, outpath, require_lang=True, require_gloss=True, requ
             new_corp.append(inst)
 
     for f in filelist:
-
-        pool.apply_async(filter_instance, args=[f, require_lang, require_gloss, require_trans, require_aln], callback=merge_to_new_corp)
+        pool.apply_async(filter_instance, args=[f, require_lang, require_gloss, require_trans, require_aln, require_gloss_pos], callback=merge_to_new_corp)
 
     pool.close()
     pool.join()
 
     try:
         os.makedirs(os.path.dirname(outpath))
-    except FileExistsError as fee:
+    except (FileExistsError, FileNotFoundError) as fee:
         pass
 
     # Only create a file if there are some instances to create...

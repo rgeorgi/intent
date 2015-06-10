@@ -4,7 +4,7 @@ from xigt.codecs import xigtxml
 
 SPLIT_LOG = logging.getLogger('SPLIT')
 
-from intent.igt.rgxigt import RGCorpus
+from intent.igt.rgxigt import RGCorpus, RGIgt
 
 __author__ = 'rgeorgi'
 
@@ -59,24 +59,21 @@ class WordCount():
         return self.total
 
 
-def split_corpus(filelist, train=0.8, dev=0.1, test=0.1, prefix='', overwrite=False):
+def split_instances(instances, train=0, dev=0, test=0):
+    """
 
-    instances = []
+    :type instances: list[RGIgt]
+    """
 
     # -- 0) Initialize the counter to keep track of which word index
     #       is in which sentence.
+    instances = list(instances)
     wc = WordCount()
 
-    # -- 1) Load all the files
-    for f in filelist:
-        SPLIT_LOG.info("Processing file {}".format(f))
-        xc = RGCorpus.load(f)
-        for i, inst in enumerate(xc):
-            instances.append(inst)
-
-            num_words = len(inst.lang)
-            SPLIT_LOG.debug('{} words in sentence {} (id {})'.format(num_words, i, inst.id))
-            wc.add(i, len(inst.lang))
+    for i, inst in enumerate(instances):
+        num_words = len(inst.lang)
+        SPLIT_LOG.debug('{} words in sentence {} (id {})'.format(num_words, i, inst.id))
+        wc.add(i, len(inst.lang))
 
     # -- 2) Figure out the number of words.
     num_train_words = round(train * wc.num_words)
@@ -98,6 +95,26 @@ def split_corpus(filelist, train=0.8, dev=0.1, test=0.1, prefix='', overwrite=Fa
     train_instances = instances[0:train_sent_index]
     dev_instances   = instances[train_sent_index:dev_sent_index]
     test_instances  = instances[dev_sent_index:test_sent_index+1]
+
+    # And return...
+    return train_instances, dev_instances, test_instances
+
+def split_corpus(filelist, train=0, dev=0, test=0, prefix='', overwrite=False):
+
+    # At least one must be specified
+    assert train or dev or test
+
+    # TODO: Make it so we automatically get to one
+
+    instances = []
+
+    # -- 1) Load all the files
+    for f in filelist:
+        SPLIT_LOG.info("Loading file {}".format(f))
+        xc = RGCorpus.load(f)
+        instances.extend(xc)
+
+    train_instances, dev_instances, test_instances = split_instances(instances, train, dev, test)
 
     # -- 5) Create the output file names.
     train_path = outpath_name(prefix, 'train')
@@ -123,8 +140,12 @@ def write_instances(instance_list, out_path, type, overwrite=False):
         return
     else:
 
-        if not os.path.exists(os.path.dirname(out_path)):
-            os.makedirs(os.path.dirname(out_path))
+        # Create the directory if need be
+        try:
+            if not os.path.exists(os.path.dirname(out_path)):
+                os.makedirs(os.path.dirname(out_path))
+        except FileNotFoundError:
+            pass
 
 
         num_sents = len(instance_list)

@@ -53,6 +53,24 @@ def flatten_list(obj):
             ret_list.extend(flatten_list(elt))
         return ret_list
 
+def chunkIt(seq, num):
+    """
+    Divide a sequence seq into num roughly equal pieces.
+
+    :param seq:
+    :param num:
+    :return:
+    """
+    avg = len(seq) / float(num)
+    out = []
+    last = 0.0
+
+    while last < len(seq):
+        out.append(seq[int(last):int(last + avg)])
+        last += avg
+
+    return out
+
 class FlattenTest(TestCase):
 
     def test_flatten(self):

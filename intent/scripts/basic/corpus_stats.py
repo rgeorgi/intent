@@ -12,10 +12,12 @@ that each make up of things.
 # Set up logging.
 import logging
 from multiprocessing.pool import Pool
-import os, argparse, sys
-import intent.utils.env
-from intent.igt.igtutils import rgp
+import os
+import argparse
+import sys
+from multiprocessing import cpu_count
 
+from intent.utils.listutils import chunkIt
 
 STATS_LOGGER = logging.getLogger(__name__)
 
@@ -25,12 +27,10 @@ STATS_LOGGER = logging.getLogger(__name__)
 
 from collections import defaultdict
 
-from intent.igt.rgxigt import RGCorpus, NoLangLineException, XigtFormatException,\
-    GlossLangAlignException
+from intent.igt.rgxigt import RGCorpus, RGIgt
 from intent.igt import rgxigt
-from intent.utils.dicts import StatDict
+from intent.utils.dicts import StatDict, CountDict, TwoLevelCountDict
 from intent.utils.token import tokenize_string, tag_tokenizer
-from intent.utils.argutils import writefile
 
 #===========================================================================
 # Get XIGT logging info....
@@ -41,74 +41,118 @@ sh.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
 xigt_logger.addHandler(sh)
 xigt_logger.setLevel(logging.ERROR)
 
+
+
+
 #  -----------------------------------------------------------------------------
 
-def inst_stats(igt):
 
-    igts = defaultdict(int)
-    types = defaultdict(lambda: defaultdict(int))
 
-    #=======================================================================
-    # Count the text on the lines
-    #=======================================================================
-    def igt_line_count(igt, attr):
-        try:
-            line = getattr(igt, attr)
-        except XigtFormatException as tpe:
-            line = False
 
-        if line:
-            igts[attr+'_lines'] += 1
-            igts[attr+'_tokens'] += len(line)
-            for token in line:
-                types[attr+'_types'][token.get_content().lower()] += 1
+def avg_tags_per_word(word_tag_dict):
+    wt_counts = [len(word_tag_dict[word]) for word in word_tag_dict.keys()]
+    return sum(wt_counts) / len(wt_counts)
 
-    dict = {}
-    # Count the language lines -----------------------------------------
-    igt_line_count(igt, 'lang')
-    igt_line_count(igt, 'gloss')
-    igt_line_count(igt, 'trans')
 
-    try:
-        igt.trans
-        igt.gloss
-        igt.lang
-    except XigtFormatException as tpe:
-        pass
-    else:
-        igts['all_lines'] += 1
-        try:
-            igt.get_gloss_lang_alignment()
-        except GlossLangAlignException as glae:
-            pass
-        else:
-            igts['1-to-1'] += 1
+class IGTStatDict(object):
+    def __init__(self):
+        self.instances = 0
+        self.lang = CountDict()
+        self.gloss = CountDict()
+        self.trans = CountDict()
 
-    igts['instances'] += 1
+        self.lang_tags = TwoLevelCountDict()
+        self.gloss_tags = TwoLevelCountDict()
+        self.trans_tags = TwoLevelCountDict()
 
-    return (types, igts)
+        self.lang_word_tags = TwoLevelCountDict()
+        self.gloss_word_tags = TwoLevelCountDict()
+        self.trans_word_tags = TwoLevelCountDict()
+
+
+    @staticmethod
+    def header():
+        keys = ['instances',
+                'lang_types', 'lang_tokens',
+                'gloss_types','gloss_tokens',
+                'lang_types','lang_tokens']
+
+        return ','.join(keys)
+
+    def __str__(self):
+        # instances, lang_types, lang_tokens, gloss_types, gloss_tokens, trans_types, trans_tokens
+        return '{},{},{},{},{},{},{}'.format(self.instances,
+                                       len(self.lang), self.lang.total(),
+                                       len(self.gloss), self.gloss.total(),
+                                       len(self.trans), self.trans.total())
+
+    def combine(self, other):
+        """
+
+        :type other: IGTStatDict
+        """
+
+        self.instances += other.instances
+        self.lang += other.lang
+        self.gloss += other.gloss
+        self.trans += other.trans
+        
+        self.gloss_tags += other.gloss_tags
+        self.lang_tags += other.lang_tags
+        self.trans_tags += other.trans_tags
+
+        self.gloss_word_tags += other.gloss_word_tags
+        self.lang_word_tags += other.lang_word_tags
+        self.trans_word_tags += other.trans_word_tags
+
+def count_words_tags(inst, tier, word_dict, tag_dict, word_tag_dict):
+    """
+
+    :type inst: RGIgt
+    """
+    # Now, add the words...
+    for word in tier:
+        word_dict.add(word.value().lower())
+
+    # Now, count the tags...
+    pos_tier = inst.get_pos_tags(tier.id)
+    if pos_tier is not None:
+        for tag in pos_tier:
+            tag_val = tag.value()
+            wrd_val = inst.find(id = tag.alignment).value()
+            tag_dict.add(tag_val, wrd_val)
+            word_tag_dict.add(wrd_val, tag_val)
+
+
+
+
+def inst_list_stats(inst_list):
+    """
+
+    :type inst_list: list[RGIgt]
+    """
+    sd = IGTStatDict()
+
+    for inst in inst_list:
+
+        sd.instances += 1
+        count_words_tags(inst, inst.lang, sd.lang, sd.lang_tags, sd.lang_word_tags)
+        count_words_tags(inst, inst.gloss, sd.gloss, sd.gloss_tags, sd.gloss_word_tags)
+        count_words_tags(inst, inst.trans, sd.trans, sd.trans_tags, sd.trans_word_tags)
+
+    return sd
 
 
 
 def igt_stats(filelist, type='text', logpath=None):
 
-    # Set up the headers -------------------------------------------------------
-    cols = ['language','instances','all_lines','g-l-1-to-1']
-    keys = ['lang', 'gloss', 'trans']
-    for k in keys:
-        lin = k+'_lines'
-        tok = k+'_tokens'
-        typ = k+'_types'
-        cols += [lin, tok, typ]
-    print(','.join(cols))
+    sd = IGTStatDict()
 
     # Load the corpus.
     for path in filelist:
 
         row = [os.path.splitext(os.path.basename(path))[0]]
 
-        igts = defaultdict(int)
-        types = defaultdict(lambda: defaultdict(int))
 
         if type == 'xigt':
             STATS_LOGGER.info('Processing xigt file: "%s"' % path)
@@ -119,39 +163,31 @@ def igt_stats(filelist, type='text', logpath=None):
             rc = RGCorpus.from_txt(path)
 
 
-        def merge_dicts(result):
-            # Unpack the result...
-            new_types, new_igts = result
+        pool = Pool(cpu_count())
 
-            # Now, add the dicts together...
-            igts['all_lines'] += new_igts['all_lines']
-            igts['instances'] += new_igts['instances']
-            igts['1-to-1'] += new_igts['1-to-1']
-            for attr in ['lang','gloss','trans']:
-                igts[attr+'_lines'] += new_igts[attr+'_lines']
-                igts[attr+'_tokens'] += new_igts[attr+'_tokens']
-                types[attr+'_types'] += new_types[attr+'_types']
+        # Divide the file into roughly equal chunks
+        chunks = chunkIt(rc.igts, cpu_count())
 
-        pool = Pool(8)
-        for igt in rc:
-            pool.apply_async(inst_stats, args=[igt], callback=merge_dicts)
+
+        for chunk in chunks:
+            pool.apply_async(inst_list_stats, args=[chunk], callback=sd.combine)
+            # sd.combine(inst_list_stats(chunk))
 
         pool.close()
         pool.join()
 
+    print(sd.header())
 
-        row += [igts['instances'], igts['all_lines'], igts['1-to-1']]
-        for k in keys:
-            lin = k+'_lines'
-            tok = k+'_tokens'
-            typ = k+'_types'
+    words = sorted(sd.gloss_word_tags.keys(), key=lambda x: sd.gloss_word_tags[x].total(), reverse=True)[:100]
 
-            row += [igts[lin], igts[tok], len(types[typ])]
+    for word in words:
+        countdict = sd.gloss_word_tags[word]
+        print('{},{},{}'.format(word, countdict.total(), countdict))
 
-        # Make them all into strings
-        row = [str(i) for i in row]
 
-        print(','.join(row))
+    print()
+    print(sd.gloss_word_tags['FOC'])
+    print(sd)
 
 
 def pos_stats(filelist, tagged, log_file = sys.stdout, csv=False):
