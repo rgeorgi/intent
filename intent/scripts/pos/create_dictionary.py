@@ -11,19 +11,27 @@ import os
 import pickle
 from multiprocessing import cpu_count
 from intent.corpora.POSCorpus import process_slashtag_file, process_wsj_file
+from intent.pos.TagMap import TagMap
 from intent.utils.argutils import existsfile, globfiles
 from intent.utils.dicts import POSEvalDict
 from intent.utils.listutils import flatten_list
 
 
 
-def process_file(path):
+def process_file(path, tm):
 
     c = POSEvalDict()
 
     def add_to_dict(tokens):
         for token in tokens:
-            c.add(token.seq.lower(), token.label)
+
+            # Do the tagset remapping.
+            if tm is not None:
+                label = tm[token.label]
+            else:
+                label = token.label
+
+            c.add(token.seq.lower(), label)
 
     print('Reading file "{}"'.format(os.path.basename(path)))
     ext = os.path.splitext(path)[1]
@@ -61,12 +69,16 @@ def create_dictionary(filelist, output, tagmap, delimeter = '/'):
         counts['tokens'] += cur_tokencount
         counts['lines'] += cur_linecount
 
+    tm = None
+    if tagmap:
+        tm = TagMap(tagmap)
 
+    # Initialize multithreading...
     p = Pool(cpu_count())
     for path in filelist:
-        p.apply_async(process_file, args=[path], callback=merge_counts)
-        #result = p.apply(process_file, args=[path])
-        #process_file(path)
+        p.apply_async(process_file, args=[path, tm], callback=merge_counts)
+        # result = p.apply(process_file, args=[path, tm])
+        # process_file(path)
 
     p.close()
     p.join()
@@ -82,7 +94,7 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser()
     p.add_argument('FILE', nargs='+', help='Slashtag files for input', type=globfiles)
     p.add_argument('-o', dest='output', help='Destination for pickled POS dict', required=True)
-    p.add_argument('--tagmap', help='Tag Map for tags', type=existsfile)
+    p.add_argument('-t', '--tagmap', help='Tag Map for tags', type=existsfile)
 
     args = p.parse_args()
 

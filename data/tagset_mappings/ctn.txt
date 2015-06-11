@@ -1,0 +1,14 @@
+vt			VERB
+vi			VERB
+v 			VERB
+v2			VERB
+n   		NOUN
+predadj		NOUN
+pro			PRON
+adv 		ADV
+sound 		ADV
+interj		PRT
+num 		NUM
+adj 		ADJ
+NoPOS 		X
+gm			PRT
