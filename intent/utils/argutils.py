@@ -142,7 +142,18 @@ def csv_choices(choice_list):
     return in_choices
 
 def globfiles(file_arg):
-    return glob(file_arg)
+    """
+    Given a glob pattern, find files matching it.
+
+    :param file_arg: glob pattern
+
+    :return: :raise argparse.ArgumentError:
+    """
+    files = glob(file_arg)
+    if len(files) == 0:
+        raise argparse.ArgumentError('No valid files matching the path "{}"'.format(file_arg))
+    else:
+        return files
 
 def proportion(arg):
     try:

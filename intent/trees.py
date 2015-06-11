@@ -10,6 +10,7 @@ from nltk.tree import ParentedTree, Tree
 #===============================================================================
 # Exceptions
 #===============================================================================
+from intent.utils.token import POSToken
 
 
 class TreeError(Exception): pass
@@ -146,7 +147,7 @@ class IdTree(ParentedTree):
         return IdTree(self.label(), new_children, id=copy(self.id))
 
     @classmethod
-    def fromstring(cls, tree_string, id_base=''):
+    def fromstring(cls, tree_string, id_base='', **kwargs):
         """
         :param tree_string:  String of a phrase structure tree in PTB format.
         :param id_base:
@@ -155,7 +156,7 @@ class IdTree(ParentedTree):
         """
         t = super(IdTree, cls).fromstring(tree_string,
                                           # When leaves are read in, make them Terminal objects.
-                                        read_leaf=lambda x: Terminal(x))
+                                        read_leaf=lambda x: Terminal(x), **kwargs)
         t.assign_ids()
         for i, leaf in enumerate(t.leaves()):
             leaf.index = i+1
@@ -168,6 +169,9 @@ class IdTree(ParentedTree):
 
     def nonterminals(self):
         return self.subtrees(filter=lambda t: not t.is_preterminal())
+
+    def tagged_words(self):
+        return [POSToken(pt[0].label, label=pt.label()) for pt in self.preterminals()]
 
     def is_preterminal(self):
         """

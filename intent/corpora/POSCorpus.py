@@ -4,6 +4,8 @@ Created on Mar 6, 2014
 @author: rgeorgi
 """
 import os, codecs, re
+from nltk import bracket_parse, Tree
+from intent.trees import IdTree
 from intent.utils.token import tokenize_string, tag_tokenizer, POSToken
 
 
@@ -109,25 +111,25 @@ class POSCorpus(list):
         Method to read in a corpus in the form of Token/TAG. (Assumes the default delimiter "/")
 
         :param fp: File path to the slashtagged file to read in.
-        :type fp: path
+        :type fp: str
         :param delimiter: Delimiter between token and Tag
         :type delimiter: str
 
         :returns: POSCorpus
 
         """
-        f = open(fp, 'r', encoding='utf-8')
-
         delimeter = kwargs.get('delimeter', '/')
 
         c = cls()
 
-        for line in f:
-            split_tokens = tokenize_string(line, tag_tokenizer)
-
-            inst = c.token_handler(split_tokens)
+        # This is the function we will use to process
+        # the tokens for this instance.
+        def func(tokens):
+            inst = c.token_handler(tokens)
             if inst:
                 c.append(inst)
+
+        process_slashtag_file(fp, func, delimeter)
 
         return c
 
@@ -186,8 +188,86 @@ class POSCorpus(list):
 
 
 
+# =============================================================================
+# Universal POS Tag Tools
+# =============================================================================
+
+def process_slashtag_file(fp, token_func, delimeter = '/'):
+    """
+    A universal function to process "slashtag"-style (e.g. Fountain/NOUN) files.
+
+    :param fp: Path to the slashtag file.
+    :param func: Function to apply to each token.
+    """
+
+    # Start by opening the file.
+    f = open(fp, 'r', encoding='utf-8')
+
+    tokens = 0
+    lines = 0
+
+    for line in f:
+        split_tokens = tokenize_string(line, lambda x: tag_tokenizer(x, delimeter=delimeter))
+        token_func(split_tokens)
+        tokens += len(split_tokens)
+        lines += 1
+
+    f.close()
+    return tokens, lines
 
 
+
+def process_wsj_file(fp, token_func):
+    """
+    A function for processing WSJ parse files.
+
+    :param fp:
+    :type fp: str
+    :param token_func:
+    :return:
+    """
+    f = open(fp, 'r', encoding='utf-8')
+
+    token_count = 0
+    line_count = 0
+
+    # Keep track of the open parens so we know when we have a full tree to parse.
+    open_parens = 0
+
+    cur_tree = ''
+    for line in f:
+
+        # Skip blank lines
+        if not line.strip():
+            continue
+
+        # Count the number of open parens.
+        open_parens += len(re.findall('\(', line))
+        open_parens -= len(re.findall('\)', line))
+
+        cur_tree += line.strip() + ' '
+
+        # If the running count of open parens
+        # matches the count of closed parens,
+        # we should have a complete tree.
+        if open_parens == 0:
+            # Parse the tree...
+            t = IdTree.fromstring(cur_tree, remove_empty_top_bracketing=True)
+
+            # Now, process the tokens...
+            tokens = t.tagged_words()
+            token_func(tokens)
+
+            # Increment the counts
+            token_count += len(tokens)
+            line_count += 1
+
+            # And reset the tree string.
+            cur_tree = ''
+
+    return token_count, line_count
+
+# =============================================================================
 
 class POSCorpusException(Exception):
     def __init__(self, msg = None):

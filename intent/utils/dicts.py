@@ -1,8 +1,8 @@
-'''
+"""
 Created on Aug 26, 2013
 
 @author: rgeorgi
-'''
+"""
 import sys, re, unittest
 from collections import defaultdict, Callable, OrderedDict
 
@@ -62,13 +62,13 @@ class CountDict(object):
         return sorted(self.items(), reverse=True, key=lambda k: k[1])[0]
 
     def most_frequent(self, minimum = 0, num = 1):
-        '''
+        """
         Return the @num entries with the highest counts that
         also have at least @minimum occurrences.
 
         @param minimum: int
         @param num: int
-        '''
+        """
         items = list(self.items())
         items.sort(key = lambda item: item[1], reverse=True)
         ret_items = []
@@ -154,6 +154,11 @@ class TwoLevelCountDict(object):
 
         return new
 
+    def combine(self, other):
+        for key_a in other.keys():
+            for key_b in other[key_a].keys():
+                self.add(key_a, key_b, other[key_a][key_b])
+
     def add(self, key_a, key_b, value=1):
         self[key_a][key_b] += value
 
@@ -190,6 +195,10 @@ class TwoLevelCountDict(object):
         return total
 
     def total(self, key):
+        """
+        :param key:
+        :return: Number of tokens that have the "REAL" tag ``key``
+        """
         count = 0
         for key2 in self[key].keys():
             count += self[key][key2]
@@ -244,14 +253,30 @@ class TwoLevelCountDict(object):
 # 
 #===============================================================================
 class POSEvalDict(TwoLevelCountDict):
+    """
+    This dictionary is used for evaluation. Items are stored in the dictionary as:
+
+    {real_label:{assigned_label:count}}
+
+    This also supports greedy mapping techniques for evaluation.
+    """
 
     def __init__(self):
         TwoLevelCountDict.__init__(self)
         self.mapping = {}
 
-
     def keys(self):
         return [str(k) for k in TwoLevelCountDict.keys(self)]
+
+    def gold_tags(self):
+        return list(self.keys())
+
+    def assigned_tags(self):
+        t = {}
+        for tag_a in self.keys():
+            for tag_b in self[tag_a].keys():
+                t[tag_b] = True
+        return list(t.keys())
 
     def _resetmapping(self):
         self.mapping = {t:t for t in self.keys()}
@@ -278,7 +303,10 @@ class POSEvalDict(TwoLevelCountDict):
         return ret_s
 
     def unaligned(self, unaligned_tag = 'UNK'):
-        return float(self.col_total(unaligned_tag)) / self.fulltotal() * 100
+        if self.fulltotal() == 0:
+            return 0
+        else:
+            return float(self.col_total(unaligned_tag)) / self.fulltotal() * 100
 
     def breakdown_csv(self):
         ret_s = 'TAG,PRECISION,RECALL,F_1,IN_GOLD,IN_EVAL,MATCHES\n'
@@ -293,13 +321,18 @@ class POSEvalDict(TwoLevelCountDict):
                                                        self.matches(label))
         return ret_s
 
-    def tag_recall(self, t):
-        total = self.total(t)
-        return float(self.matches(t)) / total * 100 if total != 0 else 0
 
     def matches(self, t):
         self._mapping()
-        return self[self.mapping[t]][t]
+        if t in self.mapping:
+            mapped = self.mapping[t]
+        else:
+            mapped = t
+
+        if mapped in self and mapped in self[mapped]:
+            return self[mapped][mapped]
+        else:
+            return 0
 
     def all_matches(self):
         self._mapping()
@@ -316,38 +349,87 @@ class POSEvalDict(TwoLevelCountDict):
 
         return float(matches / totals) * 100 if totals != 0 else 0
 
-    def col_total(self, tag_a):
+    def col_total(self, assigned_tag):
+        """
+        :param assigned_tag: The assigned tag to count
+        :return: The number of tokens that have been assigned the tag ``assigned_tag``, including false positives.
+        """
         self._mapping()
 
         totals = 0
         for tag_b in self.keys():
-            totals += self[tag_b][tag_a]
+            totals += self[tag_b][assigned_tag]
         return totals
 
+    # =============================================================================
+    # Overall Precision / Recall / FMeasure
+    # =============================================================================
+    def precision(self):
+        totals = 0
+        matches = 0
+
+        for assigned_tag in self.assigned_tags():
+
+            totals += self.col_total(assigned_tag)
+            matches += self.matches(assigned_tag)
+        return (float(matches) / totals * 100) if totals != 0 else 0
+
+    def recall(self):
+        totals = 0
+        matches = 0
+        for tag in self.keys():
+            totals += self.total(tag)
+            matches += self.matches(tag)
+        return float(matches) / totals * 100 if totals != 0 else 0
+
+    def fmeasure(self):
+        p = self.precision()
+        r = self.recall()
+
+        2 * (p*r)/(p+r) if (p+r) != 0 else 0
+    # =============================================================================
+    # Tag-Level Precision / Recall / FMeasure
+    # =============================================================================
+
+    def tag_precision(self, tag):
+        """
+        Calculate the precision for a given tag
+
+        :type tag: str
+        :rtype: float
+        """
+        self._mapping()
+
+        tag_total = self.col_total(tag)
+        return (float(self.matches(tag)) / tag_total * 100) if tag_total != 0 else 0
+
+    def tag_recall(self, tag):
+        """
+        Calculate recall for a given tag
+        :param tag: Input tag
+        :rtype: float
+        """
+        total = self.total(tag)
+        return float(self.matches(tag)) / total * 100 if total != 0 else 0
+
     def tag_fmeasure(self, tag):
+        """
+        Calculate f-measure for a given tag
+        :param tag:
+        :rtype: float
+        """
         p = self.tag_precision(tag)
         r = self.tag_recall(tag)
 
         return 2 * (p*r)/(p+r) if (p+r) != 0 else 0
 
-
-    def tag_precision(self, tag_a):
-        '''
-        Calculate the precision for a given tag
-
-        @param tag_a: the tag to precision for.
-        '''
-        self._mapping()
-
-        tag_total = self.col_total(tag_a)
-        return (float(self.matches(tag_a)) / tag_total * 100) if tag_total != 0 else 0
-
+    # =============================================================================
 
     def greedy_n_to_1(self):
-        '''
+        """
         Remap the tags in such a way to maximize matches. In this mapping,
         multiple output tags can map to the same gold tag.
-        '''
+        """
 
         self._mapping()
 
@@ -367,16 +449,15 @@ class POSEvalDict(TwoLevelCountDict):
 
         return self.mapping
 
-
     def greedy_1_to_1(self, debug=False):
-        '''
+        """
         Remap the tags one-to-one in such a way as to maximize matches.
 
         This will be similar to bubble sort. Start off with 1:1. Then, go
         through each pair of tags and try swapping the two. If we get a net
         gain of matches, then keep the swap, otherwise don't. Repeat until we
         get a full run of no swaps.
-        '''
+        """
         self._mapping()
         mapping = self.mapping
 
@@ -458,10 +539,10 @@ class POSEvalDict(TwoLevelCountDict):
 
     #===========================================================================
     def error_matrix(self, csv=False, ansi=False):
-        '''
+        """
         Print an error matrix with the columns being the tags assigned by the
         system and the rows being the gold standard answers.
-        '''
+        """
 
         self._mapping()
 
@@ -611,9 +692,9 @@ class StatDict(defaultdict):
     """
 
     def __init__(self, type=int):
-        '''
+        """
         Constructor
-        '''
+        """
         defaultdict.__init__(self, type)
 
     @property
