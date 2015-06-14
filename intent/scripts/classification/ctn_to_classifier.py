@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 from collections import defaultdict
 import glob
 import os
+import pickle
 from random import shuffle, seed
 import sys
 from tempfile import mkdtemp
@@ -45,7 +46,7 @@ The purpose of this module is to evaluate the POS-line classifiers trained on
 """
 
 
-def eval_classifier(c, inst_list):
+def eval_classifier(c, inst_list, context_feats=False, posdict=None):
     """
 
     :param c: The classifier
@@ -55,17 +56,23 @@ def eval_classifier(c, inst_list):
     gold_sents = []
     eval_sents = []
 
+    to_dump = RGCorpus()
+
     for inst in inst_list:
 
         to_tag = inst.copy()
         strip_pos(to_tag)
 
         # Do the classification.
-        to_tag.classify_gloss_pos(c, lowercase=True, feat_next_gram=False, feat_prev_gram=False)
+        to_tag.classify_gloss_pos(c, lowercase=True,
+                                  feat_next_gram=context_feats,
+                                  feat_prev_gram=context_feats,
+                                  posdict=posdict)
 
 
+        to_dump.append(to_tag)
         # Fix the tags...
-        #fix_ctn_gloss_line(to_tag, tag_method=INTENT_POS_CLASS)
+        # fix_ctn_gloss_line(to_tag, tag_method=INTENT_POS_CLASS)
 
         # Now, retrieve eval/gold.
         eval_tags = [v.value() for v in to_tag.get_pos_tags(GLOSS_WORD_ID, tag_method=INTENT_POS_CLASS)]
@@ -82,128 +89,11 @@ def eval_classifier(c, inst_list):
         gold_sents.append(gold_tokens)
         eval_sents.append(tag_tokens)
 
+
+    xigtxml.dump(open('./enriched_ctn_dev.xml', 'w'), to_dump)
     return poseval(eval_sents, gold_sents, details=True,csv=True, matrix=True)
 
 
-def eval_pos_tiers(eval_tier, gold_tier):
-    """
-    Given two POS tag tiers, return eval.
-
-    :param eval_tier:
-    :param pos_tier:
-    """
-    idmap = {}
-
-    # Get
-    for eval_pos in eval_tier:
-        idmap[eval_pos.attributes[ALIGNMENT]] = eval_pos.value()
-
-    matches = 0
-    compares= 0
-    unaligned = 0
-
-    for gold_pos in gold_tier:
-        gold_id = gold_pos.attributes[ALIGNMENT]
-
-        if gold_id not in idmap:
-            unaligned += 1
-        elif idmap[gold_id] == gold_pos.value():
-            matches += 1
-
-        if gold_id in idmap:
-            print(gold_pos.value(), idmap[gold_id])
-
-        compares += 1
-
-    return (matches, compares, unaligned)
-
-def enrich_multiple(pathlist, tagger, tagmap):
-    instances = []
-    for path in pathlist:
-        xc = RGCorpus.load(path, basic_processing=True)
-        instances += list(xc)
-
-    return enrich_ctn(instances, tagger, tagmap)
-
-def enrich_ctn(instances, tagger, tagmap):
-
-    xc = RGCorpus()
-
-    for i, inst in enumerate(instances):
-        CTN_LOG.debug('Processing instance #{} - id({})'.format(i, inst.id))
-        w_tier = inst.find(type=TRANS_WORD_TYPE, id=TRANS_WORD_ID)
-        w_tier.delete()
-        inst.trans
-
-        assert isinstance(inst, RGIgt)
-        wpos_tier = inst.get_pos_tags(LANG_WORD_ID)
-
-        if wpos_tier:
-
-            inst.heur_align()
-
-            # Do projection
-            inst.tag_trans_pos(tagger)
-            try:
-                inst.project_trans_to_gloss()
-            except ProjectionTransGlossException as ptge:
-                pass
-            else:
-                # Do the remapping....
-                gw_tier  = inst.find(id=GLOSS_WORD_ID)
-                proj_pos = inst.get_pos_tags(GLOSS_WORD_ID, INTENT_POS_PROJ)
-
-                for gw in gw_tier:
-                    new_tag = None
-                    if gw.value().lower() in ['yes','no','not','seq','top','foc','emph','add','filler']:
-                        new_tag = 'PRT'
-                        CTN_LOG.debug("PRT gloss identified.")
-                    elif gw.value().lower() in ['and','but','or']:
-                        CTN_LOG.debug("CONJ gloss identified.")
-                        new_tag = 'CONJ'
-
-                    if new_tag is not None:
-
-                        # If a tag already exists...
-                        aligned_tag = proj_pos.find(alignment=gw.id)
-
-                        if aligned_tag is not None:
-                            aligned_tag.text = new_tag
-                        else:
-                            t = RGToken(id=proj_pos.askItemId(), alignment=gw.id, text=new_tag)
-                            proj_pos.append(t)
-
-
-            # Create the (supervised) gloss tier from the language tier...
-            gp_tier = RGTokenTier(type=POS_TIER_TYPE,
-                                    id=gen_tier_id(inst, POS_TIER_ID, tier_type=POS_TIER_TYPE, alignment=inst.gloss.id),
-                                    alignment=inst.gloss.id)
-
-            set_intent_method(gp_tier, MANUAL_POS)
-
-            for wpos in wpos_tier:
-
-                old_tag = wpos.value()
-                tag = tagmap[old_tag]
-
-                lw = inst.find(id=wpos.attributes[ALIGNMENT])
-
-                gw = inst.find(alignment=wpos.attributes[ALIGNMENT], others=[lambda x: hasattr(x, 'tier') and x.tier.type == GLOSS_WORD_TYPE])
-
-                # Check for remapping of gloss words to CONJ...
-                if gw.value().lower() in ['but', 'and', 'or']:
-                    tag = 'CONJ'
-
-                gt = RGToken(id=gp_tier.askItemId(), alignment=gw.id, text=tag)
-
-                gp_tier.append(gt)
-
-                # gp_file.write('{}\t{}\t{}\t{}\n'.format(lw.value(), gw.value(), old_tag, tag))
-
-            inst.append(gp_tier)
-        xc.append(inst)
-
-    return xc
 
 def eval_proj(xc):
     prj_sents = []
@@ -236,122 +126,6 @@ def eval_proj(xc):
 
     poseval(prj_sents, sup_sents, details=True)
 
-dev_enriched_path      = '/Users/rgeorgi/Documents/code/dissertation/examples/ctn/ctn_dev_enriched.xml'
-train_enriched_path    = '/Users/rgeorgi/Documents/code/dissertation/examples/ctn/ctn_train_enriched.xml'
-devtrain_enriched_path = '/Users/rgeorgi/Documents/code/dissertation/examples/ctn/ctn_devtrain_enriched.xml'
-
-def enrich_all_ctn():
-
-    lang_dict = defaultdict(list)
-
-    # -- 1) Initialize the tags
-    tm = TagMap('/Users/rgeorgi/Documents/code/dissertation/data/tagset_mappings/ctn.txt')
-    st = StanfordPOSTagger(tagger_model)
-
-    # Some hardcoded test files...
-    dev = '/Users/rgeorgi/Documents/code/dissertation/examples/ctn/ctn_dev.xml'
-    train = '/Users/rgeorgi/Documents/code/dissertation/examples/ctn/ctn_train.xml'
-    small = '/Users/rgeorgi/Documents/code/dissertation/examples/ctn-train_small.xml'
-    full = '/Users/rgeorgi/Documents/code/dissertation/examples/ctn-train.xml'
-
-    dev_c = enrich_multiple([dev], st, tm)
-    train_c = enrich_multiple([train], st, tm)
-    devtrain_c = enrich_multiple([dev, train], st, tm)
-    sys.exit()
-
-    # Now, let's dump out those enriched files...
-    dev_enriched      = open(dev_enriched_path, 'w', encoding='utf-8')
-    train_enriched    = open(train_enriched_path, 'w', encoding='utf-8')
-    devtrain_enriched = open(devtrain_enriched_path, 'w', encoding='utf-8')
-
-    xigtxml.dump(dev_enriched, dev_c)
-    xigtxml.dump(train_enriched, train_c)
-    xigtxml.dump(devtrain_enriched, devtrain_c)
-
-def eval_ctn():
-
-    dev_c      = RGCorpus.load(dev_enriched_path)
-    train_c    = RGCorpus.load(train_enriched_path)
-    devtrain_c = RGCorpus.load(devtrain_enriched_path)
-
-    eval_proj(dev_c)
-    eval_proj(train_c)
-    eval_proj(devtrain_c)
-
-
-    #sys.exit()
-
-    # eval_proj(dev_c)
-    # eval_proj(devtrain_c)
-    # sys.exit()
-
-    dev_classifier = instances_to_classifier(dev_c, os.path.join(proj_root, 'ctn_dev.classifier'))
-    eval_classifier(dev_classifier, dev_c)
-
-    devtrain_classifier = instances_to_classifier(devtrain_c, os.path.join(proj_root, 'ctn_devtrain.classifier'))
-    eval_classifier(devtrain_classifier, dev_c)
-
-    train_classifier = instances_to_classifier(train_c, os.path.join(proj_root, 'ctn_train.classifier'))
-    eval_classifier(train_classifier, dev_c)
-
-    #xigtxml.dump(open(os.path.join(proj_root, 'ctn_dump.xml'), 'w', encoding='utf-8'), xc)
-    sys.exit()
-
-
-    # -- 2) Create three classifiers:
-    #        a) One that contains only the given language
-    #        b) One that contains all but the given language
-    #        c) One that contains everything but a holdout from the given language.
-
-
-
-    odin_c = MalletMaxent('/Users/rgeorgi/Documents/code/dissertation/odin_class.classifier')
-
-    num_splits = 2
-
-    for lang in sorted(lang_dict.keys()):
-
-        tmp_dir = mkdtemp()
-
-        instances = lang_dict[lang]
-
-        # Randomize the instances...
-        shuffle(instances, random=seed(34))
-
-
-        # Now, take a portion to hold out.
-        split_index = int(len(instances)/2)
-        lang_holdout = instances[:split_index]
-        lang_rest    = instances[split_index:]
-
-        # Now, get the other languages...
-        other_langs  = []
-        for other_lang in lang_dict.keys():
-            if other_lang != lang:
-                other_langs.extend(lang_dict[other_lang])
-
-        # Now, let's train a separate classifier for each instance.
-        same_class_path  = os.path.join(tmp_dir, 'same.class')
-        other_class_path = os.path.join(tmp_dir, 'other.class')
-        full_class_path  = os.path.join(tmp_dir, 'full.class')
-
-        same_c  = instances_to_classifier(lang_rest, same_class_path)
-        other_c = instances_to_classifier(other_langs, other_class_path)
-        full_c  = instances_to_classifier(lang_rest+other_langs, full_class_path)
-
-        print('{} {}'.format(lang, '*'*80))
-
-        # Aaaand the ODIN-based classifier...
-
-        eval_classifier(same_c, lang_holdout)
-        eval_classifier(other_c, lang_holdout)
-        eval_classifier(full_c, lang_holdout)
-
-        eval_classifier(odin_c, lang_holdout)
-
-        shutil.rmtree(tmp_dir)
-
-
 
 
 def fix_ctn_gloss_line(inst, tag_method=None):
@@ -375,6 +149,8 @@ def fix_ctn_gloss_line(inst, tag_method=None):
             new_tag = 'PRON'
         elif gw.value().lower() in ['for','in']:
             new_tag = 'ADP'
+        elif gw.value().lower() in ['the']:
+            new_tag = 'DET'
 
         if new_tag:
             gpos = gpos_tier.find(alignment=gw.id)
@@ -388,48 +164,102 @@ def fix_ctn_gloss_line(inst, tag_method=None):
 
 if __name__ == '__main__':
 
-    ctn_train =  '/Users/rgeorgi/Documents/code/dissertation/data/xml-files/ctn/ctn_train.xml'
-    ctn_dev   =  '/Users/rgeorgi/Documents/code/dissertation/data/xml-files/ctn/ctn_dev.xml'
+    ctn_train =  './data/xml-files/ctn/ctn_train.xml'
+    ctn_dev   =  './data/xml-files/ctn/ctn_dev.xml'
 
-    # train_xc  = RGCorpus.load(ctn_train)
-    train_xc    = RGCorpus.load(ctn_dev)
-    dev_xc    = RGCorpus.load(ctn_dev)
+    ctn_dev_processed = './data/xml-files/ctn/ctn_dev_processed.xml'
+    ctn_train_processed = './data/xml-files/ctn/ctn_train_processed.xml'
 
+    posdict   =  pickle.load(open('./data/dictionaries/CTN.dict', 'rb'))
+
+    # print("Loading CTN Dev Corpus...", end=" ", flush=True)
+    # dev_xc    = RGCorpus.load(ctn_dev)
+    # print("Done.")
+    #
+    # print("Loading CTN Train corpus...", end=" ", flush=True)
+    # train_xc    = RGCorpus.load(ctn_train)
+    # print("Done.")
+
+
+
+    print("Initializing tagger...", end=" ", flush=True)
     tagger = StanfordPOSTagger(tagger_model)
+    print("Done.")
 
-    # Get the language line words projected onto the gloss...
-    for inst in train_xc:
-        word_align(inst.gloss, inst.lang)
-        inst.project_lang_to_gloss(tagmap = '/Users/rgeorgi/Documents/code/dissertation/data/tagset_mappings/ctn.txt')
+    # =============================================================================
+    # 1) Start by projecting the language line to the gloss line in the dev set,
+    #    remapping it from the CTN tagset to the universal tagset along the way.
+    # =============================================================================
+    #
+    # print("Processing DEV corpus...", end=' ', flush=True)
+    # for inst in dev_xc:
+    #     word_align(inst.gloss, inst.lang)
+    #     inst.project_lang_to_gloss(tagmap = './data/tagset_mappings/ctn.txt')
+    #     fix_ctn_gloss_line(inst, tag_method=MANUAL_POS)
+    #     inst.tag_trans_pos(tagger)
+    #     inst.heur_align()                # Align trans/gloss lines heuristically
+    #     inst.project_trans_to_gloss()    # Now, project heuristically.
+    # print('done.')
+    #
+    # xigtxml.dump(open(ctn_dev_processed, 'w', encoding='utf-8'), dev_xc)
+    #
+    #
+    # print("Processing TRAIN Corpus...", end=' ', flush=True)
+    # # Get the language line words projected onto the gloss...
+    # for inst in train_xc:
+    #     word_align(inst.gloss, inst.lang)
+    #     inst.project_lang_to_gloss(tagmap = './data/tagset_mappings/ctn.txt')
+    #     inst.tag_trans_pos(tagger)
+    #     inst.heur_align()
+    #     inst.project_trans_to_gloss()
+    #     fix_ctn_gloss_line(inst, tag_method=INTENT_POS_PROJ)
+    #
+    # print("Done.")
+    #
+    # xigtxml.dump(open(ctn_train_processed, 'w', encoding='utf-8'), train_xc)
+    # sys.exit()
 
-        inst.tag_trans_pos(tagger)
-        inst.heur_align()
-        inst.project_trans_to_gloss()
-        fix_ctn_gloss_line(inst, INTENT_POS_PROJ)
+    print("Loading Processed CTN Train corpus...", end=" ", flush=True)
+    train_xc    = RGCorpus.load(ctn_train_processed)
+    print("Done.")
+
+    print("Loading Processed CTN Dev corpus...", end=" ", flush=True)
+    dev_xc    = RGCorpus.load(ctn_dev_processed)
+    print("Done.")
+
+    #
+    # # =============================================================================
+    # # 2) Train a classifier based on the projected gloss line.
+    # # =============================================================================
+    #
+
+    index_list = [35,70,106,141,284,569,854,1139,1424,1708,1993,7120]
+
+    for train_stop_index in index_list:
+
+        train_instances = list(train_xc)[0:train_stop_index]
+
+        print('* '*50)
+        tokens = 0
+        for inst in train_instances:
+            tokens += len(inst.gloss)
+
+        print("Now training with {} tokens, {} instances.".format(tokens, train_stop_index))
 
 
+        print("Training Classifier...", end=" ", flush=True)
+        c = instances_to_classifier(train_instances, './ctn-train.class',
+                                    tag_method=MANUAL_POS,
+                                    posdict=posdict,
+                                    context_feats=True,
+                                    feat_path='./ctn-train_feats.txt')
+        print("Done.")
 
+        # c = MalletMaxent('/Users/rgeorgi/Documents/code/dissertation/gc.classifier')
+        # c = MalletMaxent('./ctn_class.class.classifier')
 
-    for inst in dev_xc:
-        word_align(inst.gloss, inst.lang)
-        inst.project_lang_to_gloss(tagmap = '/Users/rgeorgi/Documents/code/dissertation/data/tagset_mappings/ctn.txt')
-        fix_ctn_gloss_line(inst)
-        inst.tag_trans_pos(tagger)
-        inst.heur_align()
-        inst.project_trans_to_gloss()
+        print("Evaluating classifier...", end=" ", flush=True)
+        eval_classifier(c, dev_xc, posdict=posdict, context_feats=True)
+        print("Done.")
+        # eval_proj(dev_xc)
 
-
-    c = instances_to_classifier(train_xc, '/Users/rgeorgi/Documents/code/dissertation/ctn-train.class', tag_method=INTENT_POS_PROJ)
-
-    #c = MalletMaxent('/Users/rgeorgi/Documents/code/dissertation/gc.classifier')
-
-    eval_classifier(c, dev_xc)
-    eval_proj(dev_xc)
-
-
-    #classifier = MalletMaxent(args.classifier)
-    # test_classifier(classifier, instances)
-    CTN_LOG.setLevel(logging.DEBUG)
-    #enrich_all_ctn()
-
-    # eval_ctn()

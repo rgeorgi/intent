@@ -1,15 +1,18 @@
 from argparse import ArgumentParser
+from collections import Counter
+from io import StringIO
 
 import logging
 import os
 import pickle
-from multiprocessing import Pool, Process
+from multiprocessing import Pool, Process, cpu_count
 import sys
 from tempfile import NamedTemporaryFile
 from intent.igt.grams import write_gram
 from intent.igt.igtutils import rgp
 from intent.interfaces.mallet_maxent import train_txt
 from intent.utils.env import proj_root
+from intent.utils.listutils import chunkIt
 from intent.utils.token import morpheme_tokenizer, tokenize_item, GoldTagPOSToken
 
 LOG = logging.getLogger('EXTRACT_CLASSIFIER')
@@ -141,45 +144,104 @@ def process_dicts(class_path):
 
     train_txt(out_path, class_path)
 
-
-def instances_to_classifier(instances, class_out_path, tag_method=None):
+def chunk_to_features(chunk, tag_method=None, posdict=None, context_feats=False):
     """
-    Given a list of IGT instances, create a gloss-line classifier from them.
+    Method to extract the gloss-line classifier features from a subset of instances. (Useful for parallelizing)
 
-    :param instances: List of IGT instances.
-    :type instances: list[RGIgt]
-    :param class_out_path: Output path for the classifier model to train.
+    :param inst:
+    :type inst: RGIgt
+    :param tag_method:
+    :param posdict:
+    :param feat_path:
+    :param context_feats:
     """
-
-    ntf = NamedTemporaryFile('w', delete=True)
+    out_string = StringIO()
 
     num_instances = 0
-
-    for inst in instances:
+    # Look for the GLOSS_POS tier
+    for inst in chunk:
         gpos_tier = inst.get_pos_tags(GLOSS_WORD_ID, tag_method=tag_method)
         if gpos_tier:
             num_instances += 1
-            for gp in gpos_tier:
 
-                # FIXME: Why do some gp not have alignments?
+            # For each token in the tier...
+            for i, gp in enumerate(gpos_tier):
+
                 if ALIGNMENT not in gp.attributes:
                     continue
 
                 word = gp.igt.find(id=gp.attributes[ALIGNMENT]).value()
                 tag  = gp.value()
 
+                prev_word = None
+                next_word = None
+
+                if context_feats:
+                    if i > 0:
+                        prev_word = gp.igt.find(id=gpos_tier[i-1].attributes[ALIGNMENT]).value()
+
+                    if i < len(gpos_tier)-1:
+                        next_word = gp.igt.find(id=gpos_tier[i+1].attributes[ALIGNMENT]).value()
+
+
                 # Write out features...
                 t = GoldTagPOSToken(word, goldlabel=tag)
-                write_gram(t, feat_prev_gram=False, feat_next_gram=False, lowercase=True, output=ntf)
+                write_gram(t,
+                           feat_prev_gram=context_feats,
+                           feat_next_gram=context_feats,
+                           prev_gram=prev_word,
+                           next_gram=next_word,
+                           lowercase=True,
+                           output=out_string,
+                           posdict=posdict)
 
-    if num_instances == 0:
+    return out_string.getvalue(), num_instances
+
+
+def instances_to_classifier(instances, class_out_path, tag_method=None, posdict=None, feat_path=None, context_feats=False):
+    """
+    Given a list of IGT instances, create a gloss-line classifier from them.
+
+    :param instances:
+    :type instances: list[RGIgt]
+    :param class_out_path:
+    :type class_out_path: str
+    :param tag_method:
+    :param posdict:
+    :param feat_path: Path to specify where to write out the svmlight-format feature file. If it is none, use a temp file.
+    """
+
+    # Create a temporary file for the features file that we will
+    # create...
+    if feat_path is None:
+        ntf = NamedTemporaryFile('w', delete=True, encoding='utf-8')
+    else:
+        ntf = open(feat_path, 'w', encoding='utf-8')
+
+    counts = CountDict()
+
+
+    def callback(result):
+        out_string, cur_instances = result
+        ntf.write(out_string)
+        counts.add('instances', 1)
+
+    p = Pool(cpu_count())
+
+    # Iterate through the instances provided
+    for chunk in chunkIt(list(instances), cpu_count()):
+        # p.apply_async(chunk_to_features, args=[chunk, tag_method, posdict, context_feats], callback=callback)
+        callback(chunk_to_features(chunk, tag_method=tag_method, posdict=posdict, context_feats=context_feats))
+
+
+    p.close()
+    p.join()
+
+    if counts['instances'] == 0:
         raise ClassifierException("No gloss POS tags found!")
 
-    return train_txt(ntf.name, class_out_path)
     ntf.close()
-
-
-
+    return train_txt(ntf.name, class_out_path)
 
 
 if __name__ == '__main__':

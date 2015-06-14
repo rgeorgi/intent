@@ -43,6 +43,9 @@ class TagMap(object):
         else:
             return self.mapping[key]
 
+    def __contains__(self, item):
+        return item in self.mapping
+
     def __str__(self):
         return str(self.mapping)
 

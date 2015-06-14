@@ -2,6 +2,11 @@
 Build a dictionary from slashtag files.
 """
 
+import logging
+DICT_LOG = logging.getLogger('DICTIONARY')
+
+DICT_LOG.setLevel(logging.DEBUG)
+
 # Built-in imports -------------------------------------------------------------
 import argparse
 
@@ -18,7 +23,7 @@ from intent.utils.listutils import flatten_list
 
 
 
-def process_file(path, tm):
+def process_file(path, tm, delimeter='/'):
 
     c = POSEvalDict()
 
@@ -27,7 +32,11 @@ def process_file(path, tm):
 
             # Do the tagset remapping.
             if tm is not None:
-                label = tm[token.label]
+                if token.label not in tm:
+                    DICT_LOG.warn('Tagmap defined, but "{}" not found.'.format(token.label))
+                    label = token.label
+                else:
+                    label = tm[token.label]
             else:
                 label = token.label
 
@@ -59,8 +68,6 @@ def create_dictionary(filelist, output, tagmap, delimeter = '/'):
     """
     c = POSEvalDict()
 
-
-
     counts = {'tokens':0, 'lines':0}
 
     def merge_counts(result):
@@ -76,9 +83,9 @@ def create_dictionary(filelist, output, tagmap, delimeter = '/'):
     # Initialize multithreading...
     p = Pool(cpu_count())
     for path in filelist:
-        p.apply_async(process_file, args=[path, tm], callback=merge_counts)
-        # result = p.apply(process_file, args=[path, tm])
-        # process_file(path)
+        p.apply_async(process_file, args=[path, tm, delimeter], callback=merge_counts)
+        # result = p.apply(process_file, args=[path, tm, delimeter])
+        # merge_counts(result)
 
     p.close()
     p.join()

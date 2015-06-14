@@ -45,11 +45,16 @@ def write_gram(token, **kwargs):
     output_type = kwargs.get('type', 'classifier')
     output = kwargs.get('output', sys.stdout)
 
-    posdict = kwargs.get('posdict', env.posdict)
+    posdict = kwargs.get('posdict', None)
+
+    if posdict is None:
+        posdict = env.posdict
 
     # Previous tag info
     prev_gram = kwargs.get('prev_gram')
     next_gram = kwargs.get('next_gram')
+
+
 
     # Get heuristic alignment
     aln_labels = kwargs.get('aln_labels', [])
@@ -144,7 +149,7 @@ def write_gram(token, **kwargs):
                     output.write('\tprev-gram-%s:1' % token.seq)
 
                 # Add prev dictionary tag
-                if kwargs.get('feat_prev_gram_dict', True, bool) and token.seq in posdict:
+                if posdict and kwargs.get('feat_prev_gram_dict', True, bool) and token.seq in posdict:
                     prev_tags = posdict.top_n(token.seq)
                     output.write('\tprev-gram-dict-tag-%s:1' % prev_tags[0][0])
 
@@ -166,7 +171,7 @@ def write_gram(token, **kwargs):
                 if kwargs.get('feat_next_gram', True, bool):
                     output.write('\tnext-gram-%s:1' % token.seq)
 
-                if kwargs.get('feat_next_gram_dict', True, bool) and token.seq in posdict:
+                if posdict and kwargs.get('feat_next_gram_dict', True, bool) and token.seq in posdict:
                     next_tags = posdict.top_n(token.seq)
                     output.write('\tnext-gram-dict-tag-%s:1' % next_tags[0][0])
 
@@ -189,7 +194,7 @@ def write_gram(token, **kwargs):
             # a predicted tag
             # ===================================================================
 
-            if token.seq in posdict and kwargs.get('feat_dict', True, bool):
+            if posdict and token.seq in posdict and kwargs.get('feat_dict', True, bool):
 
                 top_tags = posdict.top_n(token.seq)
                 # best = top_tags[0][0]
