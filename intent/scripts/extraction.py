@@ -1,9 +1,11 @@
 import logging
 from multiprocessing.pool import Pool
 from multiprocessing import cpu_count
+import sys
 
 from intent.igt.consts import POS_TIER_TYPE, GLOSS_WORD_ID
 from intent.igt.grams import write_gram
+from intent.igt.igtutils import rgp
 from intent.interfaces.mallet_maxent import train_txt
 from intent.utils.listutils import chunkIt
 from intent.utils.token import GoldTagPOSToken, tokenize_string, morpheme_tokenizer
@@ -11,23 +13,25 @@ from xigt.consts import ALIGNMENT
 
 EXTRACT_LOG = logging.getLogger("EXTRACT")
 
-from intent.igt.rgxigt import RGCorpus, RGIgt
+from intent.igt.rgxigt import RGCorpus, RGIgt, ProjectionException
 from intent.utils.dicts import TwoLevelCountDict
 
 __author__ = 'rgeorgi'
 
-def merge_dicts(tup, old_wtd, old_gtd):
-    new_wt, new_gt = tup
-    _merge_tlcd(old_wtd, new_wt)
-    _merge_tlcd(old_gtd, new_gt)
+# =============================================================================
+# EXTRACTION FUNCTION
+#
+# The main extraction call. This should be able to handle the classifier, cfgs,
+# tagger, etc.
+# =============================================================================
 
-def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_path=None):
+def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_prefix=None, tagger_prefix=None):
     """
 
     Extract certain bits of supervision from a set of
 
     :param classifier_prefix:
-    :param cfg_path:
+    :param cfg_prefix:
     """
 
     # ------- Dictionaries for keeping track of gloss_pos preprocessing. --------
@@ -37,20 +41,46 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_path=No
 
     # ---------------------------------------------------------------------------
 
-    if classifier_prefix:
+    if classifier_prefix is not None:
         print("Gathering statistics on POS tags...")
+
+    if tagger_prefix is not None:
+        tagger_train_path = tagger_prefix+'_train.txt'
+        print('Writing tagger training file out to "{}"'.format(tagger_prefix))
+        tagger_train_f = open(tagger_train_path, 'w', encoding='utf-8')
 
     cpus = cpu_count()
     p = Pool(cpus)
 
-    # Start by loading each of the files in the input files...
+    # =============================================================================
+    # Call "process_file" to process each file we are working with.
+    # =============================================================================
+
+    def callback(result):
+        new_wt, new_gt, tag_sequences = result
+        word_tag_dict.combine(new_wt)
+        gram_tag_dict.combine(new_gt)
+
+        # If the tagger stuff is enabled...
+        if tagger_prefix is not None:
+            for tag_sequence in tag_sequences:
+                sent = ' '.join(['{}/{}'.format(x.seq, x.label) for x in tag_sequence])
+                tagger_train_f.write('{}\n'.format(sent))
+                tagger_train_f.flush()
+
+
     for path in input_filelist:
-        p.apply_async(process_file, args=[path], callback=lambda x: merge_dicts(x, word_tag_dict, gram_tag_dict))
+        # p.apply_async(process_file, args=[path, classifier_prefix, cfg_prefix, tagger_prefix], callback=lambda x: merge_dicts(x, word_tag_dict, gram_tag_dict))
+        callback(process_file(path, classifier_prefix, cfg_prefix, tagger_prefix))
+
 
     p.close()
     p.join()
 
-    # Finally, try training the classifier on this file...
+    # =============================================================================
+    # Classifier output...
+    # =============================================================================
+
     if classifier_prefix is not None:
 
         # The path for the svm-light-based features.
@@ -63,14 +93,21 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_path=No
         train_txt(feat_path, class_path)
         print("Complete.")
 
-def extract_from_instances(inst_list, class_out_path, feat_out_path, cfg_out_path, threshold=1):
+    # =============================================================================
+    # Tagger output...
+    # =============================================================================
+    if tagger_prefix is not None:
+        pass
+
+
+def extract_from_instances(inst_list, classifier_prefix, feat_out_path, cfg_prefix, threshold=1):
     """
     Given a list of instances, extract the specified items.
 
     :param inst_list:
-    :param class_out_path:
+    :param classifier_prefix:
     :param feat_out_path:
-    :param cfg_out_path:
+    :param cfg_prefix:
     :param threshold:
     """
     cpus = cpu_count()
@@ -80,7 +117,7 @@ def extract_from_instances(inst_list, class_out_path, feat_out_path, cfg_out_pat
     gtd = TwoLevelCountDict()
 
     for chunk in chunkIt(inst_list, cpus):
-        p.apply_async(process_instances, args=[chunk], callback=lambda x: merge_dicts(x, wtd, gtd))
+        p.apply_async(process_instances, args=[chunk, classifier_prefix, cfg_prefix], callback=lambda x: callback(x, wtd, gtd))
 
     p.close()
     p.join()
@@ -90,16 +127,16 @@ def extract_from_instances(inst_list, class_out_path, feat_out_path, cfg_out_pat
     write_out_gram_dict(wtd, feat_out_path, threshold=threshold)
 
     # Write out the classifier...
-    return train_txt(feat_out_path, class_out_path)
+    return train_txt(feat_out_path, classifier_prefix)
 
 # =============================================================================
-# Parallelization
+# PARALLELIZATION FUNCTIONS
 #
 # Functions to handle single files in parallel, and the callback to merge their
 # results.
 # =============================================================================
 
-def process_file(path):
+def process_file(path, classifier_prefix, cfg_prefix, tagger_prefix):
     """
     Given a XIGT-XML file, load it and do preprocessing.
 
@@ -110,27 +147,44 @@ def process_file(path):
     xc = RGCorpus.load(path)
 
     # Now, iterate through each instance in the corpus...
-    return process_instances(xc)
+    return process_instances(xc, classifier_prefix, cfg_prefix, tagger_prefix)
 
-def _merge_tlcd(old, new):
-    for key_a in new.keys():
-        for key_b in new[key_a].keys():
-            old.add(key_a, key_b, new[key_a][key_b])
+# =============================================================================
+# Process the list of instances...
+# =============================================================================
 
-def process_instances(inst_list):
+def process_instances(inst_list, classifier_prefix, cfg_prefix, tagger_prefix):
     """
     Given a list of instances, gather the necessary stats to train a classifier.
 
-    :param inst_list: list[RGIgt]
+    :param inst_list: List of instances to process
+    :type inst_list: list[RGIgt]
+    :type classifier_prefix: str
+    :type cfg_prefix: str
+    :type tagger_prefix: str
     :return:
     """
     cur_word_tag_dict = TwoLevelCountDict()
     cur_gram_tag_dict = TwoLevelCountDict()
 
-    for inst in inst_list:
-        gather_gloss_pos_stats(inst, cur_word_tag_dict, cur_gram_tag_dict)
+    lang_tag_sequences = []
 
-    return cur_word_tag_dict, cur_gram_tag_dict
+    for inst in inst_list:
+
+        # Get the gloss POS stats for the classifier...
+        if classifier_prefix is not None:
+            gather_gloss_pos_stats(inst, cur_word_tag_dict, cur_gram_tag_dict)
+
+        # Also gather the tag sequences from the language line.
+        if tagger_prefix is not None:
+            try:
+                lang_tag_sequences.append(inst.get_lang_sequence())
+            except ProjectionException as pe:
+                EXTRACT_LOG.warn('Unable to extract tags from instance "{}"'.format(inst.id))
+
+    return cur_word_tag_dict, cur_gram_tag_dict, lang_tag_sequences
+
+
 
 # =============================================================================
 # Preprocessing
@@ -178,6 +232,8 @@ def gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict):
             morphs = tokenize_string(word, tokenizer=morpheme_tokenizer)
             for morph in morphs:
                 gram_tag_dict.add(morph.seq.lower(), tag)
+
+
 
 # =============================================================================
 # Postprocessing

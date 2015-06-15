@@ -141,13 +141,13 @@ filter_p = subparsers.add_parser('filter', help='Command to filter input file(s)
 
 filter_p.add_argument('FILE', nargs='+', help='XIGT files to filter.', type=globfiles)
 filter_p.add_argument('-o', '--output', help='Output file (Combine from inputs)', required=True)
-filter_p.add_argument('--require-lang', help='Require instances to have language line', choices=['true','false'], default='true')
-filter_p.add_argument('--require-gloss', help='Require instances to have gloss line', choices=['true', 'false'], default='true')
-filter_p.add_argument('--require-trans', help='Require instances to have trans line', choices=['true', 'false'], default='true')
+filter_p.add_argument('--require-lang', help='Require instances to have language line', action='store_true', default=False)
+filter_p.add_argument('--require-gloss', help='Require instances to have gloss line', action='store_true', default=False)
+filter_p.add_argument('--require-trans', help='Require instances to have trans line', action='store_true', default=False)
 
-filter_p.add_argument('--require-gloss-pos', help='Require instance to have gloss pos tags', choices=['true', 'false'], default='false')
+filter_p.add_argument('--require-gloss-pos', help='Require instance to have gloss pos tags', action='store_true', default=False)
 
-filter_p.add_argument('--require-aln', help='Require instances to have 1-to-1 gloss/lang alignment.', choices=['true','false'], default='true')
+filter_p.add_argument('--require-aln', help='Require instances to have 1-to-1 gloss/lang alignment.', action='store_true', default=False)
 filter_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 #===============================================================================
@@ -160,8 +160,9 @@ filter_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity
 extract_p = subparsers.add_parser('extract', help='Command to extract data from enriched XIGT-XML files')
 
 extract_p.add_argument('FILE', nargs='+', help='XIGT files to include.', type=globfiles)
-extract_p.add_argument('--gloss-classifier', help='Output prefix for gloss-line classifier (No extension).')
-extract_p.add_argument('--cfg-rules', help='Output path for cfg-rules.')
+extract_p.add_argument('--gloss-classifier', help='Output prefix for gloss-line classifier (No extension).', default=None)
+extract_p.add_argument('--lang-tagger', help='Output prefix for lang-line tagger.', default=None)
+extract_p.add_argument('--cfg-rules', help='Output path for cfg-rules.', default=None)
 extract_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 #===============================================================================
@@ -197,17 +198,30 @@ from intent import subcommands
 
 logging.getLogger().setLevel(logging.WARNING - 10 * (min(args.verbose, 2)))
 
+# ENRICH
 if args.subcommand == 'enrich':
     subcommands.enrich(**vars(args))
+
+# ODIN
 elif args.subcommand == 'odin':
     subcommands.odin(**vars(args))
+
+# STATS
 elif args.subcommand == 'stats':
     igt_stats(flatten_list(args.FILE), type='xigt')
+
+# SPLIT
 elif args.subcommand == 'split':
     split_corpus(flatten_list(args.FILE), args.train, args.dev, args.test, prefix=args.prefix, overwrite=args.overwrite)
+
+# FILTER
 elif args.subcommand == 'filter':
     filter_corpus(flatten_list(args.FILE), args.output, args.require_lang, args.require_gloss, args.require_trans, args.require_aln, args.require_gloss_pos)
+
+# EXTRACT
 elif args.subcommand == 'extract':
-    extract_from_xigt(flatten_list(args.FILE), args.gloss_classifier, args.cfg_rules)
+    extract_from_xigt(flatten_list(args.FILE), args.gloss_classifier, args.cfg_rules, args.lang_tagger)
+
+# EVAL
 elif args.subcommand == 'eval':
     evaluate_intent(flatten_list(args.FILE), args.classifier, args.alignment)
