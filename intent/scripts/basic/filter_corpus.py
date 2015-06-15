@@ -50,6 +50,7 @@ def filter_corpus(filelist, outpath, require_lang=True, require_gloss=True, requ
 
     for f in filelist:
         pool.apply_async(filter_instance, args=[f, require_lang, require_gloss, require_trans, require_aln, require_gloss_pos], callback=merge_to_new_corp)
+        # merge_to_new_corp(filter_instance(f, require_lang, require_gloss, require_trans, require_aln, require_gloss_pos))
 
     pool.close()
     pool.join()
