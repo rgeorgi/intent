@@ -26,11 +26,26 @@ gramdict = {'1sg': ['i', 'me'],
             '2pl': ['you']}
 
 
+
 def sub_grams(gram):
     if gram in gramdict:
         return gramdict[gram]
     else:
         return [gram]
+
+# =============================================================================
+# Fix grams
+#
+# =============================================================================
+def fix_gram(gram):
+    if gram is not None:
+        gram = gram.replace(':', '-')
+        gram = gram.replace('#', '-')
+        gram = re.sub('\s+', '', gram)
+        return gram
+    else:
+        return None
+
 
 # ===============================================================================
 # Write Gram
@@ -55,7 +70,6 @@ def write_gram(token, **kwargs):
     next_gram = kwargs.get('next_gram')
 
 
-
     # Get heuristic alignment
     aln_labels = kwargs.get('aln_labels', [])
 
@@ -70,8 +84,8 @@ def write_gram(token, **kwargs):
     lower = kwargs.get('lowercase', True, bool)
     gram = gram.lower() if gram else gram
 
-    # A gram should never contain whitespace...
-    gram = re.sub('\s', '', gram)
+    # Fix the various issues with the grams.
+    gram = fix_gram(gram)
 
     # ===========================================================================
     # Do some cleaning on the gram....
@@ -98,8 +112,13 @@ def write_gram(token, **kwargs):
 
         morphs = intent.utils.token.tokenize_string(gram, intent.utils.token.morpheme_tokenizer)
 
+        # =============================================================================
+        # Gram cleaning....
+        # =============================================================================
+
         # Replace the characters that cause the svmlight format issues.
         gram = gram.replace(':', '-')
+        gram = gram.replace('#', '-')
 
         # =======================================================================
         # Is there a number
@@ -146,7 +165,7 @@ def write_gram(token, **kwargs):
             for token in intent.utils.token.tokenize_string(prev_gram, intent.utils.token.morpheme_tokenizer):
 
                 if kwargs.get('feat_prev_gram', True, bool):
-                    output.write('\tprev-gram-%s:1' % token.seq)
+                    output.write('\tprev-gram-%s:1' % fix_gram(token.seq))
 
                 # Add prev dictionary tag
                 if posdict and kwargs.get('feat_prev_gram_dict', True, bool) and token.seq in posdict:
@@ -162,6 +181,7 @@ def write_gram(token, **kwargs):
         # ===================================================================
         if next_gram and kwargs.get('feat_next_gram', True, bool):
             next_gram = next_gram.lower() if lower else next_gram
+
             for token in intent.utils.token.tokenize_string(next_gram, intent.utils.token.morpheme_tokenizer):
 
                 # ===================================================================
@@ -169,7 +189,7 @@ def write_gram(token, **kwargs):
                 # ===================================================================
 
                 if kwargs.get('feat_next_gram', True, bool):
-                    output.write('\tnext-gram-%s:1' % token.seq)
+                    output.write('\tnext-gram-%s:1' % fix_gram(token.seq))
 
                 if posdict and kwargs.get('feat_next_gram_dict', True, bool) and token.seq in posdict:
                     next_tags = posdict.top_n(token.seq)

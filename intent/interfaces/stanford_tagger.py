@@ -1,8 +1,8 @@
-'''
+"""
 Created on Oct 22, 2013
 
 @author: rgeorgi
-'''
+"""
 
 import os, sys, re, unittest, time, logging
 import subprocess as sub
@@ -49,14 +49,18 @@ def stanford_stderr_handler(line):
 
 
 class StanfordPOSTagger(object):
-    '''
+    """
     Instantiate a java VM to run the stanford tagger.
-    '''
+    """
     def __init__(self, model):
 
         # Get the jar defined in the env.conf file.
 
         # If the .jar is not defined... ----------------------------------------
+        """
+        :param model: Path to the model file.
+        :type model: str
+        """
         if tagger_jar is None:
             TAG_LOG.critical('Path to the stanford tagger .jar file is not defined.')
             raise TaggerError('Path to the stanford tagger .jar file is not defined.')
@@ -107,9 +111,15 @@ class StanfordPOSTagger(object):
 # Functions to call for testing and training.
 #===============================================================================
 
-def train(train_file, model_path, delimeter = '/'):
-    # Exists
-    existsfile(train_file)
+def train_postagger(train_file, model_path, delimeter = '/'):
+    """
+    Given the slashtag file train_file, train a tagger model from it and
+    output it to model_path.
+
+    :param train_file: Path to input slashtag file
+    :param model_path: Path to output the model
+    :param delimeter: Delimeter to separate words/tags
+    """
 
     # If the model path doesn't exists, create it
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
@@ -117,6 +127,8 @@ def train(train_file, model_path, delimeter = '/'):
     cmd = '%s -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (java_bin, tagger_jar, model_path, train_file, delimeter)
 
     piperunner(cmd, 'stanford_tagger')
+
+    return StanfordPOSTagger(model_path)
 
 def eval(test_file, model_path, delimeter = '/'):
     global stanford_jar
@@ -165,7 +177,7 @@ if __name__ == '__main__':
         log_f = open(c.get('log_path'), 'w', encoding='utf-8')
 
     # Now do the testing and training
-    train(c['train_file'],
+    train_postagger(c['train_file'],
           c['model'],
           c['delimeter'])
     test(c['test_file'],

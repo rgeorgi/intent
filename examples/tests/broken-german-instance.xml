@@ -1,0 +1,38 @@
+<xigt-corpus>
+<igt xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="igt71550" doc-id="245" line-range="417-418" tag-types="L G">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="deu" xsi:type="olac:language">german</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="417" tag="L">         a.      Was/#Wer ist Peter?</item>
+      <item id="r2" line="418" tag="G">                 what/#who is Peter</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="417" tag="L">         a.      Was/#Wer ist Peter?</item>
+      <item id="c2" alignment="r2" line="418" tag="G">                 what/#who is Peter</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="417" tag="L">Was/#Wer ist Peter?</item>
+      <item id="n2" alignment="c2" line="418" tag="G">what/#who is Peter</item>
+    </tier>
+    <tier id="gw" type="glosses" content="n">
+      <metadata type="intent-meta">
+        <meta type="extended-data" date="2015-06-15 00:15:36-UTC" token-type="word" />
+      </metadata>
+      <item id="gw1" content="n2[0:9]" />
+      <item id="gw2" content="n2[10:12]" />
+      <item id="gw3" content="n2[13:18]" />
+    </tier>
+    <tier id="p" type="phrases" content="n">
+      <item id="p1" content="n1" />
+    </tier>
+    <tier id="w" type="words" segmentation="p">
+      <item id="w1" segmentation="p1[0:8]" />
+      <item id="w2" segmentation="p1[9:12]" />
+      <item id="w3" segmentation="p1[13:19]" />
+    </tier>
+  </igt>
+</xigt-corpus>

@@ -11,7 +11,7 @@ from io import StringIO
 from intent.igt.consts import INTENT_POS_CLASS, INTENT_POS_PROJ, ODIN_GLOSS_TAG, ODIN_LANG_TAG, ODIN_TRANS_TAG
 from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
     PhraseStructureProjectionException, ProjectionException,\
-    ProjectionTransGlossException, word_align, retrieve_normal_line, NoNormLineException
+    ProjectionTransGlossException, word_align, retrieve_normal_line, NoNormLineException, MultipleNormLineException
 
 from intent.utils.arg_consts import PARSE_VAR, PARSE_TRANS, POS_VAR, ALN_VAR, POS_LANG_CLASS, ALN_HEUR, \
     ALN_GIZA, POS_LANG_PROJ, PARSE_LANG_PROJ, POS_TRANS
@@ -146,19 +146,19 @@ def enrich(**kwargs):
             # -- A) Language Lines
             try:
                 retrieve_normal_line(inst, ODIN_LANG_TAG)
-            except NoNormLineException as e:
+            except (NoNormLineException, MultipleNormLineException) as e:
                 has_lang = False
 
             # -- B) Gloss Lines
             try:
                 retrieve_normal_line(inst, ODIN_GLOSS_TAG)
-            except NoNormLineException as e:
+            except (NoNormLineException, MultipleNormLineException) as e:
                 has_gloss = False
 
             # -- C) Trans Lines
             try:
                 retrieve_normal_line(inst, ODIN_TRANS_TAG)
-            except NoNormLineException as e:
+            except (NoNormLineException, MultipleNormLineException) as e:
                 has_trans = False
 
 

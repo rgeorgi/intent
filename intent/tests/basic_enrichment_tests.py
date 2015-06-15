@@ -8,7 +8,7 @@ __author__ = 'rgeorgi'
 
 class NoRawTest(TestCase):
     def setUp(self):
-        self.xc = RGCorpus.load(os.path.join(proj_root, './data/testcases/no_raw.xml'))
+        self.xc = RGCorpus.load(os.path.join(proj_root, './examples/tests/no_raw.xml'))
 
     def no_raw_test(self):
         """
@@ -58,4 +58,3 @@ class NoRawTest(TestCase):
 
     def word_align_test(self):
         word_align(self.xc[0].gloss, self.xc[0].lang)
-        rgp(self.xc)
