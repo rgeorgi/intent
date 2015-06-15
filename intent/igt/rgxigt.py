@@ -1243,7 +1243,6 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             w_content = re.sub(punc_re, '', w_content)
 
-
             seq.append(POSToken(w_content, label=tag_str))
         return seq
 
@@ -2192,9 +2191,12 @@ def create_words_tier(cur_item, word_id, word_type, aln_attribute = SEGMENTATION
     :rtype: RGWordTier
     """
 
-
-    # Tokenize the words in this phrase...
-    words = intent.utils.token.tokenize_item(cur_item, tokenizer=tokenizer)
+    # For the edge case in which the gloss line is defined, but empty.
+    if cur_item.value() is None or not cur_item.value().strip():
+        words = []
+    else:
+        # Tokenize the words in this phrase...
+        words = intent.utils.token.tokenize_item(cur_item, tokenizer=tokenizer)
 
     # Create a new word tier to hold the tokenized words...
     wt = RGWordTier(id = word_id, type=word_type, attributes={aln_attribute:cur_item.tier.id}, igt=cur_item.igt)
