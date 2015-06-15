@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
-DIR=`dirname $DIR`
-
-export PYTHONPATH=$DIR/src:$PYTHONPATH
-
-python3.3 $DIR/src/scripts/igt/xigt_align.py $@

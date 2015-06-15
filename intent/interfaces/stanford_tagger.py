@@ -122,7 +122,9 @@ def train_postagger(train_file, model_path, delimeter = '/'):
     """
 
     # If the model path doesn't exists, create it
-    os.makedirs(os.path.dirname(model_path), exist_ok=True)
+    dirname = os.path.dirname(model_path)
+    if dirname:
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)
 
     cmd = '%s -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (java_bin, tagger_jar, model_path, train_file, delimeter)
 
@@ -130,26 +132,42 @@ def train_postagger(train_file, model_path, delimeter = '/'):
 
     return StanfordPOSTagger(model_path)
 
-def eval(test_file, model_path, delimeter = '/'):
-    global stanford_jar
-    cmd = '%s -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s' % (java_bin, stanford_jar, model_path, test_file, delimeter )
-    piperunner(cmd, 'stanford_tagger')
+
+def test_postagger(test_file, model_path, out_file, delimeter = '/'):
 
 
-def test(test_file, model_path, out_file, delimeter = '/'):
-    global stanford_jar
+    """
 
-    existsfile(test_file)
-    existsfile(model_path)
-
+    :param test_file:
+    :param model_path:
+    :param out_file:
+    :param delimeter:
+    """
     # If the folder for the output file doesn't exist, create it.
-    os.makedirs(os.path.dirname(out_file), exist_ok=True)
+    dirname = os.path.dirname(out_file)
+    if dirname:
+        os.makedirs(os.path.dirname(out_file), exist_ok=True)
 
-    cmd = '%s -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -textFile %s -sentenceDelimiter newline -tokenize false -tagSeparator %s -outputFormat slashTags -outputFile %s' % (java_bin, stanford_jar, model_path, test_file, delimeter, out_file)
-    piperunner(cmd, 'stanford_tagger')
+    cmd = [java_bin, '-Xmx4096m', '-cp', tagger_jar,
+           'edu.stanford.nlp.tagger.maxent.MaxentTagger',
+           '-arch', 'generic',
+           '-model', model_path,
+           '-textFile', test_file,
+           '-sentenceDelimiter', 'newline',
+           '-tokenize', 'false',
+           '-tagSeparator', delimeter,
+           '-outputFile', out_file]
+
+    STANFORD_LOG.info(' '.join(cmd))
+
+    p = sub.Popen(cmd)
+    p.wait()
+
+    #p = ProcessCommunicator(cmd)
+    #p.wait()
 
 # Make sure nosetests doesn't think this is a unit test
-test.__test__ = False
+test_postagger.__test__ = False
 
 def tag(string, model):
     pt = StanfordPOSTagger(tagger_model, tagger_jar)

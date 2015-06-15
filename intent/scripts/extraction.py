@@ -7,6 +7,7 @@ from intent.igt.consts import POS_TIER_TYPE, GLOSS_WORD_ID
 from intent.igt.grams import write_gram
 from intent.igt.igtutils import rgp
 from intent.interfaces.mallet_maxent import train_txt
+from intent.interfaces.stanford_tagger import train_postagger
 from intent.utils.listutils import chunkIt
 from intent.utils.token import GoldTagPOSToken, tokenize_string, morpheme_tokenizer
 from xigt.consts import ALIGNMENT
@@ -39,23 +40,32 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_prefix=
     word_tag_dict = TwoLevelCountDict()
     gram_tag_dict = TwoLevelCountDict()
 
-    # ---------------------------------------------------------------------------
+    # =============================================================================
+    # 1) SET UP
+    # =============================================================================
 
+    # Set up the classifier....
     if classifier_prefix is not None:
         print("Gathering statistics on POS tags...")
 
+    # Set up the tagger training file...
     if tagger_prefix is not None:
         tagger_train_path = tagger_prefix+'_train.txt'
-        print('Writing tagger training file out to "{}"'.format(tagger_prefix))
+        tagger_model_path = tagger_prefix+'.tagger'
+
+        print('Opening tagger training file at "{}"'.format(tagger_train_path))
         tagger_train_f = open(tagger_train_path, 'w', encoding='utf-8')
 
     cpus = cpu_count()
     p = Pool(cpus)
 
-    # =============================================================================
-    # Call "process_file" to process each file we are working with.
-    # =============================================================================
 
+    # =============================================================================
+    # 2) Callback
+    #
+    #    Callback function for processing the files after being processed by
+    #    process_file
+    # =============================================================================
     def callback(result):
         new_wt, new_gt, tag_sequences = result
         word_tag_dict.combine(new_wt)
@@ -64,15 +74,29 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_prefix=
         # If the tagger stuff is enabled...
         if tagger_prefix is not None:
             for tag_sequence in tag_sequences:
-                sent = ' '.join(['{}/{}'.format(x.seq, x.label) for x in tag_sequence])
-                tagger_train_f.write('{}\n'.format(sent))
+                for token in tag_sequence:
+                    content = token.seq
+
+                    # TODO: Replacing the grammatical markers...?
+                    content = content.replace('*', '')
+                    content = content.replace('#', '')
+
+                    label   = token.label
+
+                    # FIXME: Also, should not indiscriminately drop words, but come up with a better way to fix this
+                    if content.strip():
+                        tagger_train_f.write('{}/{} '.format(content,label))
+
+                tagger_train_f.write('\n')
                 tagger_train_f.flush()
+
+            for t in ['?','“','"',"''","'",',','…','/','--','-','``','`',':',';','«','»']:
+                tagger_train_f.write('{}{}{}\n'.format(t,'/','PUNC'))
 
 
     for path in input_filelist:
         # p.apply_async(process_file, args=[path, classifier_prefix, cfg_prefix, tagger_prefix], callback=lambda x: merge_dicts(x, word_tag_dict, gram_tag_dict))
         callback(process_file(path, classifier_prefix, cfg_prefix, tagger_prefix))
-
 
     p.close()
     p.join()
@@ -97,7 +121,14 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_prefix=
     # Tagger output...
     # =============================================================================
     if tagger_prefix is not None:
-        pass
+        tagger_train_f.close()
+
+
+        print('Training postagger using "{}"'.format(tagger_train_path))
+        # Now, train the POStagger...
+        train_postagger(tagger_train_path, tagger_model_path)
+        print("Tagger training complete.")
+
 
 
 def extract_from_instances(inst_list, classifier_prefix, feat_out_path, cfg_prefix, threshold=1):

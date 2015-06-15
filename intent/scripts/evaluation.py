@@ -15,7 +15,16 @@ from xigt.consts import ALIGNMENT
 __author__ = 'rgeorgi'
 
 def evaluate_intent(filelist, classifier_path, eval_alignment):
+    """
+    Given a list of files that have manual POS tags and manual alignment,
+    evaluate the various INTENT methods on that file.
 
+    :param filelist: List of paths to evaluate against.
+    :type filelist: list[str]
+    :param classifier_path: Path to the classifier model
+    :type classifier_path: str
+    :param eval_alignment:
+    """
     tagger = StanfordPOSTagger(tagger_model)
 
     if classifier_path:
@@ -29,12 +38,10 @@ def evaluate_intent(filelist, classifier_path, eval_alignment):
         print('Evaluating on file: {}'.format(f))
         xc = RGCorpus.load(f)
 
-
         prj_eval, cls_eval = evaluate_classifier_on_instances(xc, classifier, tagger)
 
         overall_prj += prj_eval
         overall_cls += cls_eval
-
 
     print("ALL...")
     print('{:.2f},{:.2f}'.format(overall_prj.accuracy(), overall_cls.accuracy()))

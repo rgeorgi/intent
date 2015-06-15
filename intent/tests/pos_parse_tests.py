@@ -13,7 +13,7 @@ class parse_wsj_tests(TestCase):
 
         def count_tokens(tokens):
             for token in tokens:
-                tc.add(token.label())
+                tc.add(token.label)
 
         process_wsj_file(path, count_tokens)
 

@@ -5,7 +5,7 @@ Created on Feb 24, 2015
 """
 from unittest import TestCase
 import os
-from intent.igt.consts import INTENT_ALN_HEUR, INTENT_ALN_GIZA
+from intent.igt.consts import INTENT_ALN_HEUR, INTENT_ALN_GIZA, INTENT_POS_PROJ
 
 from intent.igt.rgxigt import RGCorpus, GlossLangAlignException, RGIgt
 from intent.alignment.Alignment import Alignment
@@ -17,10 +17,12 @@ xc = RGCorpus.load(os.path.join(testfile_dir, "kor-ex.xml"))
 
 class GlossAlignTest(TestCase):
 
-    def test_gloss_align(self):
+    def test_gloss_projection_unaligned(self):
         xc = RGCorpus.load(os.path.join(testfile_dir, "project_gloss_lang_tests.xml"))
-        igt = xc.igts[0]
-        self.assertRaises(GlossLangAlignException, igt.project_gloss_to_lang)
+        igt = xc[0]
+        igt.project_gloss_to_lang(tag_method=INTENT_POS_PROJ)
+        self.assertEqual('UNK', igt.get_pos_tags(igt.lang.id, INTENT_POS_PROJ)[-1].value())
+
 
 
 #===============================================================================

@@ -236,6 +236,9 @@ class Tokenization(list):
         """
         return super().__getitem__(item)
 
+    def slashtags(self, delimiter='/'):
+        return ' '.join(['{}{}{}'.format(x.seq, delimiter, x.label) for x in self])
+
 
 class Span(object):
     """

@@ -24,7 +24,7 @@ from intent.utils.dicts import POSEvalDict
 # 
 #===============================================================================
 
-def slashtags_eval(goldpath, testpath, delimeter, out_f=sys.stdout, tagmap=None):
+def slashtags_eval(goldpath, testpath, delimiter, out_f=sys.stdout, tagmap=None, matrix=False, details=False):
     '''
     Evaluate a "slashtags" format file
 
@@ -32,8 +32,8 @@ def slashtags_eval(goldpath, testpath, delimeter, out_f=sys.stdout, tagmap=None)
     :type goldpath:
     :param testpath:
     :type testpath:
-    :param delimeter:
-    :type delimeter:
+    :param delimiter:
+    :type delimiter:
     :param out_f:
     :type out_f:
     :param tagmap:
@@ -45,7 +45,7 @@ def slashtags_eval(goldpath, testpath, delimeter, out_f=sys.stdout, tagmap=None)
     gold_c = POSCorpus.read_slashtags(goldpath)
     test_c = POSCorpus.read_slashtags(testpath)
 
-    poseval(test_c, gold_c, out_f)
+    poseval(test_c, gold_c, out_f, matrix=matrix, details=details)
 
 #===============================================================================
 # 
