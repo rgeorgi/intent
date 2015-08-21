@@ -8,6 +8,7 @@ This script is used to point at a dump of the ODIN database and extract the spec
 
 # Built-in imports -------------------------------------------------------------
 import argparse, re, logging
+import sys
 
 EXTR_LOG = logging.getLogger('LANG_EXTRACTOR')
 
@@ -16,48 +17,55 @@ from intent.utils.argutils import configfile, writefile
 from intent.utils.fileutils import matching_files
 
 def extract_lang(dir, lang, outfile, limit=None):
-    
+
     i = 0
     EXTR_LOG.info('Extracting language "%s" from ODIN...' % lang)
 
     # Iterate through each ".check" file in the given directory.
-    for path in matching_files(dir, '.*\.check$', recursive=True):
+    try:
+        matching_paths = matching_files(dir, '.*\.check$', recursive=True)
+    except FileNotFoundError as fnfe:
+        EXTR_LOG.critical("Path {} was not found.".format(dir))
+        sys.exit(10)
+    else:
 
-        EXTR_LOG.debug('Working on path... "%s"' % path)
+        for path in matching_paths:
 
-        # Open up the file...
-        f = open(path, 'r', encoding='latin-1')
-        data = f.read()
-        f.close()
+            EXTR_LOG.debug('Working on path... "%s"' % path)
 
-        # And get the list of instances.
-        instances = re.split('\n\n+', data)
+            # Open up the file...
+            f = open(path, 'r', encoding='latin-1')
+            data = f.read()
+            f.close()
 
-        # Remove blank "instances"
-        instances = [i for i in instances if i.strip()]
+            # And get the list of instances.
+            instances = re.split('\n\n+', data)
 
-        # Now, for each instance, look for the language.
-        for instance in instances[1:]: # <-- skip the first pgph, because it's not an instance.
+            # Remove blank "instances"
+            instances = [i for i in instances if i.strip()]
 
-            inst_lang = None
-            # First, if there is a "gold" lang code, use that one.
-            gold_re = re.search('gold_lang_code:.*?\(([a-z:]+)\)', instance, flags=re.I)
-            chosen_re = re.search('stage3_lang_chosen:.*?\(([a-z:]+)\)', instance, flags=re.I)
+            # Now, for each instance, look for the language.
+            for instance in instances[1:]: # <-- skip the first pgph, because it's not an instance.
 
-            if gold_re:
-                inst_lang = gold_re.group(1)
+                inst_lang = None
+                # First, if there is a "gold" lang code, use that one.
+                gold_re = re.search('gold_lang_code:.*?\(([a-z:]+)\)', instance, flags=re.I)
+                chosen_re = re.search('stage3_lang_chosen:.*?\(([a-z:]+)\)', instance, flags=re.I)
 
-            elif chosen_re:
-                inst_lang = chosen_re.group(1)
+                if gold_re:
+                    inst_lang = gold_re.group(1)
 
-            if inst_lang == lang:
-                outfile.write(instance+'\n\n')
-                i += 1
-                if limit and i == limit: break
+                elif chosen_re:
+                    inst_lang = chosen_re.group(1)
 
-        if limit and i == limit: break
+                if inst_lang == lang:
+                    outfile.write(instance+'\n\n')
+                    i += 1
+                    if limit and i == limit: break
 
-    EXTR_LOG.info('%d instances written.' % i)
+            if limit and i == limit: break
+
+        EXTR_LOG.info('%d instances written.' % i)
 
 
 if __name__ == '__main__':
