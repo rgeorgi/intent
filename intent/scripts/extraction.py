@@ -3,7 +3,7 @@ from multiprocessing.pool import Pool
 from multiprocessing import cpu_count
 import sys
 
-from intent.igt.consts import POS_TIER_TYPE, GLOSS_WORD_ID
+from intent.igt.consts import POS_TIER_TYPE, GLOSS_WORD_ID, LANG_WORD_ID
 from intent.igt.grams import write_gram
 from intent.igt.igtutils import rgp
 from intent.interfaces.mallet_maxent import train_txt
@@ -240,7 +240,14 @@ def gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict):
     """
 
     # Grab the gloss POS tier...
-    gpos_tier = inst.find(alignment=GLOSS_WORD_ID, type=POS_TIER_TYPE)
+    gpos_tier = inst.get_pos_tags(GLOSS_WORD_ID)
+    lpos_tier = inst.get_pos_tags(LANG_WORD_ID)
+
+    # If there are POS tags on the language line but not the gloss line...
+    if gpos_tier is None and lpos_tier is not None:
+        inst.add_gloss_lang_alignments()
+        inst.project_lang_to_gloss()
+        gpos_tier = inst.get_pos_tags(GLOSS_WORD_ID)
 
     # If this tier exists, then let's process it.
     if gpos_tier is not None:
