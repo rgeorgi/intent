@@ -2,7 +2,7 @@ import sys
 from tempfile import NamedTemporaryFile
 from intent.eval.pos_eval import poseval
 from intent.igt.consts import GLOSS_WORD_ID, MANUAL_POS, INTENT_POS_PROJ, INTENT_POS_CLASS, INTENT_ALN_HEUR, \
-    INTENT_POS_TAGGER
+    INTENT_POS_TAGGER, LANG_WORD_ID
 from intent.igt.igtutils import rgp
 from intent.igt.rgxigt import RGCorpus, RGIgt, strip_pos
 from intent.interfaces.mallet_maxent import MalletMaxent
@@ -37,7 +37,6 @@ def evaluate_intent(filelist, classifier_path, eval_alignment):
     for f in filelist:
         print('Evaluating on file: {}'.format(f))
         xc = RGCorpus.load(f)
-
         prj_eval, cls_eval = evaluate_classifier_on_instances(xc, classifier, tagger)
 
         overall_prj += prj_eval
@@ -60,12 +59,19 @@ def evaluate_instance(inst, classifier, tagger):
     :param classifier: MalletMaxent
     :param tagger: StanfordPOSTagger
     """
-    sup_tier = inst.get_pos_tags(GLOSS_WORD_ID)  # We will incrementally build up the tag sequences...
+    sup_gloss_tier = inst.get_pos_tags(GLOSS_WORD_ID)  # We will incrementally build up the tag sequences...
+    sup_lang_tier  = inst.get_pos_tags(LANG_WORD_ID)
     sup_tags = []
     prj_tags = []
     cls_tags = []
 
-    if sup_tier:
+    # If there are no supervised tags on the gloss line, but there are on the language line...
+    if sup_gloss_tier is None and sup_lang_tier is not None:
+        inst.add_gloss_lang_alignments()
+        inst.project_lang_to_gloss()
+        sup_gloss_tier = inst.get_pos_tags(GLOSS_WORD_ID)
+
+    if sup_gloss_tier:
 
         # Do the classification
         inst.classify_gloss_pos(classifier)
@@ -82,7 +88,7 @@ def evaluate_instance(inst, classifier, tagger):
         prj_tier = inst.get_pos_tags(GLOSS_WORD_ID, tag_method=INTENT_POS_PROJ)
         cls_tier = inst.get_pos_tags(GLOSS_WORD_ID, tag_method=INTENT_POS_CLASS)
 
-        for sup_item in sup_tier:
+        for sup_item in sup_gloss_tier:
             word = inst.find(id=sup_item.alignment)
             if not word:
                 continue
