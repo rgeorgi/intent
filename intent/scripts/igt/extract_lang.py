@@ -65,7 +65,7 @@ def extract_lang(dir, lang, outfile, limit=None):
 
             if limit and i == limit: break
 
-        EXTR_LOG.info('%d instances written.' % i)
+        print("{} instances written.".format(i))
 
 
 if __name__ == '__main__':

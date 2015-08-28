@@ -20,6 +20,7 @@ from multiprocessing import cpu_count
 from intent.utils.listutils import chunkIt
 
 STATS_LOGGER = logging.getLogger(__name__)
+#STATS_LOGGER.setLevel(logging.INFO)
 
 #===============================================================================
 # IMPORTS
@@ -27,7 +28,8 @@ STATS_LOGGER = logging.getLogger(__name__)
 
 from collections import defaultdict
 
-from intent.igt.rgxigt import RGCorpus, RGIgt
+from intent.igt.rgxigt import RGCorpus, RGIgt, MultipleNormLineException, NoGlossLineException, NoLangLineException, \
+    NoTransLineException
 from intent.igt import rgxigt
 from intent.utils.dicts import StatDict, CountDict, TwoLevelCountDict
 from intent.utils.token import tokenize_string, tag_tokenizer
@@ -57,6 +59,8 @@ def avg_tags_per_word(word_tag_dict):
 class IGTStatDict(object):
     def __init__(self):
         self.instances = 0
+        self.corrupt_instances = 0
+        self.double_column_instances = 0
         self.lang = CountDict()
         self.gloss = CountDict()
         self.trans = CountDict()
@@ -75,16 +79,17 @@ class IGTStatDict(object):
         keys = ['instances',
                 'lang_types', 'lang_tokens',
                 'gloss_types','gloss_tokens',
-                'lang_types','lang_tokens']
+                'lang_types','lang_tokens','corrupt_instances','double_column_instances']
 
         return ','.join(keys)
 
     def __str__(self):
         # instances, lang_types, lang_tokens, gloss_types, gloss_tokens, trans_types, trans_tokens
-        return '{},{},{},{},{},{},{}'.format(self.instances,
-                                       len(self.lang), self.lang.total(),
-                                       len(self.gloss), self.gloss.total(),
-                                       len(self.trans), self.trans.total())
+        return '{},{},{},{},{},{},{},{},{}'.format(self.instances,
+                                                   len(self.lang), self.lang.total(),
+                                                   len(self.gloss), self.gloss.total(),
+                                                   len(self.trans), self.trans.total(),
+                                                   self.corrupt_instances, self.double_column_instances)
 
     def combine(self, other):
         """
@@ -93,6 +98,9 @@ class IGTStatDict(object):
         """
 
         self.instances += other.instances
+        self.corrupt_instances += other.corrupt_instances
+        self.double_column_instances += other.double_column_instances
+
         self.lang += other.lang
         self.gloss += other.gloss
         self.trans += other.trans
@@ -119,9 +127,14 @@ def count_words_tags(inst, tier, word_dict, tag_dict, word_tag_dict):
     if pos_tier is not None:
         for tag in pos_tier:
             tag_val = tag.value()
-            wrd_val = inst.find(id = tag.alignment).value()
-            tag_dict.add(tag_val, wrd_val)
-            word_tag_dict.add(wrd_val, tag_val)
+
+            # If there are more POS tags than words,
+            # we may occasionally get this "broken"  system.
+            wrd_aln = inst.find(id = tag.alignment)
+            if wrd_aln:
+                wrd_val = wrd_aln.value()
+                tag_dict.add(tag_val, wrd_val)
+                word_tag_dict.add(wrd_val, tag_val)
 
 
 
@@ -136,15 +149,33 @@ def inst_list_stats(inst_list):
     for inst in inst_list:
 
         sd.instances += 1
-        count_words_tags(inst, inst.lang, sd.lang, sd.lang_tags, sd.lang_word_tags)
-        count_words_tags(inst, inst.gloss, sd.gloss, sd.gloss_tags, sd.gloss_word_tags)
-        count_words_tags(inst, inst.trans, sd.trans, sd.trans_tags, sd.trans_word_tags)
+
+        if inst.has_corruption():
+            sd.corrupt_instances += 1
+
+        if inst.has_double_column():
+            sd.double_column_instances += 1
+
+        try:
+            count_words_tags(inst, inst.lang, sd.lang, sd.lang_tags, sd.lang_word_tags)
+        except (MultipleNormLineException, NoLangLineException) as e:
+            STATS_LOGGER.info(str(e))
+
+        try:
+            count_words_tags(inst, inst.gloss, sd.gloss, sd.gloss_tags, sd.gloss_word_tags)
+        except (MultipleNormLineException, NoGlossLineException) as e:
+            STATS_LOGGER.info(str(e))
+
+        try:
+            count_words_tags(inst, inst.trans, sd.trans, sd.trans_tags, sd.trans_word_tags)
+        except (MultipleNormLineException, NoTransLineException) as e:
+            STATS_LOGGER.info(str(e))
 
     return sd
 
 
 
-def igt_stats(filelist, type='text', logpath=None):
+def igt_stats(filelist, type='text', logpath=None, show_header=False, show_filename=False):
 
     sd = IGTStatDict()
 
@@ -153,40 +184,41 @@ def igt_stats(filelist, type='text', logpath=None):
 
         row = [os.path.splitext(os.path.basename(path))[0]]
 
-
         if type == 'xigt':
             STATS_LOGGER.info('Processing xigt file: "%s"' % path)
             rc = RGCorpus.load(path)
 
+
         elif type == 'text':
             STATS_LOGGER.info('Processing text file: "%s"' % path)
             rc = RGCorpus.from_txt(path)
-
 
         pool = Pool(cpu_count())
 
         # Divide the file into roughly equal chunks
         chunks = chunkIt(rc.igts, cpu_count())
 
-
         for chunk in chunks:
-            pool.apply_async(inst_list_stats, args=[chunk], callback=sd.combine)
-            # sd.combine(inst_list_stats(chunk))
+            # pool.apply_async(inst_list_stats, args=[chunk], callback=sd.combine)
+            sd.combine(inst_list_stats(chunk))
+
 
         pool.close()
         pool.join()
 
-    print(sd.header())
+    if show_header:
+        print(sd.header())
 
     words = sorted(sd.gloss_word_tags.keys(), key=lambda x: sd.gloss_word_tags[x].total(), reverse=True)[:100]
+
+    if show_filename:
+        print(os.path.splitext(os.path.basename(path))[0], end=',')
 
     for word in words:
         countdict = sd.gloss_word_tags[word]
         print('{},{},{}'.format(word, countdict.total(), countdict))
 
 
-    print()
-    print(sd.gloss_word_tags['FOC'])
     print(sd)
 
 
@@ -293,7 +325,7 @@ if __name__ == '__main__':
     else:
         STATS_LOGGER.addHandler(logging.StreamHandler())
 
-    STATS_LOGGER.setLevel(logging.INFO)
+
     #  -----------------------------------------------------------------------------
 
 

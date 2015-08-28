@@ -113,7 +113,7 @@ odin.add_argument('--randomize', action='store_true', help='Randomly select the 
 #===============================================================================
 stats = subparsers.add_parser('stats', help='Get corpus statistics for a set of XIGT files.')
 
-stats.add_argument('FILE', nargs='+', help='Files from which to gather statistics.')
+stats.add_argument('FILE', nargs='+', help='Files from which to gather statistics.', type=globfiles)
 stats.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 #===============================================================================
@@ -208,7 +208,7 @@ elif args.subcommand == 'odin':
 
 # STATS
 elif args.subcommand == 'stats':
-    igt_stats(flatten_list(args.FILE), type='xigt')
+    igt_stats(flatten_list(args.FILE), type='xigt', show_filename=True)
 
 # SPLIT
 elif args.subcommand == 'split':

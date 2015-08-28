@@ -13,7 +13,6 @@ import string
 import sys
 from intent.consts.grammatical import morpheme_boundary_chars
 from intent.pos.TagMap import TagMap
-from xigt.errors import XigtError
 
 from xigt.model import XigtCorpus, Igt, Item, Tier
 from xigt.metadata import Metadata, Meta
@@ -651,6 +650,25 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         #self.metadata = mdt
 
+    def all_tags(self):
+        tag_list = []
+        for item in self.raw_tier():
+            item_tags = re.split('[\+\-]', item.attributes['tag'])
+            tag_list.extend(item_tags)
+        return tag_list
+
+
+    def has_corruption(self):
+        """
+        Return True if instance has "CR" in it, indicating corruption.
+        """
+        return 'CR' in self.all_tags()
+
+    def has_double_column(self):
+        return 'DB' in self.all_tags()
+
+
+
     @classmethod
     def fromString(cls, string, corpus = None, idnum=None):
         """
@@ -672,7 +690,6 @@ class RGIgt(Igt, RecursiveFindMixin):
         inst = cls(id = id, attributes={'doc-id':docid,
                                             'line-range':'%s %s' % (lnstart, lnstop),
                                             'tag-types':tagtypes})
-
 
         # Now, find all the lines
         lines = re.findall('line=([0-9]+)\stag=(\S+):(.*)\n?', string)
@@ -723,7 +740,6 @@ class RGIgt(Igt, RecursiveFindMixin):
         Finish the loading actions of an IGT instance. (Create the normal and
         clean tiers if they don't exist...)
 
-        :param require_1_to_1:
         """
         self.clean_tier()
         self.normal_tier()
@@ -869,7 +885,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             # If a normal tier already exists, return it.
             normal_tier = self.find(type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:NORM_STATE})
-            if normal_tier:
+            if normal_tier is not None:
                 normal_tier.__class__ = RGTier
                 return normal_tier
 
@@ -892,7 +908,7 @@ class RGIgt(Igt, RecursiveFindMixin):
     def lang(self):
         try:
             lt = retrieve_lang_words(self)
-        except:
+        except NoNormLineException:
             raise NoLangLineException('No lang line available for igt "%s"' % self.id)
         else:
             return lt
@@ -2224,7 +2240,7 @@ def retrieve_trans_words(inst):
                 type=TRANS_WORD_TYPE,
                 segmentation=tpt.id)
 
-    if not twt:
+    if twt is None:
         twt = create_words_tier(tpt[0], TRANS_WORD_ID, TRANS_WORD_TYPE, tokenizer=sentence_tokenizer)
         inst.append(twt)
     else:
@@ -2245,7 +2261,7 @@ def retrieve_lang_words(inst):
     # Get the lang word tier
     lwt = inst.find(type=LANG_WORD_TYPE, segmentation=lpt.id)
 
-    if not lwt:
+    if lwt is None:
         lwt = create_words_tier(lpt[0], LANG_WORD_ID, LANG_WORD_TYPE)
         inst.append(lwt)
     else:

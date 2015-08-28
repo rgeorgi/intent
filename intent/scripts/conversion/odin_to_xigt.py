@@ -22,7 +22,7 @@ PARSELOGGER = logging.getLogger(__name__)
 def parse_text(f, xigt_path):
 
     # 1) Build the corpus --------------------------------------------------
-    corp = RGCorpus.from_txt(f.read(), require_trans=False, require_gloss=True, require_lang=True, require_1_to_1=True)
+    corp = RGCorpus.from_txt(f.read(), require_trans=False, require_gloss=True, require_lang=True)
 
     # 2) load the pos dict to help classify the gloss line ---------------------
     for inst in corp:
@@ -37,6 +37,5 @@ if __name__ == '__main__':
     p.add_argument('-o', '--output', required=True, help='Output xigt path.')
 
     args = p.parse_args()
-
 
     parse_text(args.input, args.output)
