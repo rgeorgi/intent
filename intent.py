@@ -6,9 +6,11 @@ import logging
 
 
 # Start the logger and set it up. ----------------------------------------------
+from intent.igt.igtutils import rgp
 from intent.scripts.basic.corpus_stats import igt_stats
 from intent.scripts.basic.filter_corpus import filter_corpus
 from intent.scripts.basic.split_corpus import split_corpus
+from intent.scripts.conversion.text_to_xigt import text_to_xigtxml
 from intent.scripts.evaluation import evaluate_intent
 from intent.scripts.extraction import extract_from_xigt
 from intent.utils.arg_consts import PARSE_LANG_PROJ, PARSE_TRANS, POS_TYPES, PARSE_TYPES, ALN_TYPES, ALN_VAR, POS_VAR, \
@@ -180,6 +182,17 @@ eval_p.add_argument('--alignment', help='Test alignment methods against the alig
 
 eval_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
+#===============================================================================
+# TEXT subcommand
+#
+# Convert three-line IGT instances in text format to XIGT-XML
+#===============================================================================
+text_p = subparsers.add_parser('text', help="Command to convert a text document into XIGT-XML.")
+
+text_p.add_argument('FILE', type=argparse.FileType('r'), help='Input file')
+text_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
+
+
 # Parse the args. --------------------------------------------------------------
 try:
     args = main.parse_args()
@@ -225,3 +238,7 @@ elif args.subcommand == 'extract':
 # EVAL
 elif args.subcommand == 'eval':
     evaluate_intent(flatten_list(args.FILE), args.classifier, args.alignment)
+
+# TEXT CONVERT
+elif args.subcommand == 'text':
+    rgp(text_to_xigtxml(args.FILE))

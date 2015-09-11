@@ -13,6 +13,7 @@ import string
 import sys
 from intent.consts.grammatical import morpheme_boundary_chars
 from intent.pos.TagMap import TagMap
+from intent.utils.string_utils import replace_invalid_xml
 
 from xigt.model import XigtCorpus, Igt, Item, Tier
 from xigt.metadata import Metadata, Meta
@@ -70,6 +71,8 @@ class NoLangLineException(XigtFormatException):	pass
 class NoGlossLineException(XigtFormatException): pass
 
 class NoODINRawException(XigtFormatException):	pass
+
+class RawTextParseError(RGXigtException): pass
 
 # • Alignment and Projection Exceptions ------------------------------------------
 
@@ -344,6 +347,31 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
         return new_c
 
+    @classmethod
+    def from_raw_txt(cls, txt):
+
+        xc = cls()
+        data = replace_invalid_xml(txt)
+
+        instances = []
+        cur_lines = []
+
+        for line in data.split('\n'):
+
+            if not line.strip():
+                cur_lines = []
+                continue
+            else:
+                cur_lines.append(line)
+
+            if len(cur_lines) == 3:
+                instances.append('\n'.join(cur_lines))
+
+
+        for instance in instances:
+            i = RGIgt.fromRawText(instance, corpus=xc)
+            xc.append(i)
+        return xc
 
     @classmethod
     def from_txt(cls, text, require_trans = True, require_gloss = True, require_lang = True, limit = None):
@@ -355,8 +383,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         xc = cls()
 
         # Replace invalid characters...
-        _illegal_xml_chars_RE = re.compile(u'[\x00-\x08\x0b\x0c\x0e-\x1F\uD800-\uDFFF\uFFFE\uFFFF]')
-        data = re.sub(_illegal_xml_chars_RE, ' ', text)
+        data = replace_invalid_xml(text)
 
         # Read all the text lines
         inst_txts = re.findall('doc_id=[\s\S]+?\n\n', data)
@@ -667,6 +694,48 @@ class RGIgt(Igt, RecursiveFindMixin):
     def has_double_column(self):
         return 'DB' in self.all_tags()
 
+    @classmethod
+    def fromRawText(cls, string, corpus = None, idnum=None):
+        """
+        Method to create an IGT instance from a raw three lines of text, assuming L-G-T.
+
+        :param string:
+        :param corpus:
+        :param idnum:
+        """
+        lines = string.split('\n')
+        if len(lines) < 3:
+            raise RawTextParseError("Three lines are assumed for raw text. Instead got {}".format(len(lines)))
+
+
+        if idnum is not None:
+            id = gen_item_id('i', idnum)
+        elif corpus:
+            id = corpus.askIgtId()
+        else:
+            corpus = RGCorpus()
+            id = corpus.askIgtId()
+
+        inst = cls(id = id)
+        rt = RGLineTier(id = RAW_ID, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE}, igt=inst)
+
+        for i, l in enumerate(lines):
+            if i == 0:
+                linetag = ODIN_LANG_TAG
+            elif i == 1:
+                linetag = ODIN_GLOSS_TAG
+            elif i == 2:
+                linetag = ODIN_TRANS_TAG
+
+            if not l.strip():
+                raise RawTextParseError("The {} line is empty: {}".format(linetag, l))
+
+            li = RGLine(id=rt.askItemId(), text=l, attributes={'tag':linetag})
+            rt.append(li)
+
+        inst.append(rt)
+        inst.basic_processing()
+        return inst
 
 
     @classmethod
@@ -699,7 +768,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         for lineno, linetag, linetxt in lines:
             l = RGLine(id = rt.askItemId(), text=linetxt, attributes={'tag':linetag, 'line':lineno}, tier=rt)
-            rt.add(l)
+            rt.append(l)
 
         inst.append(rt)
 
