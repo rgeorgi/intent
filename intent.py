@@ -6,7 +6,6 @@ import logging
 
 
 # Start the logger and set it up. ----------------------------------------------
-from intent.igt.igtutils import rgp
 from intent.scripts.basic.corpus_stats import igt_stats
 from intent.scripts.basic.filter_corpus import filter_corpus
 from intent.scripts.basic.split_corpus import split_corpus
@@ -16,6 +15,7 @@ from intent.scripts.extraction import extract_from_xigt
 from intent.utils.arg_consts import PARSE_LANG_PROJ, PARSE_TRANS, POS_TYPES, PARSE_TYPES, ALN_TYPES, ALN_VAR, POS_VAR, \
     PARSE_VAR
 from intent.utils.listutils import flatten_list
+from xigt.codecs.xigtxml import dump
 
 logging.basicConfig(format=logging.BASIC_FORMAT)
 MAIN_LOG = logging.getLogger('INTENT')
@@ -190,6 +190,7 @@ eval_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity l
 text_p = subparsers.add_parser('text', help="Command to convert a text document into XIGT-XML.")
 
 text_p.add_argument('FILE', type=argparse.FileType('r'), help='Input file')
+text_p.add_argument('OUT_FILE', help='Output file')
 text_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 
@@ -241,4 +242,5 @@ elif args.subcommand == 'eval':
 
 # TEXT CONVERT
 elif args.subcommand == 'text':
-    rgp(text_to_xigtxml(args.FILE))
+    xc = text_to_xigtxml(args.FILE)
+    dump(args.OUT_FILE, xc)

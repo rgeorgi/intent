@@ -3,6 +3,8 @@ from collections import defaultdict
 from copy import copy
 import itertools
 import logging
+from intent.alignment.Alignment import Alignment
+from intent.igt.rgxigt import RGWordTier
 
 from nltk.tree import ParentedTree, Tree
 
@@ -29,17 +31,23 @@ class IdTree(ParentedTree):
     This is a tree that inherits from NLTK's tree implementation,
     but assigns IDs that can be used in writing out the Xigt format.
     """
-    def __init__(self, node, children=None, id=None):
-        super().__init__(node, children)
+    def __init__(self, label, children=None, id=None):
+        super().__init__(label, children)
         self.id = id
 
     def __eq__(self, other):
         q = ParentedTree.__eq__(self, other)
         return q and (self.id == other.id)
 
+    def depth(self):
+        if self.parent() is None:
+            return 0
+        else:
+            return self.parent().depth() + 1
+
     def similar(self, other):
         """
-        Test equivalency in a tree, but without
+        Test equivalency in a tree, but without labels
 
         :param other:
         :return:
@@ -108,6 +116,20 @@ class IdTree(ParentedTree):
                     break
             return ret
 
+
+    def findall(self, filter):
+        found = []
+
+        if filter(self):
+            found += [self]
+
+        for child in self:
+            if not isinstance(child, Terminal):
+                found += child.findall(filter)
+
+        return found
+
+
     def delete(self, propagate=True):
         """
         Delete self from parent.
@@ -121,6 +143,9 @@ class IdTree(ParentedTree):
 
         if propagate and p is not None and not p:
             p.delete(propagate)
+
+    def insert_sibling(self, t):
+        self.parent().insert(self.parent_index(), t)
 
     def replace(self, t):
         """
@@ -147,6 +172,20 @@ class IdTree(ParentedTree):
         return IdTree(self.label(), new_children, id=copy(self.id))
 
     @classmethod
+    def from_ptbstring(cls, string):
+
+        """
+
+        :rtype : DepTree
+        """
+
+        def parse_label(s, children):
+            label, index, type = re.search('(.*?)(?:\[([0-9]+)\])(-.*?)?', s).groups()
+            return DepTree(label, children, type=type, word_index=int(index))
+
+        return paren_level_contents(string, f=parse_label)[0]
+
+    @classmethod
     def fromstring(cls, tree_string, id_base='', **kwargs):
         """
         :param tree_string:  String of a phrase structure tree in PTB format.
@@ -160,7 +199,6 @@ class IdTree(ParentedTree):
         t.assign_ids()
         for i, leaf in enumerate(t.leaves()):
             leaf.index = i+1
-
 
         return t
 
@@ -363,6 +401,16 @@ class IdTree(ParentedTree):
 
         self.insert(i, n)
 
+    def ancestors(self):
+        """
+
+        :rtype : list[DepTree]
+        """
+        if self.parent() is not None:
+            return [self.parent()] + self.parent().ancestors()
+        else:
+            return []
+
     def insert_by_span(self, t):
 
         assert not self.is_preterminal(), "Should not be preterminal"
@@ -418,6 +466,124 @@ def aln_indices(tokens):
     for i, token in enumerate(tokens):
         index_str += ('{:<' + str(len(token)+1) + '}').format(i+1)
     return index_str
+
+def project_ds(src_t, tgt_w, aln):
+    """
+    1. Our DS projection algorithm is similar to the projection algorithms
+        described in (Hwa et al. 2002) and (Quirk et al. 2005).
+
+        It has four steps:
+
+            1. Copy the English DS. and remove all the unaligned English words
+            from the DS.
+
+            2. We replace each English word in the DS with the corresponding
+            source words. If an English word x aligns to several source words,
+            we will make several copies of the node for x, one copy for each
+            such source word. The copies will all be siblings in the DS.
+            If a source word aligns to multiple English words, after Step 2
+            the source word will have several copies in the resulting DS.
+
+            3. In the third step, we keep only the copy that is closest
+            to the root and remove all the other copies.
+
+            4. In Step 4, we attach unaligned source words to the DS
+            using the heuristics described in (Quirk et al. 2005).
+
+            Figure 2 shows the English DS. the source DS after Step 20 and the final DS.
+
+    :param src_t: Source (English) tree to project from
+    :type src_t: DepTree
+    :param tgt_w: Set of target (non-English) words to use for projection
+    :type tgt_w: RGWordTier
+    :param aln: list of [(src, tgt)] index pairs (src == English)
+    :type aln: Alignment
+    """
+
+    # --1a) Start by copying the DS
+    tgt_t = src_t.copy()
+
+    # --1b) Get the unaligned nodes that we will be deleting later
+    unaligned_eng_nodes = [n for n in tgt_t.subtrees(filter=lambda x: x.word_index not in aln.all_src())]
+
+    # --1c) Delete all the unaligned nodes.
+    for unaligned_node in unaligned_eng_nodes:
+        unaligned_node.delete()
+
+
+    # --2) Now, create a list of the nodes that need replacing.
+    nodes_to_replace = defaultdict(list)
+
+    for src_i, tgt_i in aln:
+
+        # First, we find the source (English) node
+        src_node = tgt_t.find_index(src_i)
+
+        # Now, let's create a new node with the old
+        # type, but new index and label
+        tgt_word = tgt_w.get_index(tgt_i)
+        tgt_node = DepTree(tgt_word.value(), [], word_index = tgt_i, type=src_node.type)
+
+        # Finally, let's append these new nodes to the list
+        # associated with the old node (the list ensures
+        # that any multiple alignments will be created
+        # correctly as siblings.)
+        nodes_to_replace[src_node].append(tgt_node)
+
+    # Now, let's go through the nodes to replace, and
+    for node_to_replace in nodes_to_replace.keys():
+        parent_to_attach = node_to_replace.parent()
+
+        # Get a list of the siblings we're going to replace
+        # the original node with
+        siblings = nodes_to_replace[node_to_replace]
+
+        # Now, insert them as siblings.
+        for tgt_node in siblings:
+            node_to_replace.insert_sibling(tgt_node)
+
+        # Next, move the children of the original node
+        # to be children of the first of the siblings.
+        for child in node_to_replace:
+            child._parent = None
+            siblings[0].append(child)
+
+        # Finally, delete the old node.
+        node_to_replace.delete()
+
+    # --3) Now, for multiply-aligned words, only keep
+    #      the shallowest one.
+    multiply_aligned_indices = set([tgt_i for src_i, tgt_i in aln if len(aln.tgt_to_src(tgt_i)) > 1])
+    for multiply_aligned_index in multiply_aligned_indices:
+
+        # Find all the nodes with the given index, and sort
+        # them by their depth.
+        nodes = tgt_t.findall_indices(multiply_aligned_index)
+        depth_sorted = sorted(nodes, key=lambda x: x.depth())
+
+        # Now, delete all but the shallowest.
+        for node in depth_sorted[1:]:
+            node.delete()
+
+
+    # --4) Now, reattach unaligned words...
+    unaligned_tgt_words = [w.index for w in tgt_w if w.index not in aln.all_tgt()]
+
+
+
+    return tgt_t
+
+
+
+            
+
+
+
+
+
+
+
+
 
 
 def project_ps(src_t, tgt_w, aln):
@@ -737,6 +903,10 @@ def reorder_tree(t, prev_t_list = []):
                     return ct
 
 class DepEdge(object):
+    """
+    Container object for holding the head/child, and dependency
+    type.
+    """
     def __init__(self, head=None, dep=None, type=None):
         self.head = head
         self.dep = dep
@@ -744,11 +914,20 @@ class DepEdge(object):
 
 
 class DepTree(IdTree):
-
-    def __init__(self, node, children=None, id=None, type=None, word_index=None):
-        super().__init__(node, children, id)
+    def __init__(self, label, children=None, id=None, type=None, word_index=None):
+        super().__init__(label, children=children, id=id)
         self.type = type
         self._word_index = word_index
+
+        assert isinstance(word_index, int)
+
+    def __hash__(self):
+        return hash(self._label) + hash(self.type) + hash(self.word_index)
+
+    @classmethod
+    def root(cls):
+        return cls('ROOT', [], type='root', word_index=0)
+
 
     @classmethod
     def fromstring(cls, tree_string, id_base='', **kwargs):
@@ -801,6 +980,8 @@ class DepTree(IdTree):
 
         return dt
 
+
+
     @property
     def word_index(self):
         return self._word_index
@@ -811,8 +992,25 @@ class DepTree(IdTree):
             ret_str += ' %s' % str(child)
         return ret_str + ')'
 
+    def stanford_str(self, separator=' '):
+        """
+        Return a string representation in the stanford parser format.
+        """
+        repr = ''
+        for st in self.subtrees(filter=lambda s: s.parent()):
+            repr += '{}({}-{}, {}-{}){}'.format(st.type,
+                                               st.parent().label(),
+                                               st.parent().word_index,
+                                               st.label(),
+                                               st.word_index,
+                                               separator)
+        return repr
+
     def find_index(self, idx):
         return self.find(lambda x: x.word_index == idx)
+
+    def findall_indices(self, idx):
+        return self.findall(lambda x: x.word_index == idx)
 
     def find_terminal(self, term):
         assert isinstance(term, Terminal)
@@ -822,19 +1020,22 @@ class DepTree(IdTree):
         assert isinstance(term, Terminal)
         self.findall(lambda x: x.word_index == term.index and x.label() == term.label)
 
-    def __eq__(self, other):
+    def __eq__(self, other, check_type = True):
         if (self.word_index != other.word_index):
             return False
-        elif (self.type != other.type):
+        elif (self.type != other.type) and check_type:
             return False
         elif len(self) != len(other):
             return False
         elif (self._label != other._label):
             return False
         for my_child, their_child in zip(self, other):
-            if not my_child == their_child:
+            if not my_child.__eq__(their_child, check_type):
                 return False
         return True
+
+    def structurally_eq(self, other):
+        return self.__eq__(other, check_type=False)
 
     def span(self):
         raise TreeError('Span is not supported for dependency tree.')
@@ -844,6 +1045,33 @@ class DepTree(IdTree):
         dt = DepTree(copy(self.label()), children, id=copy(self.id), type=copy(self.type), word_index=copy(self.word_index))
         return dt
 
+    def delete(self):
+        """
+        By default,
+        :param propagate: Whether or not to delete "empty"
+         nonterminals. Default to false, since DepTrees
+         don't have the same notion of nonterminal/terminal.
+        """
+        super().delete(propagate=False)
+
+    def subtrees(self, filter=None, include_root=False):
+        """
+        Override the subtrees finder from the parent class
+        with the default that we will not include the root.
+
+        :param filter:
+        :param include_root:
+        :return: list of Deptrees
+        :rtype: list[DepTree]
+        """
+        if not include_root:
+            nonroot = lambda x: x.depth() > 0
+            if filter is not None:
+                return super().subtrees(filter=lambda x: filter(x) and nonroot(x))
+            else:
+                return super().subtrees(filter=nonroot)
+        else:
+            return super().subtrees(filter=filter)
 
 def get_dep_edges(string):
     """
@@ -873,6 +1101,49 @@ def get_dep_edges(string):
         edges.append(DepEdge(head, child, type=name))
 
     return edges
+
+
+class Count():
+    def __init__(self):
+        self._i = 0
+    def inc(self, n=1):
+        self._i += n
+    def val(self):
+        return self._i
+
+def paren_level_contents(string, f=lambda x, y: [x,y], i = Count()):
+    """
+    Tail-recursive way to parse a matched set of parens
+
+    :param string:
+    :type string: str
+    :param f:
+    :param init_open_parens:
+    """
+
+    content = ''
+
+    children = []
+
+    while i.val() < len(string):
+        char = string[i.val()]
+        i.inc() # Increment the counter...
+                # this counter will persist through recursive calls
+
+        if char == ')':
+            return f(content.strip(), children)
+        elif char == '(':
+            children.append(paren_level_contents(string, f=f, i=i))
+        else:
+            content += char
+
+    # We reach this point only after we have built up all the
+    return children
+
+
+
+
+
 
 
 def fix_tree_parents(t, preceding_parent = None):

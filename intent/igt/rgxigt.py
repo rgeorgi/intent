@@ -474,9 +474,14 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
     @classmethod
     def load(cls, path, basic_processing = False):
         """
-
         :rtype : RGCorpus
         """
+        # f = open(path, 'r', encoding='utf-8')
+        # for line in f:
+            # print(line.decode('ascii', errors='replace'), end='')
+            # print(line.encode('utf-8'))
+            # print(line, end='')
+
         xc = xigtxml.load(path)
         xc.__class__ = RGCorpus
         xc._finish_load()
@@ -1942,6 +1947,8 @@ class RGTier(Tier, RecursiveFindMixin):
 
         :param index: index of the element (starting from 1)
         :type index: int
+
+        :rtype: RGItem
         """
         return self.items[index-1]
 
@@ -2056,6 +2063,13 @@ class RGTokenTier(RGTier):
                 aligned_w = self.igt.find(id=ia)
                 a.add((item.index, aligned_w.index))
         return a
+
+    def __iter__(self):
+        """
+
+        :rtype : RGToken
+        """
+        return super().__iter__()
 
     def set_aligned_tokens(self, tgt_tier, aln, aln_method=None):
         # FIXME: This method does not appear to be called anywhere but unit tests... is it still needed?

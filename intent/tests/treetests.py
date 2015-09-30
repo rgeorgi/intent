@@ -3,8 +3,8 @@ import unittest
 import intent
 from intent.alignment.Alignment import Alignment
 from intent.igt.rgxigt import RGWordTier
-from intent.trees import IdTree, project_ps, TreeMergeError, DepTree, Terminal, TreeError
-
+from intent.trees import IdTree, project_ps, TreeMergeError, DepTree, Terminal, TreeError, project_ds, \
+    paren_level_contents
 
 __author__ = 'rgeorgi'
 
@@ -420,3 +420,50 @@ class DeleteTests(unittest.TestCase):
         self.t[0,1].replace(IdTree('NN',[Terminal('Dog', index=2)]))
 
         self.assertTrue(self.t.similar(tgt))
+
+
+class ProjectDS(unittest.TestCase):
+
+    def setUp(self):
+        self.ds1str = """
+root(ROOT-0, gave-3)
+nsubj(gave-3, teacher-2)
+det(teacher-2, the-1)
+dobj(gave-3, book-5)
+det(book-5, a-4)
+prep_to(gave-3, to-6)
+indobj(to-6, boy-8)
+det(boy-8, the-7)
+mod(gave-3, yesterday-9)"""
+
+        self.ds2str = """ (ROOT[0]-root
+                            (Rhoddodd[1]-nsubj
+                                (athro[3] (yr[2]) )
+                                (lyfr[4])
+                                (i'r[5] (bachgen[6]) )
+                                (ddoe[7])
+                            )
+                        )"""
+
+    def test_strings(self):
+        ds1 = DepTree.fromstring(self.ds1str)
+        ds2 = DepTree.from_ptbstring(self.ds2str)
+
+        self.assertTrue(ds1.stanford_str(separator='\n').strip() == self.ds1str.strip())
+
+    def test_projection(self):
+        ds1 = DepTree.fromstring(self.ds1str)
+        ds2 = DepTree.from_ptbstring(self.ds2str)
+
+        tgt_w = RGWordTier.from_string("Rhoddodd yr athro lyfr i'r bachgen ddoe")
+        aln = Alignment([(1,3),(2,1),(3,2),(4,5),(5,6),(5,7),(6,8),(7,9)])
+
+        # Flip it...
+        aln = aln.flip()
+
+        # And now, project...
+        ds_proj = project_ds(ds1, tgt_w, aln)
+
+        self.assertTrue(ds2.structurally_eq(ds_proj))
+
+
