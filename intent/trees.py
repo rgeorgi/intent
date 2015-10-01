@@ -4,7 +4,7 @@ from copy import copy
 import itertools
 import logging
 from intent.alignment.Alignment import Alignment
-from intent.igt.rgxigt import RGWordTier
+
 
 from nltk.tree import ParentedTree, Tree
 
@@ -20,10 +20,10 @@ class PhraseTreeError(TreeError): pass
 
 class TreeProjectionError(Exception): pass
 class TreeMergeError(TreeProjectionError): pass
+class DepTreeProjectionError(TreeProjectionError): pass
 
 PS_LOG = logging.getLogger('PS_PROJECT')
 DS_LOG = logging.getLogger('DS_PROJECT')
-
 
 
 class IdTree(ParentedTree):
@@ -173,9 +173,7 @@ class IdTree(ParentedTree):
 
     @classmethod
     def from_ptbstring(cls, string):
-
         """
-
         :rtype : DepTree
         """
 
@@ -183,7 +181,9 @@ class IdTree(ParentedTree):
             label, index, type = re.search('(.*?)(?:\[([0-9]+)\])(-.*?)?', s).groups()
             return DepTree(label, children, type=type, word_index=int(index))
 
-        return paren_level_contents(string, f=parse_label)[0]
+        results = paren_level_contents(string, f=parse_label)
+        assert len(results) == 1
+        return results[0]
 
     @classmethod
     def fromstring(cls, tree_string, id_base='', **kwargs):
@@ -490,7 +490,6 @@ def project_ds(src_t, tgt_w, aln):
             4. In Step 4, we attach unaligned source words to the DS
             using the heuristics described in (Quirk et al. 2005).
 
-            Figure 2 shows the English DS. the source DS after Step 20 and the final DS.
 
     :param src_t: Source (English) tree to project from
     :type src_t: DepTree
@@ -500,14 +499,19 @@ def project_ds(src_t, tgt_w, aln):
     :type aln: Alignment
     """
 
+    if not aln:
+        raise DepTreeProjectionError("No alignment was provided. Cannot project.")
+
     # --1a) Start by copying the DS
     tgt_t = src_t.copy()
 
     # --1b) Get the unaligned nodes that we will be deleting later
     unaligned_eng_nodes = [n for n in tgt_t.subtrees(filter=lambda x: x.word_index not in aln.all_src())]
 
+
     # --1c) Delete all the unaligned nodes.
     for unaligned_node in unaligned_eng_nodes:
+        DS_LOG.debug("Deleting unaligned English node: {}".format(unaligned_node))
         unaligned_node.delete()
 
 
@@ -521,8 +525,8 @@ def project_ds(src_t, tgt_w, aln):
 
         # Now, let's create a new node with the old
         # type, but new index and label
-        tgt_word = tgt_w.get_index(tgt_i)
-        tgt_node = DepTree(tgt_word.value(), [], word_index = tgt_i, type=src_node.type)
+        unaln_word = tgt_w.get_index(tgt_i)
+        tgt_node = DepTree(unaln_word.value(), [], word_index = tgt_i, type=src_node.type)
 
         # Finally, let's append these new nodes to the list
         # associated with the old node (the list ensures
@@ -532,7 +536,6 @@ def project_ds(src_t, tgt_w, aln):
 
     # Now, let's go through the nodes to replace, and
     for node_to_replace in nodes_to_replace.keys():
-        parent_to_attach = node_to_replace.parent()
 
         # Get a list of the siblings we're going to replace
         # the original node with
@@ -541,12 +544,20 @@ def project_ds(src_t, tgt_w, aln):
         # Now, insert them as siblings.
         for tgt_node in siblings:
             node_to_replace.insert_sibling(tgt_node)
+            DS_LOG.debug('Inserting "{}[{}]" in place of "{}[{}]"'.format(tgt_node.label(),
+                                                            tgt_node.word_index,
+                                                            node_to_replace.label(),
+                                                            node_to_replace.word_index))
+
 
         # Next, move the children of the original node
         # to be children of the first of the siblings.
         for child in node_to_replace:
             child._parent = None
             siblings[0].append(child)
+            # DS_LOG.debug('Child "{}" of "{}" moved to "{}"'.format(child.label(),
+            #                                                        node_to_replace.label(),
+            #                                                        siblings[0].label()))
 
         # Finally, delete the old node.
         node_to_replace.delete()
@@ -567,9 +578,75 @@ def project_ds(src_t, tgt_w, aln):
 
 
     # --4) Now, reattach unaligned words...
-    unaligned_tgt_words = [w.index for w in tgt_w if w.index not in aln.all_tgt()]
+    unaligned_tgt_indices = [w.index for w in tgt_w if w.index not in aln.all_tgt()]
 
+    # Unaligned attachment from Quirk, et. al, 2005:
+    #
+    # Unaligned target words are attached into the dependency
+    # structure as follows: assume there is an unaligned word
+    # t_j in position j. Let i < j and k > j be the target positions
+    # closest to j such that t_i depends on t_k or vice versa:
+    # attach t_j to the lower of t_i or t_k.
+    #
+    # If all the nodes to the left (or right) of position j are
+    # unaligned, attach tj to the left-most (or right-most)
+    # word that is aligned.
 
+    attachments_to_make = []
+
+    if unaligned_tgt_indices:
+        DS_LOG.debug("Reattaching unaligned target indices...".format(unaligned_tgt_indices))
+
+    for j in unaligned_tgt_indices:
+        DS_LOG.debug("Attempting to reattach unaligned word: {}[{}]".format(tgt_w.get_index(j).value(), j))
+
+        left_indices  = sorted([i for i in aln.all_tgt() if i < j])
+        right_indices = sorted([k for k in aln.all_tgt() if k > j])
+
+        # We must have something aligned...
+        assert left_indices or right_indices
+
+        # If there are no indices to the left, attach to the leftmost of those
+        # to the right...
+        if not left_indices:
+            attachments_to_make.append((j, right_indices[0]))
+
+        # If there are no indices to the right, attach to the rightmost of those
+        # to the left...
+        elif not right_indices:
+            attachments_to_make.append((j, left_indices[-1]))
+
+        # If we have indices to the left and right, find whether one depends
+        # on the other...
+        else:
+            # Convert the tree representation to a list of (head, child) indices
+            indices = tgt_t.to_indices()
+
+            # Filter the indices such that only those where j is in between the
+            # two.
+            indices = [(i, k) for i, k in indices if (i < j < k) or (k < j < i)]
+
+            # Now, sort these indices by their closeness to the current index
+            indices.sort(key=lambda x: abs(j - x[0]) + abs(j - x[1]))
+
+            # And, finally, queue the unaligned node to attach to the "lower"
+            # (child) of the index pair.
+            attachments_to_make.append((j, indices[0][1]))
+
+    for unaln_i, aln_i in attachments_to_make:
+        unaln_word = tgt_w.get_index(unaln_i).value()
+        aln_node = tgt_t.find_index(aln_i)
+
+        unaln_node = DepTree(unaln_word, [], word_index=unaln_i)
+
+        DS_LOG.debug("Attaching {}[{}] to {}[{}]".format(unaln_word, unaln_i,
+                                                         aln_node.label(), aln_i))
+
+        aln_node.append(unaln_node)
+
+    # Finally, just go through and make sure the children are sorted by index.
+    for st in tgt_t.subtrees():
+        st.sort(key=lambda x: x.word_index)
 
     return tgt_t
 
@@ -924,6 +1001,13 @@ class DepTree(IdTree):
     def __hash__(self):
         return hash(self._label) + hash(self.type) + hash(self.word_index)
 
+    def to_indices(self):
+        """
+        Return a representation of the deptree as just a list of
+        (head, child) indices.
+        """
+        return [(st.parent().word_index, st.word_index) for st in self.subtrees()]
+
     @classmethod
     def root(cls):
         return cls('ROOT', [], type='root', word_index=0)
@@ -1106,12 +1190,15 @@ def get_dep_edges(string):
 class Count():
     def __init__(self):
         self._i = 0
+
     def inc(self, n=1):
         self._i += n
+
     def val(self):
         return self._i
 
-def paren_level_contents(string, f=lambda x, y: [x,y], i = Count()):
+
+def paren_level_contents(string, f=lambda x, y: [x,y], i=None):
     """
     Tail-recursive way to parse a matched set of parens
 
@@ -1120,6 +1207,11 @@ def paren_level_contents(string, f=lambda x, y: [x,y], i = Count()):
     :param f:
     :param init_open_parens:
     """
+
+    # Make sure that the "i" gets re-initialized properly on
+    # each call. (No mutable default args!)
+    if i is None:
+        i = Count()
 
     content = ''
 
@@ -1141,11 +1233,6 @@ def paren_level_contents(string, f=lambda x, y: [x,y], i = Count()):
     return children
 
 
-
-
-
-
-
 def fix_tree_parents(t, preceding_parent = None):
     """
     For some reason, the parents are getting broken during tree projection
@@ -1160,3 +1247,9 @@ def fix_tree_parents(t, preceding_parent = None):
     for child in t:
         if isinstance(child, Tree):
             fix_tree_parents(child, preceding_parent=t)
+
+# =============================================================================
+# Move some imports down here so as not to be cyclical.
+# =============================================================================
+
+from intent.igt.rgxigt import RGWordTier

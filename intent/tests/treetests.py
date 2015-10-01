@@ -3,8 +3,7 @@ import unittest
 import intent
 from intent.alignment.Alignment import Alignment
 from intent.igt.rgxigt import RGWordTier
-from intent.trees import IdTree, project_ps, TreeMergeError, DepTree, Terminal, TreeError, project_ds, \
-    paren_level_contents
+from intent.trees import IdTree, project_ps, TreeMergeError, DepTree, Terminal, TreeError, project_ds
 
 __author__ = 'rgeorgi'
 
@@ -445,13 +444,20 @@ mod(gave-3, yesterday-9)"""
                             )
                         )"""
 
+        self.ds3str = """
+nmod(meet-4, Tomorrow-1)
+nsubj(meet-4, Mary-2)
+aux(meet-4, will-3)
+root(ROOT-0, meet-4)
+dobj(meet-4, Hans-5)"""
+
+
     def test_strings(self):
         ds1 = DepTree.fromstring(self.ds1str)
-        ds2 = DepTree.from_ptbstring(self.ds2str)
 
         self.assertTrue(ds1.stanford_str(separator='\n').strip() == self.ds1str.strip())
 
-    def test_projection(self):
+    def test_projection_1(self):
         ds1 = DepTree.fromstring(self.ds1str)
         ds2 = DepTree.from_ptbstring(self.ds2str)
 
@@ -463,7 +469,54 @@ mod(gave-3, yesterday-9)"""
 
         # And now, project...
         ds_proj = project_ds(ds1, tgt_w, aln)
-
         self.assertTrue(ds2.structurally_eq(ds_proj))
 
 
+    def test_projection_2(self):
+        ds3 = DepTree.fromstring(self.ds3str)
+
+        # English sentence:
+        #    1        2     3    4   5
+        # "Tomorrow Mary  will meet Hans"
+        #
+        # Den   Hans  wird Maria morgen treffen
+        #  1     2     3     4      5      6
+        aln = Alignment([(1,5),(2,4),(3,3),(4,6),(5,2)])
+        tgt_w = RGWordTier.from_string("Den Hans wird Maria morgen treffen")
+
+        ds_proj = project_ds(ds3, tgt_w, aln)
+
+        # ds_proj.draw()
+
+        exp_proj = DepTree.from_ptbstring("""
+(ROOT[0]
+    (treffen[6]
+        (Hans[2] (Den[1]))
+        (wird[3])
+        (Maria[4])
+        (morgen[5])
+))
+        """)
+        self.assertTrue(ds_proj.structurally_eq(exp_proj))
+
+
+    def test_projection_3(self):
+        ds3 = DepTree.fromstring(self.ds3str)
+        tgt_w = RGWordTier.from_string("morgen wird Maria Den Hans treffen")
+              # English sentence:
+        #    1        2     3    4   5
+        # "Tomorrow Mary  will meet Hans"
+        #
+        # morgen wird Maria Den Hans treffen
+        #  1     2     3     4   5      6
+        aln = Alignment([(1,1),(2,3),(3,2),(4,6),(5,5)])
+
+        ds_proj = project_ds(ds3, tgt_w, aln)
+
+        exp_proj = DepTree.from_ptbstring("""(ROOT[0]
+    (treffen[6]
+        (morgen[1])
+        (wird[2])
+        (Maria[3] (Den[4]))
+        (Hans[5])))""")
+        self.assertTrue(ds_proj.structurally_eq(exp_proj))

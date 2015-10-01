@@ -2813,11 +2813,10 @@ def strip_enrichment(inst):
     for at in inst.findall(type='bilingual-alignments'):
         at.delete()
 
+
 def strip_pos(inst):
     for pt in inst.findall(type=POS_TIER_TYPE):
         pt.delete()
-
-
 
 
 from intent.trees import IdTree, project_ps, Terminal
