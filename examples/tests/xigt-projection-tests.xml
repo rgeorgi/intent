@@ -1,0 +1,110 @@
+<xigt-corpus>
+<igt id="igt129228" tag-types="L+CR L+CR G T" line-range="8627-8630" doc-id="6">
+  <metadata>
+    <meta id="meta1">
+      <dc:subject xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ns2:code="isl" xsi:type="olac:language">icelandic</dc:subject>
+      <dc:language xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ns2:code="en" xsi:type="olac:language">English</dc:language>
+    </meta>
+  </metadata>
+  <tier id="r" type="odin" state="raw">
+    <item id="r1" tag="L+CR" line="8627">   (68) Ôa hefur/(?)hafa       einhverjum Ôott     Ôeir</item>
+    <item id="r2" tag="L+CR" line="8628">                                             ´              lei inlegir.</item>
+    <item id="r3" tag="G" line="8629">        there has.3sg/have.3pl someone.dat thought they.nom boring</item>
+    <item id="r4" tag="T" line="8630">          `Someone found them boring.'</item>
+  </tier>
+  <tier id="c" type="odin" alignment="r" state="cleaned">
+    <item id="c1" tag="L+CR" alignment="r1" line="8627">   (68) Ôa hefur/(?)hafa       einhverjum Ôott     Ôeir</item>
+    <item id="c3" tag="G" alignment="r3" line="8629">        there has.3sg/have.3pl someone.dat thought they.nom boring</item>
+    <item id="c4" tag="T" alignment="r4" line="8630">          `Someone found them boring.'</item>
+  </tier>
+  <tier id="n" type="odin" alignment="c" state="normalized">
+    <item id="n1" tag="L+CR" alignment="c1" line="8627">Ôa hefur/hafa       einhverjum Ôott/Ôeir lei inlegir</item>
+    <item id="n2" tag="G" alignment="c3" line="8629">there has.3sg/have.3pl someone.dat thought they.nom boring</item>
+    <item id="n3" tag="T" alignment="c4" line="8630">Someone found them boring.</item>
+  </tier>
+   <tier id="p" type="phrases" content="n">
+    <item id="p1" content="n1"></item>
+  </tier>
+  <tier id="t" type="translations" alignment="p" content="n">
+    <item id="t1" alignment="p1" content="n3"></item>
+  </tier>
+  <tier id="w" type="words" segmentation="p">
+    <item id="w1" segmentation="p1[0:2]"></item>
+    <item id="w2" segmentation="p1[3:16]"></item>
+    <item id="w3" segmentation="p1[23:33]"></item>
+    <item id="w4" segmentation="p1[34:43]"></item>
+    <item id="w5" segmentation="p1[44:47]"></item>
+    <item id="w6" segmentation="p1[48:55]"></item>
+  </tier>
+  <tier id="tw" type="words" segmentation="t">
+    <item id="tw1" segmentation="t1[0:7]"></item>
+    <item id="tw2" segmentation="t1[8:13]"></item>
+    <item id="tw3" segmentation="t1[14:18]"></item>
+    <item id="tw4" segmentation="t1[19:25]"></item>
+    <item id="tw5" segmentation="t1[25:26]"></item>
+  </tier>
+  <tier id="gw" type="glosses" alignment="w" content="n">
+    <item id="gw1" alignment="w1" content="n2[0:5]"></item>
+    <item id="gw2" alignment="w2" content="n2[6:22]"></item>
+    <item id="gw3" alignment="w3" content="n2[23:34]"></item>
+    <item id="gw4" alignment="w4" content="n2[35:42]"></item>
+    <item id="gw5" alignment="w5" content="n2[43:51]"></item>
+    <item id="gw6" alignment="w6" content="n2[52:58]"></item>
+  </tier>
+  <tier id="g" type="glosses" alignment="m" content="gw">
+    <item id="g1" alignment="m1" content="gw1"></item>
+    <item id="g2" alignment="m2" content="gw2[0:3]"></item>
+    <item id="g3" alignment="m2" content="gw2[4:7]"></item>
+    <item id="g4" alignment="m2" content="gw2[8:12]"></item>
+    <item id="g5" alignment="m2" content="gw2[13:16]"></item>
+    <item id="g6" alignment="m5" content="gw3[0:7]"></item>
+    <item id="g7" alignment="m5" content="gw3[8:11]"></item>
+    <item id="g8" alignment="m6" content="gw4"></item>
+    <item id="g9" alignment="m8" content="gw5[0:4]"></item>
+    <item id="g10" alignment="m8" content="gw5[5:8]"></item>
+    <item id="g11" alignment="m9" content="gw6"></item>
+  </tier>
+  <tier id="m" type="morphemes" segmentation="w">
+    <item id="m1" segmentation="w1"></item>
+    <item id="m2" segmentation="w2[0:5]"></item>
+    <item id="m3" segmentation="w2[7:8]"></item>
+    <item id="m4" segmentation="w2[9:13]"></item>
+    <item id="m5" segmentation="w3"></item>
+    <item id="m6" segmentation="w4[0:4]"></item>
+    <item id="m7" segmentation="w4[5:9]"></item>
+    <item id="m8" segmentation="w5"></item>
+    <item id="m9" segmentation="w6"></item>
+  </tier>
+  <tier id="a" type="bilingual-alignments" source="tw" target="g">
+    <metadata type="xigt-meta">
+      <meta type="data-provenance" source="intent" date="2015-10-01 22:55:58-UTC" method="heur"/>
+    </metadata>
+    <item id="a1" source="tw1" target="g6"></item>
+    <item id="a2" source="tw4" target="g11"></item>
+  </tier>
+  <tier id="tw-ps" type="phrase-structure" alignment="tw">
+    <metadata type="xigt-meta">
+      <meta type="data-provenance" date="2015-04-18 10:35:40-UTC" source="intent" method="stanford-parser"/>
+    </metadata>
+    <item id="tw-ps1" alignment="tw1">NN</item>
+    <item id="tw-ps2" alignment="tw2">VBD</item>
+    <item id="tw-ps3" alignment="tw3">PRP</item>
+    <item id="tw-ps4" alignment="tw4">NN</item>
+    <item id="tw-ps5" children="tw-ps6">ROOT</item>
+    <item id="tw-ps6" children="tw-ps7 tw-ps8">S</item>
+    <item id="tw-ps7" children="tw-ps1">NP</item>
+    <item id="tw-ps8" children="tw-ps2 tw-ps9 tw-ps10">VP</item>
+    <item id="tw-ps9" children="tw-ps3">NP</item>
+    <item id="tw-ps10" children="tw-ps4">NP</item>
+  </tier>
+  <tier id="tw-ds" type="dependencies" dep="tw" head="tw">
+    <metadata type="xigt-meta">
+      <meta type="data-provenance" date="2015-04-18 10:35:40-UTC" source="intent" method="stanford-parser"/>
+    </metadata>
+    <item id="tw-ds1" dep="tw2">root</item>
+    <item id="tw-ds2" dep="tw1" head="tw2">nsubj</item>
+    <item id="tw-ds3" dep="tw3" head="tw2">iobj</item>
+    <item id="tw-ds4" dep="tw4" head="tw2">dobj</item>
+  </tier>
+</igt>
+</xigt-corpus>
