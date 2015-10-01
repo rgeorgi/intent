@@ -410,6 +410,36 @@ class DeleteTests(unittest.TestCase):
 
         self.assertTrue(self.t.similar(tgt))
 
+    def promote_test(self):
+        """
+        Ensure that the "promote=" keyword works as expected.
+
+        """
+        t = self.t.copy()
+        t[0].delete(promote=True)
+
+        tgt = IdTree.fromstring('''(ROOT (DT The) (NP (NN Boy)))''')
+        self.assertTrue(t.similar(tgt))
+
+        t2 = self.t.copy()
+        t2[0].delete(promote=False)
+
+        tgt = IdTree.fromstring('''(ROOT)''')
+        self.assertTrue(t2.similar(tgt))
+
+        t3 = self.t.copy()
+        t3[0][1].delete(promote=True)
+        tgt=IdTree.fromstring('''(ROOT (NP (DT The) (NN Boy)))''')
+
+        self.assertTrue(t3.similar(tgt))
+
+        t4 = self.t.copy()
+        t4[0][1].delete(promote=False)
+        tgt=IdTree.fromstring('''(ROOT (NP (DT The)))''')
+        self.assertTrue(t4.similar(tgt))
+
+
+
     def replace_test(self):
         tgt = IdTree.fromstring('''(ROOT (NP (DT The) (NN Dog)))''')
 

@@ -130,19 +130,30 @@ class IdTree(ParentedTree):
         return found
 
 
-    def delete(self, propagate=True):
+    def delete(self, propagate=True, promote=False):
         """
         Delete self from parent.
 
          :param propagate: If true, then delete parents that are made empty by this deletion.
          :type propagate: bool
+         :param promote: If true, then promote the children of this node to be children of the parent.
+         :type promote: bool
         """
         p = self.parent()
-        del p[self.parent_index()]
+        pi = self.parent_index()
+
+        if p:
+            del p[pi]
+
+            # Promote the children of the deleted node if asked.
+            if len(self) != 0 and promote:
+                for offset, child in enumerate(self):
+                    child._parent = None
+                    p.insert(pi+offset, child)
 
 
-        if propagate and p is not None and not p:
-            p.delete(propagate)
+            if propagate and p is not None and not p:
+                p.delete(propagate)
 
     def insert_sibling(self, t):
         self.parent().insert(self.parent_index(), t)
@@ -514,6 +525,7 @@ def project_ds(src_t, tgt_w, aln):
         DS_LOG.debug("Deleting unaligned English node: {}".format(unaligned_node))
         unaligned_node.delete()
 
+    DS_LOG.debug("New tree: {}".format(tgt_t))
 
     # --2) Now, create a list of the nodes that need replacing.
     nodes_to_replace = defaultdict(list)
@@ -598,7 +610,7 @@ def project_ds(src_t, tgt_w, aln):
         DS_LOG.debug("Reattaching unaligned target indices...".format(unaligned_tgt_indices))
 
     for j in unaligned_tgt_indices:
-        DS_LOG.debug("Attempting to reattach unaligned word: {}[{}]".format(tgt_w.get_index(j).value(), j))
+        # DS_LOG.debug("Attempting to reattach unaligned word: {}[{}]".format(tgt_w.get_index(j).value(), j))
 
         left_indices  = sorted([i for i in aln.all_tgt() if i < j])
         right_indices = sorted([k for k in aln.all_tgt() if k > j])
@@ -1081,7 +1093,7 @@ class DepTree(IdTree):
         Return a string representation in the stanford parser format.
         """
         repr = ''
-        for st in self.subtrees(filter=lambda s: s.parent()):
+        for st in self.subtrees():
             repr += '{}({}-{}, {}-{}){}'.format(st.type,
                                                st.parent().label(),
                                                st.parent().word_index,
@@ -1129,14 +1141,14 @@ class DepTree(IdTree):
         dt = DepTree(copy(self.label()), children, id=copy(self.id), type=copy(self.type), word_index=copy(self.word_index))
         return dt
 
-    def delete(self):
+    def delete(self, promote=True):
         """
         By default,
         :param propagate: Whether or not to delete "empty"
          nonterminals. Default to false, since DepTrees
          don't have the same notion of nonterminal/terminal.
         """
-        super().delete(propagate=False)
+        super().delete(propagate=False, promote=promote)
 
     def subtrees(self, filter=None, include_root=False):
         """

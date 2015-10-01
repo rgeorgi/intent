@@ -272,6 +272,54 @@ def read_pt(tier):
     return child_n.root()
 
 
+def read_ds(tier):
+    """
+    Like read_pt above, given a DS tier, return the DepTree object
+
+    :param tier:
+    :type tier: RGTier
+    """
+
+    # First, assert that the type we're looking at is correct.
+    assert tier.type == DS_TIER_TYPE
+
+    # Next, let's find the root.
+    start_nodes = [item for item in tier if (DS_DEP_ATTRIBUTE in item.attributes) and (DS_HEAD_ATTRIBUTE not in item.attributes)]
+
+    # There should be one and only one root!
+    assert len(start_nodes) == 1
+    start_node = start_nodes[0]
+
+    # Create the root node
+    root = DepTree.root()
+
+    # Get the rest of the tree starting from the start node
+    rest = create_ds_node(start_node)
+    root.append(rest)
+
+    # Now, return the tree
+    return root
+
+def create_ds_node(item):
+    """
+
+    :param item:
+    :type item: RGItem
+    :return:
+    """
+    my_dep = item.attributes[DS_DEP_ATTRIBUTE]
+
+    word = item.igt.find(id=my_dep)
+
+    node = DepTree(word.value(), [], id=word.id, word_index=word.index, type=item.value())
+
+    children = item.tier.findall(attributes={DS_HEAD_ATTRIBUTE:my_dep})
+    for child in children:
+        child_node = create_ds_node(child)
+        node.append(child_node)
+
+    return node
+
 def gen_item_id(id_base, num):
     return '{}{}'.format(id_base, num+1)
 
@@ -1676,7 +1724,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         if pt and result.pt:
             self.create_pt_tier(result.pt, self.trans, parse_method=INTENT_PS_PARSER)
         if dt and result.dt:
-            self.create_dt_tier(result.dt, parse_method=INTENT_DS_PARSER)
+            self.create_dt_tier(result.dt, self.trans, parse_method=INTENT_DS_PARSER)
 
 
     def create_pt_tier(self, phrase_tree, w_tier, parse_method=None, source_tier=None):
@@ -1758,8 +1806,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         # Now, create a tier from that tree object.
         self.create_pt_tier(proj_tree, self.lang, parse_method=INTENT_PS_PROJ, source_tier=self.get_trans_parse_tier())
 
-
-    def create_dt_tier(self, dt, parse_method=None):
+    def create_dt_tier(self, dt, w_tier, parse_method=None):
         """
         Create the dependency structure tier based on the ds that is passed in. The :class:`intent.trees.DepTree`
         structure that is passed in must be based on the words in the translation line, as the indices from the
@@ -1771,8 +1818,8 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         # 1) Start by creating dt tier -----------------------------------------
         dt_tier = RGTier(type=DS_TIER_TYPE,
-                         id=gen_tier_id(self, DS_TIER_ID, DS_TIER_TYPE, alignment=self.trans.id),
-                         attributes={DS_DEP_ATTRIBUTE: self.trans.id, DS_HEAD_ATTRIBUTE: self.trans.id})
+                         id=gen_tier_id(self, DS_TIER_ID, DS_TIER_TYPE, alignment=w_tier.id),
+                         attributes={DS_DEP_ATTRIBUTE: w_tier.id, DS_HEAD_ATTRIBUTE: w_tier.id})
 
         set_intent_method(dt_tier, parse_method)
 
@@ -1780,10 +1827,10 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         for label, head_i, dep_i in dt.indices_labels():
 
-            attributes={DS_DEP_ATTRIBUTE:self.trans.get_index(dep_i).id}
+            attributes={DS_DEP_ATTRIBUTE:w_tier.get_index(dep_i).id}
 
             if head_i != 0:
-                attributes[DS_HEAD_ATTRIBUTE] = self.trans.get_index(head_i).id
+                attributes[DS_HEAD_ATTRIBUTE] = w_tier.get_index(head_i).id
 
 
             di = RGItem(id=dt_tier.askItemId(), attributes=attributes, text=label)
@@ -1791,10 +1838,26 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         self.append(dt_tier)
 
+    def project_ds(self):
+        """
+        Project the dependency structure found in this tree.
+
+        """
+        trans_ds = self.get_trans_ds()
+        if not trans_ds:
+            raise ProjectionException('No dependency tree found for igt "{}"'.format(self.id))
+        else:
+            src_t = read_ds(trans_ds)
+            tgt_w = self.lang
+            aln = self.get_trans_gloss_lang_alignment()
 
 
+            proj_t = project_ds(src_t, tgt_w, aln)
 
+            self.create_dt_tier(proj_t, self.lang, parse_method=INTENT_DS_PROJ)
 
+    def get_trans_ds(self):
+        return self.find(type=DS_TIER_TYPE, attributes={DS_DEP_ATTRIBUTE:self.trans.id})
 
 
 #===============================================================================
@@ -2819,4 +2882,4 @@ def strip_pos(inst):
         pt.delete()
 
 
-from intent.trees import IdTree, project_ps, Terminal
+from intent.trees import IdTree, project_ps, Terminal, DepTree, project_ds
