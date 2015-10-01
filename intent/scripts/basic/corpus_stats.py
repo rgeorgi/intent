@@ -30,14 +30,13 @@ from collections import defaultdict
 
 from intent.igt.rgxigt import RGCorpus, RGIgt, MultipleNormLineException, NoGlossLineException, NoLangLineException, \
     NoTransLineException
-from intent.igt import rgxigt
 from intent.utils.dicts import StatDict, CountDict, TwoLevelCountDict
 from intent.utils.token import tokenize_string, tag_tokenizer
 
 #===========================================================================
 # Get XIGT logging info....
 #===========================================================================
-xigt_logger = logging.getLogger(rgxigt.__name__)
+xigt_logger = logging.getLogger("RGXIGT")
 sh = logging.StreamHandler()
 sh.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
 xigt_logger.addHandler(sh)
