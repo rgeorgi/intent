@@ -234,5 +234,16 @@
       <item id="w-ds5" dep="w5" head="w2">dep</item>
       <item id="w-ds6" dep="w6" head="w5" />
     </tier>
+    <tier id="w-pos" type="pos" alignment="w">
+      <metadata type="xigt-meta">
+        <meta type="data-provenance" date="2015-10-02 04:34:56-UTC" method="classifier" projected-from="gw-pos" source="intent" />
+      </metadata>
+      <item id="w-pos1" alignment="w5">VERB</item>
+      <item id="w-pos2" alignment="w3">PRON</item>
+      <item id="w-pos3" alignment="w6">VERB</item>
+      <item id="w-pos4" alignment="w4">PRON</item>
+      <item id="w-pos5" alignment="w2">VERB</item>
+      <item id="w-pos6" alignment="w1">PRON</item>
+    </tier>
   </igt>
 </xigt-corpus>
