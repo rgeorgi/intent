@@ -272,7 +272,7 @@ def read_pt(tier):
     return child_n.root()
 
 
-def read_ds(tier):
+def read_ds(tier, pos_source=None):
     """
     Like read_pt above, given a DS tier, return the DepTree object
 
@@ -286,30 +286,42 @@ def read_ds(tier):
     # Next, let's find the root.
     start_nodes = [item for item in tier if (DS_DEP_ATTRIBUTE in item.attributes) and (DS_HEAD_ATTRIBUTE not in item.attributes)]
 
-    # There should be one and only one root!
-    assert len(start_nodes) == 1
-    start_node = start_nodes[0]
+
 
     # Create the root node
     root = DepTree.root()
 
-    # Get the rest of the tree starting from the start node
-    rest = create_ds_node(start_node)
-    root.append(rest)
+    # TODO: Should we allow multiple start tiers?
+    for start_node in start_nodes:
+        # Get the rest of the tree starting from the start node
+        rest = create_ds_node(start_node, pos_source=pos_source)
+        root.append(rest)
 
     # Now, return the tree
     return root
 
-def create_ds_node(item):
+def create_ds_node(item, pos_source=None):
     """
+    Given an item from a dependency tier, create a DepTree node for it,
+    and recursively add any children that depend upon it.
+
+    Also look for POS tags
 
     :param item:
     :type item: RGItem
     :return:
     """
+    # Start by getting the id for the word that this edge
+    # has for its dependent (the root of the tree will
+    # have no head attribute)
     my_dep = item.attributes[DS_DEP_ATTRIBUTE]
 
+    # Find the item that represents this node.
     word = item.igt.find(id=my_dep)
+
+    # If there is a POS tag associated...
+    pos_tier = item.igt.get_pos_tags(word.tier.id, tag_method=pos_source)
+    print(pos_tier)
 
     node = DepTree(word.value(), [], id=word.id, word_index=word.index, type=item.value())
 
@@ -1841,23 +1853,39 @@ class RGIgt(Igt, RecursiveFindMixin):
     def project_ds(self):
         """
         Project the dependency structure found in this tree.
-
         """
-        trans_ds = self.get_trans_ds()
+
+        # If a tier previously existed, overwrite it...
+        old_lang_ds_tier = self.get_lang_ds_tier()
+        if old_lang_ds_tier is not None:
+            old_lang_ds_tier.delete()
+
+        trans_ds = self.get_trans_ds_tier()
         if not trans_ds:
             raise ProjectionException('No dependency tree found for igt "{}"'.format(self.id))
         else:
-            src_t = read_ds(trans_ds)
+            src_t = self.get_trans_ds()
             tgt_w = self.lang
             aln = self.get_trans_gloss_lang_alignment()
 
-
             proj_t = project_ds(src_t, tgt_w, aln)
+
 
             self.create_dt_tier(proj_t, self.lang, parse_method=INTENT_DS_PROJ)
 
-    def get_trans_ds(self):
+    def get_trans_ds_tier(self):
         return self.find(type=DS_TIER_TYPE, attributes={DS_DEP_ATTRIBUTE:self.trans.id})
+
+    def get_trans_ds(self, pos_source=None):
+        return read_ds(self.get_trans_ds_tier(), pos_source=pos_source)
+
+    def get_lang_ds_tier(self):
+        return self.find(type=DS_TIER_TYPE, attributes={DS_DEP_ATTRIBUTE:self.lang.id})
+
+    def get_lang_ds(self, pos_source=None):
+        return read_ds(self.get_lang_ds_tier(), pos_source=pos_source)
+
+
 
 
 #===============================================================================
@@ -1897,7 +1925,19 @@ class RGItem(Item, FindMixin):
         return new_item
 
 
+    @property
+    def tier(self):
+        """
+        :rtype : RGTier
+        """
+        return super().tier
 
+    @property
+    def igt(self):
+        """
+        :rtype : RGIgt
+        """
+        return super().igt
 
 
 class RGLine(RGItem):
@@ -2320,9 +2360,9 @@ def retrieve_phrase(inst, tag, id, type):
     f = lambda x: tag in aligned_tags(x)
     pt = inst.find(type=type, others=[f])
 
-    #n = inst.normal_tier()
+    #n = inst1.normal_tier()
 
-    #pt = inst.find(type=type, content = n.id)
+    #pt = inst1.find(type=type, content = n.id)
     if not pt:
         n = inst.normal_tier()
         # Get the normalized line line
@@ -2510,7 +2550,7 @@ def retrieve_gloss_words(inst):
 
 def retrieve_normal_line(inst, tag):
     """
-    Retrieve a normalized line from the instance ``inst`` with the given ``tag``.
+    Retrieve a normalized line from the instance ``inst1`` with the given ``tag``.
 
     :param inst: Instance to retrieve the normalized line from.
     :type inst: RGIgt
@@ -2680,8 +2720,8 @@ def odin_span(item):
     Follow this item's segmentation all the way
     back to the raw odin item it originates from.
 
-    :param inst: Instance to pull from
-    :type inst: RGIgt
+    :param inst1: Instance to pull from
+    :type inst1: RGIgt
     :param item: RGItem
     :type item: Item to trace the alignment for.
     """

@@ -6,7 +6,7 @@ from intent.igt.consts import DS_TIER_TYPE
 from intent.igt.igtutils import rgp
 from intent.igt.rgxigt import RGXigtException, RGCorpus, read_ds
 from intent.subcommands import enrich
-from intent.trees import DepTree
+from intent.trees import DepTree, DEPSTR_PTB, project_ds
 from intent.utils.env import proj_root, testfile_dir
 
 __author__ = 'rgeorgi'
@@ -32,21 +32,53 @@ class ParseTests(TestCase):
         enrich(IN_FILE=ger_file, **no_enrich_args)
 
 class ReadTreeTests(TestCase):
+    """
+    Unit tests to ensure that trees are read correctly from XIGT.
+    """
 
     def setUp(self):
         logging.basicConfig(level=logging.DEBUG)
         self.xc = RGCorpus.load(xigt_proj, basic_processing=True)
-        self.inst = self.xc[0]
+        self.inst1 = self.xc[0]
+        self.inst2 = self.xc[1]
 
     def test_read_ds_tree(self):
-        ds_tier = self.inst.get_trans_ds()
-        ds = read_ds(ds_tier)
-        r = DepTree.from_ptbstring("""
-(ROOT[0] (found[2] (Someone[1]) (them[3]) (boring.[4])))""")
+        ds = self.inst1.get_trans_ds()
+        r = DepTree.fromstring("""(ROOT[0] (found[2] (Someone[1]) (them[3]) (boring[4])))""", stype=DEPSTR_PTB)
 
         self.assertTrue(r.structurally_eq(ds))
 
     def test_project_ds_tree(self):
-        self.inst.project_ds()
-        
+        """
+        Test that performing projection works correctly.
+        """
+        self.inst1.project_ds()
+
+        self.inst2.project_ds()
+
+        self.inst2.get_lang_ds().draw()
+
+    def test_read_proj_ds_tree(self):
+        src_t = self.inst2.get_trans_ds()
+        tgt_w = self.inst2.lang
+        aln   = self.inst2.get_trans_gloss_lang_alignment()
+
+        tgt_t = DepTree.fromstring("""
+        (ROOT[0]
+            (glaubst[2]
+                (Was[1])
+                (Du[3])
+                (wer[4])
+                (angerufen[5] (hat[6]))
+            ))
+        """, stype=DEPSTR_PTB)
+
+        proj_t = project_ds(src_t, tgt_w, aln)
+
+        self.assertTrue(proj_t.structurally_eq(tgt_t))
+
+
+
+
+
 

@@ -207,7 +207,7 @@ def enrich(**kwargs):
                 inst.parse_translation_line(sp, pt=True, dt=True)
                 # except Exception as ve:
                     # pass
-                    # ENRICH_LOG.critical("Unknown parse error in instance {}".format(inst.id))
+                    # ENRICH_LOG.critical("Unknown parse error in instance {}".format(inst1.id))
                     # ENRICH_LOG.critical(str(ve))
 
             # If parse tree projection is enabled... -------------------------------
@@ -218,9 +218,10 @@ def enrich(**kwargs):
                     ENRICH_LOG.warning('A parse for the translation line was not found for instance "%s", not projecting phrase structure.' % inst.id)
                 except ProjectionTransGlossException as ptge:
                     ENRICH_LOG.warning('Alignment between translation and gloss lines was not found for instance "%s". Not projecting phrase structure.' % inst.id)
-                # except Exception as ie:
-                #     ENRICH_LOG.critical("Unknown projection error in instance {}".format(inst.id))
-                #     ENRICH_LOG.critical(str(ie))
+
+
+                inst.project_ds()
+
 
             # Sort the tiers... ----------------------------------------------------
             inst.sort()
