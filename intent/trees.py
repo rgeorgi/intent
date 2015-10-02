@@ -8,6 +8,13 @@ from intent.alignment.Alignment import Alignment
 
 from nltk.tree import ParentedTree, Tree
 
+#===============================================================================
+# Constants / Strings
+#===============================================================================
+
+DEPSTR_STANFORD = 'stanford'
+DEPSTR_CONLL    = 'conll'
+DEPSTR_PTB      = 'ptb-like'
 
 #===============================================================================
 # Exceptions
@@ -182,19 +189,6 @@ class IdTree(ParentedTree):
         new_children = [t.copy() for t in self]
         return IdTree(self.label(), new_children, id=copy(self.id))
 
-    @classmethod
-    def from_ptbstring(cls, string):
-        """
-        :rtype : DepTree
-        """
-
-        def parse_label(s, children):
-            label, index, type = re.search('(.*?)(?:\[([0-9]+)\])(-.*?)?', s).groups()
-            return DepTree(label, children, type=type, word_index=int(index))
-
-        results = paren_level_contents(string, f=parse_label)
-        assert len(results) == 1
-        return results[0]
 
     @classmethod
     def fromstring(cls, tree_string, id_base='', **kwargs):
@@ -571,8 +565,8 @@ def project_ds(src_t, tgt_w, aln):
             #                                                        node_to_replace.label(),
             #                                                        siblings[0].label()))
 
-        # Finally, delete the old node.
-        node_to_replace.delete()
+        # Finally, delete the old node (and don't promote children)
+        node_to_replace.delete(promote=False)
 
     # --3) Now, for multiply-aligned words, only keep
     #      the shallowest one.
@@ -996,18 +990,21 @@ class DepEdge(object):
     Container object for holding the head/child, and dependency
     type.
     """
-    def __init__(self, head=None, dep=None, type=None):
+    def __init__(self, head=None, dep=None, type=None, pos=None):
         self.head = head
         self.dep = dep
         self.type = type
+        self.pos = pos
 
 
 class DepTree(IdTree):
-    def __init__(self, label, children=None, id=None, type=None, word_index=None):
+    def __init__(self, label, children=None, id=None, type=None, word_index=None, pos=None):
         super().__init__(label, children=children, id=id)
         self.type = type
         self._word_index = word_index
+        self.pos = pos
 
+        # We must have an index for every word.
         assert isinstance(word_index, int)
 
     def __hash__(self):
@@ -1026,55 +1023,100 @@ class DepTree(IdTree):
 
 
     @classmethod
-    def fromstring(cls, tree_string, id_base='', **kwargs):
+    def fromstring(cls, tree_string, id_base='', stype=DEPSTR_STANFORD, **kwargs):
         """
-        Read a dependency tree from the stanford dependency format. Example:
+        Read a dependency tree from a string using several different formats.
 
         ::
-
-            nsubj(ran-2, John-1)
-            root(ROOT-0, ran-2)
-            det(woods-5, the-4)
-            prep_into(ran-2, woods-5)
 
         :param tree_string: String to parse
         :type tree_string: str
         :param id_base: ID string on which to base the IDs in this tree.
         :type id_base: str
+        :param stype: The format of the string to parse...
         """
         DS_LOG.debug('Building dependency tree from: {}'.format(tree_string))
 
 
-        edges = get_dep_edges(tree_string)
+        # =============================================================================
+        # PTB-LIKE FORMAT (Bracketed, hierarchical)
+        # =============================================================================
 
-        dt = DepTree('ROOT', [], word_index = 0)
+        if stype == DEPSTR_PTB:
+            def parse_label(s, children):
+                label, index, type = re.search('(.*?)(?:\[([0-9]+)\])(-.*?)?', s).groups()
+                return cls(label, children, type=type, word_index=int(index))
 
-        roots = [e.head for e in edges if e.head.label == 'ROOT']
+            results = paren_level_contents(tree_string, f=parse_label)
+            assert len(results) == 1
+            return results[0]
 
-        if not roots:
-            raise TreeError("No root for tree {}. Skipping.".format(tree_string))
+        # =============================================================================
+        # STANFORD/CONLL FORMATS (Unordered, edges)
+        # =============================================================================
+        else:
+
+            edges = get_dep_edges(tree_string, stype=stype)
+
+            dt = cls.root()
+
+            roots = [e.head for e in edges if e.head.label == 'ROOT']
+
+            if not roots:
+                raise TreeError("No root for tree {}. Skipping.".format(tree_string))
 
 
-        # Iterate through the edges, and look for those
-        # that are "attachable"
-        while edges:
+            # Iterate through the edges, and look for those
+            # that are "attachable"
+            while edges:
 
-            edge_found = False
+                edge_found = False
 
-            for i, edge in enumerate(edges):
-                #
-                node = dt.find_terminal(edge.head)
+                for i, edge in enumerate(edges):
+                    #
+                    node = dt.find_terminal(edge.head)
 
-                if node is not None:
-                    node.append(DepTree(edge.dep.label, [], word_index=edge.dep.index, type=edge.type))
-                    del edges[i]
-                    edge_found = True
-                    break
+                    if node is not None:
+                        node.append(DepTree(edge.dep.label, [], word_index=edge.dep.index, type=edge.type, pos=edge.pos))
+                        del edges[i]
+                        edge_found = True
+                        break
 
-            if not edge_found:
-                raise TreeError("Dependency Tree {} could not be built, edge could not be connected.".format(tree_string))
+                if not edge_found:
+                    raise TreeError("Dependency Tree {} could not be built, edge could not be connected.".format(tree_string))
 
-        return dt
+            return dt
+
+
+    def to_conll(self):
+        """
+        Return a string in CONLL format
+
+        (see:
+            http://ilk.uvt.nl/conll/
+
+        under "Data Format")
+        """
+
+        # Get all the nodes and order them by their index.
+        nodes = list(self.subtrees())
+        nodes.sort(key=lambda x: x.word_index)
+
+        ret_str = ''
+        for node in nodes:
+            fields = ['_'] * 10
+
+            fields[0] = str(node.word_index)
+            fields[1] = node.label()
+            fields[2] = node.label()
+            fields[3] = node.pos if node.pos else '_'
+            fields[4] = node.pos if node.pos else '_'
+            fields[6] = str(node.parent().word_index)
+            fields[7] = node.type
+
+            ret_str += '\t'.join(fields)+'\n'
+
+        return ret_str
 
 
 
@@ -1169,32 +1211,64 @@ class DepTree(IdTree):
         else:
             return super().subtrees(filter=filter)
 
-def get_dep_edges(string):
+
+
+def get_dep_edges(string, stype=DEPSTR_STANFORD):
     """
 
     :param string: A string representation of the dependency tree produced by the stanford parser.
-    :return: Dictionary of
-    :rtype: dict
+    :return: List of DepEdges
+    :rtype: list[DepEdge]
     """
 
-    #                    Sometimes the parser seems to place a spurious quote after the digit?
-    nodes = re.findall('(\w+)\((.*?\d+)\'?\)', string)
-
-    # We are going to store a dictionary of words
-    # and their children, and then construct the
-    # tree from "ROOT" on down...
     edges = []
 
-    # Go through each of the returned values...
-    for name, pair in nodes:
-        head, child = re.split(',\s', pair)
+    if stype == DEPSTR_STANFORD:
+        #                    Sometimes the parser seems to place a spurious quote after the digit?
+        nodes = re.findall('(\w+)\((.*?\d+)\'?\)', string)
 
-        w_i_re = re.compile('(\S+)-(\d+)')
+        # We are going to store a dictionary of words
+        # and their children, and then construct the
+        # tree from "ROOT" on down...
 
-        head  = Terminal(*re.search(w_i_re, head).groups())
-        child = Terminal(*re.search(w_i_re, child).groups())
 
-        edges.append(DepEdge(head, child, type=name))
+        # Go through each of the returned values...
+        for name, pair in nodes:
+            head, child = re.split(',\s', pair)
+
+            w_i_re = re.compile('(\S+)-(\d+)')
+
+            head  = Terminal(*re.search(w_i_re, head).groups())
+            child = Terminal(*re.search(w_i_re, child).groups())
+
+            edges.append(DepEdge(head, child, type=name))
+
+    # -----------------------------------------------------------------------------
+    # CONLL Dependencies...
+
+    elif stype == DEPSTR_CONLL:
+        words = string.strip().split('\n')
+
+        # Get the indices and their associated words...
+        w_d = {int(w.split()[0]):w.split()[1] for w in words}
+
+
+        for word in words:
+            info = word.split()
+
+            index = int(info[0])
+            form  = info[1]
+            pos   = info[3]
+            head  = int(info[6])
+            type  = info[7]
+
+            if head == 0:
+                head_t = Terminal('ROOT', 0)
+            else:
+                head_t = Terminal(w_d[head], head)
+
+            child_t = Terminal(form, index)
+            edges.append(DepEdge(head_t, child_t, type=type, pos=pos))
 
     return edges
 

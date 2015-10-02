@@ -1,9 +1,11 @@
 import unittest
+import re
 
 import intent
 from intent.alignment.Alignment import Alignment
 from intent.igt.rgxigt import RGWordTier
-from intent.trees import IdTree, project_ps, TreeMergeError, DepTree, Terminal, TreeError, project_ds
+from intent.trees import IdTree, project_ps, TreeMergeError, DepTree, Terminal, TreeError, project_ds, get_dep_edges, \
+    DEPSTR_CONLL, DEPSTR_PTB, DEPSTR_STANFORD
 
 __author__ = 'rgeorgi'
 
@@ -455,15 +457,25 @@ class ProjectDS(unittest.TestCase):
 
     def setUp(self):
         self.ds1str = """
-root(ROOT-0, gave-3)
-nsubj(gave-3, teacher-2)
-det(teacher-2, the-1)
-dobj(gave-3, book-5)
-det(book-5, a-4)
-prep_to(gave-3, to-6)
-indobj(to-6, boy-8)
-det(boy-8, the-7)
-mod(gave-3, yesterday-9)"""
+                        root(ROOT-0, gave-3)
+                        nsubj(gave-3, teacher-2)
+                        det(teacher-2, the-1)
+                        dobj(gave-3, book-5)
+                        det(book-5, a-4)
+                        prep_to(gave-3, to-6)
+                        indobj(to-6, boy-8)
+                        det(boy-8, the-7)
+                        mod(gave-3, yesterday-9)"""
+
+        self.ds1bstr = """
+                        (ROOT[0]
+                            (gave[3]
+                                (teacher[2] (the[1]))
+                                (book[5] (a[4]))
+                                (to[6] (boy[8] (the[7])))
+                                (yesterday[9])
+                            ))
+                        """
 
         self.ds2str = """ (ROOT[0]-root
                             (Rhoddodd[1]-nsubj
@@ -475,30 +487,58 @@ mod(gave-3, yesterday-9)"""
                         )"""
 
         self.ds3str = """
-nmod(meet-4, Tomorrow-1)
-nsubj(meet-4, Mary-2)
-aux(meet-4, will-3)
-root(ROOT-0, meet-4)
-dobj(meet-4, Hans-5)"""
+                        nmod(meet-4, Tomorrow-1)
+                        nsubj(meet-4, Mary-2)
+                        aux(meet-4, will-3)
+                        root(ROOT-0, meet-4)
+                        dobj(meet-4, Hans-5)"""
 
 
-    def test_strings(self):
+    def test_stanford_ds_string(self):
+        """
+        Unit tests for parsing the stanford dependency format, and ensuring it is written back out correctly.
+        """
         ds1 = DepTree.fromstring(self.ds1str)
 
-        self.assertTrue(ds1.stanford_str(separator='\n').strip() == self.ds1str.strip())
+        self.assertTrue(ds1.stanford_str(separator='\n').strip() == re.sub('\s\s+', '\n', self.ds1str.strip()))
+
+    def test_ptb_ds_string(self):
+        """
+        Unit test for parsing the PTB-style format.
+        """
+        ds2 = DepTree.fromstring(self.ds1bstr, stype=DEPSTR_PTB)
+
+    def test_ptb_stanford_equiv(self):
+        ds1 = DepTree.fromstring(self.ds1str,  stype=DEPSTR_STANFORD)
+        ds2 = DepTree.fromstring(self.ds1bstr, stype=DEPSTR_PTB)
+
+        self.assertTrue(ds1.structurally_eq(ds2))
+
+
 
     def test_projection_1(self):
+        """
+        Testcase for the DS projection in Fei/Will's paper.
+        """
         ds1 = DepTree.fromstring(self.ds1str)
-        ds2 = DepTree.from_ptbstring(self.ds2str)
+        ds2 = DepTree.fromstring(self.ds2str, stype=DEPSTR_PTB)
+
+        # -----------------------------------------------------------------------------
+        #    1       2      3        4    5        6      7
+        # Rhoddod    yr   athro    lyfr  i'r     bachgen  ddoe
+        # gave-3sg   the  teacher  book  to-the  boy      yesterday
+        #
+        # The     teacher  gave  a book   to the  boy      yesterday
+        #  1         2     3     4  5     6  7    8           9
+
 
         tgt_w = RGWordTier.from_string("Rhoddodd yr athro lyfr i'r bachgen ddoe")
-        aln = Alignment([(1,3),(2,1),(3,2),(4,5),(5,6),(5,7),(6,8),(7,9)])
 
-        # Flip it...
-        aln = aln.flip()
+        aln = Alignment([(1,2),(2,3),(3,1),(5,4),(6,5),(7,5),(8,6),(9,7)])
 
         # And now, project...
         ds_proj = project_ds(ds1, tgt_w, aln)
+
         self.assertTrue(ds2.structurally_eq(ds_proj))
 
 
@@ -518,15 +558,16 @@ dobj(meet-4, Hans-5)"""
 
         # ds_proj.draw()
 
-        exp_proj = DepTree.from_ptbstring("""
-(ROOT[0]
-    (treffen[6]
-        (Hans[2] (Den[1]))
-        (wird[3])
-        (Maria[4])
-        (morgen[5])
-))
-        """)
+        exp_proj = DepTree.fromstring("""
+                                        (ROOT[0]
+                                            (treffen[6]
+                                                (Hans[2] (Den[1]))
+                                                (wird[3])
+                                                (Maria[4])
+                                                (morgen[5])
+                                        ))
+                                                """,
+                                      stype=DEPSTR_PTB)
         self.assertTrue(ds_proj.structurally_eq(exp_proj))
 
 
@@ -543,10 +584,41 @@ dobj(meet-4, Hans-5)"""
 
         ds_proj = project_ds(ds3, tgt_w, aln)
 
-        exp_proj = DepTree.from_ptbstring("""(ROOT[0]
+        exp_proj = DepTree.fromstring("""(ROOT[0]
     (treffen[6]
         (morgen[1])
         (wird[2])
         (Maria[3] (Den[4]))
-        (Hans[5])))""")
+        (Hans[5])))""", stype=DEPSTR_PTB)
         self.assertTrue(ds_proj.structurally_eq(exp_proj))
+
+class CONLLTests(unittest.TestCase):
+
+        def setUp(self):
+            self.s = '''
+1   Cathy             Cathy             N     N     eigen|ev|neut                    2   su      _  _
+2   zag               zie               V     V     trans|ovt|1of2of3|ev             0   ROOT    _  _
+3   hen               hen               Pron  Pron  per|3|mv|datofacc                2   obj1    _  _
+4   wild              wild              Adj   Adj   attr|stell|onverv                5   mod     _  _
+5   zwaaien           zwaai             N     N     soort|mv|neut                    2   vc      _  _
+6   .                 .                 Punc  Punc  punt                             5   punct   _  _'''
+
+        def test_conll_read(self):
+            ds = DepTree.fromstring(self.s, stype=DEPSTR_CONLL)
+
+            tgt = DepTree.fromstring("""
+                            (ROOT[0]
+                                (zag[2]
+                                    (Cathy[1])
+                                    (hen[3])
+                                    (zwaaien[5] (wild[4])
+                                                (.[6]))
+                                ))""", stype=DEPSTR_PTB)
+
+            self.assertTrue(ds.structurally_eq(tgt))
+
+        def test_conll_write(self):
+            ds = DepTree.fromstring(self.s, stype=DEPSTR_CONLL)
+
+            print(ds.to_conll())
+
