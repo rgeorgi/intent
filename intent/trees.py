@@ -1112,7 +1112,11 @@ class DepTree(IdTree):
             fields[3] = node.pos if node.pos else '_'
             fields[4] = node.pos if node.pos else '_'
             fields[6] = str(node.parent().word_index)
-            fields[7] = node.type
+            fields[7] = node.type if node.type else '_'
+
+            # Set the type to root if the parent is root
+            if node.parent().word_index == 0:
+                fields[7] = 'root'
 
             ret_str += '\t'.join(fields)+'\n'
 

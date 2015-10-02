@@ -321,13 +321,17 @@ def create_ds_node(item, pos_source=None):
 
     # If there is a POS tag associated...
     pos_tier = item.igt.get_pos_tags(word.tier.id, tag_method=pos_source)
-    print(pos_tier)
+    pos = None
+    if pos_tier:
+        pos_item = pos_tier.find(alignment=word.id)
+        if pos_item:
+            pos = pos_item.value()
 
-    node = DepTree(word.value(), [], id=word.id, word_index=word.index, type=item.value())
+    node = DepTree(word.value(), [], id=word.id, word_index=word.index, type=item.value(), pos=pos)
 
     children = item.tier.findall(attributes={DS_HEAD_ATTRIBUTE:my_dep})
     for child in children:
-        child_node = create_ds_node(child)
+        child_node = create_ds_node(child, pos_source=pos_source)
         node.append(child_node)
 
     return node

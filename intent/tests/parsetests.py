@@ -77,7 +77,19 @@ class ReadTreeTests(TestCase):
 
         self.assertTrue(proj_t.structurally_eq(tgt_t))
 
+    def test_conll(self):
+        ds = self.inst2.get_lang_ds()
+        conll_str = ds.to_conll()
 
+        s = """
+1	Was	Was	PRON	PRON	_	2	_	_	_
+2	glaubst	glaubst	VERB	VERB	_	0	root	_	_
+3	Du	Du	PRON	PRON	_	2	nsubj	_	_
+4	wer	wer	PRON	PRON	_	2	dobj	_	_
+5	angerufen	angerufen	VERB	VERB	_	2	dep	_	_
+6	hat	hat	VERB	VERB	_	5	_	_	_"""
+
+        self.assertEqual(conll_str.strip(), s.strip())
 
 
 
