@@ -16,7 +16,10 @@ ctn_file = os.path.join(testfile_dir, 'ctn2-xigt.xml')
 ger_file = os.path.join(testfile_dir, 'single_ger.xml')
 kor_file = os.path.join(testfile_dir, 'kor-ex.xml')
 
+
+# Some of the tree test files.
 xigt_proj = os.path.join(testfile_dir, 'xigt-projection-tests.xml')
+ds_cycle  = os.path.join(testfile_dir, 'ds-cycle-test.xml')
 
 no_enrich_args = {'OUT_FILE':'/dev/null'}
 
@@ -92,5 +95,31 @@ class ReadTreeTests(TestCase):
         self.assertEqual(conll_str.strip(), s.strip())
 
 
+    def test_ds_cycle(self):
+        xc = RGCorpus.load(ds_cycle)
+        inst = xc[0]
+
+        #  1    2       4        5       7    8    9
+        # The woman, (after) arriving, began to browse.
+
+        # (The commas count as words, hence the skipping)
+
+        tgt_t = DepTree.fromstring("""
+        (ROOT[0]
+            (began[7]
+                (woman[2]
+                    (The[1])
+                    (\(after\)[4] (arriving[5])))
+                (browse[9]
+                    (woman[2])
+                    (to[8])
+                )
+            ))
+        """, stype=DEPSTR_PTB)
+
+        ds = inst.get_trans_ds()
+        self.assertTrue(tgt_t.structurally_eq(ds))
+
+        self.assertIsNone(inst.project_ds())
 
 

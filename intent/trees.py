@@ -1068,24 +1068,7 @@ class DepTree(IdTree):
 
             # Iterate through the edges, and look for those
             # that are "attachable"
-            while edges:
-
-                edge_found = False
-
-                for i, edge in enumerate(edges):
-                    #
-                    node = dt.find_terminal(edge.head)
-
-                    if node is not None:
-                        node.append(DepTree(edge.dep.label, [], word_index=edge.dep.index, type=edge.type, pos=edge.pos))
-                        del edges[i]
-                        edge_found = True
-                        break
-
-                if not edge_found:
-                    raise TreeError("Dependency Tree {} could not be built, edge could not be connected.".format(tree_string))
-
-            return dt
+            return build_dep_edges(edges)
 
 
     def to_conll(self):
@@ -1098,12 +1081,18 @@ class DepTree(IdTree):
         under "Data Format")
         """
 
-        # Get all the nodes and order them by their index.
-        nodes = list(self.subtrees())
-        nodes.sort(key=lambda x: x.word_index)
+        indices = sorted(set([st.word_index for st in self.subtrees()]))
 
         ret_str = ''
-        for node in nodes:
+
+        # Add support for a node having multiple heads...
+        for index in indices:
+            nodes = self.findall_indices(index)
+            head_indices = sorted(set([n.parent().word_index for n in nodes]))
+            head = ','.join([str(i) for i in head_indices])
+
+
+            node = nodes[0]
             fields = ['_'] * 10
 
             fields[0] = str(node.word_index)
@@ -1111,11 +1100,11 @@ class DepTree(IdTree):
             fields[2] = node.label()
             fields[3] = node.pos if node.pos else '_'
             fields[4] = node.pos if node.pos else '_'
-            fields[6] = str(node.parent().word_index)
+            fields[6] = head
             fields[7] = node.type if node.type else '_'
 
             # Set the type to root if the parent is root
-            if node.parent().word_index == 0:
+            if 0 in head_indices:
                 fields[7] = 'root'
 
             ret_str += '\t'.join(fields)+'\n'
@@ -1287,6 +1276,26 @@ class Count():
     def val(self):
         return self._i
 
+def build_dep_edges(edges):
+    dt = DepTree.root()
+    while edges:
+
+        edge_found = False
+
+        for i, edge in enumerate(edges):
+            #
+            node = dt.find_terminal(edge.head)
+
+            if node is not None:
+                node.append(DepTree(edge.dep.label, [], word_index=edge.dep.index, type=edge.type, pos=edge.pos))
+                del edges[i]
+                edge_found = True
+                break
+
+        if not edge_found:
+            raise TreeError("Dependency Tree {} could not be built, edge could not be connected.".format(tree_string))
+
+    return dt
 
 def paren_level_contents(string, f=lambda x, y: [x,y], i=None):
     """
@@ -1307,12 +1316,19 @@ def paren_level_contents(string, f=lambda x, y: [x,y], i=None):
 
     children = []
 
+    escaped = False
+
     while i.val() < len(string):
         char = string[i.val()]
         i.inc() # Increment the counter...
                 # this counter will persist through recursive calls
 
-        if char == ')':
+        if escaped == True:
+            content += char
+            escaped = False
+        elif char == '\\':
+            escaped = True
+        elif char == ')':
             return f(content.strip(), children)
         elif char == '(':
             children.append(paren_level_contents(string, f=f, i=i))
@@ -1321,6 +1337,7 @@ def paren_level_contents(string, f=lambda x, y: [x,y], i=None):
 
     # We reach this point only after we have built up all the
     return children
+
 
 
 def fix_tree_parents(t, preceding_parent = None):

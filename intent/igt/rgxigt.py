@@ -283,58 +283,42 @@ def read_ds(tier, pos_source=None):
     # First, assert that the type we're looking at is correct.
     assert tier.type == DS_TIER_TYPE
 
-    # Next, let's find the root.
-    start_nodes = [item for item in tier if (DS_DEP_ATTRIBUTE in item.attributes) and (DS_HEAD_ATTRIBUTE not in item.attributes)]
-
-
-
-    # Create the root node
+    # --1) Root the tree.
     root = DepTree.root()
 
-    # TODO: Should we allow multiple start tiers?
-    for start_node in start_nodes:
-        # Get the rest of the tree starting from the start node
-        rest = create_ds_node(start_node, pos_source=pos_source)
-        root.append(rest)
+    # --2) We will build up a list of edges, then attach the edges to the tree.
+    edges = []
 
-    # Now, return the tree
-    return root
+    # --2b) Retrieve the POS tier, if it exists, in advance.
+    pos_tier = tier.igt.get_pos_tags(tier.attributes.get(DS_DEP_ATTRIBUTE))
 
-def create_ds_node(item, pos_source=None):
-    """
-    Given an item from a dependency tier, create a DepTree node for it,
-    and recursively add any children that depend upon it.
+    for item in tier:
+        dep  = item.attributes.get(DS_DEP_ATTRIBUTE)
+        head = item.attributes.get(DS_HEAD_ATTRIBUTE)
 
-    Also look for POS tags
+        # Get the POS tag if it exists
+        pos = None
+        if pos_tier:
+            pos_item = pos_tier.find(alignment=dep)
+            if pos_item:
+                pos = pos_item.value()
 
-    :param item:
-    :type item: RGItem
-    :return:
-    """
-    # Start by getting the id for the word that this edge
-    # has for its dependent (the root of the tree will
-    # have no head attribute)
-    my_dep = item.attributes[DS_DEP_ATTRIBUTE]
+        # Get the word value...
+        dep_w = tier.igt.find(id=dep)
+        dep_t = Terminal(dep_w.value(), dep_w.index)
 
-    # Find the item that represents this node.
-    word = item.igt.find(id=my_dep)
+        if head is not None:
+            head_w = tier.igt.find(id=head)
+            head_t = Terminal(head_w.value(), head_w.index)
+        else:
+            head_t = Terminal('ROOT', 0)
 
-    # If there is a POS tag associated...
-    pos_tier = item.igt.get_pos_tags(word.tier.id, tag_method=pos_source)
-    pos = None
-    if pos_tier:
-        pos_item = pos_tier.find(alignment=word.id)
-        if pos_item:
-            pos = pos_item.value()
+        e = DepEdge(head=head_t, dep=dep_t, type=item.value(), pos=pos)
+        edges.append(e)
 
-    node = DepTree(word.value(), [], id=word.id, word_index=word.index, type=item.value(), pos=pos)
+    dt = build_dep_edges(edges)
+    return dt
 
-    children = item.tier.findall(attributes={DS_HEAD_ATTRIBUTE:my_dep})
-    for child in children:
-        child_node = create_ds_node(child, pos_source=pos_source)
-        node.append(child_node)
-
-    return node
 
 def gen_item_id(id_base, num):
     return '{}{}'.format(id_base, num+1)
@@ -1881,13 +1865,21 @@ class RGIgt(Igt, RecursiveFindMixin):
         return self.find(type=DS_TIER_TYPE, attributes={DS_DEP_ATTRIBUTE:self.trans.id})
 
     def get_trans_ds(self, pos_source=None):
-        return read_ds(self.get_trans_ds_tier(), pos_source=pos_source)
+        tier = self.get_trans_ds_tier()
+        if tier is None:
+            return None
+        else:
+            return read_ds(tier, pos_source=pos_source)
 
     def get_lang_ds_tier(self):
         return self.find(type=DS_TIER_TYPE, attributes={DS_DEP_ATTRIBUTE:self.lang.id})
 
     def get_lang_ds(self, pos_source=None):
-        return read_ds(self.get_lang_ds_tier(), pos_source=pos_source)
+        tier = self.get_lang_ds_tier()
+        if tier is None:
+            return None
+        else:
+            return read_ds(tier, pos_source=pos_source)
 
 
 
@@ -2100,6 +2092,13 @@ class RGTier(Tier, RecursiveFindMixin):
         """
         del self.igt.tiers[self.index]
         self.igt.refresh_index()
+
+    @property
+    def igt(self):
+        """
+        :rtype : RGIgt
+        """
+        return super().igt
 
 #===============================================================================
 # Bilingual Alignment Tier
@@ -2926,4 +2925,4 @@ def strip_pos(inst):
         pt.delete()
 
 
-from intent.trees import IdTree, project_ps, Terminal, DepTree, project_ds
+from intent.trees import IdTree, project_ps, Terminal, DepTree, project_ds, DepEdge, build_dep_edges
