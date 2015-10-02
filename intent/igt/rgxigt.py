@@ -290,7 +290,7 @@ def read_ds(tier, pos_source=None):
     edges = []
 
     # --2b) Retrieve the POS tier, if it exists, in advance.
-    pos_tier = tier.igt.get_pos_tags(tier.attributes.get(DS_DEP_ATTRIBUTE))
+    pos_tier = tier.igt.get_pos_tags(tier.attributes.get(DS_DEP_ATTRIBUTE), tag_method=pos_source)
 
     for item in tier:
         dep  = item.attributes.get(DS_DEP_ATTRIBUTE)
