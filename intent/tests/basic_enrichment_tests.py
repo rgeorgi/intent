@@ -2,13 +2,13 @@ import os
 from unittest import TestCase
 from intent.igt.igtutils import rgp
 from intent.igt.rgxigt import RGCorpus, NoODINRawException, morph_align, word_align
-from intent.utils.env import proj_root
+from intent.utils.env import proj_root, testfile_dir
 
 __author__ = 'rgeorgi'
 
 class NoRawTest(TestCase):
     def setUp(self):
-        self.xc = RGCorpus.load(os.path.join(proj_root, './examples/tests/no_raw.xml'))
+        self.xc = RGCorpus.load(os.path.join(testfile_dir, 'xigt/no_raw.xml'))
 
     def no_raw_test(self):
         """

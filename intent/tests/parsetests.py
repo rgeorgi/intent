@@ -12,14 +12,14 @@ from intent.utils.env import proj_root, testfile_dir
 __author__ = 'rgeorgi'
 
 
-ctn_file = os.path.join(testfile_dir, 'ctn2-xigt.xml')
-ger_file = os.path.join(testfile_dir, 'single_ger.xml')
-kor_file = os.path.join(testfile_dir, 'kor-ex.xml')
+ctn_file = os.path.join(testfile_dir, 'xigt/ctn2-xigt.xml')
+ger_file = os.path.join(testfile_dir, 'xigt/single_ger.xml')
+kor_file = os.path.join(testfile_dir, 'xigt/kor-ex.xml')
 
 
 # Some of the tree test files.
-xigt_proj = os.path.join(testfile_dir, 'xigt-projection-tests.xml')
-ds_cycle  = os.path.join(testfile_dir, 'ds-cycle-test.xml')
+xigt_proj = os.path.join(testfile_dir, 'xigt/xigt-projection-tests.xml')
+ds_cycle  = os.path.join(testfile_dir, 'xigt/ds-cycle-test.xml')
 
 no_enrich_args = {'OUT_FILE':'/dev/null'}
 
@@ -56,10 +56,9 @@ class ReadTreeTests(TestCase):
         Test that performing projection works correctly.
         """
         self.inst1.project_ds()
-
         self.inst2.project_ds()
 
-        self.inst2.get_lang_ds().draw()
+
 
     def test_read_proj_ds_tree(self):
         src_t = self.inst2.get_trans_ds()
@@ -96,6 +95,10 @@ class ReadTreeTests(TestCase):
 
 
     def test_ds_cycle(self):
+        """
+        The tree in the ds_cycle file has "woman" depend both
+        on "arriving" and "browse."
+        """
         xc = RGCorpus.load(ds_cycle)
         inst = xc[0]
 

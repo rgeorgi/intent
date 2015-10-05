@@ -14,7 +14,7 @@ ENV_LOG = logging.getLogger(__name__)
 # 2) Determine the project root directory --------------------------------------
 proj_root = dir_above(__file__, 3)
 
-testfile_dir = os.path.join(proj_root, "examples/tests")
+testfile_dir = os.path.join(proj_root, "data/testcases")
 
 # 3) Load the "env.conf" file. -------------------------------------------------
 env_path = os.path.join(proj_root, 'env.conf')
@@ -41,6 +41,7 @@ parser_model_jar = c.getpath('stanford_parser_model_jar')
 parser_model     = c.get('stanford_parser_model')
 posdict          = 0 if not c.getpath('pos_dict') else pickle.load(open(c.getpath('pos_dict'), 'rb'))
 odin_data		 = c.getpath('odin_data')
+mst_parser       = c.getpath('mst_parser')
 
 #===============================================================================
 # Try to import the XIGT module.

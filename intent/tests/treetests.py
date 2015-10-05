@@ -556,8 +556,6 @@ class ProjectDS(unittest.TestCase):
 
         ds_proj = project_ds(ds3, tgt_w, aln)
 
-        # ds_proj.draw()
-
         exp_proj = DepTree.fromstring("""
                                         (ROOT[0]
                                             (treffen[6]

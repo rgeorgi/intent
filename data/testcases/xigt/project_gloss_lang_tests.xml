@@ -29,9 +29,6 @@
     <item id="tw5" segmentation="t1[19:25]"/>
   </tier>
   <tier id="gw" type="glosses" content="n" alignment="w">
-    <metadata type="intent-meta">
-      <meta type="token-type">word</meta>
-    </metadata>
     <item id="gw1" content="n2[0:4]" alignment="w1"/>
     <item id="gw2" content="n2[5:12]" alignment="w2"/>
     <item id="gw3" content="n2[13:16]" alignment="w3"/>
@@ -50,8 +47,7 @@
 
   <tier id="g-pos" type="pos" alignment="gw">
     <metadata type="xigt-meta">
-      <meta type="data-source">intent</meta>
-      <meta type="data-method">projection</meta>
+      <meta type="data-provenance" date="2015-04-18 10:35:40-UTC" source="intent" method="projection"/>
     </metadata>
     <item id="g-pos1" alignment="gw4">PRON</item>
     <item id="g-pos2" alignment="gw3">PRON</item>
@@ -60,8 +56,7 @@
   </tier>
   <tier id="tw-pos" type="pos" alignment="tw">
     <metadata type="xigt-meta">
-      <meta type="data-source">intent</meta>
-      <meta type="data-method">stanford-tagger</meta>
+      <meta type="data-provenance" date="2015-04-18 10:35:40-UTC" source="intent" method="stanford-tagger"/>
     </metadata>
     <item id="tw-pos1" alignment="tw1">PRON</item>
     <item id="tw-pos2" alignment="tw2">VERB</item>
@@ -89,10 +84,9 @@
     <item id="ps12" children="ps5">VP</item>
   </tier>
   <tier id="ps-b" type="phrase-structure" alignment="w">
-    <metadata type="xigt-meta">
-      <meta type="data-source">intent</meta>
-      <meta type="data-method">projection</meta>
-    </metadata>
+      <metadata type="xigt-meta">
+        <meta type="data-provenance" date="2015-10-02 03:13:34-UTC" method="projection" projected-from="ps" source="intent"/>
+      </metadata>
     <item id="ps-b1" alignment="w1">UNK</item>
     <item id="ps-b2" alignment="w2">VB</item>
     <item id="ps-b3" alignment="w3">PRP</item>
@@ -106,10 +100,9 @@
     <item id="ps-b11" children="ps-b5 ps-b6">VP</item>
   </tier>
   <tier id="ds" type="dependencies" head="tw" dep="tw">
-    <metadata type="xigt-meta">
-      <meta type="data-source">intent</meta>
-      <meta type="data-method">stanford-parser</meta>
-    </metadata>
+      <metadata type="xigt-meta">
+        <meta type="data-provenance" date="2015-10-02 03:13:34-UTC" method="stanford-parser" source="intent"/>
+      </metadata>
     <item id="ds1" dep="tw4">root</item>
     <item id="ds2" head="tw4" dep="tw1">dobj</item>
     <item id="ds3" head="tw4" dep="tw2">aux</item>

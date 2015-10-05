@@ -1089,7 +1089,8 @@ class DepTree(IdTree):
         for index in indices:
             nodes = self.findall_indices(index)
             head_indices = sorted(set([n.parent().word_index for n in nodes]))
-            head = ','.join([str(i) for i in head_indices])
+            # head = ','.join([str(i) for i in head_indices])
+            head = str(head_indices[0])
 
 
             node = nodes[0]

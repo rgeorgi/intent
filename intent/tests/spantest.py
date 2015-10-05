@@ -9,7 +9,7 @@ __author__ = 'rgeorgi'
 
 class span_test(TestCase):
     def setUp(self):
-        self.xc1 = RGCorpus.load(os.path.join(testfile_dir, 'kor-ex.xml'))
+        self.xc1 = RGCorpus.load(os.path.join(testfile_dir, 'xigt/kor-ex.xml'))
         self.inst = self.xc1[0]
         self.g1_2 = self.inst.find(id='g1.2')
         self.m2_1 = self.inst.find(id="m2.1")
