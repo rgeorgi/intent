@@ -8,7 +8,7 @@ OO interface for communicating with the Stanford Parser
 import logging
 
 # Internal Imports -------------------------------------------------------------
-from intent.utils.env import parser_jar, parser_model, parser_model_jar
+from intent.utils.env import parser_jar, parser_model, parser_model_jar, java_bin
 from intent.utils.systematizing import ProcessCommunicator
 
 # NLTK Import
@@ -37,7 +37,7 @@ class StanfordParser(object):
     dependency parses.
     """
     def __init__(self):
-        self.p = ProcessCommunicator(['java', '-Xmx1200m',
+        self.p = ProcessCommunicator([java_bin, '-Xmx1200m',
                                         '-cp', parser_jar+':'+parser_model_jar,
                                         'edu.stanford.nlp.parser.lexparser.LexicalizedParser',
                                         '-outputFormat', 'penn,typedDependencies',
