@@ -5,20 +5,22 @@ Created on Feb 14, 2014
 """
 
 # Built-in imports -------------------------------------------------------------
-import os, sys, re, argparse, glob, shutil, time
+import os, sys, re, glob, logging
 
 # Internal imports -------------------------------------------------------------
-from intent.utils import ConfigFile
-from intent.alignment.Alignment import AlignedCorpus, combine_corpora, AlignedSent,	Alignment
-from intent.eval.AlignEval import AlignEval
+import shutil
+import stat
+from intent.alignment.Alignment import AlignedSent,	Alignment
 from intent.utils.env import c
-from intent.utils.fileutils import swapext, matching_files, remove_safe
-from intent.utils.systematizing import piperunner
+from intent.utils.fileutils import swapext
+from intent.utils.systematizing import piperunner, ProcessCommunicator
 
 # Other imports ----------------------------------------------------------------
 from tempfile import mkdtemp
 from collections import defaultdict
 from unittest.case import TestCase
+
+GIZA_LOG = logging.getLogger("GIZA")
 
 
 class GizaAlignmentException(Exception):
@@ -175,11 +177,12 @@ class GizaFiles(object):
                 pass
 
     def merge_a3(self):
+        GIZA_LOG.debug("Merging A3 files in {}".format(self.prefix))
         a3 = A3files(self.prefix)
         a3.merge(self.a3merged)
 
     def clean(self):
-
+        GIZA_LOG.debug("Removing unnecessary files...")
         self.merge_a3()
 
         filelist = [self.ef_cooc, self.fe_cooc,
@@ -195,10 +198,6 @@ class GizaFiles(object):
 
 
         self._clean(filelist)
-
-
-
-        #sys.exit()
 
 
 
@@ -495,12 +494,21 @@ class GizaAligner(object):
                 '-C', tf.ef_snt,
                 '-CoocurrenceFile', tf.ef_cooc,
                 '-hmmiterations', '5',
-                '-model4iterations', '0']
+                '-model4iterations', '0',
+                '-ncpus', '0']
         cmd = ' '.join(elts)
 
-        piperunner(cmd, log_name='giza')
+        GIZA_LOG.debug('Command: "{}"'.format(cmd))
 
-        tf.clean()
+        p = ProcessCommunicator(elts)
+        status = p.wait()
+        GIZA_LOG.debug("Exit code: {}".format(str(status)))
+
+        if status != 0:
+            raise GizaAlignmentException("mgiza exited abnormally with a return code of {}".format(str(status)))
+
+        tf.merge_a3()
+        # tf.clean()
 
         return tf.aligned_sents()
 
@@ -521,6 +529,11 @@ class GizaAligner(object):
         :type func: method
         """
         tempdir = mkdtemp()
+        # tempdir = '/tmp/tmp3pnlk0oi'
+
+        # Set the temp dir to world-readable... (for debugging)
+        # os.chmod(tempdir, stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH | stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH
+        #          | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
         g_path = os.path.join(tempdir, 'g.txt')
         t_path = os.path.join(tempdir, 't.txt')
@@ -552,6 +565,7 @@ class GizaAligner(object):
         """
         # First, initialize a new GizaFile container for
         # the files we are going to create
+
         new_gf = GizaFiles(prefix, new_e, new_f)
 
         # Now, we're going to extend the old vocabulary files
@@ -591,10 +605,13 @@ class GizaAligner(object):
                 '-Coocurrencefile', new_gf.ef_cooc]
 
         cmd = ' '.join(args)
+        GIZA_LOG.debug('Command: "{}"'.format(cmd))
 
-        piperunner(cmd, log_name='giza')
+        p = ProcessCommunicator(args)
+        p.wait()
 
-        new_gf.clean()
+        new_gf.merge_a3()
+        # new_gf.clean()
 
         return new_gf.aligned_sents()
 
