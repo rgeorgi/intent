@@ -608,7 +608,14 @@ class GizaAligner(object):
         GIZA_LOG.debug('Command: "{}"'.format(cmd))
 
         p = ProcessCommunicator(args)
-        p.wait()
+        status = p.wait()
+
+        GIZA_LOG.debug("Exit status {}".format(str(status)))
+
+        if status != 0:
+            raise GizaAlignmentException("mgiza exited abnormally with a return code of {}".format(str(status)))
+
+
 
         new_gf.merge_a3()
         # new_gf.clean()
