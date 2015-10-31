@@ -1,0 +1,30 @@
+<xigt-corpus xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <igt id="igt150088" doc-id="4034" line-range="987-989" tag-types="L+SY G B">
+    <metadata>
+      <meta id="meta1" type="odin-header">doc_id=4034 987 989 L+SY G B
+stage3_lang_chosen: german (deu)
+lang_code: german (deu) || deutsch (deu) || flemish (nld) || dutch (nld) || hebrew (heb) || icelandic (isl) || galician (glg) || greek (ell) || modern greek (ell)
+note: lang_chosen_idx=0</meta>
+      <meta id="meta2">
+        <dc:subject olac:code="deu" xsi:type="olac:language">German</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="987" tag="L+SY">          c.      Ich konntei nach Hause gehen ti.</item>
+      <item id="r2" line="988" tag="G" />
+      <item id="r3" line="989" tag="B">                  I    could to     home go</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="987" tag="L+SY">          c.      Ich konntei nach Hause gehen ti.</item>
+      <item id="c2" alignment="r2" line="988" tag="G" />
+      <item id="c3" alignment="r3" line="989" tag="B">                  I    could to     home go</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="987" tag="L+SY">Ich konntei nach Hause gehen ti.</item>
+      <item id="n2" alignment="c2" line="988" tag="G" />
+      <item id="n3" alignment="c3" line="989" tag="B">I    could to     home go</item>
+    </tier>
+  </igt>
+</xigt-corpus>

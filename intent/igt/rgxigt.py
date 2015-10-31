@@ -701,15 +701,15 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                 PARSELOG.info('Attempting to heuristically align instance "{}"'.format(igt.id))
                 g_heur_aln = igt.heur_align()
             except NoTransLineException as ntle:
-                logging.warning(ntle)
+                PARSELOG.warning(ntle)
                 if error:
                     raise ntle
-            except (NoGlossLineException, NoTransLineException, NoLangLineException) as ngle:
-                logging.warning(ngle)
+            except (NoGlossLineException, NoTransLineException, NoLangLineException, EmptyGlossException) as ngle:
+                PARSELOG.warning(ngle)
                 if error:
                     raise ngle
             except MultipleNormLineException as mnle:
-                logging.warning(mnle)
+                PARSELOG.warning(mnle)
                 if error:
                     raise mnle
 
