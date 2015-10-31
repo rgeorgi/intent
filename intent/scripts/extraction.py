@@ -15,7 +15,7 @@ from xigt.consts import ALIGNMENT
 
 EXTRACT_LOG = logging.getLogger("EXTRACT")
 
-from intent.igt.rgxigt import RGCorpus, RGIgt, ProjectionException
+from intent.igt.rgxigt import RGCorpus, RGIgt, ProjectionException, RGXigtException
 from intent.utils.dicts import TwoLevelCountDict
 
 __author__ = 'rgeorgi'
@@ -27,8 +27,10 @@ __author__ = 'rgeorgi'
 # tagger, etc.
 # =============================================================================
 
-def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_prefix=None, tagger_prefix=None,
-                      dep_parser=None, dep_pos=None):
+def extract_from_xigt(input_filelist = list, classifier_prefix=None,
+                      cfg_prefix=None, tagger_prefix=None,
+                      dep_parser=None, dep_pos=None,
+                      alignment=None, alignment_source=None):
     """
 
     Extract certain bits of supervision from a set of
@@ -109,12 +111,12 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_prefix=
 
 
 
-    for path in input_filelist:
-        # p.apply_async(process_file, args=[path, classifier_prefix, cfg_prefix, tagger_prefix], callback=lambda x: merge_dicts(x, word_tag_dict, gram_tag_dict))
-        callback(process_file(path, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos))
-
-    p.close()
-    p.join()
+    # for path in input_filelist:
+    #     # p.apply_async(process_file, args=[path, classifier_prefix, cfg_prefix, tagger_prefix], callback=lambda x: merge_dicts(x, word_tag_dict, gram_tag_dict))
+    #     callback(process_file(path, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos))
+    #
+    # p.close()
+    # p.join()
 
     # =============================================================================
     # Classifier output...
@@ -146,8 +148,48 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None, cfg_prefix=
 
 
     # =============================================================================
-    # Parser
+    # Alignment
     # =============================================================================
+    if alignment:
+        print("Extracting alignment...")
+        e = open(alignment+'_e.txt', 'w', encoding='utf-8')
+        f = open(alignment+'_f.txt', 'w', encoding='utf-8')
+
+        with open(alignment, 'w', encoding='utf-8') as align_f:
+            for input_file in input_filelist:
+                xc = RGCorpus.load(input_file)
+                for inst in xc:
+                    try:
+                        print('Attempting to extract alignment from instance "{}"'.format(inst.id))
+                        # First, let's start with the entire sentences.
+                        # e.write(inst.trans.text(remove_whitespace_inside_tokens=True).lower() + '\n')
+                        # f.write(inst.lang.text(remove_whitespace_inside_tokens=True).lower() + '\n')
+
+                        # Now, return the word pairs.
+                        for t_w, l_w in inst.get_trans_gloss_lang_aligned_pairs():
+                            e.write(t_w.value().lower()+'\n')
+                            f.write(l_w.value().lower()+'\n')
+                    except RGXigtException as rgxe:
+                        EXTRACT_LOG.warn('Instance "{}" encountered an error retrieving alignment.'.format(inst.id))
+
+        e.close()
+        f.close()
+    #
+    # =============================================================================
+    # CFG Rules
+    # =============================================================================
+    if cfg_prefix:
+        with open(cfg_prefix, 'w', encoding='utf-8') as cfg_f:
+            for f in input_filelist:
+                xc = RGCorpus.load(f)
+                for inst in xc:
+                    t = inst.get_lang_ps()
+                    if t is not None:
+                        for prod in t.productions():
+                            cfg_f.write('{}\n'.format(prod))
+
+
+
 
 def extract_from_instances(inst_list, classifier_prefix, feat_out_path, cfg_prefix, threshold=1):
     """

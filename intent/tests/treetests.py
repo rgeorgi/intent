@@ -1,11 +1,14 @@
+import os
 import unittest
 import re
 
 import intent
 from intent.alignment.Alignment import Alignment
 from intent.igt.rgxigt import RGWordTier
+from intent.scripts.basic.corpus_stats import pos_stats, CONLL_TYPE
 from intent.trees import IdTree, project_ps, TreeMergeError, DepTree, Terminal, TreeError, project_ds, get_dep_edges, \
-    DEPSTR_CONLL, DEPSTR_PTB, DEPSTR_STANFORD
+    DEPSTR_CONLL, DEPSTR_PTB, DEPSTR_STANFORD, read_conll_file
+from intent.utils.env import testfile_dir
 
 __author__ = 'rgeorgi'
 
@@ -601,6 +604,8 @@ class CONLLTests(unittest.TestCase):
 5   zwaaien           zwaai             N     N     soort|mv|neut                    2   vc      _  _
 6   .                 .                 Punc  Punc  punt                             5   punct   _  _'''
 
+            self.conll_path = os.path.join(testfile_dir, 'conll/test.conll')
+
         def test_conll_read(self):
             ds = DepTree.fromstring(self.s, stype=DEPSTR_CONLL)
 
@@ -619,4 +624,17 @@ class CONLLTests(unittest.TestCase):
             ds = DepTree.fromstring(self.s, stype=DEPSTR_CONLL)
 
             print(ds.to_conll())
+
+        def test_conll_file(self):
+
+            trees = read_conll_file(self.conll_path)
+            self.assertEqual(1, len(trees))
+
+
+        def test_conll_file_stats(self):
+            pos_stats([self.conll_path], filetypes=CONLL_TYPE)
+
+
+
+
 

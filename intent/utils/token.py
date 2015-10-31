@@ -86,6 +86,8 @@ class POSToken(Token):
         if 'label' in kwargs:
             self.label = kwargs.get('label')
 
+    def __repr__(self):
+        return str(self)
 
     def __str__(self):
         return '<%s %s [%s]>' % (self.__class__.__name__, self.content, self.label)

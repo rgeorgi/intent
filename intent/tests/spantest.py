@@ -1,8 +1,7 @@
 import os
 from unittest import TestCase
-from intent.igt.igtutils import rgp, resolve_objects
 from intent.igt.rgxigt import RGCorpus, odin_span, x_span_contains_y, x_contains_y
-from intent.utils.env import proj_root, testfile_dir
+from intent.utils.env import testfile_dir
 from xigt.model import Item
 
 __author__ = 'rgeorgi'
@@ -30,7 +29,7 @@ class span_test(TestCase):
         self.assertFalse(x_contains_y(self.inst, self.m2_1, self.p1))
 
 #===============================================================================
-# Some tests
+# Span Tests
 #===============================================================================
 class ContainsTests(TestCase):
 

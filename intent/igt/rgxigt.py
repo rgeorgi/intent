@@ -30,6 +30,7 @@ from xigt.ref import dereference, ids
 
 PARSELOG = logging.getLogger(__name__)
 ALIGN_LOG = logging.getLogger('GIZA_LN')
+ODIN_LOG = logging.getLogger('ODIN_LOOKUP')
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
@@ -69,6 +70,7 @@ class MultipleNormLineException(XigtFormatException): pass
 class NoTransLineException(XigtFormatException): pass
 class NoLangLineException(XigtFormatException):	pass
 class NoGlossLineException(XigtFormatException): pass
+class EmptyGlossException(XigtFormatException): pass
 
 class NoODINRawException(XigtFormatException):	pass
 
@@ -341,7 +343,10 @@ def gen_tier_id(inst, id_base, tier_type=None, alignment=None, no_hyphenate=Fals
         filters.append(type_match(tier_type))
 
     # Get the number of tiers that match this.
-    num_tiers = len(inst.findall(others=filters))
+    if not filters:
+        num_tiers = 0
+    else:
+        num_tiers = len(inst.findall(others=filters))
 
 
     id_str = id_base
@@ -397,8 +402,10 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
     @classmethod
     def from_raw_txt(cls, txt):
-
+        print("Creating XIGT corpus from raw text...")
         xc = cls()
+
+        PARSELOG.debug("Replacing invalid XML...")
         data = replace_invalid_xml(txt)
 
         instances = []
@@ -419,6 +426,8 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         for instance in instances:
             i = RGIgt.fromRawText(instance, corpus=xc)
             xc.append(i)
+
+        print("{} instances parsed.".format(len(xc)))
         return xc
 
     @classmethod
@@ -1003,7 +1012,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             tier.add(item)
 
-    def normal_tier(self):
+    def normal_tier(self, clean=True):
 
             # If a normal tier already exists, return it.
             normal_tier = self.find(type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:NORM_STATE})
@@ -1017,9 +1026,9 @@ class RGIgt(Igt, RecursiveFindMixin):
                                          attributes={STATE_ATTRIBUTE:NORM_STATE, ALIGNMENT:self.clean_tier().id})
 
                 # Get one item per...
-                self.add_normal_line(normal_tier, ODIN_LANG_TAG, clean_lang_string)
-                self.add_normal_line(normal_tier, ODIN_GLOSS_TAG, clean_gloss_string)
-                self.add_normal_line(normal_tier, ODIN_TRANS_TAG, clean_trans_string)
+                self.add_normal_line(normal_tier, ODIN_LANG_TAG, clean_lang_string if clean else lambda x: x)
+                self.add_normal_line(normal_tier, ODIN_GLOSS_TAG, clean_gloss_string if clean else lambda x: x)
+                self.add_normal_line(normal_tier, ODIN_TRANS_TAG, clean_trans_string if clean else lambda x: x)
 
                 self.append(normal_tier)
                 return normal_tier
@@ -1140,12 +1149,12 @@ class RGIgt(Igt, RecursiveFindMixin):
         """
         return self.gloss.get_aligned_tokens()
 
-    def get_trans_gloss_lang_alignment(self):
+    def get_trans_gloss_lang_alignment(self, aln_method=None):
         """
         Get the translation to lang alignment, travelling through the gloss line.
         """
 
-        tg_aln = self.get_trans_gloss_alignment()
+        tg_aln = self.get_trans_gloss_alignment(aln_method=aln_method)
         gl_aln = self.get_gloss_lang_alignment()
 
         # Combine the two alignments...
@@ -1156,8 +1165,16 @@ class RGIgt(Igt, RecursiveFindMixin):
                 a.add((t_i, l_j))
         return a
 
+    def get_trans_gloss_lang_aligned_pairs(self, aln_method=None):
+        """
+        Retrieve the word pairs that are aligned via the specified aln_method.
 
-
+        :param aln_method:
+        """
+        ret_pairs = []
+        for t_i, l_j in self.get_trans_gloss_lang_alignment(aln_method=aln_method):
+            ret_pairs.append((self.trans.get_index(t_i), self.lang.get_index(l_j)))
+        return ret_pairs
 
     #===========================================================================
     # ALIGNMENT STUFF
@@ -1861,25 +1878,36 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             self.create_dt_tier(proj_t, self.lang, parse_method=INTENT_DS_PROJ)
 
-    def get_trans_ds_tier(self):
-        return self.find(type=DS_TIER_TYPE, attributes={DS_DEP_ATTRIBUTE:self.trans.id})
+    def get_ps_tier(self, target):
+        return self.find(type=PS_TIER_TYPE, alignment=target.id)
 
-    def get_trans_ds(self, pos_source=None):
-        tier = self.get_trans_ds_tier()
-        if tier is None:
-            return None
-        else:
-            return read_ds(tier, pos_source=pos_source)
+    def get_ps(self, target):
+        """
+        :rtype : IdTree
+        """
+        t = self.get_ps_tier(target)
+        if t is not None:
+            return read_pt(t)
 
-    def get_lang_ds_tier(self):
-        return self.find(type=DS_TIER_TYPE, attributes={DS_DEP_ATTRIBUTE:self.lang.id})
+    def get_lang_ps(self):
+        return self.get_ps(self.lang)
+
+    def get_trans_ps(self):
+        return self.get_ps(self.trans)
+
+    # GET TRANS DS
+
+    def get_ds_tier(self, target):
+        return self.find(type=DS_TIER_TYPE, attributes={DS_DEP_ATTRIBUTE:target.id})
+
+    def get_ds(self, target, pos_source=None):
+        t = self.get_ds_tier(target)
+        if t is not None:
+            return read_ds(t, pos_source=pos_source)
 
     def get_lang_ds(self, pos_source=None):
-        tier = self.get_lang_ds_tier()
-        if tier is None:
-            return None
-        else:
-            return read_ds(tier, pos_source=pos_source)
+        return self.get_ds(self.lang, pos_source)
+
 
 
 
@@ -2463,7 +2491,7 @@ def retrieve_lang_words(inst):
 #===============================================================================
 
 def odin_ancestor(obj):
-
+    ODIN_LOG.debug("Looking up the odin ancestor for {}".format(str(obj)))
     # If we are at an ODIN item, return.
     if isinstance(obj, Item) and obj.tier.type == ODIN_TYPE:
         return obj
@@ -2515,6 +2543,7 @@ def retrieve_gloss_words(inst):
 
     1. If a "words" type exists, and it's contents are the gloss line, return it.
     2. If it does not exist, tokenize the gloss line and return it.
+    3. If there are NO tokens on the gloss line for whatever reason... Return None.
 
     :param inst: Instance which to create the tiers from.
     :type inst: RGIgt
@@ -2534,8 +2563,14 @@ def retrieve_gloss_words(inst):
     # 2. If it exists, return it. Otherwise, look for the glosses tier.
     if not wt:
         n = inst.normal_tier()
-        wt = create_words_tier(retrieve_normal_line(inst, ODIN_GLOSS_TAG), GLOSS_WORD_ID,
-                               GLOSS_WORD_TYPE, aln_attribute=CONTENT)
+        g_n = retrieve_normal_line(inst, ODIN_GLOSS_TAG)
+
+        # If the value of the gloss line is None, or it's simply an empty string...
+        if g_n.value() is None or not g_n.value().strip():
+            raise EmptyGlossException()
+        else:
+            wt = create_words_tier(retrieve_normal_line(inst, ODIN_GLOSS_TAG), GLOSS_WORD_ID,
+                                   GLOSS_WORD_TYPE, aln_attribute=CONTENT)
 
         # Set the "gloss type" to the "word-level"
         add_word_level_info(wt, INTENT_GLOSS_WORD)

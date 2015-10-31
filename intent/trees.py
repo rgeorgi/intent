@@ -1070,6 +1070,14 @@ class DepTree(IdTree):
             # that are "attachable"
             return build_dep_edges(edges)
 
+    def pos_list(self):
+        """
+
+        :rtype : list[POSToken]
+        """
+        words = sorted([POSToken(st.label(), index=st.word_index, label=st.pos) for st in self.subtrees()],
+                       key=lambda x: x.index)
+        return words
 
     def to_conll(self):
         """
@@ -1294,7 +1302,8 @@ def build_dep_edges(edges):
                 break
 
         if not edge_found:
-            raise TreeError("Dependency Tree {} could not be built, edge could not be connected.".format(tree_string))
+            edge_children = [(e.dep.label,e.dep.index) for e in edges]
+            raise TreeError("Dependency Tree could not be built, edges remain: {}.".format(edge_children))
 
     return dt
 
@@ -1339,6 +1348,23 @@ def paren_level_contents(string, f=lambda x, y: [x,y], i=None):
     # We reach this point only after we have built up all the
     return children
 
+def read_conll_file(path):
+    """
+
+    :rtype : list[DepTree]
+    """
+    f = open(path, 'r')
+    string = ''
+    trees = []
+    for line in f:
+        if not line.strip():
+            if string:
+                trees.append(DepTree.fromstring(string, stype=DEPSTR_CONLL))
+                string = ''
+        else:
+            string += line
+
+    return trees
 
 
 def fix_tree_parents(t, preceding_parent = None):

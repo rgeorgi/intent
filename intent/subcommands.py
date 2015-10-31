@@ -145,19 +145,22 @@ def enrich(**kwargs):
 
             # -- A) Language Lines
             try:
-                retrieve_normal_line(inst, ODIN_LANG_TAG)
+                n = retrieve_normal_line(inst, ODIN_LANG_TAG)
+                has_lang = n.value() is not None and n.value().strip()
             except (NoNormLineException, MultipleNormLineException) as e:
                 has_lang = False
 
             # -- B) Gloss Lines
             try:
-                retrieve_normal_line(inst, ODIN_GLOSS_TAG)
+                n = retrieve_normal_line(inst, ODIN_GLOSS_TAG)
+                has_gloss = n.value() is not None and n.value().strip()
             except (NoNormLineException, MultipleNormLineException) as e:
                 has_gloss = False
 
             # -- C) Trans Lines
             try:
-                retrieve_normal_line(inst, ODIN_TRANS_TAG)
+                n = retrieve_normal_line(inst, ODIN_TRANS_TAG)
+                has_trans = n.value() is not None and n.value().strip()
             except (NoNormLineException, MultipleNormLineException) as e:
                 has_trans = False
 

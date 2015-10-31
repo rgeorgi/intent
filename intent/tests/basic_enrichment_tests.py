@@ -58,3 +58,12 @@ class NoRawTest(TestCase):
 
     def word_align_test(self):
         word_align(self.xc[0].gloss, self.xc[0].lang)
+
+class NullGlossTest(TestCase):
+
+    def setUp(self):
+        self.path = os.path.join(testfile_dir, 'xigt/deu_no_gloss_line.xml')
+
+    def test_basic_processing(self):
+        xc = RGCorpus.load(self.path, basic_processing=True)
+

@@ -73,7 +73,7 @@ def remove_elipses(ret_str):
 
 
 def remove_solo_punctuation(ret_str):
-    ret_str = re.sub('\s*{}+\s*'.format(punc_re), '', ret_str)
+    ret_str = re.sub('\s*{}+\s*'.format(punc_re), ' ', ret_str)
     return ret_str
 
 
@@ -256,7 +256,7 @@ def clean_gloss_string(ret_str):
     ret_str = remove_external_punctuation(ret_str)
 
     # Collapse spaces
-    ret_str = collapse_spaces(ret_str)
+    # ret_str = collapse_spaces(ret_str)
 
     # Remove final punctuation
     ret_str = remove_final_punctuation(ret_str)
@@ -295,7 +295,7 @@ def clean_trans_string(trans_string):
     ret_str = remove_numbering(ret_str)
 
     # Collapse spaces
-    ret_str = collapse_spaces(ret_str)
+    # ret_str = collapse_spaces(ret_str)
 
     return ret_str
 
@@ -318,7 +318,7 @@ def clean_lang_string(ret_str):
     ret_str = split_punctuation(ret_str)
 
     # Collapse spaces
-    ret_str = collapse_spaces(ret_str)
+    # ret_str = collapse_spaces(ret_str)
 
     # Remove final punctuation
     # ret_str = remove_final_punctuation(ret_str)

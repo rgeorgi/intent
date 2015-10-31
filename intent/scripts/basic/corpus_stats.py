@@ -16,6 +16,8 @@ import os
 import argparse
 import sys
 from multiprocessing import cpu_count
+from intent.trees import read_conll_file
+from intent.utils.fileutils import globlist
 
 from intent.utils.listutils import chunkIt
 
@@ -43,7 +45,8 @@ xigt_logger.addHandler(sh)
 xigt_logger.setLevel(logging.ERROR)
 
 
-
+CONLL_TYPE = 'conll'
+SLASHTAG_TYPE = 'slashtags'
 
 #  -----------------------------------------------------------------------------
 
@@ -198,8 +201,8 @@ def igt_stats(filelist, type='text', logpath=None, show_header=False, show_filen
         chunks = chunkIt(rc.igts, cpu_count())
 
         for chunk in chunks:
-            # pool.apply_async(inst_list_stats, args=[chunk], callback=sd.combine)
-            sd.combine(inst_list_stats(chunk))
+            pool.apply_async(inst_list_stats, args=[chunk], callback=sd.combine)
+            # sd.combine(inst_list_stats(chunk))
 
 
         pool.close()
@@ -220,8 +223,9 @@ def igt_stats(filelist, type='text', logpath=None, show_header=False, show_filen
 
     print(sd)
 
+class UndefinedPOSTypeError(Exception): pass
 
-def pos_stats(filelist, tagged, log_file = sys.stdout, csv=False):
+def pos_stats(filelist, filetypes=SLASHTAG_TYPE, log_file = sys.stdout, csv=False):
 
     # Count of each unique word and its count.
     wordCount = StatDict()
@@ -239,23 +243,44 @@ def pos_stats(filelist, tagged, log_file = sys.stdout, csv=False):
     # Count the number of lines
     lines = 0
 
-    for filename in filelist:
-        f = open(filename, 'r', encoding='utf-8')
-        for line in f:
-            lines += 1
-            tokens = tokenize_string(line, tokenizer=tag_tokenizer)
-            for token in tokens:
+    sents = []
+    # =============================================================================
+    # Slashtags File
+    # =============================================================================
+    if filetypes == SLASHTAG_TYPE:
+        for filename in filelist:
+            f = open(filename, 'r', encoding='utf-8')
+            for line in f:
+                lines += 1
 
-                seq = token.seq.lower()
+                sents.append(tokenize_string(line, tokenizer=tag_tokenizer))
 
-                if seq not in wordCount:
-                    typetags[token.label] += 1
+    elif filetypes == CONLL_TYPE:
+        for filename in filelist:
+            trees = read_conll_file(filename)
+            for tree in trees:
+                sents.append(tree.pos_list())
 
-                wordCount[seq] += 1
-                tagCount[token.label] += 1
+    else:
+        raise UndefinedPOSTypeError('Unknown POS filetype "{}"'.format(filetypes))
 
-                # Start counting the average types per tag.
-                tagtypes[seq] |= set([token.label])
+    # =============================================================================
+    # Now process the sentences
+    # =============================================================================
+
+    for tokens in sents:
+        for token in tokens:
+
+            seq = token.seq.lower()
+
+            if seq not in wordCount:
+                typetags[token.label] += 1
+
+            wordCount[seq] += 1
+            tagCount[token.label] += 1
+
+            # Start counting the average types per tag.
+            tagtypes[seq] |= set([token.label])
 
 
     # Calculate tags per type
@@ -276,13 +301,13 @@ def pos_stats(filelist, tagged, log_file = sys.stdout, csv=False):
     total_types = len(wordCount)
 
     if not csv:
-        log_file.write('Sentences    : %d\n' % lines)
+        log_file.write('Sentences    : %d\n' % len(sents))
         log_file.write('Total Tokens : %d\n' % total_tokens)
         log_file.write('Total Types  : %d\n' % total_types)
         log_file.write('Avg Tags/Type: %.2f\n' % tag_per_type_avg)
     else:
         log_file.write('sents,tokens,types,tags-per-type\n')
-        log_file.write('%s,%s,%s,%.2f\n' % (lines, total_tokens, total_types, tag_per_type_avg))
+        log_file.write('%s,%s,%s,%.2f\n' % (len(sents), total_tokens, total_types, tag_per_type_avg))
 
 
     log_file.write('\n'* 2 + '='*80 + '\n')
@@ -307,10 +332,10 @@ def pos_stats(filelist, tagged, log_file = sys.stdout, csv=False):
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
-    p.add_argument('--slashtags', nargs='*', default=[])
+    p.add_argument('--slashtags', nargs='*', default=[], type=globlist)
+    p.add_argument('--conll', nargs='*', default=[])
     p.add_argument('--xigt', nargs='*', default=[])
     p.add_argument('--igt-txt', nargs='*', default=[])
-    p.add_argument('--tagged', default=True)
     p.add_argument('--log', type=str)
     p.add_argument('--csv', action='store_true', default=True)
 
@@ -333,4 +358,7 @@ if __name__ == '__main__':
 
     for f in args.slashtags:
         sys.stderr.write('\n\n\n\n\n\n%s\n' % f)
-        pos_stats([f], args.tagged, log_file = sys.stderr, csv=args.csv)
+        pos_stats([f], log_file = sys.stderr, csv=args.csv)
+
+    if args.conll:
+        pos_stats(args.conll, filetypes=CONLL_TYPE, csv=args.csv)

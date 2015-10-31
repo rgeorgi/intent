@@ -167,6 +167,8 @@ extract_p.add_argument('--lang-tagger', help='Output prefix for lang-line tagger
 extract_p.add_argument('--cfg-rules', help='Output path for cfg-rules.', default=None)
 extract_p.add_argument('--dep-parser', help='Output path for dependency parser', default=None)
 extract_p.add_argument('--dep-pos', choices=['class','proj','manual','none'], default='none')
+extract_p.add_argument('--alignment', help='The file to output bootstrapped alignment as.')
+extract_p.add_argument('--alignment-source', choices=['giza','heur'], help='Source of the bootstrapped alignments.')
 extract_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 #===============================================================================
@@ -237,7 +239,7 @@ elif args.subcommand == 'filter':
 # EXTRACT
 elif args.subcommand == 'extract':
     extract_from_xigt(flatten_list(args.FILE), args.gloss_classifier, args.cfg_rules, args.lang_tagger,
-                      dep_parser=args.dep_parser, dep_pos=args.dep_pos)
+                      dep_parser=args.dep_parser, dep_pos=args.dep_pos, alignment=args.alignment, alignment_source=args.alignment_source)
 
 # EVAL
 elif args.subcommand == 'eval':

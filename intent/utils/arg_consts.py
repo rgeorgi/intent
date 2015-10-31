@@ -4,6 +4,7 @@ __author__ = 'rgeorgi'
 # Alignment stuff
 ALN_GIZA = 'giza'
 ALN_HEUR = 'heur'
+ALN_MANUAL = 'manual'
 
 ALN_TYPES = [ALN_GIZA, ALN_HEUR]
 ALN_VAR = 'alignment_list'
