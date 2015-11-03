@@ -1640,6 +1640,9 @@ class RGIgt(Igt, RecursiveFindMixin):
                 if unk_handling is None:
                     continue
 
+                elif unk_handling == 'keep':
+                    pass
+
                 # If we are doing the "Noun" method, then we
                 # replace all the unknowns with "NOUN"
                 elif unk_handling == 'noun':
@@ -1861,15 +1864,15 @@ class RGIgt(Igt, RecursiveFindMixin):
         """
 
         # If a tier previously existed, overwrite it...
-        old_lang_ds_tier = self.get_lang_ds_tier()
+        old_lang_ds_tier = self.get_ds_tier(self.lang)
         if old_lang_ds_tier is not None:
             old_lang_ds_tier.delete()
 
-        trans_ds = self.get_trans_ds_tier()
-        if not trans_ds:
+        # Get the trans DS, if it exists.
+        src_t = self.get_ds(self.trans)
+        if src_t is None:
             raise ProjectionException('No dependency tree found for igt "{}"'.format(self.id))
         else:
-            src_t = self.get_trans_ds()
             tgt_w = self.lang
             aln = self.get_trans_gloss_lang_alignment()
 

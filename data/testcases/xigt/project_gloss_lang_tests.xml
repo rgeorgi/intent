@@ -3,7 +3,7 @@
 <igt id="i1" doc-id="14.txt" line-range="13 15" tag-types="L G T">
   <tier id="n" type="odin" state="normalized" alignment="c">
     <item id="n1" tag="L" alignment="c1">Was glaubst Du wer angerufen hat UNKNOWN-TOKEN</item>
-    <item id="n2" tag="G" alignment="c2">What believe you who called has</item>
+    <item id="n2" tag="G" alignment="c2">What believe you who called has UNKNOWN-TOKEN</item>
     <item id="n3" tag="T" alignment="c3">Who do you believe called</item>
   </tier>
   <tier id="p" type="phrases" content="n">
@@ -19,7 +19,7 @@
     <item id="w4" segmentation="p1[15:18]"/>
     <item id="w5" segmentation="p1[19:28]"/>
     <item id="w6" segmentation="p1[29:32]"/>
-    <item id="w7" segmentation="p1[34:36]"/>
+    <item id="w7" segmentation="p1[33:48]"/>
   </tier>
   <tier id="tw" type="words" segmentation="t">
     <item id="tw1" segmentation="t1[0:3]"/>
@@ -35,6 +35,7 @@
     <item id="gw4" content="n2[17:20]" alignment="w4"/>
     <item id="gw5" content="n2[21:27]" alignment="w5"/>
     <item id="gw6" content="n2[28:31]" alignment="w6"/>
+    <item id="gw7" content="n2[32:47]" alignment="w7"/>
   </tier>
   <tier id="g" type="glosses" segmentation="gw">
     <item id="g1" segmentation="gw1[0:4]"/>
@@ -43,6 +44,8 @@
     <item id="g4" segmentation="gw4[0:3]"/>
     <item id="g5" segmentation="gw5[0:6]"/>
     <item id="g6" segmentation="gw6[0:3]"/>
+    <item id="g7" segmentation="gw7[0:8]"/>
+    <item id="g8" segmentation="gw7[9:15]"/>
   </tier>
 
   <tier id="g-pos" type="pos" alignment="gw">

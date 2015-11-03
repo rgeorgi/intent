@@ -46,7 +46,7 @@ class ReadTreeTests(TestCase):
         self.inst2 = self.xc[1]
 
     def test_read_ds_tree(self):
-        ds = self.inst1.get_trans_ds()
+        ds = self.inst1.get_ds(self.inst1.trans)
         r = DepTree.fromstring("""(ROOT[0] (found[2] (Someone[1]) (them[3]) (boring[4])))""", stype=DEPSTR_PTB)
 
         self.assertTrue(r.structurally_eq(ds))
@@ -61,7 +61,7 @@ class ReadTreeTests(TestCase):
 
 
     def test_read_proj_ds_tree(self):
-        src_t = self.inst2.get_trans_ds()
+        src_t = self.inst2.get_ds(self.inst2.trans)
         tgt_w = self.inst2.lang
         aln   = self.inst2.get_trans_gloss_lang_alignment()
 
@@ -120,7 +120,7 @@ class ReadTreeTests(TestCase):
             ))
         """, stype=DEPSTR_PTB)
 
-        ds = inst.get_trans_ds()
+        ds = inst.get_ds(inst.trans)
         self.assertTrue(tgt_t.structurally_eq(ds))
 
         self.assertIsNone(inst.project_ds())

@@ -389,7 +389,7 @@ class TestGlossLines(unittest.TestCase):
         g1 = 'Agnès     1SG . REC   3SG . M . THM   present. FUT .3 SG'
 
         g1_clean = clean_gloss_string(g1)
-        g1_target = 'Agnès 1SG.REC 3SG.M.THM present.FUT.3SG'
+        g1_target = 'Agnès     1SG.REC   3SG.M.THM   present.FUT.3SG'
 
         self.assertEquals(g1_clean, g1_target)
 

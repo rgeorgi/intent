@@ -20,7 +20,8 @@ class GlossAlignTest(TestCase):
     def test_gloss_projection_unaligned(self):
         xc = RGCorpus.load(os.path.join(testfile_dir, "xigt/project_gloss_lang_tests.xml"))
         igt = xc[0]
-        igt.project_gloss_to_lang(tag_method=INTENT_POS_PROJ)
+        igt.project_gloss_to_lang(tag_method=INTENT_POS_PROJ, unk_handling='keep')
+
         self.assertEqual('UNK', igt.get_pos_tags(igt.lang.id, INTENT_POS_PROJ)[-1].value())
 
 
