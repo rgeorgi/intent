@@ -1845,8 +1845,8 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         # 2) Next, simply iterate through the tree and make the head/dep mappings.
 
-        for label, head_i, dep_i in dt.indices_labels():
 
+        for label, head_i, dep_i in dt.indices_labels():
             attributes={DS_DEP_ATTRIBUTE:w_tier.get_index(dep_i).id}
 
             if head_i != 0:
@@ -1877,7 +1877,6 @@ class RGIgt(Igt, RecursiveFindMixin):
             aln = self.get_trans_gloss_lang_alignment()
 
             proj_t = project_ds(src_t, tgt_w, aln)
-
 
             self.create_dt_tier(proj_t, self.lang, parse_method=INTENT_DS_PROJ)
 
@@ -2361,9 +2360,12 @@ def retrieve_trans_phrase(inst):
 
     # Add the alignment with the language line phrase if it's not already there.
     if ALIGNMENT not in tpt.attributes:
-        lpt = retrieve_lang_phrase(inst)
-        tpt.attributes[ALIGNMENT] = lpt.id
-        tpt[0].attributes[ALIGNMENT] = lpt[0].id
+        try:
+            lpt = retrieve_lang_phrase(inst)
+            tpt.attributes[ALIGNMENT] = lpt.id
+            tpt[0].attributes[ALIGNMENT] = lpt[0].id
+        except MultipleNormLineException as mnle:
+            pass
 
     return tpt
 

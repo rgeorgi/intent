@@ -12,6 +12,7 @@ from intent.igt.consts import INTENT_POS_CLASS, INTENT_POS_PROJ, ODIN_GLOSS_TAG,
 from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
     PhraseStructureProjectionException, ProjectionException,\
     ProjectionTransGlossException, word_align, retrieve_normal_line, NoNormLineException, MultipleNormLineException
+from intent.trees import TreeProjectionError, NoAlignmentProvidedError
 
 from intent.utils.arg_consts import PARSE_VAR, PARSE_TRANS, POS_VAR, ALN_VAR, POS_LANG_CLASS, ALN_HEUR, \
     ALN_GIZA, POS_LANG_PROJ, PARSE_LANG_PROJ, POS_TRANS
@@ -127,7 +128,7 @@ def enrich(**kwargs):
         print('Aligning gloss and translation lines using mgiza++...')
 
         try:
-            corp.giza_align_t_g()
+            corp.giza_align_t_g(resume=False)
         except GizaAlignmentException as gae:
             gl = logging.getLogger('giza')
             gl.critical(str(gae))
@@ -180,6 +181,8 @@ def enrich(**kwargs):
                 except CriticalTaggerError as cte:
                     ENRICH_LOG.critical(str(cte))
                     sys.exit(2)
+                except MultipleNormLineException as mnle:
+                    ENRICH_LOG.warn(str(mnle) + ' Not projecting POS tags.')
 
 
             # 4) POS tag the gloss line --------------------------------------------
@@ -191,17 +194,24 @@ def enrich(**kwargs):
                     ENRICH_LOG.warning('The gloss and language lines for instance id "%s" do not align. Language line not POS tagged.' % inst.id)
 
             if POS_LANG_PROJ in pos_args and has_all():
-                try:
-                    inst.project_trans_to_gloss()
-                except ProjectionTransGlossException as ptge:
-                    ENRICH_LOG.warning('No alignment between translation and gloss lines found for instance "%s". Not projecting POS tags.' % inst.id)
-                except ProjectionException as pe:
-                    ENRICH_LOG.warning('No translation POS tags were found for instance "%s". Not projecting POS tags.' % inst.id)
+                pos_tags = inst.get_pos_tags(inst.trans.id)
+                aln = inst.get_trans_gloss_alignment()
+                if not pos_tags:
+                    ENRICH_LOG.warn('No trans-line POS tags available for "{}". Not projecting POS tags from trans line.'.format(inst.id))
+                elif not aln:
+                    ENRICH_LOG.warn('No trans-gloss alignment available for "{}". Not projecting POS tags from trans line.'.format(inst.id))
                 else:
                     try:
-                        inst.project_gloss_to_lang(tag_method=INTENT_POS_PROJ)
-                    except GlossLangAlignException as glae:
-                        ENRICH_LOG.warn(glae)
+                        inst.project_trans_to_gloss()
+                    except ProjectionTransGlossException as ptge:
+                        ENRICH_LOG.warning('No alignment between translation and gloss lines found for instance "%s". Not projecting POS tags.' % inst.id)
+                    except ProjectionException as pe:
+                        ENRICH_LOG.warning('No translation POS tags were found for instance "%s". Not projecting POS tags.' % inst.id)
+                    else:
+                        try:
+                            inst.project_gloss_to_lang(tag_method=INTENT_POS_PROJ)
+                        except GlossLangAlignException as glae:
+                            ENRICH_LOG.warn(glae)
 
 
             # 5) Parse the translation line ----------------------------------------
@@ -215,22 +225,32 @@ def enrich(**kwargs):
 
             # If parse tree projection is enabled... -------------------------------
             if PARSE_LANG_PROJ in parse_args and has_all():
-                try:
-                    inst.project_pt()
-                except PhraseStructureProjectionException as pspe:
-                    ENRICH_LOG.warning('A parse for the translation line was not found for instance "%s", not projecting phrase structure.' % inst.id)
-                except ProjectionTransGlossException as ptge:
-                    ENRICH_LOG.warning('Alignment between translation and gloss lines was not found for instance "%s". Not projecting phrase structure.' % inst.id)
+                aln = inst.get_trans_gloss_lang_alignment()
 
+                # If there's no alignment, just skip.
+                if len(aln) == 0:
+                    ENRICH_LOG.warning('No alignment available for "{}". Not projecting trees.'.format(inst.id))
 
-                inst.project_ds()
+                # If there's alignment, try projecting.
+                else:
+                    try:
+                        inst.project_pt()
+                    except PhraseStructureProjectionException as pspe:
+                        ENRICH_LOG.warning('A parse for the translation line was not found for instance "%s", not projecting phrase structure.' % inst.id)
+                    except ProjectionTransGlossException as ptge:
+                        ENRICH_LOG.warning('Alignment between translation and gloss lines was not found for instance "%s". Not projecting phrase structure.' % inst.id)
+
+                    inst.project_ds()
 
 
             # Sort the tiers... ----------------------------------------------------
             inst.sort()
         except Exception as e:
-            ENRICH_LOG.warn("Unknown Error occurred processing instance {}".format(inst.id))
-            ENRICH_LOG.warn(e)
+            raise e
+
+        # except Exception as e:
+        #     ENRICH_LOG.warn("Unknown Error occurred processing instance {}".format(inst.id))
+        #     ENRICH_LOG.warn(e)
 
     print('Writing output file...', end=' ')
     xigtxml.dump(writefile(kwargs.get('OUT_FILE')), corp)

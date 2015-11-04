@@ -28,6 +28,7 @@ class PhraseTreeError(TreeError): pass
 class TreeProjectionError(Exception): pass
 class TreeMergeError(TreeProjectionError): pass
 class DepTreeProjectionError(TreeProjectionError): pass
+class NoAlignmentProvidedError(TreeProjectionError): pass
 
 PS_LOG = logging.getLogger('PS_PROJECT')
 DS_LOG = logging.getLogger('DS_PROJECT')
@@ -505,14 +506,13 @@ def project_ds(src_t, tgt_w, aln):
     """
 
     if not aln:
-        raise DepTreeProjectionError("No alignment was provided. Cannot project.")
+        raise NoAlignmentProvidedError("No alignment was provided. Cannot project.")
 
     # --1a) Start by copying the DS
     tgt_t = src_t.copy()
 
     # --1b) Get the unaligned nodes that we will be deleting later
     unaligned_eng_nodes = [n for n in tgt_t.subtrees(filter=lambda x: x.word_index not in aln.all_src())]
-
 
     # --1c) Delete all the unaligned nodes.
     for unaligned_node in unaligned_eng_nodes:
@@ -522,30 +522,34 @@ def project_ds(src_t, tgt_w, aln):
     DS_LOG.debug("New tree: {}".format(tgt_t))
 
     # --2) Now, create a list of the nodes that need replacing.
-    nodes_to_replace = defaultdict(list)
+    indices_to_replace = defaultdict(list)
 
+    # Now, let's go through the aligned indices in order to replace
+    # aligned nodes with their foreign language equivalents...
     for src_i, tgt_i in aln:
 
-        # First, we find the source (English) node
-        src_node = tgt_t.find_index(src_i)
+        # First, we find the source (English) nodes
+        # (This is plural because we CAN have the same word listed twice...)
+        src_nodes = tgt_t.findall_indices(src_i)
 
-        # Now, let's create a new node with the old
-        # type, but new index and label
-        unaln_word = tgt_w.get_index(tgt_i)
-        tgt_node = DepTree(unaln_word.value(), [], word_index = tgt_i, type=src_node.type)
+        for src_node in src_nodes:
+            # Now, let's create a new node with the old
+            # type, but new index and label
+            tgt_word = tgt_w.get_index(tgt_i)
+            tgt_node = DepTree(tgt_word.value(), [], word_index = tgt_i, type=src_node.type)
 
-        # Finally, let's append these new nodes to the list
-        # associated with the old node (the list ensures
-        # that any multiple alignments will be created
-        # correctly as siblings.)
-        nodes_to_replace[src_node].append(tgt_node)
+            # Finally, let's append these new nodes to the list
+            # associated with the old node (the list ensures
+            # that any multiple alignments will be created
+            # correctly as siblings.)
+            indices_to_replace[src_node].append(tgt_node)
 
     # Now, let's go through the nodes to replace, and
-    for node_to_replace in nodes_to_replace.keys():
+    for node_to_replace in indices_to_replace.keys():
 
         # Get a list of the siblings we're going to replace
         # the original node with
-        siblings = nodes_to_replace[node_to_replace]
+        siblings = indices_to_replace[node_to_replace]
 
         # Now, insert them as siblings.
         for tgt_node in siblings:
@@ -567,6 +571,7 @@ def project_ds(src_t, tgt_w, aln):
 
         # Finally, delete the old node (and don't promote children)
         node_to_replace.delete(promote=False)
+
 
     # --3) Now, for multiply-aligned words, only keep
     #      the shallowest one.
@@ -609,9 +614,6 @@ def project_ds(src_t, tgt_w, aln):
         left_indices  = sorted([i for i in aln.all_tgt() if i < j])
         right_indices = sorted([k for k in aln.all_tgt() if k > j])
 
-        # We must have something aligned...
-        assert left_indices or right_indices
-
         # If there are no indices to the left, attach to the leftmost of those
         # to the right...
         if not left_indices:
@@ -640,19 +642,32 @@ def project_ds(src_t, tgt_w, aln):
             attachments_to_make.append((j, indices[0][1]))
 
     for unaln_i, aln_i in attachments_to_make:
-        unaln_word = tgt_w.get_index(unaln_i).value()
+        tgt_word = tgt_w.get_index(unaln_i).value()
         aln_node = tgt_t.find_index(aln_i)
 
-        unaln_node = DepTree(unaln_word, [], word_index=unaln_i)
+        unaln_node = DepTree(tgt_word, [], word_index=unaln_i)
 
-        DS_LOG.debug("Attaching {}[{}] to {}[{}]".format(unaln_word, unaln_i,
+        DS_LOG.debug("Attaching {}[{}] to {}[{}]".format(tgt_word, unaln_i,
                                                          aln_node.label(), aln_i))
 
         aln_node.append(unaln_node)
 
     # Finally, just go through and make sure the children are sorted by index.
-    for st in tgt_t.subtrees():
+    seen_edges = set([])
+
+    for st in list(tgt_t.subtrees()):
         st.sort(key=lambda x: x.word_index)
+
+        # And do one more check... we should allow the same word to appear multiple times
+        # in the tree, but not as its own sibling.
+        edge = None if st.parent() is None else (st.word_index, st.parent().word_index)
+
+        if edge not in seen_edges:
+            seen_edges.add((st.word_index, st.parent().word_index))
+        else:
+            st.delete(promote=False)
+
+    # print(tgt_t.to_indices())
 
     return tgt_t
 
@@ -708,6 +723,10 @@ def project_ps(src_t, tgt_w, aln):
             * Find closest left and right aligned neighbor
             * Attach x to the lowest common ancestor of the two.
     """
+
+    if len(aln) == 0:
+        raise NoAlignmentProvidedError("No aligned words found, cannot project.")
+
 
     PS_LOG.debug('Projecting phrase structure.')
     PS_LOG.debug('             ' + aln_indices(src_t.leaves()))
@@ -1008,7 +1027,7 @@ class DepTree(IdTree):
         assert isinstance(word_index, int)
 
     def __hash__(self):
-        return hash(self._label) + hash(self.type) + hash(self.word_index)
+        return hash(self._label) + hash(self.type) + hash(self.word_index) + id(self)
 
     def to_indices(self):
         """
@@ -1176,6 +1195,9 @@ class DepTree(IdTree):
 
     def structurally_eq(self, other):
         return self.__eq__(other, check_type=False)
+
+    def similar(self, other):
+        return super().similar(other) and self.word_index == other.word_index
 
     def span(self):
         raise TreeError('Span is not supported for dependency tree.')

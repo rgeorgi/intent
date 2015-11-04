@@ -1,0 +1,48 @@
+<xigt-corpus xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<igt id="igt3903-914" doc-id="3903" line-range="10836-10838" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="fin" xsi:type="olac:language">Finnish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="10836" tag="L">         b. Jumala salli-i [sata-a rake-i-ta         ja tuhka-a].</item>
+      <item id="r2" line="10837" tag="G">            god.NOM let-3SG rain-TA hail-PL-PAR and ash-PAR</item>
+      <item id="r3" line="10838" tag="T">            'God lets (it) rain hail stones and ashes'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="10836" tag="L">         b. Jumala salli-i [sata-a rake-i-ta         ja tuhka-a].</item>
+      <item id="c2" alignment="r2" line="10837" tag="G">            god.NOM let-3SG rain-TA hail-PL-PAR and ash-PAR</item>
+      <item id="c3" alignment="r3" line="10838" tag="T">            'God lets (it) rain hail stones and ashes'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="10836" tag="L">Jumala salli-i [sata-a rake-i-ta         ja tuhka-a].</item>
+      <item id="n2" alignment="c2" line="10837" tag="G">god.NOM let-3SG rain-TA hail-PL-PAR and ash-PAR</item>
+      <item id="n3" alignment="c3" line="10838" tag="T">God lets (it) rain hail stones and ashes</item>
+    </tier>
+  </igt>
+  <igt id="igt3903-926" doc-id="3903" line-range="10963-10965" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="fin" xsi:type="olac:language">Finnish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="10963" tag="L">              d. *Minua unohta-a /Minä unohda-n pelo-tta-a                 /laula-tta-a.</item>
+      <item id="r2" line="10964" tag="G">                  I.PAR forget-3SG /I.NOM forget-1SG fear-CAUS-TA /sing-CAUS-               TA</item>
+      <item id="r3" line="10965" tag="T">                  'I forget to be frightened/ I forget to feel like singing'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="10963" tag="L">              d. *Minua unohta-a /Minä unohda-n pelo-tta-a                 /laula-tta-a.</item>
+      <item id="c2" alignment="r2" line="10964" tag="G">                  I.PAR forget-3SG /I.NOM forget-1SG fear-CAUS-TA /sing-CAUS-               TA</item>
+      <item id="c3" alignment="r3" line="10965" tag="T">                  'I forget to be frightened/ I forget to feel like singing'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="10963" tag="L">*Minua unohta-a /Minä unohda-n pelo-tta-a                 /laula-tta-a.</item>
+      <item id="n2" alignment="c2" line="10964" tag="G">I.PAR forget-3SG /I.NOM forget-1SG fear-CAUS-TA /sing-CAUS-TA</item>
+      <item id="n3" alignment="c3" line="10965" tag="T">I forget to be frightened/ I forget to feel like singing</item>
+    </tier>
+  </igt>
+</xigt-corpus>

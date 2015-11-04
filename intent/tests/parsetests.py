@@ -5,9 +5,11 @@ from intent.igt import rgxigt
 from intent.igt.consts import DS_TIER_TYPE
 from intent.igt.igtutils import rgp
 from intent.igt.rgxigt import RGXigtException, RGCorpus, read_ds
+from intent.interfaces.stanford_parser import StanfordParser
+from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.subcommands import enrich
 from intent.trees import DepTree, DEPSTR_PTB, project_ds
-from intent.utils.env import proj_root, testfile_dir
+from intent.utils.env import proj_root, testfile_dir, tagger_model
 
 __author__ = 'rgeorgi'
 
@@ -124,5 +126,44 @@ class ReadTreeTests(TestCase):
         self.assertTrue(tgt_t.structurally_eq(ds))
 
         self.assertIsNone(inst.project_ds())
+
+class UnknownErrorTests(TestCase):
+
+    def test_ds_project(self):
+        sp = StanfordParser()
+
+        xc = RGCorpus.load(os.path.join(testfile_dir, 'xigt/index_error.xml'), basic_processing=True)
+        inst = xc[0]
+        inst.heur_align()
+        inst.parse_translation_line(sp, dt=True)
+        inst.project_ds()
+        proj_t = inst.get_lang_ds()
+
+        tgt_t = DepTree.fromstring("""(ROOT[0]
+                                        (salli-i[2]
+                                            (Jumala[1])
+                                            (sata-a[3])
+                                            (rake-i-ta[4])
+                                            (ja[5])
+                                            (tuhka-a[6]) ))""", stype=DEPSTR_PTB)
+
+        self.assertTrue(tgt_t.similar(proj_t))
+
+        inst2 = xc[1]
+        inst2.heur_align()
+        inst2.parse_translation_line(sp, dt=True)
+        inst2.project_ds()
+
+        tgt2_t = DepTree.fromstring("""(ROOT[0]
+                                            (unohta-a[2] (*Minua[1])
+                                                (unohda-n[4]
+                                                    (/Minä[3])
+                                                    (/laula-tta-a[6] (pelo-tta-a[5]))
+                                                )
+                                            ))
+                                        """, stype=DEPSTR_PTB)
+
+        self.assertTrue(inst2.get_lang_ds(), tgt2_t)
+
 
 
