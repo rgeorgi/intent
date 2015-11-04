@@ -1,0 +1,23 @@
+<xigt-corpus xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <igt id="igt3294-24" doc-id="3294" line-range="2669-2671" tag-types="L+CR L+CR+EX G">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="gkn" xsi:type="olac:language">Gokana</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="2669" tag="L+CR">                                        `      `</item>
+      <item id="r2" line="2670" tag="L+CR+EX">              b. `Dispreferred to [a]' mm k mm d` -`</item>
+      <item id="r3" line="2671" tag="G">                                       I said I fell-LOG</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="2669" tag="L+CR">                                        `      `</item>
+      <item id="c2" alignment="r3" line="2671" tag="G">                                       I said I fell-LOG</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="2669" tag="L+CR" />
+      <item id="n2" alignment="c2" line="2671" tag="G">I said I fell-LOG</item>
+    </tier>
+  </igt>
+</xigt-corpus>

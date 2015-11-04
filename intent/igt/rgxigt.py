@@ -2398,10 +2398,7 @@ def retrieve_phrase(inst, tag, id, type):
     f = lambda x: tag in aligned_tags(x)
     pt = inst.find(type=type, others=[f])
 
-    #n = inst1.normal_tier()
-
-    #pt = inst1.find(type=type, content = n.id)
-    if not pt:
+    if pt is None:
         n = inst.normal_tier()
         # Get the normalized line line
         l = retrieve_normal_line(inst, tag)
@@ -2515,8 +2512,14 @@ def odin_ancestor(obj):
         else:
             return None
 
+        # If this item is a tier, we would like to follow a random object
+        # to
+
         if isinstance(obj, Tier):
-            id = [ids(i.attributes[ref_attr])[0] for i in obj][0]
+            if len(obj) == 0:
+                id = obj.attributes[ref_attr]
+            else:
+                id = [ids(i.attributes[ref_attr])[0] for i in obj][0]
         elif isinstance(obj, Item):
             id = ids(obj.attributes[ref_attr])[0]
         else:

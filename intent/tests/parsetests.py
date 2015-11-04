@@ -26,6 +26,11 @@ xigt_proj = os.path.join(testfile_dir, 'xigt/xigt-projection-tests.xml')
 ds_cycle  = os.path.join(testfile_dir, 'xigt/ds-cycle-test.xml')
 
 no_enrich_args = {'OUT_FILE':'/dev/null'}
+all_enrich_args = {'OUT_FILE':'/dev/null',
+                   'class_path':classifier,
+                   POS_VAR:[POS_LANG_CLASS, POS_LANG_PROJ],
+                   PARSE_VAR:[PARSE_LANG_PROJ, PARSE_TRANS],
+                   ALN_VAR:[ALN_HEUR]}
 
 class ParseTests(TestCase):
 
@@ -169,9 +174,19 @@ class UnknownErrorTests(TestCase):
 
 
     def test_3191(self):
-        enrich(**{'IN_FILE':os.path.join(testfile_dir, 'xigt/3191.xml'),
-                  'OUT_FILE':'/dev/null',
-                  'class_path':classifier,
-                  POS_VAR:[POS_LANG_CLASS, POS_LANG_PROJ],
-                  PARSE_VAR:[PARSE_LANG_PROJ, PARSE_TRANS],
-                  ALN_VAR:[ALN_HEUR]})
+        d = all_enrich_args.copy()
+        d['IN_FILE'] = os.path.join(testfile_dir, 'xigt/3191.xml')
+        self.assertIsNone(enrich(**d))
+
+    def test_3294(self):
+        d = all_enrich_args.copy()
+        d['IN_FILE'] = os.path.join(testfile_dir, 'xigt/3294.xml')
+        self.assertIsNone(enrich(**d))
+
+
+class MultipleLineTests(TestCase):
+
+    def test_911(self):
+        d = all_enrich_args.copy()
+        d['IN_FILE'] = os.path.join(testfile_dir, 'xigt/multiple_lang_lines.xml')
+        self.assertIsNone(enrich(**d))

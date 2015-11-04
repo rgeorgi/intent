@@ -172,6 +172,8 @@ def enrich(**kwargs):
                     word_align(inst.gloss, inst.lang)
                 except GlossLangAlignException as glae:
                     ENRICH_LOG.warn(str(glae))
+                except MultipleNormLineException as mnle:
+                    pass # This will be errored out elsewhere...
 
 
             # 3) POS tag the translation line --------------------------------------

@@ -1,0 +1,28 @@
+  <xigt-corpus xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <igt id="igt911-23" doc-id="911" line-range="663-666" tag-types="L+CR L+CN G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="hau" xsi:type="olac:language">Hausa</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="663" tag="L+CR">          Wa¥     ka         ganê?</item>
+      <item id="r2" line="664" tag="L+CN">  (35)                                                                                       ex-situ wh-phrase</item>
+      <item id="r3" line="665" tag="G">           whom 2m.FOC.PF see</item>
+      <item id="r4" line="666" tag="T">          `Whom did you see?'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="663" tag="L+CR">          Wa¥     ka         ganê?</item>
+      <item id="c2" alignment="r2" line="664" tag="L+CN">  (35)                                                                                       ex-situ wh-phrase</item>
+      <item id="c3" alignment="r3" line="665" tag="G">           whom 2m.FOC.PF see</item>
+      <item id="c4" alignment="r4" line="666" tag="T">          `Whom did you see?'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="663" tag="L+CR">Wa¥     ka         ganê?</item>
+      <item id="n2" alignment="c2" line="664" tag="L+CN">ex-situ wh-phrase</item>
+      <item id="n3" alignment="c3" line="665" tag="G">whom 2m.FOC.PF see</item>
+      <item id="n4" alignment="c4" line="666" tag="T">Whom did you see?</item>
+    </tier>
+  </igt>
+</xigt-corpus>
