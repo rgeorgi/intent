@@ -14,7 +14,7 @@ import sys
 from intent.consts.grammatical import morpheme_boundary_chars
 from intent.pos.TagMap import TagMap
 from intent.utils.string_utils import replace_invalid_xml
-
+from xigt.errors import XigtError
 from xigt.model import XigtCorpus, Igt, Item, Tier
 from xigt.metadata import Metadata, Meta
 from xigt.consts import ALIGNMENT, SEGMENTATION, CONTENT
@@ -712,6 +712,9 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                 PARSELOG.warning(mnle)
                 if error:
                     raise mnle
+            except XigtError as xe:
+                PARSELOG.critical('XigtError in "{}"'.format(igt.id))
+                raise xe
 
 
 
@@ -1070,7 +1073,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         f = [lambda x: not is_word_level_gloss(x)]
 
         gt = self.find(type=GLOSS_MORPH_TYPE, others=f)
-        if gt:
+        if gt is not None:
             gt.__class__ = RGMorphTier
 
         # If we don't already have a sub-token-level glosses tier, let's create
@@ -1081,7 +1084,6 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             # Add the meta information that this is not a word-level gloss.
             add_word_level_info(gt, INTENT_GLOSS_MORPH)
-
             self.append(gt)
 
         # If we have alignment, remove the metadata attribute.
@@ -1092,7 +1094,7 @@ class RGIgt(Igt, RecursiveFindMixin):
     @property
     def morphemes(self):
         morphemes = self.find(type=LANG_MORPH_TYPE)
-        if morphemes:
+        if morphemes is not None:
             morphemes.__class__ = RGMorphTier
             return morphemes
         else:
@@ -2566,7 +2568,7 @@ def retrieve_gloss_words(inst):
 
 
     # 2. If it exists, return it. Otherwise, look for the glosses tier.
-    if not wt:
+    if wt is None:
         n = inst.normal_tier()
         g_n = retrieve_normal_line(inst, ODIN_GLOSS_TAG)
 

@@ -9,7 +9,9 @@ from intent.interfaces.stanford_parser import StanfordParser
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.subcommands import enrich
 from intent.trees import DepTree, DEPSTR_PTB, project_ds
-from intent.utils.env import proj_root, testfile_dir, tagger_model
+from intent.utils.arg_consts import PARSE_VAR, PARSE_LANG_PROJ, ALN_VAR, ALN_HEUR, PARSE_TRANS, POS_VAR, POS_LANG_CLASS, \
+    POS_LANG_PROJ
+from intent.utils.env import proj_root, testfile_dir, tagger_model, classifier
 
 __author__ = 'rgeorgi'
 
@@ -166,4 +168,10 @@ class UnknownErrorTests(TestCase):
         self.assertTrue(inst2.get_lang_ds(), tgt2_t)
 
 
-
+    def test_3191(self):
+        enrich(**{'IN_FILE':os.path.join(testfile_dir, 'xigt/3191.xml'),
+                  'OUT_FILE':'/dev/null',
+                  'class_path':classifier,
+                  POS_VAR:[POS_LANG_CLASS, POS_LANG_PROJ],
+                  PARSE_VAR:[PARSE_LANG_PROJ, PARSE_TRANS],
+                  ALN_VAR:[ALN_HEUR]})

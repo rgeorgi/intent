@@ -1,0 +1,36 @@
+<xigt-corpus xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <igt id="igt3191-510" doc-id="3191" line-range="27797-27804" tag-types="M+AC L G+CR G+CR G+CR B T T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="kat" xsi:type="olac:language">Georgian</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="27797" tag="M+AC">   (32) (Amiridze and Everaert, 2000)</item>
+      <item id="r2" line="27798" tag="L">          tavis-ma tav-ma ixsna                        prezident-i.</item>
+      <item id="r3" line="27799" tag="G+CR">                                                               .</item>
+      <item id="r4" line="27800" tag="G+CR">                                                       .</item>
+      <item id="r5" line="27801" tag="G+CR">          self 's-E R G self-E R G (s)he.saved.him/her president-N    OM</item>
+      <item id="r6" line="27802" tag="B" />
+      <item id="r7" line="27803" tag="T">          "It was his/her own positive personal properties, and/or his/her achieve-</item>
+      <item id="r8" line="27804" tag="T">          ments, etc., that saved the president."</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="27797" tag="M+AC">   (32) (Amiridze and Everaert, 2000)</item>
+      <item id="c2" alignment="r2" line="27798" tag="L">          tavis-ma tav-ma ixsna                        prezident-i.</item>
+      <item id="c3" alignment="r3" line="27799 27800" tag="G+CR">                                                       .       .</item>
+      <item id="c4" alignment="r6" line="27802" tag="B" />
+      <item id="c5" alignment="r7" line="27803" tag="T">          "It was his/her own positive personal properties, and/or his/her achieve-</item>
+      <item id="c6" alignment="r8" line="27804" tag="T">          ments, etc., that saved the president."</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="27797" tag="M+AC">(Amiridze and Everaert, 2000</item>
+      <item id="n2" alignment="c2" line="27798" tag="L">tavis-ma tav-ma ixsna                        prezident-i.</item>
+      <item id="n3" alignment="c3" line="27799 27800" tag="G+CR">.       .</item>
+      <item id="n4" alignment="c4" line="27802" tag="B" />
+      <item id="n5" alignment="c5" line="27803" tag="T">It was his/her own positive personal properties, and/or his/her achieve-</item>
+      <item id="n6" alignment="c6" line="27804" tag="T">ments, etc., that saved the president.</item>
+    </tier>
+  </igt>
+</xigt-corpus>
