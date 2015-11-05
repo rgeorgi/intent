@@ -250,12 +250,12 @@ def enrich(**kwargs):
 
             # Sort the tiers... ----------------------------------------------------
             inst.sort()
-        except Exception as e:
-            raise e
-
         # except Exception as e:
-        #     ENRICH_LOG.warn("Unknown Error occurred processing instance {}".format(inst.id))
-        #     ENRICH_LOG.warn(e)
+        #     raise e
+
+        except Exception as e:
+            ENRICH_LOG.warn("Unknown Error occurred processing instance {}".format(inst.id))
+            ENRICH_LOG.warn(e)
 
     print('Writing output file...', end=' ')
     xigtxml.dump(writefile(kwargs.get('OUT_FILE')), corp)
