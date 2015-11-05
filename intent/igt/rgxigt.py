@@ -390,6 +390,9 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         return len(self._list)
 
     def copy(self, limit=None):
+        """
+        :rtype: RGCorpus
+        """
         new_c = RGCorpus(id=self.id, attributes=copy.deepcopy(self.attributes), metadata=copy.copy(self.metadata), igts=None)
 
         for i, igt in enumerate(self.igts):
@@ -402,6 +405,10 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
     @classmethod
     def from_raw_txt(cls, txt):
+        """
+
+        :rtype: RGCorpus
+        """
         print("Creating XIGT corpus from raw text...")
         xc = cls()
 
@@ -619,7 +626,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         self.filter(lambda inst: inst.get_pos_tags(GLOSS_WORD_ID) is not None)
 
 
-    def giza_align_t_g(self, resume = True):
+    def giza_align_t_g(self, resume = True, use_heur = False):
         """
         Perform giza alignments on the gloss and translation
         lines.
@@ -634,6 +641,9 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         g_sents = []
         t_sents = []
 
+        g_words = []
+        t_words = []
+
         for inst in self:
             g_sent = []
             t_sent = []
@@ -645,6 +655,24 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
             for trans in inst.trans.tokens():
                 t_sent.append(re.sub('\s+', '', trans.value().lower()))
             t_sents.append(' '.join(t_sent))
+
+            # Perform the augmented GIZA alignment...
+            if use_heur:
+                try:
+                    heur = inst.get_trans_gloss_alignment(aln_method=INTENT_ALN_HEUR)
+                except ProjectionTransGlossException as ptge:
+                    ALIGN_LOG.warn("Augmented giza was requested but no heur alignment is present.")
+                else:
+                    for t_i, g_i in heur:
+                        t_words.append(inst.trans.get_index(t_i).value())
+                        g_words.append(inst.gloss.get_index(g_i).value())
+
+        # Tack on the heuristically aligned g/t words
+        # to the end of the sents, so they won't mess
+        # up alignment.
+        g_sents.extend(g_words)
+        t_sents.extend(t_words)
+
 
         PARSELOG.info('Attempting to align instance "{}" with giza'.format(inst.id))
 
@@ -662,7 +690,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
             g_t_asents = ga.temp_train(g_sents, t_sents)
 
         # Before continuing, make sure that we have the same number of alignments as we do instances.
-        assert len(g_t_asents) == len(self), 'giza: %s -- self: %s' % (len(g_t_asents), len(self))
+        assert len(g_t_asents) >= len(self), 'giza: %s -- self: %s' % (len(g_t_asents), len(self))
 
         # Next, iterate through the aligned sentences and assign their alignments
         # to the instance.
@@ -692,14 +720,14 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
 
 
-    def heur_align(self, error=False):
+    def heur_align(self, error=False, use_pos=False, **kwargs):
         """
         Perform heuristic alignment between the gloss and translation.
         """
         for igt in self:
             try:
                 PARSELOG.info('Attempting to heuristically align instance "{}"'.format(igt.id))
-                g_heur_aln = igt.heur_align()
+                g_heur_aln = igt.heur_align(use_pos=use_pos, **kwargs)
             except NoTransLineException as ntle:
                 PARSELOG.warning(ntle)
                 if error:
@@ -846,6 +874,7 @@ class RGIgt(Igt, RecursiveFindMixin):
     def copy(self, parent = None):
         """
         Perform a custom deepcopy of ourselves.
+        :rtype: RGIgt
         """
         new_i = RGIgt(id = self.id, type=self.type,
                     attributes = copy.deepcopy(self.attributes),
@@ -1280,6 +1309,7 @@ class RGIgt(Igt, RecursiveFindMixin):
     def heur_align(self, **kwargs):
         """
         Heuristically align the gloss and translation lines of this instance.
+        :rtype Alignment:
         """
 
         # If given the "tokenize" option, use the tokens
@@ -1292,11 +1322,26 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         trans_tokens = self.trans.tokens()
 
+        # Use POS tags from the classifier if available.
+        if kwargs.get('use_pos', False):
+            gloss_pos = self.get_pos_tags(self.gloss.id, tag_method=INTENT_POS_CLASS)
+            trans_pos = self.get_pos_tags(self.trans.id, tag_method=INTENT_POS_TAGGER)
+
+            # TODO: In order to do the alignment with POS tags, they need to be at the morpheme level. Find a better way to do this?
+            # Make sure to expand the POS tags to function at the morpheme-level...
+            glosses_tags = [gloss_pos.get_index(find_gloss_word(self, gloss).index) for gloss in self.glosses]
+
+            if gloss_pos is None or trans_pos is None:
+                ALIGN_LOG.warn('POS-heur alignment requested, but gloss-classifier tags or trans-tagger tags were not available. Skipping for instance "{}"'.format(self.id))
+
+            kwargs['gloss_pos'] = glosses_tags
+            kwargs['trans_pos'] = trans_pos
+
         aln = heur_alignments(gloss_tokens, trans_tokens, **kwargs).flip()
 
         # Now, add these alignments as bilingual alignments...
         self.set_bilingual_alignment(self.trans, self.glosses, aln, aln_method=INTENT_ALN_HEUR)
-
+        return aln
 
 
     # • POS Tag Manipulation ---------------------------------------------------------------
@@ -1342,7 +1387,7 @@ class RGIgt(Igt, RecursiveFindMixin):
             p = RGToken(id=pt.askItemId(), alignment=w.id, text=tag)
             pt.add(p)
 
-    def get_pos_tags(self, tier_id, tag_method = None):
+    def get_pos_tags(self, tier_id, tag_method = None, morpheme_granularity = False):
         """
         Retrieve the pos tags if they exist for the given tier id...
 
@@ -1362,6 +1407,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         # If we found a tier, return it with the token methods...
         if pos_tier is not None:
             pos_tier.__class__ = RGTokenTier
+
             return pos_tier
 
         # Otherwise, return None...

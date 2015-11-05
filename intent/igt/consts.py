@@ -121,6 +121,7 @@ INTENT_GLOSS_MORPH = 'sub-word'
 
 INTENT_ALN_GIZA = 'mgiza'
 INTENT_ALN_HEUR = 'heur'
+INTENT_ALN_MANUAL = 'manual'
 
 INTENT_POS_CLASS  = 'classifier'
 INTENT_POS_PROJ   = 'projection'

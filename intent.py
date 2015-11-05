@@ -181,8 +181,8 @@ extract_p.add_argument('-v', '--verbose', action='count', help='Set the verbosit
 eval_p = subparsers.add_parser('eval', help='Command to eval INTENT functions against a gold-standard XIGT-XML.')
 
 eval_p.add_argument('FILE', nargs='+', help='XIGT files to test against.', type=globfiles)
-eval_p.add_argument('--classifier', help='Specify a gloss-line POS classifier to test.')
-eval_p.add_argument('--alignment', help='Test alignment methods against the alignment provided in the file.')
+eval_p.add_argument('--classifier', help='Specify a gloss-line POS classifier to test.', type=existsfile, default=None)
+eval_p.add_argument('--alignment', help='Test alignment methods against the alignment provided in the file.', action='store_true', default=False)
 
 eval_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 

@@ -5,7 +5,10 @@ Created on Feb 21, 2014
 '''
 
 import collections, sys, re, unittest, copy
-from intent.utils.token import tokenize_string, whitespace_tokenizer
+from intent.utils.token import tokenize_string, whitespace_tokenizer, Token
+
+
+class HeuristicAlignmentException(Exception): pass
 
 #===============================================================================
 # Aligned Sent Class
@@ -416,7 +419,7 @@ class Alignment(set):
     Simply, a set of (src_index, tgt_index) pairs in a set.
     '''
 
-    def __init__(self, iter=[]):
+    def __init__(self, iter=list()):
         super().__init__(iter)
 
     def __str__(self):
@@ -472,12 +475,6 @@ class Alignment(set):
 
     def __sub__(self, o):
         return self.__class__(set.__sub__(self, o))
-
-    def __or__(self, o):
-        return self.__class__(set.__or__(self, o))
-
-    def __and__(self, o):
-        return self.__class__(set.__and__(self, o))
 
     def nonzeros(self):
         nz = [elt for elt in self if elt[0] > 0 and elt[-1] > 0]
@@ -544,28 +541,44 @@ class MorphAlign(Alignment):
     def remapping(self):
         return self._remapping
 
-def heur_alignments(gloss_tokens, trans_tokens, iteration=1, **kwargs):
+def heur_alignments(gloss_tokens, trans_tokens, iteration=1, alignments = None, **kwargs):
     '''
     Obtain heuristic alignments between gloss and translation tokens
 
     :param gloss_tokens: The gloss tokens
-    :type gloss_tokens: [Token]
+    :type gloss_tokens: list[Token]
     :param trans_tokens: The trans tokens
-    :type trans_tokens: [Token]
+    :type trans_tokens: list[Token]
     :param iteration: Number of iterations looking for matches
     :type iteration: int
     '''
 
-    alignments = Alignment()
+    # So that the previous supplied alignments arg doesn't stick.
+    if alignments is None:
+        alignments = Alignment()
+
+    gp = kwargs.get('gloss_pos')
+    tp = kwargs.get('trans_pos')
+
+    use_pos = (gp is not None and tp is not None)
 
     # For the second iteration
-    if iteration>1:
+    if iteration==2:
+        gloss_tokens = gloss_tokens[::-1]
+        trans_tokens = trans_tokens[::-1]
+    elif iteration==3:
         gloss_tokens = gloss_tokens[::-1]
         trans_tokens = trans_tokens[::-1]
 
     for gloss_token in gloss_tokens:
-
         for trans_token in trans_tokens:
+
+            gpos, tpos = None, None
+            if gp:
+                gpos = gp[gloss_token.index-1].value()
+            if tp:
+                tpos = tp[trans_token.index-1].value()
+
 
             if gloss_token.morphequals(trans_token, **kwargs):
                 # Get the alignment count
@@ -589,12 +602,28 @@ def heur_alignments(gloss_tokens, trans_tokens, iteration=1, **kwargs):
                     gloss_token.attrs['align_count'] = gloss_align_count+1
                     alignments.add((gloss_token.index, trans_token.index))
 
+            elif use_pos and iteration > 2 and gpos is not None and tpos is not None and gpos == tpos:
+                # If the gloss token is unaligned, see if it matches
+                # an unaligned trans token.
+                unaligned_trans_tokens = [t.index for t in trans_tokens if t.index not in [t for g,t in alignments]]
+                unaligned_gloss_tokens = [g.index for g in gloss_tokens if g.index not in [g for g,t in alignments]]
+
+                if gloss_token.index in unaligned_gloss_tokens and trans_token.index in unaligned_trans_tokens:
+                    trans_token.attrs['align_count'] = 1
+                    gloss_token.attrs['align_count'] = 1
+                    alignments.add((gloss_token.index, trans_token.index))
+                    break
+
+                # elif gloss_token.index in unaligned_gloss_tokens and iteration == 4:
+                #     trans_token.attrs['align_count'] += 1
+                #     gloss_token.attrs['align_count'] = 1
+                #     alignments.add((gloss_token.index, trans_token.index))
 
 
-    if iteration == 2 or kwargs.get('no_multiples', False):
+    if iteration == 4 or (iteration == 2 and not use_pos):
         return alignments
     else:
-        return alignments | heur_alignments(gloss_tokens, trans_tokens, iteration+1, **kwargs)
+        return heur_alignments(gloss_tokens, trans_tokens, iteration+1, alignments=alignments, **kwargs)
 
 #===============================================================================
 # Unit tests

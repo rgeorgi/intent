@@ -1,20 +1,23 @@
 import sys
 from tempfile import NamedTemporaryFile
+
+from intent.eval.AlignEval import AlignEval
 from intent.eval.pos_eval import poseval
 from intent.igt.consts import GLOSS_WORD_ID, MANUAL_POS, INTENT_POS_PROJ, INTENT_POS_CLASS, INTENT_ALN_HEUR, \
-    INTENT_POS_TAGGER, LANG_WORD_ID
+    INTENT_POS_TAGGER, LANG_WORD_ID, INTENT_ALN_MANUAL, INTENT_ALN_GIZA
 from intent.igt.igtutils import rgp
 from intent.igt.rgxigt import RGCorpus, RGIgt, strip_pos
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
+from intent.utils.arg_consts import ALN_MANUAL
 from intent.utils.dicts import TwoLevelCountDict, POSEvalDict
-from intent.utils.env import tagger_model
+from intent.utils.env import tagger_model, classifier
 from intent.utils.token import POSToken, GoldTagPOSToken
 from xigt.consts import ALIGNMENT
 
 __author__ = 'rgeorgi'
 
-def evaluate_intent(filelist, classifier_path, eval_alignment):
+def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
     """
     Given a list of files that have manual POS tags and manual alignment,
     evaluate the various INTENT methods on that file.
@@ -27,7 +30,11 @@ def evaluate_intent(filelist, classifier_path, eval_alignment):
     """
     tagger = StanfordPOSTagger(tagger_model)
 
-    if classifier_path:
+    # =============================================================================
+    # Set up the objects to run as "servers"
+    # =============================================================================
+
+    if classifier_path is not None:
         classifier = MalletMaxent(classifier_path)
 
     overall_prj = POSEvalDict()
@@ -37,13 +44,92 @@ def evaluate_intent(filelist, classifier_path, eval_alignment):
     for f in filelist:
         print('Evaluating on file: {}'.format(f))
         xc = RGCorpus.load(f)
-        prj_eval, cls_eval = evaluate_classifier_on_instances(xc, classifier, tagger)
 
-        overall_prj += prj_eval
-        overall_cls += cls_eval
+        # Test the classifier if evaluation is requested.
+        if classifier_path is not None:
+            prj_eval, cls_eval = evaluate_classifier_on_instances(xc, classifier, tagger)
 
-    print("ALL...")
-    print('{:.2f},{:.2f}'.format(overall_prj.accuracy(), overall_cls.accuracy()))
+            overall_prj += prj_eval
+            overall_cls += cls_eval
+
+        # Test alignment if requested.
+        if eval_alignment:
+            evaluate_alignment_on_file(xc)
+
+
+    # Report the POS tagging accuracy...
+    if classifier_path is not None:
+        print("ALL...")
+        print('{:.2f},{:.2f}'.format(overall_prj.accuracy(), overall_cls.accuracy()))
+
+def evaluate_alignment_on_file(xc):
+    """
+    :type xc: RGCorpus
+    """
+    xc2 = xc.copy()
+
+    xc.heur_align(use_pos=False)
+
+    xc3 = xc.copy()
+
+    xc3.giza_align_t_g(use_heur=True, resume=True)
+
+    xc.giza_align_t_g(resume=True)
+
+
+    xc2.giza_align_t_g(resume=False)
+
+    sp = StanfordPOSTagger(tagger_model)
+    mc = MalletMaxent(classifier)
+
+    heur_alignments = []
+    # heur_pos_alignments = []
+    giza_alignments_aug = []
+    giza_alignments_resume = []
+    giza_alignments_fresh = []
+    gold_alignments = []
+
+    for inst, inst2, inst3 in zip(xc, xc2, xc3):
+
+        assert isinstance(inst, RGIgt)
+        assert isinstance(inst2, RGIgt)
+        assert isinstance(inst3, RGIgt)
+
+        manual      = inst.get_trans_gloss_alignment(aln_method=INTENT_ALN_MANUAL)
+        giza_resume = inst.get_trans_gloss_alignment(aln_method=INTENT_ALN_GIZA)
+        giza_fresh = inst2.get_trans_gloss_alignment(aln_method=INTENT_ALN_GIZA)
+        giza_augment = inst3.get_trans_gloss_alignment(aln_method=INTENT_ALN_GIZA)
+
+        heur        = inst.get_trans_gloss_alignment(aln_method=INTENT_ALN_HEUR)
+
+        # inst2.classify_gloss_pos(mc)
+        # inst2.tag_trans_pos(sp)
+        # inst2.heur_align(use_pos=True)
+
+
+        # heur_pos    = inst2.get_trans_gloss_alignment(aln_method=INTENT_ALN_HEUR)
+
+        heur_alignments.append(heur)
+        # heur_pos_alignments.append(heur_pos)
+        gold_alignments.append(manual)
+        giza_alignments_aug.append(giza_augment)
+        giza_alignments_resume.append(giza_resume)
+        giza_alignments_fresh.append(giza_fresh)
+
+    heur_ae = AlignEval(heur_alignments, gold_alignments)
+    # heur_pos_ae = AlignEval(heur_pos_alignments, gold_alignments)
+    giza_augment_ae = AlignEval(giza_alignments_aug, gold_alignments)
+    giza_resume_ae = AlignEval(giza_alignments_resume, gold_alignments)
+    giza_fresh_ae  = AlignEval(giza_alignments_fresh, gold_alignments)
+
+    print(AlignEval.header())
+    # print(heur_pos_ae.all())
+    print(heur_ae.all())
+
+    print(giza_augment_ae.all())
+    print(giza_resume_ae.all())
+    print(giza_fresh_ae.all())
+
 
 # =============================================================================
 # Evaluate instances
