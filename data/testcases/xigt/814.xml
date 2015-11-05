@@ -1,0 +1,29 @@
+<xigt-corpus xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <igt id="igt108442" doc-id="814" line-range="485-487" tag-types="L G T">
+    <metadata>
+      <meta id="meta1" type="odin-header">doc_id=814 485 487 L G T
+stage3_lang_chosen: passamaquoddy (pqm)
+lang_code: passamaquoddy (pqm) || japanese (jpn) || mali (gcc) || malagasy (plt) || cree (ojs)
+note: lang_chosen_idx=0</meta>
+      <meta id="meta2">
+        <dc:subject olac:code="pqm" xsi:type="olac:language">Passamaquoddy</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="485" tag="L">             b.        Cihpolakon kosona kuhas ma=te           n-kisi-maton-oku-wih-ik.</item>
+      <item id="r2" line="486" tag="G">                       eagle       or      hawk Neg=Emph 1-Perf-fight-Inv-Neg-3P</item>
+      <item id="r3" line="487" tag="T">                     `(Neither) an eagle (n)or a hawk attacked me.' (neither attacked)                                Conjunctive</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="485" tag="L">             b.        Cihpolakon kosona kuhas ma=te           n-kisi-maton-oku-wih-ik.</item>
+      <item id="c2" alignment="r2" line="486" tag="G">                       eagle       or      hawk Neg=Emph 1-Perf-fight-Inv-Neg-3P</item>
+      <item id="c3" alignment="r3" line="487" tag="T">                     `(Neither) an eagle (n)or a hawk attacked me.' (neither attacked)                                Conjunctive</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="485" tag="L">Cihpolakon kosona kuhas ma=te           n-kisi-maton-oku-wih-ik.</item>
+      <item id="n2" alignment="c2" line="486" tag="G">eagle       or      hawk Neg=Emph 1-Perf-fight-Inv-Neg-3P</item>
+      <item id="n3" alignment="c3" line="487" tag="T">(Neither) an eagle (n)or a hawk attacked me.' (neither attacked)                                Conjunctive</item>
+    </tier>
+  </igt>
+</xigt-corpus>

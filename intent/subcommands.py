@@ -242,7 +242,10 @@ def enrich(**kwargs):
                     except ProjectionTransGlossException as ptge:
                         ENRICH_LOG.warning('Alignment between translation and gloss lines was not found for instance "%s". Not projecting phrase structure.' % inst.id)
 
-                    inst.project_ds()
+                    try:
+                        inst.project_ds()
+                    except ProjectionException as pe:
+                        ENRICH_LOG.warning(pe)
 
 
             # Sort the tiers... ----------------------------------------------------

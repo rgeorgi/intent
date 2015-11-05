@@ -190,3 +190,10 @@ class MultipleLineTests(TestCase):
         d = all_enrich_args.copy()
         d['IN_FILE'] = os.path.join(testfile_dir, 'xigt/multiple_lang_lines.xml')
         self.assertIsNone(enrich(**d))
+
+class DepTreeTests(TestCase):
+
+    def test_814(self):
+        d = all_enrich_args.copy()
+        d['IN_FILE'] = os.path.join(testfile_dir, 'xigt/814.xml')
+        self.assertIsNone(enrich(**d))

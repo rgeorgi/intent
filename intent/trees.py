@@ -1249,7 +1249,7 @@ def get_dep_edges(string, stype=DEPSTR_STANFORD):
 
     if stype == DEPSTR_STANFORD:
         #                    Sometimes the parser seems to place a spurious quote after the digit?
-        nodes = re.findall('(\w+)\((.*?\d+)\'?\)', string)
+        nodes = re.findall('(\S+)\((.*?\d+)\'?\)', string)
 
         # We are going to store a dictionary of words
         # and their children, and then construct the

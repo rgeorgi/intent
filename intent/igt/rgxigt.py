@@ -166,6 +166,7 @@ class FindMixin():
                 filters += val
             else:
                 raise ValueError('Invalid keyword argument "%s"' % kw)
+
         return filters
 
     def find(self, **kwargs):
@@ -2559,13 +2560,11 @@ def odin_ancestor(obj):
             return None
 
         # If this item is a tier, we would like to follow a random object
-        # to
-
         if isinstance(obj, Tier):
             if len(obj) == 0:
                 id = obj.attributes[ref_attr]
             else:
-                id = [ids(i.attributes[ref_attr])[0] for i in obj][0]
+                id = [ids(i.attributes[ref_attr])[0] for i in obj if ref_attr in i.attributes][0]
         elif isinstance(obj, Item):
             id = ids(obj.attributes[ref_attr])[0]
         else:
@@ -2613,8 +2612,7 @@ def retrieve_gloss_words(inst):
 
                    # TODO FIXME: Find more elegant solution
                    others=[lambda x: is_word_level_gloss(x),
-                           lambda x: 'G' in aligned_tags(x) ])
-
+                           lambda x: ODIN_GLOSS_TAG in aligned_tags(x) ])
 
     # 2. If it exists, return it. Otherwise, look for the glosses tier.
     if wt is None:
