@@ -172,21 +172,22 @@ class UnknownErrorTests(TestCase):
 
         self.assertTrue(inst2.get_lang_ds(), tgt2_t)
 
+    def harness(self, name):
+        d = all_enrich_args.copy()
+        d['IN_FILE'] = os.path.join(testfile_dir, name)
+        self.assertIsNone(enrich(**d))
 
     def test_3191(self):
-        d = all_enrich_args.copy()
-        d['IN_FILE'] = os.path.join(testfile_dir, 'xigt/3191.xml')
-        self.assertIsNone(enrich(**d))
+        self.harness('xigt/3191.xml')
 
     def test_3294(self):
-        d = all_enrich_args.copy()
-        d['IN_FILE'] = os.path.join(testfile_dir, 'xigt/3294.xml')
-        self.assertIsNone(enrich(**d))
+        self.harness('xigt/3294.xml')
 
     def test_3307(self):
-        d = all_enrich_args.copy()
-        d['IN_FILE'] = os.path.join(testfile_dir, 'xigt/3307.xml')
-        self.assertIsNone(enrich(**d))
+        self.harness('xigt/3307.xml')
+
+    def test_555(self):
+        self.harness('xigt/555.xml')
 
 
 class MultipleLineTests(TestCase):

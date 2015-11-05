@@ -193,7 +193,7 @@ def enrich(**kwargs):
                 try:
                     inst.project_gloss_to_lang(tag_method=INTENT_POS_CLASS)
                 except GlossLangAlignException:
-                    ENRICH_LOG.warning('The gloss and language lines for instance id "%s" do not align. Language line not POS tagged.' % inst.id)
+                    ENRICH_LOG.warning('The gloss and language lines for instance id "{}" do not align. Language line not POS tagged.'.format(inst.id))
 
             if POS_LANG_PROJ in pos_args and has_all():
                 pos_tags = inst.get_pos_tags(inst.trans.id)

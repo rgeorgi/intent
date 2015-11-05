@@ -193,7 +193,7 @@ eval_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity l
 #===============================================================================
 text_p = subparsers.add_parser('text', help="Command to convert a text document into XIGT-XML.")
 
-text_p.add_argument('FILE', type=argparse.FileType('r'), help='Input file')
+text_p.add_argument('FILE', type=argparse.FileType('r', encoding='utf-8'), help='Input file')
 text_p.add_argument('OUT_FILE', help='Output file')
 text_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 

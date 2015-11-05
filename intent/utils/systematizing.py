@@ -9,6 +9,8 @@ import logging
 from threading import Thread
 from queue import Empty, Queue
 from unittest.case import TestCase
+import time
+
 
 def enqueue_output(out, queue):
     for line in iter(out.readline, b''):
@@ -115,6 +117,7 @@ def piperunner(cmd, log_name=None):
     while p.poll() is None:
         try:
             data = q.get_nowait()
+            time.sleep(1)
         except Empty:
             pass
         else:

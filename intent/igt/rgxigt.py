@@ -31,6 +31,7 @@ from xigt.ref import dereference, ids
 PARSELOG = logging.getLogger(__name__)
 ALIGN_LOG = logging.getLogger('GIZA_LN')
 ODIN_LOG = logging.getLogger('ODIN_LOOKUP')
+CONVERT_LOG = logging.getLogger('CONVERSION')
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
@@ -828,7 +829,12 @@ class RGIgt(Igt, RecursiveFindMixin):
             rt.append(li)
 
         inst.append(rt)
-        inst.basic_processing()
+        try:
+            inst.basic_processing()
+        except GlossLangAlignException as glae:
+            CONVERT_LOG.warn('Gloss and language lines could not be automatically aligned for instance "{}".'.format(inst.id))
+
+            # CONVERT_LOG.warn("Basic processing failed for instance {}".format(inst.id))
         return inst
 
 
