@@ -167,7 +167,7 @@ def enrich(**kwargs):
 
 
             # Attempt to align the gloss and language lines if requested... --------
-            if has_gloss and has_trans:
+            if has_gloss and has_lang:
                 try:
                     word_align(inst.gloss, inst.lang)
                 except GlossLangAlignException as glae:

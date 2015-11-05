@@ -2415,6 +2415,8 @@ def retrieve_trans_phrase(inst):
             tpt[0].attributes[ALIGNMENT] = lpt[0].id
         except MultipleNormLineException as mnle:
             pass
+        except NoNormLineException as nlle:
+            pass
 
     return tpt
 
@@ -2654,7 +2656,7 @@ def retrieve_normal_line(inst, tag):
 
     n = inst.normal_tier()
 
-    lines = [l for l in n if tag in l.attributes['tag'].split('+')]
+    lines = [l for l in n if tag in l.attributes[ODIN_TAG_ATTRIBUTE].split('+')]
 
     if len(lines) < 1:
         raise NoNormLineException()

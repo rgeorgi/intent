@@ -183,6 +183,11 @@ class UnknownErrorTests(TestCase):
         d['IN_FILE'] = os.path.join(testfile_dir, 'xigt/3294.xml')
         self.assertIsNone(enrich(**d))
 
+    def test_3307(self):
+        d = all_enrich_args.copy()
+        d['IN_FILE'] = os.path.join(testfile_dir, 'xigt/3307.xml')
+        self.assertIsNone(enrich(**d))
+
 
 class MultipleLineTests(TestCase):
 
