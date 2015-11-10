@@ -199,8 +199,11 @@ class AlignedSent():
 
 
 class AlignedCorpus(list):
-    def __init__(self):
-        super(AlignedCorpus).__init__(AlignedCorpus)
+
+    def __init__(self, iter=None):
+        if iter is None:
+            iter = []
+        super().__init__(iter)
 
     def write(self, src_path, tgt_path, aln_path):
         src_f = open(src_path, 'w')

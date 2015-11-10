@@ -1,8 +1,8 @@
-'''
+"""
 Created on Mar 24, 2015
 
 @author: rgeorgi
-'''
+"""
 
 import sys
 import logging
@@ -12,11 +12,10 @@ from intent.igt.consts import INTENT_POS_CLASS, INTENT_POS_PROJ, ODIN_GLOSS_TAG,
 from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
     PhraseStructureProjectionException, ProjectionException,\
     ProjectionTransGlossException, word_align, retrieve_normal_line, NoNormLineException, MultipleNormLineException
-from intent.trees import TreeProjectionError, NoAlignmentProvidedError
 
 from intent.utils.arg_consts import PARSE_VAR, PARSE_TRANS, POS_VAR, ALN_VAR, POS_LANG_CLASS, ALN_HEUR, \
     ALN_GIZA, POS_LANG_PROJ, PARSE_LANG_PROJ, POS_TRANS
-from intent.utils.env import c, classifier, posdict, odin_data
+from intent.utils.env import c, posdict, odin_data
 from intent.utils.argutils import writefile
 from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
 from intent.interfaces.giza import GizaAlignmentException
@@ -31,6 +30,7 @@ from intent.scripts.conversion.odin_to_xigt import parse_text
 #===============================================================================
 # The ODIN subcommand
 #===============================================================================
+
 def odin(**kwargs):
     ODIN_LOG = logging.getLogger('ODIN')
 

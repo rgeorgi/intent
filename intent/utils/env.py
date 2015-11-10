@@ -42,6 +42,8 @@ parser_model     = c.get('stanford_parser_model')
 posdict          = 0 if not c.getpath('pos_dict') else pickle.load(open(c.getpath('pos_dict'), 'rb'))
 odin_data		 = c.getpath('odin_data')
 mst_parser       = c.getpath('mst_parser')
+fast_align_bin   = c.getpath('fast_align_bin')
+fast_align_atool = c.getpath('fast_align_atool')
 
 #===============================================================================
 # Try to import the XIGT module.

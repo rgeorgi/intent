@@ -298,7 +298,7 @@ class GizaFiles(object):
         """
         Read in the (merged) A3 file and return the AlignedSents of (src, tgt) alignments.
 
-        :rtype: list of :py:class:`~alignment.AlignedSent` instances
+        :rtype: list[AlignedSent]
         """
         a_f = open(self.a3merged, 'r', encoding='utf-8')
         lines = a_f.readlines()
@@ -522,9 +522,9 @@ class GizaAligner(object):
         """
 
         :param e_snts: e sentences
-        :type e_snts: [str]
+        :type e_snts: list[list[str]]
         :param f_snts: f sentences
-        :type f_snts: [str]
+        :type f_snts: list[list[str]]
         :param func: The function to use on the data, either training from scratch or resuming.
         :type func: method
         """
@@ -542,9 +542,9 @@ class GizaAligner(object):
         t_f = open(t_path, 'w', encoding='utf-8')
 
         for snt in e_snts:
-            g_f.write(snt+'\n')
+            g_f.write(' '.join(snt)+'\n')
         for snt in f_snts:
-            t_f.write(snt+'\n')
+            t_f.write(' '.join(snt)+'\n')
 
         g_f.close(), t_f.close()
 

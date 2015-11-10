@@ -12,6 +12,7 @@ import copy
 import string
 import sys
 from intent.consts.grammatical import morpheme_boundary_chars
+from intent.interfaces.fast_align import fast_align_sents
 from intent.pos.TagMap import TagMap
 from intent.utils.string_utils import replace_invalid_xml
 from xigt.errors import XigtError
@@ -44,7 +45,7 @@ from .consts import *
 
 import intent.utils.token
 from intent.utils.env import c
-from intent.alignment.Alignment import Alignment, heur_alignments
+from intent.alignment.Alignment import Alignment, heur_alignments, AlignmentError
 from intent.utils.token import Token, POSToken, sentence_tokenizer, whitespace_tokenizer
 from intent.interfaces.giza import GizaAligner
 from intent.utils.dicts import DefaultOrderedDict
@@ -423,18 +424,20 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         for line in data.split('\n'):
 
             if not line.strip():
+
+                instances.append('\n'.join(cur_lines))
                 cur_lines = []
                 continue
             else:
                 cur_lines.append(line)
 
-            if len(cur_lines) == 3:
-                instances.append('\n'.join(cur_lines))
-
+        if cur_lines:
+            instances.append('\n'.join(cur_lines))
 
         for instance in instances:
             i = RGIgt.fromRawText(instance, corpus=xc)
             xc.append(i)
+
 
         print("{} instances parsed.".format(len(xc)))
         return xc
@@ -628,7 +631,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         self.filter(lambda inst: inst.get_pos_tags(GLOSS_WORD_ID) is not None)
 
 
-    def giza_align_t_g(self, resume = True, use_heur = False):
+    def giza_align_t_g(self, aligner=ALIGNER_FASTALIGN, resume = True, use_heur = False):
         """
         Perform giza alignments on the gloss and translation
         lines.
@@ -652,11 +655,11 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
             for gloss in inst.glosses.tokens():
                 g_sent.append(re.sub('\s+','', gloss.value().lower()))
-            g_sents.append(' '.join(g_sent))
+            g_sents.append(g_sent)
 
             for trans in inst.trans.tokens():
                 t_sent.append(re.sub('\s+', '', trans.value().lower()))
-            t_sents.append(' '.join(t_sent))
+            t_sents.append(t_sent)
 
             # Perform the augmented GIZA alignment...
             if use_heur:
@@ -666,8 +669,8 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                     ALIGN_LOG.warn("Augmented giza was requested but no heur alignment is present.")
                 else:
                     for t_i, g_i in heur:
-                        t_words.append(inst.trans.get_index(t_i).value())
-                        g_words.append(inst.gloss.get_index(g_i).value())
+                        t_words.append([inst.trans.get_index(t_i).value().lower()])
+                        g_words.append([inst.gloss.get_index(g_i).value().lower()])
 
         # Tack on the heuristically aligned g/t words
         # to the end of the sents, so they won't mess
@@ -675,24 +678,29 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         g_sents.extend(g_words)
         t_sents.extend(t_words)
 
+        if aligner == ALIGNER_FASTALIGN:
+            PARSELOG.info('Attempting to align corpus "{}" using fastalign'.format(self.id))
+            g_t_asents = fast_align_sents(g_sents, t_sents)
 
-        PARSELOG.info('Attempting to align instance "{}" with giza'.format(inst.id))
+        elif aligner == ALIGNER_GIZA:
+            PARSELOG.info('Attempting to align corpus "{}" with giza'.format(self.id))
 
-        if resume:
-            ALIGN_LOG.info('Using pre-saved giza alignment.')
-            # Next, load up the saved gloss-trans giza alignment model
-            ga = GizaAligner.load(c.getpath('g_t_prefix'), c.getpath('g_path'), c.getpath('t_path'))
+            if resume:
+                ALIGN_LOG.info('Using pre-saved giza alignment.')
+                # Next, load up the saved gloss-trans giza alignment model
+                ga = GizaAligner.load(c.getpath('g_t_prefix'), c.getpath('g_path'), c.getpath('t_path'))
 
-            # ...and use it to align the gloss line to the translation line.
-            g_t_asents = ga.force_align(g_sents, t_sents)
+                # ...and use it to align the gloss line to the translation line.
+                g_t_asents = ga.force_align(g_sents, t_sents)
 
-        # Otherwise, start a fresh alignment model.
-        else:
-            ga = GizaAligner()
-            g_t_asents = ga.temp_train(g_sents, t_sents)
+            # Otherwise, start a fresh alignment model.
+            else:
+                ga = GizaAligner()
+                g_t_asents = ga.temp_train(g_sents, t_sents)
 
-        # Before continuing, make sure that we have the same number of alignments as we do instances.
-        assert len(g_t_asents) >= len(self), 'giza: %s -- self: %s' % (len(g_t_asents), len(self))
+
+        if len(g_t_asents) < len(self):
+            raise AlignmentError('Something went wrong with statistical alignment, {} alignments were returned, {} expected.'.format(len(g_t_asents), len(self)))
 
         # Next, iterate through the aligned sentences and assign their alignments
         # to the instance.
@@ -815,12 +823,35 @@ class RGIgt(Igt, RecursiveFindMixin):
         rt = RGLineTier(id = RAW_ID, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE}, igt=inst)
 
         for i, l in enumerate(lines):
-            if i == 0:
-                linetag = ODIN_LANG_TAG
-            elif i == 1:
-                linetag = ODIN_GLOSS_TAG
-            elif i == 2:
-                linetag = ODIN_TRANS_TAG
+
+            # If we have four lines, assume that the first is
+            # native orthography
+            if len(lines) == 4:
+                if i == 0:
+                    linetag = ODIN_LANG_TAG + '+FR'
+                if i == 1:
+                    linetag = ODIN_LANG_TAG
+                if i == 2:
+                    linetag = ODIN_GLOSS_TAG
+                if i == 3:
+                    linetag = ODIN_TRANS_TAG
+
+            elif len(lines) == 3:
+                if i == 0:
+                    linetag = ODIN_LANG_TAG
+                elif i == 1:
+                    linetag = ODIN_GLOSS_TAG
+                elif i == 2:
+                    linetag = ODIN_TRANS_TAG
+
+            elif len(lines) == 2:
+                if i == 0:
+                    linetag = ODIN_LANG_TAG
+                if i == 1:
+                    linetag = ODIN_TRANS_TAG
+
+            else:
+                raise RawTextParseError("Unknown number of lines...")
 
             if not l.strip():
                 raise RawTextParseError("The {} line is empty: {}".format(linetag, l))
@@ -971,7 +1002,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         else:
             return raw_tier
 
-    def clean_tier(self):
+    def clean_tier(self, merge=False):
         """
         If the clean odin tier exists, return it. Otherwise, create it.
 
@@ -1019,6 +1050,7 @@ class RGIgt(Igt, RecursiveFindMixin):
                     PARSELOG.info('Corruption detected in instance %s: %s' % (self.id, [l.attributes['tag'] for l in lines]))
                     for l in lines:
                         PARSELOG.debug('BEFORE: %s' % l)
+
                     text = merge_lines([l.value() for l in lines])
                     PARSELOG.debug('AFTER: %s' % text)
                     new_tag = primary_tag
