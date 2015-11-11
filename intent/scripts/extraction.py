@@ -4,7 +4,7 @@ from multiprocessing import cpu_count
 import sys
 
 from intent.igt.consts import POS_TIER_TYPE, GLOSS_WORD_ID, LANG_WORD_ID, INTENT_DS_PROJ, INTENT_POS_CLASS, \
-    INTENT_POS_PROJ, MANUAL_POS
+    INTENT_POS_PROJ, MANUAL_POS, INTENT_ALN_GIZA, INTENT_ALN_HEUR
 from intent.igt.grams import write_gram
 from intent.igt.igtutils import rgp
 from intent.interfaces.mallet_maxent import train_txt
@@ -30,7 +30,7 @@ __author__ = 'rgeorgi'
 def extract_from_xigt(input_filelist = list, classifier_prefix=None,
                       cfg_prefix=None, tagger_prefix=None,
                       dep_parser=None, dep_pos=None,
-                      alignment=None, alignment_source=None):
+                      alignment=None, alignment_heur=True):
     """
 
     Extract certain bits of supervision from a set of
@@ -155,22 +155,38 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
         e = open(alignment+'_e.txt', 'w', encoding='utf-8')
         f = open(alignment+'_f.txt', 'w', encoding='utf-8')
 
-        with open(alignment, 'w', encoding='utf-8') as align_f:
-            for input_file in input_filelist:
-                xc = RGCorpus.load(input_file)
-                for inst in xc:
-                    try:
-                        print('Attempting to extract alignment from instance "{}"'.format(inst.id))
-                        # First, let's start with the entire sentences.
-                        # e.write(inst.trans.text(remove_whitespace_inside_tokens=True).lower() + '\n')
-                        # f.write(inst.lang.text(remove_whitespace_inside_tokens=True).lower() + '\n')
+        for input_file in input_filelist:
+            print('Extracting alignment from file {}'.format(input_file))
+            xc = RGCorpus.load(input_file)
+            for inst in xc:
+                try:
+                    EXTRACT_LOG.info('Attempting to extract alignment from instance "{}"'.format(inst.id))
 
-                        # Now, return the word pairs.
-                        for t_w, l_w in inst.get_trans_gloss_lang_aligned_pairs():
-                            e.write(t_w.value().lower()+'\n')
-                            f.write(l_w.value().lower()+'\n')
-                    except RGXigtException as rgxe:
-                        EXTRACT_LOG.warn('Instance "{}" encountered an error retrieving alignment.'.format(inst.id))
+                    # -------------------------------------------
+                    # 1) First, let's start with the entire sentences.
+                    e.write(inst.trans.text(remove_whitespace_inside_tokens=True).lower() + '\n')
+                    f.write(inst.glosses.text(remove_whitespace_inside_tokens=True).lower() + '\n')
+
+                    # -------------------------------------------
+                    # 2) Now, return the word pairs.
+                    if alignment_heur:
+
+                        if inst.get_trans_gloss_alignment(INTENT_ALN_HEUR) is None:
+                            inst.heur_align()
+
+                        # -------------------------------------------
+                        # 3) Now, get the heuristically aligned words...
+                        for t_w, g_m in inst.get_trans_gloss_wordpairs(INTENT_ALN_HEUR, all_morphs=True):
+                            e.write(t_w.lower()+'\n')
+                            f.write(g_m.lower()+'\n')
+
+
+
+
+                except IndexError as ie:
+                    print(ie)
+                # except RGXigtException as rgxe:
+                #     EXTRACT_LOG.warn('Instance "{}" encountered an error retrieving alignment.'.format(inst.id))
 
         e.close()
         f.close()

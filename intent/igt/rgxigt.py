@@ -631,7 +631,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         self.filter(lambda inst: inst.get_pos_tags(GLOSS_WORD_ID) is not None)
 
 
-    def giza_align_t_g(self, aligner=ALIGNER_FASTALIGN, resume = True, use_heur = False):
+    def giza_align_t_g(self, aligner=ALIGNER_GIZA, resume = True, use_heur = False):
         """
         Perform giza alignments on the gloss and translation
         lines.
@@ -646,7 +646,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         g_sents = []
         t_sents = []
 
-        g_words = []
+        g_morphs = []
         t_words = []
 
         for inst in self:
@@ -661,22 +661,27 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                 t_sent.append(re.sub('\s+', '', trans.value().lower()))
             t_sents.append(t_sent)
 
-            # Perform the augmented GIZA alignment...
+            # -------------------------------------------
+            # If we ask for the augmented alignment...
             if use_heur:
                 try:
-                    heur = inst.get_trans_gloss_alignment(aln_method=INTENT_ALN_HEUR)
+                    # Try obtaining the tw/gm alignment.
+                    pairs = inst.get_trans_gloss_wordpairs(aln_method=INTENT_ALN_HEUR, all_morphs=True)
                 except ProjectionTransGlossException as ptge:
                     ALIGN_LOG.warn("Augmented giza was requested but no heur alignment is present.")
                 else:
-                    for t_i, g_i in heur:
-                        t_words.append([inst.trans.get_index(t_i).value().lower()])
-                        g_words.append([inst.gloss.get_index(g_i).value().lower()])
+                    # For each trans_word/gloss_word index...
+                    for t_w, g_m in pairs:
+                        t_words.append(t_w.lower())
+                        g_morphs.append(g_m.lower())
+
 
         # Tack on the heuristically aligned g/t words
         # to the end of the sents, so they won't mess
         # up alignment.
-        g_sents.extend(g_words)
+        g_sents.extend(g_morphs)
         t_sents.extend(t_words)
+
 
         if aligner == ALIGNER_FASTALIGN:
             PARSELOG.info('Attempting to align corpus "{}" using fastalign'.format(self.id))
@@ -1178,22 +1183,19 @@ class RGIgt(Igt, RecursiveFindMixin):
         """
         Get the alignment between trans words and gloss words.
         """
-        # If we already have this alignment, just return it.
+        # -------------------------------------------
+        # 1) If we already have this alignment, just return it.
         trans_gloss = self.get_bilingual_alignment(self.trans.id, self.gloss.id, aln_method)
+        trans_glosses = self.get_bilingual_alignment(self.trans.id, self.glosses.id, aln_method)
+
         if trans_gloss is not None:
             return trans_gloss
 
-        # Otherwise, let's create it from the glosses alignment
-        else:
-            trans_glosses = self.get_bilingual_alignment(self.trans.id, self.glosses.id, aln_method)
-
-            if trans_glosses is None:
-                if aln_method is None:
-                    raise ProjectionTransGlossException('No trans/gloss alignment exists for instance "{}"'.format(self.id))
-                else:
-                    raise ProjectionTransGlossException(
-                        'No trans/gloss alignment exists for requested method "{}" in instance "{}"'.format(aln_method, self.id))
-
+        # -------------------------------------------
+        # 2) Otherwise, if we have alignment between the translation line
+        #    and the morpheme-level glosses, let's return a new
+        #    alignment created from these.
+        elif trans_glosses is not None:
             new_trans_gloss = Alignment()
 
             for trans_i, gloss_i in trans_glosses:
@@ -1204,13 +1206,50 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             return new_trans_gloss
 
+        # -------------------------------------------
+        # 3) Otherwise, return None.
+        else:
+            return None
+
+    def get_trans_gloss_wordpairs(self, aln_method=None, all_morphs=True):
+        """
+        Return a list of (trans_word, gloss_morph) pairs
+
+        :param aln_method:
+        :return:
+         :rtype: list[tuple]
+        """
+        pairs = []
+        if all_morphs:
+            a = self.get_trans_gloss_alignment(aln_method=aln_method)
+            if a is not None:
+                for t_i, g_i in a:
+                    t_w = self.trans.get_index(t_i)
+                    g_w = self.gloss.get_index(g_i)
+                    g_ms = find_glosses(self, g_w)
+                    pairs.append((t_w.value(), ' '.join([g_m.value() for g_m in g_ms])))
+                    # for g_m in g_ms:
+                    #     pairs.append((t_w.value(), g_m.value()))
+        else:
+            a = self.get_trans_glosses_alignment(aln_method=aln_method)
+            if a is not None:
+                for t_i, g_i in a:
+                    t_w = self.trans.get_index(t_i)
+                    g_m = self.glosses.get_index(g_i)
+                    pairs.append((t_w.value(), g_m.value()))
+
+        return pairs
+
+
+
+
+
     def get_trans_glosses_alignment(self, aln_method=None):
         """
         Convenience method for getting the trans-word to gloss-morpheme
         bilingual alignment.
         """
         return self.get_bilingual_alignment(self.trans.id, self.glosses.id, aln_method=aln_method)
-
 
     def get_gloss_lang_alignment(self):
         """
@@ -2946,6 +2985,20 @@ def find_gloss_word(inst, morph):
     # If we reached this far, there is no gloss word that contains this
     # morph.
     return None
+
+def find_glosses(inst, gloss_word):
+    """
+    Given a gloss word, attempt to find all the glosses that segment it.
+
+    :param inst:
+    :type inst: RGIgt
+    :param gloss_word:
+    :type gloss_word: RGWord
+    """
+
+    # This filter should find elements that have a content tag that has
+    others = [lambda x: gloss_word.id in ids(x.attributes.get(CONTENT, ''))]
+    return inst.findall(others=others)
 
 def follow_alignment(inst, id):
     """
