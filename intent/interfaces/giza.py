@@ -10,17 +10,22 @@ import os, sys, re, glob, logging
 # Internal imports -------------------------------------------------------------
 import shutil
 import stat
+
+from os import getcwd
+
 from intent.alignment.Alignment import AlignedSent,	Alignment
 from intent.utils.env import c
-from intent.utils.fileutils import swapext
-from intent.utils.systematizing import piperunner, ProcessCommunicator
+
 
 # Other imports ----------------------------------------------------------------
 from tempfile import mkdtemp
 from collections import defaultdict
 from unittest.case import TestCase
 
+from intent.utils.systematizing import ProcessCommunicator
+
 GIZA_LOG = logging.getLogger("GIZA")
+
 
 
 class GizaAlignmentException(Exception):
@@ -49,8 +54,8 @@ class CooccurrenceFile(defaultdict):
         f.flush()
 
 class A3files(object):
-    def __init__(self, prefix):
-        self.files = glob.glob(prefix+'.A3.final.part*')
+    def __init__(self, prefix, name='aln'):
+        self.files = glob.glob(os.path.join(prefix, name+'.A3.final.part*'))
         self.prefix = prefix
 
     def merge(self, merged_path):
@@ -77,8 +82,11 @@ class A3files(object):
                 merged_f.write(line)
 
         merged_f.close()
+        self.clean()
 
-
+    def clean(self):
+        for path in self.files:
+            os.remove(path)
 
 
 class GizaFiles(object):
@@ -88,30 +96,47 @@ class GizaFiles(object):
     provided for output.
     """
 
-    def __init__(self, prefix, e, f):
+    def __init__(self, prefix, e, f, name='aln'):
         self.e = e
         self.f = f
+        if prefix is None:
+            prefix = getcwd()
+
+        self.name = name
+
+        # -------------------------------------------
+        # The prefix should be the directory.
+        assert (os.path.isdir(prefix)) or (not os.path.exists(prefix))
+
+        os.makedirs(prefix, exist_ok=True)
+
         self.prefix = prefix
+
+    def _f(self, name):
+        return os.path.join(self.prefix, name)
+
+    def _fext(self, ext):
+        return self._f(self.name+ext)
 
     @property
     def cfg(self):
-        return self.prefix+'.gizacfg'
+        return self._fext('.gizacfg')
 
     @property
     def e_vcb(self):
-        return swapext(self.e, '.vcb')
+        return self._f(self.name+'_e.vcb')
 
     @property
     def f_vcb(self):
-        return swapext(self.f, '.vcb')
+        return self._f(self.name+'_f.vcb')
 
     @property
     def ef(self):
-        return os.path.splitext(self.e)[0]+'_'+os.path.basename(os.path.splitext(self.f)[0])
+        return self._f(self.name+'_e_f')
 
     @property
     def fe(self):
-        return os.path.splitext(self.f)[0]+'_'+os.path.basename(os.path.splitext(self.e)[0])
+        return self._f(self.name+'_f_e')
 
     @property
     def ef_snt(self):
@@ -131,43 +156,43 @@ class GizaFiles(object):
 
     @property
     def a3(self):
-        return glob.glob(self.prefix+'.A3.final.part*')
+        return self._fext('.A3.final.part*')
 
     @property
     def a3merged(self):
-        return self.prefix+'.A3.final.merged'
+        return self._fext('.A3.final.merged')
 
     @property
     def t(self):
-        return self.prefix+'.t3.final'
+        return self._fext('.t3.final')
 
     @property
     def a(self):
-        return self.prefix+'.a3.final'
+        return self._fext('.a3.final')
 
     @property
     def n(self):
-        return self.prefix+'.n3.final'
+        return self._fext('.n3.final')
 
     @property
     def d3(self):
-        return self.prefix+'.d3.final'
+        return self._fext('.d3.final')
 
     @property
     def d4(self):
-        return self.prefix+'.d4.final'
+        return self._fext('.d4.final')
 
     @property
     def perp(self):
-        return self.prefix+'.perp'
+        return self._fext('.perp')
 
     @property
     def p0(self):
-        return self.prefix+'.p0_3.final'
+        return self._fext('.p0_3.final')
 
     @property
     def decoder(self):
-        return self.prefix+'.Decoder.config'
+        return self._fext('.Decoder.config')
 
     def _clean(self, ls):
         for f in ls:
@@ -216,7 +241,6 @@ class GizaFiles(object):
             else:
                 ev = Vocab()
 
-
         if not fv:
             if os.path.exists(self.f_vcb):
                 fv = Vocab.load(self.f_vcb)
@@ -227,7 +251,9 @@ class GizaFiles(object):
         ef = open(self.e, encoding='utf-8')
         ff = open(self.f, encoding='utf-8')
 
+        GIZA_LOG.debug('Reading ef file "{}"'.format(self.ef))
         ef_lines = ef.readlines()
+        GIZA_LOG.debug('Reading fe file "{}"'.format(self.fe))
         ff_lines = ff.readlines()
 
         # --- 3) Verify the files are the same length
@@ -473,9 +499,10 @@ class GizaAligner(object):
         :param f: Path to the "f"
         :type f: path
         """
+        GIZA_LOG.info("Starting mgiza training from scratch...")
         self.tf = GizaFiles(prefix, e, f)
-        tf = self.tf
 
+        GIZA_LOG.info("Converting txt files to SNTS and VCB files...")
         self.tf.txt_to_snt(ev = Vocab(), fv = Vocab())
 
         # Now, do the aligning...
@@ -488,11 +515,11 @@ class GizaAligner(object):
 
 
         elts = [exe,
-                '-o', tf.prefix,
-                '-S', tf.e_vcb,
-                '-T', tf.f_vcb,
-                '-C', tf.ef_snt,
-                '-CoocurrenceFile', tf.ef_cooc,
+                '-o', os.path.join(self.tf.prefix, self.tf.name),
+                '-S', self.tf.e_vcb,
+                '-T', self.tf.f_vcb,
+                '-C', self.tf.ef_snt,
+                '-CoocurrenceFile', self.tf.ef_cooc,
                 '-hmmiterations', '5',
                 '-model4iterations', '0',
                 '-ncpus', '0']
@@ -507,10 +534,10 @@ class GizaAligner(object):
         if status != 0:
             raise GizaAlignmentException("mgiza exited abnormally with a return code of {}".format(str(status)))
 
-        tf.merge_a3()
-        # tf.clean()
+        self.tf.merge_a3()
+        # self.tf.clean()
 
-        return tf.aligned_sents()
+        return self.tf.aligned_sents()
 
     def force_align(self, e_snts, f_snts):
         return self.temp_align(e_snts, f_snts, self.resume)
@@ -548,9 +575,7 @@ class GizaAligner(object):
 
         g_f.close(), t_f.close()
 
-        prefix = os.path.join(tempdir, 'temp')
-
-        aln = func(prefix, g_path, t_path)
+        aln = func(tempdir, g_path, t_path)
         shutil.rmtree(tempdir)
         return aln
 
@@ -593,7 +618,7 @@ class GizaAligner(object):
 
         args = [exe, #self.tf.cfg,
                 '-restart', '2',
-                '-o', new_gf.prefix,
+                '-o', os.path.join(new_gf.prefix, new_gf.name),
                 '-m2', '5',
                 '-previoust', self.tf.t,
                 '-previousa', self.tf.a,
@@ -669,15 +694,15 @@ class TestTrain(TestCase):
     def test_giza_train_toy(self):
         ga = GizaAligner()
 
-        e_snts = ['the house is blue',
-                   'my dog is in the house',
-                   'the house is big',
-                   'house']
+        e_snts = ['the house is blue'.split(),
+                   'my dog is in the house'.split(),
+                   'the house is big'.split(),
+                   'house'.split()]
 
-        f_snts = ['das haus ist blau',
-                    'meine hund ist in dem haus',
-                    'das haus ist gross',
-                    'haus']
+        f_snts = ['das haus ist blau'.split(),
+                    'meine hund ist in dem haus'.split(),
+                    'das haus ist gross'.split(),
+                    'haus'.split()]
 
         a_snts = ga.temp_train(e_snts, f_snts)
         self.assertEqual(a_snts[0].aln, Alignment([(1,1),(2,2),(3,3),(4,4)]))
