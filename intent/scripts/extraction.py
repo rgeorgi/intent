@@ -30,7 +30,7 @@ __author__ = 'rgeorgi'
 def extract_from_xigt(input_filelist = list, classifier_prefix=None,
                       cfg_prefix=None, tagger_prefix=None,
                       dep_parser=None, dep_pos=None,
-                      alignment=None, alignment_heur=True):
+                      alignment=None, no_alignment_heur=False):
     """
 
     Extract certain bits of supervision from a set of
@@ -169,7 +169,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
 
                     # -------------------------------------------
                     # 2) Now, return the word pairs.
-                    if alignment_heur:
+                    if not no_alignment_heur:
 
                         if inst.get_trans_gloss_alignment(INTENT_ALN_HEUR) is None:
                             inst.heur_align()

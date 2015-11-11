@@ -168,7 +168,7 @@ extract_p.add_argument('--cfg-rules', help='Output path for cfg-rules.', default
 extract_p.add_argument('--dep-parser', help='Output path for dependency parser', default=None)
 extract_p.add_argument('--dep-pos', choices=['class','proj','manual','none'], default='none')
 extract_p.add_argument('--alignment', help='The file to output bootstrapped alignment as.')
-extract_p.add_argument('--alignment-heur', action='store_true', help='Add heuristic alignment results to aligned sentences.', default=True)
+extract_p.add_argument('--no-alignment-heur', action='store_true', help='Add heuristic alignment results to aligned sentences.', default=False)
 extract_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 #===============================================================================
@@ -240,7 +240,7 @@ elif args.subcommand == 'filter':
 elif args.subcommand == 'extract':
     extract_from_xigt(flatten_list(args.FILE), args.gloss_classifier, args.cfg_rules, args.lang_tagger,
                       dep_parser=args.dep_parser, dep_pos=args.dep_pos,
-                      alignment=args.alignment, alignment_heur=args.alignment_heur)
+                      alignment=args.alignment, no_alignment_heur=args.no_alignment_heur)
 
 # EVAL
 elif args.subcommand == 'eval':
