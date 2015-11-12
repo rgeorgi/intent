@@ -1,0 +1,107 @@
+adbackoff 0
+c data/models/g_t_giza_reverse/aln_e_f.snt
+compactadtable 1
+compactalignmentformat 0
+coocurrencefile data/models/g_t_giza_reverse/aln_e_f.cooc
+corpusfile data/models/g_t_giza_reverse/aln_e_f.snt
+countcutoff 1e-06
+countcutoffal 1e-05
+countincreasecutoff 1e-06
+countincreasecutoffal 1e-05
+countoutputprefix 
+d 
+deficientdistortionforemptyword 0
+depm4 76
+depm5 68
+dictionary 
+dopeggingyn 0
+dumpcount 0
+dumpcountusingwordstring 0
+emalignmentdependencies 2
+emalsmooth 0.2
+emprobforempty 0.4
+emsmoothhmm 2
+hmmdumpfrequency 0
+hmmiterations 5
+l 115-11-10.235253.rgeorgi.log
+log 0
+logfile 115-11-10.235253.rgeorgi.log
+m1 5
+m2 0
+m3 5
+m4 0
+m5 0
+m5p0 -1
+m6 0
+manlexfactor1 0
+manlexfactor2 0
+manlexmaxmultiplicity 20
+maxfertility 10
+maxsentencelength 101
+mh 5
+mincountincrease 1e-07
+ml 101
+model1dumpfrequency 0
+model1iterations 5
+model23smoothfactor 0
+model2dumpfrequency 0
+model2iterations 0
+model345dumpfrequency 0
+model3dumpfrequency 0
+model3iterations 5
+model4iterations 0
+model4smoothfactor 0.2
+model5iterations 0
+model5smoothfactor 0.1
+model6iterations 0
+nbestalignments 0
+ncpus 8
+nodumps 0
+nofiledumpsyn 0
+noiterationsmodel1 5
+noiterationsmodel2 0
+noiterationsmodel3 5
+noiterationsmodel4 0
+noiterationsmodel5 0
+noiterationsmodel6 0
+nsmooth 64
+nsmoothgeneral 0
+numberofiterationsforhmmalignmentmodel 5
+o data/models/g_t_giza_reverse/aln
+onlyaldumps 0
+outputfileprefix data/models/g_t_giza_reverse/aln
+outputpath 
+p 0
+p0 -1
+peggedcutoff 0.03
+pegging 0
+previousa 
+previousd 
+previousd4 
+previousd42 
+previoushmm 
+previousn 
+previousp0 
+previoust 
+probcutoff 1e-07
+probsmooth 1e-07
+readtableprefix 
+restart 0
+s data/models/g_t_giza_reverse/aln_e.vcb
+sourcevocabularyclasses data/models/g_t_giza_reverse/aln_e.vcb.classes
+sourcevocabularyfile data/models/g_t_giza_reverse/aln_e.vcb
+t data/models/g_t_giza_reverse/aln_f.vcb
+t1 0
+t2 0
+t2to3 0
+t3 0
+t345 0
+targetvocabularyclasses data/models/g_t_giza_reverse/aln_f.vcb.classes
+targetvocabularyfile data/models/g_t_giza_reverse/aln_f.vcb
+tc 
+testcorpusfile 
+th 0
+transferdumpfrequency 0
+v 0
+verbose 0
+verbosesentence -10

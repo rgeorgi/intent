@@ -7,7 +7,7 @@ import sys
 from intent.alignment.Alignment import MorphAlign, Alignment
 
 class AlignEval():
-    def __init__(self, test_alignments, gold_alignments, debug = False, filter=None, reverse=False, explicit_nulls = False):
+    def __init__(self, test_alignments=None, gold_alignments=None, debug = False, filter=None, reverse=False, explicit_nulls = False):
         """
         :param test_alignments:
          :type test_alignments: list[Alignment]
@@ -22,6 +22,11 @@ class AlignEval():
         self.total_test = 0.
         self.total_gold = 0.
         self._instances = 0
+
+        if test_alignments is None:
+            test_alignments = []
+        if gold_alignments is None:
+            gold_alignments = []
 
         assert len(test_alignments) == len(gold_alignments)
 
@@ -101,5 +106,18 @@ class AlignEval():
         return '{},{},{},{},{},{},{}'.format('aer','precision','recall', 'fmeasure','matches','total_gold','total_test')
 
     def all(self):
-        return '%f,%f,%f,%f,%d,%d,%d' % (self.aer(), self.precision(), self.recall(), self.fmeasure(), self.matches, self.total_gold, self.total_test)
+        return (self.aer(), self.precision(), self.recall(), self.fmeasure(), self.matches, self.total_gold, self.total_test)
 
+    def all_str(self):
+        return '%f,%f,%f,%f,%d,%d,%d' % self.all()
+
+    def __add__(self, other):
+        assert isinstance(other, AlignEval)
+
+        retae = AlignEval()
+        retae._instances = self._instances + other._instances
+        retae.matches = self.matches + other.matches
+        retae.total_gold = self.total_gold + other.total_gold
+        retae.total_test = self.total_test + other.total_test
+
+        return retae

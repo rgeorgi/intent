@@ -17,6 +17,9 @@ from xigt.consts import ALIGNMENT
 
 __author__ = 'rgeorgi'
 
+import logging
+EVAL_LOG = logging.getLogger('EVAL')
+
 def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
     """
     Given a list of files that have manual POS tags and manual alignment,
@@ -40,6 +43,11 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
     overall_prj = POSEvalDict()
     overall_cls = POSEvalDict()
 
+
+    heur_ae, heur_pos_ae, aug_ae, resume_ae, fresh_ae = AlignEval(), AlignEval(), AlignEval(), AlignEval(), AlignEval()
+
+    align_scores = {}
+
     # Go through all the files in the list...
     for f in filelist:
         print('Evaluating on file: {}'.format(f))
@@ -54,7 +62,37 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
 
         # Test alignment if requested.
         if eval_alignment:
-            evaluate_alignment_on_file(xc)
+            heur, heur_pos, aug, resume, fresh = evaluate_alignment_on_file(xc)
+            heur_ae += heur
+            heur_pos_ae += heur_pos
+            aug_ae += aug
+            resume_ae += resume
+            fresh_ae += fresh
+            align_scores[f] = (heur_pos, heur, aug, resume, fresh)
+
+    if eval_alignment:
+        print("Overall Alignment:")
+        print(heur_pos_ae.all_str())
+        print(heur_ae.all_str())
+        print(aug_ae.all_str())
+        print(resume_ae.all_str())
+        print(fresh_ae.all_str())
+        align_scores['zz_overall'] = (heur_pos_ae, heur_ae, aug_ae, resume_ae, fresh_ae)
+
+
+        for attr in ['fmeasure', 'precision', 'recall', 'matches', 'total_gold', 'total_test']:
+            print(attr)
+            keys = sorted(align_scores.keys())
+            for lang in keys:
+                print(lang, end=',')
+                for ae in align_scores[lang]:
+                    f = getattr(ae, attr)
+                    if hasattr(f, '__call__'):
+                        print(f(), end=',')
+                    else:
+                        print(f, end=',')
+                print()
+            print()
 
 
     # Report the POS tagging accuracy...
@@ -72,18 +110,18 @@ def evaluate_alignment_on_file(xc):
 
     xc3 = xc.copy()
 
+    EVAL_LOG.info("Performing GIZA alignments...")
+
+    xc.giza_align_t_g(use_heur=False, resume=True)
+    xc2.giza_align_t_g(use_heur=False, resume=False)
     xc3.giza_align_t_g(use_heur=True, resume=True)
 
-    xc.giza_align_t_g(resume=True)
-
-
-    xc2.giza_align_t_g(resume=False)
-
+    EVAL_LOG.info("Initializing tager and classifier...")
     sp = StanfordPOSTagger(tagger_model)
     mc = MalletMaxent(classifier)
 
     heur_alignments = []
-    # heur_pos_alignments = []
+    heur_pos_alignments = []
     giza_alignments_aug = []
     giza_alignments_resume = []
     giza_alignments_fresh = []
@@ -91,44 +129,56 @@ def evaluate_alignment_on_file(xc):
 
     for inst, inst2, inst3 in zip(xc, xc2, xc3):
 
+        EVAL_LOG.info('Processing instance {}'.format(inst.id))
         assert isinstance(inst, RGIgt)
         assert isinstance(inst2, RGIgt)
         assert isinstance(inst3, RGIgt)
 
         manual      = inst.get_trans_gloss_alignment(aln_method=INTENT_ALN_MANUAL)
+
+        if manual is None:
+            continue
+
         giza_resume = inst.get_trans_gloss_alignment(aln_method=INTENT_ALN_GIZA)
         giza_fresh = inst2.get_trans_gloss_alignment(aln_method=INTENT_ALN_GIZA)
         giza_augment = inst3.get_trans_gloss_alignment(aln_method=INTENT_ALN_GIZA)
 
         heur        = inst.get_trans_gloss_alignment(aln_method=INTENT_ALN_HEUR)
 
-        # inst2.classify_gloss_pos(mc)
-        # inst2.tag_trans_pos(sp)
-        # inst2.heur_align(use_pos=True)
+        EVAL_LOG.info("Tagging gloss...")
+
+        inst2.classify_gloss_pos(mc)
+
+        EVAL_LOG.info("Tagging trans...")
+        inst2.tag_trans_pos(sp)
+        inst2.heur_align(use_pos=True)
 
 
-        # heur_pos    = inst2.get_trans_gloss_alignment(aln_method=INTENT_ALN_HEUR)
+
+        heur_pos    = inst2.get_trans_gloss_alignment(aln_method=INTENT_ALN_HEUR)
 
         heur_alignments.append(heur)
-        # heur_pos_alignments.append(heur_pos)
+        heur_pos_alignments.append(heur_pos)
         gold_alignments.append(manual)
         giza_alignments_aug.append(giza_augment)
         giza_alignments_resume.append(giza_resume)
         giza_alignments_fresh.append(giza_fresh)
 
     heur_ae = AlignEval(heur_alignments, gold_alignments)
-    # heur_pos_ae = AlignEval(heur_pos_alignments, gold_alignments)
+    heur_pos_ae = AlignEval(heur_pos_alignments, gold_alignments)
     giza_augment_ae = AlignEval(giza_alignments_aug, gold_alignments)
     giza_resume_ae = AlignEval(giza_alignments_resume, gold_alignments)
     giza_fresh_ae  = AlignEval(giza_alignments_fresh, gold_alignments)
 
     print(AlignEval.header())
-    # print(heur_pos_ae.all())
-    print(heur_ae.all())
 
-    print(giza_augment_ae.all())
-    print(giza_resume_ae.all())
-    print(giza_fresh_ae.all())
+    print(heur_pos_ae.all_str())
+    print(heur_ae.all_str())
+    print(giza_augment_ae.all_str())
+    print(giza_resume_ae.all_str())
+    print(giza_fresh_ae.all_str())
+
+    return (heur_ae, heur_pos_ae, giza_augment_ae, giza_resume_ae, giza_fresh_ae)
 
 
 # =============================================================================

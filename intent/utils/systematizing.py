@@ -56,15 +56,23 @@ class ProcessCommunicator(object):
         self.p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1,
                                   shell=shell)
 
-        if stderr_func:
-            stderr_t = Thread(target=thread_handler, args=(self.p.stderr, stderr_func))
-            stderr_t.daemon = True
-            stderr_t.start()
 
-        if stdout_func:
-            stdout_t = Thread(target=thread_handler, args=(self.p.stdout, stdout_func))
-            stdout_t.daemon = True
-            stdout_t.start()
+        # -------------------------------------------
+        # If the stderr_func is None, make sure to apply SOMETHING
+        # so that the thread won't deadlock
+        if stderr_func is None:
+            stderr_func = lambda x: x
+
+        stderr_t = Thread(target=thread_handler, args=(self.p.stderr, stderr_func))
+        stderr_t.daemon = True
+        stderr_t.start()
+
+        if stdout_func is None:
+            stdout_func = lambda x: x
+
+        stdout_t = Thread(target=thread_handler, args=(self.p.stdout, stdout_func))
+        stdout_t.daemon = True
+        stdout_t.start()
 
     def wait(self):
         return self.p.wait()

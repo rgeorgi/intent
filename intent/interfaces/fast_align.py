@@ -85,7 +85,7 @@ def fast_align_sents(e_list, f_list, symmetric=True):
         # -------------------------------------------
         # Now, let's do the grow-diag-final...
 
-        cmd = [fast_align_atool, '-c', 'intersect', '-i', forward_f.name, '-j', reverse_f.name]
+        cmd = [fast_align_atool, '-c', 'grow-diag-final-and', '-i', forward_f.name, '-j', reverse_f.name]
         c = ProcessCommunicator(cmd, stdout_func=parse_alignments)
         c.wait()
 

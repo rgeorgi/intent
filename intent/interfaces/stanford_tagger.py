@@ -30,6 +30,9 @@ class CriticalTaggerError(TaggerError): pass
 # Set up the stanford tagger to run via stdin.
 #===============================================================================
 
+def stanford_stdout_handler(output, queue):
+    queue.append(tokenize_string(output, tokenizer=tag_tokenizer))
+
 def stanford_stderr_handler(line):
 
     if line.startswith('Loading default properties'):
@@ -65,12 +68,16 @@ class StanfordPOSTagger(object):
             TAG_LOG.critical('Path to the stanford tagger .jar file is not defined.')
             raise TaggerError('Path to the stanford tagger .jar file is not defined.')
 
+        self.results_queue = []
+
         self.st = ProcessCommunicator([java_bin,
                                        '-cp', tagger_jar,
                                        'edu.stanford.nlp.tagger.maxent.MaxentTagger',
                                        '-model', model,
                                        '-sentenceDelimiter', 'newline',
-                                       '-tokenize', 'false'], stderr_func=stanford_stderr_handler)
+                                       '-tokenize', 'false'],
+                                      stderr_func=stanford_stderr_handler,
+                                      stdout_func=lambda x: stanford_stdout_handler(x, self.results_queue))
 
 
     def tag_tokenization(self, tokenization, **kwargs):
@@ -90,19 +97,10 @@ class StanfordPOSTagger(object):
         except BrokenPipeError:
             raise CriticalTaggerError('The Stanford parser unexpectedly quit.')
 
-        #=======================================================================
-        # Have a sliding window here such that we find all the tokens...
-        #=======================================================================
-        word_count = 0
-        input_len = len(s.split())
+        while len(self.results_queue) == 0:
+            time.sleep(0.25)
 
-        # We are now using a version of the stanford tagger which finally respects
-        # the sentence_delimiter argument. So we only need one readline() for the sentence.
-        output_str = self.st.stdout.readline().decode('utf-8', errors='replace')
-
-
-
-        return tokenize_string(output_str, tokenizer=tag_tokenizer)
+        return self.results_queue.pop()
 
     def close(self):
         self.st.kill()

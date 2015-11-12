@@ -650,7 +650,7 @@ class GizaAligner(object):
 
 
     @classmethod
-    def load(cls, prefix, e, f):
+    def load(cls, prefix):
         """
         Load a stored giza alignment file to resume
 
@@ -662,7 +662,7 @@ class GizaAligner(object):
         :type f: path
         """
         ga = cls()
-        ga.tf = GizaFiles(prefix, e, f)
+        ga.tf = GizaFiles(prefix, None, None)
         return ga
 
         # After training, return the aligned sentences:

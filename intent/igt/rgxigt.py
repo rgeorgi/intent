@@ -672,13 +672,14 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                 else:
                     # For each trans_word/gloss_word index...
                     for t_w, g_m in pairs:
-                        t_words.append(t_w.lower())
-                        g_morphs.append(g_m.lower())
+                        t_words.append([t_w.lower()])
+                        g_morphs.append([g_m.lower()])
 
 
         # Tack on the heuristically aligned g/t words
         # to the end of the sents, so they won't mess
         # up alignment.
+
         g_sents.extend(g_morphs)
         t_sents.extend(t_words)
 
@@ -693,7 +694,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
             if resume:
                 ALIGN_LOG.info('Using pre-saved giza alignment.')
                 # Next, load up the saved gloss-trans giza alignment model
-                ga = GizaAligner.load(c.getpath('g_t_prefix'), c.getpath('g_path'), c.getpath('t_path'))
+                ga = GizaAligner.load(c.getpath('g_t_dir'))
 
                 # ...and use it to align the gloss line to the translation line.
                 g_t_asents = ga.force_align(g_sents, t_sents)
@@ -2621,7 +2622,7 @@ def retrieve_lang_words(inst):
 #===============================================================================
 
 def odin_ancestor(obj):
-    ODIN_LOG.debug("Looking up the odin ancestor for {}".format(str(obj)))
+    # ODIN_LOG.debug("Looking up the odin ancestor for {}".format(str(obj)))
     # If we are at an ODIN item, return.
     if isinstance(obj, Item) and obj.tier.type == ODIN_TYPE:
         return obj
