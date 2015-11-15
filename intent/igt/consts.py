@@ -119,6 +119,11 @@ INTENT_GLOSS_MORPH = 'sub-word'
 ALIGNER_GIZA = 'giza'
 ALIGNER_FASTALIGN = 'fast_align'
 
+SYMMETRIC_INTERSECT       = 'intersection'
+SYMMETRIC_UNION           = 'union'
+SYMMETRIC_GROW_DIAG       = 'grow_diag'
+SYMMETRIC_GROW_DIAG_FINAL = 'grow_diag_final'
+
 #===============================================================================
 # Methods
 #===============================================================================

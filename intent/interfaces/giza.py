@@ -318,7 +318,6 @@ class GizaFiles(object):
         fe_cooc.dump(self.fe_cooc)
 
 
-
     # Read the aligned file here...
     def aligned_sents(self):
         """
@@ -330,17 +329,17 @@ class GizaFiles(object):
         lines = a_f.readlines()
         a_f.close()
 
-        a_sents = []
+        alignments = []
 
         while lines:
-            top = lines.pop(0)
-            tgt = lines.pop(0)
-            aln = lines.pop(0)
+            top_str = lines.pop(0)
+            tgt_str = lines.pop(0)
+            aln_str = lines.pop(0)
 
-            a_sents.append(AlignedSent.from_giza_lines(tgt, aln))
+            a = Alignment.from_giza(aln_str)
+            alignments.append(a)
 
-
-        return a_sents
+        return alignments
 
 
 class VocabWord(object):
@@ -691,18 +690,23 @@ class GizaAligner(object):
 
 class TestTrain(TestCase):
 
+    def setUp(self):
+        self.ga = GizaAligner()
+
+        self.e_snts = ['the house is blue'.split(),
+                       'my dog is in the house'.split(),
+                       'the house is big'.split(),
+                       'house'.split(),
+                       'go to the house'.split()]
+
+        self.f_snts = ['das haus blau ist'.split(),
+                       'meine hund ist in dem haus'.split(),
+                       'das haus ist gross'.split(),
+                       'haus'.split(),
+                       'gehen zur haus'.split()]
+
     def test_giza_train_toy(self):
-        ga = GizaAligner()
+        a_snts = self.ga.temp_train(self.e_snts, self.f_snts)
+        self.assertEqual(a_snts[0], Alignment([(1,1),(2,2),(4,3),(4,4)]))
 
-        e_snts = ['the house is blue'.split(),
-                   'my dog is in the house'.split(),
-                   'the house is big'.split(),
-                   'house'.split()]
 
-        f_snts = ['das haus ist blau'.split(),
-                    'meine hund ist in dem haus'.split(),
-                    'das haus ist gross'.split(),
-                    'haus'.split()]
-
-        a_snts = ga.temp_train(e_snts, f_snts)
-        self.assertEqual(a_snts[0].aln, Alignment([(1,1),(2,2),(3,3),(4,4)]))

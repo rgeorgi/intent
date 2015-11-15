@@ -463,6 +463,86 @@ class Alignment(set):
         # Return the alignment.
         return a
 
+    # -------------------------------------------
+    # UNION AND INTERSECTION
+    # -------------------------------------------
+    # Just here for the purposes of type-hinting.
+
+    def intersection(self, *args, **kwargs):
+        """
+        :rtype: Alignment
+        """
+        return Alignment(super().intersection(*args, **kwargs))
+
+    def union(self, *args, **kwargs):
+        """
+        :rtype: Alignment
+        """
+        return Alignment(super().union(self, *args, **kwargs))
+
+    def copy(self, *args, **kwargs):
+        """
+        :rtype: Alignment
+        """
+        return Alignment(super().copy(*args, **kwargs))
+    # -------------------------------------------
+
+    def grow_diag(self, a2):
+
+        # -------------------------------------------
+        # 1) Start by getting the intersection and union
+        """
+        :rtype: Alignment
+        """
+        intersection = self.intersection(a2)
+        union        = self.union(a2)
+
+        new_alignment = intersection.copy()
+
+        # -------------------------------------------
+        # 2) Now, for each aligned point, see if one of the
+        #    e or f portions are in the intersection, and the
+
+        neighboring = ((-1,0),(0,-1),(1,0),(0,1),(-1,-1),(-1,1),(1,-1),(1,1))
+
+        e_indices = set([e for e, f in intersection])
+        f_indices = set([f for e, f in intersection])
+
+        for e, f in intersection:
+            for e_offset, f_offset in neighboring:
+                e_new = e + e_offset
+                f_new = f + f_offset
+
+                if ((not intersection.contains_src(e_new) or
+                     not intersection.contains_tgt(f_new)) and
+                    (e_new, f_new) in union):
+
+                    new_alignment.add((e_new, f_new))
+
+        return new_alignment
+
+    def grow_diag_final(self, a2):
+        new_alignment = self.grow_diag(a2)
+        new_alignment = new_alignment.final(self)
+        new_alignment = new_alignment.final(a2)
+        return new_alignment
+
+    def final(self, a):
+        """
+        :rtype: Alignment
+        """
+        new_alignment = self.copy()
+        # -------------------------------------------
+        # 1) for the alignments in the provided alignment...
+        #    if one of the points is unaligned in ourselves,
+        #    add it.
+        for e, f in a:
+            if (not self.contains_src(e) or not self.contains_tgt(f)):
+                new_alignment.add((e,f))
+
+        return new_alignment
+
+
 
     def flip(self):
         '''
@@ -627,6 +707,15 @@ def heur_alignments(gloss_tokens, trans_tokens, iteration=1, alignments = None, 
         return alignments
     else:
         return heur_alignments(gloss_tokens, trans_tokens, iteration+1, alignments=alignments, **kwargs)
+
+# =============================================================================
+# Symmetricization Heuristics
+# =============================================================================
+def intersect(a1, a2):
+    pass
+
+def union(a1, a2):
+    pass
 
 #===============================================================================
 # Unit tests

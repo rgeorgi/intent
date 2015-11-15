@@ -631,7 +631,7 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         self.filter(lambda inst: inst.get_pos_tags(GLOSS_WORD_ID) is not None)
 
 
-    def giza_align_t_g(self, aligner=ALIGNER_GIZA, resume = True, use_heur = False):
+    def giza_align_t_g(self, aligner=ALIGNER_GIZA, resume = True, use_heur = False, symmetric = SYMMETRIC_INTERSECT):
         """
         Perform giza alignments on the gloss and translation
         lines.
@@ -686,7 +686,8 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
         if aligner == ALIGNER_FASTALIGN:
             PARSELOG.info('Attempting to align corpus "{}" using fastalign'.format(self.id))
-            g_t_asents = fast_align_sents(g_sents, t_sents)
+            g_t_alignments = fast_align_sents(g_sents, t_sents)
+            t_g_alignments = fast_align_sents(t_sents, g_sents)
 
         elif aligner == ALIGNER_GIZA:
             PARSELOG.info('Attempting to align corpus "{}" with giza'.format(self.id))
@@ -697,24 +698,46 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                 ga = GizaAligner.load(c.getpath('g_t_dir'))
 
                 # ...and use it to align the gloss line to the translation line.
-                g_t_asents = ga.force_align(g_sents, t_sents)
+                g_t_alignments = ga.force_align(g_sents, t_sents)
+
+                # If we are applying a symmetricization heuristic AND we are
+                # forcing alignment, load the reverse model.
+                if symmetric is not None:
+                    ga_reverse = GizaAligner.load(c.getpath('g_t_reverse_dir'))
+                    t_g_alignments = ga_reverse.force_align(t_sents, g_sents)
+
 
             # Otherwise, start a fresh alignment model.
             else:
                 ga = GizaAligner()
-                g_t_asents = ga.temp_train(g_sents, t_sents)
+                g_t_alignments = ga.temp_train(g_sents, t_sents)
+
+                if symmetric:
+                    t_g_alignments = ga.temp_train(t_sents, g_sents)
 
 
-        if len(g_t_asents) < len(self):
-            raise AlignmentError('Something went wrong with statistical alignment, {} alignments were returned, {} expected.'.format(len(g_t_asents), len(self)))
+        # -------------------------------------------
+        # Apply the symmetricization heuristic to
+        # the alignments if one is specified.
+        # -------------------------------------------
+        if symmetric:
+            for i, pairs in enumerate(zip(g_t_alignments, t_g_alignments)):
+                g_t, t_g = pairs
+                if not hasattr(g_t, symmetric):
+                    raise AlignmentError('Unimplemented symmetricization heuristic "{}"'.format(symmetric))
+
+                g_t_alignments[i] = getattr(g_t, symmetric)(t_g.flip())
+
+        if len(g_t_alignments) < len(self):
+            raise AlignmentError('Something went wrong with statistical alignment, {} alignments were returned, {} expected.'.format(len(g_t_alignments), len(self)))
 
         # Next, iterate through the aligned sentences and assign their alignments
         # to the instance.
-        for g_t_asent, igt in zip(g_t_asents, self):
-            t_g_aln = g_t_asent.aln.flip()
+        for g_t_asent, igt in zip(g_t_alignments, self):
+            t_g_aln = g_t_asent.flip()
             igt.set_bilingual_alignment(igt.trans, igt.glosses, t_g_aln, aln_method = INTENT_ALN_GIZA)
 
-    def giza_align_l_t(self):
+    def giza_align_l_t(self, symmetric = None):
         """
         Perform giza alignments directly from language to translation lines, for comparison
 
@@ -726,13 +749,32 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
         ga = GizaAligner()
 
-        l_t_asents = ga.temp_train(l_sents, t_sents)
+        t_l_sents = ga.temp_train(t_sents, l_sents)
 
-        assert len(l_t_asents) == len(self)
+        assert len(t_l_sents) == len(self)
 
-        for l_t_asent, igt in zip(l_t_asents, self):
-            t_l_aln = l_t_asent.aln.flip()
-            igt.set_bilingual_alignment(igt.trans, igt.lang, t_l_aln, aln_method = INTENT_ALN_GIZA)
+        if symmetric is not None:
+            l_t_sents = ga.temp_train(l_sents, t_sents)
+
+
+        for i, igt in enumerate(self):
+            t_l = t_l_sents[i]
+
+            # If we want these symmetricized...
+            if symmetric is not None:
+
+                # Get the l_t (the "reverse" alignment)
+                l_t = l_t_sents[i]
+
+                # Ensure that the requested symmetricization heuristic is implemented...
+                if not hasattr(t_l, symmetric):
+                    raise AlignmentError('Unimplemented symmetricization heuristic "{}"'.format(symmetric))
+
+                # Now, apply it (and make sure to flip the reversed alignment)
+                t_l = getattr(t_l, symmetric)(l_t.flip())
+
+            # Finally, set the resulting trans-to-lang alignment in the instance
+            igt.set_bilingual_alignment(igt.trans, igt.lang, t_l, aln_method = INTENT_ALN_GIZA)
 
 
 

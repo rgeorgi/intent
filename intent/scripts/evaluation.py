@@ -4,7 +4,7 @@ from tempfile import NamedTemporaryFile
 from intent.eval.AlignEval import AlignEval
 from intent.eval.pos_eval import poseval
 from intent.igt.consts import GLOSS_WORD_ID, MANUAL_POS, INTENT_POS_PROJ, INTENT_POS_CLASS, INTENT_ALN_HEUR, \
-    INTENT_POS_TAGGER, LANG_WORD_ID, INTENT_ALN_MANUAL, INTENT_ALN_GIZA
+    INTENT_POS_TAGGER, LANG_WORD_ID, INTENT_ALN_MANUAL, INTENT_ALN_GIZA, SYMMETRIC_GROW_DIAG_FINAL
 from intent.igt.igtutils import rgp
 from intent.igt.rgxigt import RGCorpus, RGIgt, strip_pos
 from intent.interfaces.mallet_maxent import MalletMaxent

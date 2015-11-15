@@ -10,7 +10,7 @@ import subprocess as sub
 
 
 
-def fast_align_sents(e_list, f_list, symmetric=True):
+def fast_align_sents(e_list, f_list):
     """
 
     :type e_list: list[list[str]]
@@ -24,7 +24,6 @@ def fast_align_sents(e_list, f_list, symmetric=True):
     sents_f = NamedTemporaryFile(mode='w', encoding='utf-8', delete=False)
 
     forward_f = NamedTemporaryFile(mode='w', delete=False)
-    reverse_f = NamedTemporaryFile(mode='w', delete=False)
 
     for e_snt, f_snt in zip(e_list, f_list):
         sent = '{} ||| {}\n'.format(' '.join(e_snt), ' '.join(f_snt))
@@ -52,56 +51,20 @@ def fast_align_sents(e_list, f_list, symmetric=True):
         alignments.append(a)
 
     # -------------------------------------------
-    # 2) Set up which function to use for the first step.
-    #    (a) If we are doing symmetric alignment, we will
-    #        want to save the output of our alignment to a file and then run reverse.
-    #    (b) If we aren't doing symmetric alignment, just
-    #        parse the results of the unidirectional alignment
-    #        and use that.
-
-    if not symmetric:
-        forward_func = parse_alignments
-    else:
-        forward_func = lambda x: write_alignments(x, forward_f)
-
-    # -------------------------------------------
     # Set up the default args...
     args = [fast_align_bin, '-i', sents_f.name, '-v', '-d']
 
-    p = ProcessCommunicator(args, stdout_func=forward_func)
+    p = ProcessCommunicator(args, stdout_func=parse_alignments)
     p.wait()
     forward_f.close()   # Close the file handle so it's flushed...
 
-    # -------------------------------------------
-    # 3) If we are doing symmetric alignment, run the
-    #    reverse alignment...
-
-    if symmetric:
-        p = ProcessCommunicator(args+['-r'], stdout_func = lambda x: write_alignments(x, reverse_f))
-        p.wait()
-
-        reverse_f.close() # Close the file handle...
-
-        # -------------------------------------------
-        # Now, let's do the grow-diag-final...
-
-        cmd = [fast_align_atool, '-c', 'grow-diag-final-and', '-i', forward_f.name, '-j', reverse_f.name]
-        c = ProcessCommunicator(cmd, stdout_func=parse_alignments)
-        c.wait()
 
     # -------------------------------------------
     # 4) Delete all the files...
     unlink(forward_f.name)
-    unlink(reverse_f.name)
     unlink(sents_f.name)
 
-    a_sents = AlignedCorpus()
-    # print(sents_f.name)
-    for e_snt, f_snt, aln in zip(e_list, f_list, alignments):
-        a = AlignedSent(e_snt, f_snt, aln)
-        a_sents.append(a)
-
-    return a_sents
+    return alignments
 
 
 
@@ -117,7 +80,9 @@ class FastAlignTest(TestCase):
         aln = fast_align_sents(en_sents, de_sents)
 
         my_aln = [Alignment({(4, 4), (1, 1), (3, 3), (2, 2)}),
-                  Alignment({(3, 2), (5, 5), (6, 6), (4, 4), (4, 3), (2, 2), (1, 1)}),
+                  Alignment({(3, 2), (5, 5), (6, 6), (4, 4), (4, 3), (1, 1)}),
                   Alignment({(5, 5), (3, 3), (6, 6), (4, 4), (2, 2), (1, 1)})]
 
+
+        # print(aln)
         self.assertEqual(aln, my_aln)

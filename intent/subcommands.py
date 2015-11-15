@@ -128,7 +128,7 @@ def enrich(**kwargs):
         print('Aligning gloss and translation lines using mgiza++...')
 
         try:
-            corp.giza_align_t_g(resume=False)
+            corp.giza_align_t_g(resume=True)
         except GizaAlignmentException as gae:
             gl = logging.getLogger('giza')
             gl.critical(str(gae))
