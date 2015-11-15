@@ -111,9 +111,9 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
 
 
 
-    # for path in input_filelist:
+    for path in input_filelist:
     #     # p.apply_async(process_file, args=[path, classifier_prefix, cfg_prefix, tagger_prefix], callback=lambda x: merge_dicts(x, word_tag_dict, gram_tag_dict))
-    #     callback(process_file(path, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos))
+        callback(process_file(path, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos))
     #
     # p.close()
     # p.join()
@@ -280,6 +280,7 @@ def process_instances(inst_list, classifier_prefix, cfg_prefix, tagger_prefix, d
     dep_trees = []
 
     for inst in inst_list:
+
 
         # Extract the dependency trees...
         if dep_pos == 'class':

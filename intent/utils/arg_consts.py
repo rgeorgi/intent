@@ -1,13 +1,19 @@
+from intent.igt.consts import SYMMETRIC_INTERSECT, SYMMETRIC_UNION, SYMMETRIC_GROW_DIAG_FINAL, SYMMETRIC_GROW_DIAG
+
 __author__ = 'rgeorgi'
 
 
 # Alignment stuff
 ALN_GIZA = 'giza'
+ALN_GIZA_HEUR = 'gizaheur'
 ALN_HEUR = 'heur'
 ALN_MANUAL = 'manual'
 
-ALN_TYPES = [ALN_GIZA, ALN_HEUR]
+ALN_TYPES = [ALN_GIZA, ALN_HEUR, ALN_GIZA_HEUR]
 ALN_VAR = 'alignment_list'
+
+ALN_SYM_VAR = 'align_symmetric'
+ALN_SYM_TYPES = [None, SYMMETRIC_INTERSECT, SYMMETRIC_UNION, SYMMETRIC_GROW_DIAG_FINAL, SYMMETRIC_GROW_DIAG]
 
 # POS Stuff
 POS_TRANS = 'trans'

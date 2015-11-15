@@ -14,7 +14,7 @@ from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
     ProjectionTransGlossException, word_align, retrieve_normal_line, NoNormLineException, MultipleNormLineException
 
 from intent.utils.arg_consts import PARSE_VAR, PARSE_TRANS, POS_VAR, ALN_VAR, POS_LANG_CLASS, ALN_HEUR, \
-    ALN_GIZA, POS_LANG_PROJ, PARSE_LANG_PROJ, POS_TRANS
+    ALN_GIZA, POS_LANG_PROJ, PARSE_LANG_PROJ, POS_TRANS, ALN_SYM_VAR, ALN_GIZA_HEUR
 from intent.utils.env import c, posdict, odin_data
 from intent.utils.argutils import writefile
 from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
@@ -124,11 +124,13 @@ def enrich(**kwargs):
         corp.heur_align()
 
     # -- 1b) Giza Gloss to Translation alignment --------------------------------------
-    if ALN_GIZA in aln_args:
+    if ALN_GIZA in aln_args or ALN_GIZA_HEUR in aln_args:
         print('Aligning gloss and translation lines using mgiza++...')
 
+        use_heur = ALN_GIZA_HEUR in aln_args
+
         try:
-            corp.giza_align_t_g(resume=True)
+            corp.giza_align_t_g(resume=True, use_heur=use_heur, symmetric=kwargs.get(ALN_SYM_VAR))
         except GizaAlignmentException as gae:
             gl = logging.getLogger('giza')
             gl.critical(str(gae))

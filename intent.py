@@ -13,7 +13,7 @@ from intent.scripts.conversion.text_to_xigt import text_to_xigtxml
 from intent.scripts.evaluation import evaluate_intent
 from intent.scripts.extraction import extract_from_xigt
 from intent.utils.arg_consts import PARSE_LANG_PROJ, PARSE_TRANS, POS_TYPES, PARSE_TYPES, ALN_TYPES, ALN_VAR, POS_VAR, \
-    PARSE_VAR
+    PARSE_VAR, ALN_SYM_VAR, ALN_SYM_TYPES
 from intent.utils.listutils import flatten_list
 from xigt.codecs.xigtxml import dump
 
@@ -84,6 +84,10 @@ enrich.add_argument('OUT_FILE', help='Path to output XIGT file.')
 enrich.add_argument('--align', dest=ALN_VAR,
                     type=csv_choices(ALN_TYPES), default=[],
                     help='Comma-separated list of alignments to add. {}'.format(ALN_TYPES))
+
+enrich.add_argument('--giza-symmetric', dest=ALN_SYM_VAR, choices=ALN_SYM_TYPES,
+                    help='Symmetricization heuristic to apply to statistical alignment',
+                    default=None)
 
 enrich.add_argument('--pos', dest=POS_VAR,
                     type=csv_choices(POS_TYPES), default=[],
