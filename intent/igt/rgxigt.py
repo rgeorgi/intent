@@ -1321,15 +1321,23 @@ class RGIgt(Igt, RecursiveFindMixin):
         """
 
         tg_aln = self.get_trans_gloss_alignment(aln_method=aln_method)
-        gl_aln = self.get_gloss_lang_alignment()
 
-        # Combine the two alignments...
-        a = Alignment()
-        for t_i, g_i in tg_aln:
-            l_js = [l_j for (g_j, l_j) in gl_aln if g_j == g_i]
-            for l_j in l_js:
-                a.add((t_i, l_j))
-        return a
+        # -------------------------------------------
+        # If we don't have an existing alignment, return None.
+
+        if tg_aln is None:
+            return None
+
+        else:
+            gl_aln = self.get_gloss_lang_alignment()
+
+            # Combine the two alignments...
+            a = Alignment()
+            for t_i, g_i in tg_aln:
+                l_js = [l_j for (g_j, l_j) in gl_aln if g_j == g_i]
+                for l_j in l_js:
+                    a.add((t_i, l_j))
+            return a
 
     def get_trans_gloss_lang_aligned_pairs(self, aln_method=None):
         """

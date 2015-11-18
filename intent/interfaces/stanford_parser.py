@@ -31,12 +31,17 @@ class ParseResult(object):
         self.pt = None
         self.dt = None
 
+def parse_interpreter(str, parse_queue):
+    parse_queue.append(str)
+
+
 class StanfordParser(object):
     """
     Instantiate an object which can be called upon to return either phrase structure parses or
     dependency parses.
     """
     def __init__(self):
+        self.parse_queue = ''
         self.p = ProcessCommunicator([java_bin, '-Xmx1200m',
                                         '-cp', parser_jar+':'+parser_model_jar,
                                         'edu.stanford.nlp.parser.lexparser.LexicalizedParser',
@@ -44,7 +49,11 @@ class StanfordParser(object):
                                         '-sentences', 'newline',
                                         '-tokenized',
                                         parser_model,
-                                        '-'], stderr_func=parser_stderr_handler)
+                                        '-'], stderr_func=parser_stderr_handler,
+                                     blocking=True)
+
+    def parse_interpreter(self, str):
+        print(str)
 
     def parse(self, string, id_base = None):
         """
@@ -55,11 +64,13 @@ class StanfordParser(object):
         :param id_base:
         :type id_base:
         """
+
         self.p.stdin.write(bytes(string+'\n', encoding='utf-8'))
         self.p.stdin.flush()
 
         result = ParseResult()
         string = ''
+
 
         while True:
             line = self.p.stdout.readline().decode('utf-8', errors='replace').strip()

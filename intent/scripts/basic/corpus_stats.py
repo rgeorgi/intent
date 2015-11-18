@@ -177,7 +177,7 @@ def inst_list_stats(inst_list):
 
 
 
-def igt_stats(filelist, type='text', logpath=None, show_header=False, show_filename=False):
+def igt_stats(filelist, type='text', logpath=None, show_header=True, show_filename=False):
 
     sd = IGTStatDict()
 
@@ -216,9 +216,9 @@ def igt_stats(filelist, type='text', logpath=None, show_header=False, show_filen
     if show_filename:
         print(os.path.splitext(os.path.basename(path))[0], end=',')
 
-    for word in words:
-        countdict = sd.gloss_word_tags[word]
-        print('{},{},{}'.format(word, countdict.total(), countdict))
+    # for word in words:
+    #     countdict = sd.gloss_word_tags[word]
+    #     print('{},{},{}'.format(word, countdict.total(), countdict))
 
 
     print(sd)
@@ -316,7 +316,7 @@ def pos_stats(filelist, filetypes=SLASHTAG_TYPE, log_file = sys.stdout, csv=Fals
     labels = sorted(labels)
 
 
-    log_file.write('tag, tag_counts, types_per_tag, percent_of_tokens, percent_of_types\n')
+    log_file('tag, tag_counts, types_per_tag, percent_of_tokens, percent_of_types\n')
     for i, tag in enumerate(labels):
         tagcounts = tagCount[tag]
         typetagcounts = typetags[tag]

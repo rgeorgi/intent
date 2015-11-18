@@ -40,7 +40,7 @@ class ProcessCommunicator(object):
     to be handled by a custom handler.
     """
 
-    def __init__(self, cmd, stdout_func=None, stderr_func=None, shell=False):
+    def __init__(self, cmd, stdout_func=None, stderr_func=None, shell=False, blocking=False):
         """
         Execute a command, ``cmd`` and save the stdin/stdout for communication,
         but allow the stderr to be read in a non-blocking manner and printed using
@@ -67,12 +67,12 @@ class ProcessCommunicator(object):
         stderr_t.daemon = True
         stderr_t.start()
 
-        if stdout_func is None:
+        if stdout_func is None and not blocking:
             stdout_func = lambda x: x
 
-        stdout_t = Thread(target=thread_handler, args=(self.p.stdout, stdout_func))
-        stdout_t.daemon = True
-        stdout_t.start()
+            stdout_t = Thread(target=thread_handler, args=(self.p.stdout, stdout_func))
+            stdout_t.daemon = True
+            stdout_t.start()
 
     def wait(self):
         return self.p.wait()
