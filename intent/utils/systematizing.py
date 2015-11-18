@@ -70,6 +70,7 @@ class ProcessCommunicator(object):
         if stdout_func is None and not blocking:
             stdout_func = lambda x: x
 
+        if stdout_func is not None:
             stdout_t = Thread(target=thread_handler, args=(self.p.stdout, stdout_func))
             stdout_t.daemon = True
             stdout_t.start()

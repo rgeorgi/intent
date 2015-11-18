@@ -77,7 +77,8 @@ class StanfordPOSTagger(object):
                                        '-sentenceDelimiter', 'newline',
                                        '-tokenize', 'false'],
                                       stderr_func=stanford_stderr_handler,
-                                      stdout_func=lambda x: stanford_stdout_handler(x, self.results_queue))
+                                      stdout_func=lambda x: stanford_stdout_handler(x, self.results_queue),
+                                      blocking=False)
 
 
     def tag_tokenization(self, tokenization, **kwargs):
