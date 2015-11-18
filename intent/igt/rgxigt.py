@@ -209,6 +209,7 @@ class RecursiveFindMixin(FindMixin):
     def findall(self, **kwargs):
         """
         Find function that does not terminate on the first match.
+        :rtype: list[XigtContainerMixin]
         """
         found = []
         if super().find(**kwargs) is not None:
@@ -630,8 +631,21 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
     def require_gloss_pos(self):
         self.filter(lambda inst: inst.get_pos_tags(GLOSS_WORD_ID) is not None)
 
+    def remove_alignments(self, aln_method=None):
+        """
+        Remove alignment information from all instances.
+        """
+        filters = []
+        if aln_method is not None:
+            filters = [lambda x: get_intent_method(x) == aln_method]
 
-    def giza_align_t_g(self, aligner=ALIGNER_GIZA, resume = True, use_heur = False, symmetric = SYMMETRIC_INTERSECT):
+        for inst in self:
+            for t in inst.findall(type=ALN_TIER_TYPE, others=filters):
+                t.delete()
+
+
+
+    def giza_align_t_g(self, aligner=ALIGNER_GIZA, resume = True, use_heur = True, symmetric = SYMMETRIC_INTERSECT):
         """
         Perform giza alignments on the gloss and translation
         lines.
@@ -744,8 +758,8 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         :rtype: Alignment
         """
 
-        l_sents = [i.lang.text().lower() for i in self]
-        t_sents = [i.trans.text().lower() for i in self]
+        l_sents = [i.lang.text(return_list=True) for i in self]
+        t_sents = [i.trans.text(return_list=True) for i in self]
 
         ga = GizaAligner()
 
@@ -1448,21 +1462,28 @@ class RGIgt(Igt, RecursiveFindMixin):
             gloss_pos = self.get_pos_tags(self.gloss.id, tag_method=INTENT_POS_CLASS)
             trans_pos = self.get_pos_tags(self.trans.id, tag_method=INTENT_POS_TAGGER)
 
-            # TODO: In order to do the alignment with POS tags, they need to be at the morpheme level. Find a better way to do this?
-            # Make sure to expand the POS tags to function at the morpheme-level...
-            glosses_tags = [gloss_pos.get_index(find_gloss_word(self, gloss).index) for gloss in self.glosses]
-
             if gloss_pos is None or trans_pos is None:
                 ALIGN_LOG.warn('POS-heur alignment requested, but gloss-classifier tags or trans-tagger tags were not available. Skipping for instance "{}"'.format(self.id))
 
-            kwargs['gloss_pos'] = glosses_tags
+            # TODO: In order to do the alignment with POS tags, they need to be at the morpheme level. Find a better way to do this?
+            # Make sure to expand the POS tags to function at the morpheme-level...
+            if kwargs.get('tokenize', True):
+                glosses_tags = [gloss_pos.get_index(find_gloss_word(self, gloss).index) for gloss in self.glosses]
+                kwargs['gloss_pos'] = glosses_tags
+            else:
+                kwargs['gloss_pos'] = gloss_pos
+
             kwargs['trans_pos'] = trans_pos
 
         aln = heur_alignments(gloss_tokens, trans_tokens, **kwargs).flip()
 
         # Now, add these alignments as bilingual alignments...
-        self.set_bilingual_alignment(self.trans, self.glosses, aln, aln_method=INTENT_ALN_HEUR)
-        return aln
+        if kwargs.get('tokenize', True):
+            self.set_bilingual_alignment(self.trans, self.glosses, aln, aln_method=INTENT_ALN_HEUR)
+        else:
+            self.set_bilingual_alignment(self.trans, self.gloss, aln, aln_method=INTENT_ALN_HEUR)
+
+        return self.get_trans_gloss_alignment(INTENT_ALN_HEUR)
 
 
     # • POS Tag Manipulation ---------------------------------------------------------------
@@ -2256,7 +2277,7 @@ class RGTier(Tier, RecursiveFindMixin):
     def askIndex(self):
         return len(self.items)+1
 
-    def text(self, remove_whitespace_inside_tokens = True):
+    def text(self, remove_whitespace_inside_tokens = True, return_list = False):
         """
         Return a whitespace-delimeted string consisting of the
         elements of this tier. Default to removing whitespace
@@ -2268,7 +2289,10 @@ class RGTier(Tier, RecursiveFindMixin):
             # TODO: Another whitespace replacement handling
             tokens = [re.sub('\s+','',i) for i in tokens]
 
-        return ' '.join(tokens)
+        if return_list:
+            return tokens
+        else:
+            return ' '.join(tokens)
 
     def tokens(self):
         """
@@ -3139,9 +3163,9 @@ def tier_sorter(x):
 #===============================================================================
 
 
-def strip_enrichment(inst):
+def strip_alignment(inst):
     strip_pos(inst)
-    for at in inst.findall(type='bilingual-alignments'):
+    for at in inst.findall(type=ALN_TIER_TYPE):
         at.delete()
 
 

@@ -1,10 +1,12 @@
+import os
 import sys
+from collections import defaultdict
 from tempfile import NamedTemporaryFile
 
 from intent.eval.AlignEval import AlignEval
 from intent.eval.pos_eval import poseval
 from intent.igt.consts import GLOSS_WORD_ID, MANUAL_POS, INTENT_POS_PROJ, INTENT_POS_CLASS, INTENT_ALN_HEUR, \
-    INTENT_POS_TAGGER, LANG_WORD_ID, INTENT_ALN_MANUAL, INTENT_ALN_GIZA, SYMMETRIC_GROW_DIAG_FINAL
+    INTENT_POS_TAGGER, LANG_WORD_ID, INTENT_ALN_MANUAL, INTENT_ALN_GIZA, SYMMETRIC_GROW_DIAG_FINAL, ALIGNER_FASTALIGN
 from intent.igt.igtutils import rgp
 from intent.igt.rgxigt import RGCorpus, RGIgt, strip_pos
 from intent.interfaces.mallet_maxent import MalletMaxent
@@ -37,16 +39,16 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
     # Set up the objects to run as "servers"
     # =============================================================================
 
+    classifier_obj = MalletMaxent(classifier)
+
     if classifier_path is not None:
-        classifier = MalletMaxent(classifier_path)
+        classifier_obj = MalletMaxent(classifier_path)
+
 
     overall_prj = POSEvalDict()
     overall_cls = POSEvalDict()
 
-
-    heur_ae, heur_pos_ae, aug_ae, resume_ae, fresh_ae = AlignEval(), AlignEval(), AlignEval(), AlignEval(), AlignEval()
-
-    align_scores = {}
+    mas = MultAlignScorer()
 
     # Go through all the files in the list...
     for f in filelist:
@@ -61,124 +63,151 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
             overall_cls += cls_eval
 
         # Test alignment if requested.
+
         if eval_alignment:
-            heur, heur_pos, aug, resume, fresh = evaluate_alignment_on_file(xc)
-            heur_ae += heur
-            heur_pos_ae += heur_pos
-            aug_ae += aug
-            resume_ae += resume
-            fresh_ae += fresh
-            align_scores[f] = (heur_pos, heur, aug, resume, fresh)
+            # evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger)
+            evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger)
 
-    if eval_alignment:
-        print("Overall Alignment:")
-        print(heur_pos_ae.all_str())
-        print(heur_ae.all_str())
-        print(aug_ae.all_str())
-        print(resume_ae.all_str())
-        print(fresh_ae.all_str())
-        align_scores['zz_overall'] = (heur_pos_ae, heur_ae, aug_ae, resume_ae, fresh_ae)
-
-
-        for attr in ['fmeasure', 'precision', 'recall', 'matches', 'total_gold', 'total_test']:
-            print(attr)
-            keys = sorted(align_scores.keys())
-            for lang in keys:
-                print(lang, end=',')
-                for ae in align_scores[lang]:
-                    f = getattr(ae, attr)
-                    if hasattr(f, '__call__'):
-                        print(f(), end=',')
-                    else:
-                        print(f, end=',')
-                print()
-            print()
-
-
+    mas.eval_all()
     # Report the POS tagging accuracy...
     if classifier_path is not None:
         print("ALL...")
         print('{:.2f},{:.2f}'.format(overall_prj.accuracy(), overall_cls.accuracy()))
 
-def evaluate_alignment_on_file(xc):
-    """
-    :type xc: RGCorpus
-    """
-    xc2 = xc.copy()
+class MultAlignScorer(object):
 
-    xc.heur_align(use_pos=False)
+    def __init__(self):
+        self.by_lang_dict = defaultdict(lambda: defaultdict(list))
+        self.methods = []
 
-    xc3 = xc.copy()
+    def add_alignment(self, method, lang, aln):
+        self.by_lang_dict[lang][method].append(aln)
 
-    EVAL_LOG.info("Performing GIZA alignments...")
+        if method != 'gold' and method not in self.methods:
+            self.methods.append(method)
 
-    xc.giza_align_t_g(use_heur=False, resume=True)
-    xc2.giza_align_t_g(use_heur=False, resume=False)
-    xc3.giza_align_t_g(use_heur=True, resume=True)
+    def add_corpus(self, name, method, lang, xc):
+        """
+        :type method: str
+        :type xc: RGCorpus
+        """
+        for inst in xc:
+            gold = inst.get_trans_gloss_alignment(aln_method=ALN_MANUAL)
+            if gold is None:
+                continue
+            else:
+                aln = inst.get_trans_gloss_alignment(aln_method=method)
+                self.add_alignment(name, lang, aln)
 
-    EVAL_LOG.info("Initializing tager and classifier...")
-    sp = StanfordPOSTagger(tagger_model)
-    mc = MalletMaxent(classifier)
+    def eval_all(self):
+        overall_dict = defaultdict(list)
 
+        for method in self.methods:
+            overall_dict[method] = AlignEval()
+
+
+        for lang in self.by_lang_dict.keys():
+
+            for method in self.methods:
+                test_snts = self.by_lang_dict[lang][method]
+                gold_snts = self.by_lang_dict[lang]['gold']
+                ae = AlignEval(test_snts, gold_snts)
+                print(','.join([lang,method]+[str(i) for i in ae.all()]))
+
+                overall_dict[method] += ae
+
+        for method in self.methods:
+            print(','.join(['overall',method]+[str(i) for i in overall_dict[method].all()]))
+
+
+def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj):
+    EVAL_LOG.info('Evaluating heuristic methods on file "{}"'.format(os.path.basename(f)))
+
+    manual_alignments = []
     heur_alignments = []
-    heur_pos_alignments = []
-    giza_alignments_aug = []
-    giza_alignments_resume = []
-    giza_alignments_fresh = []
-    gold_alignments = []
 
-    for inst, inst2, inst3 in zip(xc, xc2, xc3):
+    for inst in xc:
 
-        EVAL_LOG.info('Processing instance {}'.format(inst.id))
-        assert isinstance(inst, RGIgt)
-        assert isinstance(inst2, RGIgt)
-        assert isinstance(inst3, RGIgt)
-
-        manual      = inst.get_trans_gloss_alignment(aln_method=INTENT_ALN_MANUAL)
-
-        if manual is None:
+        # -------------------------------------------
+        # Only evaluate against instances that have a gold alignment.
+        manual = inst.get_trans_gloss_alignment(aln_method=INTENT_ALN_MANUAL)
+        if not manual:
             continue
 
-        giza_resume = inst.get_trans_gloss_alignment(aln_method=INTENT_ALN_GIZA)
-        giza_fresh = inst2.get_trans_gloss_alignment(aln_method=INTENT_ALN_GIZA)
-        giza_augment = inst3.get_trans_gloss_alignment(aln_method=INTENT_ALN_GIZA)
+        lang = os.path.basename(f)
 
-        heur        = inst.get_trans_gloss_alignment(aln_method=INTENT_ALN_HEUR)
+        mas.add_alignment('gold', lang, manual)
 
-        EVAL_LOG.info("Tagging gloss...")
+        # heur = inst.heur_align(lowercase=True, stem=True, tokenize=True, no_multiples=False, use_pos=True)
+        heur = inst.copy().heur_align(lowercase=False, stem=False, tokenize=False, no_multiples=True, use_pos=False)
+        mas.add_alignment('baseline', lang, heur)
 
-        inst2.classify_gloss_pos(mc)
+        heur = inst.copy().heur_align(lowercase=True, stem=False, tokenize=False, no_multiples=True, use_pos=False)
+        mas.add_alignment('lowercasing', lang, heur)
 
-        EVAL_LOG.info("Tagging trans...")
-        inst2.tag_trans_pos(sp)
-        inst2.heur_align(use_pos=True)
+        heur = inst.copy().heur_align(lowercase=True, stem=False, tokenize=True, no_multiples=True, use_pos=False)
+        mas.add_alignment('Tokenization', lang, heur)
+
+        heur = inst.copy().heur_align(lowercase=True, stem=False, tokenize=True, no_multiples=False, use_pos=False)
+        mas.add_alignment('Multiple Matches', lang, heur)
+
+        heur = inst.copy().heur_align(lowercase=True, stem=True, tokenize=True, no_multiples=False, use_pos=False)
+        mas.add_alignment('Morphing', lang, heur)
+
+        heur = inst.copy().heur_align(lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=False)
+        mas.add_alignment('Grams', lang, heur)
+
+        b = inst.copy()
+        b.classify_gloss_pos(classifier_obj)
+        b.tag_trans_pos(tagger_obj)
+        heur = b.heur_align(lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=True)
+        mas.add_alignment('POS', lang, heur)
+
+        
 
 
 
-        heur_pos    = inst2.get_trans_gloss_alignment(aln_method=INTENT_ALN_HEUR)
+        # inst.heur_align(stem=False)
+        # inst.heur_align(tokenize=False)
+        # inst.heur_align(no_multiples=True)
+        # heur = inst.get_trans_gloss_alignment(INTENT_ALN_HEUR)
 
-        heur_alignments.append(heur)
-        heur_pos_alignments.append(heur_pos)
-        gold_alignments.append(manual)
-        giza_alignments_aug.append(giza_augment)
-        giza_alignments_resume.append(giza_resume)
-        giza_alignments_fresh.append(giza_fresh)
+def evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger):
+    """
+    :type xc: RGCorpus
+    :type mas: MultAlignScorer
+    """
 
-    heur_ae = AlignEval(heur_alignments, gold_alignments)
-    heur_pos_ae = AlignEval(heur_pos_alignments, gold_alignments)
-    giza_augment_ae = AlignEval(giza_alignments_aug, gold_alignments)
-    giza_resume_ae = AlignEval(giza_alignments_resume, gold_alignments)
-    giza_fresh_ae  = AlignEval(giza_alignments_fresh, gold_alignments)
+    xc.heur_align()
 
-    print(AlignEval.header())
+    # Start by adding the manual alignments...
+    mas.add_corpus('gold', INTENT_ALN_MANUAL, f, xc)
 
-    print(heur_pos_ae.all_str())
-    print(heur_ae.all_str())
-    print(giza_augment_ae.all_str())
-    print(giza_resume_ae.all_str())
-    print(giza_fresh_ae.all_str())
+    EVAL_LOG.info("")
+    xc.giza_align_t_g(aligner=ALIGNER_FASTALIGN, use_heur=False)
+    mas.add_corpus('fast_align', INTENT_ALN_GIZA, f, xc)
+    xc.remove_alignments(INTENT_ALN_GIZA)
 
-    return (heur_ae, heur_pos_ae, giza_augment_ae, giza_resume_ae, giza_fresh_ae)
+    xc.giza_align_t_g(aligner=ALIGNER_FASTALIGN, use_heur=True)
+    mas.add_corpus('fast_align_heur', INTENT_ALN_GIZA, f, xc)
+    xc.remove_alignments(INTENT_ALN_GIZA)
+
+    xc.giza_align_t_g(use_heur=False, resume=False)
+    mas.add_corpus('statistic', INTENT_ALN_GIZA, f, xc)
+    xc.remove_alignments(INTENT_ALN_GIZA)
+
+    xc.giza_align_t_g(use_heur=True, resume=False)
+    mas.add_corpus('statistic_heur', INTENT_ALN_GIZA, f, xc)
+    xc.remove_alignments(INTENT_ALN_GIZA)
+
+    xc.giza_align_t_g(use_heur=False, resume=True)
+    mas.add_corpus('statistic+', INTENT_ALN_GIZA, f, xc)
+    xc.remove_alignments(INTENT_ALN_GIZA)
+
+    xc.giza_align_t_g(use_heur=True, resume=True)
+    mas.add_corpus('statistic+_heur', INTENT_ALN_GIZA, f, xc)
+    xc.remove_alignments(INTENT_ALN_GIZA)
+
 
 
 # =============================================================================

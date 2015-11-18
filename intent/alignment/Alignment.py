@@ -1,10 +1,13 @@
-'''
+"""
 Created on Feb 21, 2014
 
 @author: rgeorgi
-'''
+"""
 
 import collections, sys, re, unittest, copy
+
+from intent.igt.grams import gramdict
+from intent.utils.string_utils import lemmatize_token
 from intent.utils.token import tokenize_string, whitespace_tokenizer, Token
 
 
@@ -15,9 +18,9 @@ class HeuristicAlignmentException(Exception): pass
 #===============================================================================
 
 class AlignedSent():
-    '''
+    """
     An object class to contain source and target tokens, and an alignment between the two.
-    '''
+    """
     def __init__(self, src_tokens, tgt_tokens, aln):
         self.src_tokens = src_tokens
         self.tgt_tokens = tgt_tokens
@@ -35,9 +38,9 @@ class AlignedSent():
                 raise AlignmentError('Target index %d is too high for sentence %s' % (tgt_i, self.tgt_tokens))
 
     def aln_with_nulls(self):
-        '''
+        """
         Return alignment with explicit NULL alignments.
-        '''
+        """
         new_aln = copy.copy(self.aln)
         for i, src_t in enumerate(self.src_tokens):
             if src_t.index not in [src for src, tgt in self.aln]:
@@ -77,23 +80,23 @@ class AlignedSent():
         return [aln for aln in self.aln if (src and src==aln[0]) or (tgt and tgt==aln[1]) ]
 
     def wordpairs(self, ips=None):
-        '''
+        """
         Return the pairs of words referred to by the indices in ips.
 
         This is either an aribitrary pair of indices passed as an argument,
         or the indices contained in the alignment property.
         @param ips:
-        '''
+        """
         if ips is None:
             ips = self.aln
         return [self.wordpair(ip) for ip in ips]
 
 
     def wordpair(self, ip):
-        '''
+        """
         Return the wordpair corresponding with an alignment pair.
         @param ip:
-        '''
+        """
         return(self.src_tokens[ip[0]-1], self.tgt_tokens[ip[1]-1])
 
     def __str__(self):
@@ -175,10 +178,10 @@ class AlignedSent():
 
     @classmethod
     def from_giza_lines(cls, tgt, aln):
-        '''
+        """
         Return the target-to-source alignment from the target and aln lines
         of giza.
-        '''
+        """
         # Start by getting the target tokens from the provided target line
         tgt_tokens = tokenize_string(tgt, whitespace_tokenizer)
 
@@ -223,14 +226,14 @@ class AlignedCorpus(list):
         src_f.close(), tgt_f.close(), aln_f.close()
 
     def read(self, src_path, tgt_path, aln_path, limit=None):
-        '''
+        """
         Read in the morph:gloss:aln alignment format
 
         @param src_path: Source sents
         @param tgt_path: Target sents
         @param aln_path: Alignment filename
         @param limit: Sentence limit
-        '''
+        """
         src_f = open(src_path, 'r', encoding='utf-8')
         tgt_f = open(tgt_path, 'r', encoding='utf-8')
         aln_f = open(aln_path, 'r', encoding='utf-8')
@@ -269,14 +272,14 @@ class AlignedCorpus(list):
 
 
     def read_giza(self, src_path, tgt_path, a3, limit=None):
-        '''
+        """
         Method intended to read a giza A3.final file into an alignment format.
 
         @param src_path: path to the source sentences
         @param tgt_path: path to the target sentences
         @param a3: path to the giza A3.final file.
         @param limit:
-        '''
+        """
         src_f = open(src_path, 'r', encoding='utf-8')
         tgt_f = open(tgt_path, 'r', encoding='utf-8')
         aln_f = open(a3, 'r', encoding='utf-8')
@@ -361,13 +364,13 @@ def combine_sents(s1, s2, method='intersect'):
         raise AlignmentError('Unknown combining method')
 
 def refined_combine(s1, s2):
-    '''
+    """
 
     Implements the "refined" alignment algorithm from Och & Ney 2003
 
     @param s1:
     @param s2:
-    '''
+    """
     A_1 = s1.aln
     A_2 = s2.aln.flip()
 
@@ -418,9 +421,9 @@ class AlignmentError(Exception):
 #===============================================================================
 
 class Alignment(set):
-    '''
+    """
     Simply, a set of (src_index, tgt_index) pairs in a set.
-    '''
+    """
 
     def __init__(self, iter=list()):
         super().__init__(iter)
@@ -436,7 +439,7 @@ class Alignment(set):
 
     @classmethod
     def from_giza(cls, giza):
-        '''
+        """
         | Given a giza style alignment string, such as:
         |
         | ``NULL ({ 3 }) fact ({ }) 1ss ({ 1 }) refl ({ }) wash ({ 2 }) ben ({ 5 4 }) punc ({ }) ne ({ 6 }) shirt ({ 4 })``
@@ -447,7 +450,7 @@ class Alignment(set):
 
         :param giza: Alignment string as described above.
         :type giza: str
-        '''
+        """
         # Initialize the alignment.
         a = cls()
 
@@ -545,12 +548,12 @@ class Alignment(set):
 
 
     def flip(self):
-        '''
+        """
         For an alignment of ``{ (a, b) ... (c, d) }`` pairs, return an :py:class:`Alignment` of
         ``{ (b, a) ... (d, c) }``
 
         :rtype: Alignment
-        '''
+        """
         return Alignment([(y, x) for x, y in self])
 
     def contains_src(self, key):
@@ -583,10 +586,10 @@ class Alignment(set):
 # MorphAlign Class
 #===============================================================================
 class MorphAlign(Alignment):
-    '''
+    """
     Special subclass of alignment that holds not only src and tgt indices, but also
     a remapped middle index
-    '''
+    """
     def __init__(self, iter=[]):
         self._remapping = {}
         Alignment.__init__(self, iter)
@@ -612,20 +615,102 @@ class MorphAlign(Alignment):
         return Alignment((aln[0], aln[-1]) for aln in self)
 
     def remap(self, aln):
-        '''
+        """
         Given another alignment, return a new alignment where its indices are either
         either remapped to an entry in the remapping, or returned as-is.
 
         @param aln: Alignment to remap.
-        '''
+        """
         return Alignment((self.remapping.get(elt[0], elt[0]), elt[-1]) for elt in aln)
 
     @property
     def remapping(self):
         return self._remapping
 
-def heur_alignments(gloss_tokens, trans_tokens, iteration=1, alignments = None, **kwargs):
-    '''
+# =============================================================================
+# General-Purpose Method for heuristic alignment
+#
+#  Use this function to do the back-and-forth iteration with varying
+# comparison functions.
+# =============================================================================
+
+def exact_match(src, tgt):
+    return str(src) == str(tgt)
+
+def stem_match(src, tgt):
+    return lemmatize_token(str(src)) == lemmatize_token(str(tgt))
+
+def gram_match(src, tgt):
+    return str(tgt).lower() in gramdict.get(str(src).lower(), [])
+
+def heuristic_chain(gloss_tokens, trans_tokens, methods, aln = None, multiple_matches = True):
+
+    if aln is None:
+        aln = Alignment()
+
+    for method in methods:
+        aln = heuristic_iteration(gloss_tokens, trans_tokens, aln, method, multiple_matches = multiple_matches)
+    return aln
+
+def heuristic_iteration(gloss_tokens, trans_tokens, aln, comparison_function, multiple_matches = True, iteration=1, report=False):
+    """
+
+    :param gloss_tokens:
+    :type gloss_tokens: list[str]
+    :param trans_tokens:
+    :type trans_tokens: list[str]
+    :param aln:
+    :type aln: Alignment
+    :param comparison_function:
+    :param iteration:
+    """
+
+    gloss_indices = range(0, len(gloss_tokens))
+    trans_indices = range(0, len(trans_tokens))
+
+    # On the second pass, let's move from the right
+    # backward
+    if iteration > 1:
+        gloss_indices = gloss_indices[::-1]
+        trans_indices = trans_indices[::-1]
+
+    aligned_gloss_w = set(aln.all_src())
+    aligned_trans_w = set(aln.all_tgt())
+
+    for gloss_i in gloss_indices:
+
+        # Only allow one alignment from gloss to trans.
+        if gloss_i+1 in aligned_gloss_w:
+            continue
+
+        gloss_w = gloss_tokens[gloss_i]
+        for trans_i in trans_indices:
+            trans_w = trans_tokens[trans_i]
+
+            # Skip any attempt to align already aligned words on the first pass.
+            if iteration == 1 and trans_i+1 in aligned_trans_w:
+                continue
+
+            if comparison_function(gloss_w, trans_w):
+                if report:
+                    print('ADDING "{}"--"{}"'.format(gloss_w, trans_w))
+                aln.add((gloss_i+1, trans_i+1))
+                aligned_gloss_w.add(gloss_i+1)
+                aligned_trans_w.add(trans_i+1)
+                if iteration == 1: break # On the first iteration, let's move to another
+
+
+
+
+    if iteration == 2 or not multiple_matches:
+        return aln
+    else:
+        return heuristic_iteration(gloss_tokens, trans_tokens, aln, comparison_function, multiple_matches, iteration+1)
+
+
+
+def heur_alignments(gloss_tokens, trans_tokens, **kwargs):
+    """
     Obtain heuristic alignments between gloss and translation tokens
 
     :param gloss_tokens: The gloss tokens
@@ -634,79 +719,32 @@ def heur_alignments(gloss_tokens, trans_tokens, iteration=1, alignments = None, 
     :type trans_tokens: list[Token]
     :param iteration: Number of iterations looking for matches
     :type iteration: int
-    '''
+    """
+    if kwargs.get('lowercase', True):
+        gloss_tokens = [str(g).lower() for g in gloss_tokens]
+        trans_tokens = [str(t).lower() for t in trans_tokens]
 
-    # So that the previous supplied alignments arg doesn't stick.
-    if alignments is None:
-        alignments = Alignment()
+    methods = [exact_match]
+    if kwargs.get('stem', True):
+        methods.append(stem_match)
+
+    if kwargs.get('grams', True):
+        methods.append(gram_match)
+
+    aln = heuristic_chain(gloss_tokens, trans_tokens, methods, multiple_matches=kwargs.get('no_multiples'))
 
     gp = kwargs.get('gloss_pos')
     tp = kwargs.get('trans_pos')
 
-    use_pos = (gp is not None and tp is not None)
+    if gp is not None and tp is not None:
+        old_aln = aln.copy()
+        gp = [g.value() for g in gp]
+        tp = [t.value() for t in tp]
+        aln = heuristic_iteration(gp, tp, aln, exact_match, multiple_matches=False, report=False)
 
-    # For the second iteration
-    if iteration==2:
-        gloss_tokens = gloss_tokens[::-1]
-        trans_tokens = trans_tokens[::-1]
-    elif iteration==3:
-        gloss_tokens = gloss_tokens[::-1]
-        trans_tokens = trans_tokens[::-1]
+        # print('{} new alignments added to {} old alignments'.format(len(aln - old_aln), len(old_aln)))
 
-    for gloss_token in gloss_tokens:
-        for trans_token in trans_tokens:
-
-            gpos, tpos = None, None
-            if gp:
-                gpos = gp[gloss_token.index-1].value()
-            if tp:
-                tpos = tp[trans_token.index-1].value()
-
-
-            if gloss_token.morphequals(trans_token, **kwargs):
-                # Get the alignment count
-                trans_align_count = trans_token.attrs.get('align_count', 0)
-                gloss_align_count = gloss_token.attrs.get('align_count', 0)
-
-
-                # Only align with tokens
-                if trans_align_count == 0 or kwargs.get('no_multiples', False):
-                    trans_token.attrs['align_count'] = trans_align_count+1
-                    gloss_token.attrs['align_count'] = gloss_align_count+1
-                    alignments.add((gloss_token.index, trans_token.index))
-
-                    # Stop aligning this gloss token for this iteration.
-                    break
-
-                # If we're on the second pass and the gloss wasn't aligned, align
-                # it to whatever remains.
-                elif gloss_align_count == 0 and iteration == 2:
-                    trans_token.attrs['align_count'] = trans_align_count+1
-                    gloss_token.attrs['align_count'] = gloss_align_count+1
-                    alignments.add((gloss_token.index, trans_token.index))
-
-            elif use_pos and iteration > 2 and gpos is not None and tpos is not None and gpos == tpos:
-                # If the gloss token is unaligned, see if it matches
-                # an unaligned trans token.
-                unaligned_trans_tokens = [t.index for t in trans_tokens if t.index not in [t for g,t in alignments]]
-                unaligned_gloss_tokens = [g.index for g in gloss_tokens if g.index not in [g for g,t in alignments]]
-
-                if gloss_token.index in unaligned_gloss_tokens and trans_token.index in unaligned_trans_tokens:
-                    trans_token.attrs['align_count'] = 1
-                    gloss_token.attrs['align_count'] = 1
-                    alignments.add((gloss_token.index, trans_token.index))
-                    break
-
-                # elif gloss_token.index in unaligned_gloss_tokens and iteration == 4:
-                #     trans_token.attrs['align_count'] += 1
-                #     gloss_token.attrs['align_count'] = 1
-                #     alignments.add((gloss_token.index, trans_token.index))
-
-
-    if iteration == 4 or (iteration == 2 and not use_pos):
-        return alignments
-    else:
-        return heur_alignments(gloss_tokens, trans_tokens, iteration+1, alignments=alignments, **kwargs)
+    return aln
 
 # =============================================================================
 # Symmetricization Heuristics

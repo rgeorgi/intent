@@ -27,7 +27,7 @@ gramdict = {'1sg': ['i', 'me'],
 
 
 
-def sub_grams(gram):
+def gram_matches(gram):
     if gram in gramdict:
         return gramdict[gram]
     else:
