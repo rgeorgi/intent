@@ -10,6 +10,7 @@ import pickle
 
 # 1) Set up logging ------------------------------------------------------------
 ENV_LOG = logging.getLogger(__name__)
+logging.addLevelName(1000, "NORMAL")
 
 # 2) Determine the project root directory --------------------------------------
 proj_root = dir_above(__file__, 3)
@@ -50,6 +51,14 @@ fast_align_atool = c.getpath('fast_align_atool')
 #===============================================================================
 
 # First, if there is a version of XIGT specified in the env file, use that
+
+if java_bin is None:
+    ENV_LOG.critical('Path to java binary not specified. Please specify in env.conf using java_bin.')
+    sys.exit(2)
+
+if not os.path.exists(java_bin):
+    ENV_LOG.critical('Path to java_bin "{}" not found.'.format(java_bin))
+    sys.exit(2)
 
 # -- 4) If it IS in the env.conf file, but not found, error out.
 if xigt_dir:
