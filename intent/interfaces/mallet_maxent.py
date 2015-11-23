@@ -39,7 +39,7 @@ class MalletMaxent(object):
                             '--classifier', self._model,
                             '--input', '-',
                             '--output', '-'],
-                stdout=sub.PIPE, stdin=sub.PIPE, stderr=sys.stderr)
+                stdout=sub.PIPE, stdin=sub.PIPE)
         self._first = True
 
     def info(self):

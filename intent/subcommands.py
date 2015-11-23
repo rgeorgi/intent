@@ -15,7 +15,7 @@ from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
 
 from intent.utils.arg_consts import PARSE_VAR, PARSE_TRANS, POS_VAR, ALN_VAR, POS_LANG_CLASS, ALN_HEUR, \
     ALN_GIZA, POS_LANG_PROJ, PARSE_LANG_PROJ, POS_TRANS, ALN_SYM_VAR, ALN_GIZA_HEUR
-from intent.utils.env import c, posdict, odin_data
+from intent.utils.env import c, posdict, odin_data, classifier
 from intent.utils.argutils import writefile
 from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
 from intent.interfaces.giza import GizaAlignmentException
@@ -61,8 +61,9 @@ def enrich(**kwargs):
     # =============================================================================
     # Set up the alternate classifier path...
     # =============================================================================
+
     if kwargs.get('class_path'):
-        classifier = kwargs.get('class_path')
+        classifier_path = mallet_maxent.MalletMaxent(kwargs.get('class_path'))
 
     #===========================================================================
     # Set up the different arguments...
@@ -85,17 +86,16 @@ def enrich(**kwargs):
         ENRICH_LOG.warn("You have asked for projection methods but have not requested " + \
                         "alignments to be generated. Projection may fail if alignment not already present in file.")
 
-
-    print('Loading input file...')
+    ENRICH_LOG.log(1000, 'Loading input file...')
     corp = RGCorpus.load(inpath, basic_processing=True)
 
-    print("{} instances loaded...".format(len(corp)))
+    ENRICH_LOG.log(1000, "{} instances loaded...".format(len(corp)))
 
     #===========================================================================
     # If the tagger is asked for, initialize it.
     #===========================================================================
     if POS_LANG_PROJ in pos_args or POS_TRANS in pos_args:
-        print('Initializing tagger...')
+        ENRICH_LOG.log(1000, 'Initializing tagger...')
         tagger = c.getpath('stanford_tagger_trans')
 
         try:
@@ -107,25 +107,25 @@ def enrich(**kwargs):
     # Initialize the parser
     #===========================================================================
     if PARSE_TRANS in parse_args:
-        print("Intializing English parser...")
+        ENRICH_LOG.log(1000, "Intializing English parser...")
         sp = stanford_parser.StanfordParser()
 
     #===========================================================================
     # If the classifier is asked for, initialize it...
     #===========================================================================
     if POS_LANG_CLASS in pos_args:
-        print("Initializing gloss-line classifier...")
+        ENRICH_LOG.log(1000, "Initializing gloss-line classifier...")
         p = posdict
         m = mallet_maxent.MalletMaxent(classifier)
 
     # -- 1a) Heuristic Alignment --------------------------------------------------
     if ALN_HEUR in aln_args:
-        print('Heuristically aligning gloss and translation lines...')
+        ENRICH_LOG.log(1000, 'Heuristically aligning gloss and translation lines...')
         corp.heur_align()
 
     # -- 1b) Giza Gloss to Translation alignment --------------------------------------
     if ALN_GIZA in aln_args or ALN_GIZA_HEUR in aln_args:
-        print('Aligning gloss and translation lines using mgiza++...')
+        ENRICH_LOG.log(1000, 'Aligning gloss and translation lines using mgiza++...')
 
         use_heur = ALN_GIZA_HEUR in aln_args
 
@@ -232,7 +232,7 @@ def enrich(**kwargs):
                 aln = inst.get_trans_gloss_lang_alignment()
 
                 # If there's no alignment, just skip.
-                if len(aln) == 0:
+                if aln is None or len(aln) == 0:
                     ENRICH_LOG.warning('No alignment available for "{}". Not projecting trees.'.format(inst.id))
 
                 # If there's alignment, try projecting.
@@ -258,8 +258,14 @@ def enrich(**kwargs):
         except Exception as e:
             ENRICH_LOG.warn("Unknown Error occurred processing instance {}".format(inst.id))
             ENRICH_LOG.warn(e)
+            raise(e)
 
-    print('Writing output file...', end=' ')
-    xigtxml.dump(writefile(kwargs.get('OUT_FILE')), corp)
-    print('Done.')
-    print("{} instances written.".format(len(corp)))
+    ENRICH_LOG.log(1000, 'Writing output file...')
+
+    if hasattr(kwargs.get('OUT_FILE'), 'write'):
+        xigtxml.dump(kwargs.get('OUT_FILE'), corp)
+    else:
+        xigtxml.dump(writefile(kwargs.get('OUT_FILE')), corp)
+
+    ENRICH_LOG.log(1000, 'Done.')
+    ENRICH_LOG.log(1000, "{} instances written.".format(len(corp)))

@@ -1,14 +1,22 @@
-import os
+import os, re
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
-from subprocess import Popen
-import shutil
-import re
+
+# =============================================================================
+# Internal Imports
+# =============================================================================
 from intent.utils.env import mst_parser, testfile_dir
 from intent.utils.systematizing import ProcessCommunicator
 
+# =============================================================================
+# Exceptions
+# =============================================================================
 class MSTParserError(Exception): pass
 
+
+# =============================================================================
+# MST Parser Object
+# =============================================================================
 class MSTParser(object):
     def __init__(self):
         self.cp = '{}:{}'.format(os.path.join(mst_parser, "./output/classes"),
@@ -37,6 +45,11 @@ def watch_for_java_exception(string):
         print(string)
     else:
         print(string)
+
+
+# =============================================================================
+# Test Cases
+# =============================================================================
 
 class MSTParserTests(TestCase):
     def setUp(self):

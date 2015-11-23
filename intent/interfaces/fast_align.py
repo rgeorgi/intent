@@ -1,3 +1,4 @@
+# coding=UTF-8
 from os import unlink
 from tempfile import NamedTemporaryFile
 from unittest import TestCase

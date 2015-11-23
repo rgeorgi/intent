@@ -1,3 +1,4 @@
+# coding=UTF-8
 """
 Subclassing of the xigt package to add a few convenience methods.
 """
@@ -11,6 +12,7 @@ import re
 import copy
 import string
 import sys
+
 from intent.consts.grammatical import morpheme_boundary_chars
 from intent.interfaces.fast_align import fast_align_sents
 from intent.pos.TagMap import TagMap
@@ -348,10 +350,11 @@ def gen_tier_id(inst, id_base, tier_type=None, alignment=None, no_hyphenate=Fals
 
     # Get the number of tiers that match this.
     if not filters:
+        prev_tiers = []
         num_tiers = 0
     else:
-        num_tiers = len(inst.findall(others=filters))
-
+        prev_tiers = inst.findall(others=filters)
+        num_tiers = len(prev_tiers)
 
     id_str = id_base
     # Now, if we have specified the alignment, we also want to prepend
@@ -364,10 +367,17 @@ def gen_tier_id(inst, id_base, tier_type=None, alignment=None, no_hyphenate=Fals
 
     # Finally, if we have multiple tiers of the same type that annotate the
     # same item, we should append a letter for the different analyses.
-    if num_tiers > 0:
-        letters = string.ascii_lowercase
-        assert num_tiers < 26, "More than 26 alternative analyses not currently supported"
-        id_str += '_{}'.format(letters[num_tiers])
+    if num_tiers > 0 and inst.find(id=id_str) is not None:
+        while True:
+            letters = string.ascii_lowercase
+            assert num_tiers < 26, "More than 26 alternative analyses not currently supported"
+            potential_id = id_str + '_{}'.format(letters[num_tiers])
+
+            if inst.find(id=potential_id) is None:
+                id_str = potential_id
+                break
+            else:
+                num_tiers += 1
 
     return id_str
 
@@ -542,35 +552,31 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
         return super().__iter__()
 
     @classmethod
+    def loads(cls, s, basic_processing=False):
+        """
+        :rtype: RGCorpus
+        """
+        xc = xigtxml.loads(s)
+        xc.__class__ = RGCorpus
+        xc._finish_load(basic_processing)
+
+        return xc
+
+    @classmethod
     def load(cls, path, basic_processing = False):
         """
         :rtype : RGCorpus
         """
-        # f = open(path, 'r', encoding='utf-8')
-        # for line in f:
-            # print(line.decode('ascii', errors='replace'), end='')
-            # print(line.encode('utf-8'))
-            # print(line, end='')
-
         xc = xigtxml.load(path)
         xc.__class__ = RGCorpus
-        xc._finish_load()
+        xc._finish_load(basic_processing)
 
-        # If asked, we will also do some
-        # basic-level enrichment...
-        if basic_processing:
-            for inst in xc:
-                try:
-                    inst.basic_processing()
-                except XigtFormatException as xfe:
-                    PARSELOG.warn("Basic processing failed for instance {}".format(inst.id))
-                except GlossLangAlignException as gae:
-                    PARSELOG.warn("Gloss and language did not align for instance {}.".format(inst.id))
+
 
 
         return xc
 
-    def _finish_load(self):
+    def _finish_load(self, basic_processing=False):
         # Now, convert all the IGT instances to RGIgt instances.
         for igt in self.igts:
             igt.__class__ = RGIgt
@@ -581,6 +587,17 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
                 for i, item in enumerate(tier):
                     item.__class__ = RGItem
                     item.index = i+1
+
+       # If asked, we will also do some
+        # basic-level enrichment...
+        if basic_processing:
+            for inst in self:
+                try:
+                    inst.basic_processing()
+                except XigtFormatException as xfe:
+                    PARSELOG.warn("Basic processing failed for instance {}".format(inst.id))
+                except GlossLangAlignException as gae:
+                    PARSELOG.warn("Gloss and language did not align for instance {}.".format(inst.id))
 
 
     def filter(self, func):
@@ -1435,7 +1452,8 @@ class RGIgt(Igt, RecursiveFindMixin):
         aln = sorted(aln, key = lambda x: x[0])
 
         # Start by creating the alignment tier.
-        ba_tier = RGBilingualAlignmentTier(id=gen_tier_id(self, G_T_ALN_ID, tier_type=ALN_TIER_TYPE),
+        ba_tier = RGBilingualAlignmentTier(id=gen_tier_id(self, G_T_ALN_ID,
+                                                          tier_type=ALN_TIER_TYPE),
                                            source=src_tier.id, target=tgt_tier.id)
 
         # Add the metadata for the alignment source (intent) and type (giza or heur)
@@ -1794,6 +1812,10 @@ class RGIgt(Igt, RecursiveFindMixin):
         Project POS tags from gloss words to language words. This assumes that we have
         alignment tags on the gloss words already that align them to the language words.
         """
+
+        lang_tags = self.get_pos_tags(self.lang.id, tag_method=tag_method)
+        if lang_tags is not None:
+            lang_tags.delete()
 
         gloss_tags = self.get_pos_tags(self.gloss.id, tag_method=tag_method)
 
