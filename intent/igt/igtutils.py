@@ -19,16 +19,17 @@ from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xig
 
 punc_re = '[.?!,\xc2]'
 list_re = '(?:[0-9]+|[a-z]|i+)'
+quote_re = '[\'"\`]'
 
 
 def grammaticality(ret_str):
     # Now, remove leading grammaticality markers
-    return re.sub('[#\*\?]+', '', ret_str).strip()
+    return re.sub('([#\*\?]+)', replace_with_whitespace, ret_str)
 
 
 def surrounding_quotes_and_parens(ret_str):
-    ret_str = re.sub('^[\'"`\[\(]+', '', ret_str).strip()
-    ret_str = re.sub('[\'"`\]\)\.]+$', '', ret_str).strip()
+    ret_str = re.sub('^\s*([\'"`\[\(]+)', replace_with_whitespace, ret_str)
+    ret_str = re.sub('([\'"`\]\)\.]+)\s*$', replace_with_whitespace, ret_str)
     return ret_str
 
 
@@ -37,9 +38,9 @@ def split_punctuation(ret_str):
 
 
 def remove_external_punctuation(ret_str):
-    ret_str = re.sub(r'(\w+)({})+\s'.format(punc_re), r'\1 ', ret_str).strip()
-    ret_str = re.sub(r'(?:^|\s)({}+)(\w+)'.format(punc_re), r'\2', ret_str).strip()
-    return re.sub(r'(\w+)([{}])+$'.format(punc_re), r'\1 ', ret_str).strip()
+    ret_str = re.sub(r'(\w+)({})+\s'.format(punc_re), r'\1 ', ret_str)
+    ret_str = re.sub(r'(?:^|\s)({}+)(\w+)'.format(punc_re), r'\2', ret_str)
+    return re.sub(r'(\w+)([{}])+$'.format(punc_re), r'\1 ', ret_str)
 
 
 def join_morphs(ret_str):
@@ -74,12 +75,12 @@ def remove_elipses(ret_str):
 
 
 def remove_solo_punctuation(ret_str):
-    ret_str = re.sub('\s*{}+\s*'.format(punc_re), ' ', ret_str)
+    ret_str = re.sub('\s*({}+)\s*'.format(punc_re), replace_with_whitespace, ret_str)
     return ret_str
 
 
 def remove_final_punctuation(ret_str):
-    ret_str = re.sub('{}+$'.format(punc_re), '', ret_str.strip())
+    ret_str = re.sub('({}+)$'.format(punc_re), replace_with_whitespace, ret_str)
     return ret_str
 
 
@@ -89,9 +90,9 @@ def rejoin_letter(ret_str, letter='t', direction='right'):
     @param ret_str:
     """
     if direction == 'right':
-        ret_str = re.sub(r'\s(%s)\s+(\S+)' % letter, r' \1\2', ret_str).strip()
+        ret_str = re.sub(r'\s(%s)\s+(\S+)' % letter, r' \1\2', ret_str)
     elif direction == 'left':
-        ret_str = re.sub(r'(\S+)\s+(%s)\s' % letter, r'\1\2 ', ret_str).strip()
+        ret_str = re.sub(r'(\S+)\s+(%s)\s' % letter, r'\1\2 ', ret_str)
     else:
         raise Exception('Invalid direction specified!')
     return ret_str
@@ -100,9 +101,25 @@ def rejoin_letter(ret_str, letter='t', direction='right'):
 def remove_byte_char(ret_str):
     return re.sub('^b["\']\s+', '', ret_str).strip()
 
+def replace_with_whitespace(match_obj):
+    """
+    :type match_obj: MatchObject
+    """
+    match_start, match_stop = match_obj.span(1)
+    overall_start, overall_stop = match_obj.span(0)
+
+    start_offset = match_start - overall_start
+    stop_offset  = (match_stop-match_start) + start_offset
+
+    new_str = '{}{}{}'.format(match_obj.group(0)[:start_offset],
+                              ' '*(stop_offset-start_offset),
+                              match_obj.group(0)[stop_offset:])
+
+    return new_str
 
 def remove_parenthetical_numbering(ret_str):
-    return re.sub('^\S+\s*[.)]', '', ret_str).strip()
+    ret_str = re.sub('^\s*(\(.*?\))', replace_with_whitespace, ret_str)
+    return ret_str
 
 
 def remove_period_numbering(ret_str):
@@ -111,18 +128,14 @@ def remove_period_numbering(ret_str):
     |
     1.   a.  ii.
     """
-    number_search = '^%s\.' % list_re
+    number_search = '^\s*(%s\.)' % list_re
 
-    number_match = re.search(number_search, ret_str.strip())
+    return re.sub(number_search, replace_with_whitespace, ret_str)
 
-    if number_match:
-        return re.sub(number_search, '', ret_str)
-    else:
-        return ret_str
 
 
 def remove_leading_numbers(ret_str):
-    return re.sub('^[0-9]+', '', ret_str).strip()
+    return re.sub('^\s*([0-9]+)', replace_with_whitespace, ret_str)
 
 
 def remove_numbering(ret_str):
@@ -254,7 +267,7 @@ def clean_gloss_string(ret_str):
     ret_str = rejoin_letter(ret_str, 'h', 'left')
 
     # Remove word-final punctuation
-    ret_str = remove_external_punctuation(ret_str)
+    # ret_str = remove_external_punctuation(ret_str)
 
     # Collapse spaces
     # ret_str = collapse_spaces(ret_str)
@@ -263,17 +276,17 @@ def clean_gloss_string(ret_str):
     ret_str = remove_final_punctuation(ret_str)
 
     # Remove illegal chars
-    ret_str = re.sub('#', '', ret_str)
+    ret_str = re.sub('(#)', replace_with_whitespace, ret_str)
 
     return ret_str
 
 
-def clean_trans_string(trans_string):
+def clean_trans_string(ret_str):
     # Start by removing the leading "B" stuff
-    ret_str = re.sub('^b["\']', '', trans_string).strip()
+    # ret_str = re.sub('^b["\']', '', trans_string).strip()
 
     # Remove word-final punctuation:
-    ret_str = remove_external_punctuation(ret_str)
+    # ret_str = remove_external_punctuation(ret_str)
 
     # Remove solo punctuation
     ret_str = remove_solo_punctuation(ret_str)
@@ -285,7 +298,7 @@ def clean_trans_string(trans_string):
     ret_str = grammaticality(ret_str)
 
     # Remove surrounding quotes and parentheticals
-    ret_str = surrounding_quotes_and_parens(ret_str)
+    # ret_str = surrounding_quotes_and_parens(ret_str)
 
     # t seems to hang out on its own
     ret_str = rejoin_letter(ret_str, letter='t', direction='right')
@@ -300,23 +313,46 @@ def clean_trans_string(trans_string):
 
     return ret_str
 
+def strip_leading_whitespace(lines):
+    """
+    Given
+
+    :type lines: list[str]
+    """
+    newlines = []
+
+    min_leading_whitespace = None
+
+    for line in lines:
+        leading_whitespace = re.search('^\s*', line).group(0)
+        if min_leading_whitespace is None:
+            min_leading_whitespace = len(leading_whitespace)
+        else:
+            min_leading_whitespace = min(min_leading_whitespace, len(leading_whitespace))
+
+    for line in lines:
+        newlines.append(line[min_leading_whitespace:])
+
+    return newlines
+
+
 
 def clean_lang_string(ret_str):
     # Remove leading byte string
-    ret_str = remove_byte_char(ret_str)
+    # ret_str = remove_byte_char(ret_str)
 
     # First remove leading parenthetical numbering
     ret_str = remove_numbering(ret_str)
 
     # Now, remove leading grammaticality markers
-    ret_str = grammaticality(ret_str)
+    # ret_str = grammaticality(ret_str)
 
     # Remove spurious brackets
-    ret_str = re.sub('[\[\]\(\)]', '', ret_str).strip()
+    # ret_str = re.sub('[\[\]\(\)]', '', ret_str)
 
     # Split punctuation
-    ret_str = remove_external_punctuation(ret_str)
-    ret_str = split_punctuation(ret_str)
+    # ret_str = remove_external_punctuation(ret_str)
+    # ret_str = split_punctuation(ret_str)
 
     # Collapse spaces
     # ret_str = collapse_spaces(ret_str)
