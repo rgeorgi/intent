@@ -136,7 +136,7 @@ def is_contentful_meta(m):
 
 
 def timestamp_meta(m):
-    m.attributes[XIGT_DATA_DATE] = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S-UTC')
+    m.attributes[XIGT_DATA_DATE] = datetime.utcnow().replace(microsecond=0).isoformat()
 
 def get_meta_timestamp(m):
     return m.attributes.get(XIGT_DATA_DATE)
