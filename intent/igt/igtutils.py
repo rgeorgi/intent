@@ -12,6 +12,7 @@ import string
 # ===============================================================================
 # Sub-tasks of cleaning
 # ===============================================================================
+from intent.alignment.Alignment import Alignment
 from xigt.model import Tier, Item, Igt, XigtCorpus
 from xigt.ref import selection_re, delimiters, span_re
 from xigt.errors import XigtStructureError
@@ -24,12 +25,12 @@ quote_re = '[\'"\`]'
 
 def grammaticality(ret_str):
     # Now, remove leading grammaticality markers
-    return re.sub('([#\*\?]+)', replace_with_whitespace, ret_str)
+    return re.sub('([#\*\?]+)', replace_group_with_whitespace, ret_str)
 
 
 def surrounding_quotes_and_parens(ret_str):
-    ret_str = re.sub('^\s*([\'"`\[\(]+)', replace_with_whitespace, ret_str)
-    ret_str = re.sub('([\'"`\]\)\.]+)\s*$', replace_with_whitespace, ret_str)
+    ret_str = re.sub('^\s*([\'"`\[\(]+)', replace_group_with_whitespace, ret_str)
+    ret_str = re.sub('([\'"`\]\)\.]+)\s*$', replace_group_with_whitespace, ret_str)
     return ret_str
 
 
@@ -75,12 +76,12 @@ def remove_elipses(ret_str):
 
 
 def remove_solo_punctuation(ret_str):
-    ret_str = re.sub('\s*({}+)\s*'.format(punc_re), replace_with_whitespace, ret_str)
+    ret_str = re.sub('\s*({}+)\s*'.format(punc_re), replace_group_with_whitespace, ret_str)
     return ret_str
 
 
 def remove_final_punctuation(ret_str):
-    ret_str = re.sub('({}+)$'.format(punc_re), replace_with_whitespace, ret_str)
+    ret_str = re.sub('({}+)$'.format(punc_re), replace_group_with_whitespace, ret_str)
     return ret_str
 
 
@@ -101,7 +102,7 @@ def rejoin_letter(ret_str, letter='t', direction='right'):
 def remove_byte_char(ret_str):
     return re.sub('^b["\']\s+', '', ret_str).strip()
 
-def replace_with_whitespace(match_obj):
+def replace_group_with_whitespace(match_obj):
     """
     :type match_obj: MatchObject
     """
@@ -118,7 +119,7 @@ def replace_with_whitespace(match_obj):
     return new_str
 
 def remove_parenthetical_numbering(ret_str):
-    ret_str = re.sub('^\s*(\(.*?\))', replace_with_whitespace, ret_str)
+    ret_str = re.sub('^\s*(\(.*?\))', replace_group_with_whitespace, ret_str)
     return ret_str
 
 
@@ -130,12 +131,12 @@ def remove_period_numbering(ret_str):
     """
     number_search = '^\s*(%s\.)' % list_re
 
-    return re.sub(number_search, replace_with_whitespace, ret_str)
+    return re.sub(number_search, replace_group_with_whitespace, ret_str)
 
 
 
 def remove_leading_numbers(ret_str):
-    return re.sub('^\s*([0-9]+)', replace_with_whitespace, ret_str)
+    return re.sub('^\s*([0-9]+)', replace_group_with_whitespace, ret_str)
 
 
 def remove_numbering(ret_str):
@@ -276,7 +277,7 @@ def clean_gloss_string(ret_str):
     ret_str = remove_final_punctuation(ret_str)
 
     # Remove illegal chars
-    ret_str = re.sub('(#)', replace_with_whitespace, ret_str)
+    ret_str = re.sub('(#)', replace_group_with_whitespace, ret_str)
 
     return ret_str
 
@@ -345,8 +346,10 @@ def clean_lang_string(ret_str):
     ret_str = remove_numbering(ret_str)
 
     # Now, remove leading grammaticality markers
-    # ret_str = grammaticality(ret_str)
+    ret_str = grammaticality(ret_str)
 
+
+    ret_str = surrounding_quotes_and_parens(ret_str)
     # Remove spurious brackets
     # ret_str = re.sub('[\[\]\(\)]', '', ret_str)
 
@@ -364,6 +367,35 @@ def clean_lang_string(ret_str):
 
     return ret_str
 
+def strict_columnar_alignment(s_a, s_b):
+    words_a = list(re.finditer('\S+', s_a))
+    words_b = list(re.finditer('\S+', s_b))
+
+    a = Alignment()
+
+    for i, word_a in enumerate(words_a):
+        start_a, stop_a = word_a.span()
+        for j, word_b in enumerate(words_b):
+            start_b, stop_b = word_b.span()
+
+            # CASE 1:
+            #    word_a is completely subsumed
+            #    by the span of word_b
+            if start_a >= start_b and stop_a <= stop_b:
+                a.add((i+1, j+1))
+
+            # CASE 2:
+            #    word_b is completely subsumed
+            #    by the span of word_a
+            elif start_b >= start_a and stop_b <= stop_a:
+                a.add((i+1, j+1))
+
+
+    return a
+
+def is_strict_columnar_alignment(s_a, s_b):
+    a = strict_columnar_alignment(s_a, s_b)
+    return len(a.all_src()) == len(s_a.split()) and len(a.all_tgt()) == len(s_b.split())
 
 def resolve_objects(container, expression):
     """
@@ -406,8 +438,8 @@ def hyphenate_infinitive(ret_str):
 
 class TestLangLines(unittest.TestCase):
     def runTest(self):
-        l1 = '  (38)     Este taxista     (*me) parece [t estar cansado]'
-        l1c = 'Este taxista me parece t estar cansado'
+        l1  = '  (38)     Este taxista     (*me) parece [t estar cansado]'
+        l1c = '           Este taxista       me  parece  t estar cansado'
 
         self.assertEqual(clean_lang_string(l1), l1c)
 

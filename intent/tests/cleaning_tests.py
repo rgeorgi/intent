@@ -1,6 +1,8 @@
 from unittest import TestCase
 
-from intent.igt.igtutils import strip_leading_whitespace, clean_lang_string, clean_trans_string
+from intent.alignment.Alignment import Alignment
+from intent.igt.igtutils import strip_leading_whitespace, clean_lang_string, clean_trans_string, strict_columnar_alignment, \
+    is_strict_columnar_alignment
 
 
 class CleanTests(TestCase):
@@ -30,3 +32,21 @@ class CleanTests(TestCase):
 
     def clean_trans_test(self):
         print(clean_trans_string(self.l3))
+
+
+
+class AlignTests(TestCase):
+
+    def setUp(self):
+        self.l1 = 'Procetox ts     statija-ta=i'
+        self.l2 = 'read.1sg.FEM    article DEF'
+
+
+    def test_columnar_alignment(self):
+        result = strict_columnar_alignment(self.l1, self.l2)
+
+        a = Alignment([(1,1),(2,1),(3,2),(3,3)])
+        self.assertEqual(a, result)
+
+    def test_is_strict_columnar(self):
+        self.assertTrue(is_strict_columnar_alignment(self.l1, self.l2))

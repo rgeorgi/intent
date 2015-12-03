@@ -14,7 +14,9 @@ import string
 import sys
 
 from intent.consts.grammatical import morpheme_boundary_chars
+from intent.interfaces import mallet_maxent
 from intent.interfaces.fast_align import fast_align_sents
+from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.pos.TagMap import TagMap
 from intent.utils.string_utils import replace_invalid_xml
 from xigt.errors import XigtError
@@ -46,7 +48,7 @@ from .igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
 from .consts import *
 
 import intent.utils.token
-from intent.utils.env import c
+from intent.utils.env import c, classifier
 from intent.alignment.Alignment import Alignment, heur_alignments, AlignmentError
 from intent.utils.token import Token, POSToken, sentence_tokenizer, whitespace_tokenizer
 from intent.interfaces.giza import GizaAligner
@@ -1081,6 +1083,8 @@ class RGIgt(Igt, RecursiveFindMixin):
         else:
             return raw_tier
 
+
+
     def clean_tier(self, merge=False):
         """
         If the clean odin tier exists, return it. Otherwise, create it.
@@ -1141,6 +1145,43 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             self.append(clean_tier)
             return clean_tier
+
+
+    def add_raw_tier(self, lines):
+        self.add_text_tier_from_lines(lines, RAW_ID, RAW_STATE)
+
+    def add_clean_tier(self, lines):
+        self.add_text_tier_from_lines(lines, CLEAN_ID, CLEAN_STATE)
+
+    def add_normal_tier(self, lines):
+        self.add_text_tier_from_lines(lines, NORM_ID, NORM_STATE)
+
+    def add_text_tier_from_lines(self, lines, id_base, state):
+        """
+        Given a list of lines that are dicts with the attributes 'text' and 'tag', create
+        a text tier of the specified type with the provided line items.
+
+        :type lines: list[dict]
+        """
+        # -------------------------------------------
+        # 1) Generate the parent tier.
+        tier = RGTier(id=gen_tier_id(self, id_base), type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:state})
+
+        # -------------------------------------------
+        # 2) Iterate over the list of lines
+        for line in lines:
+
+            # Make sure the line is a dict.
+            if not hasattr(line, 'get') or 'text' not in line or 'tag' not in line:
+                raise RGXigtException("When constructing tier from lines, must be a list of dicts with keys 'text' and 'tag'.")
+
+            l = RGItem(id=tier.askItemId(),
+                       attributes={ODIN_TAG_ATTRIBUTE:line.get('tag')},
+                       text=line.get('text'))
+            tier.append(l)
+        self.append(tier)
+
+
 
     # • Word Tier Creation -----------------------------------
 
@@ -1633,13 +1674,15 @@ class RGIgt(Igt, RecursiveFindMixin):
         self.add_pos_tags(self.trans.id, trans_tags, tag_method=INTENT_POS_TAGGER)
         return trans_tags
 
-    def classify_gloss_pos(self, classifier, **kwargs):
+    def classify_gloss_pos(self, classifier_obj=None, **kwargs):
         """
         Run the classifier on the gloss words and return the POS tags.
 
-        :param classifier: the active mallet classifier to classify this language line.
-        :type classifier: MalletMaxent
+        :param classifier_obj: the active mallet classifier to classify this language line.
+        :type classifier_obj: MalletMaxent
         """
+        if classifier_obj is None:
+            classifier_obj = MalletMaxent(classifier)
 
         attributes = {ALIGNMENT:self.gloss.id}
 
@@ -1680,7 +1723,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
                 # The classifier returns a Classification object which has all the weights...
                 # obtain the highest weight.
-                result = classifier.classify_string(gloss_token, **kwargs)
+                result = classifier_obj.classify_string(gloss_token, **kwargs)
 
                 if len(result) == 0:
                     best = ['UNK']
