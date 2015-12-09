@@ -14,6 +14,7 @@ import string
 import sys
 
 from intent.consts.grammatical import morpheme_boundary_chars
+from intent.igt.search import aln_match, type_match, seg_match, ref_match, findall_in_obj, find_in_obj
 from intent.interfaces import mallet_maxent
 from intent.interfaces.fast_align import fast_align_sents
 from intent.interfaces.mallet_maxent import MalletMaxent
@@ -286,16 +287,6 @@ def gen_tier_id(inst, id_base, tier_type=None, alignment=None, no_hyphenate=Fals
 
     return id_str
 
-
-def get_id_base(id_str):
-    """
-    Return the "base" of the id string. This should either be everything leading up to the final numbering, or a hyphen-separated letter.
-
-    :param id_str:
-    :type id_str:
-    """
-    s = re.search('^(\S+?)(?:[0-9]+|-[a-z])?$', id_str).group(1)
-    return s
 
 # ===============================================================================
 
@@ -1043,25 +1034,7 @@ class RGIgt(Igt, RecursiveFindMixin):
             tier.add(item)
 
     def normal_tier(self, clean=True, generate=True):
-
-            # If a normal tier already exists, return it.
-            normal_tier = self.find(type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:NORM_STATE})
-            if normal_tier is not None:
-                normal_tier.__class__ = RGTier
-                return normal_tier
-
-            # Otherwise, create a new one, with only L, G and T lines.
-            elif generate:
-                normal_tier = RGLineTier(id = NORM_ID, type=ODIN_TYPE,
-                                         attributes={STATE_ATTRIBUTE:NORM_STATE, ALIGNMENT:self.clean_tier().id})
-
-                # Get one item per...
-                self.add_normal_line(normal_tier, ODIN_LANG_TAG, clean_lang_string if clean else lambda x: x)
-                self.add_normal_line(normal_tier, ODIN_GLOSS_TAG, clean_gloss_string if clean else lambda x: x)
-                self.add_normal_line(normal_tier, ODIN_TRANS_TAG, clean_trans_string if clean else lambda x: x)
-
-                self.append(normal_tier)
-                return normal_tier
+        return get_normal_tier(self, clean, generate)
 
     # • Words Tiers ------------------------------------------------------------
 
@@ -3086,5 +3059,4 @@ def strip_pos(inst):
 
 
 from intent.trees import IdTree, project_ps, Terminal, DepTree, project_ds, DepEdge, build_dep_edges
-from intent.igt.xigt_manipulations import get_clean_tier, findall_in_obj, find_in_obj, aln_match, seg_match, ref_match, \
-    type_match
+from intent.igt.xigt_manipulations import get_clean_tier, get_normal_tier
