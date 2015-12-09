@@ -105,24 +105,6 @@ def project_creator_except(msg_start, msg_end, created_by):
 # Mixins
 #===============================================================================
 
-
-
-def ref_match(o, target_ref, ref_type):
-    if hasattr(o, ref_type):
-        my_ref = getattr(o, ref_type)
-        if my_ref and target_ref in ref.ids(my_ref):
-            return True
-    return False
-
-def seg_match(seg): return lambda o: ref_match(o, seg, SEGMENTATION)
-def cnt_match(cnt): return lambda o: ref_match(o, cnt, CONTENT)
-def aln_match(aln): return lambda o: ref_match(o, aln, ALIGNMENT)
-
-def type_match(type): return lambda o: o.type == type
-def id_match(id): return lambda o: o.id == id
-def id_base_match(id_base): return lambda o: get_id_base(o.id) == id_base
-def attr_match(attr): return lambda o: set(attr.items()).issubset(set(o.attributes.items()))
-
 class FindMixin():
     """
     Extension of the recursive search for non-iterable elements.
@@ -131,59 +113,11 @@ class FindMixin():
     # FindMixin objects should have an index.
     index = None
 
-    def find_self(self, filters=list):
-        """
-        Check to see if this object matches all of the filter functions in filters.
-
-        :param filters: List of functions to apply to this object. All filters have a logical and
-                        applied to them.
-        :type filters: list
-        """
-
-        assert len(filters) > 0, "Must have selected some attribute to filter."
-
-        # Iterate through the filters...
-        for filter in filters:
-            if not filter(self): # If one evaluates to false...
-                return None      # ..we're done. Exit with "None"
-
-        # If we make it through all the iteration, we're a match. Return.
-        return self
-
-    def _build_filterlist(self, **kwargs):
-        filters = []
-        for kw, val in kwargs.items():
-            if kw == 'id':
-                filters += [id_match(val)]
-            elif kw == 'content':
-                filters += [cnt_match(val)]
-            elif kw == 'segmentation':
-                filters += [seg_match(val)]
-            elif kw == 'id_base':
-                filters += [id_base_match(val)]
-            elif kw == 'attributes':
-                filters += [attr_match(val)]
-            elif kw == 'type':
-                filters += [type_match(val)]
-            elif kw == 'alignment':
-                filters += [aln_match(val)]
-
-            elif kw == 'others': # Append any other filters...
-                filters += val
-            else:
-                raise ValueError('Invalid keyword argument "%s"' % kw)
-
-        return filters
-
     def find(self, **kwargs):
-        return self.find_self(self._build_filterlist(**kwargs))
+        return find_in_obj(self, **kwargs)
 
     def findall(self, **kwargs):
-        found = self.find_self(self._build_filterlist(**kwargs))
-        if found:
-            return [found]
-        else:
-            return []
+        return findall_in_obj(self, **kwargs)
 
 class RecursiveFindMixin(FindMixin):
 
@@ -191,38 +125,6 @@ class RecursiveFindMixin(FindMixin):
     # but don't implement the class.
     def __iter__(self): pass
 
-    def find(self, **kwargs):
-        """
-        Generic find function for non-iterable elements. NOTE: This version stops on the first match.
-
-        :param id: id of an element to find, or None to search by attribute.
-        :type id: str
-        :param attributes: key:value pairs that are an inclusive subset of those found in the desired item.
-        :type attributes: dict
-        """
-        if super().find(**kwargs) is not None:
-            return self
-        else:
-            found = None
-            for child in self:
-                found = child.find(**kwargs)
-                if found is not None:
-                    break
-            return found
-
-    def findall(self, **kwargs):
-        """
-        Find function that does not terminate on the first match.
-        :rtype: list[XigtContainerMixin]
-        """
-        found = []
-        if super().find(**kwargs) is not None:
-            found = [self]
-
-        for child in self:
-            found += child.findall(**kwargs)
-
-        return found
 
 
 #===============================================================================
@@ -358,6 +260,7 @@ def gen_tier_id(inst, id_base, tier_type=None, alignment=None, no_hyphenate=Fals
         prev_tiers = inst.findall(others=filters)
         num_tiers = len(prev_tiers)
 
+
     id_str = id_base
     # Now, if we have specified the alignment, we also want to prepend
     # that to the generated id string.
@@ -401,9 +304,6 @@ class RGCorpus(XigtCorpus, RecursiveFindMixin):
 
     def askIgtId(self):
         return gen_item_id('i', len(self.igts))
-
-    def __len__(self):
-        return len(self._list)
 
     def copy(self, limit=None):
         """
@@ -1006,13 +906,6 @@ class RGIgt(Igt, RecursiveFindMixin):
         return new_i
 
 
-    def sort(self):
-        """
-        Sort an instance's tiers.
-        """
-        self._list = sorted(self._list, key=tier_sorter)
-
-
 
     # • Processing of newly created instances ----------------------------------
 
@@ -1090,61 +983,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         If the clean odin tier exists, return it. Otherwise, create it.
 
         """
-
-        # If a clean tier already exists, return it.
-        clean_tier = self.find(type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:CLEAN_STATE})
-        if clean_tier:
-            return clean_tier
-
-        elif generate:
-            # Otherwise, we will make our own:
-            raw_tier = self.raw_tier()
-
-
-            # Initialize the clean tier...
-            clean_tier = RGLineTier(id = CLEAN_ID, type=ODIN_TYPE,
-                         attributes={STATE_ATTRIBUTE:CLEAN_STATE,
-                                    ALIGNMENT:raw_tier.id})
-
-            # Gather the different tags used in this tier.
-            # Note that we don't want to discard non-L,G,T tiers yet.
-            line_tags = DefaultOrderedDict(list)
-            for l in raw_tier:
-                tags = l.attributes['tag'].split('+')
-                primary = tags[0]
-                others = tags[1:]
-                line_tags[primary].append(l)
-
-            # Now, the line_tags should be indexed by the primary
-            # tag (L, G, T, etc...) with the +'s after it...
-
-
-            # Now, go through and merge if needed.
-            for primary_tag in line_tags.keys():
-
-                lines = line_tags[primary_tag]
-
-                if len(lines) == 1:
-                    text = lines[0].value()
-                    new_tag = lines[0].attributes['tag']
-                    align_id = lines[0].id
-
-                elif len(lines) > 1:
-                    PARSELOG.info('Corruption detected in instance %s: %s' % (self.id, [l.attributes['tag'] for l in lines]))
-                    for l in lines:
-                        PARSELOG.debug('BEFORE: %s' % l)
-
-                    text = merge_lines([l.value() for l in lines])
-                    PARSELOG.debug('AFTER: %s' % text)
-                    new_tag = primary_tag
-                    align_id = ','.join([l.id for l in lines])
-
-                item = RGLine(id=clean_tier.askItemId(), alignment=align_id, text=text,
-                              attributes={'tag': new_tag})
-                clean_tier.add(item)
-
-            self.append(clean_tier)
-            return clean_tier
+        return get_clean_tier(self, merge, generate)
 
 
     def add_raw_tier(self, lines):
@@ -2386,8 +2225,7 @@ class RGTier(Tier, RecursiveFindMixin):
         Remove this tier from its parent, and refresh
         the index to notify the instance of its removal.
         """
-        del self.igt.tiers[self.index]
-        self.igt.refresh_index()
+        self.igt.remove(self)
 
     @property
     def igt(self):
@@ -3248,3 +3086,5 @@ def strip_pos(inst):
 
 
 from intent.trees import IdTree, project_ps, Terminal, DepTree, project_ds, DepEdge, build_dep_edges
+from intent.igt.xigt_manipulations import get_clean_tier, findall_in_obj, find_in_obj, aln_match, seg_match, ref_match, \
+    type_match

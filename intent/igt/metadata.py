@@ -5,7 +5,7 @@ Created on Apr 9, 2015
 """
 from xigt.metadata import Metadata, Meta
 from intent.igt.consts import XIGT_META_TYPE, XIGT_DATA_DATE, INTENT_META_SOURCE, XIGT_DATA_SRC, XIGT_DATA_PROV, \
-    XIGT_DATA_METH, XIGT_DATA_FROM, XIGT_DATA_ALNF
+    XIGT_DATA_METH, XIGT_DATA_FROM
 from xigt.mixins import XigtContainerMixin
 from datetime import datetime
 
@@ -96,10 +96,10 @@ def del_meta(obj, meta_type):
     m = find_meta(obj, meta_type)
     if m is not None:
         md = m._parent
-        md._list.remove(m)
+        md.remove(m)
 
         if not is_contentful_metadata(md):
-            obj.metadata._list.remove(md)
+            obj.metadata.remove(md)
 
 
 def del_meta_attr(obj, meta_type, attr):
@@ -150,6 +150,7 @@ def find_meta(obj, meta_type):
     :param obj: Object to search for metadata on
     :param meta_type:
     :return:
+    :rtype: Meta
     """
     if not isinstance(obj, XigtContainerMixin):
         return None

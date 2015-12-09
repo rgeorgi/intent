@@ -11,8 +11,8 @@ from io import StringIO
 from intent.igt.consts import INTENT_POS_CLASS, INTENT_POS_PROJ, ODIN_GLOSS_TAG, ODIN_LANG_TAG, ODIN_TRANS_TAG
 from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
     PhraseStructureProjectionException, ProjectionException,\
-    ProjectionTransGlossException, word_align, retrieve_normal_line, NoNormLineException, MultipleNormLineException
-
+    ProjectionTransGlossException, word_align, retrieve_normal_line, NoNormLineException, MultipleNormLineException, \
+    tier_sorter
 from intent.utils.arg_consts import PARSE_VAR, PARSE_TRANS, POS_VAR, ALN_VAR, POS_LANG_CLASS, ALN_HEUR, \
     ALN_GIZA, POS_LANG_PROJ, PARSE_LANG_PROJ, POS_TRANS, ALN_SYM_VAR, ALN_GIZA_HEUR
 from intent.utils.env import c, posdict, odin_data, classifier
@@ -251,7 +251,7 @@ def enrich(**kwargs):
 
 
             # Sort the tiers... ----------------------------------------------------
-            inst.sort()
+            inst.sort(key=tier_sorter)
         # except Exception as e:
         #     raise e
 
