@@ -1085,7 +1085,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
 
 
-    def clean_tier(self, merge=False):
+    def clean_tier(self, merge=False, generate=True):
         """
         If the clean odin tier exists, return it. Otherwise, create it.
 
@@ -1096,7 +1096,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         if clean_tier:
             return clean_tier
 
-        else:
+        elif generate:
             # Otherwise, we will make our own:
             raw_tier = self.raw_tier()
 
@@ -1203,7 +1203,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             tier.add(item)
 
-    def normal_tier(self, clean=True):
+    def normal_tier(self, clean=True, generate=True):
 
             # If a normal tier already exists, return it.
             normal_tier = self.find(type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:NORM_STATE})
@@ -1212,7 +1212,7 @@ class RGIgt(Igt, RecursiveFindMixin):
                 return normal_tier
 
             # Otherwise, create a new one, with only L, G and T lines.
-            else:
+            elif generate:
                 normal_tier = RGLineTier(id = NORM_ID, type=ODIN_TYPE,
                                          attributes={STATE_ATTRIBUTE:NORM_STATE, ALIGNMENT:self.clean_tier().id})
 
