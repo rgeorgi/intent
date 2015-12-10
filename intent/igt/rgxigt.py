@@ -14,8 +14,8 @@ import string
 import sys
 
 from intent.consts.grammatical import morpheme_boundary_chars
-from intent.igt.search import aln_match, type_match, seg_match, ref_match, findall_in_obj, find_in_obj
-from intent.interfaces import mallet_maxent
+from .exceptions import *
+from .search import aln_match, type_match, seg_match, ref_match, findall_in_obj, find_in_obj
 from intent.interfaces.fast_align import fast_align_sents
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.pos.TagMap import TagMap
@@ -24,7 +24,7 @@ from xigt.errors import XigtError
 from xigt.model import XigtCorpus, Igt, Item, Tier
 from xigt.metadata import Metadata, Meta
 from xigt.consts import ALIGNMENT, SEGMENTATION, CONTENT
-from intent.igt.metadata import add_meta, find_meta_attr, del_meta_attr, set_intent_method, get_intent_method, \
+from .metadata import add_meta, find_meta_attr, del_meta_attr, set_intent_method, get_intent_method, \
     set_intent_proj_data
 from xigt import ref
 
@@ -32,7 +32,7 @@ from xigt import ref
 
 
 # Set up logging ---------------------------------------------------------------
-from xigt.ref import dereference, ids
+from xigt.ref import ids
 
 PARSELOG = logging.getLogger(__name__)
 ALIGN_LOG = logging.getLogger('GIZA_LN')
@@ -43,8 +43,7 @@ CONVERT_LOG = logging.getLogger('CONVERSION')
 from xigt.codecs import xigtxml
 
 # INTERNAL imports -------------------------------------------------------------
-from .igtutils import merge_lines, clean_lang_string, clean_gloss_string,\
-    clean_trans_string, remove_hyphens, surrounding_quotes_and_parens, punc_re, rgencode, rgp, resolve_objects
+from .igtutils import remove_hyphens, surrounding_quotes_and_parens, punc_re, rgencode, rgp, resolve_objects
 
 from .consts import *
 
@@ -53,54 +52,9 @@ from intent.utils.env import c, classifier
 from intent.alignment.Alignment import Alignment, heur_alignments, AlignmentError
 from intent.utils.token import Token, POSToken, sentence_tokenizer, whitespace_tokenizer
 from intent.interfaces.giza import GizaAligner
-from intent.utils.dicts import DefaultOrderedDict
 
 # Other imports ----------------------------------------------------------------
 from collections import defaultdict
-
-
-
-
-
-#===============================================================================
-# Exceptions
-#===============================================================================
-
-class RGXigtException(Exception): pass
-
-# • Format Exceptions ------------------------------------------------------------
-
-class XigtFormatException(RGXigtException): pass
-class NoNormLineException(XigtFormatException): pass
-class MultipleNormLineException(XigtFormatException): pass
-
-class NoTransLineException(XigtFormatException): pass
-class NoLangLineException(XigtFormatException):	pass
-class NoGlossLineException(XigtFormatException): pass
-class EmptyGlossException(XigtFormatException): pass
-
-class NoODINRawException(XigtFormatException):	pass
-
-class RawTextParseError(RGXigtException): pass
-
-# • Alignment and Projection Exceptions ------------------------------------------
-
-class GlossLangAlignException(RGXigtException):	pass
-
-class ProjectionException(RGXigtException): pass
-
-class ProjectionTransGlossException(ProjectionException): pass
-
-class PhraseStructureProjectionException(RGXigtException): pass
-
-
-def project_creator_except(msg_start, msg_end, created_by):
-
-    if created_by:
-        msg_start += ' by the creator "%s".' % created_by
-    else:
-        msg_start += '.'
-    raise ProjectionException(msg_start + ' ' + msg_end)
 
 #===============================================================================
 # Mixins
@@ -771,74 +725,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
     @classmethod
     def fromRawText(cls, string, corpus = None, idnum=None):
-        """
-        Method to create an IGT instance from a raw three lines of text, assuming L-G-T.
-
-        :param string:
-        :param corpus:
-        :param idnum:
-        """
-        lines = string.split('\n')
-        if len(lines) < 3:
-            raise RawTextParseError("Three lines are assumed for raw text. Instead got {}".format(len(lines)))
-
-
-        if idnum is not None:
-            id = gen_item_id('i', idnum)
-        elif corpus:
-            id = corpus.askIgtId()
-        else:
-            corpus = RGCorpus()
-            id = corpus.askIgtId()
-
-        inst = cls(id = id)
-        rt = RGLineTier(id = RAW_ID, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE}, igt=inst)
-
-        for i, l in enumerate(lines):
-
-            # If we have four lines, assume that the first is
-            # native orthography
-            if len(lines) == 4:
-                if i == 0:
-                    linetag = ODIN_LANG_TAG + '+FR'
-                if i == 1:
-                    linetag = ODIN_LANG_TAG
-                if i == 2:
-                    linetag = ODIN_GLOSS_TAG
-                if i == 3:
-                    linetag = ODIN_TRANS_TAG
-
-            elif len(lines) == 3:
-                if i == 0:
-                    linetag = ODIN_LANG_TAG
-                elif i == 1:
-                    linetag = ODIN_GLOSS_TAG
-                elif i == 2:
-                    linetag = ODIN_TRANS_TAG
-
-            elif len(lines) == 2:
-                if i == 0:
-                    linetag = ODIN_LANG_TAG
-                if i == 1:
-                    linetag = ODIN_TRANS_TAG
-
-            else:
-                raise RawTextParseError("Unknown number of lines...")
-
-            if not l.strip():
-                raise RawTextParseError("The {} line is empty: {}".format(linetag, l))
-
-            li = RGLine(id=rt.askItemId(), text=l, attributes={'tag':linetag})
-            rt.append(li)
-
-        inst.append(rt)
-        try:
-            inst.basic_processing()
-        except GlossLangAlignException as glae:
-            CONVERT_LOG.warn('Gloss and language lines could not be automatically aligned for instance "{}".'.format(inst.id))
-
-            # CONVERT_LOG.warn("Basic processing failed for instance {}".format(inst.id))
-        return inst
+        return from_raw_text(string, corpus, idnum)
 
 
     @classmethod
@@ -957,23 +844,9 @@ class RGIgt(Igt, RecursiveFindMixin):
     # • Basic Tier Creation ------------------------------------------------------------
 
     def raw_tier(self):
-        """
-        Retrieve the raw ODIN tier, otherwise raise an exception.
-        """
-        raw_tier = self.find(type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE})
-
-        if not raw_tier:
-            raise NoODINRawException('No raw tier found.')
-        else:
-            return raw_tier
-
-
+        return get_raw_tier(self)
 
     def clean_tier(self, merge=False, generate=True):
-        """
-        If the clean odin tier exists, return it. Otherwise, create it.
-
-        """
         return get_clean_tier(self, merge, generate)
 
 
@@ -987,51 +860,12 @@ class RGIgt(Igt, RecursiveFindMixin):
         self.add_text_tier_from_lines(lines, NORM_ID, NORM_STATE)
 
     def add_text_tier_from_lines(self, lines, id_base, state):
-        """
-        Given a list of lines that are dicts with the attributes 'text' and 'tag', create
-        a text tier of the specified type with the provided line items.
-
-        :type lines: list[dict]
-        """
-        # -------------------------------------------
-        # 1) Generate the parent tier.
-        tier = RGTier(id=gen_tier_id(self, id_base), type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:state})
-
-        # -------------------------------------------
-        # 2) Iterate over the list of lines
-        for line in lines:
-
-            # Make sure the line is a dict.
-            if not hasattr(line, 'get') or 'text' not in line or 'tag' not in line:
-                raise RGXigtException("When constructing tier from lines, must be a list of dicts with keys 'text' and 'tag'.")
-
-            l = RGItem(id=tier.askItemId(),
-                       attributes={ODIN_TAG_ATTRIBUTE:line.get('tag')},
-                       text=line.get('text'))
-            tier.append(l)
-        self.append(tier)
-
-
+        add_text_tier_from_lines(self, lines, id_base, state)
 
     # • Word Tier Creation -----------------------------------
 
     def add_normal_line(self, tier, tag, func):
-        clean_tier = self.clean_tier()
-        clean_lines = [l for l in clean_tier if tag in l.attributes['tag'].split('+')]
-
-        if len(clean_lines) > 1:
-            PARSELOG.warning(rgencode(clean_tier))
-            raise XigtFormatException("Clean tier should not have multiple lines of same tag.")
-
-        # If there are clean lines for this tag... There must be only 1...
-        # create it and add it to the tier.
-        if clean_lines:
-            item = RGLine(id=tier.askItemId(),
-                        text=func(clean_lines[0].value()),
-                        alignment=clean_lines[0].id,
-                        attributes={'tag':tag})
-
-            tier.add(item)
+        add_normal_line(self, tier, tag, func)
 
     def normal_tier(self, clean=True, generate=True):
         return get_normal_tier(self, clean, generate)
@@ -3059,4 +2893,5 @@ def strip_pos(inst):
 
 
 from intent.trees import IdTree, project_ps, Terminal, DepTree, project_ds, DepEdge, build_dep_edges
-from intent.igt.xigt_manipulations import get_clean_tier, get_normal_tier
+from .xigt_manipulations import *
+from .creation import *
