@@ -1,5 +1,8 @@
+from unittest import TestCase
+
 from intent.igt.igtutils import strip_leading_whitespace
 from intent.utils.dicts import DefaultOrderedDict
+import xigt.xigtpath as xp
 from xigt.consts import ALIGNMENT
 
 # -------------------------------------------
@@ -15,15 +18,17 @@ def get_raw_tier(inst):
     else:
         return raw_tier
 
-def get_normal_tier(inst, clean=True, generate=True):
+def get_normal_tier(inst, clean=True, generate=True, force_generate=False):
     # If a normal tier already exists, return it.
     normal_tier = find_in_obj(inst, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:NORM_STATE})
-    if normal_tier is not None:
-        normal_tier.__class__ = RGTier
-        return normal_tier
+
 
     # Otherwise, create a new one, with only L, G and T lines.
-    elif generate:
+    if force_generate or (normal_tier is None and generate):
+
+        if normal_tier is not None:
+            inst.remove(normal_tier)
+
         normal_tier = RGLineTier(id = NORM_ID, type=ODIN_TYPE,
                                  attributes={STATE_ATTRIBUTE:NORM_STATE, ALIGNMENT:get_clean_tier(inst).id})
 
@@ -42,18 +47,33 @@ def get_normal_tier(inst, clean=True, generate=True):
         inst.append(normal_tier)
         return normal_tier
 
-def get_clean_tier(inst, merge=False, generate=True):
+    elif normal_tier is not None:
+        return normal_tier
+
+    else:
+        return None
+
+def get_clean_tier(inst, merge=False, generate=True, force_generate=False):
     """
     If the clean odin tier exists, return it. Otherwise, create it.
 
     """
 
-    # If a clean tier already exists, return it.
+    # -------------------------------------------
+    # Search for the clean tier
+    # -------------------------------------------
     clean_tier = find_in_obj(inst, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:CLEAN_STATE})
-    if clean_tier:
-        return clean_tier
 
-    elif generate:
+    # Remove the clean tier if we are regenerating.
+    if clean_tier is not None and force_generate:
+        inst.remove(clean_tier)
+
+    # -------------------------------------------
+    # If we want to force regenerate the tier, or
+    # it is not found and we want to generate it
+    # freshly.
+    # -------------------------------------------
+    if force_generate or ((clean_tier is None) and generate):
         # Otherwise, we will make our own:
         raw_tier = get_raw_tier(inst)
 
@@ -103,6 +123,18 @@ def get_clean_tier(inst, merge=False, generate=True):
         inst.append(clean_tier)
         return clean_tier
 
+    # -------------------------------------------
+    # Finally, if the tier exists
+    # -------------------------------------------
+    elif clean_tier is not None:
+        return clean_tier
+
+    # -------------------------------------------
+    # Otherwise, just return None
+    # -------------------------------------------
+    else:
+        return None
+
 def replace_lines(inst, clean_lines, norm_lines):
     """
     Given an instance and a list of clean lines and normal lines,
@@ -116,40 +148,20 @@ def replace_lines(inst, clean_lines, norm_lines):
     :param norm_lines:
     :type norm_lines: list[dict]
     """
-    logging.log(1000, rgencode(inst))
 
-    # -------------------------------------------
-    # If we are providing new clean lines, remove
-    # the old ones.
-    # -------------------------------------------
     if clean_lines:
         old_clean_tier = get_clean_tier(inst, generate=False)
         if old_clean_tier is not None:
             inst.remove(old_clean_tier)
 
-    # -------------------------------------------
-    # If we are providing new norm lines, remove
-    # the old ones.
-    # -------------------------------------------
+        new_clean_tier = create_text_tier_from_lines(inst, clean_lines, CLEAN_ID, CLEAN_STATE)
+        inst.append(new_clean_tier)
+
     if norm_lines:
         old_norm_tier = get_normal_tier(inst, generate=False)
         if old_norm_tier is not None:
             inst.remove(old_norm_tier)
 
-    # -------------------------------------------
-    # At this point, we should only have the raw tier left.
-    # -------------------------------------------
-    if len(inst) > 1:
-        logging.log(1000, rgencode(inst))
-        raise Exception("Attempt to replace tiers on IGT with additional data")
-
-    # -------------------------------------------
-    # Create and append the clean/norm tiers
-    # -------------------------------------------
-    if clean_lines:
-        new_clean_tier = create_text_tier_from_lines(inst, clean_lines, CLEAN_ID, CLEAN_STATE)
-        inst.append(new_clean_tier)
-    if norm_lines:
         new_norm_tier = create_text_tier_from_lines(inst, norm_lines, NORM_ID, NORM_STATE)
         inst.append(new_norm_tier)
 
