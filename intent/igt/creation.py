@@ -42,7 +42,7 @@ def add_text_tier_from_lines(inst, lines, id_base, state):
 # -------------------------------------------
 #
 # -------------------------------------------
-def add_normal_line(inst, tier, tag, func):
+def add_normal_line_to_tier(inst, tier, tag, func):
     clean_tier = get_clean_tier(inst)
     clean_lines = [l for l in clean_tier if tag in l.attributes['tag'].split('+')]
 

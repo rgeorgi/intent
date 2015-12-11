@@ -865,7 +865,7 @@ class RGIgt(Igt, RecursiveFindMixin):
     # • Word Tier Creation -----------------------------------
 
     def add_normal_line(self, tier, tag, func):
-        add_normal_line(self, tier, tag, func)
+        add_normal_line_to_tier(self, tier, tag, func)
 
     def normal_tier(self, clean=True, generate=True):
         return get_normal_tier(self, clean, generate)

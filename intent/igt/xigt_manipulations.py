@@ -28,9 +28,9 @@ def get_normal_tier(inst, clean=True, generate=True):
                                  attributes={STATE_ATTRIBUTE:NORM_STATE, ALIGNMENT:get_clean_tier(inst).id})
 
         # Get one item per...
-        add_normal_line(inst, normal_tier, ODIN_LANG_TAG, clean_lang_string if clean else lambda x: x)
-        add_normal_line(inst, normal_tier, ODIN_GLOSS_TAG, clean_gloss_string if clean else lambda x: x)
-        add_normal_line(inst, normal_tier, ODIN_TRANS_TAG, clean_trans_string if clean else lambda x: x)
+        add_normal_line_to_tier(inst, normal_tier, ODIN_LANG_TAG, clean_lang_string if clean else lambda x: x)
+        add_normal_line_to_tier(inst, normal_tier, ODIN_GLOSS_TAG, clean_gloss_string if clean else lambda x: x)
+        add_normal_line_to_tier(inst, normal_tier, ODIN_TRANS_TAG, clean_trans_string if clean else lambda x: x)
 
         # -------------------------------------------
         # Now, remove the whitespace shared between lines.
