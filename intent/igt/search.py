@@ -3,6 +3,7 @@
 # -------------------------------------------
 import re
 
+from intent.igt.consts import ODIN_TYPE, STATE_ATTRIBUTE, RAW_STATE, CLEAN_STATE, NORM_STATE
 from xigt import ref
 from xigt.consts import CONTENT, ALIGNMENT
 from xigt.consts import SEGMENTATION
@@ -113,3 +114,18 @@ def findall_in_obj(obj, **kwargs):
 
 
     return found
+
+# -------------------------------------------
+# Some convenience methods for common searches
+# -------------------------------------------
+def text_tier(inst, state):
+    return find_in_obj(inst, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:state})
+
+def raw_tier(inst):
+    return text_tier(inst, RAW_STATE)
+
+def cleaned_tier(inst):
+    return text_tier(inst, CLEAN_STATE)
+
+def normalized_tier(inst):
+    return text_tier(inst, NORM_STATE)
