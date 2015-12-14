@@ -42,14 +42,16 @@ class StanfordParser(object):
     """
     def __init__(self):
         self.parse_queue = ''
-        self.p = ProcessCommunicator([java_bin, '-Xmx1200m',
-                                        '-cp', parser_jar+':'+parser_model_jar,
-                                        'edu.stanford.nlp.parser.lexparser.LexicalizedParser',
-                                        '-outputFormat', 'penn,typedDependencies',
-                                        '-sentences', 'newline',
-                                        '-tokenized',
-                                        parser_model,
-                                        '-'], stderr_func=parser_stderr_handler,
+        args = [java_bin, '-Xmx1200m',
+                '-cp', parser_jar+':'+parser_model_jar,
+                'edu.stanford.nlp.parser.lexparser.LexicalizedParser',
+                '-outputFormat', 'penn,typedDependencies',
+                '-sentences', 'newline',
+                '-tokenized',
+                parser_model,
+                '-']
+        PARSE_LOG.debug(' '.join(args))
+        self.p = ProcessCommunicator(args, stderr_func=parser_stderr_handler,
                                      blocking=True)
 
     def parse_interpreter(self, str):
