@@ -18,9 +18,9 @@ MAIN_LOG = logging.getLogger('INTENT')
 import_errors = False
 
 try:
-    import lxml
+    import nltk
 except ImportError:
-    MAIN_LOG.critical('lxml not installed.')
+    MAIN_LOG.critical('NLTK module not installed')
     import_errors = True
 
 if import_errors:
