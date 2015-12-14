@@ -4,25 +4,16 @@ import argparse
 import sys
 import logging
 
-
-# Start the logger and set it up. ----------------------------------------------
-from intent.scripts.basic.corpus_stats import igt_stats
-from intent.scripts.basic.filter_corpus import filter_corpus
-from intent.scripts.basic.split_corpus import split_corpus
-from intent.scripts.conversion.text_to_xigt import text_to_xigtxml
-from intent.scripts.evaluation import evaluate_intent
-from intent.scripts.extraction import extract_from_xigt
-from intent.utils.arg_consts import PARSE_LANG_PROJ, PARSE_TRANS, POS_TYPES, PARSE_TYPES, ALN_TYPES, ALN_VAR, POS_VAR, \
-    PARSE_VAR, ALN_SYM_VAR, ALN_SYM_TYPES
-from intent.utils.listutils import flatten_list
-from xigt.codecs.xigtxml import dump
+# -------------------------------------------
+# Start the logger.
+# -------------------------------------------
 
 logging.basicConfig(format=logging.BASIC_FORMAT)
 MAIN_LOG = logging.getLogger('INTENT')
 
-# ===============================================================================
-# Check for dependencies...
-# ===============================================================================
+# -------------------------------------------
+# Check for dependencies.
+# -------------------------------------------
 
 import_errors = False
 
@@ -42,15 +33,26 @@ if import_errors:
     MAIN_LOG.critical('Necessary python modules were not found. Please install and try again.')
     sys.exit(2)
 
-
-# ===============================================================================
-# Set up the environment...
-#===============================================================================
-
+# -------------------------------------------
+# Import the env module, since there are some
+# additional tests there.
+# -------------------------------------------
 import intent.utils.env
 
+# -------------------------------------------
+# Start the logger and set it up.
+# -------------------------------------------
+from intent.scripts.basic.corpus_stats import igt_stats
+from intent.scripts.basic.filter_corpus import filter_corpus
+from intent.scripts.basic.split_corpus import split_corpus
+from intent.scripts.conversion.text_to_xigt import text_to_xigtxml
+from intent.scripts.evaluation import evaluate_intent
+from intent.scripts.extraction import extract_from_xigt
+from intent.utils.arg_consts import PARSE_LANG_PROJ, PARSE_TRANS, POS_TYPES, PARSE_TYPES, ALN_TYPES, ALN_VAR, POS_VAR, \
+    PARSE_VAR, ALN_SYM_VAR, ALN_SYM_TYPES
+from intent.utils.listutils import flatten_list
+from xigt.codecs.xigtxml import dump
 from intent.utils.env import classifier
-
 from intent.utils.argutils import DefaultHelpParser, existsfile, \
     PathArgException, csv_choices, proportion, globfiles
 
