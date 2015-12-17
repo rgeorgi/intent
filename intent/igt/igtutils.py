@@ -177,6 +177,11 @@ def rgencode(o):
     else:
         raise Exception('%s is not a XIGT object, but is: %s' % (o, type(o)))
 
+def concat_lines(linelist):
+    newline = ''
+    for line in linelist:
+        newline += line[:]
+    return newline
 
 def merge_lines(linelist):
     """
@@ -344,10 +349,6 @@ def clean_lang_string(ret_str):
 
     # First remove leading parenthetical numbering
     ret_str = remove_numbering(ret_str)
-
-    # Now, remove leading grammaticality markers
-    ret_str = grammaticality(ret_str)
-
 
     ret_str = surrounding_quotes_and_parens(ret_str)
     # Remove spurious brackets

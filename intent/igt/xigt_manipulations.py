@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from intent.igt.igtutils import strip_leading_whitespace
+from intent.igt.search import normalized_tier, cleaned_tier
 from intent.utils.dicts import DefaultOrderedDict
 import xigt.xigtpath as xp
 from xigt.consts import ALIGNMENT
@@ -11,12 +12,12 @@ def get_raw_tier(inst):
     """
     Retrieve the raw ODIN tier, otherwise raise an exception.
     """
-    raw_tier = find_in_obj(inst, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE})
+    rt = raw_tier(inst)
 
-    if not raw_tier:
+    if not rt:
         raise NoODINRawException('No raw tier found.')
     else:
-        return raw_tier
+        return rt
 
 def get_normal_tier(inst, clean=True, generate=True, force_generate=False):
     # If a normal tier already exists, return it.
@@ -101,17 +102,21 @@ def get_clean_tier(inst, merge=False, generate=True, force_generate=False):
 
             lines = line_tags[primary_tag]
 
+            # If there is only one line for the given tag,
+            # simply return the first line.
             if len(lines) == 1:
                 text = lines[0].value()
                 new_tag = lines[0].attributes['tag']
                 align_id = lines[0].id
 
+            # If there are multiple lines for a given tag,
+            # concatenate them to a single line.
             elif len(lines) > 1:
                 PARSELOG.info('Corruption detected in instance %s: %s' % (inst.id, [l.attributes['tag'] for l in lines]))
                 for l in lines:
                     PARSELOG.debug('BEFORE: %s' % l)
 
-                text = merge_lines([l.value() for l in lines])
+                text = concat_lines([l.value() for l in lines])
                 PARSELOG.debug('AFTER: %s' % text)
                 new_tag = primary_tag
                 align_id = ','.join([l.id for l in lines])
@@ -149,19 +154,25 @@ def replace_lines(inst, clean_lines, norm_lines):
     :type norm_lines: list[dict]
     """
 
-    if clean_lines:
-        old_clean_tier = get_clean_tier(inst, generate=False)
-        if old_clean_tier is not None:
-            inst.remove(old_clean_tier)
+    # -------------------------------------------
+    # Remove the old clean/norm lines.
+    # -------------------------------------------
+    old_clean_tier = cleaned_tier(inst)
+    if old_clean_tier is not None:
+        inst.remove(old_clean_tier)
 
+    old_norm_tier = normalized_tier(inst)
+    if old_norm_tier is not None:
+        inst.remove(old_norm_tier)
+
+    # -------------------------------------------
+    # Now, add the clean/norm lines, if provided.
+    # -------------------------------------------
+    if clean_lines:
         new_clean_tier = create_text_tier_from_lines(inst, clean_lines, CLEAN_ID, CLEAN_STATE)
         inst.append(new_clean_tier)
 
     if norm_lines:
-        old_norm_tier = get_normal_tier(inst, generate=False)
-        if old_norm_tier is not None:
-            inst.remove(old_norm_tier)
-
         new_norm_tier = create_text_tier_from_lines(inst, norm_lines, NORM_ID, NORM_STATE)
         inst.append(new_norm_tier)
 
@@ -169,8 +180,8 @@ def replace_lines(inst, clean_lines, norm_lines):
 
 
 
-from .search import find_in_obj
+from .search import find_in_obj, raw_tier
 from .consts import *
-from .igtutils import merge_lines, clean_lang_string, clean_gloss_string, clean_trans_string
+from .igtutils import merge_lines, clean_lang_string, clean_gloss_string, clean_trans_string, concat_lines
 from .rgxigt import RGLineTier, PARSELOG, RGLine, RGTier, NoODINRawException
 from .creation import *

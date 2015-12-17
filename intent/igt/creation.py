@@ -2,6 +2,7 @@ import logging
 
 from intent.igt.igtutils import rgencode
 
+CREATE_LOG = logging.getLogger("IGT_CREATION")
 
 
 # -------------------------------------------
@@ -29,8 +30,10 @@ def create_text_tier_from_lines(inst, lines, id_base, state):
         if not hasattr(line, 'get') or 'text' not in line or 'tag' not in line:
             raise RGXigtException("When constructing tier from lines, must be a list of dicts with keys 'text' and 'tag'.")
 
+        alltags = '+'.join([line.get('tag')] + [line.get('labels')])
+
         l = RGItem(id=gen_item_id(tier.id, len(tier)),
-                   attributes={ODIN_TAG_ATTRIBUTE:line.get('tag')},
+                   attributes={ODIN_TAG_ATTRIBUTE:alltags},
                    text=line.get('text'))
         tier.append(l)
     return tier
@@ -44,7 +47,7 @@ def add_text_tier_from_lines(inst, lines, id_base, state):
 # -------------------------------------------
 def add_normal_line_to_tier(inst, tier, tag, func):
     clean_tier = get_clean_tier(inst)
-    clean_lines = [l for l in clean_tier if tag in l.attributes['tag'].split('+')]
+    clean_lines = [l for l in clean_tier if tag in l.attributes[ODIN_TAG_ATTRIBUTE].split('+')]
 
     if len(clean_lines) > 1:
         PARSELOG.warning(rgencode(clean_tier))
@@ -52,11 +55,11 @@ def add_normal_line_to_tier(inst, tier, tag, func):
 
     # If there are clean lines for this tag... There must be only 1...
     # create it and add it to the tier.
-    if clean_lines:
+    elif clean_lines:
         item = RGLine(id=gen_item_id(tier.id, len(tier)),
                     text=func(clean_lines[0].value()),
                     alignment=clean_lines[0].id,
-                    attributes={'tag':tag})
+                    attributes={ODIN_TAG_ATTRIBUTE:clean_lines[0].attributes[ODIN_TAG_ATTRIBUTE]})
 
         tier.add(item)
 
