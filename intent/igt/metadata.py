@@ -3,9 +3,10 @@ Created on Apr 9, 2015
 
 :author: rgeorgi
 """
+import xigt.xigtpath as xp
 from xigt.metadata import Metadata, Meta
-from intent.igt.consts import XIGT_META_TYPE, XIGT_DATA_DATE, INTENT_META_SOURCE, XIGT_DATA_SRC, XIGT_DATA_PROV, \
-    XIGT_DATA_METH, XIGT_DATA_FROM
+from intent.igt.consts import DATA_DATE, INTENT_META_SOURCE, DATA_SRC, DATA_PROV, \
+    DATA_METH, DATA_FROM, INTENT_META_TYPE
 from xigt.mixins import XigtContainerMixin
 from datetime import datetime
 
@@ -17,9 +18,9 @@ def get_intent_method(obj):
     :param obj: Object on which to look for the metadata
     :return: str or None
     """
-    m = find_meta(obj, XIGT_DATA_PROV)
-    if m is not None and m.attributes.get(XIGT_DATA_SRC) == INTENT_META_SOURCE:
-        return m.attributes.get(XIGT_DATA_METH)
+    m = find_meta(obj, DATA_PROV)
+    if m is not None and m.attributes.get(DATA_SRC) == INTENT_META_SOURCE:
+        return m.attributes.get(DATA_METH)
 
 def set_intent_method(obj, method):
     """
@@ -29,8 +30,8 @@ def set_intent_method(obj, method):
     :param obj: Object to add metadata to.
     :param method: Method to set as the method attribute on the meta item.
     """
-    add_meta(obj, XIGT_DATA_PROV, XIGT_DATA_SRC, INTENT_META_SOURCE)
-    add_meta(obj, XIGT_DATA_PROV, XIGT_DATA_METH, method)
+    set_meta_attr(obj, DATA_PROV, DATA_SRC, INTENT_META_SOURCE)
+    set_meta_attr(obj, DATA_PROV, DATA_METH, method)
 
 
 def set_intent_proj_data(obj, source_tier):
@@ -41,11 +42,38 @@ def set_intent_proj_data(obj, source_tier):
     :param obj:
     :param source_tier:
     """
-    add_meta(obj, XIGT_DATA_PROV, XIGT_DATA_FROM, source_tier.id)
-    #add_meta(obj, XIGT_DATA_PROV, XIGT_DATA_ALNF, aln_tier.id)
+    set_meta_attr(obj, DATA_PROV, DATA_FROM, source_tier.id)
+
+def find_metadata(obj, metadata_type):
+    found = None
+    for md in obj.metadata:
+        if md.type == metadata_type:
+            found = md
+            break
+    return found
 
 
-def add_meta(obj, meta_type, attr, val, metadata_type=XIGT_META_TYPE, timestamp=True):
+def set_meta(obj, m, metadata_type=INTENT_META_TYPE, timestamp=True):
+    md = find_metadata(obj, metadata_type)
+
+    # Add a new metadata container to the current object if
+    # the type that we're looking for is not found.
+    if md is None:
+        md = Metadata(type=metadata_type)
+        obj.metadata.append(md)
+
+    replaced = False
+    for i, meta in enumerate(md):
+        if meta.type == m.type:
+            md[i] = m
+            break
+
+    if not replaced:
+        md.append(m)
+
+
+
+def set_meta_attr(obj, meta_type, attr, val, metadata_type=INTENT_META_TYPE, timestamp=True):
     """
     Add an arbitrary piece of metadata to a XIGT object that accepts metadata
 
@@ -59,31 +87,13 @@ def add_meta(obj, meta_type, attr, val, metadata_type=XIGT_META_TYPE, timestamp=
     if not isinstance(obj, XigtContainerMixin):
         raise Exception('Attempt to add meta object on object ({}) that cannot contain meta'.format(meta_type(obj)))
     else:
-        metadata_list = obj.metadata
-        md = None
-        if metadata_list:
-            for metadata in metadata_list:
-                # If we have found the correct metadata
-                # container, set that to the m to be
-                # appended to.
-                if metadata.type == metadata_type:
-                    md = metadata
-                    break
-
-        # If there is no metadata, or the metadata
-        # of the specified meta_type was not found, create it.
-        if md is None:
-            md = Metadata(type=metadata_type)
-            obj.metadata = [md]
-
-        # Finally, add our Meta object to the metadata.
-        m = find_meta(obj, meta_type)
-        if m is not None:
-            m.attributes[attr] = val
-        else:
-            m = Meta(type=meta_type,attributes={attr:val})
+        m = find_meta(obj, meta_type, metadata_type=metadata_type)
+        if m is None:
+            m = Meta(type=meta_type, attributes={attr:val})
             timestamp_meta(m)
-            md.append(m)
+            set_meta(obj, m, metadata_type=metadata_type, timestamp=timestamp)
+        else:
+            m.attributes[attr] = val
 
 
 def del_meta(obj, meta_type):
@@ -131,18 +141,18 @@ def is_contentful_meta(m):
     has_text = m.text is not None
     # Also, the attributes should be more than just the timestamp
     # (i.e. the timestamp set should be a proper subset of all attributes)
-    keys = [k for k in m.attributes.keys() if k != XIGT_DATA_DATE]
+    keys = [k for k in m.attributes.keys() if k != DATA_DATE]
     return has_text or keys
 
 
 def timestamp_meta(m):
-    m.attributes[XIGT_DATA_DATE] = datetime.utcnow().replace(microsecond=0).isoformat()
+    m.attributes[DATA_DATE] = datetime.utcnow().replace(microsecond=0).isoformat()
 
 def get_meta_timestamp(m):
-    return m.attributes.get(XIGT_DATA_DATE)
+    return m.attributes.get(DATA_DATE)
 
 
-def find_meta(obj, meta_type):
+def find_meta(obj, meta_type, metadata_type = INTENT_META_TYPE):
     """
     Given an object, search to find the text value of a Meta item
       with the given type ``type``.
@@ -152,10 +162,11 @@ def find_meta(obj, meta_type):
     :return:
     :rtype: Meta
     """
+
     if not isinstance(obj, XigtContainerMixin):
         return None
     elif obj.metadata is not None:
-        for metadata in obj.metadata:
+        for metadata in [m for m in obj.metadata if m.type == metadata_type or metadata_type is None]:
             for meta in metadata.metas:
                 if meta.type == meta_type:
                     return meta
@@ -177,4 +188,16 @@ def find_meta_attr(obj, meta_type, attr):
     else:
         return None
 
+def set_meta_text(obj, meta_type, text, metadata_type=INTENT_META_TYPE):
+    m = find_meta(obj, meta_type)
+    if m is not None:
+        m.text = text
+    else:
+        m = Meta(type=meta_type, text=text)
+        set_meta(obj, m, metadata_type=metadata_type)
 
+
+def find_meta_text(obj, meta_type):
+    m = find_meta(obj, meta_type)
+    if m is not None:
+        return m.text

@@ -24,7 +24,7 @@ from xigt.errors import XigtError
 from xigt.model import XigtCorpus, Igt, Item, Tier
 from xigt.metadata import Metadata, Meta
 from xigt.consts import ALIGNMENT, SEGMENTATION, CONTENT
-from .metadata import add_meta, find_meta_attr, del_meta_attr, set_intent_method, get_intent_method, \
+from .metadata import set_meta_attr, find_meta_attr, del_meta_attr, set_intent_method, get_intent_method, \
     set_intent_proj_data
 from xigt import ref
 
@@ -2810,7 +2810,7 @@ def follow_alignment(inst, id):
         return found
 
 def add_word_level_info(obj, val):
-    add_meta(obj, INTENT_EXTENDED_INFO, INTENT_TOKEN_TYPE, val, metadata_type=INTENT_META_TYPE)
+    set_meta_attr(obj, INTENT_EXTENDED_INFO, INTENT_TOKEN_TYPE, val, metadata_type=INTENT_META_TYPE)
 
 def remove_word_level_info(obj):
     del_meta_attr(obj, INTENT_EXTENDED_INFO, INTENT_TOKEN_TYPE)

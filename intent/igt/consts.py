@@ -87,21 +87,22 @@ ODIN_CORRUPT_TAG = 'CR'
 
 # The overall types for intent-specific meta
 # and xigt-general meta.
-XIGT_META_TYPE     = 'xigt-meta'
-INTENT_META_TYPE   = 'intent-meta'
+XIGT_META_TYPE   = 'xigt-meta'
+INTENT_META_TYPE = 'intent-meta'
 
 # Define the strings for data source and data method
 
-XIGT_DATA_PROV='data-provenance'
-XIGT_DATA_METH='method'             # The attribute for marking which method was used
-XIGT_DATA_SRC ='source'             # The attribute for marking that this was INTENT
-XIGT_DATA_FROM='projected-from'     # The attribute for marking which tier was used to make this one (for projection)
-XIGT_DATA_ALNF='aligned-with'       # The attribute for marking the alignment used for projection.
-XIGT_DATA_DATE='date'               # The attribute for marking
+DATA_PROV = 'data-provenance'
+DATA_METH = 'method'             # The attribute for marking which method was used
+DATA_SRC  = 'source'             # The attribute for marking that this was INTENT
+DATA_FROM = 'projected-from'     # The attribute for marking which tier was used to make this one (for projection)
+DATA_ALNF = 'aligned-with'       # The attribute for marking the alignment used for projection.
+DATA_DATE = 'date'               # The attribute for marking
 
 
 # Now, define intent as the data-source provider...
 INTENT_META_SOURCE = 'intent'
+EDITOR_META_SOURCE = 'manual'
 
 # Let's also add a string for the intent extended information
 INTENT_EXTENDED_INFO = 'extended-data'

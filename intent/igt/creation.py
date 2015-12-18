@@ -30,10 +30,17 @@ def create_text_tier_from_lines(inst, lines, id_base, state):
         if not hasattr(line, 'get') or 'text' not in line or 'tag' not in line:
             raise RGXigtException("When constructing tier from lines, must be a list of dicts with keys 'text' and 'tag'.")
 
-        alltags = '+'.join([line.get('tag')] + [line.get('labels')])
+        # Construct the list of tags.
+        alltags = []
+        if line.get('tag') is not None:
+            alltags.append(line.get('tag'))
+        if line.get('labels') is not None:
+            alltags.append(line.get('labels'))
+        tag_str = '+'.join(alltags)
+
 
         l = RGItem(id=gen_item_id(tier.id, len(tier)),
-                   attributes={ODIN_TAG_ATTRIBUTE:alltags},
+                   attributes={ODIN_TAG_ATTRIBUTE:tag_str},
                    text=line.get('text'))
         tier.append(l)
     return tier

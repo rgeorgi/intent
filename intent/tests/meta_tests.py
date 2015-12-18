@@ -1,9 +1,9 @@
 from unittest import TestCase
 
-from intent.igt.consts import XIGT_DATA_PROV, XIGT_DATA_SRC, INTENT_META_SOURCE, XIGT_DATA_METH, INTENT_ALN_GIZA, \
+from intent.igt.consts import DATA_PROV, DATA_SRC, INTENT_META_SOURCE, DATA_METH, INTENT_ALN_GIZA, \
     WORDS_TYPE, GLOSS_WORD_TYPE, INTENT_GLOSS_WORD, INTENT_GLOSS_MORPH
 from intent.igt.igtutils import rgp
-from intent.igt.metadata import add_meta, find_meta, find_meta_attr, get_meta_timestamp, timestamp_meta, is_contentful_meta, \
+from intent.igt.metadata import set_meta_attr, find_meta, find_meta_attr, get_meta_timestamp, timestamp_meta, is_contentful_meta, \
     del_meta_attr
 from intent.igt.rgxigt import RGTier, RGIgt, is_word_level_gloss, add_word_level_info
 from xigt import Meta, Metadata
@@ -18,19 +18,19 @@ class ProvenanceTest(TestCase):
         self.metadata = []
 
     def add_meta_test(self):
-        add_meta(self.t, XIGT_DATA_PROV, XIGT_DATA_SRC, INTENT_META_SOURCE)
-        add_meta(self.t, XIGT_DATA_PROV, XIGT_DATA_METH, INTENT_ALN_GIZA)
+        set_meta_attr(self.t, DATA_PROV, DATA_SRC, INTENT_META_SOURCE)
+        set_meta_attr(self.t, DATA_PROV, DATA_METH, INTENT_ALN_GIZA)
 
-        self.assertEqual(find_meta_attr(self.t, XIGT_DATA_PROV, XIGT_DATA_METH), INTENT_ALN_GIZA)
-        self.assertEqual(find_meta_attr(self.t, XIGT_DATA_PROV, XIGT_DATA_SRC), INTENT_META_SOURCE)
+        self.assertEqual(find_meta_attr(self.t, DATA_PROV, DATA_METH), INTENT_ALN_GIZA)
+        self.assertEqual(find_meta_attr(self.t, DATA_PROV, DATA_SRC), INTENT_META_SOURCE)
 
         self.assertEqual(len(self.t.metadata), 1)
         self.assertEqual(len(self.t.metadata[0].metas), 1)
 
     def timestamp_test(self):
-        add_meta(self.t, XIGT_DATA_PROV, XIGT_DATA_SRC, INTENT_META_SOURCE)
+        set_meta_attr(self.t, DATA_PROV, DATA_SRC, INTENT_META_SOURCE)
 
-        self.assertIsNotNone(get_meta_timestamp(find_meta(self.t, XIGT_DATA_PROV)))
+        self.assertIsNotNone(get_meta_timestamp(find_meta(self.t, DATA_PROV)))
 
 class WordTypeTest(TestCase):
     def setUp(self):
