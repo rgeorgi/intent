@@ -1,17 +1,14 @@
 import logging
 import os
 from unittest import TestCase
-from intent.igt import rgxigt
-from intent.igt.consts import DS_TIER_TYPE
-from intent.igt.igtutils import rgp
-from intent.igt.rgxigt import RGXigtException, RGCorpus, read_ds
+
+from intent.igt.rgxigt import RGCorpus
 from intent.interfaces.stanford_parser import StanfordParser
-from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.subcommands import enrich
 from intent.trees import DepTree, DEPSTR_PTB, project_ds
 from intent.utils.arg_consts import PARSE_VAR, PARSE_LANG_PROJ, ALN_VAR, ALN_HEUR, PARSE_TRANS, POS_VAR, POS_LANG_CLASS, \
     POS_LANG_PROJ
-from intent.utils.env import proj_root, testfile_dir, tagger_model, classifier
+from intent.utils.env import testfile_dir, classifier
 
 __author__ = 'rgeorgi'
 

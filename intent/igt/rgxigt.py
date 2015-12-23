@@ -13,7 +13,10 @@ import copy
 import string
 import sys
 
+import xigt
+
 from intent.consts.grammatical import morpheme_boundary_chars
+from xigt.query import ancestors
 from .exceptions import *
 from .search import aln_match, type_match, seg_match, ref_match, findall_in_obj, find_in_obj
 from intent.interfaces.fast_align import fast_align_sents
@@ -2408,6 +2411,7 @@ def retrieve_lang_words(inst):
 def odin_ancestor(obj):
     # ODIN_LOG.debug("Looking up the odin ancestor for {}".format(str(obj)))
     # If we are at an ODIN item, return.
+
     if isinstance(obj, Item) and obj.tier.type == ODIN_TYPE:
         return obj
 
@@ -2415,11 +2419,21 @@ def odin_ancestor(obj):
     elif isinstance(obj, Igt):
         return None
 
+    # Also, an ODIN tier can't get a specific item...
+    elif isinstance(obj, Tier) and obj.type == ODIN_TYPE:
+        return None
+
     else:
+
+
         if SEGMENTATION in obj.attributes:
             ref_attr = SEGMENTATION
         elif CONTENT in obj.attributes:
             ref_attr = CONTENT
+        elif ALIGNMENT in obj.attributes:
+            ref_attr = ALIGNMENT
+        elif DS_DEP_ATTRIBUTE in obj.attributes:
+            ref_attr = DS_DEP_ATTRIBUTE
         else:
             return None
 
@@ -2434,7 +2448,7 @@ def odin_ancestor(obj):
         else:
             raise Exception
 
-        item = obj.igt.find(id=id)
+        item = find_in_obj(obj.igt, id=id)
         if item is None:
             return None
         else:
@@ -2839,15 +2853,15 @@ def is_word_level_gloss(obj):
 
 
 #===============================================================================
-# • Sorting ---
+# Sorting ---
 #===============================================================================
 
-def sort_idx(l, v):
+def sort_idx(l: list, v) -> int:
     """
     Return the index of an item in a list, otherwise the length of the list (for sorting)
 
-    :param l: list
-    :param v: value
+    :param l: The list to search
+    :param v: The value to search for
     """
     try:
         return l.index(v)
@@ -2860,11 +2874,20 @@ def tier_sorter(x):
     tier state (for ODIN tiers), and word_id (for word
     tiers that all share the same type attribute)
     """
-    type_order = [ODIN_TYPE,
-                    LANG_PHRASE_TYPE, TRANS_PHRASE_TYPE,
-                    LANG_WORD_TYPE, GLOSS_WORD_TYPE, TRANS_WORD_TYPE,
-                    LANG_MORPH_TYPE, GLOSS_MORPH_TYPE,
-                    POS_TIER_TYPE, ALN_TIER_TYPE, PS_TIER_TYPE, DS_TIER_TYPE, None]
+    lgt_order  = [ODIN_LANG_TAG, ODIN_GLOSS_TAG, ODIN_TRANS_TAG]
+    aln_tags   = aligned_tags(x)
+    my_tag     = aln_tags[0] if aln_tags else None
+    tag_index  = sort_idx(lgt_order, my_tag)
+
+    # -------------------------------------------
+    # ODIN items should be at the top of the list.
+    # -------------------------------------------
+    is_odin    = 0 if x.type == ODIN_TYPE else 1
+
+    type_order = [LANG_PHRASE_TYPE,TRANS_PHRASE_TYPE,
+                  LANG_WORD_TYPE, GLOSS_WORD_TYPE, TRANS_WORD_TYPE,
+                  LANG_MORPH_TYPE, GLOSS_MORPH_TYPE,
+                  POS_TIER_TYPE, ALN_TIER_TYPE, PS_TIER_TYPE, DS_TIER_TYPE, None]
 
     state_order = [RAW_STATE, CLEAN_STATE, NORM_STATE]
     word_id_order = [LANG_WORD_ID, GLOSS_WORD_ID, TRANS_WORD_ID]
@@ -2874,7 +2897,20 @@ def tier_sorter(x):
     type_index = sort_idx(type_order, x.type)
     id_index = sort_idx(word_id_order, x.id)
 
-    return (type_index, state_index, id_index, x.id)
+    return (is_odin, tag_index, type_index, state_index, id_index, x.id)
+
+def sort_igt(igt) -> Igt:
+    """
+    Given an IGT instance, return the igt instance with the tiers sorted.
+
+    :param igt:
+    :return: The sorted IGT instance.
+    """
+    tiers = sorted(igt.tiers, key=tier_sorter)
+    igt.clear()
+    igt.extend(tiers)
+    return igt
+
 
 #===============================================================================
 # • Cleaning ---
