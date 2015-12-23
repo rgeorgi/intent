@@ -171,7 +171,7 @@ def find_meta(obj, meta_type, metadata_type = INTENT_META_TYPE):
                 if meta.type == meta_type:
                     return meta
 
-def find_meta_attr(obj, meta_type, attr):
+def find_meta_attr(obj, meta_type, attr, metadata_type = INTENT_META_TYPE):
     """
     Find the specific value of a metadata attribute, or None
     if the meta item does not exist, or does not have the
@@ -182,7 +182,7 @@ def find_meta_attr(obj, meta_type, attr):
     :param attr:
     :return: str or None
     """
-    m = find_meta(obj, meta_type)
+    m = find_meta(obj, meta_type, metadata_type=metadata_type)
     if m is not None:
         return m.attributes.get(attr)
     else:

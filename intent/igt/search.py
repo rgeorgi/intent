@@ -4,7 +4,7 @@
 import re
 
 from intent.igt.consts import ODIN_TYPE, STATE_ATTRIBUTE, RAW_STATE, CLEAN_STATE, NORM_STATE
-from xigt import ref
+from xigt import ref, Tier
 from xigt.consts import CONTENT, ALIGNMENT
 from xigt.consts import SEGMENTATION
 from xigt.mixins import XigtContainerMixin
@@ -121,11 +121,12 @@ def findall_in_obj(obj, **kwargs):
 def text_tier(inst, state):
     return find_in_obj(inst, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:state})
 
-def raw_tier(inst):
+def raw_tier(inst) -> Tier:
     return text_tier(inst, RAW_STATE)
 
-def cleaned_tier(inst):
+def cleaned_tier(inst) -> Tier:
     return text_tier(inst, CLEAN_STATE)
 
-def normalized_tier(inst):
+
+def normalized_tier(inst) -> Tier:
     return text_tier(inst, NORM_STATE)
