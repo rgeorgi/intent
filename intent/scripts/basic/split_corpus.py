@@ -4,7 +4,7 @@ from xigt.codecs import xigtxml
 
 SPLIT_LOG = logging.getLogger('SPLIT')
 
-from intent.igt.rgxigt import RGCorpus, RGIgt
+from intent.igt.rgxigt import RGCorpus, RGIgt, sort_corpus
 
 __author__ = 'rgeorgi'
 
@@ -156,6 +156,7 @@ def write_instances(instance_list, out_path, type, overwrite=False):
 
             print("Writing {} instances to {}...".format(num_sents, out_path))
             f = open(out_path, 'w', encoding='utf-8')
+            sort_corpus(xc)
             xigtxml.dump(f, xc)
             f.close()
         else:

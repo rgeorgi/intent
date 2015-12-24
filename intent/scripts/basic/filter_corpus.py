@@ -1,6 +1,6 @@
 from multiprocessing.pool import Pool
 import os
-from intent.igt.rgxigt import RGCorpus
+from intent.igt.rgxigt import RGCorpus, sort_corpus
 from xigt.codecs import xigtxml
 
 __author__ = 'rgeorgi'
@@ -66,6 +66,7 @@ def filter_corpus(filelist, outpath, require_lang=True, require_gloss=True, requ
         f = open(outpath, 'w', encoding='utf-8')
 
         print("Writing out {} instances...".format(len(new_corp)))
+        sort_corpus(new_corp)
         xigtxml.dump(f, new_corp)
         f.close()
 

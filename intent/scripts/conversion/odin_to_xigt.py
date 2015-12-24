@@ -11,7 +11,7 @@ import logging
 from argparse import ArgumentParser
 
 # Internal Imports -------------------------------------------------------------
-from intent.igt.rgxigt import RGCorpus
+from intent.igt.rgxigt import RGCorpus, sort_corpus
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
@@ -25,8 +25,7 @@ def parse_text(f, xigt_path):
     corp = RGCorpus.from_txt(f.read(), require_trans=False, require_gloss=True, require_lang=True)
 
     # 2) load the pos dict to help classify the gloss line ---------------------
-    for inst in corp:
-        inst.sort()
+    sort_corpus(corp)
     xigtxml.dump(xigt_path, corp)
 
 

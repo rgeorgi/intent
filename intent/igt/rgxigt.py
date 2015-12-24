@@ -2856,60 +2856,13 @@ def is_word_level_gloss(obj):
 # Sorting ---
 #===============================================================================
 
-def sort_idx(l: list, v) -> int:
+def sort_corpus(xc: XigtCorpus):
     """
-    Return the index of an item in a list, otherwise the length of the list (for sorting)
-
-    :param l: The list to search
-    :param v: The value to search for
+    Sort the corpus in-place.
     """
-    try:
-        return l.index(v)
-    except:
-        return len(l)
+    for inst in xc:
+        inst.sort_tiers()
 
-def tier_sorter(x):
-    """
-    ``key=`` function to sort a tier according to tier type,
-    tier state (for ODIN tiers), and word_id (for word
-    tiers that all share the same type attribute)
-    """
-    lgt_order  = [ODIN_LANG_TAG, ODIN_GLOSS_TAG, ODIN_TRANS_TAG]
-    aln_tags   = aligned_tags(x)
-    my_tag     = aln_tags[0] if aln_tags else None
-    tag_index  = sort_idx(lgt_order, my_tag)
-
-    # -------------------------------------------
-    # ODIN items should be at the top of the list.
-    # -------------------------------------------
-    is_odin    = 0 if x.type == ODIN_TYPE else 1
-
-    type_order = [LANG_PHRASE_TYPE,TRANS_PHRASE_TYPE,
-                  LANG_WORD_TYPE, GLOSS_WORD_TYPE, TRANS_WORD_TYPE,
-                  LANG_MORPH_TYPE, GLOSS_MORPH_TYPE,
-                  POS_TIER_TYPE, ALN_TIER_TYPE, PS_TIER_TYPE, DS_TIER_TYPE, None]
-
-    state_order = [RAW_STATE, CLEAN_STATE, NORM_STATE]
-    word_id_order = [LANG_WORD_ID, GLOSS_WORD_ID, TRANS_WORD_ID]
-
-
-    state_index = sort_idx(state_order, x.attributes.get('state'))
-    type_index = sort_idx(type_order, x.type)
-    id_index = sort_idx(word_id_order, x.id)
-
-    return (is_odin, tag_index, type_index, state_index, id_index, x.id)
-
-def sort_igt(igt) -> Igt:
-    """
-    Given an IGT instance, return the igt instance with the tiers sorted.
-
-    :param igt:
-    :return: The sorted IGT instance.
-    """
-    tiers = sorted(igt.tiers, key=tier_sorter)
-    igt.clear()
-    igt.extend(tiers)
-    return igt
 
 
 #===============================================================================
