@@ -71,7 +71,17 @@ def set_meta(obj, m, metadata_type=INTENT_META_TYPE, timestamp=True):
     if not replaced:
         md.append(m)
 
-
+def set_meta_text(obj, meta_type, text, metadata_type=INTENT_META_TYPE, timestamp=True):
+    if not isinstance(obj, XigtContainerMixin):
+        raise Exception("Attempt to add meta object on object ({}) that cannot contain meta".format(meta_type(obj)))
+    else:
+        m = find_meta(obj, meta_type, metadata_type=metadata_type)
+        if m is None:
+            m = Meta(type=meta_type, text=text)
+            set_meta(obj, m, metadata_type=metadata_type, timestamp=timestamp)
+        else:
+            m.text = text
+        timestamp_meta(m)
 
 def set_meta_attr(obj, meta_type, attr, val, metadata_type=INTENT_META_TYPE, timestamp=True):
     """
@@ -90,10 +100,10 @@ def set_meta_attr(obj, meta_type, attr, val, metadata_type=INTENT_META_TYPE, tim
         m = find_meta(obj, meta_type, metadata_type=metadata_type)
         if m is None:
             m = Meta(type=meta_type, attributes={attr:val})
-            timestamp_meta(m)
             set_meta(obj, m, metadata_type=metadata_type, timestamp=timestamp)
         else:
             m.attributes[attr] = val
+        timestamp_meta(m)
 
 
 def del_meta(obj, meta_type):
