@@ -1,6 +1,7 @@
 import logging
 
-from intent.igt.igtutils import rgencode
+from intent.igt.consts import ODIN_JUDGMENT_ATTRIBUTE
+from intent.igt.igtutils import rgencode, judgment
 
 CREATE_LOG = logging.getLogger("IGT_CREATION")
 
@@ -63,10 +64,20 @@ def add_normal_line_to_tier(inst, tier, tag, func):
     # If there are clean lines for this tag... There must be only 1...
     # create it and add it to the tier.
     elif clean_lines:
+
+        attributes = {ODIN_TAG_ATTRIBUTE:clean_lines[0].attributes[ODIN_TAG_ATTRIBUTE]}
+
+        # look for an indication of "judgment" on the line.
+        j = judgment(clean_lines[0])
+        if j is not None:
+            attributes[ODIN_JUDGMENT_ATTRIBUTE:j]
+
+
+
         item = RGLine(id=gen_item_id(tier.id, len(tier)),
                     text=func(clean_lines[0].value()),
                     alignment=clean_lines[0].id,
-                    attributes={ODIN_TAG_ATTRIBUTE:clean_lines[0].attributes[ODIN_TAG_ATTRIBUTE]})
+                    attributes=attributes)
 
         tier.add(item)
 

@@ -344,6 +344,12 @@ def strip_leading_whitespace(lines):
 
 
 def clean_lang_string(ret_str):
+    """
+    Clean the language string.
+
+    :param ret_str:
+    :return:
+    """
     # Remove leading byte string
     # ret_str = remove_byte_char(ret_str)
 
@@ -425,6 +431,21 @@ def resolve_objects(container, expression):
             tokens.append((item, None))
     return tokens
 
+# -------------------------------------------
+# Search for judgment on line
+# -------------------------------------------
+def judgment(line):
+    ungrammatical = '*' in line
+    questionable  = re.search('\?\w', line)
+
+    ret_str = ''
+    if ungrammatical:
+        ret_str += '*'
+    if questionable:
+        ret_str += '?'
+
+    return ret_str if ret_str else None
+
 #===============================================================================
 # Backoff methods
 #===============================================================================
@@ -480,3 +501,17 @@ class TestMergeLines(unittest.TestCase):
         merged = merge_lines([l1, l2])
         tgt = 'This  is    an example    of    merged lines'
         self.assertEqual(merged, tgt)
+
+class JudgmentTests(unittest.TestCase):
+
+    def ungrammatical_test(self):
+        l1 = "             *'Read many   books, she has'"
+        self.assertEqual(judgment(l1), '*')
+
+    def questionable_test(self):
+        l1 = "        b. ?Koja ot tezi knigi se ¤cudi      ¤s   koj    znae     koj prodava?"
+        l2 = "        b.  Koja ot tezi knigi se ¤cudi      ¤s   koj    znae     koj prodava?"
+        l3 = "*       b. ?Koja ot tezi knigi se ¤cudi      ¤s   koj    znae     koj prodava?"
+        self.assertEqual(judgment(l1), '?')
+        self.assertEqual(judgment(l2), None)
+        self.assertEqual(judgment(l3), '*?')

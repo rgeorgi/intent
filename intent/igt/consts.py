@@ -76,6 +76,7 @@ DS_HEAD_ATTRIBUTE = 'head'
 
 # ODIN Line Tags ---------------------------------------------------------------
 ODIN_TAG_ATTRIBUTE = 'tag'
+ODIN_JUDGMENT_ATTRIBUTE = 'judgment'
 ODIN_LANG_TAG = 'L'
 ODIN_GLOSS_TAG = 'G'
 ODIN_TRANS_TAG = 'T'
