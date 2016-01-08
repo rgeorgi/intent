@@ -20,6 +20,16 @@ def get_raw_tier(inst):
         return rt
 
 def get_normal_tier(inst, clean=True, generate=True, force_generate=False):
+    """
+    :param inst: The instance to retrieve the normal tier from.
+    :param clean: Whether to attempt to automatically clean the instance or not.
+    :type clean: bool
+    :param generate: Whether to generate the normalized line if it doesn't exist.
+    :type generate: bool
+    :param force_generate: If the normal line already exists, overwrite it?
+    :type force_generate: bool
+    :return:
+    """
     # If a normal tier already exists, return it.
     normal_tier = find_in_obj(inst, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:NORM_STATE})
 
@@ -93,6 +103,7 @@ def get_clean_tier(inst, merge=False, generate=True, force_generate=False):
             others = tags[1:]
             line_tags[primary].append(l)
 
+
         # Now, the line_tags should be indexed by the primary
         # tag (L, G, T, etc...) with the +'s after it...
 
@@ -106,8 +117,9 @@ def get_clean_tier(inst, merge=False, generate=True, force_generate=False):
             # simply return the first line.
             if len(lines) == 1:
                 text = lines[0].value()
-                new_tag = lines[0].attributes['tag']
+                new_tag = lines[0].attributes[ODIN_TAG_ATTRIBUTE]
                 align_id = lines[0].id
+                item_judgment = lines[0].attributes.get(ODIN_JUDGMENT_ATTRIBUTE)
 
             # If there are multiple lines for a given tag,
             # concatenate them to a single line.
@@ -116,13 +128,36 @@ def get_clean_tier(inst, merge=False, generate=True, force_generate=False):
                 for l in lines:
                     PARSELOG.debug('BEFORE: %s' % l)
 
+                # The new text should be the concatenation of the multiple lines...
                 text = concat_lines([l.value() for l in lines])
                 PARSELOG.debug('AFTER: %s' % text)
                 new_tag = primary_tag
                 align_id = ','.join([l.id for l in lines])
 
-            item = RGLine(id=clean_tier.askItemId(), alignment=align_id, text=text,
-                          attributes={'tag': new_tag})
+                item_judgment = None
+                for l in lines:
+                    j = l.attributes.get(ODIN_JUDGMENT_ATTRIBUTE)
+                    if j is not None:
+                        item_judgment = j
+                        break
+
+            # Set up the attributes for the new line
+            item_attributes = {ODIN_TAG_ATTRIBUTE: new_tag}
+
+            # Use the old judgment if it exists, otherwise check again to see if
+            # the cleaned text has a judgment
+            if item_judgment is None:
+                item_judgment = judgment(text)
+
+            # If we have a judgment, add it to the attributes.
+            if item_judgment is not None:
+                item_attributes[ODIN_JUDGMENT_ATTRIBUTE] = item_judgment
+
+
+
+            item = RGLine(id=clean_tier.askItemId(),
+                          alignment=align_id, text=text,
+                          attributes=item_attributes)
             clean_tier.add(item)
 
         inst.append(clean_tier)

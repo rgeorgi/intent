@@ -35,13 +35,17 @@ def create_text_tier_from_lines(inst, lines, id_base, state):
         alltags = []
         if line.get('tag') is not None:
             alltags.append(line.get('tag'))
-        if line.get('labels') is not None:
+        if line.get('labels') is not None and line.get('labels'):
             alltags.append(line.get('labels'))
         tag_str = '+'.join(alltags)
 
+        # Construct the attributes
+        line_attributes = {ODIN_TAG_ATTRIBUTE:tag_str}
+        if line.get('judgment') is not None:
+            line_attributes[ODIN_JUDGMENT_ATTRIBUTE] = line['judgment']
 
         l = RGItem(id=gen_item_id(tier.id, len(tier)),
-                   attributes={ODIN_TAG_ATTRIBUTE:tag_str},
+                   attributes=line_attributes,
                    text=line.get('text'))
         tier.append(l)
     return tier
@@ -67,10 +71,15 @@ def add_normal_line_to_tier(inst, tier, tag, func):
 
         attributes = {ODIN_TAG_ATTRIBUTE:clean_lines[0].attributes[ODIN_TAG_ATTRIBUTE]}
 
-        # look for an indication of "judgment" on the line.
-        j = judgment(clean_lines[0])
-        if j is not None:
-            attributes[ODIN_JUDGMENT_ATTRIBUTE:j]
+        cl = clean_lines[0]
+
+        # Keep the previous judgment if specified, otherwise, look
+        # to see if it's been added since.
+        line_judgment = cl.attributes.get(ODIN_JUDGMENT_ATTRIBUTE)
+        if line_judgment is not None:
+            attributes[ODIN_JUDGMENT_ATTRIBUTE] = line_judgment
+        elif cl.value() is not None and judgment(cl.value()) is not None:
+            attributes[ODIN_JUDGMENT_ATTRIBUTE] = judgment(cl.value())
 
 
 
