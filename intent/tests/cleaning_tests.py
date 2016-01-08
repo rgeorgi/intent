@@ -50,3 +50,4 @@ class AlignTests(TestCase):
 
     def test_is_strict_columnar(self):
         self.assertTrue(is_strict_columnar_alignment(self.l1, self.l2))
+

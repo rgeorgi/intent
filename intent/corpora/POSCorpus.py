@@ -4,7 +4,6 @@ Created on Mar 6, 2014
 @author: rgeorgi
 """
 import os, codecs, re
-from nltk import bracket_parse, Tree
 from intent.trees import IdTree
 from intent.utils.token import tokenize_string, tag_tokenizer, POSToken
 

@@ -1,7 +1,6 @@
 from unittest import TestCase
 
 from intent.alignment.Alignment import heur_alignments, Alignment
-from intent.igt.igtutils import rgp
 from intent.igt.rgxigt import RGWordTier, RGIgt
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger

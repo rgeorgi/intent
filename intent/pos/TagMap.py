@@ -1,15 +1,15 @@
-'''
-This module is meant to 
-'''
+"""
+This module is meant to
+"""
 import os
 
 class TagMapException(Exception):
     pass
 
 class TagMap(object):
-    '''
+    """
     This is a simple class for reading/writing the prototype files used by Haghighi's prototype system.
-    '''
+    """
 
 
     def __init__(self, path):

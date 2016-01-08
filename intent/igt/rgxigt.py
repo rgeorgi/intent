@@ -2313,7 +2313,7 @@ def retrieve_phrase(inst, tag, id, type):
     pt = inst.find(type=type, others=[f])
 
     if pt is None:
-        n = inst.normal_tier()
+        n = get_normal_tier(inst)
         # Get the normalized line line
         l = retrieve_normal_line(inst, tag)
         pt = RGPhraseTier(id=id, type=type, content=n.id)

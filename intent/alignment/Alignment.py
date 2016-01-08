@@ -4,7 +4,7 @@ Created on Feb 21, 2014
 @author: rgeorgi
 """
 
-import collections, sys, re, unittest, copy
+import re, unittest, copy
 
 from intent.igt.grams import gramdict
 from intent.utils.string_utils import lemmatize_token
