@@ -2270,12 +2270,12 @@ def retrieve_trans_phrase(inst):
     :param inst: Instance to search
     :type inst: RGIgt
     """
-    tpt = retrieve_phrase(inst, ODIN_TRANS_TAG, TRANS_PHRASE_ID, TRANS_PHRASE_TYPE)
+    tpt = retrieve_phrase_tier(inst, ODIN_TRANS_TAG, TRANS_PHRASE_ID, TRANS_PHRASE_TYPE)
 
     # Add the alignment with the language line phrase if it's not already there.
     if ALIGNMENT not in tpt.attributes:
         try:
-            lpt = retrieve_lang_phrase(inst)
+            lpt = retrieve_lang_phrase_tier(inst)
             tpt.attributes[ALIGNMENT] = lpt.id
             tpt[0].attributes[ALIGNMENT] = lpt[0].id
         except MultipleNormLineException as mnle:
@@ -2285,16 +2285,16 @@ def retrieve_trans_phrase(inst):
 
     return tpt
 
-def retrieve_lang_phrase(inst):
+def retrieve_lang_phrase_tier(inst):
     """
     Retrieve the language phrase if it exists, otherwise create it.
 
     :param inst: Instance to search
     :type inst: RGIgt
     """
-    return retrieve_phrase(inst, ODIN_LANG_TAG, LANG_PHRASE_ID, LANG_PHRASE_TYPE)
+    return retrieve_phrase_tier(inst, ODIN_LANG_TAG, LANG_PHRASE_ID, LANG_PHRASE_TYPE)
 
-def retrieve_phrase(inst, tag, id, type):
+def retrieve_phrase_tier(inst, tag, id, type):
     """
     Retrieve a phrase for the given tag, with the provided id and type.
 
@@ -2310,14 +2310,25 @@ def retrieve_phrase(inst, tag, id, type):
 
     # TODO FIXME: VERY kludgy and unstable...
     f = lambda x: tag in aligned_tags(x)
-    pt = inst.find(type=type, others=[f])
+    pt = find_in_obj(inst, type=type, others=[f])
 
     if pt is None:
         n = get_normal_tier(inst)
-        # Get the normalized line line
+        # Get the normalized line
         l = retrieve_normal_line(inst, tag)
+
+        # -------------------------------------------
+        # Create the phrase tier, and add a single phrase item.
         pt = RGPhraseTier(id=id, type=type, content=n.id)
-        pt.add(RGPhrase(id=pt.askItemId(), content=l.id))
+
+        # -------------------------------------------
+        # Propagate the judgment attribute on the line to the phrase item
+        phrase_attributes = {}
+        old_judgment = l.attributes.get(ODIN_JUDGMENT_ATTRIBUTE)
+        if l.attributes.get(ODIN_JUDGMENT_ATTRIBUTE) is not None:
+            phrase_attributes[ODIN_JUDGMENT_ATTRIBUTE] = old_judgment
+
+        pt.add(RGPhrase(id=pt.askItemId(), content=l.id, attributes=phrase_attributes))
         inst.append(pt)
     else:
         pt.__class__ = RGPhraseTier
@@ -2391,7 +2402,7 @@ def retrieve_lang_words(inst):
     :rtype: RGWordTier
     """
     # Get the lang phrase tier
-    lpt = retrieve_lang_phrase(inst)
+    lpt = retrieve_lang_phrase_tier(inst)
 
     # Get the lang word tier
     lwt = inst.find(type=LANG_WORD_TYPE, segmentation=lpt.id)
@@ -2530,7 +2541,7 @@ def retrieve_normal_line(inst, tag):
     :rtype: RGPhrase
     """
 
-    n = inst.normal_tier()
+    n = get_normal_tier(inst)
 
     lines = [l for l in n if tag in l.attributes[ODIN_TAG_ATTRIBUTE].split('+')]
 
