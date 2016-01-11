@@ -57,6 +57,10 @@ def enrich(**kwargs):
 
     ENRICH_LOG = logging.getLogger('ENRICH')
 
+    if 'OUT_FILE' not in kwargs:
+        ENRICH_LOG.critical("No output file specified.")
+        sys.exit()
+
     # =============================================================================
     # Set up the alternate classifier path...
     # =============================================================================

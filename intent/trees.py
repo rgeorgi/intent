@@ -614,6 +614,16 @@ def project_ds(src_t, tgt_w, aln):
         left_indices  = sorted([i for i in aln.all_tgt() if i < j])
         right_indices = sorted([k for k in aln.all_tgt() if k > j])
 
+        # Convert the tree representation to a list of (head, child) indices
+        indices = tgt_t.to_indices()
+
+        # Filter the indices such that only those where j is in between the
+        # two.
+        indices = [(i, k) for i, k in indices if (i < j < k) or (k < j < i)]
+
+        # Now, sort these indices by their closeness to the current index
+        indices.sort(key=lambda x: abs(j - x[0]) + abs(j - x[1]))
+
         # If there are no indices to the left, attach to the leftmost of those
         # to the right...
         if not left_indices:
@@ -626,20 +636,17 @@ def project_ds(src_t, tgt_w, aln):
 
         # If we have indices to the left and right, find whether one depends
         # on the other...
-        else:
-            # Convert the tree representation to a list of (head, child) indices
-            indices = tgt_t.to_indices()
-
-            # Filter the indices such that only those where j is in between the
-            # two.
-            indices = [(i, k) for i, k in indices if (i < j < k) or (k < j < i)]
-
-            # Now, sort these indices by their closeness to the current index
-            indices.sort(key=lambda x: abs(j - x[0]) + abs(j - x[1]))
-
+        elif indices:
             # And, finally, queue the unaligned node to attach to the "lower"
             # (child) of the index pair.
             attachments_to_make.append((j, indices[0][1]))
+
+        else:
+            DS_LOG.warning('Unable to reattach index "{}"'.format(j))
+
+
+
+
 
     for unaln_i, aln_i in attachments_to_make:
         tgt_word = tgt_w.get_index(unaln_i).value()
@@ -1249,7 +1256,7 @@ def get_dep_edges(string, stype=DEPSTR_STANFORD):
 
     if stype == DEPSTR_STANFORD:
         #                    Sometimes the parser seems to place a spurious quote after the digit?
-        nodes = re.findall('(\S+)\((.*?\d+)\'?\)', string)
+        nodes = re.findall('(\S+)\((.*?\d+)\'*\)', string)
 
         # We are going to store a dictionary of words
         # and their children, and then construct the
