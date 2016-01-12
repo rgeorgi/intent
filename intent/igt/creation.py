@@ -305,12 +305,8 @@ def get_clean_tier(inst, merge=False, generate=True, force_generate=False):
             # Set up the attributes for the new line
             item_attributes = {ODIN_TAG_ATTRIBUTE: new_tag}
 
-            # Use the old judgment if it exists, otherwise check again to see if
-            # the cleaned text has a judgment
-            if item_judgment is None:
-                item_judgment = get_judgment(text)
-
             # If we have a judgment, add it to the attributes.
+            # Otherwise, don't add it.
             if item_judgment is not None:
                 item_attributes[ODIN_JUDGMENT_ATTRIBUTE] = item_judgment
 
