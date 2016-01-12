@@ -4,7 +4,7 @@ from intent.igt.consts import DATA_PROV, DATA_SRC, INTENT_META_SOURCE, DATA_METH
     WORDS_TYPE, GLOSS_WORD_TYPE, INTENT_GLOSS_WORD, INTENT_GLOSS_MORPH
 from intent.igt.igtutils import rgp
 from intent.igt.metadata import set_meta_attr, find_meta, find_meta_attr, get_meta_timestamp, timestamp_meta, is_contentful_meta, \
-    del_meta_attr
+    del_meta_attr, del_meta
 from intent.igt.rgxigt import RGTier, RGIgt, is_word_level_gloss, add_word_level_info
 from xigt import Meta, Metadata
 
@@ -94,5 +94,5 @@ class DelMetaTests(TestCase):
         self.assertEqual(len(self.md), 2)
 
         del_meta_attr(self.t, 'foobar', 'foo')
-        self.assertEqual(len(self.md), 1)
+
         self.assertEqual(len(self.t.metadata), 1)

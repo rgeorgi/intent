@@ -24,6 +24,7 @@ class symmetricization_tests(TestCase):
         self.assertEqual(a, self.a1.grow_diag(self.a2))
 
     def test_grow_diag_final(self):
+        #TODO: Write testcase for grow_diag_final
         raise Exception("NO TESTCASE DEFINED!")
 
 class heur_align_tests(TestCase):
@@ -32,7 +33,7 @@ class heur_align_tests(TestCase):
         self.gloss = "1SG feels the Cat NOM kicks the ACC dog".split()
         self.trans = "I   feel that the cat kicked the dog".split()
 
-        self.exact = Alignment([(3, 4), (4, 5), (7, 7), (9, 8)])
+        self.exact = Alignment([(3, 4), (7, 7), (9, 8)])
         self.stem  = Alignment([(2, 2), (3, 4), (4, 5), (6, 6), (7, 7), (9, 8)])
         self.gram  = Alignment([(1, 1)])
         self.all   = Alignment([(1, 1), (2, 2), (3, 4), (4, 5), (6, 6), (7, 7), (9, 8)])

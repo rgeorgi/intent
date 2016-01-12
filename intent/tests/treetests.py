@@ -630,11 +630,5 @@ class CONLLTests(unittest.TestCase):
             trees = read_conll_file(self.conll_path)
             self.assertEqual(1, len(trees))
 
-
         def test_conll_file_stats(self):
             pos_stats([self.conll_path], filetypes=CONLL_TYPE)
-
-
-
-
-

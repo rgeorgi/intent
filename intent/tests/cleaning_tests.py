@@ -20,7 +20,7 @@ class CleanTests(TestCase):
 
         l4 = '(i) Procetox        statija-ta=i.          (ii) *Procetox statija=i.'
         l5 = '      read.1sg      article-DEF=3fsg            read.1sg     article=3fsg'
-        l6 = "      `I read her article.'                     `I read one of her articles."
+        l6 = "      `I read her article.'                     `I read one of her articles.'"
 
         newlines = [l4,l5,l6]
 
@@ -28,10 +28,12 @@ class CleanTests(TestCase):
 
     def clean_lang_test(self):
         result = clean_lang_string(self.l1)
-        self.assertEqual(result, '          Procetox        statija-ta=i.          (ii) *Procetox statija=i.')
+        self.assertEqual(result, '          Procetox        statija-ta=i.               *Procetox statija=i ')
 
     def clean_trans_test(self):
-        print(clean_trans_string(self.l3))
+        result = "      `I read her article.'                     `I read one of her articles "
+        self.assertEqual(clean_trans_string(self.l3), result)
+
 
 
 
