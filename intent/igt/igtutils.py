@@ -119,7 +119,7 @@ def replace_group_with_whitespace(match_obj):
     return new_str
 
 def remove_parenthetical_numbering(ret_str):
-    ret_str = re.sub('(\((?:[ivx]+|[a-z]|[1-9]+)\))', replace_group_with_whitespace, ret_str)
+    ret_str = re.sub('(\((?:[ivx]+|[a-z]|[1-9]+[a-z]?)\))', replace_group_with_whitespace, ret_str)
     # ret_str = re.sub('^\s*(\(.*?\))', replace_group_with_whitespace, ret_str)
     return ret_str
 

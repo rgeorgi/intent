@@ -79,16 +79,25 @@ def add_normal_line_to_tier(inst, tier, tag, func):
         attributes = {ODIN_TAG_ATTRIBUTE:clean_lines[0].attributes[ODIN_TAG_ATTRIBUTE]}
 
         cl = clean_lines[0]
-        text = cl.value()
+        text = None if cl.value() is None else func(cl.value())
+        text, j = (None, None) if text is None else extract_judgment(text)
 
-        # Keep the previous judgment if specified, otherwise, look
-        # to see if it's been added since.
+        # -------------------------------------------
+        # Several options for the judgment attribute...
+        # -------------------------------------------
+        # 1) It was previously there on the clean tier.
+        #    in this case, carry it over to the normalized
+        #    tier.
         line_judgment = cl.attributes.get(ODIN_JUDGMENT_ATTRIBUTE)
         if line_judgment is not None:
             attributes[ODIN_JUDGMENT_ATTRIBUTE] = line_judgment
-        elif cl.value() is not None and get_judgment(cl.value()) is not None:
-            text, j = extract_judgment(text)
-            attributes[ODIN_JUDGMENT_ATTRIBUTE] = get_judgment(cl.value())
+
+        # -------------------------------------------
+        # 2) After being cleaned, there is still a judgment
+        #    character on the line. Extract it and add
+        #    the appropriate attribute.
+        elif text is not None and j is not None:
+            attributes[ODIN_JUDGMENT_ATTRIBUTE] = j
 
         item = RGLine(id=gen_item_id(tier.id, len(tier)),
                     text=func(text),
