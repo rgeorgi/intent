@@ -315,8 +315,7 @@ def pos_stats(filelist, filetypes=SLASHTAG_TYPE, log_file = sys.stdout, csv=Fals
     labels = list(tagCount.keys())
     labels = sorted(labels)
 
-
-    log_file('tag, tag_counts, types_per_tag, percent_of_tokens, percent_of_types\n')
+    log_file.write('tag, tag_counts, types_per_tag, percent_of_tokens, percent_of_types\n')
     for i, tag in enumerate(labels):
         tagcounts = tagCount[tag]
         typetagcounts = typetags[tag]

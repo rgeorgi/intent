@@ -1790,6 +1790,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             proj_t = project_ds(src_t, tgt_w, aln)
 
+
             self.create_dt_tier(proj_t, self.lang, parse_method=INTENT_DS_PROJ)
 
     def get_ps_tier(self, target):
@@ -2893,5 +2894,4 @@ def strip_pos(inst):
 
 
 from intent.trees import IdTree, project_ps, Terminal, DepTree, project_ds, DepEdge, build_dep_edges
-from .xigt_manipulations import *
 from .creation import *

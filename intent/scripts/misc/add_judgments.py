@@ -7,7 +7,7 @@ JUDG_LOG = logging.getLogger("JUDGMENTS")
 from intent.igt.consts import ODIN_TYPE, ODIN_JUDGMENT_ATTRIBUTE
 from xigt import xigtpath
 
-from intent.igt.igtutils import rgp, judgment
+from intent.igt.igtutils import rgp, get_judgment
 from xigt.codecs import xigtxml
 from xigt.consts import INCREMENTAL
 
@@ -32,7 +32,7 @@ if __name__ == '__main__':
                         continue
 
                     # Get the judgment and add it if it is non-null.
-                    j = judgment(item.value())
+                    j = get_judgment(item.value())
                     if j is not None:
                         item.attributes[ODIN_JUDGMENT_ATTRIBUTE] = j
                         JUDG_LOG.debug('Judgment found on item "{}"'.format(item.id))

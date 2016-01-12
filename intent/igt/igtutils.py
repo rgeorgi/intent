@@ -119,7 +119,8 @@ def replace_group_with_whitespace(match_obj):
     return new_str
 
 def remove_parenthetical_numbering(ret_str):
-    ret_str = re.sub('^\s*(\(.*?\))', replace_group_with_whitespace, ret_str)
+    ret_str = re.sub('(\((?:[ivx]+|[a-z]|[1-9]+)\))', replace_group_with_whitespace, ret_str)
+    # ret_str = re.sub('^\s*(\(.*?\))', replace_group_with_whitespace, ret_str)
     return ret_str
 
 
@@ -358,7 +359,7 @@ def clean_lang_string(ret_str):
 
     ret_str = surrounding_quotes_and_parens(ret_str)
     # Remove spurious brackets
-    # ret_str = re.sub('[\[\]\(\)]', '', ret_str)
+    ret_str = re.sub('([\[\]\(\)])', replace_group_with_whitespace, ret_str)
 
     # Split punctuation
     # ret_str = remove_external_punctuation(ret_str)
@@ -434,17 +435,31 @@ def resolve_objects(container, expression):
 # -------------------------------------------
 # Search for judgment on line
 # -------------------------------------------
-def judgment(line):
-    ungrammatical = '*' in line
-    questionable  = re.search('\?\w', line)
+def get_judgment(line):
+    line, j = extract_judgment(line)
+    return j
 
-    ret_str = ''
-    if ungrammatical:
-        ret_str += '*'
-    if questionable:
-        ret_str += '?'
+def extract_judgment(line):
+    """
+    Given a string, attempt to extract the judgment character ("*" or "?") from it.
 
-    return ret_str if ret_str else None
+    :param line:
+    :type line: str
+    :return: Tuple of the altered line and the judgment character.
+     :rtype: tuple[str, str]
+    """
+    judgment_re = '^[\s\'\`\"]*([\?\*])'
+    result = re.search(judgment_re, line)
+
+    j = None
+    if result:
+        line = re.sub(judgment_re, replace_group_with_whitespace, line)
+        j = result.group(1)
+    elif '*' in line:
+        j = '*'
+
+    return line, j
+
 
 #===============================================================================
 # Backoff methods
@@ -461,7 +476,7 @@ def hyphenate_infinitive(ret_str):
 class TestLangLines(unittest.TestCase):
     def runTest(self):
         l1  = '  (38)     Este taxista     (*me) parece [t estar cansado]'
-        l1c = '           Este taxista       me  parece  t estar cansado'
+        l1c = '           Este taxista      *me  parece  t estar cansado '
 
         self.assertEqual(clean_lang_string(l1), l1c)
 
@@ -470,7 +485,7 @@ class TestLangLines(unittest.TestCase):
         # l1 = '  (1)     Mangi-a.'
 
         l1_clean = clean_lang_string(l1)
-        l1_target = 'Mangi-a .'
+        l1_target = '          Mangi-a '
 
         self.assertEquals(l1_clean, l1_target)
 
@@ -501,17 +516,3 @@ class TestMergeLines(unittest.TestCase):
         merged = merge_lines([l1, l2])
         tgt = 'This  is    an example    of    merged lines'
         self.assertEqual(merged, tgt)
-
-class JudgmentTests(unittest.TestCase):
-
-    def ungrammatical_test(self):
-        l1 = "             *'Read many   books, she has'"
-        self.assertEqual(judgment(l1), '*')
-
-    def questionable_test(self):
-        l1 = "        b. ?Koja ot tezi knigi se ¤cudi      ¤s   koj    znae     koj prodava?"
-        l2 = "        b.  Koja ot tezi knigi se ¤cudi      ¤s   koj    znae     koj prodava?"
-        l3 = "*       b. ?Koja ot tezi knigi se ¤cudi      ¤s   koj    znae     koj prodava?"
-        self.assertEqual(judgment(l1), '?')
-        self.assertEqual(judgment(l2), None)
-        self.assertEqual(judgment(l3), '*?')

@@ -106,14 +106,14 @@ def set_meta_attr(obj, meta_type, attr, val, metadata_type=INTENT_META_TYPE, tim
         timestamp_meta(m)
 
 
-def del_meta(obj, meta_type):
+def del_meta(obj, meta_type, metadata_type=None):
     """
     Remove the specified Meta type.
 
     :param obj:
     :param meta_type:
     """
-    m = find_meta(obj, meta_type)
+    m = find_meta(obj, meta_type, metadata_type=metadata_type)
     if m is not None:
         md = m._parent
         md.remove(m)
@@ -122,7 +122,7 @@ def del_meta(obj, meta_type):
             obj.metadata.remove(md)
 
 
-def del_meta_attr(obj, meta_type, attr):
+def del_meta_attr(obj, meta_type, attr, metadata_type=None):
     """
     Remove the specified meta attribute
 
@@ -131,7 +131,7 @@ def del_meta_attr(obj, meta_type, attr):
     :param attr:
     """
     # Find the Meta object
-    m = find_meta(obj, meta_type)
+    m = find_meta(obj, meta_type, metadata_type=metadata_type)
     if m is not None:
         # If it has the specified attribute,
         # remove it.
@@ -142,7 +142,7 @@ def del_meta_attr(obj, meta_type, attr):
         # or other contentful attributes (not timestamp)
         # Remove it from its parent.
         if not is_contentful_meta(m):
-            del_meta(obj, meta_type)
+            del_meta(obj, meta_type, metadata_type=metadata_type)
 
 def is_contentful_metadata(md):
     return len(md) > 0
