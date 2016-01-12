@@ -1264,7 +1264,6 @@ def get_dep_edges(string, stype=DEPSTR_STANFORD):
 
     if stype == DEPSTR_STANFORD:
         #                    Sometimes the parser seems to place a spurious quote after the digit?
-        print(string)
         nodes = re.findall('(\S+)\((.*?\d+)\'*\)', string)
 
 
