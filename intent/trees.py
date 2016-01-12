@@ -652,12 +652,14 @@ def project_ds(src_t, tgt_w, aln):
         tgt_word = tgt_w.get_index(unaln_i).value()
         aln_node = tgt_t.find_index(aln_i)
 
-        unaln_node = DepTree(tgt_word, [], word_index=unaln_i)
+        #TODO: Determine why we're not occasionally not finding the unaligned nodes?
+        if aln_node is not None:
+            unaln_node = DepTree(tgt_word, [], word_index=unaln_i)
 
-        DS_LOG.debug("Attaching {}[{}] to {}[{}]".format(tgt_word, unaln_i,
-                                                         aln_node.label(), aln_i))
+            DS_LOG.debug("Attaching {}[{}] to {}[{}]".format(tgt_word, unaln_i,
+                                                             aln_node.label(), aln_i))
 
-        aln_node.append(unaln_node)
+            aln_node.append(unaln_node)
 
     # Finally, just go through and make sure the children are sorted by index.
     seen_edges = set([])

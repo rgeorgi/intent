@@ -1,4 +1,30 @@
 <xigt-corpus xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <igt id="igt1836-221" doc-id="1836" line-range="1481-1484" tag-types="L M G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="kxi" xsi:type="olac:language">Nabay</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="1481" tag="L">           Mo- kondo' kia dua pasang      KAWAL   dugitu?</item>
+      <item id="r2" line="1482" tag="M">   27g</item>
+      <item id="r3" line="1483" tag="G">           npt.af-ext ?    two cl.clothes shirt.F here</item>
+      <item id="r4" line="1484" tag="T">           Are there two shirts here?</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="1481" tag="L">           Mo- kondo' kia dua pasang      KAWAL   dugitu?</item>
+      <item id="c2" alignment="r2" line="1482" tag="M">   27g</item>
+      <item id="c3" alignment="r3" line="1483" tag="G">           npt.af-ext ?    two cl.clothes shirt.F here</item>
+      <item id="c4" alignment="r4" line="1484" tag="T">           Are there two shirts here?</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="1481" tag="L">Mo-kondo' kia dua pasang      KAWAL   dugitu?</item>
+      <item id="n2" alignment="c2" line="1482" tag="M">27g</item>
+      <item id="n3" alignment="c3" line="1483" tag="G">npt.af-ext ?    two cl.clothes shirt.F here</item>
+      <item id="n4" alignment="c4" line="1484" tag="T">Are there two shirts here?</item>
+    </tier>
+  </igt>
  <igt id="igt1607-64" doc-id="1607" line-range="1164-1166" tag-types="L G T">
     <metadata>
       <meta id="meta1">
