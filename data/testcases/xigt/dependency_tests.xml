@@ -1,0 +1,54 @@
+<xigt-corpus xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <igt id="igt1607-64" doc-id="1607" line-range="1164-1166" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="cku" xsi:type="olac:language">Koasati</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="1164" tag="L">  (65) akkámmi-t ow-i:sá-hci                  hahci-f-ó:t oktaspi-f-ó:t kámmi-fa</item>
+      <item id="r2" line="1165" tag="G">       be.so-CONN      LOC-dwell. PL- PROG river-in- EX    swamp-in-EX      be.so-in</item>
+      <item id="r3" line="1166" tag="T">       `So they live in rivers and in swamps and in suchlike places.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="1164" tag="L">  (65) akkámmi-t ow-i:sá-hci                  hahci-f-ó:t oktaspi-f-ó:t kámmi-fa</item>
+      <item id="c2" alignment="r2" line="1165" tag="G">       be.so-CONN      LOC-dwell. PL- PROG river-in- EX    swamp-in-EX      be.so-in</item>
+      <item id="c3" alignment="r3" line="1166" tag="T">       `So they live in rivers and in swamps and in suchlike places.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="1164" tag="L">akkámmi-t ow-i:sá-hci                  hahci-f-ó:t oktaspi-f-ó:t kámmi-fa</item>
+      <item id="n2" alignment="c2" line="1165" tag="G">be.so-CONN      LOC-dwell. PL-PROG river-in-EX    swamp-in-EX      be.so-in</item>
+      <item id="n3" alignment="c3" line="1166" tag="T">So they live in rivers and in swamps and in suchlike places.</item>
+    </tier>
+  </igt>
+  <igt id="igt4071-46" doc-id="4071" line-range="1223-1227" tag-types="L B G B T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="fro" xsi:type="olac:language">Old French</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="1223" tag="L">     b. Et quex chevaliers i       avra il .. ?</item>
+      <item id="r2" line="1224" tag="B" />
+      <item id="r3" line="1225" tag="G">           And which knight    there will-be there .. ?</item>
+      <item id="r4" line="1226" tag="B" />
+      <item id="r5" line="1227" tag="T">                      'And which knight will be there .. ?'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="1223" tag="L">     b. Et quex chevaliers i       avra il .. ?</item>
+      <item id="c2" alignment="r2" line="1224" tag="B" />
+      <item id="c3" alignment="r3" line="1225" tag="G">           And which knight    there will-be there .. ?</item>
+      <item id="c4" alignment="r4" line="1226" tag="B" />
+      <item id="c5" alignment="r5" line="1227" tag="T">                      'And which knight will be there .. ?'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="1223" tag="L">Et quex chevaliers i       avra il .. ?</item>
+      <item id="n2" alignment="c2" line="1224" tag="B" />
+      <item id="n3" alignment="c3" line="1225" tag="G">And which knight    there will-be there .. ?</item>
+      <item id="n4" alignment="c4" line="1226" tag="B" />
+      <item id="n5" alignment="c5" line="1227" tag="T">And which knight will be there .. ?</item>
+    </tier>
+  </igt>
+</xigt-corpus>

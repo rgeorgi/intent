@@ -3,7 +3,6 @@ import os
 from unittest import TestCase
 
 from intent.igt.consts import ODIN_LANG_TAG, ODIN_JUDGMENT_ATTRIBUTE, ODIN_TRANS_TAG
-from intent.igt.igtutils import rgp
 from xigt.codecs import xigtxml
 
 from intent.igt.rgxigt import RGCorpus, retrieve_normal_line, retrieve_lang_phrase_tier, retrieve_trans_phrase
@@ -232,4 +231,3 @@ class JudgmentPropogationTests(TestCase):
 
         phrase_item = retrieve_trans_phrase(self.inst)[0]
         self.assertEqual(phrase_item.attributes.get(ODIN_JUDGMENT_ATTRIBUTE), '*')
-        

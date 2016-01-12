@@ -1022,6 +1022,12 @@ class DepEdge(object):
         self.type = type
         self.pos = pos
 
+    def __eq__(self, other):
+        return self.head == other.head and self.dep == other.dep and self.type == other.type and self.pos == other.pos
+
+    def __hash__(self):
+        return '{}_{}_{}_{}'.format(self.head, self.dep, self.type, self.pos)
+
 
 class DepTree(IdTree):
     def __init__(self, label, children=None, id=None, type=None, word_index=None, pos=None):
@@ -1256,7 +1262,9 @@ def get_dep_edges(string, stype=DEPSTR_STANFORD):
 
     if stype == DEPSTR_STANFORD:
         #                    Sometimes the parser seems to place a spurious quote after the digit?
+        print(string)
         nodes = re.findall('(\S+)\((.*?\d+)\'*\)', string)
+
 
         # We are going to store a dictionary of words
         # and their children, and then construct the
@@ -1272,7 +1280,11 @@ def get_dep_edges(string, stype=DEPSTR_STANFORD):
             head  = Terminal(*re.search(w_i_re, head).groups())
             child = Terminal(*re.search(w_i_re, child).groups())
 
-            edges.append(DepEdge(head, child, type=name))
+            edge = DepEdge(head, child, type=name)
+            if edge in edges:
+                continue
+
+            edges.append(edge)
 
     # -----------------------------------------------------------------------------
     # CONLL Dependencies...
