@@ -95,7 +95,7 @@ def set_meta_attr(obj, meta_type, attr, val, metadata_type=INTENT_META_TYPE, tim
     :raise Exception: If ``obj`` is of a meta_type that does not contain metadata.
     """
     if not isinstance(obj, XigtContainerMixin):
-        raise Exception('Attempt to add meta object on object ({}) that cannot contain meta'.format(meta_type(obj)))
+        raise Exception('Attempt to add meta object on object ({}) that cannot contain meta'.format(obj))
     else:
         m = find_meta(obj, meta_type, metadata_type=metadata_type)
         if m is None:
