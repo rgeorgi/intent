@@ -109,7 +109,7 @@ def enrich(**kwargs):
     #===========================================================================
     # Initialize the parser
     #===========================================================================
-    if PARSE_TRANS in parse_args:
+    if PARSE_TRANS in parse_args or PARSE_LANG_PROJ in parse_args:
         ENRICH_LOG.log(1000, "Intializing English parser...")
         sp = stanford_parser.StanfordParser()
 
@@ -222,7 +222,7 @@ def enrich(**kwargs):
 
 
             # 5) Parse the translation line ----------------------------------------
-            if PARSE_TRANS in parse_args and has_trans:
+            if (PARSE_TRANS in parse_args) or (PARSE_LANG_PROJ in parse_args) and has_trans:
                 # try:
                 inst.parse_translation_line(sp, pt=True, dt=True)
                 # except Exception as ve:
