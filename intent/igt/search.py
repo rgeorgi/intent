@@ -3,7 +3,9 @@
 # -------------------------------------------
 import re
 
-from intent.igt.consts import ODIN_TYPE, STATE_ATTRIBUTE, RAW_STATE, CLEAN_STATE, NORM_STATE
+from intent.igt.consts import ODIN_TYPE, STATE_ATTRIBUTE, RAW_STATE, CLEAN_STATE, NORM_STATE, ODIN_LANG_TAG, \
+    ODIN_GLOSS_TAG, ODIN_TRANS_TAG
+
 from xigt import ref, Tier
 from xigt.consts import CONTENT, ALIGNMENT
 from xigt.consts import SEGMENTATION
@@ -127,6 +129,19 @@ def raw_tier(inst) -> Tier:
 def cleaned_tier(inst) -> Tier:
     return text_tier(inst, CLEAN_STATE)
 
-
 def normalized_tier(inst) -> Tier:
     return text_tier(inst, NORM_STATE)
+
+# -------------------------------------------
+# More convenience methods
+# -------------------------------------------
+def lang_line(inst):
+    return retrieve_normal_line(inst, ODIN_LANG_TAG)
+
+def gloss_line(inst):
+    return retrieve_normal_line(inst, ODIN_GLOSS_TAG)
+
+def trans_line(inst):
+    return retrieve_normal_line(inst, ODIN_TRANS_TAG)
+
+from .rgxigt import retrieve_normal_line

@@ -18,7 +18,6 @@ import xigt
 from intent.consts.grammatical import morpheme_boundary_chars
 from xigt.query import ancestors
 from .exceptions import *
-from .search import aln_match, type_match, seg_match, ref_match, findall_in_obj, find_in_obj
 from intent.interfaces.fast_align import fast_align_sents
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.pos.TagMap import TagMap
@@ -946,6 +945,8 @@ class RGIgt(Igt, RecursiveFindMixin):
     def get_trans_gloss_alignment(self, aln_method=None):
         """
         Get the alignment between trans words and gloss words.
+
+        :rtype: Alignment
         """
         # -------------------------------------------
         # 1) If we already have this alignment, just return it.
@@ -2395,7 +2396,7 @@ def retrieve_trans_words(inst):
 
     return twt
 
-def retrieve_lang_words(inst):
+def retrieve_lang_words(inst, create=True):
     """
     Retrieve the language words tier from an instance
 
@@ -2408,11 +2409,13 @@ def retrieve_lang_words(inst):
     # Get the lang word tier
     lwt = inst.find(type=LANG_WORD_TYPE, segmentation=lpt.id)
 
-    if lwt is None:
+    if lwt is None and create:
         lwt = create_words_tier(lpt[0], LANG_WORD_ID, LANG_WORD_TYPE)
         inst.append(lwt)
-    else:
+    elif lwt is not None:
         lwt.__class__ = RGWordTier
+    else:
+        lwt = None
 
     return lwt
 
@@ -2482,7 +2485,7 @@ def aligned_tags(obj):
         return []
 
 
-def retrieve_gloss_words(inst):
+def retrieve_gloss_words(inst, create=True):
     """
     Given an IGT instance, create the gloss "words" and "glosses" tiers.
 
@@ -2505,7 +2508,7 @@ def retrieve_gloss_words(inst):
                            lambda x: ODIN_GLOSS_TAG in aligned_tags(x) ])
 
     # 2. If it exists, return it. Otherwise, look for the glosses tier.
-    if wt is None:
+    if wt is None and create:
         n = inst.normal_tier()
         g_n = retrieve_normal_line(inst, ODIN_GLOSS_TAG)
 
@@ -2519,8 +2522,10 @@ def retrieve_gloss_words(inst):
         # Set the "gloss type" to the "word-level"
         add_word_level_info(wt, INTENT_GLOSS_WORD)
         inst.append(wt)
-    else:
+    elif wt is not None:
         wt.__class__ = RGWordTier
+    else:
+        return None
 
 
     # If we have alignment, we can remove the metadata, because
@@ -2547,7 +2552,7 @@ def retrieve_normal_line(inst, tag):
     lines = [l for l in n if tag in l.attributes[ODIN_TAG_ATTRIBUTE].split('+')]
 
     if len(lines) < 1:
-        raise NoNormLineException()
+        return None
     elif len(lines) > 1:
         raise MultipleNormLineException('Multiple normalized lines found for tag "{}" in instance {}'.format(tag, inst.id))
     else:
@@ -2895,3 +2900,4 @@ def strip_pos(inst):
 
 from intent.trees import IdTree, project_ps, Terminal, DepTree, project_ds, DepEdge, build_dep_edges
 from .creation import *
+from .search import aln_match, type_match, seg_match, ref_match, findall_in_obj, find_in_obj
