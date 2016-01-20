@@ -299,7 +299,7 @@ def get_clean_tier(inst, merge=False, generate=True, force_generate=False):
                     PARSELOG.debug('BEFORE: %s' % l)
 
                 # The new text should be the concatenation of the multiple lines...
-                text = concat_lines([l.value() for l in lines])
+                text = concat_lines([l.value() for l in lines if l.value() is not None])
                 PARSELOG.debug('AFTER: %s' % text)
                 new_tag = primary_tag
                 align_id = ','.join([l.id for l in lines])
