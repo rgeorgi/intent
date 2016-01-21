@@ -195,18 +195,18 @@ def igt_stats(filelist, type='text', logpath=None, show_header=True, show_filena
             STATS_LOGGER.info('Processing text file: "%s"' % path)
             rc = RGCorpus.from_txt(path)
 
-        pool = Pool(cpu_count())
+        # pool = Pool(cpu_count())
 
         # Divide the file into roughly equal chunks
         chunks = chunkIt(rc.igts, cpu_count())
 
         for chunk in chunks:
-            pool.apply_async(inst_list_stats, args=[chunk], callback=sd.combine)
-            # sd.combine(inst_list_stats(chunk))
+            # pool.apply_async(inst_list_stats, args=[chunk], callback=sd.combine)
+            sd.combine(inst_list_stats(chunk))
 
 
-        pool.close()
-        pool.join()
+        # pool.close()
+        # pool.join()
 
     if show_header:
         print(sd.header())
