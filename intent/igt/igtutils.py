@@ -119,7 +119,7 @@ def replace_group_with_whitespace(match_obj):
     return new_str
 
 def remove_parenthetical_numbering(ret_str):
-    ret_str = re.sub('(\((?:[ivx]+|[a-z]|[1-9]+[a-z]?)\))', replace_group_with_whitespace, ret_str)
+    ret_str = re.sub('(\((?:[ivx]+|[a-z]|[1-9\.]+[a-z]?)\))', replace_group_with_whitespace, ret_str)
     # ret_str = re.sub('^\s*(\(.*?\))', replace_group_with_whitespace, ret_str)
     return ret_str
 
@@ -130,7 +130,7 @@ def remove_period_numbering(ret_str):
     |
     1.   a.  ii.
     """
-    number_search = '^\s*(%s\.)' % list_re
+    number_search = '^\s*((?:[a-z]|[ivx]+)\.)'.format(list_re)
 
     return re.sub(number_search, replace_group_with_whitespace, ret_str)
 
@@ -455,8 +455,11 @@ def extract_judgment(line):
     if result:
         line = re.sub(judgment_re, replace_group_with_whitespace, line)
         j = result.group(1)
-    elif '*' in line:
-        j = '*'
+    if '*' in line:
+        if j is None:
+            j = '*'
+        else:
+            j+= '*'
 
     return line, j
 

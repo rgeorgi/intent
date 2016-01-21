@@ -49,6 +49,7 @@ class JudgmentTests(TestCase):
         self.assertEqual(get_judgment(l1), None)
         self.assertEqual(get_judgment(l2), None)
         self.assertEqual(get_judgment(l3), '*')
+        self.assertEqual(get_judgment(l4), '?*')
 
 
 # -------------------------------------------
