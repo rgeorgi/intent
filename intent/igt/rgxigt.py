@@ -2318,6 +2318,8 @@ def retrieve_phrase_tier(inst, tag, id, type):
         n = get_normal_tier(inst)
         # Get the normalized line
         l = retrieve_normal_line(inst, tag)
+        if l is None:
+            raise NoNormLineException('No normalized line found for tag "{}"'.format(tag))
 
         # -------------------------------------------
         # Create the phrase tier, and add a single phrase item.
@@ -2513,7 +2515,7 @@ def retrieve_gloss_words(inst, create=True):
         g_n = retrieve_normal_line(inst, ODIN_GLOSS_TAG)
 
         # If the value of the gloss line is None, or it's simply an empty string...
-        if g_n.value() is None or not g_n.value().strip():
+        if g_n is None or g_n.value() is None or not g_n.value().strip():
             raise EmptyGlossException()
         else:
             wt = create_words_tier(retrieve_normal_line(inst, ODIN_GLOSS_TAG), GLOSS_WORD_ID,
