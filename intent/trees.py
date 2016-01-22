@@ -546,7 +546,6 @@ def project_ds(src_t, tgt_w, aln):
 
     # Now, let's go through the nodes to replace, and
     for node_to_replace in indices_to_replace.keys():
-
         # Get a list of the siblings we're going to replace
         # the original node with
         siblings = indices_to_replace[node_to_replace]
@@ -587,9 +586,11 @@ def project_ds(src_t, tgt_w, aln):
         for node in depth_sorted[1:]:
             node.delete()
 
+    cur_nodes = tgt_t.subtrees()
+    cur_indices = [st.word_index for st in cur_nodes]
 
     # --4) Now, reattach unaligned words...
-    unaligned_tgt_indices = [w.index for w in tgt_w if w.index not in aln.all_tgt()]
+    unaligned_tgt_indices = [w.index for w in tgt_w if w.index not in cur_indices]
 
     # Unaligned attachment from Quirk, et. al, 2005:
     #
