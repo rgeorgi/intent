@@ -1,26 +1,22 @@
 import os
-import sys
 from collections import defaultdict
-from tempfile import NamedTemporaryFile
 
+
+from intent.consts import *
 from intent.eval.AlignEval import AlignEval
 from intent.eval.pos_eval import poseval
-from intent.igt.consts import GLOSS_WORD_ID, MANUAL_POS, INTENT_POS_PROJ, INTENT_POS_CLASS, INTENT_ALN_HEUR, \
-    INTENT_POS_TAGGER, LANG_WORD_ID, INTENT_ALN_MANUAL, INTENT_ALN_GIZA, SYMMETRIC_GROW_DIAG_FINAL, ALIGNER_FASTALIGN
-from intent.igt.igtutils import rgp
-from intent.igt.rgxigt import RGCorpus, RGIgt, strip_pos
+from intent.igt.rgxigt import RGCorpus, RGIgt
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
-from intent.utils.arg_consts import ALN_MANUAL
-from intent.utils.dicts import TwoLevelCountDict, POSEvalDict
+from intent.utils.dicts import POSEvalDict
 from intent.utils.env import tagger_model, classifier
-from intent.utils.token import POSToken, GoldTagPOSToken
-from xigt.consts import ALIGNMENT
+from intent.utils.token import POSToken
 
 __author__ = 'rgeorgi'
 
 import logging
 EVAL_LOG = logging.getLogger('EVAL')
+
 
 def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
     """
@@ -92,7 +88,7 @@ class MultAlignScorer(object):
         :type xc: RGCorpus
         """
         for inst in xc:
-            gold = inst.get_trans_gloss_alignment(aln_method=ALN_MANUAL)
+            gold = inst.get_trans_gloss_alignment(aln_method=ARG_ALN_MANUAL)
             if gold is None:
                 continue
             else:

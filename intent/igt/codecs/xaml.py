@@ -7,19 +7,19 @@ Created on Feb 25, 2015
 #===============================================================================
 # Logging
 #===============================================================================
-import logging
 import glob
+import logging
 import os
-from intent.eval.pos_eval import poseval
+
 
 
 logging.basicConfig()
 XAML_LOG = logging.getLogger()
 XAML_LOG.setLevel(logging.DEBUG)
 
-from intent.igt.consts import *
 from intent.igt.grams import write_gram
-
+from intent.consts import *
+from intent.eval.pos_eval import poseval
 from intent.alignment.Alignment import AlignedCorpus, AlignedSent
 from intent.eval.AlignEval import AlignEval
 from intent.utils.env import classifier, tagger_model
@@ -36,7 +36,7 @@ from xigt.ref import ids
 
 import lxml.etree
 import sys
-from intent.igt.rgxigt import RGCorpus, RGTier, rgp, RGIgt, RGItem, RGWordTier, RGWord,\
+from intent.igt.rgxigt import RGCorpus, RGTier, RGIgt, RGItem, RGWordTier, RGWord,\
     RGBilingualAlignmentTier, RGTokenTier, RGToken, ProjectionException, gen_tier_id, RGPhraseTier, RGPhrase, \
     add_word_level_info, ProjectionTransGlossException, GlossLangAlignException, strip_pos
 import re

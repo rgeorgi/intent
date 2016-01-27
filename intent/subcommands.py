@@ -4,22 +4,24 @@ Created on Mar 24, 2015
 @author: rgeorgi
 """
 
-import sys
 import logging
+import sys
 from io import StringIO
 
-from intent.igt.consts import INTENT_POS_CLASS, INTENT_POS_PROJ, ODIN_GLOSS_TAG, ODIN_LANG_TAG, ODIN_TRANS_TAG
-from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
-    PhraseStructureProjectionException, ProjectionException,\
-    ProjectionTransGlossException, word_align, retrieve_normal_line, NoNormLineException, MultipleNormLineException
-from intent.utils.arg_consts import PARSE_VAR, PARSE_TRANS, POS_VAR, ALN_VAR, POS_LANG_CLASS, ALN_HEUR, \
-    ALN_GIZA, POS_LANG_PROJ, PARSE_LANG_PROJ, POS_TRANS, ALN_SYM_VAR, ALN_GIZA_HEUR
-from intent.utils.env import c, posdict, odin_data, classifier
-from intent.utils.argutils import writefile
-from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
-from intent.interfaces.giza import GizaAlignmentException
-from intent.interfaces import mallet_maxent, stanford_parser
+from intent.consts import PARSE_VAR, PARSE_TRANS, POS_VAR, ALN_VAR, POS_LANG_CLASS, ARG_ALN_HEUR, \
+    ARG_ALN_GIZA, POS_LANG_PROJ, PARSE_LANG_PROJ, POS_TRANS, ALN_SYM_VAR, ARG_ALN_GIZAHEUR, ARG_ALN_HEURPOS, ARG_ALN_ANY, INTENT_POS_CLASS, INTENT_POS_PROJ, \
+    ALN_ARG_MAP
 
+from intent.igt.igtutils import rgp
+from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
+    PhraseStructureProjectionException, ProjectionException, \
+    word_align, MultipleNormLineException
+from intent.igt.search import gloss_line, trans_line, lang_line
+from intent.interfaces import mallet_maxent, stanford_parser
+from intent.interfaces.giza import GizaAlignmentException
+from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
+from intent.utils.argutils import writefile
+from intent.utils.env import c, posdict, odin_data, classifier
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
@@ -29,6 +31,8 @@ from intent.scripts.conversion.odin_to_xigt import parse_text
 #===============================================================================
 # The ODIN subcommand
 #===============================================================================
+from xigt.consts import INCREMENTAL
+
 
 def odin(**kwargs):
     ODIN_LOG = logging.getLogger('ODIN')
@@ -90,14 +94,18 @@ def enrich(**kwargs):
                         "alignments to be generated. Projection may fail if alignment not already present in file.")
 
     ENRICH_LOG.log(1000, 'Loading input file...')
-    corp = RGCorpus.load(inpath, basic_processing=True)
+    corp = RGCorpus.load(inpath, basic_processing=True, mode=INCREMENTAL)
 
     ENRICH_LOG.log(1000, "{} instances loaded...".format(len(corp)))
 
-    #===========================================================================
-    # If the tagger is asked for, initialize it.
-    #===========================================================================
-    if POS_LANG_PROJ in pos_args or POS_TRANS in pos_args:
+    # -------------------------------------------
+    # Initialize the English tagger if:
+    #   A) "proj" option is selected for pos.
+    #   B) "trans" option is given for pos.
+    #   C) "heurpos" option is given for alignment.
+    # -------------------------------------------
+    s = None
+    if POS_LANG_PROJ in pos_args or POS_TRANS in pos_args or ARG_ALN_HEURPOS in aln_args:
         ENRICH_LOG.log(1000, 'Initializing tagger...')
         tagger = c.getpath('stanford_tagger_trans')
 
@@ -106,73 +114,88 @@ def enrich(**kwargs):
         except TaggerError:
             sys.exit(2)
 
-    #===========================================================================
-    # Initialize the parser
-    #===========================================================================
+    # -------------------------------------------
+    # Initialize the parser if:
+    #    A) "trans" option is given for parse
+    #    B) "proj" option is given for parse.
+    # -------------------------------------------
     if PARSE_TRANS in parse_args or PARSE_LANG_PROJ in parse_args:
         ENRICH_LOG.log(1000, "Intializing English parser...")
         sp = stanford_parser.StanfordParser()
 
-    #===========================================================================
-    # If the classifier is asked for, initialize it...
-    #===========================================================================
-    if POS_LANG_CLASS in pos_args:
+    # -------------------------------------------
+    # Initialize the classifier if:
+    #    A) "class" option is given for pos
+    #    B) "heurpos" option is given for alignment.
+    # -------------------------------------------
+    m = None
+    if POS_LANG_CLASS in pos_args or ARG_ALN_HEURPOS in aln_args:
         ENRICH_LOG.log(1000, "Initializing gloss-line classifier...")
         p = posdict
         m = mallet_maxent.MalletMaxent(classifier)
 
-    # -- 1a) Heuristic Alignment --------------------------------------------------
-    if ALN_HEUR in aln_args:
-        ENRICH_LOG.log(1000, 'Heuristically aligning gloss and translation lines...')
-        corp.heur_align()
 
     # -- 1b) Giza Gloss to Translation alignment --------------------------------------
-    if ALN_GIZA in aln_args or ALN_GIZA_HEUR in aln_args:
+    if ARG_ALN_GIZA in aln_args or ARG_ALN_GIZAHEUR in aln_args:
         ENRICH_LOG.log(1000, 'Aligning gloss and translation lines using mgiza++...')
 
-        use_heur = ALN_GIZA_HEUR in aln_args
-
         try:
-            corp.giza_align_t_g(resume=True, use_heur=use_heur, symmetric=kwargs.get(ALN_SYM_VAR))
+            if ARG_ALN_GIZAHEUR in aln_args:
+                corp.giza_align_t_g(resume=True, use_heur=True, symmetric=kwargs.get(ALN_SYM_VAR))
+            if ARG_ALN_GIZA in aln_args:
+                corp.giza_align_t_g(resume=True, use_heur=False, symmetric=kwargs.get(ALN_SYM_VAR))
         except GizaAlignmentException as gae:
             gl = logging.getLogger('giza')
             gl.critical(str(gae))
             sys.exit(2)
 
-    # -- 2) Iterate through the corpus -----------------------------------------------
+    # -------------------------------------------
+    # Begin iterating through the corpus
+    # -------------------------------------------
+
     for inst in corp:
 
         try:
-            has_gloss = True
-            has_trans = True
-            has_lang  = True
 
-            has_all = lambda: (has_gloss and has_trans and has_lang)
+            # -------------------------------------------
+            # Get the different lines
+            # -------------------------------------------
+            gl = gloss_line(inst)
+            tl = trans_line(inst)
+            ll  = lang_line(inst)
 
-            # -- A) Language Lines
-            try:
-                n = retrieve_normal_line(inst, ODIN_LANG_TAG)
-                has_lang = n.value() is not None and n.value().strip()
-            except (NoNormLineException, MultipleNormLineException) as e:
-                has_lang = False
+            has_gl = gl is not None
+            has_tl = tl is not None
+            has_ll = ll is not None
 
-            # -- B) Gloss Lines
-            try:
-                n = retrieve_normal_line(inst, ODIN_GLOSS_TAG)
-                has_gloss = n.value() is not None and n.value().strip()
-            except (NoNormLineException, MultipleNormLineException) as e:
-                has_gloss = False
-
-            # -- C) Trans Lines
-            try:
-                n = retrieve_normal_line(inst, ODIN_TRANS_TAG)
-                has_trans = n.value() is not None and n.value().strip()
-            except (NoNormLineException, MultipleNormLineException) as e:
-                has_trans = False
+            has_all = lambda: (has_gl and has_tl and has_ll)
 
 
-            # Attempt to align the gloss and language lines if requested... --------
-            if has_gloss and has_lang:
+            # -------------------------------------------
+            # Translation Line
+            # -------------------------------------------
+            if has_tl:
+
+                if POS_LANG_PROJ in pos_args or POS_TRANS in pos_args or ARG_ALN_HEURPOS in aln_args:
+
+                    try:
+                        inst.tag_trans_pos(s)
+                    except CriticalTaggerError as cte:
+                        ENRICH_LOG.critical(str(cte))
+                        sys.exit(2)
+
+                if PARSE_LANG_PROJ in parse_args or PARSE_TRANS in parse_args:
+                    inst.parse_translation_line(sp, pt=True, dt=True)
+
+            # 4) POS tag the gloss line --------------------------------------------
+            if has_gl:
+                if POS_LANG_CLASS in pos_args or ARG_ALN_HEURPOS in aln_args:
+                    inst.classify_gloss_pos(m, posdict=p)
+
+            # -------------------------------------------
+            # Try getting alignments.
+            # -------------------------------------------
+            if has_gl and has_ll:
                 try:
                     word_align(inst.gloss, inst.lang)
                 except GlossLangAlignException as glae:
@@ -180,83 +203,65 @@ def enrich(**kwargs):
                 except MultipleNormLineException as mnle:
                     pass # This will be errored out elsewhere...
 
+            if has_gl and has_tl:
+                if ARG_ALN_HEURPOS in aln_args:
+                    inst.heur_align(use_pos=True)
+                if ARG_ALN_HEUR in aln_args:
+                    inst.heur_align(use_pos=False)
 
-            # 3) POS tag the translation line --------------------------------------
-            if POS_LANG_PROJ in pos_args and has_trans:
-                try:
-                    inst.tag_trans_pos(s)
-                except CriticalTaggerError as cte:
-                    ENRICH_LOG.critical(str(cte))
-                    sys.exit(2)
-                except MultipleNormLineException as mnle:
-                    ENRICH_LOG.warn(str(mnle) + ' Not projecting POS tags.')
+            # -------------------------------------------
+            # Now, do the necessary projection tasks.
+            # -------------------------------------------
 
-
-            # 4) POS tag the gloss line --------------------------------------------
-            if POS_LANG_CLASS in pos_args and has_gloss and has_lang:
-                inst.classify_gloss_pos(m, posdict=p)
+            # Project the classifier tags...
+            if has_ll and has_gl and POS_LANG_CLASS in pos_args:
                 try:
                     inst.project_gloss_to_lang(tag_method=INTENT_POS_CLASS)
                 except GlossLangAlignException:
-                    ENRICH_LOG.warning('The gloss and language lines for instance id "{}" do not align. Language line not POS tagged.'.format(inst.id))
+                    pass
 
-            if POS_LANG_PROJ in pos_args and has_all():
-                pos_tags = inst.get_pos_tags(inst.trans.id)
-                aln = inst.get_trans_gloss_alignment()
-                if not pos_tags:
-                    ENRICH_LOG.warn('No trans-line POS tags available for "{}". Not projecting POS tags from trans line.'.format(inst.id))
-                elif not aln:
-                    ENRICH_LOG.warn('No trans-gloss alignment available for "{}". Not projecting POS tags from trans line.'.format(inst.id))
+            # -------------------------------------------
+            # Do the trans-to-lang projection...
+            # -------------------------------------------
+
+            if has_all():
+                proj_aln_method = ALN_ARG_MAP[kwargs.get('proj_aln', ARG_ALN_ANY)]
+                aln = inst.get_trans_gloss_alignment(aln_method=proj_aln_method)
+                if not aln or len(aln) == 0:
+                    ENRICH_LOG.warning("No alignment found between translation and gloss for instance {}, no projection will be done.".format(inst.id))
                 else:
-                    try:
-                        inst.project_trans_to_gloss()
-                    except ProjectionTransGlossException as ptge:
-                        ENRICH_LOG.warning('No alignment between translation and gloss lines found for instance "%s". Not projecting POS tags.' % inst.id)
-                    except ProjectionException as pe:
-                        ENRICH_LOG.warning('No translation POS tags were found for instance "%s". Not projecting POS tags.' % inst.id)
-                    else:
+                    # -------------------------------------------
+                    # POS Projection
+                    # -------------------------------------------
+                    if POS_LANG_PROJ in pos_args:
+                        pos_tags = inst.get_pos_tags(inst.trans.id)
+
+                        if not pos_tags:
+                            ENRICH_LOG.warn('No trans-line POS tags available for "{}". Not projecting POS tags from trans line.'.format(inst.id))
+                        else:
+                            inst.project_trans_to_gloss()
+                            try:
+                                inst.project_gloss_to_lang(tag_method=INTENT_POS_PROJ)
+                            except GlossLangAlignException as glae:
+                                pass
+
+                    # -------------------------------------------
+                    # Parse projection
+                    # -------------------------------------------
+                    if PARSE_LANG_PROJ in parse_args:
                         try:
-                            inst.project_gloss_to_lang(tag_method=INTENT_POS_PROJ)
-                        except GlossLangAlignException as glae:
-                            ENRICH_LOG.warn(glae)
+                            inst.project_pt(proj_aln_method=proj_aln_method)
+                        except PhraseStructureProjectionException as pspe:
+                            ENRICH_LOG.warning(pspe)
 
-
-            # 5) Parse the translation line ----------------------------------------
-            if (PARSE_TRANS in parse_args) or (PARSE_LANG_PROJ in parse_args) and has_trans:
-                # try:
-                inst.parse_translation_line(sp, pt=True, dt=True)
-                # except Exception as ve:
-                    # pass
-                    # ENRICH_LOG.critical("Unknown parse error in instance {}".format(inst1.id))
-                    # ENRICH_LOG.critical(str(ve))
-
-            # If parse tree projection is enabled... -------------------------------
-            if PARSE_LANG_PROJ in parse_args and has_all():
-                aln = inst.get_trans_gloss_lang_alignment()
-
-                # If there's no alignment, just skip.
-                if aln is None or len(aln) == 0:
-                    ENRICH_LOG.warning('No alignment available for "{}". Not projecting trees.'.format(inst.id))
-
-                # If there's alignment, try projecting.
-                else:
-                    try:
-                        inst.project_pt()
-                    except PhraseStructureProjectionException as pspe:
-                        ENRICH_LOG.warning('A parse for the translation line was not found for instance "%s", not projecting phrase structure.' % inst.id)
-                    except ProjectionTransGlossException as ptge:
-                        ENRICH_LOG.warning('Alignment between translation and gloss lines was not found for instance "%s". Not projecting phrase structure.' % inst.id)
-
-                    try:
-                        inst.project_ds()
-                    except ProjectionException as pe:
-                        ENRICH_LOG.warning(pe)
+                        try:
+                            inst.project_ds(proj_aln_method=proj_aln_method)
+                        except ProjectionException as pe:
+                            ENRICH_LOG.warning(pe)
 
 
             # Sort the tiers... ----------------------------------------------------
             inst.sort_tiers()
-        # except Exception as e:
-        #     raise e
 
         except Exception as e:
             ENRICH_LOG.warn("Unknown Error occurred processing instance {}".format(inst.id))

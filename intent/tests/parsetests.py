@@ -2,15 +2,13 @@ import logging
 import os
 from unittest import TestCase
 
-from intent.igt.consts import ODIN_LANG_TAG, ODIN_JUDGMENT_ATTRIBUTE, ODIN_TRANS_TAG
-from xigt.codecs import xigtxml
+from intent.utils.arg_consts import PARSE_VAR, PARSE_LANG_PROJ, ALN_VAR, ALN_HEUR, PARSE_TRANS, POS_VAR, POS_LANG_CLASS, \
+    POS_LANG_PROJ
 
-from intent.igt.rgxigt import RGCorpus, retrieve_normal_line, retrieve_lang_phrase_tier, retrieve_trans_phrase
+from intent.igt.rgxigt import RGCorpus
 from intent.interfaces.stanford_parser import StanfordParser
 from intent.subcommands import enrich
 from intent.trees import DepTree, DEPSTR_PTB, project_ds
-from intent.utils.arg_consts import PARSE_VAR, PARSE_LANG_PROJ, ALN_VAR, ALN_HEUR, PARSE_TRANS, POS_VAR, POS_LANG_CLASS, \
-    POS_LANG_PROJ
 from intent.utils.env import testfile_dir, classifier
 
 __author__ = 'rgeorgi'

@@ -1,14 +1,5 @@
-from argparse import ArgumentParser
-from collections import defaultdict
-import glob
-import os
-import pickle
-from random import shuffle, seed
-import sys
-from tempfile import mkdtemp
-import shutil
-
 import logging
+import pickle
 root_logger = logging.getLogger()
 root_logger.setLevel(logging.DEBUG)
 
@@ -16,11 +7,8 @@ CTN_LOG = logging.getLogger('CTN_CLASS')
 CTN_LOG.setLevel(logging.DEBUG)
 logging.basicConfig()
 
-
-from intent.igt.metadata import set_intent_method, get_intent_method
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
-from intent.pos.TagMap import TagMap
-from intent.utils.env import tagger_model, proj_root
+from intent.utils.env import tagger_model
 from xigt.codecs import xigtxml
 from xigt.consts import ALIGNMENT
 
@@ -29,15 +17,10 @@ from xigt.consts import ALIGNMENT
 
 
 from intent.eval.pos_eval import poseval
-from intent.igt.consts import GLOSS_WORD_ID, POS_TIER_TYPE, LANG_WORD_ID, GLOSS_WORD_TYPE, POS_TIER_ID, \
-    INTENT_TOKEN_TYPE, INTENT_POS_PROJ, LANG_WORD_TYPE, TRANS_WORD_TYPE, TRANS_WORD_ID, MANUAL_POS, INTENT_POS_CLASS
-from intent.igt.rgxigt import RGCorpus, strip_pos, RGIgt, RGTokenTier, RGTier, gen_tier_id, RGToken, \
-    ProjectionTransGlossException, word_align
-from intent.interfaces.mallet_maxent import MalletMaxent
+from intent.consts import GLOSS_WORD_ID, INTENT_POS_PROJ, MANUAL_POS, INTENT_POS_CLASS
+from intent.igt.rgxigt import RGCorpus, strip_pos, RGIgt, RGToken
 from intent.scripts.classification.xigt_to_classifier import instances_to_classifier
-from intent.utils.token import POSToken, GoldTagPOSToken
-from intent.igt.igtutils import rgp
-
+from intent.utils.token import POSToken
 
 __author__ = 'rgeorgi'
 

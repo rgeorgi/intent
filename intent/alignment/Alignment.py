@@ -425,8 +425,9 @@ class Alignment(set):
     Simply, a set of (src_index, tgt_index) pairs in a set.
     """
 
-    def __init__(self, iter=list()):
+    def __init__(self, iter=list(), type=None):
         super().__init__(iter)
+        self.type = type
 
     def __str__(self):
         ret_str = ''

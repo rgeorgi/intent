@@ -3,10 +3,10 @@
 # -------------------------------------------
 import re
 
-from intent.igt.consts import ODIN_TYPE, STATE_ATTRIBUTE, RAW_STATE, CLEAN_STATE, NORM_STATE, ODIN_LANG_TAG, \
+from intent.consts import ODIN_TYPE, STATE_ATTRIBUTE, RAW_STATE, CLEAN_STATE, NORM_STATE, ODIN_LANG_TAG, \
     ODIN_GLOSS_TAG, ODIN_TRANS_TAG
-
-from xigt import ref, Tier
+from intent.igt.exceptions import NoNormLineException, MultipleNormLineException
+from xigt import ref, Tier, Item
 from xigt.consts import CONTENT, ALIGNMENT
 from xigt.consts import SEGMENTATION
 from xigt.mixins import XigtContainerMixin
@@ -135,13 +135,19 @@ def normalized_tier(inst) -> Tier:
 # -------------------------------------------
 # More convenience methods
 # -------------------------------------------
-def lang_line(inst):
-    return retrieve_normal_line(inst, ODIN_LANG_TAG)
+def _handle_nnle(f):
+    try:
+        return f()
+    except (NoNormLineException, MultipleNormLineException) as nnle:
+        return None
 
-def gloss_line(inst):
-    return retrieve_normal_line(inst, ODIN_GLOSS_TAG)
+def lang_line(inst) -> Item:
+    return _handle_nnle(lambda: retrieve_normal_line(inst, ODIN_LANG_TAG))
 
-def trans_line(inst):
-    return retrieve_normal_line(inst, ODIN_TRANS_TAG)
+def gloss_line(inst) -> Item:
+    return _handle_nnle(lambda: retrieve_normal_line(inst, ODIN_GLOSS_TAG))
+
+def trans_line(inst) -> Item:
+    return _handle_nnle(lambda: retrieve_normal_line(inst, ODIN_TRANS_TAG))
 
 from .rgxigt import retrieve_normal_line

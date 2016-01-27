@@ -34,8 +34,19 @@ class MSTParser(object):
         return exit_code
 
     def test(self, model_file, test_file, output_file):
-        cmd = self.cmd_start + 'test model-name:{} test-file:{} out-file:{}'.format(model_file, test_file, output_file)
-        p = ProcessCommunicator(cmd, shell=True, stdout_func=print, stderr_func=watch_for_java_exception)
+        cmd = self.cmd_start + 'test model-name:{} test-file:{} output-file:{}'.format(model_file, test_file, output_file)
+        p = ProcessCommunicator(cmd, shell=True, stdout_func=None, stderr_func=watch_for_java_exception)
+        exit_code = p.wait()
+        return exit_code
+
+    def eval(self, gold_file, output_file):
+        def split_out(string):
+            if string.strip():
+                print(string.split(':')[1].strip())
+
+
+        cmd = self.cmd_start + 'eval gold-file:{} output-file:{}'.format(gold_file, output_file)
+        p = ProcessCommunicator(cmd, shell=True, stdout_func=split_out, stderr_func=watch_for_java_exception)
         exit_code = p.wait()
         return exit_code
 

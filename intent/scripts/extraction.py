@@ -1,17 +1,16 @@
 import logging
-from multiprocessing.pool import Pool
 from multiprocessing import cpu_count
-import sys
+from multiprocessing.pool import Pool
 
-from intent.igt.consts import POS_TIER_TYPE, GLOSS_WORD_ID, LANG_WORD_ID, INTENT_DS_PROJ, INTENT_POS_CLASS, \
-    INTENT_POS_PROJ, MANUAL_POS, INTENT_ALN_GIZA, INTENT_ALN_HEUR
+from intent.consts import POS_TIER_TYPE, GLOSS_WORD_ID, LANG_WORD_ID, INTENT_POS_CLASS, \
+    INTENT_POS_PROJ, MANUAL_POS, INTENT_ALN_HEUR
 from intent.igt.grams import write_gram
-from intent.igt.igtutils import rgp
 from intent.interfaces.mallet_maxent import train_txt
+from intent.interfaces.mst_parser import MSTParser
 from intent.interfaces.stanford_tagger import train_postagger
 from intent.utils.listutils import chunkIt
 from intent.utils.token import GoldTagPOSToken, tokenize_string, morpheme_tokenizer
-from xigt.consts import ALIGNMENT
+from xigt.consts import ALIGNMENT, INCREMENTAL
 
 EXTRACT_LOG = logging.getLogger("EXTRACT")
 
@@ -29,7 +28,7 @@ __author__ = 'rgeorgi'
 
 def extract_from_xigt(input_filelist = list, classifier_prefix=None,
                       cfg_prefix=None, tagger_prefix=None,
-                      dep_parser=None, dep_pos=None,
+                      dep_prefix=None, dep_pos=None, dep_align=None,
                       alignment=None, no_alignment_heur=False):
     """
 
@@ -64,9 +63,13 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     p = Pool(cpus)
 
     # Set up the dependency parser output if it's specified...
-    dep_f = None
-    if dep_parser:
-        dep_f = open(dep_parser, 'w', encoding='utf-8')
+    dep_train_f = None
+    dep_train_path = None
+    if dep_prefix is not None:
+        dep_train_path = dep_prefix+'_train.txt'
+        # assert not os.path.exists(dep_train_path)
+        dep_train_f = open(dep_train_path, 'w', encoding='utf-8')
+
 
 
 
@@ -107,14 +110,13 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
                 tagger_train_f.write('{}{}{}\n'.format(t,'/','PUNC'))
 
         for dt in dep_trees:
-            dep_f.write(dt.to_conll()+'\n')
-
+            dep_train_f.write(dt.to_conll()+'\n')
 
 
     for path in input_filelist:
-    #     # p.apply_async(process_file, args=[path, classifier_prefix, cfg_prefix, tagger_prefix], callback=lambda x: merge_dicts(x, word_tag_dict, gram_tag_dict))
-        callback(process_file(path, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos))
-    #
+        # p.apply_async(process_file, args=[path, classifier_prefix, cfg_prefix, tagger_prefix, dep_prefix, dep_pos, dep_align], callback=callback)
+        callback(process_file(path, classifier_prefix, cfg_prefix, tagger_prefix, dep_prefix, dep_pos, dep_align))
+
     # p.close()
     # p.join()
 
@@ -205,6 +207,16 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
                             cfg_f.write('{}\n'.format(prod))
 
 
+    # -------------------------------------------
+    # Train
+    # -------------------------------------------
+    if dep_prefix:
+        dep_train_f.close()
+        dep_parser_path = dep_prefix+'.parser'
+        mp = MSTParser()
+        mp.train(dep_train_path, dep_parser_path)
+
+
 
 
 def extract_from_instances(inst_list, classifier_prefix, feat_out_path, cfg_prefix, threshold=1):
@@ -243,7 +255,7 @@ def extract_from_instances(inst_list, classifier_prefix, feat_out_path, cfg_pref
 # results.
 # =============================================================================
 
-def process_file(path, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos):
+def process_file(path, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos, dep_align):
     """
     Given a XIGT-XML file, load it and do preprocessing.
 
@@ -251,16 +263,16 @@ def process_file(path, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser,
     :return:
     """
     EXTRACT_LOG.info('Opening "{}"...'.format(path))
-    xc = RGCorpus.load(path)
+    xc = RGCorpus.load(path, mode=INCREMENTAL)
 
     # Now, iterate through each instance in the corpus...
-    return process_instances(xc, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos)
+    return process_instances(xc, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos, dep_align)
 
 # =============================================================================
 # Process the list of instances...
 # =============================================================================
 
-def process_instances(inst_list, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos):
+def process_instances(inst_list, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos, dep_align):
     """
     Given a list of instances, gather the necessary stats to train a classifier.
 
@@ -290,11 +302,17 @@ def process_instances(inst_list, classifier_prefix, cfg_prefix, tagger_prefix, d
         elif dep_pos == 'manual':
             dep_pos = MANUAL_POS
 
+
         try:
             ds = inst.get_lang_ds(pos_source=dep_pos)
         except RuntimeError as re:
             print(re)
             EXTRACT_LOG.error("Runtime error in instance {}".format(inst.id))
+            continue
+        except RGXigtException as rgxe:
+            EXTRACT_LOG.warn('Instance "{}" failed with "{}"'.format(inst.id, rgxe))
+            continue
+
         if ds is not None:
             dep_trees.append(ds)
 

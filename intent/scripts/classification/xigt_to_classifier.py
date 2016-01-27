@@ -1,15 +1,12 @@
-from argparse import ArgumentParser
-from collections import Counter
-from io import StringIO
-
 import logging
 import os
 import pickle
-from multiprocessing import Pool, Process, cpu_count
-import sys
+from argparse import ArgumentParser
+from io import StringIO
+from multiprocessing import Pool, cpu_count
 from tempfile import NamedTemporaryFile
+
 from intent.igt.grams import write_gram
-from intent.igt.igtutils import rgp
 from intent.interfaces.mallet_maxent import train_txt
 from intent.utils.env import proj_root
 from intent.utils.listutils import chunkIt
@@ -19,8 +16,8 @@ LOG = logging.getLogger('EXTRACT_CLASSIFIER')
 logging.basicConfig()
 LOG.setLevel(logging.DEBUG)
 
-from intent.igt.consts import POS_TIER_TYPE
-from intent.igt.consts import GLOSS_WORD_ID
+from intent.consts import POS_TIER_TYPE
+from intent.consts import GLOSS_WORD_ID
 from intent.igt.rgxigt import RGCorpus, RGIgt
 from intent.utils.argutils import globfiles
 from intent.utils.dicts import CountDict, TwoLevelCountDict

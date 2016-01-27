@@ -1,13 +1,11 @@
-from argparse import ArgumentParser
 import os
 import re
+from argparse import ArgumentParser
+
 from intent.alignment.Alignment import Alignment
-from intent.igt.consts import RAW_STATE, STATE_ATTRIBUTE, ODIN_TAG_ATTRIBUTE, ODIN_LANG_TAG, ODIN_GLOSS_TAG, \
-    ODIN_TRANS_TAG, MANUAL_POS
-from intent.igt.igtutils import rgp
+from intent.consts import *
 from intent.igt.rgxigt import RGIgt, RGTier, gen_tier_id, RGItem, RGCorpus
 from intent.trees import DepEdge, Terminal, build_dep_edges, TreeError
-from intent.utils.arg_consts import ALN_GIZA, ALN_MANUAL
 from intent.utils.argutils import existsfile
 from intent.utils.env import testfile_dir
 from xigt.codecs.xigtxml import dump
@@ -105,7 +103,7 @@ def naacl_to_xigt(naacl_path):
             pass
 
 
-        inst.set_bilingual_alignment(inst.trans, inst.gloss, a, aln_method=ALN_MANUAL)
+        inst.set_bilingual_alignment(inst.trans, inst.gloss, a, aln_method=INTENT_ALN_MANUAL)
 
 
         # inst.set_bilingual_alignment()

@@ -3,15 +3,15 @@ Created on Feb 24, 2015
 
 :author: rgeorgi <rgeorgi@uw.edu>
 """
-from unittest import TestCase
 import os
-from intent.igt.consts import INTENT_ALN_HEUR, INTENT_ALN_GIZA, INTENT_POS_PROJ
+from unittest import TestCase
 
-from intent.igt.rgxigt import RGCorpus, RGIgt
 from intent.alignment.Alignment import Alignment
-from intent.utils.env import posdict, classifier, tagger_model, testfile_dir
+from intent.consts import INTENT_ALN_HEUR, INTENT_ALN_GIZA, INTENT_POS_PROJ
+from intent.igt.rgxigt import RGCorpus, RGIgt
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
+from intent.utils.env import posdict, classifier, tagger_model, testfile_dir
 
 xc = RGCorpus.load(os.path.join(testfile_dir, "xigt/kor-ex.xml"))
 

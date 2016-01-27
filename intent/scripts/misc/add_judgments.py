@@ -1,13 +1,14 @@
+import logging
 import os
 from argparse import ArgumentParser
 from os import makedirs
-import logging
+
 JUDG_LOG = logging.getLogger("JUDGMENTS")
 
-from intent.igt.consts import ODIN_TYPE, ODIN_JUDGMENT_ATTRIBUTE
+from intent.consts import ODIN_TYPE, ODIN_JUDGMENT_ATTRIBUTE
 from xigt import xigtpath
 
-from intent.igt.igtutils import rgp, get_judgment
+from intent.igt.igtutils import get_judgment
 from xigt.codecs import xigtxml
 from xigt.consts import INCREMENTAL
 

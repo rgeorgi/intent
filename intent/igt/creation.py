@@ -1,14 +1,11 @@
 import logging
 
-from intent.igt.consts import ODIN_JUDGMENT_ATTRIBUTE
-from intent.igt.igtutils import rgencode, get_judgment, extract_judgment
-from unittest import TestCase
-
-from intent.igt.igtutils import strip_leading_whitespace
-from intent.igt.search import normalized_tier, cleaned_tier
+from intent.consts import ODIN_JUDGMENT_ATTRIBUTE, NORM_ID, NORM_STATE, CLEAN_STATE, CLEAN_ID, RAW_ID, ODIN_TYPE, STATE_ATTRIBUTE, RAW_STATE, ODIN_LANG_TAG, ODIN_GLOSS_TAG, \
+    ODIN_TRANS_TAG, ODIN_TAG_ATTRIBUTE
+from intent.igt.search import raw_tier, find_in_obj, cleaned_tier, normalized_tier
 from intent.utils.dicts import DefaultOrderedDict
-import xigt.xigtpath as xp
 from xigt.consts import ALIGNMENT
+
 
 CREATE_LOG = logging.getLogger("IGT_CREATION")
 
@@ -381,14 +378,8 @@ def replace_lines(inst, clean_lines, norm_lines):
 
 
 
-from .consts import RAW_ID, ODIN_TYPE, STATE_ATTRIBUTE, RAW_STATE, ODIN_LANG_TAG, ODIN_GLOSS_TAG, \
-    ODIN_TRANS_TAG, ODIN_TAG_ATTRIBUTE
-from .rgxigt import RGCorpus, RGIgt, RGLineTier, RGLine,  CONVERT_LOG, RGTier, gen_tier_id, RGItem, PARSELOG, \
-    gen_item_id
-from .exceptions import GlossLangAlignException, RawTextParseError, RGXigtException, XigtFormatException
-
-from .search import find_in_obj, raw_tier
-from .consts import *
-from .igtutils import merge_lines, clean_lang_string, clean_gloss_string, clean_trans_string, concat_lines
-from .rgxigt import RGLineTier, PARSELOG, RGLine, RGTier, NoODINRawException
-from .creation import *
+from .exceptions import RGXigtException, RawTextParseError, XigtFormatException, GlossLangAlignException, \
+    NoODINRawException
+from .igtutils import extract_judgment, rgencode, clean_lang_string, clean_gloss_string, clean_trans_string, \
+    strip_leading_whitespace, concat_lines
+from .rgxigt import RGItem, gen_item_id, RGTier, gen_tier_id, RGLine, RGCorpus, PARSELOG, RGIgt, RGLineTier, CONVERT_LOG

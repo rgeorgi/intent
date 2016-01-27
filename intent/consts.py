@@ -97,7 +97,7 @@ DATA_PROV = 'data-provenance'
 DATA_METH = 'method'             # The attribute for marking which method was used
 DATA_SRC  = 'source'             # The attribute for marking that this was INTENT
 DATA_FROM = 'projected-from'     # The attribute for marking which tier was used to make this one (for projection)
-DATA_ALNF = 'aligned-with'       # The attribute for marking the alignment used for projection.
+DATA_ALNF = 'projection-alignment'       # The attribute for marking the alignment used for projection.
 DATA_DATE = 'date'               # The attribute for marking
 
 
@@ -130,11 +130,13 @@ SYMMETRIC_GROW_DIAG_FINAL = 'grow_diag_final'
 # Methods
 #===============================================================================
 
-
-
 INTENT_ALN_GIZA = 'mgiza'
+INTENT_ALN_GIZAHEUR = 'mgiza+heur'
 INTENT_ALN_HEUR = 'heur'
+INTENT_ALN_HEURPOS = 'heur+pos'
 INTENT_ALN_MANUAL = 'manual'
+
+INTENT_ALN_1TO1   = '1to1'
 
 INTENT_POS_CLASS  = 'classifier'
 INTENT_POS_PROJ   = 'projection'
@@ -156,3 +158,53 @@ ID_DEFAULT                   = 'default'    # e.g. "t1"
 ID_SAME_TYPE_DIFFERENT_TIERS = 'diff-tiers' # e.g. "t-w"
 ID_SAME_TYPE_DIFFERENT_ITEMS = 'diff-items' # e.g. "t1-w"
 ID_SAME_TYPE_ALTERNATE       = 'alternate'  # e.g. "pos_a"
+
+# ===============================================================================
+# ARGUMENT Stuff
+# ===============================================================================
+ARG_ALN_GIZA = 'giza'
+ARG_ALN_GIZAHEUR = 'gizaheur'
+ARG_ALN_HEUR = 'heur'
+ARG_ALN_HEURPOS = 'heurpos'
+ARG_ALN_MANUAL = 'manual'
+ARG_ALN_ANY = 'any'
+
+# -------------------------------------------
+# Map from the argument form of alignment to
+# -------------------------------------------
+ALN_ARG_MAP = {ARG_ALN_GIZA:INTENT_ALN_GIZA,
+               ARG_ALN_GIZAHEUR:INTENT_ALN_GIZAHEUR,
+               ARG_ALN_HEUR:INTENT_ALN_HEUR,
+               ARG_ALN_HEURPOS:INTENT_ALN_HEURPOS,
+               ARG_ALN_MANUAL:INTENT_ALN_MANUAL,
+               ARG_ALN_ANY:None}
+
+ALL_ALN_TYPES = [ARG_ALN_GIZA, ARG_ALN_GIZAHEUR, ARG_ALN_HEUR, ARG_ALN_HEURPOS, ARG_ALN_MANUAL, ARG_ALN_ANY]
+ALN_TYPES = [ARG_ALN_GIZA, ARG_ALN_HEUR, ARG_ALN_HEURPOS, ARG_ALN_GIZAHEUR]
+ALN_VAR = 'alignment_list'
+
+ALN_SYM_VAR = 'align_symmetric'
+ALN_SYM_TYPES = [None, SYMMETRIC_INTERSECT, SYMMETRIC_UNION, SYMMETRIC_GROW_DIAG_FINAL, SYMMETRIC_GROW_DIAG]
+
+# POS Stuff
+POS_TRANS = 'trans'
+POS_LANG_CLASS = 'class'
+POS_LANG_PROJ  = 'proj'
+
+POS_TYPES = [POS_LANG_CLASS, POS_LANG_PROJ, POS_TRANS]
+
+POS_VAR = 'pos_list'
+
+# Parse Stuff
+PARSE_TRANS = 'trans'
+PARSE_LANG_PROJ = 'proj'
+
+PARSE_TYPES = [PARSE_TRANS, PARSE_LANG_PROJ]
+
+PARSE_VAR = 'parse_list'
+
+# ===============================================================================
+# GRAMMATICAL
+# ===============================================================================
+morpheme_boundary_chars = ['-','=']
+morpheme_interior_chars = ['.',':']

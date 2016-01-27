@@ -3,12 +3,13 @@ Created on Apr 9, 2015
 
 :author: rgeorgi
 """
-import xigt.xigtpath as xp
-from xigt.metadata import Metadata, Meta
-from intent.igt.consts import DATA_DATE, INTENT_META_SOURCE, DATA_SRC, DATA_PROV, \
-    DATA_METH, DATA_FROM, INTENT_META_TYPE
-from xigt.mixins import XigtContainerMixin
 from datetime import datetime
+
+from intent.consts import DATA_DATE, INTENT_META_SOURCE, DATA_SRC, DATA_PROV, \
+    DATA_METH, DATA_FROM, INTENT_META_TYPE, DATA_ALNF
+from xigt.metadata import Metadata, Meta
+from xigt.mixins import XigtContainerMixin
+
 
 def get_intent_method(obj):
     """
@@ -34,7 +35,7 @@ def set_intent_method(obj, method):
     set_meta_attr(obj, DATA_PROV, DATA_METH, method)
 
 
-def set_intent_proj_data(obj, source_tier):
+def set_intent_proj_data(obj, source_tier, aln_type):
     """
     Using the source_tier tier, add some metadata to this instance to describe the source_tier
     that created the projection material.
@@ -43,6 +44,9 @@ def set_intent_proj_data(obj, source_tier):
     :param source_tier:
     """
     set_meta_attr(obj, DATA_PROV, DATA_FROM, source_tier.id)
+    if aln_type is not None:
+        set_meta_attr(obj, DATA_PROV, DATA_ALNF, aln_type)
+
 
 def find_metadata(obj, metadata_type):
     found = None

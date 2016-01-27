@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from build.lib.xigt.codecs import xigtxml
-from intent.igt.consts import ODIN_LANG_TAG, ODIN_JUDGMENT_ATTRIBUTE, ODIN_TRANS_TAG
+from intent.consts import ODIN_LANG_TAG, ODIN_JUDGMENT_ATTRIBUTE, ODIN_TRANS_TAG
 from intent.igt.igtutils import get_judgment, extract_judgment
 from intent.igt.rgxigt import retrieve_normal_line, retrieve_lang_phrase_tier, retrieve_trans_phrase
 from intent.tests.parsetests import ger_file

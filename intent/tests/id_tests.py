@@ -1,5 +1,5 @@
 from unittest import TestCase
-from intent.igt.consts import ID_DEFAULT, ID_SAME_TYPE_ALTERNATE, ID_SAME_TYPE_DIFFERENT_TIERS
+
 from intent.igt.rgxigt import RGIgt,  RGTier, gen_item_id, gen_tier_id
 
 __author__ = 'rgeorgi'

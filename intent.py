@@ -1,12 +1,13 @@
 #!/usr/bin/env python3.4
 
 import argparse
-import sys
 import logging
+import sys
 
 # -------------------------------------------
 # Start the logger.
 # -------------------------------------------
+
 
 logging.basicConfig(format=logging.BASIC_FORMAT)
 MAIN_LOG = logging.getLogger('INTENT')
@@ -31,7 +32,6 @@ if import_errors:
 # Import the env module, since there are some
 # additional tests there.
 # -------------------------------------------
-import intent.utils.env
 
 # -------------------------------------------
 # Start the logger and set it up.
@@ -42,8 +42,7 @@ from intent.scripts.basic.split_corpus import split_corpus
 from intent.scripts.conversion.text_to_xigt import text_to_xigtxml
 from intent.scripts.evaluation import evaluate_intent
 from intent.scripts.extraction import extract_from_xigt
-from intent.utils.arg_consts import PARSE_LANG_PROJ, PARSE_TRANS, POS_TYPES, PARSE_TYPES, ALN_TYPES, ALN_VAR, POS_VAR, \
-    PARSE_VAR, ALN_SYM_VAR, ALN_SYM_TYPES
+from intent.consts import *
 from intent.utils.listutils import flatten_list
 from xigt.codecs.xigtxml import dump
 from intent.utils.env import classifier
@@ -95,6 +94,9 @@ enrich.add_argument('--parse', dest=PARSE_VAR,
                     help='List of parses to create. {}'.format(PARSE_TYPES))
 
 enrich.add_argument('--class', dest='class_path', default=classifier)
+
+enrich.add_argument('--proj-aln', dest='proj_aln', choices=ALL_ALN_TYPES, default=ARG_ALN_ANY,
+                    help='Alignment to use when performing projection. Can use "any" for any available alignment.')
 
 #===============================================================================
 # ODIN subcommand
@@ -165,8 +167,9 @@ extract_p.add_argument('FILE', nargs='+', help='XIGT files to include.', type=gl
 extract_p.add_argument('--gloss-classifier', help='Output prefix for gloss-line classifier (No extension).', default=None)
 extract_p.add_argument('--lang-tagger', help='Output prefix for lang-line tagger.', default=None)
 extract_p.add_argument('--cfg-rules', help='Output path for cfg-rules.', default=None)
-extract_p.add_argument('--dep-parser', help='Output path for dependency parser', default=None)
+extract_p.add_argument('--dep-parser', help='Output prefix for dependency parser', default=None)
 extract_p.add_argument('--dep-pos', choices=['class','proj','manual','none'], default='none')
+extract_p.add_argument('--dep-align', choices=ALN_TYPES)
 extract_p.add_argument('--alignment', help='The file to output bootstrapped alignment as.')
 extract_p.add_argument('--no-alignment-heur', action='store_true', help='Add heuristic alignment results to aligned sentences.', default=False)
 extract_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
@@ -239,7 +242,7 @@ elif args.subcommand == 'filter':
 # EXTRACT
 elif args.subcommand == 'extract':
     extract_from_xigt(flatten_list(args.FILE), args.gloss_classifier, args.cfg_rules, args.lang_tagger,
-                      dep_parser=args.dep_parser, dep_pos=args.dep_pos,
+                      dep_prefix=args.dep_parser, dep_pos=args.dep_pos, dep_align=args.dep_align,
                       alignment=args.alignment, no_alignment_heur=args.no_alignment_heur)
 
 # EVAL
