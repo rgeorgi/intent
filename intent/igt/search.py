@@ -1029,11 +1029,13 @@ def resolve_objects(container, expression):
             tokens.append((item, None))
     return tokens
 
+
+
 # -------------------------------------------
 # Imports
 
 from .exceptions import RGXigtException, RawTextParseError, XigtFormatException, GlossLangAlignException, \
-    NoODINRawException
+    NoODINRawException, project_creator_except
 from .igtutils import extract_judgment, rgencode, clean_lang_string, clean_gloss_string, clean_trans_string, \
     strip_leading_whitespace, concat_lines, rgp
 from .rgxigt import RGCorpus, PARSELOG, RGIgt, RGLineTier, CONVERT_LOG, \

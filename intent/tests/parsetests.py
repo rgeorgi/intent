@@ -24,7 +24,7 @@ ds_cycle  = os.path.join(testfile_dir, 'xigt/ds-cycle-test.xml')
 no_enrich_args = {'OUT_FILE':'/dev/null'}
 all_enrich_args = {'OUT_FILE':'/dev/null',
                    'class_path':classifier,
-                   POS_VAR:[POS_LANG_CLASS, POS_LANG_PROJ],
+                   POS_VAR:[ARG_POS_CLASS, ARG_POS_PROJ],
                    PARSE_VAR:[PARSE_LANG_PROJ, PARSE_TRANS],
                    ALN_VAR:[ARG_ALN_HEUR]}
 

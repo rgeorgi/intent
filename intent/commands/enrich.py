@@ -47,7 +47,7 @@ def enrich(**kwargs):
     #===========================================================================
 
     # Check that alignment is asked for if projection is asked for.
-    if (POS_LANG_PROJ in pos_args or PARSE_LANG_PROJ in parse_args) and (not aln_args):
+    if (ARG_POS_PROJ in pos_args or PARSE_LANG_PROJ in parse_args) and (not aln_args):
         ENRICH_LOG.warn("You have asked for projection methods but have not requested " + \
                         "alignments to be generated. Projection may fail if alignment not already present in file.")
 
@@ -63,7 +63,7 @@ def enrich(**kwargs):
     #   C) "heurpos" option is given for alignment.
     # -------------------------------------------
     s = None
-    if POS_LANG_PROJ in pos_args or POS_TRANS in pos_args or ARG_ALN_HEURPOS in aln_args:
+    if ARG_POS_PROJ in pos_args or ARG_POS_TRANS in pos_args or ARG_ALN_HEURPOS in aln_args:
         ENRICH_LOG.log(1000, 'Initializing tagger...')
         tagger = c.getpath('stanford_tagger_trans')
 
@@ -87,7 +87,7 @@ def enrich(**kwargs):
     #    B) "heurpos" option is given for alignment.
     # -------------------------------------------
     m = None
-    if POS_LANG_CLASS in pos_args or ARG_ALN_HEURPOS in aln_args:
+    if ARG_POS_CLASS in pos_args or ARG_ALN_HEURPOS in aln_args:
         ENRICH_LOG.log(1000, "Initializing gloss-line classifier...")
         p = posdict
         m = mallet_maxent.MalletMaxent(classifier)
@@ -134,7 +134,7 @@ def enrich(**kwargs):
             # -------------------------------------------
             if has_tl:
 
-                if POS_LANG_PROJ in pos_args or POS_TRANS in pos_args or ARG_ALN_HEURPOS in aln_args:
+                if ARG_POS_PROJ in pos_args or ARG_POS_TRANS in pos_args or ARG_ALN_HEURPOS in aln_args:
 
                     try:
                         inst.tag_trans_pos(s)
@@ -147,7 +147,7 @@ def enrich(**kwargs):
 
             # 4) POS tag the gloss line --------------------------------------------
             if has_gl:
-                if POS_LANG_CLASS in pos_args or ARG_ALN_HEURPOS in aln_args:
+                if ARG_POS_CLASS in pos_args or ARG_ALN_HEURPOS in aln_args:
                     inst.classify_gloss_pos(m, posdict=p)
 
             # -------------------------------------------
@@ -172,7 +172,7 @@ def enrich(**kwargs):
             # -------------------------------------------
 
             # Project the classifier tags...
-            if has_ll and has_gl and POS_LANG_CLASS in pos_args:
+            if has_ll and has_gl and ARG_POS_CLASS in pos_args:
                 try:
                     inst.project_gloss_to_lang(tag_method=INTENT_POS_CLASS)
                 except GlossLangAlignException:
@@ -191,7 +191,7 @@ def enrich(**kwargs):
                     # -------------------------------------------
                     # POS Projection
                     # -------------------------------------------
-                    if POS_LANG_PROJ in pos_args:
+                    if ARG_POS_PROJ in pos_args:
                         pos_tags = inst.get_pos_tags(inst.trans.id)
 
                         if not pos_tags:

@@ -29,6 +29,18 @@ if import_errors:
     MAIN_LOG.critical('Necessary python modules were not found. Please install and try again.')
     sys.exit(2)
 
+# =============================================================================
+# Commands
+# =============================================================================
+CMD_PROJECT = 'project'
+CMD_EVAL    = 'eval'
+CMD_FILTER  = 'filter'
+CMD_STATS   = 'stats'
+CMD_ENRICH  = 'enrich'
+CMD_SPLIT   = 'split'
+CMD_EXTRACT = 'extract'
+CMD_TEXT    = 'text'
+# =============================================================================
 
 
 # -------------------------------------------
@@ -50,7 +62,7 @@ from intent.utils.listutils import flatten_list
 from xigt.codecs.xigtxml import dump
 from intent.utils.env import classifier
 from intent.utils.argutils import DefaultHelpParser, existsfile, \
-    PathArgException, csv_choices, proportion, globfiles
+    PathArgException, csv_choices, proportion, globfiles, writefile
 
 #===============================================================================
 # Now, intialize the subcommands.
@@ -68,7 +80,17 @@ subparsers.required = True
 def add_verbose(p):
     p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
-def register_subparser(name, help=None, description=None, **kwargs):
+
+def register_subparser(name, help=None, description=None, **kwargs) -> argparse.ArgumentParser:
+    """
+    Use this function to create regularized subparser.
+
+    :param name: The name of the parser.
+    :param help:
+    :param description:
+    :param kwargs: Any other arguments
+    :return: The subparser
+    """
     p = subparsers.add_parser(name, help=help, description=description, **kwargs)
     add_verbose(p)
     return p
@@ -76,7 +98,7 @@ def register_subparser(name, help=None, description=None, **kwargs):
 #===============================================================================
 # Enrich subcommand
 #===============================================================================
-enrich_p = register_subparser('enrich', help='Enrich igt data.',
+enrich_p = register_subparser(CMD_ENRICH, help='Enrich igt data.',
                                  description='Ingest a XIGT document and add information, such as alignment, or POS tags.',
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
@@ -86,17 +108,17 @@ enrich_p.add_argument(ARG_OUTFILE, help='Path to output XIGT file.')
 
 # Optional arguments -----------------------------------------------------------
 enrich_p.add_argument('--align', dest=ALN_VAR,
-                      type=csv_choices(ALN_TYPES), default=[],
-                      help='Comma-separated list of alignments to add. {}'.format(ALN_TYPES))
+                      type=csv_choices(ARG_ALN_METHODS), default=[],
+                      help='Comma-separated list of alignments to add. {}'.format(ARG_ALN_METHODS))
 
 enrich_p.add_argument('--giza-symmetric', dest=ALN_SYM_VAR, choices=ALN_SYM_TYPES,
                       help='Symmetricization heuristic to apply to statistical alignment',
                       default=None)
 
 enrich_p.add_argument('--pos', dest=POS_VAR,
-                      type=csv_choices(POS_TYPES), default=[],
+                      type=csv_choices(ARG_POS_METHODS), default=[],
                       help='''Comma-separated list of POS tags to add (no spaces):
-                     {}'''.format(POS_TYPES))
+                     {}'''.format(ARG_POS_METHODS))
 
 enrich_p.add_argument('--parse', dest=PARSE_VAR,
                       type=csv_choices(PARSE_TYPES), default=[],
@@ -104,7 +126,7 @@ enrich_p.add_argument('--parse', dest=PARSE_VAR,
 
 enrich_p.add_argument('--class', dest='class_path', default=classifier)
 
-enrich_p.add_argument('--proj-aln', dest='proj_aln', choices=ALL_ALN_TYPES, default=ARG_ALN_ANY,
+enrich_p.add_argument('--proj-aln', dest='proj_aln', choices=ARG_ALN_METHODS_ALL, default=ARG_ALN_ANY,
                       help='Alignment to use when performing projection. Can use "any" for any available alignment.')
 
 #===============================================================================
@@ -112,7 +134,7 @@ enrich_p.add_argument('--proj-aln', dest='proj_aln', choices=ALL_ALN_TYPES, defa
 #
 # Get statistics (# sents, # tokens, tags/token, etc) for a XIGT file.
 #===============================================================================
-stats_p = register_subparser('stats', help='Get corpus statistics for a set of XIGT files.')
+stats_p = register_subparser(CMD_STATS, help='Get corpus statistics for a set of XIGT files.')
 stats_p.add_argument('FILE', nargs='+', help='Files from which to gather statistics.', type=globfiles)
 
 
@@ -121,7 +143,7 @@ stats_p.add_argument('FILE', nargs='+', help='Files from which to gather statist
 #
 # Split XIGT file into train/dev/test
 #===============================================================================
-split_p = register_subparser('split', help='Command to split input file(s) into train/dev/test instances.')
+split_p = register_subparser(CMD_SPLIT, help='Command to split input file(s) into train/dev/test instances.')
 
 split_p.add_argument('FILE', nargs='+', help='XIGT files to gather together in order to generate the train/dev/test split', type=globfiles)
 split_p.add_argument('--train', default=0.8, help='The proportion of the data to set aside for training.', type=proportion)
@@ -135,7 +157,7 @@ split_p.add_argument('-f', dest='overwrite', action='store_true', help='Force ov
 #
 # Filter XIGT files for L,G,T lines, 1-to-1 alignment, etc.
 #===============================================================================
-filter_p = register_subparser('filter', help='Command to filter input file(s) for instances')
+filter_p = register_subparser(CMD_FILTER, help='Command to filter input file(s) for instances')
 
 filter_p.add_argument('FILE', nargs='+', help='XIGT files to filter.', type=globfiles)
 filter_p.add_argument('-o', '--output', help='Output file (Combine from inputs)', required=True)
@@ -153,7 +175,7 @@ filter_p.add_argument('--require-aln', help='Require instances to have 1-to-1 gl
 # Extract useful things from a series of enriched XIGT-XML files, such as
 # a POS classifier for the gloss line, or CFG rules from projected trees, etc.
 #===============================================================================
-extract_p = register_subparser('extract', help='Command to extract data from enriched XIGT-XML files')
+extract_p = register_subparser(CMD_EXTRACT, help='Command to extract data from enriched XIGT-XML files')
 
 extract_p.add_argument('FILE', nargs='+', help='XIGT files to include.', type=globfiles)
 extract_p.add_argument('--gloss-classifier', help='Output prefix for gloss-line classifier (No extension).', default=None)
@@ -161,7 +183,7 @@ extract_p.add_argument('--lang-tagger', help='Output prefix for lang-line tagger
 extract_p.add_argument('--cfg-rules', help='Output path for cfg-rules.', default=None)
 extract_p.add_argument('--dep-parser', help='Output prefix for dependency parser', default=None)
 extract_p.add_argument('--dep-pos', choices=['class','proj','manual','none'], default='none')
-extract_p.add_argument('--dep-align', choices=ALN_TYPES)
+extract_p.add_argument('--dep-align', choices=ARG_ALN_METHODS)
 extract_p.add_argument('--alignment', help='The file to output bootstrapped alignment as.')
 extract_p.add_argument('--no-alignment-heur', action='store_true', help='Add heuristic alignment results to aligned sentences.', default=False)
 
@@ -171,7 +193,7 @@ extract_p.add_argument('--no-alignment-heur', action='store_true', help='Add heu
 # Used for evaluating different portions of INTENT's functions against a gold-standard
 # XIGT-XML file.
 #===============================================================================
-eval_p = register_subparser('eval', help='Command to eval INTENT functions against a gold-standard XIGT-XML.')
+eval_p = register_subparser(CMD_EVAL, help='Command to eval INTENT functions against a gold-standard XIGT-XML.')
 
 eval_p.add_argument('FILE', nargs='+', help='XIGT files to test against.', type=globfiles)
 eval_p.add_argument('--classifier', help='Specify a gloss-line POS classifier to test.', type=existsfile, default=None)
@@ -182,7 +204,7 @@ eval_p.add_argument('--alignment', help='Test alignment methods against the alig
 #
 # Convert three-line IGT instances in text format to XIGT-XML
 #===============================================================================
-text_p = register_subparser('text', help="Command to convert a text document into XIGT-XML.")
+text_p = register_subparser(CMD_TEXT, help="Command to convert a text document into XIGT-XML.")
 
 text_p.add_argument('FILE', type=argparse.FileType('r', encoding='utf-8'), help='Input file')
 text_p.add_argument('OUT_FILE', help='Output file')
@@ -192,9 +214,12 @@ text_p.add_argument('OUT_FILE', help='Output file')
 #
 # (Re)do projection from an enriched instance.
 #===============================================================================
-project_p = register_subparser('project', help="Command that will (re)project pos/ps/ds using the specified pos source and alignment type.")
+project_p = register_subparser(CMD_PROJECT, help="Command that will (re)project pos/ps/ds using the specified pos source and alignment type.")
 
 project_p.add_argument(ARG_INFILE, type=existsfile)
+project_p.add_argument(ARG_OUTFILE)
+project_p.add_argument('--aln-method', dest='aln_method',
+                       choices=ARG_ALN_METHODS_ALL, help="The alignment method to use for projection.", default=ARG_ALN_ANY)
 
 # Parse the args. --------------------------------------------------------------
 try:
@@ -214,35 +239,36 @@ except PathArgException as pae:  # If we get some kind of invalid file in the ar
 logging.getLogger().setLevel(logging.WARNING - 10 * (min(args.verbose, 2)))
 
 # ENRICH
-if args.subcommand == 'enrich':
+if args.subcommand == CMD_ENRICH:
     enrich(**vars(args))
 
 # STATS
-elif args.subcommand == 'stats':
+elif args.subcommand == CMD_STATS:
     igt_stats(flatten_list(args.FILE), type='xigt', show_filename=True)
 
 # SPLIT
-elif args.subcommand == 'split':
+elif args.subcommand == CMD_SPLIT:
     split_corpus(flatten_list(args.FILE), args.train, args.dev, args.test, prefix=args.prefix, overwrite=args.overwrite)
 
 # FILTER
-elif args.subcommand == 'filter':
+elif args.subcommand == CMD_FILTER:
     filter_corpus(flatten_list(args.FILE), args.output, args.require_lang, args.require_gloss, args.require_trans, args.require_aln, args.require_gloss_pos)
 
 # EXTRACT
-elif args.subcommand == 'extract':
+elif args.subcommand == CMD_EXTRACT:
     extract_from_xigt(flatten_list(args.FILE), args.gloss_classifier, args.cfg_rules, args.lang_tagger,
                       dep_prefix=args.dep_parser, dep_pos=args.dep_pos, dep_align=args.dep_align,
                       alignment=args.alignment, no_alignment_heur=args.no_alignment_heur)
 
 # EVAL
-elif args.subcommand == 'eval':
+elif args.subcommand == CMD_EVAL:
     evaluate_intent(flatten_list(args.FILE), args.classifier, args.alignment)
 
 # TEXT CONVERT
-elif args.subcommand == 'text':
+elif args.subcommand == CMD_TEXT:
     xc = text_to_xigtxml(args.FILE)
     dump(args.OUT_FILE, xc)
 
-elif args.subcommand == 'project':
+elif args.subcommand == CMD_PROJECT:
     do_projection(**vars(args))
+

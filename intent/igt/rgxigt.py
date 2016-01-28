@@ -150,7 +150,7 @@ def read_ds(tier, pos_source=None):
     edges = []
 
     # --2b) Retrieve the POS tier, if it exists, in advance.
-    pos_tier = tier.igt.get_pos_tags(tier.attributes.get(DS_DEP_ATTRIBUTE), tag_method=pos_source)
+    pos_tier = get_pos_tags(tier.igt, tier.attributes.get(DS_DEP_ATTRIBUTE), tag_method=pos_source)
 
     for item in tier:
         dep  = item.attributes.get(DS_DEP_ATTRIBUTE)
@@ -159,16 +159,16 @@ def read_ds(tier, pos_source=None):
         # Get the POS tag if it exists
         pos = None
         if pos_tier:
-            pos_item = pos_tier.find(alignment=dep)
+            pos_item = find_in_obj(pos_tier, alignment=dep)
             if pos_item:
                 pos = pos_item.value()
 
         # Get the word value...
-        dep_w = tier.igt.find(id=dep)
+        dep_w = find_in_obj(tier.igt, id=dep)
         dep_t = Terminal(dep_w.value(), item_index(dep_w))
 
         if head is not None:
-            head_w = tier.igt.find(id=head)
+            head_w = find_in_obj(tier.igt, id=head)
             head_t = Terminal(head_w.value(), item_index(head_w))
         else:
             head_t = Terminal('ROOT', 0)
@@ -216,13 +216,13 @@ def gen_tier_id(inst, id_base, tier_type=None, alignment=None, no_hyphenate=Fals
 
     # Finally, if we have multiple tiers of the same type that annotate the
     # same item, we should append a letter for the different analyses.
-    if num_tiers > 0 and inst.find(id=id_str) is not None:
+    if num_tiers > 0 and find_in_obj(inst, id=id_str) is not None:
         while True:
             letters = string.ascii_lowercase
             assert num_tiers < 26, "More than 26 alternative analyses not currently supported"
             potential_id = id_str + '_{}'.format(letters[num_tiers])
 
-            if inst.find(id=potential_id) is None:
+            if find_in_obj(inst, id=potential_id) is None:
                 id_str = potential_id
                 break
             else:
@@ -1129,70 +1129,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         return tags
 
     # • POS Tag Projection -----------------------------------------------------
-    def project_trans_to_gloss(self, aln_method=None, tag_source=None):
-        """
-        Project POS tags from the translation words to the gloss words.
-        """
 
-        # Remove previous gloss tags created by us if specified...
-        attributes = {ALIGNMENT:self.gloss.id}
-
-        # Remove the previous tags if they are present...
-        prev_t = self.get_pos_tags(self.gloss.id, tag_method=INTENT_POS_PROJ)
-        if prev_t: prev_t.delete()
-
-        # Get the trans tags...
-        trans_tags = self.get_pos_tags(self.trans.id, tag_method=tag_source)
-
-        # If we don't get any trans tags back, throw an exception:
-        if not trans_tags:
-            project_creator_except("There were no translation-line POS tags found",
-                                   "Please create the appropriate translation-line POS tags before projecting.",
-                                   INTENT_POS_PROJ)
-
-        t_g_aln = get_trans_gloss_alignment(self, aln_method=aln_method)
-
-
-        # Create the new pos tier.
-        # TODO: There should be a more unified approach to transferring tags.
-
-        pt = RGTokenTier(type=POS_TIER_TYPE,
-                         id=gen_tier_id(self, POS_TIER_ID, tier_type=POS_TIER_TYPE, alignment=self.gloss.id),
-                         alignment=self.gloss.id, attributes=attributes)
-
-        # Add the metadata about this tier...
-        set_intent_method(pt, INTENT_POS_PROJ)
-        set_intent_proj_data(pt, trans_tags, t_g_aln.type)
-
-
-        for t_i, g_i in sorted(t_g_aln):
-            g_word = gloss(self)[g_i - 1]
-            t_tag = trans_tags[t_i-1]
-
-            # TODO: Implement order of precedence here.
-
-            # Order of precedence:
-            # NOUN > VERB > ADJ > ADV > PRON > DET > ADP > CONJ > PRT > NUM > PUNC > X
-
-            precedence = ['NOUN','VERB', 'ADJ', 'ADV', 'PRON', 'DET', 'ADP', 'CONJ', 'PRT', 'NUM', 'PUNC', 'X']
-
-            # Look for a tag that aligns with the given word.
-            g_tag = pt.find(alignment=g_word.id)
-
-            # If it isn't already specified, go ahead and insert it.
-            if g_tag is None:
-                pt.add(RGToken(id=pt.askItemId(), alignment=g_word.id, text=t_tag.value()))
-
-            # If it has been specified, see if it has higher precedence than the tag
-            # that already exists and replace it if it does.
-            elif g_tag.value() in precedence and t_tag.value() in precedence:
-                old_index = precedence.index(g_tag.value())
-                new_index = precedence.index(t_tag.value())
-                if new_index < old_index:
-                    g_tag.text = t_tag.value()
-
-
-        self.append(pt)
 
     def project_lang_to_gloss(self, tagmap=None):
         """
@@ -2026,7 +1963,7 @@ def retrieve_gloss_words(inst, create=True):
 
     # 2. If it exists, return it. Otherwise, look for the glosses tier.
     if wt is None and create:
-        n = inst.normal_tier()
+        n = get_normal_tier(inst)
         g_n = retrieve_normal_line(inst, ODIN_GLOSS_TAG)
 
         # If the value of the gloss line is None, or it's simply an empty string...
@@ -2406,7 +2343,7 @@ def strip_pos(inst):
         pt.delete()
 
 
-from intent.trees import IdTree, project_ps, Terminal, DepTree, project_ds, DepEdge, build_dep_edges
+from intent.trees import Terminal, DepTree, DepEdge, build_dep_edges
 from .search import *
-from .igtutils import remove_hyphens, surrounding_quotes_and_parens, punc_re, rgp
+from .igtutils import remove_hyphens, surrounding_quotes_and_parens, punc_re
 from .alignment import heur_align_inst, set_bilingual_alignment
