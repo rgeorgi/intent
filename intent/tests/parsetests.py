@@ -2,12 +2,10 @@ import logging
 import os
 from unittest import TestCase
 
-from intent.utils.arg_consts import PARSE_VAR, PARSE_LANG_PROJ, ALN_VAR, ALN_HEUR, PARSE_TRANS, POS_VAR, POS_LANG_CLASS, \
-    POS_LANG_PROJ
-
+from intent.commands import enrich
+from intent.consts import *
 from intent.igt.rgxigt import RGCorpus
 from intent.interfaces.stanford_parser import StanfordParser
-from intent.subcommands import enrich
 from intent.trees import DepTree, DEPSTR_PTB, project_ds
 from intent.utils.env import testfile_dir, classifier
 
@@ -28,7 +26,7 @@ all_enrich_args = {'OUT_FILE':'/dev/null',
                    'class_path':classifier,
                    POS_VAR:[POS_LANG_CLASS, POS_LANG_PROJ],
                    PARSE_VAR:[PARSE_LANG_PROJ, PARSE_TRANS],
-                   ALN_VAR:[ALN_HEUR]}
+                   ALN_VAR:[ARG_ALN_HEUR]}
 
 class ParseTests(TestCase):
 

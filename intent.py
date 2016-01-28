@@ -7,8 +7,8 @@ import sys
 # -------------------------------------------
 # Start the logger.
 # -------------------------------------------
-from intent.enrich import enrich
-from intent.scripts.commands.project import do_projection
+from intent.commands.enrich import enrich
+from intent.commands.project import do_projection
 
 logging.basicConfig(format=logging.BASIC_FORMAT)
 MAIN_LOG = logging.getLogger('INTENT')
@@ -29,6 +29,8 @@ if import_errors:
     MAIN_LOG.critical('Necessary python modules were not found. Please install and try again.')
     sys.exit(2)
 
+
+
 # -------------------------------------------
 # Import the env module, since there are some
 # additional tests there.
@@ -37,12 +39,12 @@ if import_errors:
 # -------------------------------------------
 # Start the logger and set it up.
 # -------------------------------------------
-from intent.scripts.basic.corpus_stats import igt_stats
-from intent.scripts.basic.filter_corpus import filter_corpus
-from intent.scripts.basic.split_corpus import split_corpus
-from intent.scripts.conversion.text_to_xigt import text_to_xigtxml
-from intent.scripts.evaluation import evaluate_intent
-from intent.scripts.extraction import extract_from_xigt
+from intent.commands.corpus_stats import igt_stats
+from intent.commands.filter_corpus import filter_corpus
+from intent.commands.split_corpus import split_corpus
+from intent.commands.text_to_xigt import text_to_xigtxml
+from intent.commands.evaluation import evaluate_intent
+from intent.commands.extraction import extract_from_xigt
 from intent.consts import *
 from intent.utils.listutils import flatten_list
 from xigt.codecs.xigtxml import dump
@@ -63,14 +65,20 @@ main = DefaultHelpParser(description="This is the main module for the INTENT pac
 subparsers = main.add_subparsers(help='Valid subcommands', dest='subcommand')
 subparsers.required = True
 
+def add_verbose(p):
+    p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
+
+def register_subparser(name, help=None, description=None, **kwargs):
+    p = subparsers.add_parser(name, help=help, description=description, **kwargs)
+    add_verbose(p)
+    return p
+
 #===============================================================================
 # Enrich subcommand
 #===============================================================================
-enrich_p = subparsers.add_parser('enrich', help='Enrich igt data.',
+enrich_p = register_subparser('enrich', help='Enrich igt data.',
                                  description='Ingest a XIGT document and add information, such as alignment, or POS tags.',
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-
-enrich_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 # Positional arguments ---------------------------------------------------------
 enrich_p.add_argument(ARG_INFILE, type=existsfile, help='Input XIGT file.')
@@ -100,49 +108,34 @@ enrich_p.add_argument('--proj-aln', dest='proj_aln', choices=ALL_ALN_TYPES, defa
                       help='Alignment to use when performing projection. Can use "any" for any available alignment.')
 
 #===============================================================================
-# ODIN subcommand
-#===============================================================================
-odin = subparsers.add_parser('odin', help='Convert ODIN data to XIGT format')
-
-odin.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
-odin.add_argument('--format', help='Format to output odin data in.', choices=['txt', 'xigt'], default='xigt')
-odin.add_argument('LNG', help='ISO 639-3 code for a language')
-odin.add_argument('OUT_FILE', help='Output path for the output file.')
-odin.add_argument('--limit', help="Limit number of instances written.", type=int)
-odin.add_argument('--randomize', action='store_true', help='Randomly select the instances')
-
-#===============================================================================
 # STATS subcommand
 #
 # Get statistics (# sents, # tokens, tags/token, etc) for a XIGT file.
 #===============================================================================
-stats = subparsers.add_parser('stats', help='Get corpus statistics for a set of XIGT files.')
+stats_p = register_subparser('stats', help='Get corpus statistics for a set of XIGT files.')
+stats_p.add_argument('FILE', nargs='+', help='Files from which to gather statistics.', type=globfiles)
 
-stats.add_argument('FILE', nargs='+', help='Files from which to gather statistics.', type=globfiles)
-stats.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 #===============================================================================
 # SPLIT subcommand
 #
 # Split XIGT file into train/dev/test
 #===============================================================================
-split = subparsers.add_parser('split', help='Command to split input file(s) into train/dev/test instances.')
+split_p = register_subparser('split', help='Command to split input file(s) into train/dev/test instances.')
 
-split.add_argument('FILE', nargs='+', help='XIGT files to gather together in order to generate the train/dev/test split', type=globfiles)
-split.add_argument('--train', default=0.8, help='The proportion of the data to set aside for training.', type=proportion)
-split.add_argument('--dev', default=0.1, help='The proportion of data to set aside for development.', type=proportion)
-split.add_argument('--test', default=0.1, help='The proportion of data to set aside for testing.', type=proportion)
-split.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
-split.add_argument('-o', dest='prefix', default=None, help='Destination prefix for the output.', required=True)
-split.add_argument('-f', dest='overwrite', action='store_true', help='Force overwrite of existing files.')
+split_p.add_argument('FILE', nargs='+', help='XIGT files to gather together in order to generate the train/dev/test split', type=globfiles)
+split_p.add_argument('--train', default=0.8, help='The proportion of the data to set aside for training.', type=proportion)
+split_p.add_argument('--dev', default=0.1, help='The proportion of data to set aside for development.', type=proportion)
+split_p.add_argument('--test', default=0.1, help='The proportion of data to set aside for testing.', type=proportion)
+split_p.add_argument('-o', dest='prefix', default=None, help='Destination prefix for the output.', required=True)
+split_p.add_argument('-f', dest='overwrite', action='store_true', help='Force overwrite of existing files.')
 
 #===============================================================================
 # FILTER subcommand
 #
 # Filter XIGT files for L,G,T lines, 1-to-1 alignment, etc.
 #===============================================================================
-
-filter_p = subparsers.add_parser('filter', help='Command to filter input file(s) for instances')
+filter_p = register_subparser('filter', help='Command to filter input file(s) for instances')
 
 filter_p.add_argument('FILE', nargs='+', help='XIGT files to filter.', type=globfiles)
 filter_p.add_argument('-o', '--output', help='Output file (Combine from inputs)', required=True)
@@ -153,7 +146,6 @@ filter_p.add_argument('--require-trans', help='Require instances to have trans l
 filter_p.add_argument('--require-gloss-pos', help='Require instance to have gloss pos tags', action='store_true', default=False)
 
 filter_p.add_argument('--require-aln', help='Require instances to have 1-to-1 gloss/lang alignment.', action='store_true', default=False)
-filter_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 #===============================================================================
 # EXTRACT subcommand
@@ -161,8 +153,7 @@ filter_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity
 # Extract useful things from a series of enriched XIGT-XML files, such as
 # a POS classifier for the gloss line, or CFG rules from projected trees, etc.
 #===============================================================================
-
-extract_p = subparsers.add_parser('extract', help='Command to extract data from enriched XIGT-XML files')
+extract_p = register_subparser('extract', help='Command to extract data from enriched XIGT-XML files')
 
 extract_p.add_argument('FILE', nargs='+', help='XIGT files to include.', type=globfiles)
 extract_p.add_argument('--gloss-classifier', help='Output prefix for gloss-line classifier (No extension).', default=None)
@@ -173,7 +164,6 @@ extract_p.add_argument('--dep-pos', choices=['class','proj','manual','none'], de
 extract_p.add_argument('--dep-align', choices=ALN_TYPES)
 extract_p.add_argument('--alignment', help='The file to output bootstrapped alignment as.')
 extract_p.add_argument('--no-alignment-heur', action='store_true', help='Add heuristic alignment results to aligned sentences.', default=False)
-extract_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 #===============================================================================
 # EVAL subcommand
@@ -181,35 +171,30 @@ extract_p.add_argument('-v', '--verbose', action='count', help='Set the verbosit
 # Used for evaluating different portions of INTENT's functions against a gold-standard
 # XIGT-XML file.
 #===============================================================================
-
-eval_p = subparsers.add_parser('eval', help='Command to eval INTENT functions against a gold-standard XIGT-XML.')
+eval_p = register_subparser('eval', help='Command to eval INTENT functions against a gold-standard XIGT-XML.')
 
 eval_p.add_argument('FILE', nargs='+', help='XIGT files to test against.', type=globfiles)
 eval_p.add_argument('--classifier', help='Specify a gloss-line POS classifier to test.', type=existsfile, default=None)
 eval_p.add_argument('--alignment', help='Test alignment methods against the alignment provided in the file.', action='store_true', default=False)
-
-eval_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 #===============================================================================
 # TEXT subcommand
 #
 # Convert three-line IGT instances in text format to XIGT-XML
 #===============================================================================
-text_p = subparsers.add_parser('text', help="Command to convert a text document into XIGT-XML.")
+text_p = register_subparser('text', help="Command to convert a text document into XIGT-XML.")
 
 text_p.add_argument('FILE', type=argparse.FileType('r', encoding='utf-8'), help='Input file')
 text_p.add_argument('OUT_FILE', help='Output file')
-text_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 #===============================================================================
 # PROJECT subcommand
 #
 # (Re)do projection from an enriched instance.
 #===============================================================================
-project_p = subparsers.add_parser('project', help="Command that will (re)project pos/ps/ds using the specified pos source and alignment type.")
+project_p = register_subparser('project', help="Command that will (re)project pos/ps/ds using the specified pos source and alignment type.")
 
 project_p.add_argument(ARG_INFILE, type=existsfile)
-project_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 # Parse the args. --------------------------------------------------------------
 try:
@@ -221,7 +206,6 @@ except PathArgException as pae:  # If we get some kind of invalid file in the ar
 
 
 # Decide on action based on subcommand and args. -------------------------------
-from intent import subcommands
 
 #===============================================================================
 # Set verbosity level
@@ -232,10 +216,6 @@ logging.getLogger().setLevel(logging.WARNING - 10 * (min(args.verbose, 2)))
 # ENRICH
 if args.subcommand == 'enrich':
     enrich(**vars(args))
-
-# ODIN
-elif args.subcommand == 'odin':
-    subcommands.odin(**vars(args))
 
 # STATS
 elif args.subcommand == 'stats':

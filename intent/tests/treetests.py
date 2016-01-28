@@ -1,13 +1,12 @@
 import os
-import unittest
 import re
+import unittest
 
 import intent
 from intent.alignment.Alignment import Alignment
+from intent.commands.corpus_stats import pos_stats, CONLL_TYPE
 from intent.igt.rgxigt import RGWordTier
-from intent.scripts.basic.corpus_stats import pos_stats, CONLL_TYPE
-from intent.trees import IdTree, project_ps, TreeMergeError, DepTree, Terminal, TreeError, project_ds, get_dep_edges, \
-    DEPSTR_CONLL, DEPSTR_PTB, DEPSTR_STANFORD, read_conll_file
+from intent.trees import IdTree, project_ps, DepTree, Terminal, TreeError, project_ds, DEPSTR_CONLL, DEPSTR_PTB, DEPSTR_STANFORD, read_conll_file
 from intent.utils.env import testfile_dir
 
 __author__ = 'rgeorgi'

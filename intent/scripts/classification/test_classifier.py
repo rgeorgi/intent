@@ -1,12 +1,12 @@
-from collections import defaultdict
-from glob import glob
 import os
+from glob import glob
+
+from intent.commands.evaluation import evaluate_classifier_on_instances
+from intent.commands.extraction import extract_from_instances
+from intent.commands.split_corpus import split_instances
 from intent.igt.rgxigt import RGCorpus
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
-from intent.scripts.basic.split_corpus import split_instances
-from intent.scripts.evaluation import evaluate_classifier_on_instances
-from intent.scripts.extraction import extract_from_instances
 from intent.utils.dicts import POSEvalDict
 from intent.utils.env import tagger_model
 

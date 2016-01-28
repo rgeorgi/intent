@@ -5,6 +5,7 @@ from multiprocessing.pool import Pool
 from intent.consts import POS_TIER_TYPE, GLOSS_WORD_ID, LANG_WORD_ID, INTENT_POS_CLASS, \
     INTENT_POS_PROJ, MANUAL_POS, INTENT_ALN_HEUR
 from intent.igt.grams import write_gram
+from intent.igt.search import get_lang_ds
 from intent.interfaces.mallet_maxent import train_txt
 from intent.interfaces.mst_parser import MSTParser
 from intent.interfaces.stanford_tagger import train_postagger
@@ -304,7 +305,7 @@ def process_instances(inst_list, classifier_prefix, cfg_prefix, tagger_prefix, d
 
 
         try:
-            ds = inst.get_lang_ds(pos_source=dep_pos)
+            ds = get_lang_ds(inst, pos_source=dep_pos)
         except RuntimeError as re:
             print(re)
             EXTRACT_LOG.error("Runtime error in instance {}".format(inst.id))
