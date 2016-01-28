@@ -405,32 +405,7 @@ def is_strict_columnar_alignment(s_a, s_b):
     a = strict_columnar_alignment(s_a, s_b)
     return len(a.all_src()) == len(s_a.split()) and len(a.all_tgt()) == len(s_b.split())
 
-def resolve_objects(container, expression):
-    """
-    Return the string that is the resolution of the alignment expression
-    `expression`, which selects ids from `container`.
-    """
-    itemgetter = getattr(container, 'get_item', container.get)
-    tokens = []
-    expression = expression.strip()
-    for sel_delim, _id, _range in selection_re.findall(expression):
 
-        item = container.find(id=_id)
-        if item is None:
-            raise XigtStructureError(
-                'Referred Item (id: {}) from reference "{}" does not '
-                'exist in the given container.'
-                .format(_id, expression)
-            )
-
-        if _range:
-            for spn_delim, start, end in span_re.findall(_range):
-                start = int(start) if start else None
-                end = int(end) if end else None
-                tokens.append((item, (start, end)))
-        else:
-            tokens.append((item, None))
-    return tokens
 
 # -------------------------------------------
 # Search for judgment on line
@@ -519,3 +494,5 @@ class TestMergeLines(unittest.TestCase):
         merged = merge_lines([l1, l2])
         tgt = 'This  is    an example    of    merged lines'
         self.assertEqual(merged, tgt)
+
+from .search import find_in_obj

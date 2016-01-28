@@ -162,6 +162,13 @@ ID_SAME_TYPE_ALTERNATE       = 'alternate'  # e.g. "pos_a"
 # ===============================================================================
 # ARGUMENT Stuff
 # ===============================================================================
+
+ARG_INFILE = 'IN_FILE'
+ARG_OUTFILE= 'OUT_FILE'
+
+# -------------------------------------------
+# Alignment types
+# -------------------------------------------
 ARG_ALN_GIZA = 'giza'
 ARG_ALN_GIZAHEUR = 'gizaheur'
 ARG_ALN_HEUR = 'heur'
@@ -169,9 +176,8 @@ ARG_ALN_HEURPOS = 'heurpos'
 ARG_ALN_MANUAL = 'manual'
 ARG_ALN_ANY = 'any'
 
-# -------------------------------------------
 # Map from the argument form of alignment to
-# -------------------------------------------
+# the metadata form.
 ALN_ARG_MAP = {ARG_ALN_GIZA:INTENT_ALN_GIZA,
                ARG_ALN_GIZAHEUR:INTENT_ALN_GIZAHEUR,
                ARG_ALN_HEUR:INTENT_ALN_HEUR,
@@ -183,10 +189,16 @@ ALL_ALN_TYPES = [ARG_ALN_GIZA, ARG_ALN_GIZAHEUR, ARG_ALN_HEUR, ARG_ALN_HEURPOS, 
 ALN_TYPES = [ARG_ALN_GIZA, ARG_ALN_HEUR, ARG_ALN_HEURPOS, ARG_ALN_GIZAHEUR]
 ALN_VAR = 'alignment_list'
 
+# -------------------------------------------
+# Symmetricization algorithms.
+# -------------------------------------------
+
 ALN_SYM_VAR = 'align_symmetric'
 ALN_SYM_TYPES = [None, SYMMETRIC_INTERSECT, SYMMETRIC_UNION, SYMMETRIC_GROW_DIAG_FINAL, SYMMETRIC_GROW_DIAG]
 
-# POS Stuff
+# -------------------------------------------
+# POS types.
+# -------------------------------------------
 POS_TRANS = 'trans'
 POS_LANG_CLASS = 'class'
 POS_LANG_PROJ  = 'proj'
@@ -195,7 +207,9 @@ POS_TYPES = [POS_LANG_CLASS, POS_LANG_PROJ, POS_TRANS]
 
 POS_VAR = 'pos_list'
 
+# -------------------------------------------
 # Parse Stuff
+# -------------------------------------------
 PARSE_TRANS = 'trans'
 PARSE_LANG_PROJ = 'proj'
 

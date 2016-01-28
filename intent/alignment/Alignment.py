@@ -429,6 +429,11 @@ class Alignment(set):
         super().__init__(iter)
         self.type = type
 
+    def add(self, *args, **kwargs):
+        for arg in args[0]:
+            assert isinstance(arg, int), type(arg)
+        super().add(*args, **kwargs)
+
     def __str__(self):
         ret_str = ''
         for elt in self:

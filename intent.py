@@ -7,7 +7,8 @@ import sys
 # -------------------------------------------
 # Start the logger.
 # -------------------------------------------
-
+from intent.enrich import enrich
+from intent.scripts.commands.project import do_projection
 
 logging.basicConfig(format=logging.BASIC_FORMAT)
 MAIN_LOG = logging.getLogger('INTENT')
@@ -65,38 +66,38 @@ subparsers.required = True
 #===============================================================================
 # Enrich subcommand
 #===============================================================================
-enrich = subparsers.add_parser('enrich', help='Enrich igt data.',
-                               description='Ingest a XIGT document and add information, such as alignment, or POS tags.',
-                               formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+enrich_p = subparsers.add_parser('enrich', help='Enrich igt data.',
+                                 description='Ingest a XIGT document and add information, such as alignment, or POS tags.',
+                                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-enrich.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
+enrich_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 # Positional arguments ---------------------------------------------------------
-enrich.add_argument('IN_FILE', type=existsfile, help='Input XIGT file.')
-enrich.add_argument('OUT_FILE', help='Path to output XIGT file.')
+enrich_p.add_argument(ARG_INFILE, type=existsfile, help='Input XIGT file.')
+enrich_p.add_argument(ARG_OUTFILE, help='Path to output XIGT file.')
 
 # Optional arguments -----------------------------------------------------------
-enrich.add_argument('--align', dest=ALN_VAR,
-                    type=csv_choices(ALN_TYPES), default=[],
-                    help='Comma-separated list of alignments to add. {}'.format(ALN_TYPES))
+enrich_p.add_argument('--align', dest=ALN_VAR,
+                      type=csv_choices(ALN_TYPES), default=[],
+                      help='Comma-separated list of alignments to add. {}'.format(ALN_TYPES))
 
-enrich.add_argument('--giza-symmetric', dest=ALN_SYM_VAR, choices=ALN_SYM_TYPES,
-                    help='Symmetricization heuristic to apply to statistical alignment',
-                    default=None)
+enrich_p.add_argument('--giza-symmetric', dest=ALN_SYM_VAR, choices=ALN_SYM_TYPES,
+                      help='Symmetricization heuristic to apply to statistical alignment',
+                      default=None)
 
-enrich.add_argument('--pos', dest=POS_VAR,
-                    type=csv_choices(POS_TYPES), default=[],
-                    help='''Comma-separated list of POS tags to add (no spaces):
+enrich_p.add_argument('--pos', dest=POS_VAR,
+                      type=csv_choices(POS_TYPES), default=[],
+                      help='''Comma-separated list of POS tags to add (no spaces):
                      {}'''.format(POS_TYPES))
 
-enrich.add_argument('--parse', dest=PARSE_VAR,
-                    type=csv_choices(PARSE_TYPES), default=[],
-                    help='List of parses to create. {}'.format(PARSE_TYPES))
+enrich_p.add_argument('--parse', dest=PARSE_VAR,
+                      type=csv_choices(PARSE_TYPES), default=[],
+                      help='List of parses to create. {}'.format(PARSE_TYPES))
 
-enrich.add_argument('--class', dest='class_path', default=classifier)
+enrich_p.add_argument('--class', dest='class_path', default=classifier)
 
-enrich.add_argument('--proj-aln', dest='proj_aln', choices=ALL_ALN_TYPES, default=ARG_ALN_ANY,
-                    help='Alignment to use when performing projection. Can use "any" for any available alignment.')
+enrich_p.add_argument('--proj-aln', dest='proj_aln', choices=ALL_ALN_TYPES, default=ARG_ALN_ANY,
+                      help='Alignment to use when performing projection. Can use "any" for any available alignment.')
 
 #===============================================================================
 # ODIN subcommand
@@ -200,6 +201,15 @@ text_p.add_argument('FILE', type=argparse.FileType('r', encoding='utf-8'), help=
 text_p.add_argument('OUT_FILE', help='Output file')
 text_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
+#===============================================================================
+# PROJECT subcommand
+#
+# (Re)do projection from an enriched instance.
+#===============================================================================
+project_p = subparsers.add_parser('project', help="Command that will (re)project pos/ps/ds using the specified pos source and alignment type.")
+
+project_p.add_argument(ARG_INFILE, type=existsfile)
+project_p.add_argument('-v', '--verbose', action='count', help='Set the verbosity level.', default=0)
 
 # Parse the args. --------------------------------------------------------------
 try:
@@ -221,7 +231,7 @@ logging.getLogger().setLevel(logging.WARNING - 10 * (min(args.verbose, 2)))
 
 # ENRICH
 if args.subcommand == 'enrich':
-    subcommands.enrich(**vars(args))
+    enrich(**vars(args))
 
 # ODIN
 elif args.subcommand == 'odin':
@@ -253,3 +263,6 @@ elif args.subcommand == 'eval':
 elif args.subcommand == 'text':
     xc = text_to_xigtxml(args.FILE)
     dump(args.OUT_FILE, xc)
+
+elif args.subcommand == 'project':
+    do_projection(**vars(args))

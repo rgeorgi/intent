@@ -12,6 +12,7 @@ from nltk.tree import ParentedTree, Tree
 # Constants / Strings
 #===============================================================================
 
+
 DEPSTR_STANFORD = 'stanford'
 DEPSTR_CONLL    = 'conll'
 DEPSTR_PTB      = 'ptb-like'
@@ -535,7 +536,7 @@ def project_ds(src_t, tgt_w, aln):
         for src_node in src_nodes:
             # Now, let's create a new node with the old
             # type, but new index and label
-            tgt_word = tgt_w.get_index(tgt_i)
+            tgt_word = tgt_w[tgt_i - 1]
             tgt_node = DepTree(tgt_word.value(), [], word_index = tgt_i, type=src_node.type)
 
             # Finally, let's append these new nodes to the list
@@ -590,7 +591,7 @@ def project_ds(src_t, tgt_w, aln):
     cur_indices = [st.word_index for st in cur_nodes]
 
     # --4) Now, reattach unaligned words...
-    unaligned_tgt_indices = [w.index for w in tgt_w if w.index not in cur_indices]
+    unaligned_tgt_indices = [item_index(w) for w in tgt_w if item_index(w) not in cur_indices]
 
     # Unaligned attachment from Quirk, et. al, 2005:
     #
@@ -650,7 +651,7 @@ def project_ds(src_t, tgt_w, aln):
 
 
     for unaln_i, aln_i in attachments_to_make:
-        tgt_word = tgt_w.get_index(unaln_i).value()
+        tgt_word = tgt_w[unaln_i - 1].value()
         aln_node = tgt_t.find_index(aln_i)
 
         #TODO: Determine why we're not occasionally not finding the unaligned nodes?
@@ -680,16 +681,6 @@ def project_ds(src_t, tgt_w, aln):
     # print(tgt_t.to_indices())
 
     return tgt_t
-
-
-
-            
-
-
-
-
-
-
 
 
 
@@ -742,7 +733,7 @@ def project_ps(src_t, tgt_w, aln):
     PS_LOG.debug('             ' + aln_indices(src_t.leaves()))
     PS_LOG.debug('SRC        : %s' % ' '.join([str(l) for l in src_t.leaves()]))
     PS_LOG.debug('SRC -> TGT : %s' % str(sorted(list(aln))))
-    PS_LOG.debug('TGT        : %s' % tgt_w.text())
+    PS_LOG.debug('TGT        : %s' % str(tgt_w))
     PS_LOG.debug('             ' + aln_indices([t.value() for t in tgt_w]))
 
 
@@ -779,12 +770,12 @@ def project_ps(src_t, tgt_w, aln):
         assert(tgt_n.is_preterminal())
 
         # Get the correct word for the index...
-        w = tgt_w.get_index(tgt_i)
+        w = tgt_w[tgt_i - 1]
 
         # Make an entry in the dictionary with the new
         # Preterminal/Terminal combination.
         tgt_n_copy = tgt_n.copy()
-        tgt_n_copy[0] = Terminal(w.value(), index=w.index)
+        tgt_n_copy[0] = Terminal(w.value(), index=item_index(w))
 
         nodes_to_replace[tgt_n].append(tgt_n_copy)
 
@@ -827,14 +818,14 @@ def project_ps(src_t, tgt_w, aln):
     PS_LOG.debug('#'*10+' Now reattaching unaligned words...' + '#'*10)
     aligned_indices = [t for s, t in aln]
 
-    unaligned_tgt_words = [w for w in tgt_w if w.index not in aligned_indices]
+    unaligned_tgt_words = [w for w in tgt_w if item_index(w) not in aligned_indices]
 
 
     for unaligned_tgt_word in unaligned_tgt_words:
 
         # Get the left and right words that are aligned...
-        left_words = [w for w in tgt_w if w.index < unaligned_tgt_word.index and w.index in aligned_indices]
-        right_words= [w for w in tgt_w if w.index > unaligned_tgt_word.index and w.index in aligned_indices]
+        left_words = [w for w in tgt_w if item_index(w) < item_index(unaligned_tgt_word) and item_index(w) in aligned_indices]
+        right_words= [w for w in tgt_w if item_index(w) > item_index(unaligned_tgt_word) and item_index(w) in aligned_indices]
 
         assert left_words or right_words, "No aligned words were found..."
 
@@ -844,26 +835,26 @@ def project_ps(src_t, tgt_w, aln):
         # Create the new preterminal node with the label 'UNK',
         # using the ID label provided by this word, and its index
         # at the preterminal stage.
-        t = IdTree('UNK', [Terminal(unaligned_tgt_word.value(), index=unaligned_tgt_word.index)], id=unaligned_tgt_word.id)
+        t = IdTree('UNK', [Terminal(unaligned_tgt_word.value(), index=item_index(unaligned_tgt_word))], id=unaligned_tgt_word.id)
 
 
         # If the only aligned word found was to the right,
         # select the preterminal with a span that starts
         # at that right word's index.
         if not left_word:
-            left_n = tgt_t.find_start_index(right_word.index)
+            left_n = tgt_t.find_start_index(item_index(right_word))
             left_n.parent().insert_by_span(t)
 
         # If the only aligned word found was to the left,
         # select the preterminal with a span that ends
         # at that left word's index
         elif not right_word:
-            right_n = tgt_t.find_stop_index(left_word.index)
+            right_n = tgt_t.find_stop_index(item_index(left_word))
             right_n.parent().insert_by_span(t)
 
         else:
-            left_n = tgt_t.find_stop_index(left_word.index)
-            right_n= tgt_t.find_start_index(right_word.index)
+            left_n = tgt_t.find_stop_index(item_index(left_word))
+            right_n= tgt_t.find_start_index(item_index(right_word))
 
             # Get the list of ancestors going up to the root of the
             # tree. The first point at which they "intersect"
@@ -1430,3 +1421,4 @@ def fix_tree_parents(t, preceding_parent = None):
 # =============================================================================
 
 from intent.igt.rgxigt import RGWordTier
+from intent.igt.search import item_index
