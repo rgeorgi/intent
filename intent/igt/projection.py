@@ -1,12 +1,17 @@
-from intent.consts import INTENT_PS_PROJ, INTENT_DS_PROJ, INTENT_POS_PROJ, POS_TIER_TYPE, POS_TIER_ID
-from intent.igt.exceptions import PhraseStructureProjectionException, ProjectionException, project_creator_except
+import re
+
+from intent.consts import *
+from intent.igt.exceptions import PhraseStructureProjectionException, ProjectionException, project_creator_except, \
+    GlossLangAlignException
 from intent.igt.metadata import set_intent_method
 from intent.igt.metadata import set_intent_proj_data
 from intent.igt.rgxigt import read_pt, gen_tier_id
 from intent.igt.search import get_trans_parse_tier, get_trans_gloss_lang_alignment, lang, get_trans_gloss_alignment, \
     create_pt_tier, get_ds_tier, get_lang_ds, delete_tier, get_trans_ds, trans, create_dt_tier, gloss, get_pos_tags, \
-    find_in_obj, ask_item_id
+    find_in_obj, ask_item_id, get_aligned_tokens, tier_text, add_pos_tags, tier_tokens
+from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.trees import project_ps, project_ds
+from intent.utils.env import classifier
 from xigt import Tier, Item
 from xigt.consts import ALIGNMENT
 
@@ -127,3 +132,205 @@ def project_trans_pos_to_gloss(inst, aln_method=None, trans_tag_method=None):
 
 
     inst.append(pt)
+
+def project_gloss_pos_to_lang(inst, tag_method = None, unk_handling=None, classifier=None, posdict=None):
+    """
+    Project POS tags from gloss words to language words. This assumes that we have
+    alignment tags on the gloss words already that align them to the language words.
+    """
+
+    lang_tag_tier = get_pos_tags(inst, lang(inst).id, tag_method=tag_method)
+    if lang_tag_tier is not None:
+        delete_tier(lang_tag_tier)
+
+    gloss_tag_tier = get_pos_tags(inst, gloss(inst).id, tag_method=tag_method)
+
+    # If we don't have gloss tags by that creator...
+    if not gloss_tag_tier:
+        project_creator_except("There were no gloss-line POS tags found",
+                                "Please create the appropriate gloss-line POS tags before projecting.",
+                                tag_method)
+
+    alignment = get_aligned_tokens(gloss(inst))
+
+    # If we don't have an alignment between language and gloss line,
+    # throw an error.
+    if not alignment:
+        raise GlossLangAlignException()
+
+    # Get the bilingual alignment from trans to
+    # Create the new pos tier...
+    pt = Tier(type=POS_TIER_TYPE,
+              id=gen_tier_id(inst, POS_TIER_ID, tier_type=POS_TIER_TYPE, alignment=lang(inst).id),
+              alignment=lang(inst).id)
+
+    # Add the metadata as to the source
+    set_intent_method(pt, tag_method)
+    set_intent_proj_data(pt, gloss_tag_tier, INTENT_ALN_1TO1)
+
+    for g_idx, l_idx in alignment:
+        l_w = lang(inst)[l_idx - 1]
+        g_w = gloss(inst)[g_idx - 1]
+
+        # Find the tag associated with this word.
+        g_tag = find_in_obj(gloss_tag_tier, attributes={ALIGNMENT:g_w.id})
+
+        # If no gloss tag exists for this...
+        if not g_tag:
+            label = 'UNK'
+
+            # If we are not handling unknowns, we could
+            # assign it "UNK", OR we could just skip it
+            # and leave it unspecified.
+            # Here, we choose to skip.
+            if unk_handling is None:
+                continue
+
+            elif unk_handling == 'keep':
+                pass
+
+            # If we are doing the "Noun" method, then we
+            # replace all the unknowns with "NOUN"
+            elif unk_handling == 'noun':
+                label = 'NOUN'
+
+            # Finally, we can choose to run the classifier on
+            # the unknown gloss words.
+            elif unk_handling == 'classify':
+                kwargs = {'posdict':posdict}    # <-- Initialize the new kwargs for the classifier.
+                if not classifier:
+                    raise ProjectionException('To project with a classifier, one must be provided.')
+
+                # Set up for the classifier...
+                kwargs['prev_gram'] = ''
+                kwargs['next_gram'] = ''
+
+                if g_idx > 1:
+                    kwargs['prev_gram'] = gloss(inst)[g_idx-1 - 1].value()
+                if g_idx < len(gloss(inst)):
+                    kwargs['next_gram'] = gloss(inst)[g_idx-1 + 1].value()
+
+                # Replace the whitespace in the gloss word for error
+                # TODO: Another whitespace replacement handling.
+                g_content = re.sub('\s+','', g_w.value())
+
+
+                label = classifier.classify_string(g_content, **kwargs).largest()[0]
+
+            else:
+                raise ProjectionException('Unknown unk_handling method "%s"' % unk_handling)
+
+        else:
+            label = g_tag.value()
+
+        pt.append(Item(id=ask_item_id(pt), alignment = l_w.id, text=label))
+
+    inst.append(pt)
+
+# =============================================================================
+# Tag Production
+# =============================================================================
+def tag_trans_pos(inst, tagger):
+    """
+    Run the stanford tagger on the translation words and return the POS tags.
+
+    :param tagger: The active POS tagger model.
+    :type tagger: StanfordPOSTagger
+    """
+
+    trans_tags = [i.label for i in tagger.tag(tier_text(trans(inst)))]
+
+    # Add the generated pos tags to the tier.
+    add_pos_tags(inst, trans(inst).id, trans_tags, tag_method=INTENT_POS_TAGGER)
+    return trans_tags
+
+def classify_gloss_pos(inst, classifier_obj=None, **kwargs):
+    """
+    Run the classifier on the gloss words and return the POS tags.
+
+    :param classifier_obj: the active mallet classifier to classify this language line.
+    :type classifier_obj: MalletMaxent
+    """
+    if classifier_obj is None:
+        classifier_obj = MalletMaxent(classifier)
+
+    attributes = {ALIGNMENT:gloss(inst).id}
+
+    # Search for a previous run and remove if found...
+    prev_tier = get_pos_tags(inst, gloss(inst).id, tag_method = INTENT_POS_CLASS)
+
+    if prev_tier:
+        delete_tier(prev_tier)
+
+    kwargs['prev_gram'] = None
+    kwargs['next_gram'] = None
+
+    tags = []
+
+    # Iterate over the gloss tokens...
+    for i, gloss_token in enumerate(tier_tokens(gloss(inst))):
+
+        # Manually ensure punctuation.
+        if re.match('[\.\?"\';/,]+', gloss_token.seq):
+            tags.append('PUNC')
+        else:
+
+            # TODO: Yet another whitespace issue..
+            # TODO: Also, somewhat inelegant forcing it to a string like this...
+            gloss_token = re.sub('\s+', '', str(gloss_token))
+
+            # lowercase the token...
+            gloss_token = gloss_token.lower()
+
+            #===================================================================
+            # Make sure to set up the next and previous tokens for the classifier
+            # if they are requested...
+            #===================================================================
+            if i+1 < len(gloss(inst)):
+                kwargs['next_gram'] = tier_tokens(gloss(inst))[i+1]
+            if i-1 >= 0:
+                kwargs['prev_gram'] = tier_tokens(gloss(inst))[i-1]
+
+            # The classifier returns a Classification object which has all the weights...
+            # obtain the highest weight.
+            result = classifier_obj.classify_string(gloss_token, **kwargs)
+
+            if len(result) == 0:
+                best = ['UNK']
+            else:
+                best = result.largest()
+
+            # Return the POS tags
+            tags.append(best[0])
+
+    add_pos_tags(inst, gloss(inst).id, tags, tag_method=INTENT_POS_CLASS)
+    return tags
+
+def parse_translation_line(inst, parser, pt=False, dt=False):
+    """
+    Parse the translation line in order to project phrase structure.
+
+    :param parser: Initialized StanfordParser
+    :type parser: StanfordParser
+    """
+    import logging
+    PARSELOG = logging.getLogger('PARSER')
+
+    assert pt or dt, "At least one of pt or dt should be true."
+
+    PARSELOG.debug('Attempting to parse translation line of instance "{}"'.format(inst.id))
+
+    # Replace any parens in the translation line with square brackets, since they
+    # will cause problems in the parsing otherwise.
+
+    trans_text = tier_text(trans(inst)).replace('(', '[')
+    trans_text = trans_text.replace(')',']')
+
+    result = parser.parse(trans_text)
+
+    PARSELOG.debug('Result of translation parse: {}'.format(result.pt))
+
+    if pt and result.pt:
+        create_pt_tier(inst, result.pt, trans(inst), parse_method=INTENT_PS_PARSER)
+    if dt and result.dt:
+        create_dt_tier(inst, result.dt, trans(inst), parse_method=INTENT_DS_PARSER)

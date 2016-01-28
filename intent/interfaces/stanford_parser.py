@@ -24,8 +24,8 @@ PARSE_LOG = logging.getLogger('STANFORD_PARSER')
 
 def parser_stderr_handler(msg):
     if   msg.startswith('Loading parser from serialized'): PARSE_LOG.info(msg)
-    elif msg.startswith('Parsing file:'): PARSE_LOG.info(msg)
-    elif msg.startswith('Parsing [sent.'): PARSE_LOG.info(msg)
+    elif msg.startswith('Parsing file:'): PARSE_LOG.debug(msg)
+    elif msg.startswith('Parsing [sent.'): PARSE_LOG.debug(msg)
     else:
         PARSE_LOG.warn(msg)
 

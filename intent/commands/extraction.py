@@ -264,10 +264,11 @@ def process_file(path, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser,
     :return:
     """
     EXTRACT_LOG.info('Opening "{}"...'.format(path))
-    xc = RGCorpus.load(path, mode=INCREMENTAL)
+    with open(path, 'r', encoding='utf-8') as f:
+        xc = RGCorpus.load(f, mode=INCREMENTAL)
 
-    # Now, iterate through each instance in the corpus...
-    return process_instances(xc, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos, dep_align)
+        # Now, iterate through each instance in the corpus...
+        return process_instances(xc, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos, dep_align)
 
 # =============================================================================
 # Process the list of instances...

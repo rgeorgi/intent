@@ -1,15 +1,22 @@
 import logging
 
+import re
+
+from intent.igt.exceptions import ProjectionTransGlossException, NoNormLineException, MultipleNormLineException
 from intent.igt.igtutils import rgp
 from intent.igt.metadata import set_intent_method
+from intent.interfaces.fast_align import fast_align_sents
+from intent.interfaces.giza import GizaAligner
+from intent.utils.env import c
 from xigt.model import Tier, Item
 
-from intent.alignment.Alignment import heur_alignments
+from intent.alignment.Alignment import heur_alignments, AlignmentError
 from intent.igt.rgxigt import find_gloss_word, gen_tier_id, gen_item_id
 from intent.igt.search import get_pos_tags, get_trans_gloss_alignment, find_in_obj, delete_tier
 
 ALIGN_LOG = logging.getLogger("ALN")
-from .search import glosses, tier_tokens, gloss, trans, get_bilingual_alignment_tier, ask_item_id, item_index
+from .search import glosses, tier_tokens, gloss, trans, get_bilingual_alignment_tier, ask_item_id, item_index, \
+    get_trans_gloss_wordpairs
 from intent.consts import *
 
 def set_bilingual_alignment(inst, src_tier, tgt_tier, aln, aln_method):
@@ -118,3 +125,147 @@ def heur_align_inst(inst, **kwargs):
         set_bilingual_alignment(inst, trans(inst), glosses(inst), aln, aln_method=aln_method)
 
     return get_trans_gloss_alignment(inst, aln_method=aln_method)
+
+def giza_align_t_g(xc, aligner=ALIGNER_GIZA, resume = True, use_heur = False, symmetric = SYMMETRIC_INTERSECT):
+    """
+    Perform giza alignments on the gloss and translation
+    lines.
+
+    :param resume: Whether to "resume" from the saved aligner, or start fresh.
+    :type resume: bool
+    """
+    import logging
+    ALIGN_LOG = logging.getLogger("GIZA")
+
+    # -------------------------------------------
+    # Start a list of the sentences and the associated
+    # instance IDs, so we will know after alignment
+    # which alignments go with which sentence.
+    # -------------------------------------------
+    g_sents = []
+    t_sents = []
+
+    # Keep track of which igt IDs are associated
+    # with which indices of the aligner output.
+    id_pairs = {}
+
+    g_morphs = []
+    t_words = []
+
+    i = 0
+
+    ALIGN_LOG.info("Building up parallel sentences for training...")
+    for inst in xc:
+        g_sent = []
+        t_sent = []
+
+        try:
+            gloss_tokens, trans_tokens = tier_tokens(glosses(inst)), tier_tokens(trans(inst))
+
+            # -------------------------------------------
+            # Only add the sentences if
+            if gloss_tokens and trans_tokens:
+
+                for gloss_token in gloss_tokens:
+                    g_sent.append(re.sub('\s+','', gloss_token.value().lower()))
+                g_sents.append(g_sent)
+
+                for trans_token in trans_tokens:
+                    t_sent.append(re.sub('\s+', '', trans_token.value().lower()))
+                t_sents.append(t_sent)
+
+                # -------------------------------------------
+                # If we ask for the augmented alignment...
+                # -------------------------------------------
+                if use_heur:
+                    try:
+                        # Try obtaining the tw/gm alignment.
+                        pairs = get_trans_gloss_wordpairs(inst, aln_method=[INTENT_ALN_HEUR, INTENT_ALN_HEURPOS], all_morphs=True)
+                    except ProjectionTransGlossException as ptge:
+                        ALIGN_LOG.warn("Augmented giza was requested but no heur alignment is present.")
+                    else:
+                        # For each trans_word/gloss_word index...
+                        for t_w, g_m in pairs:
+                            t_words.append([t_w.lower()])
+                            g_morphs.append([g_m.lower()])
+
+                id_pairs[inst.id] = i
+                i+=1
+
+        except (NoNormLineException, MultipleNormLineException) as nnle:
+            continue
+
+
+    # Tack on the heuristically aligned g/t words
+    # to the end of the sents, so they won't mess
+    # up alignment.
+
+    g_sents.extend(g_morphs)
+    t_sents.extend(t_words)
+
+    ALIGN_LOG.info("Beginning training...")
+    if aligner == ALIGNER_FASTALIGN:
+        ALIGN_LOG.info('Attempting to align corpus "{}" using fastalign'.format(xc.id))
+        g_t_alignments = fast_align_sents(g_sents, t_sents)
+        t_g_alignments = fast_align_sents(t_sents, g_sents)
+
+    elif aligner == ALIGNER_GIZA:
+        ALIGN_LOG.info('Attempting to align corpus "{}" with giza'.format(xc.id))
+
+        if resume:
+            ALIGN_LOG.info('Using pre-saved giza alignment.')
+            # Next, load up the saved gloss-trans giza alignment model
+            ga = GizaAligner.load(c.getpath('g_t_dir'))
+
+            # ...and use it to align the gloss line to the translation line.
+            g_t_alignments = ga.force_align(g_sents, t_sents)
+
+            # If we are applying a symmetricization heuristic AND we are
+            # forcing alignment, load the reverse model.
+            if symmetric is not None:
+                ga_reverse = GizaAligner.load(c.getpath('g_t_reverse_dir'))
+                t_g_alignments = ga_reverse.force_align(t_sents, g_sents)
+
+
+        # Otherwise, start a fresh alignment model.
+        else:
+            ga = GizaAligner()
+            g_t_alignments = ga.temp_train(g_sents, t_sents)
+
+            if symmetric:
+                t_g_alignments = ga.temp_train(t_sents, g_sents)
+
+
+    # -------------------------------------------
+    # Apply the symmetricization heuristic to
+    # the alignments if one is specified.
+    # -------------------------------------------
+    if symmetric:
+        for i, pairs in enumerate(zip(g_t_alignments, t_g_alignments)):
+            g_t, t_g = pairs
+            if not hasattr(g_t, symmetric):
+                raise AlignmentError('Unimplemented symmetricization heuristic "{}"'.format(symmetric))
+
+            g_t_alignments[i] = getattr(g_t, symmetric)(t_g.flip())
+
+    # -------------------------------------------
+    # Check to make sure the correct number of alignments
+    # is returned
+    # -------------------------------------------
+    if len(g_t_alignments) != i:
+        raise AlignmentError('Something went wrong with statistical alignment, {} alignments were returned, {} expected.'.format(len(g_t_alignments), i))
+
+    # -------------------------------------------
+    # Next, iterate through the aligned sentences and assign their alignments
+    # to the instance.
+    # -------------------------------------------
+    if use_heur:
+        aln_method = INTENT_ALN_GIZAHEUR
+    else:
+        aln_method = INTENT_ALN_GIZA
+
+    for igt in xc:
+        if igt.id in id_pairs:
+            g_t_asent = g_t_alignments[id_pairs[igt.id]]
+            t_g_aln = g_t_asent.flip()
+            set_bilingual_alignment(igt, trans(igt), glosses(igt), t_g_aln, aln_method = aln_method)

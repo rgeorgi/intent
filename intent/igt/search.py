@@ -273,6 +273,47 @@ def get_pos_tags(inst, tier_id, tag_method = None):
 
     return pos_tier
 
+def add_pos_tags(inst, tier_id, tags, tag_method = None):
+    """
+    Assign a list of pos tags to the tier specified by tier_id. The number of tags
+    must match the number of items in the tier.
+
+    :param tier_id: The id for the tier
+    :type tier_id: str
+    :param tags: A list of POS tag strings
+    :type tags: [str]
+    """
+
+    # See if we have a pos tier that's already been assigned by this method.
+    prev_tier = get_pos_tags(inst, tier_id, tag_method=tag_method)
+
+    # And delete it if so.
+    if prev_tier: delete_tier(prev_tier)
+
+    # Determine the id of this new tier...
+    new_id = gen_tier_id(inst, POS_TIER_ID, alignment=tier_id)
+
+    # Find the tier that we are adding tags to.
+    tier = find_in_obj(inst, id=tier_id)
+
+    # We assume that the length of the tags we are to add is the same as the
+    # number of tokens on the target tier.
+    assert len(tier) == len(tags)
+
+    # Create the POS tier
+    pt = Tier(type=POS_TIER_TYPE, id=new_id, alignment=tier_id,
+              attributes={ALIGNMENT:tier_id})
+
+    # And add the metadata for the source (intent) and tagging method
+    set_intent_method(pt, tag_method)
+
+    inst.append(pt)
+
+    # Go through the words and add the tags.
+    for w, tag in zip(tier.items, tags):
+        p = Item(id=ask_item_id(pt), alignment=w.id, text=tag)
+        pt.append(p)
+
 
 # -------------------------------------------
 # Alignment Retrieval
