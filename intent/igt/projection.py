@@ -30,7 +30,7 @@ def project_pt_tier(inst, proj_aln_method=None):
 
     # This might raise a ProjectionTransGlossException if the trans and gloss
     # alignments don't exist.
-    tl_aln = get_trans_gloss_alignment(inst, aln_method=proj_aln_method)
+    tl_aln = get_trans_gloss_lang_alignment(inst, aln_method=proj_aln_method)
 
     # Do the actual tree projection and create a tree object
     proj_tree = project_ps(trans_tree, lang(inst), tl_aln)

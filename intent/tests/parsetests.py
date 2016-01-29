@@ -25,7 +25,7 @@ no_enrich_args = {'OUT_FILE':'/dev/null'}
 all_enrich_args = {'OUT_FILE':'/dev/null',
                    'class_path':classifier,
                    POS_VAR:[ARG_POS_CLASS, ARG_POS_PROJ],
-                   PARSE_VAR:[PARSE_LANG_PROJ, PARSE_TRANS],
+                   PARSE_VAR:[ARG_PARSE_LANG, ARG_PARSE_TRANS],
                    ALN_VAR:[ARG_ALN_HEUR]}
 
 class ParseTests(TestCase):

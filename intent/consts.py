@@ -210,10 +210,10 @@ POS_VAR = 'pos_list'
 # -------------------------------------------
 # Parse Stuff
 # -------------------------------------------
-PARSE_TRANS = 'trans'
-PARSE_LANG_PROJ = 'proj'
+ARG_PARSE_TRANS = 'trans'
+ARG_PARSE_LANG = 'proj'
 
-PARSE_TYPES = [PARSE_TRANS, PARSE_LANG_PROJ]
+PARSE_TYPES = [ARG_PARSE_TRANS, ARG_PARSE_LANG]
 
 PARSE_VAR = 'parse_list'
 

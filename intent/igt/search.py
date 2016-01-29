@@ -476,9 +476,10 @@ def get_aligned_tokens(tier):
     """
     a = Alignment()
     for item in tier:
-        ia = item.attributes[ALIGNMENT]
-        aligned_w = find_in_obj(tier.igt, id=ia)
-        a.add((item_index(item), item_index(aligned_w)))
+        if ALIGNMENT in item.attributes:
+            ia = item.attributes[ALIGNMENT]
+            aligned_w = find_in_obj(tier.igt, id=ia)
+            a.add((item_index(item), item_index(aligned_w)))
     return a
 
 def get_trans_gloss_lang_alignment(inst, aln_method=None):

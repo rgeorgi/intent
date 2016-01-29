@@ -47,7 +47,7 @@ def enrich(class_path=None, **kwargs):
     #===========================================================================
 
     # Check that alignment is asked for if projection is asked for.
-    if (ARG_POS_PROJ in pos_args or PARSE_LANG_PROJ in parse_args) and (not aln_args):
+    if (ARG_POS_PROJ in pos_args or ARG_PARSE_LANG in parse_args) and (not aln_args):
         ENRICH_LOG.warn("You have asked for projection methods but have not requested " + \
                         "alignments to be generated. Projection may fail if alignment not already present in file.")
 
@@ -76,7 +76,7 @@ def enrich(class_path=None, **kwargs):
         #    A) "trans" option is given for parse
         #    B) "proj" option is given for parse.
         # -------------------------------------------
-        if PARSE_TRANS in parse_args or PARSE_LANG_PROJ in parse_args:
+        if ARG_PARSE_TRANS in parse_args or ARG_PARSE_LANG in parse_args:
             ENRICH_LOG.log(1000, "Intializing English parser...")
             sp = stanford_parser.StanfordParser()
 
@@ -170,7 +170,7 @@ def enrich(class_path=None, **kwargs):
                             ENRICH_LOG.critical(str(cte))
                             sys.exit(2)
 
-                    if PARSE_LANG_PROJ in parse_args or PARSE_TRANS in parse_args:
+                    if ARG_PARSE_LANG in parse_args or ARG_PARSE_TRANS in parse_args:
                         parse_translation_line(inst, sp, pt=True, dt=True)
 
                 # 4) POS tag the gloss line --------------------------------------------
@@ -234,7 +234,7 @@ def enrich(class_path=None, **kwargs):
                         # -------------------------------------------
                         # Parse projection
                         # -------------------------------------------
-                        if PARSE_LANG_PROJ in parse_args:
+                        if ARG_PARSE_LANG in parse_args:
                             try:
                                 project_pt_tier(inst, proj_aln_method=proj_aln_method)
                             except PhraseStructureProjectionException as pspe:
