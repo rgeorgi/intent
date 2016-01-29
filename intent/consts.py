@@ -222,3 +222,5 @@ PARSE_VAR = 'parse_list'
 # ===============================================================================
 morpheme_boundary_chars = ['-','=']
 morpheme_interior_chars = ['.',':']
+
+PUNC_TAG = 'PUNC'

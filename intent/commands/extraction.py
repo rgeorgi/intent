@@ -298,15 +298,15 @@ def process_instances(inst_list, classifier_prefix, cfg_prefix, tagger_prefix, d
 
         # Extract the dependency trees...
         if dep_pos == 'class':
-            dep_pos = INTENT_POS_CLASS
+            use_pos = INTENT_POS_CLASS
         elif dep_pos == 'proj':
-            dep_pos = INTENT_POS_PROJ
+            use_pos = INTENT_POS_PROJ
         elif dep_pos == 'manual':
-            dep_pos = MANUAL_POS
+            use_pos = MANUAL_POS
 
 
         try:
-            ds = get_lang_ds(inst, pos_source=dep_pos)
+            ds = get_lang_ds(inst, pos_source=use_pos)
         except RuntimeError as re:
             print(re)
             EXTRACT_LOG.error("Runtime error in instance {}".format(inst.id))

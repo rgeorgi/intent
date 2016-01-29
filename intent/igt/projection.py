@@ -3,6 +3,7 @@ import re
 from intent.consts import *
 from intent.igt.exceptions import PhraseStructureProjectionException, ProjectionException, project_creator_except, \
     GlossLangAlignException
+from intent.igt.igtutils import punc_re, punc_re_mult
 from intent.igt.metadata import set_intent_method
 from intent.igt.metadata import set_intent_proj_data
 from intent.igt.rgxigt import read_pt, gen_tier_id
@@ -168,62 +169,73 @@ def project_gloss_pos_to_lang(inst, tag_method = None, unk_handling=None, classi
     set_intent_method(pt, tag_method)
     set_intent_proj_data(pt, gloss_tag_tier, INTENT_ALN_1TO1)
 
-    for g_idx, l_idx in alignment:
-        l_w = lang(inst)[l_idx - 1]
-        g_w = gloss(inst)[g_idx - 1]
+    # -------------------------------------------
+    # Iterate over the language line to find punctuation...
+    # -------------------------------------------
+    for l_idx, l_w in enumerate(lang(inst)):
 
-        # Find the tag associated with this word.
-        g_tag = find_in_obj(gloss_tag_tier, attributes={ALIGNMENT:g_w.id})
+        l_w_string = l_w.value()
+        if re.match(punc_re_mult, l_w_string.strip(), flags=re.U):
+            label = PUNC_TAG
+        else:
+            g_indices = alignment.tgt_to_src(l_idx+1)
+            assert len(g_indices) <= 1, 'Number of gloss tokens aligned to for id: "{}-{}": {}'.format(inst.id, l_w.id, len(g_indices))
 
-        # If no gloss tag exists for this...
-        if not g_tag:
-            label = 'UNK'
+            g_w = gloss(inst)[g_indices[0] - 1]
+            # Find the tag associated with this word.
+            g_tag = find_in_obj(gloss_tag_tier, attributes={ALIGNMENT:g_w.id})
 
-            # If we are not handling unknowns, we could
-            # assign it "UNK", OR we could just skip it
-            # and leave it unspecified.
-            # Here, we choose to skip.
-            if unk_handling is None:
-                continue
+            # If no gloss tag exists for this...
+            if g_tag is None:
+                label = 'UNK'
 
-            elif unk_handling == 'keep':
-                pass
+                # If we are not handling unknowns, we could
+                # assign it "UNK", OR we could just skip it
+                # and leave it unspecified.
+                # Here, we choose to skip.
+                if unk_handling is None:
+                    continue
 
-            # If we are doing the "Noun" method, then we
-            # replace all the unknowns with "NOUN"
-            elif unk_handling == 'noun':
-                label = 'NOUN'
+                elif unk_handling == 'keep':
+                    pass
 
-            # Finally, we can choose to run the classifier on
-            # the unknown gloss words.
-            elif unk_handling == 'classify':
-                kwargs = {'posdict':posdict}    # <-- Initialize the new kwargs for the classifier.
-                if not classifier:
-                    raise ProjectionException('To project with a classifier, one must be provided.')
+                # If we are doing the "Noun" method, then we
+                # replace all the unknowns with "NOUN"
+                elif unk_handling == 'noun':
+                    label = 'NOUN'
 
-                # Set up for the classifier...
-                kwargs['prev_gram'] = ''
-                kwargs['next_gram'] = ''
+                # Finally, we can choose to run the classifier on
+                # the unknown gloss words.
+                elif unk_handling == 'classify':
+                    kwargs = {'posdict':posdict}    # <-- Initialize the new kwargs for the classifier.
+                    if not classifier:
+                        raise ProjectionException('To project with a classifier, one must be provided.')
 
-                if g_idx > 1:
-                    kwargs['prev_gram'] = gloss(inst)[g_idx-1 - 1].value()
-                if g_idx < len(gloss(inst)):
-                    kwargs['next_gram'] = gloss(inst)[g_idx-1 + 1].value()
+                    # Set up for the classifier...
+                    kwargs['prev_gram'] = ''
+                    kwargs['next_gram'] = ''
 
-                # Replace the whitespace in the gloss word for error
-                # TODO: Another whitespace replacement handling.
-                g_content = re.sub('\s+','', g_w.value())
+                    if g_idx > 1:
+                        kwargs['prev_gram'] = gloss(inst)[g_idx-1 - 1].value()
+                    if g_idx < len(gloss(inst)):
+                        kwargs['next_gram'] = gloss(inst)[g_idx-1 + 1].value()
+
+                    # Replace the whitespace in the gloss word for error
+                    # TODO: Another whitespace replacement handling.
+                    g_content = re.sub('\s+','', g_w.value())
 
 
-                label = classifier.classify_string(g_content, **kwargs).largest()[0]
+                    label = classifier.classify_string(g_content, **kwargs).largest()[0]
+
+                else:
+                    raise ProjectionException('Unknown unk_handling method "%s"' % unk_handling)
 
             else:
-                raise ProjectionException('Unknown unk_handling method "%s"' % unk_handling)
-
-        else:
-            label = g_tag.value()
+                label = g_tag.value()
 
         pt.append(Item(id=ask_item_id(pt), alignment = l_w.id, text=label))
+
+
 
     inst.append(pt)
 

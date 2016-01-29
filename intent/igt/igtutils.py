@@ -17,6 +17,7 @@ from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xig
 
 punc_chars   = '\.,\'\"\?!\xc2'
 punc_re      = '[{}]'.format(punc_chars)
+punc_re_mult = '{}+'.format(punc_re)
 no_punc_re   = '[^{}]'.format(punc_chars)
 word_re      = '[^{}\s]+'.format(punc_chars)
 
