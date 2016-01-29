@@ -157,7 +157,12 @@ def read_ds(tier, pos_source=None):
 
         # Get the word value...
         dep_w = find_in_obj(tier.igt, id=dep)
-        dep_t = Terminal(dep_w.value(), item_index(dep_w))
+        dep_w_string = dep_w.value()
+        dep_t = Terminal(dep_w_string, item_index(dep_w))
+
+        # If the pos is "None" but it's clearly a punctuation tag...
+        if pos_tier is not None and pos is None and re.match(punc_re+'+', dep_w_string, flags=re.UNICODE):
+            pos = PUNC_TAG
 
         if head is not None:
             head_w = find_in_obj(tier.igt, id=head)
