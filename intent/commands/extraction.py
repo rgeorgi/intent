@@ -68,6 +68,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     dep_train_path = None
     if dep_prefix is not None:
         dep_train_path = dep_prefix+'_train.txt'
+        EXTRACT_LOG.log(1000, 'Writing dependency parser training data to "{}"'.format(dep_train_path))
         # assert not os.path.exists(dep_train_path)
         dep_train_f = open(dep_train_path, 'w', encoding='utf-8')
 
@@ -294,7 +295,6 @@ def process_instances(inst_list, classifier_prefix, cfg_prefix, tagger_prefix, d
     dep_trees = []
 
     for inst in inst_list:
-
 
         # Extract the dependency trees...
         if dep_pos == 'class':

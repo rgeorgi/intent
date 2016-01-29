@@ -12,13 +12,14 @@ import string
 # ===============================================================================
 # Sub-tasks of cleaning
 # ===============================================================================
-from intent.alignment.Alignment import Alignment
 from xigt.model import Tier, Item, Igt, XigtCorpus
-from xigt.ref import selection_re, delimiters, span_re
-from xigt.errors import XigtStructureError
 from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xigtcorpus
 
-punc_re = '[.?!,\xc2]'
+punc_chars   = '\.,\'\"\?!\xc2'
+punc_re      = '[{}]'.format(punc_chars)
+no_punc_re   = '[^{}]'.format(punc_chars)
+word_re      = '[^{}\s]+'.format(punc_chars)
+
 list_re = '(?:[0-9]+|[a-z]|i+)'
 quote_re = '[\'"\`]'
 
@@ -39,9 +40,9 @@ def split_punctuation(ret_str):
 
 
 def remove_external_punctuation(ret_str):
-    ret_str = re.sub(r'(\w+)({})+\s'.format(punc_re), r'\1 ', ret_str)
-    ret_str = re.sub(r'(?:^|\s)({}+)(\w+)'.format(punc_re), r'\2', ret_str)
-    return re.sub(r'(\w+)([{}])+$'.format(punc_re), r'\1 ', ret_str)
+    ret_str = re.sub(r'(\w+)({})+\s'.format(punc_chars), r'\1 ', ret_str, flags=re.U)
+    ret_str = re.sub(r'(?:^|\s)({}+)(\w+)'.format(punc_chars), r'\2', ret_str, flags=re.U)
+    return re.sub(r'(\w+)([{}])+$'.format(punc_chars), r'\1 ', ret_str, flags=re.U)
 
 
 def join_morphs(ret_str):
@@ -76,12 +77,12 @@ def remove_elipses(ret_str):
 
 
 def remove_solo_punctuation(ret_str):
-    ret_str = re.sub('\s*({}+)\s*'.format(punc_re), replace_group_with_whitespace, ret_str)
+    ret_str = re.sub('\s*({}+)\s*'.format(punc_chars), replace_group_with_whitespace, ret_str)
     return ret_str
 
 
 def remove_final_punctuation(ret_str):
-    ret_str = re.sub('({}+)$'.format(punc_re), replace_group_with_whitespace, ret_str)
+    ret_str = re.sub('({}+)$'.format(punc_chars), replace_group_with_whitespace, ret_str)
     return ret_str
 
 
@@ -496,3 +497,4 @@ class TestMergeLines(unittest.TestCase):
         self.assertEqual(merged, tgt)
 
 from .search import find_in_obj
+from intent.alignment.Alignment import Alignment

@@ -5,7 +5,6 @@ import re
 
 import logging
 
-from intent.trees import IdTree
 from xigt.errors import XigtStructureError
 from xigt.ref import selection_re, span_re, ids
 
@@ -14,7 +13,7 @@ from intent.alignment.Alignment import Alignment
 from intent.consts import *
 
 from intent.igt.exceptions import NoNormLineException, MultipleNormLineException, NoTransLineException, \
-    NoGlossLineException, NoLangLineException
+    NoGlossLineException, NoLangLineException, EmptyGlossException
 from intent.igt.metadata import get_intent_method
 from xigt import ref, Tier, Item, Igt
 from xigt.consts import CONTENT, ALIGNMENT
@@ -148,7 +147,7 @@ def normalized_tier(inst) -> Tier:
 def _handle_nnle(f):
     try:
         return f()
-    except (NoNormLineException, MultipleNormLineException) as nnle:
+    except (NoNormLineException, MultipleNormLineException, EmptyGlossException) as nnle:
         return None
 
 def lang_line(inst) -> Item:
@@ -223,7 +222,7 @@ def glosses(inst) -> Tier:
 def get_ps_tier(inst, target):
     return find_in_obj(inst, type=PS_TIER_TYPE, alignment=target.id)
 
-def get_ps(inst, target) -> IdTree:
+def get_ps(inst, target):
     t = get_ps_tier(inst, target)
     if t is not None:
         return read_pt(t)

@@ -1,5 +1,9 @@
 import os
 from unittest import TestCase
+
+
+from xigt.codecs import xigtxml
+
 from intent.igt.igtutils import rgp
 from intent.igt.rgxigt import RGCorpus, NoODINRawException, morph_align, word_align
 from intent.utils.env import proj_root, testfile_dir
@@ -67,3 +71,15 @@ class NullGlossTest(TestCase):
     def test_basic_processing(self):
         xc = RGCorpus.load(self.path, basic_processing=True)
 
+class L_G_WordAlignTests(TestCase):
+
+    def setUp(self):
+        path = os.path.join(testfile_dir, 'xigt/multiple_lang_lines.xml')
+        with open(path, 'r', encoding='utf-8') as f:
+            self.xc = xigtxml.load(f)
+
+    def align_test(self):
+        inst = self.xc[0]
+        word_align(gloss(inst), lang(inst))
+
+from intent.igt.search import *

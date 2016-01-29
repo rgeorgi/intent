@@ -1105,7 +1105,7 @@ class DepTree(IdTree):
                        key=lambda x: x.index)
         return words
 
-    def to_conll(self):
+    def to_conll(self, lowercase=True):
         """
         Return a string in CONLL format
 
@@ -1126,13 +1126,12 @@ class DepTree(IdTree):
             # head = ','.join([str(i) for i in head_indices])
             head = str(head_indices[0])
 
-
             node = nodes[0]
             fields = ['_'] * 10
 
             fields[0] = str(node.word_index)
-            fields[1] = node.label()
-            fields[2] = node.label()
+            fields[1] = node.label() if not lowercase else node.label().lower()
+            fields[2] = node.label() if not lowercase else node.label().lower()
             fields[3] = node.pos if node.pos else '_'
             fields[4] = node.pos if node.pos else '_'
             fields[6] = head

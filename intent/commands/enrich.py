@@ -15,7 +15,7 @@ from xigt.codecs import xigtxml
 from xigt.consts import INCREMENTAL
 
 
-def enrich(**kwargs):
+def enrich(class_path=None, **kwargs):
 
     ENRICH_LOG = logging.getLogger('ENRICH')
 
@@ -27,8 +27,8 @@ def enrich(**kwargs):
     # Set up the alternate classifier path...
     # =============================================================================
 
-    if kwargs.get('class_path'):
-        classifier_path = mallet_maxent.MalletMaxent(kwargs.get('class_path'))
+    if class_path:
+        classifier_path = mallet_maxent.MalletMaxent(class_path)
 
     #===========================================================================
     # Set up the different arguments...
@@ -112,6 +112,35 @@ def enrich(**kwargs):
 
         for inst in corp:
 
+            feedback_string = 'Instance {:15s}: {{:20s}}{{}}'.format(inst.id)
+
+            reasons = []
+            inst_status = None
+
+            def fail(reason):
+                nonlocal inst_status, reasons
+                if reason not in reasons:
+                    reasons.append(reason)
+                inst_status = 'WARN'
+
+            def success():
+                nonlocal inst_status
+                inst_status = 'OK'
+
+            # -------------------------------------------
+            # Define the reasons for failure
+            # -------------------------------------------
+            F_GLOSS_LINE = "NOGLOSS"
+            F_LANG_LINE  = "NOLANG"
+            F_TRANS_LINE = "NOTRANS"
+            F_BAD_LINES  = "BADLINES"
+            F_L_G_ALN    = "L_G_ALIGN"
+            F_T_G_ALN    = "G_T_ALIGN"
+            F_NO_TRANS_POS="NO_POS_TRANS"
+            F_PROJECTION = "PROJECTION"
+            F_UNKNOWN    = "UNKNOWN"
+
+
             try:
 
                 # -------------------------------------------
@@ -156,9 +185,9 @@ def enrich(**kwargs):
                     try:
                         word_align(gloss(inst), lang(inst))
                     except GlossLangAlignException as glae:
-                        ENRICH_LOG.warn(str(glae))
+                        fail(F_L_G_ALN)
                     except MultipleNormLineException as mnle:
-                        pass # This will be errored out elsewhere...
+                        fail(F_BAD_LINES)
 
                 if has_gl and has_tl:
                     if ARG_ALN_HEURPOS in aln_args:
@@ -175,7 +204,7 @@ def enrich(**kwargs):
                     try:
                         project_gloss_pos_to_lang(inst, tag_method=INTENT_POS_CLASS)
                     except GlossLangAlignException:
-                        pass
+                        fail(F_L_G_ALN)
 
                 # -------------------------------------------
                 # Do the trans-to-lang projection...
@@ -185,7 +214,7 @@ def enrich(**kwargs):
                     proj_aln_method = ALN_ARG_MAP[kwargs.get('proj_aln', ARG_ALN_ANY)]
                     aln = get_trans_gloss_alignment(inst, aln_method=proj_aln_method)
                     if not aln or len(aln) == 0:
-                        ENRICH_LOG.warning("No alignment found between translation and gloss for instance {}, no projection will be done.".format(inst.id))
+                        fail(F_T_G_ALN)
                     else:
                         # -------------------------------------------
                         # POS Projection
@@ -194,13 +223,13 @@ def enrich(**kwargs):
                             pos_tags = get_pos_tags(inst, trans(inst).id)
 
                             if not pos_tags:
-                                ENRICH_LOG.warn('No trans-line POS tags available for "{}". Not projecting POS tags from trans line.'.format(inst.id))
+                                fail(F_NO_TRANS_POS)
                             else:
                                 project_trans_pos_to_gloss(inst)
                                 try:
                                     project_gloss_pos_to_lang(inst, tag_method=INTENT_POS_PROJ)
                                 except GlossLangAlignException as glae:
-                                    pass
+                                    fail(F_L_G_ALN)
 
                         # -------------------------------------------
                         # Parse projection
@@ -209,21 +238,28 @@ def enrich(**kwargs):
                             try:
                                 project_pt_tier(inst, proj_aln_method=proj_aln_method)
                             except PhraseStructureProjectionException as pspe:
-                                ENRICH_LOG.warning(pspe)
+                                fail(F_PROJECTION)
 
                             try:
                                 project_ds_tier(inst, proj_aln_method=proj_aln_method)
                             except ProjectionException as pe:
-                                ENRICH_LOG.warning(pe)
+                                fail(F_PROJECTION)
 
 
                 # Sort the tiers... ----------------------------------------------------
                 inst.sort_tiers()
 
             except Exception as e:
-                ENRICH_LOG.warn("Unknown Error occurred processing instance {}".format(inst.id))
-                ENRICH_LOG.warn(e)
-                raise(e)
+                # ENRICH_LOG.warn("Unknown Error occurred processing instance {}".format(inst.id))
+                # ENRICH_LOG.warn(e)
+                # raise(e)
+                fail(F_UNKNOWN)
+
+            if not reasons:
+                success()
+
+
+            ENRICH_LOG.info(feedback_string.format(inst_status, ','.join(reasons)))
 
         ENRICH_LOG.log(1000, 'Writing output file...')
 

@@ -11,12 +11,11 @@ from intent.utils.env import c
 from xigt.model import Tier, Item
 
 from intent.alignment.Alignment import heur_alignments, AlignmentError
-from intent.igt.rgxigt import find_gloss_word, gen_tier_id, gen_item_id
-from intent.igt.search import get_pos_tags, get_trans_gloss_alignment, find_in_obj, delete_tier
+
+
 
 ALIGN_LOG = logging.getLogger("ALN")
-from .search import glosses, tier_tokens, gloss, trans, get_bilingual_alignment_tier, ask_item_id, item_index, \
-    get_trans_gloss_wordpairs
+
 from intent.consts import *
 
 def set_bilingual_alignment(inst, src_tier, tgt_tier, aln, aln_method):
@@ -269,3 +268,6 @@ def giza_align_t_g(xc, aligner=ALIGNER_GIZA, resume = True, use_heur = False, sy
             g_t_asent = g_t_alignments[id_pairs[igt.id]]
             t_g_aln = g_t_asent.flip()
             set_bilingual_alignment(igt, trans(igt), glosses(igt), t_g_aln, aln_method = aln_method)
+
+from intent.igt.rgxigt import find_gloss_word, gen_tier_id, gen_item_id
+from .search import *

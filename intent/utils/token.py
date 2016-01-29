@@ -3,6 +3,7 @@ Created on Mar 21, 2014
 
 @author: rgeorgi
 """
+
 from intent.utils.string_utils import string_compare_with_processing
 import re
 
@@ -169,7 +170,8 @@ def whitespace_tokenizer(st):
 
 def sentence_tokenizer(st):
     i = 1
-    for match in re.finditer('[\w\']+|\$[\d\.]+|\S+', st, re.UNICODE):
+
+    for match in re.finditer('{}|{}+'.format(word_re, punc_re), st, flags=re.U):
         yield Token(match.group(0), start=match.start(), stop=match.end(), index=i)
         i += 1
 
@@ -275,3 +277,5 @@ class Span(object):
 
 class TokenException(Exception):
     pass
+
+from intent.igt.igtutils import word_re, punc_re

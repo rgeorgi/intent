@@ -9,25 +9,18 @@ Subclassing of the xigt package to add a few convenience methods.
 
 import copy
 import logging
-import re
 import string
 
-from intent.consts import *
-from intent.interfaces.fast_align import fast_align_sents
-from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.pos.TagMap import TagMap
 from intent.utils.string_utils import replace_invalid_xml
-from xigt import ref
 from xigt.consts import ALIGNMENT, SEGMENTATION, CONTENT
 from xigt.errors import XigtError
 from xigt.metadata import Metadata, Meta
 from xigt.model import XigtCorpus, Igt, Item, Tier
 from .exceptions import *
-from .metadata import set_meta_attr, find_meta_attr, del_meta_attr, set_intent_method, get_intent_method, \
-    set_intent_proj_data
+from .metadata import set_meta_attr, find_meta_attr, del_meta_attr
 
 # Set up logging ---------------------------------------------------------------
-from xigt.ref import ids
 
 PARSELOG = logging.getLogger(__name__)
 ALIGN_LOG = logging.getLogger('GIZA_LN')
@@ -41,9 +34,8 @@ from xigt.codecs import xigtxml
 
 
 import intent.utils.token
-from intent.utils.env import c, classifier
-from intent.alignment.Alignment import Alignment, heur_alignments, AlignmentError
-from intent.utils.token import Token, POSToken, sentence_tokenizer, whitespace_tokenizer
+from intent.alignment.Alignment import Alignment, AlignmentError
+from intent.utils.token import POSToken, sentence_tokenizer, whitespace_tokenizer
 from intent.interfaces.giza import GizaAligner
 
 # Other imports ----------------------------------------------------------------
@@ -840,7 +832,7 @@ class RGIgt(Igt, RecursiveFindMixin):
             w_content = w.value().lower()
             w_content = surrounding_quotes_and_parens(remove_hyphens(w_content))
 
-            w_content = re.sub(punc_re, '', w_content)
+            w_content = re.sub(punc_chars, '', w_content)
 
             seq.append(POSToken(w_content, label=tag_str))
         return seq
@@ -1403,7 +1395,7 @@ def retrieve_phrase_tier(inst, tag, id, type):
 # • Word Tier Creation ---
 #===============================================================================
 
-def create_words_tier(cur_item, word_id, word_type, aln_attribute = SEGMENTATION, tokenizer=whitespace_tokenizer):
+def create_words_tier(cur_item, word_id, word_type, aln_attribute = SEGMENTATION, tokenizer=sentence_tokenizer):
     """
     Create a words tier from an ODIN line type item.
 
@@ -1573,7 +1565,7 @@ def retrieve_gloss_words(inst, create=True):
             raise EmptyGlossException()
         else:
             wt = create_words_tier(retrieve_normal_line(inst, ODIN_GLOSS_TAG), GLOSS_WORD_ID,
-                                   GLOSS_WORD_TYPE, aln_attribute=CONTENT)
+                                   GLOSS_WORD_TYPE, aln_attribute=CONTENT, tokenizer=whitespace_tokenizer)
 
         # Set the "gloss type" to the "word-level"
         add_word_level_info(wt, INTENT_GLOSS_WORD)
@@ -1655,14 +1647,18 @@ def word_align(this, other):
     :type other:
     """
 
-    if len(this) != len(other):
+    # First, let's discard all the punctuation from both lines.
+    these_words = [w for w in this  if not re.match(punc_re+'+', w.value().strip())]
+    those_words = [w for w in other if not re.match(punc_re+'+', w.value().strip())]
+
+    if len(these_words) != len(those_words):
         raise GlossLangAlignException('Gloss and language lines could not be auto-aligned for igt "%s"' % this.igt.id)
     else:
         # Note on the tier the alignment
         this.alignment = other.id
 
         # Align the words 1-to-1, left-to-right
-        for my_word, their_word in zip(this, other):
+        for my_word, their_word in zip(these_words, those_words):
             my_word.alignment = their_word.id
 
         # Remove the word type metadata.
@@ -1947,5 +1943,6 @@ def strip_pos(inst):
 
 from intent.trees import Terminal, DepTree, DepEdge, build_dep_edges
 from .search import *
-from .igtutils import remove_hyphens, surrounding_quotes_and_parens, punc_re
+from .igtutils import remove_hyphens, surrounding_quotes_and_parens, punc_chars, punc_re
 from .alignment import heur_align_inst, set_bilingual_alignment
+from intent.trees import IdTree
