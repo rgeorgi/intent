@@ -19,7 +19,7 @@ from xigt.consts import INCREMENTAL
 
 def do_projection(**kwargs):
 
-    aln_method = kwargs.get('aln_method', ARG_ALN_ANY)
+    aln_method = ALN_ARG_MAP[kwargs.get('aln_method', ARG_ALN_ANY)]
 
     successes = 0
     failures  = 0
