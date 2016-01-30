@@ -4,21 +4,28 @@
 import re
 
 import logging
+from collections import defaultdict
 
-from intent.igt.references import find_in_obj, retrieve_lang_words, ask_item_id, cleaned_tier, normalized_tier
+from intent.igt.create_tiers import lang, trans, pos_tags, gloss, glosses, lang_tags, morphemes
+from intent.igt.references import xigt_find, ask_item_id, cleaned_tier, normalized_tier, \
+    gen_tier_id, odin_ancestor, findall_in_obj, gen_item_id, item_index
 from intent.interfaces.fast_align import fast_align_sents
 from intent.interfaces.giza import GizaAligner
 from intent.interfaces.mallet_maxent import MalletMaxent
-from intent.trees import project_ps, project_ds, Terminal, DepEdge, build_dep_edges
-from intent.utils.env import c
+from intent.interfaces.stanford_parser import StanfordParser
+from intent.interfaces.stanford_tagger import StanfordPOSTagger
+from intent.pos.TagMap import TagMap
+from intent.trees import project_ps, project_ds, Terminal, DepEdge, build_dep_edges, IdTree, DepTree
+from intent.utils.env import c, tagger_model
+from intent.utils.token import Token
 from xigt.errors import XigtStructureError
-from xigt.ref import selection_re, span_re, ids
+from xigt.ref import ids, selection_re, span_re
 
 RETRIEVE_LOG = logging.getLogger("RETRIEVAL")
 ALIGN_LOG = logging.getLogger("ALN")
 
-from xigt import Tier, Item, Igt
-from xigt.consts import SEGMENTATION, ALIGNMENT
+from xigt import Tier, Item, Igt, XigtCorpus
+from xigt.consts import SEGMENTATION, ALIGNMENT, CONTENT
 
 
 # -------------------------------------------
@@ -27,41 +34,13 @@ from xigt.consts import SEGMENTATION, ALIGNMENT
 
 
 
-def morphemes(inst) -> Tier:
-    mt = find_in_obj(inst, type=LANG_MORPH_TYPE)
-    if mt is None:
-        mt = words_to_morph_tier(lang(inst), LANG_MORPH_TYPE, LANG_MORPH_ID, SEGMENTATION)
-        inst.append(mt)
-    return mt
 
-def glosses(inst) -> Tier:
-    # Make sure that we don't pick up the gloss-word tier by accident.
-    f = [lambda x: not is_word_level_gloss(x)]
-
-    gt = find_in_obj(inst, type=GLOSS_MORPH_TYPE, others=f)
-
-
-    # If we don't already have a sub-token-level glosses tier, let's create
-    # it. Remembering that we want to use CONTENT to align the tier, not
-    # SEGMENTATION.
-    if gt is None:
-        gt = words_to_morph_tier(gloss(inst), GLOSS_MORPH_TYPE, GLOSS_MORPH_ID, CONTENT)
-
-        # Add the meta information that this is not a word-level gloss.
-        add_word_level_info(gt, INTENT_GLOSS_MORPH)
-        inst.append(gt)
-
-    # If we have alignment, remove the metadata attribute.
-    if gt.alignment is not None:
-        remove_word_level_info(gt)
-
-    return gt
 
 # -------------------------------------------
 # Other tier types.
 # -------------------------------------------
 def get_ps_tier(inst, target):
-    return find_in_obj(inst, type=PS_TIER_TYPE, alignment=target.id)
+    return xigt_find(inst, type=PS_TIER_TYPE, alignment=target.id)
 
 def get_ps(inst, target):
     t = get_ps_tier(inst, target)
@@ -75,7 +54,7 @@ def get_trans_ps(inst):
     return get_ps(inst, trans(inst))
 
 def get_ds_tier(inst, dep):
-    return find_in_obj(inst, type=DS_TIER_TYPE, attributes={DS_DEP_ATTRIBUTE:dep.id})
+    return xigt_find(inst, type=DS_TIER_TYPE, attributes={DS_DEP_ATTRIBUTE:dep.id})
 
 def get_ds(inst, target, pos_source=None):
     t = get_ds_tier(inst, target)
@@ -92,7 +71,7 @@ def get_trans_parse_tier(inst):
     """
     Get the phrase structure tier aligned with the translation words.
     """
-    return find_in_obj(inst, type=PS_TIER_TYPE, attributes={ALIGNMENT:trans(inst).id})
+    return xigt_find(inst, type=PS_TIER_TYPE, attributes={ALIGNMENT:trans(inst).id})
 
 
 # -------------------------------------------
@@ -118,7 +97,7 @@ def add_pos_tags(inst, tier_id, tags, tag_method = None):
     new_id = gen_tier_id(inst, POS_TIER_ID, alignment=tier_id)
 
     # Find the tier that we are adding tags to.
-    tier = find_in_obj(inst, id=tier_id)
+    tier = xigt_find(inst, id=tier_id)
 
     # We assume that the length of the tags we are to add is the same as the
     # number of tokens on the target tier.
@@ -152,16 +131,10 @@ def get_bilingual_alignment_tier(inst, src_id, tgt_id, aln_method = None):
     if aln_method is not None:
         filters = [lambda x: get_intent_method(x) == aln_method]
 
-    ba_tier = find_in_obj(inst, attributes=attributes, others=filters)
+    ba_tier = xigt_find(inst, attributes=attributes, others=filters)
     return ba_tier
 
-def item_index(item):
-    """
-    Retrieve the index of a given item on its parent tier.
 
-    :type item: Item
-    """
-    return list(item.tier).index(item)+1
 
 def delete_tier(tier):
     tier.igt.remove(tier)
@@ -182,10 +155,10 @@ def get_bilingual_alignment(inst, src_id, tgt_id, aln_method = None):
             src_id = ba.attributes[SOURCE_ATTRIBUTE]
             tgt_id = ba.attributes[TARGET_ATTRIBUTE]
 
-            src_item = find_in_obj(inst, id=src_id)
-            tgt_ids = ref.ids(tgt_id)
+            src_item = xigt_find(inst, id=src_id)
+            tgt_ids = ids(tgt_id)
             for tgt in tgt_ids:
-                tgt_item = find_in_obj(inst, id=tgt_id)
+                tgt_item = xigt_find(inst, id=tgt_id)
 
                 if tgt_item is not None:
                     a.add((item_index(src_item), item_index(tgt_item)))
@@ -226,7 +199,7 @@ def get_trans_gloss_alignment(inst, aln_method=None):
         return None
 
 def get_trans_glosses_alignment(inst, aln_method=None):
-    return get_bilingual_alignment(trans(inst).id, glosses(inst).id, aln_method=aln_method)
+    return get_bilingual_alignment(inst, trans(inst).id, glosses(inst).id, aln_method=aln_method)
 
 def get_trans_gloss_wordpairs(inst, aln_method=None, all_morphs=True):
     """
@@ -303,7 +276,7 @@ def tier_alignment(tier):
     for item in tier:
         if ALIGNMENT in item.attributes:
             ia = item.attributes[ALIGNMENT]
-            aligned_w = find_in_obj(tier.igt, id=ia)
+            aligned_w = xigt_find(tier.igt, id=ia)
             a.add((item_index(item), item_index(aligned_w)))
     return a
 
@@ -444,39 +417,7 @@ def replace_lines(inst, clean_lines, norm_lines):
 
     return inst
 
-# -------------------------------------------
-# Create morpheme-level tiers
-# -------------------------------------------
-def words_to_morph_tier(tier, type, id, aln_attribute):
-    """
-    :param tier:
-     :type tier: Tier
 
-    :param type:
-    :param id:
-    :param aln_attribute:
-    """
-
-    mt = Tier(id=id, attributes={aln_attribute:tier.id}, type=type)
-
-    # Go through each word...
-    for word in tier:
-
-        morphs = tokenize_item(word, morpheme_tokenizer)
-
-        for morph in morphs:
-            # If there is only one morph in the tokenization, don't bother with the indexing, just
-            # use the id.
-            if len(morphs) == 1:
-                aln_str = word.id
-            else:
-                aln_str = create_aln_expr(word.id, morph.start, morph.stop)
-
-            rm = Item(id=gen_item_id(mt.id, len(mt)),
-                      attributes={aln_attribute: aln_str})
-            mt.append(rm)
-
-    return mt
 
 # -------------------------------------------
 # Create Phrase Tier
@@ -597,7 +538,7 @@ def resolve_objects(container, expression):
     expression = expression.strip()
     for sel_delim, _id, _range in selection_re.findall(expression):
 
-        item = find_in_obj(container, id=_id)
+        item = xigt_find(container, id=_id)
         if item is None:
             raise XigtStructureError(
                 'Referred Item (id: {}) from reference "{}" does not '
@@ -665,12 +606,16 @@ def set_bilingual_alignment(inst, src_tier, tgt_tier, aln, aln_method):
 
 def add_pair(tier, src_id, tgt_id):
     attributes = {SOURCE_ATTRIBUTE:src_id, TARGET_ATTRIBUTE:tgt_id}
-    i = find_in_obj(tier, attributes=attributes)
+    i = xigt_find(tier, attributes=attributes)
     if i is None:
         ba = Item(id=ask_item_id(tier), attributes=attributes)
         tier.append(ba)
     else:
         i.attributes[TARGET_ATTRIBUTE] += ',' + tgt_id
+
+def heur_align_corp(xc, **kwargs):
+    for inst in xc:
+        heur_align_inst(inst, **kwargs)
 
 def heur_align_inst(inst, **kwargs):
     """
@@ -973,7 +918,7 @@ def project_trans_pos_to_gloss(inst, aln_method=None, trans_tag_method=None):
         precedence = ['NOUN','VERB', 'ADJ', 'ADV', 'PRON', 'DET', 'ADP', 'CONJ', 'PRT', 'NUM', 'PUNC', 'X']
 
         # Look for a tag that aligns with the given word.
-        g_tag = find_in_obj(pt, alignment=g_word.id)
+        g_tag = xigt_find(pt, alignment=g_word.id)
 
         # If it isn't already specified, go ahead and insert it.
         if g_tag is None:
@@ -1021,8 +966,8 @@ def project_lang_to_gloss(inst, tagmap=None):
     for lang_tag in lang_pos_tags:
         # Get the gloss word related to this tag. It should share
         # an alignment with the lang_tag...
-        gloss_word = find_in_obj(inst, alignment=lang_tag.alignment,
-                                 # And it's parent tier should be the GLOSS_WORD_TYPE.
+        gloss_word = xigt_find(inst, alignment=lang_tag.alignment,
+                               # And it's parent tier should be the GLOSS_WORD_TYPE.
                                  others=[lambda x: hasattr(x, 'tier') and x.tier.type == GLOSS_WORD_TYPE])
 
         # Do the tag mapping...
@@ -1087,7 +1032,7 @@ def project_gloss_pos_to_lang(inst, tag_method = None, unk_handling=None, classi
             g_idx = g_indices[0] - 1
             g_w = gloss(inst)[g_idx]
             # Find the tag associated with this word.
-            g_tag = find_in_obj(gloss_tag_tier, attributes={ALIGNMENT:g_w.id})
+            g_tag = xigt_find(gloss_tag_tier, attributes={ALIGNMENT:g_w.id})
 
             # If no gloss tag exists for this...
             if g_tag is None:
@@ -1146,13 +1091,15 @@ def project_gloss_pos_to_lang(inst, tag_method = None, unk_handling=None, classi
 # =============================================================================
 # Tag Production
 # =============================================================================
-def tag_trans_pos(inst, tagger):
+def tag_trans_pos(inst, tagger=None):
     """
     Run the stanford tagger on the translation words and return the POS tags.
 
     :param tagger: The active POS tagger model.
     :type tagger: StanfordPOSTagger
     """
+    if tagger is None:
+        tagger = StanfordPOSTagger(tagger_model)
 
     trans_tags = [i.label for i in tagger.tag(tier_text(trans(inst)))]
 
@@ -1222,7 +1169,7 @@ def classify_gloss_pos(inst, classifier_obj=None, **kwargs):
     add_pos_tags(inst, gloss(inst).id, tags, tag_method=INTENT_POS_CLASS)
     return tags
 
-def parse_translation_line(inst, parser, pt=False, dt=False):
+def parse_translation_line(inst, parser=None, pt=False, dt=False):
     """
     Parse the translation line in order to project phrase structure.
 
@@ -1231,6 +1178,9 @@ def parse_translation_line(inst, parser, pt=False, dt=False):
     """
     import logging
     PARSELOG = logging.getLogger('PARSER')
+
+    if parser is None:
+        parser = StanfordParser()
 
     assert pt or dt, "At least one of pt or dt should be true."
 
@@ -1281,12 +1231,12 @@ def read_ds(tier, pos_source=None):
         # Get the POS tag if it exists
         pos = None
         if pos_tier:
-            pos_item = find_in_obj(pos_tier, alignment=dep)
+            pos_item = xigt_find(pos_tier, alignment=dep)
             if pos_item:
                 pos = pos_item.value()
 
         # Get the word value...
-        dep_w = find_in_obj(tier.igt, id=dep)
+        dep_w = xigt_find(tier.igt, id=dep)
         dep_w_string = dep_w.value()
         dep_t = Terminal(dep_w_string, item_index(dep_w))
 
@@ -1295,7 +1245,7 @@ def read_ds(tier, pos_source=None):
             pos = PUNC_TAG
 
         if head is not None:
-            head_w = find_in_obj(tier.igt, id=head)
+            head_w = xigt_find(tier.igt, id=head)
             head_t = Terminal(head_w.value(), item_index(head_w))
         else:
             head_t = Terminal('ROOT', 0)
@@ -1321,10 +1271,9 @@ def find_lang_word(inst, morph):
 
     :rtype: RGWord
     """
-    ids = set(ref.ids(morph.segmentation))
-    assert len(ids) == 1, "A morph should not segment more than one word"
-
-    return inst.find(id = ids.pop())
+    segment_ids = set(ids(morph.segmentation))
+    assert len(segment_ids) == 1, "A morph should not segment more than one word"
+    return xigt_find(inst, id=segment_ids.pop())
 
 
 def odin_span(item):
@@ -1452,37 +1401,6 @@ def follow_alignment(inst, id):
     else:
         return found
 
-def add_word_level_info(obj, val):
-    set_meta_attr(obj, INTENT_EXTENDED_INFO, INTENT_TOKEN_TYPE, val, metadata_type=INTENT_META_TYPE)
-
-def remove_word_level_info(obj):
-    del_meta_attr(obj, INTENT_EXTENDED_INFO, INTENT_TOKEN_TYPE)
-
-def get_word_level_info(obj):
-    return find_meta_attr(obj, INTENT_EXTENDED_INFO, INTENT_TOKEN_TYPE)
-
-def is_word_level_gloss(obj):
-    """
-    Return true if this item is a "word-level" tier. (That is, it should
-    either have explicit metadata stating such, or its alignment will be
-    with a word tier, rather than a morphemes tier)
-
-    :param obj:
-    :returns bool:
-    """
-
-    if not isinstance(obj, Tier):
-        return False
-
-    # If we have explicit metadata that says we are a word,
-    # return true.
-    if get_word_level_info(obj) == INTENT_GLOSS_WORD:
-        return True
-
-    # Otherwise, check and see if we are aligned with a
-    else:
-        a = find_in_obj(obj.igt, id=obj.alignment)
-        return (a is not None) and (a.type == WORDS_TYPE)
 
 
 #===============================================================================
@@ -1513,21 +1431,6 @@ def strip_pos(inst):
     for pt in inst.findall(type=POS_TIER_TYPE):
         pt.delete()
 
-#===============================================================================
-# • Word Tier Creation ---
-#===============================================================================
-
-
-
-
-
-
-#===============================================================================
-# • Phrase Tier Creation ---
-#===============================================================================
-
-
-
 
 
 #===============================================================================
@@ -1535,59 +1438,6 @@ def strip_pos(inst):
 #===============================================================================
 
 
-
-
-
-
-def retrieve_gloss_words(inst, create=True):
-    """
-    Given an IGT instance, create the gloss "words" and "glosses" tiers.
-
-    1. If a "words" type exists, and it's contents are the gloss line, return it.
-    2. If it does not exist, tokenize the gloss line and return it.
-    3. If there are NO tokens on the gloss line for whatever reason... Return None.
-
-    :param inst: Instance which to create the tiers from.
-    :type inst: RGIgt
-    :rtype: RGWordTier
-    """
-
-    # 1. Look for an existing words tier that aligns with the normalized tier...
-    wt = find_in_obj(inst, type=GLOSS_WORD_TYPE,
-                   # Add the "others" to find only the "glosses" tiers that
-                   # are at the word level...
-
-                   # TODO FIXME: Find more elegant solution
-                   others=[lambda x: is_word_level_gloss(x),
-                           lambda x: ODIN_GLOSS_TAG in aligned_tags(x) ])
-
-    # 2. If it exists, return it. Otherwise, look for the glosses tier.
-    if wt is None and create:
-        n = get_normal_tier(inst)
-        g_n = retrieve_normal_line(inst, ODIN_GLOSS_TAG)
-
-        # If the value of the gloss line is None, or it's simply an empty string...
-        if g_n is None or g_n.value() is None or not g_n.value().strip():
-            raise EmptyGlossException()
-        else:
-            wt = create_words_tier(retrieve_normal_line(inst, ODIN_GLOSS_TAG), GLOSS_WORD_ID,
-                                   GLOSS_WORD_TYPE, aln_attribute=CONTENT, tokenizer=whitespace_tokenizer)
-
-        # Set the "gloss type" to the "word-level"
-        add_word_level_info(wt, INTENT_GLOSS_WORD)
-        inst.append(wt)
-    elif wt is not None:
-        wt.__class__ = RGWordTier
-    else:
-        return None
-
-
-    # If we have alignment, we can remove the metadata, because
-    # that indicates the type for us.
-    if wt.alignment is not None:
-        remove_word_level_info(wt)
-
-    return wt
 
 
 
@@ -1730,7 +1580,7 @@ def read_pt(tier):
         # 1) If the node has an alignment, that means it's a terminal ----------
         aln = node.attributes.get(ALIGNMENT)
         if aln:
-            word_item = find_in_obj(tier.igt, id=aln)
+            word_item = xigt_find(tier.igt, id=aln)
             n = IdTree(node.value(), [Terminal(word_item.value(), item_index(word_item))])
 
             # If this is a preterminal, it shouldn't have children.
@@ -1765,6 +1615,14 @@ def read_pt(tier):
 
     return child_n.root()
 
+def add_gloss_lang_alignments(inst):
+    # Finally, do morpheme-to-morpheme alignment between gloss
+    # and language if it's not already done...
+    if not glosses(inst).alignment:
+        morph_align(glosses(inst), morphemes(inst))
+
+    if not gloss(inst).alignment:
+        word_align(gloss(inst), lang(inst))
 
 
 # -------------------------------------------
@@ -1772,6 +1630,7 @@ def read_pt(tier):
 
 from .exceptions import *
 from .igtutils import *
-from .metadata import get_intent_method
+from .metadata import get_intent_method, get_word_level_info, set_intent_method, remove_word_level_info, \
+    set_intent_proj_data
 from intent.alignment.Alignment import Alignment, heur_alignments, AlignmentError
 from intent.consts import *

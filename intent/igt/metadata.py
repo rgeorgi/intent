@@ -6,7 +6,7 @@ Created on Apr 9, 2015
 from datetime import datetime
 
 from intent.consts import DATA_DATE, INTENT_META_SOURCE, DATA_SRC, DATA_PROV, \
-    DATA_METH, DATA_FROM, INTENT_META_TYPE, DATA_ALNF
+    DATA_METH, DATA_FROM, INTENT_META_TYPE, DATA_ALNF, INTENT_EXTENDED_INFO, INTENT_TOKEN_TYPE, INTENT_GLOSS_WORD
 from xigt.metadata import Metadata, Meta
 from xigt.mixins import XigtContainerMixin
 
@@ -215,3 +215,13 @@ def find_meta_text(obj, meta_type):
     m = find_meta(obj, meta_type)
     if m is not None:
         return m.text
+
+def add_word_level_info(obj, val):
+    set_meta_attr(obj, INTENT_EXTENDED_INFO, INTENT_TOKEN_TYPE, val, metadata_type=INTENT_META_TYPE)
+
+def remove_word_level_info(obj):
+    del_meta_attr(obj, INTENT_EXTENDED_INFO, INTENT_TOKEN_TYPE)
+
+def get_word_level_info(obj):
+    return find_meta_attr(obj, INTENT_EXTENDED_INFO, INTENT_TOKEN_TYPE)
+

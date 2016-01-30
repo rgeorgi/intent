@@ -107,7 +107,7 @@ def _build_filterlist(**kwargs):
 
     return filters
 
-def find_in_obj(obj, **kwargs):
+def xigt_find(obj, **kwargs):
     found = _find_in_self(obj, _build_filterlist(**kwargs))
     if found is not None:
         return obj
@@ -117,7 +117,7 @@ def find_in_obj(obj, **kwargs):
     elif isinstance(obj, XigtContainerMixin):
         found = None
         for child in obj:
-            found = find_in_obj(child, **kwargs)
+            found = xigt_find(child, **kwargs)
             if found is not None:
                 break
         return found
@@ -137,37 +137,12 @@ def findall_in_obj(obj, **kwargs):
 
     return found
 
-# -------------------------------------------
-# Basic Tier Retrieval
-# -------------------------------------------
-def _word_tier(inst, r_func, ex):
-    """
-    :param r_func: The retrieval function
-    :param ex:  The exception to throw
-    """
-    tier = find(inst, '//')
-    try:
-        t = r_func(inst)
-    except NoNormLineException:
-        raise ex
-    else:
-        return t
-
-
-def lang(inst) -> Tier:
-    return _word_tier(inst, retrieve_lang_words, NoLangLineException)
-
-def gloss(inst) -> Tier:
-    return _word_tier(inst, retrieve_gloss_words, NoGlossLineException)
-
-def trans(inst) -> Tier:
-    return _word_tier(inst, retrieve_trans_words, NoTransLineException)
 
 # -------------------------------------------
 # Some convenience methods for common searches
 # -------------------------------------------
 def text_tier(inst, state):
-    return find_in_obj(inst, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:state})
+    return xigt_find(inst, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:state})
 
 def raw_tier(inst) -> Tier:
     return text_tier(inst, RAW_STATE)
@@ -178,28 +153,18 @@ def cleaned_tier(inst) -> Tier:
 def normalized_tier(inst) -> Tier:
     return text_tier(inst, NORM_STATE)
 
-# -------------------------------------------
-# More convenience methods
-# -------------------------------------------
-def _handle_nnle(f):
-    try:
-        return f()
-    except (NoNormLineException, MultipleNormLineException, EmptyGlossException) as nnle:
-        return None
-
-def lang_line(inst) -> Item:
-    return _handle_nnle(lambda: retrieve_normal_line(inst, ODIN_LANG_TAG))
-
-def gloss_line(inst) -> Item:
-    return _handle_nnle(lambda: retrieve_normal_line(inst, ODIN_GLOSS_TAG))
-
-def trans_line(inst) -> Item:
-    return _handle_nnle(lambda: retrieve_normal_line(inst, ODIN_TRANS_TAG))
 
 
 # -------------------------------------------
 # Retrieve Tiers
 # -------------------------------------------
+def item_index(item):
+    """
+    Retrieve the index of a given item on its parent tier.
+
+    :type item: Item
+    """
+    return list(item.tier).index(item)+1
 
 # -------------------------------------------
 # GENERATING ID STRINGS
@@ -246,13 +211,13 @@ def gen_tier_id(inst, id_base, tier_type=None, alignment=None, no_hyphenate=Fals
 
     # Finally, if we have multiple tiers of the same type that annotate the
     # same item, we should append a letter for the different analyses.
-    if num_tiers > 0 and find_in_obj(inst, id=id_str) is not None:
+    if num_tiers > 0 and xigt_find(inst, id=id_str) is not None:
         while True:
             letters = string.ascii_lowercase
             assert num_tiers < 26, "More than 26 alternative analyses not currently supported"
             potential_id = id_str + '_{}'.format(letters[num_tiers])
 
-            if find_in_obj(inst, id=potential_id) is None:
+            if xigt_find(inst, id=potential_id) is None:
                 id_str = potential_id
                 break
             else:
@@ -260,45 +225,13 @@ def gen_tier_id(inst, id_base, tier_type=None, alignment=None, no_hyphenate=Fals
 
     return id_str
 
-# -------------------------------------------
-# POS TAG RETRIEVAL
-# -------------------------------------------
-
-def lang_tags(inst, tag_method=None):
-    return pos_tags(inst, lang(inst).id, tag_method=tag_method)
-
-def gloss_tags(inst, tag_method=None):
-    return pos_tags(inst, gloss(inst).id, tag_method=tag_method)
-
-def trans_tags(inst, tag_method=None):
-    return pos_tags(inst, trans(inst).id, tag_method=tag_method)
-
-def pos_tags(inst, tier_id, tag_method = None):
-    """
-    Retrieve the pos tags if they exist for the given tier id...
-
-    :rtype : Tier
-    :param tier_id: Id for the tier to find tags for
-    :type tier_id: str
-    """
-
-    # Also, if we have specified a tag_method we are looking for, then
-    # check the metadata to see if the source is correct.
-    filters = []
-    if tag_method is not None:
-        filters = [lambda x: get_intent_method(x) == tag_method]
-
-    pos_tier = find_in_obj(inst, alignment=tier_id, type=POS_TIER_TYPE, others = filters)
-
-    return pos_tier
 
 # -------------------------------------------
 # FINDING ODIN TAGS
 # -------------------------------------------
-def retrieve_normal_line(inst, tag):
-    
 
-def aligned_tags(obj):
+
+def odin_tags(obj):
     """
     Given an object, return the tags that it is ultimately aligned with.
 
@@ -352,7 +285,7 @@ def odin_ancestor(obj):
         else:
             raise Exception
 
-        item = find_in_obj(obj.igt, id=id)
+        item = xigt_find(obj.igt, id=id)
         if item is None:
             return None
         else:

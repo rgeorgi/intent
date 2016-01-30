@@ -4,10 +4,13 @@ from argparse import ArgumentParser
 
 from intent.alignment.Alignment import Alignment
 from intent.consts import *
-from intent.igt.rgxigt import RGIgt, RGTier, gen_tier_id, RGItem, RGCorpus
+from intent.igt.create_tiers import generate_normal_tier, lang, gloss, trans
+from intent.igt.igt_functions import set_bilingual_alignment, create_dt_tier
+from intent.igt.references import gen_tier_id, ask_item_id, normalized_tier
 from intent.trees import DepEdge, Terminal, build_dep_edges, TreeError
 from intent.utils.argutils import existsfile
 from intent.utils.env import testfile_dir
+from xigt import XigtCorpus, Igt, Tier, Item
 from xigt.codecs.xigtxml import dump
 
 __author__ = 'rgeorgi'
@@ -25,34 +28,33 @@ def naacl_to_xigt(naacl_path):
     # First, collect all the instances.
     instances = re.findall('Igt_id[\s\S]+?Q6.*Answer', content)
 
-    xc = RGCorpus()
+    xc = XigtCorpus()
 
     for instance_txt in instances:
         # id = re.search('Igt_id=([\S]+)', instance_txt).group(1)
-        id = xc.askIgtId()
-        inst = RGIgt(id='i{}'.format(id))
+        inst = Igt(id='i{}'.format(len(xc)))
 
         lang_raw, gloss_raw, trans_raw = instance_txt.split('\n')[1:4]
 
         # Now, create the raw tier...
-        raw_tier = RGTier(id=gen_tier_id(inst, 'r'), type='odin', attributes={STATE_ATTRIBUTE:RAW_STATE})
-        raw_tier.append(RGItem(id=raw_tier.askItemId(), text=lang_raw, attributes={ODIN_TAG_ATTRIBUTE:ODIN_LANG_TAG}))
-        raw_tier.append(RGItem(id=raw_tier.askItemId(), text=gloss_raw, attributes={ODIN_TAG_ATTRIBUTE:ODIN_GLOSS_TAG}))
-        raw_tier.append(RGItem(id=raw_tier.askItemId(), text=trans_raw, attributes={ODIN_TAG_ATTRIBUTE:ODIN_TRANS_TAG}))
+        raw_tier = Tier(id=gen_tier_id(inst, 'r'), type='odin', attributes={STATE_ATTRIBUTE:RAW_STATE})
+        raw_tier.append(Item(id=ask_item_id(raw_tier), text=lang_raw, attributes={ODIN_TAG_ATTRIBUTE:ODIN_LANG_TAG}))
+        raw_tier.append(Item(id=ask_item_id(raw_tier), text=gloss_raw, attributes={ODIN_TAG_ATTRIBUTE:ODIN_GLOSS_TAG}))
+        raw_tier.append(Item(id=ask_item_id(raw_tier), text=trans_raw, attributes={ODIN_TAG_ATTRIBUTE:ODIN_TRANS_TAG}))
 
         inst.append(raw_tier)
         xc.append(inst)
 
         # Generate the clean/normal tiers, but without any cleaning.
-        inst.normal_tier(clean=False)
+        generate_normal_tier(inst, clean=False)
 
         # Lang Dependency representation handling...
         lang_ds_str = re.search('Q6:([\s\S]+?)Q6:', instance_txt).group(1)
         lang_ds_lines = lang_ds_str.split('\n')[5:-3]
 
         try:
-            lang_dt = parse_naacl_dep(inst.lang, lang_ds_lines)
-            inst.create_dt_tier(lang_dt, inst.lang, parse_method=MANUAL_POS)
+            lang_dt = parse_naacl_dep(lang(inst), lang_ds_lines)
+            create_dt_tier(inst, lang_dt, lang(inst), parse_method=MANUAL_POS)
         except TreeError as te:
             pass
         except IndexError as ie:
@@ -63,8 +65,8 @@ def naacl_to_xigt(naacl_path):
         eng_ds_lines = eng_ds_str.split('\n')[2:-3]
 
         try:
-            eng_dt = parse_naacl_dep(inst.trans, eng_ds_lines)
-            inst.create_dt_tier(eng_dt, inst.trans, parse_method=MANUAL_POS)
+            eng_dt = parse_naacl_dep(trans(inst), eng_ds_lines)
+            create_dt_tier(inst, eng_dt, trans(inst), parse_method=MANUAL_POS)
         except TreeError as te:
             pass
         except IndexError as ie:
@@ -89,8 +91,8 @@ def naacl_to_xigt(naacl_path):
 
                 gloss_i = int(gloss_s)
 
-                for trans in trans_s.split(','):
-                    trans_i = int(trans)
+                for trans_token in trans_s.split(','):
+                    trans_i = int(trans_token)
                     if trans_i == 0:
                         continue
                     else:
@@ -102,11 +104,7 @@ def naacl_to_xigt(naacl_path):
         except:
             pass
 
-
-        inst.set_bilingual_alignment(inst.trans, inst.gloss, a, aln_method=INTENT_ALN_MANUAL)
-
-
-        # inst.set_bilingual_alignment()
+        set_bilingual_alignment(inst, trans(inst), gloss(inst), a, aln_method=INTENT_ALN_MANUAL)
 
     return xc
 
@@ -128,7 +126,7 @@ def parse_naacl_dep(w_tier, dep_lines):
     edges = []
     for line in dep_lines:
         dep, heads = line.split()[0:2]
-        dep_w = w_tier.get_index(int(dep)).value()
+        dep_w = w_tier[int(dep)-1].value()
 
         # Sometimes we have two heads...
         for head in heads.split(','):
@@ -143,7 +141,7 @@ def parse_naacl_dep(w_tier, dep_lines):
                 head_w = 'ROOT'
                 head_i = 0
             else:
-                head_w = w_tier.get_index(int(head_i)).value()
+                head_w = w_tier[int(head_i)-1].value()
 
             child_t = Terminal(dep_w, index=int(dep))
             head_t = Terminal(head_w, index=head_i)

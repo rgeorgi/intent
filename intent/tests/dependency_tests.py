@@ -1,6 +1,7 @@
 import os
 from unittest.case import TestCase
 
+from intent.igt.igt_functions import project_ds_tier, get_lang_ds
 from intent.igt.rgxigt import RGCorpus
 from xigt.codecs import xigtxml
 from intent.utils.env import testfile_dir
@@ -14,8 +15,8 @@ class MissingCoNLLTokenTest(TestCase):
         self.inst = self.xc[3]
 
     def all_tokens_present_test(self):
-        self.inst.project_ds()
-        ds = self.inst.get_lang_ds()
+        project_ds_tier(self.inst)
+        ds = get_lang_ds(self.inst)
         print(ds.to_conll())
 
 

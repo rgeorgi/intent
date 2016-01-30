@@ -2,8 +2,11 @@ import logging
 import os
 from unittest import TestCase
 
-from intent.commands import enrich
+from intent.commands.enrich import enrich
 from intent.consts import *
+from intent.igt.create_tiers import trans, lang
+from intent.igt.igt_functions import get_lang_ds, get_ds, project_ds_tier, heur_align_inst, parse_translation_line, \
+    get_trans_gloss_alignment
 from intent.igt.rgxigt import RGCorpus
 from intent.interfaces.stanford_parser import StanfordParser
 from intent.trees import DepTree, DEPSTR_PTB, project_ds
@@ -51,7 +54,7 @@ class ReadTreeTests(TestCase):
         self.inst2 = self.xc[1]
 
     def test_read_ds_tree(self):
-        ds = self.inst1.get_ds(self.inst1.trans)
+        ds = get_ds(self.inst1, trans(self.inst1))
         r = DepTree.fromstring("""(ROOT[0] (found[2] (Someone[1]) (them[3]) (boring[4])))""", stype=DEPSTR_PTB)
 
         self.assertTrue(r.structurally_eq(ds))
@@ -60,15 +63,15 @@ class ReadTreeTests(TestCase):
         """
         Test that performing projection works correctly.
         """
-        self.inst1.project_ds()
-        self.inst2.project_ds()
+        project_ds_tier(self.inst1)
+        project_ds_tier(self.inst2)
 
 
 
     def test_read_proj_ds_tree(self):
-        src_t = self.inst2.get_ds(self.inst2.trans)
-        tgt_w = self.inst2.lang
-        aln   = self.inst2.get_trans_gloss_lang_alignment()
+        src_t = get_ds(self.inst2, trans(self.inst2))
+        tgt_w = lang(self.inst2)
+        aln   = get_trans_gloss_alignment(self.inst2)
 
         tgt_t = DepTree.fromstring("""
         (ROOT[0]
@@ -85,8 +88,8 @@ class ReadTreeTests(TestCase):
         self.assertTrue(proj_t.structurally_eq(tgt_t))
 
     def test_conll(self):
-        ds = self.inst2.get_lang_ds()
-        conll_str = ds.to_conll()
+        ds = get_lang_ds(self.inst2)
+        conll_str = ds.to_conll(lowercase=False)
 
         s = """
 1	Was	Was	PRON	PRON	_	2	_	_	_
@@ -125,22 +128,20 @@ class ReadTreeTests(TestCase):
             ))
         """, stype=DEPSTR_PTB)
 
-        ds = inst.get_ds(inst.trans)
+        ds = get_ds(inst, trans(inst))
         self.assertTrue(tgt_t.structurally_eq(ds))
 
-        self.assertIsNone(inst.project_ds())
+        self.assertIsNone(project_ds_tier(inst))
 
 class UnknownErrorTests(TestCase):
 
     def test_ds_project(self):
-        sp = StanfordParser()
-
         xc = RGCorpus.load(os.path.join(testfile_dir, 'xigt/index_error.xml'), basic_processing=True)
         inst = xc[0]
-        inst.heur_align()
-        inst.parse_translation_line(sp, dt=True)
-        inst.project_ds()
-        proj_t = inst.get_lang_ds()
+        heur_align_inst(inst)
+        parse_translation_line(inst)
+        project_ds_tier(inst)
+        proj_t = get_lang_ds(inst)
 
         tgt_t = DepTree.fromstring("""(ROOT[0]
                                         (salli-i[2]
@@ -182,8 +183,8 @@ class UnknownErrorTests(TestCase):
     def test_3307(self):
         self.harness('xigt/3307.xml')
 
-    def test_555(self):
-        self.harness('xigt/555.xml')
+    # def test_555(self):
+    #     self.harness('xigt/555.xml')
 
 
 class MultipleLineTests(TestCase):

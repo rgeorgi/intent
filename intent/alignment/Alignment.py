@@ -6,10 +6,6 @@ Created on Feb 21, 2014
 
 import re, unittest, copy
 
-
-
-
-
 class HeuristicAlignmentException(Exception): pass
 
 #===============================================================================

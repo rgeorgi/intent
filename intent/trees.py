@@ -11,7 +11,7 @@ from nltk.tree import ParentedTree, Tree
 #===============================================================================
 # Constants / Strings
 #===============================================================================
-
+from intent.igt.references import item_index
 
 DEPSTR_STANFORD = 'stanford'
 DEPSTR_CONLL    = 'conll'
@@ -1424,6 +1424,3 @@ def fix_tree_parents(t, preceding_parent = None):
 # =============================================================================
 # Move some imports down here so as not to be cyclical.
 # =============================================================================
-
-from intent.igt.rgxigt import RGWordTier
-from intent.igt.igt_functions import item_index

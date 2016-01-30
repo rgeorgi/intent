@@ -1,6 +1,7 @@
 from unittest import TestCase
 
-from intent.igt.rgxigt import RGIgt,  RGTier, gen_item_id, gen_tier_id
+from intent.igt.references import gen_item_id, gen_tier_id
+from xigt import Tier, Igt
 
 __author__ = 'rgeorgi'
 
@@ -15,15 +16,15 @@ class IdTests(TestCase):
 
 class TierIdTests(TestCase):
     def setUp(self):
-        self.i = RGIgt(id='i1')
-        self.i.append(RGTier(id='tw'))
-        self.i.append(RGTier(id='w'))
+        self.i = Igt(id='i1')
+        self.i.append(Tier(id='tw'))
+        self.i.append(Tier(id='w'))
 
     def same_type_different_tiers_test(self):
         pos1_id = gen_tier_id(self.i, 'pos', tier_type='pos', alignment='tw')
         self.assertEqual(pos1_id, 'tw-pos')
 
-        self.i.append(RGTier(id=pos1_id, type='pos', alignment='tw'))
+        self.i.append(Tier(id=pos1_id, type='pos', alignment='tw'))
         pos2_id = gen_tier_id(self.i, 'pos', tier_type='pos', alignment='tw')
         self.assertEqual(pos2_id, 'tw-pos_b')
 

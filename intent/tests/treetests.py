@@ -5,7 +5,7 @@ import unittest
 import intent
 from intent.alignment.Alignment import Alignment
 from intent.commands.corpus_stats import pos_stats, CONLL_TYPE
-from intent.igt.rgxigt import RGWordTier
+from intent.igt.parsing import create_words_tier_from_string
 from intent.trees import IdTree, project_ps, DepTree, Terminal, TreeError, project_ds, DEPSTR_CONLL, DEPSTR_PTB, DEPSTR_STANFORD, read_conll_file
 from intent.utils.env import testfile_dir
 
@@ -59,7 +59,7 @@ class ProjectTest(unittest.TestCase):
         self.aln = intent.alignment.Alignment.Alignment([(1,2), (2,3), (3,1), (5,4), (6, 5), (7, 5), (8, 6), (9, 7)])
 
     def test_projection(self):
-        proj = project_ps(self.t, RGWordTier.from_string("rhoddodd yr athro lyfr i'r bachgen ddoe"), self.aln)
+        proj = project_ps(self.t, create_words_tier_from_string("rhoddodd yr athro lyfr i'r bachgen ddoe"), self.aln)
 
         # Reassign the ids after everything has moved around.
         proj.assign_ids()
@@ -72,7 +72,7 @@ class ProjectTest(unittest.TestCase):
 
         """
         src_t = IdTree.fromstring('(ROOT (SBARQ (WHNP (WP Who)) (SQ (VP (VBZ else?)))))')
-        tgt_w = RGWordTier.from_string('sa-lo sa-lo')
+        tgt_w = create_words_tier_from_string('sa-lo sa-lo')
         tgt_t = IdTree.fromstring('(ROOT (SBARQ (WHNP (WP sa-lo) (WP sa-lo))))')
         aln = Alignment([(1,1),(1,2)])
 
@@ -105,7 +105,7 @@ class ProjectTest(unittest.TestCase):
                                                 (UNK hou)
                                                 (VBP chitt-u-m)
                                             ))''')
-        tgt_w = RGWordTier.from_string('''chitt-u-m hola ni hou chitt-u-m''')
+        tgt_w = create_words_tier_from_string('''chitt-u-m hola ni hou chitt-u-m''')
         aln = Alignment([(1,2),(3,1),(3,5)])
 
         proj = project_ps(src_t, tgt_w, aln)
@@ -117,7 +117,7 @@ class ProjectTest(unittest.TestCase):
   (SBARQ
     (WHNP (WDT What) (NP (NN kind) (PP (IN of) (NP (NNP work,)))))
     (SQ (VP (VBZ then?)))))''')
-        tgt_w = RGWordTier.from_string('kam-a na them lis-no-kha hou')
+        tgt_w = create_words_tier_from_string('kam-a na them lis-no-kha hou')
         aln = Alignment([(1, 3), (2, 5), (4, 1), (5, 5)])
 
         project_ps(t, tgt_w, aln)
@@ -302,7 +302,7 @@ class MergeTests(unittest.TestCase):
                                           (S
                                             (NP (PRP they))
                                             (VP (VBP do) (RB not) (VP (VB drink) (NP (NN it.))))))))''')
-        tgt_w = RGWordTier.from_string('loĩs-ma yaŋ hunci-suma kat-a-ŋs-e kina u-tus-u-kV-nɨŋ')
+        tgt_w = create_words_tier_from_string('loĩs-ma yaŋ hunci-suma kat-a-ŋs-e kina u-tus-u-kV-nɨŋ')
         aln = Alignment([(16, 6), (3, 2), (7, 1), (15, 3), (9, 3), (11, 3), (12, 6), (14, 6), (13, 6), (4, 3), (5, 3)])
 
         proj = project_ps(src_t, tgt_w, aln)
@@ -534,7 +534,7 @@ class ProjectDS(unittest.TestCase):
         #  1         2     3     4  5     6  7    8           9
 
 
-        tgt_w = RGWordTier.from_string("Rhoddodd yr athro lyfr i'r bachgen ddoe")
+        tgt_w = create_words_tier_from_string("Rhoddodd yr athro lyfr i'r bachgen ddoe")
 
         aln = Alignment([(1,2),(2,3),(3,1),(5,4),(6,5),(7,5),(8,6),(9,7)])
 
@@ -554,7 +554,7 @@ class ProjectDS(unittest.TestCase):
         # Den   Hans  wird Maria morgen treffen
         #  1     2     3     4      5      6
         aln = Alignment([(1,5),(2,4),(3,3),(4,6),(5,2)])
-        tgt_w = RGWordTier.from_string("Den Hans wird Maria morgen treffen")
+        tgt_w = create_words_tier_from_string("Den Hans wird Maria morgen treffen")
 
         ds_proj = project_ds(ds3, tgt_w, aln)
 
@@ -573,7 +573,7 @@ class ProjectDS(unittest.TestCase):
 
     def test_projection_3(self):
         ds3 = DepTree.fromstring(self.ds3str)
-        tgt_w = RGWordTier.from_string("morgen wird Maria Den Hans treffen")
+        tgt_w = create_words_tier_from_string("morgen wird Maria Den Hans treffen")
               # English sentence:
         #    1        2     3    4   5
         # "Tomorrow Mary  will meet Hans"

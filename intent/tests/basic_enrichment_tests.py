@@ -1,7 +1,8 @@
 import os
 from unittest import TestCase
 
-
+from intent.igt.create_tiers import morphemes, get_raw_tier, generate_normal_tier, generate_clean_tier
+from intent.igt.references import cleaned_tier, normalized_tier
 from xigt.codecs import xigtxml
 
 from intent.igt.igtutils import rgp
@@ -18,50 +19,50 @@ class NoRawTest(TestCase):
         """
         There is no raw tier in this instance, so it should return a failure.
         """
-        self.assertRaises(NoODINRawException, self.xc[0].raw_tier)
+        self.assertRaises(NoODINRawException, get_raw_tier(self.xc[0]))
 
     def clean_test(self):
         """
         The "clean" tier is already defined in this example. Assert that it is simply
         returned without incident.
         """
-        self.assertIsNotNone(self.xc[0].clean_tier())
+        self.assertIsNotNone(generate_clean_tier(self.xc[0]))
 
     def norm_test(self):
         """
         Ensure that the normal tier is created without incident.
         """
-        self.assertIsNotNone(self.xc[0].normal_tier())
+        self.assertIsNotNone(generate_normal_tier(self.xc[0]))
 
     def gloss_test(self):
         """
         Ensure that the gloss gets created, and that it doesn't
         get created twice by accident.
         """
-        self.assertIsNotNone(self.xc[0].gloss)
-        self.assertIsNotNone(self.xc[0].gloss)
+        self.assertIsNotNone(gloss(self.xc[0]))
+        self.assertIsNotNone(gloss(self.xc[0]))
 
     def trans_test(self):
-        self.assertIsNotNone(self.xc[0].trans)
-        self.assertIsNotNone(self.xc[0].trans)
+        self.assertIsNotNone(trans(self.xc[0]))
+        self.assertIsNotNone(trans(self.xc[0]))
 
     def lang_test(self):
-        self.assertIsNotNone(self.xc[0].trans)
-        self.assertIsNotNone(self.xc[0].trans)
+        self.assertIsNotNone(lang(self.xc[0]))
+        self.assertIsNotNone(lang(self.xc[0]))
 
     def glosses_test(self):
-        self.assertIsNotNone(self.xc[0].glosses)
-        self.assertIsNotNone(self.xc[0].glosses)
+        self.assertIsNotNone(glosses(self.xc[0]))
+        self.assertIsNotNone(glosses(self.xc[0]))
 
     def morphs_test(self):
-        self.assertIsNotNone(self.xc[0].morphemes)
-        self.assertIsNotNone(self.xc[0].morphemes)
+        self.assertIsNotNone(morphemes(self.xc[0]))
+        self.assertIsNotNone(morphemes(self.xc[0]))
 
     def morph_align_test(self):
-        morph_align(self.xc[0].glosses, self.xc[0].morphemes)
+        morph_align(glosses(self.xc[0]), morphemes(self.xc[0]))
 
     def word_align_test(self):
-        word_align(self.xc[0].gloss, self.xc[0].lang)
+        word_align(gloss(self.xc[0]), lang(self.xc[0]))
 
 class NullGlossTest(TestCase):
 

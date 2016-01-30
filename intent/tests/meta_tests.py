@@ -2,18 +2,17 @@ from unittest import TestCase
 
 from intent.consts import DATA_PROV, DATA_SRC, INTENT_META_SOURCE, DATA_METH, INTENT_ALN_GIZA, \
     WORDS_TYPE, GLOSS_WORD_TYPE, INTENT_GLOSS_WORD, INTENT_GLOSS_MORPH
+from intent.igt.create_tiers import is_word_level_gloss
 from intent.igt.metadata import set_meta_attr, find_meta, find_meta_attr, get_meta_timestamp, timestamp_meta, is_contentful_meta, \
-    del_meta_attr
-from intent.igt.rgxigt import RGTier, RGIgt, is_word_level_gloss, add_word_level_info
-from xigt import Meta, Metadata
-
+    del_meta_attr, add_word_level_info
+from xigt import Meta, Metadata, Tier, Igt
 
 __author__ = 'rgeorgi'
 
 class ProvenanceTest(TestCase):
 
     def setUp(self):
-        self.t = RGTier(id='t')
+        self.t = Tier(id='t')
         self.metadata = []
 
     def add_meta_test(self):
@@ -33,9 +32,9 @@ class ProvenanceTest(TestCase):
 
 class WordTypeTest(TestCase):
     def setUp(self):
-        self.i = RGIgt(id='i1')
-        self.w = RGTier(id='w', type=WORDS_TYPE)
-        self.gw =RGTier(id='gw', type=GLOSS_WORD_TYPE, alignment=self.w.id)
+        self.i = Igt(id='i1')
+        self.w = Tier(id='w', type=WORDS_TYPE)
+        self.gw =Tier(id='gw', type=GLOSS_WORD_TYPE, alignment=self.w.id)
 
         self.i.extend([self.w, self.gw])
 
@@ -68,7 +67,7 @@ class ContentfulMeta(TestCase):
 
 class DelMetaTests(TestCase):
     def setUp(self):
-        self.t = RGTier()
+        self.t = Tier()
         self.md = Metadata()
         self.t.metadata = [self.md]
 

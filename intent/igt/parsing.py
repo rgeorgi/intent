@@ -1,6 +1,9 @@
-from intent.igt.exceptions import RawTextParseError
+from intent.consts import *
+from intent.igt.exceptions import RawTextParseError, GlossLangAlignException
+from intent.igt.references import gen_item_id, ask_item_id
 from intent.utils.string_utils import replace_invalid_xml
-from xigt.model import XigtCorpus
+from intent.utils.token import whitespace_tokenizer, tokenize_string
+from xigt.model import XigtCorpus, Igt, Tier, Item
 
 import logging
 PARSELOG = logging.getLogger("TEXTPARSER")
@@ -58,11 +61,11 @@ def raw_txt_to_inst(string, corpus=None, idnum=None):
     elif corpus:
         id = corpus.askIgtId()
     else:
-        corpus = RGCorpus()
-        id = corpus.askIgtId()
+        corpus = XigtCorpus()
+        id = 'i{}'.format(len(corpus))
 
-    inst = RGIgt(id = id)
-    rt = RGLineTier(id = RAW_ID, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE}, igt=inst)
+    inst = Igt(id = id)
+    rt = Tier(id = RAW_ID, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE}, igt=inst)
 
     for i, l in enumerate(lines):
 
@@ -98,14 +101,17 @@ def raw_txt_to_inst(string, corpus=None, idnum=None):
         if not l.strip():
             raise RawTextParseError("The {} line is empty: {}".format(linetag, l))
 
-        li = Item(id=rt.askItemId(), text=l, attributes={'tag':linetag})
+        li = Item(id=ask_item_id(rt), text=l, attributes={'tag':linetag})
         rt.append(li)
 
     inst.append(rt)
-    try:
-        inst.basic_processing()
-    except GlossLangAlignException as glae:
-        CONVERT_LOG.warn('Gloss and language lines could not be automatically aligned for instance "{}".'.format(inst.id))
-
         # CONVERT_LOG.warn("Basic processing failed for instance {}".format(inst.id))
     return inst
+
+def create_words_tier_from_string(string):
+    tokens = tokenize_string(string, tokenizer=whitespace_tokenizer)
+    wt = Tier(type=WORDS_TYPE)
+    for token in tokens:
+        i = Item(id=ask_item_id(wt), text=token.value())
+        wt.append(i)
+    return wt

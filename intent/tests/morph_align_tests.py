@@ -1,5 +1,8 @@
 import os
 from unittest import TestCase
+
+from intent.igt.create_tiers import morphemes, glosses
+from intent.igt.igt_functions import add_gloss_lang_alignments
 from intent.igt.igtutils import rgp
 from intent.igt.rgxigt import RGCorpus, odin_ancestor, intervening_characters, morph_align
 from intent.utils.env import proj_root, testfile_dir
@@ -14,64 +17,64 @@ class MorphAlignTests(TestCase):
 
     def test_intervening_characters(self):
         inst = self.xc[0]
-        glosses = inst.glosses
-        morphs  = inst.morphemes
+        gloss_tokens = glosses(inst)
+        morph_tokens  = morphemes(inst)
 
         # Check for the intervening characters between
         # the first two morphs from the language line
-        ichars = intervening_characters(morphs[0],morphs[1])
+        ichars = intervening_characters(morph_tokens[0],morph_tokens[1])
 
         # The intervening character should be a hyphen.
         self.assertEqual('-', ichars)
 
         # Now, check for the first two of the gloss line.
-        gchars = intervening_characters(glosses[0], glosses[1])
+        gchars = intervening_characters(gloss_tokens[0], gloss_tokens[1])
 
         self.assertEqual('.', gchars)
 
         # And make sure that what is between the second and third
         # language morphemes is just whitespace.
 
-        wchars = intervening_characters(morphs[1], morphs[2])
+        wchars = intervening_characters(morph_tokens[1], morph_tokens[2])
 
         self.assertEqual(' ', wchars)
 
-        nochars = intervening_characters(morphs[1], morphs[1])
+        nochars = intervening_characters(morph_tokens[1], morph_tokens[1])
 
         self.assertEqual('', nochars)
 
     def morph_align_test(self):
         inst = self.xc[0]
 
-        glosses = inst.glosses
-        morphs = inst.morphemes
+        gloss_tokens = glosses(inst)
+        morph_tokens = morphemes(inst)
 
-        morph_align(glosses, morphs)
+        morph_align(gloss_tokens, morph_tokens)
 
-        self.assertEqual(glosses[0].alignment, morphs[0].id)
-        self.assertEqual(glosses[1].alignment, morphs[0].id)
-        self.assertEqual(glosses[2].alignment, morphs[0].id)
-        self.assertEqual(glosses[3].alignment, morphs[1].id)
-        self.assertEqual(glosses[4].alignment, morphs[1].id)
-        self.assertEqual(glosses[7].alignment, morphs[2].id)
-        self.assertEqual(glosses[8].alignment, morphs[3].id)
+        self.assertEqual(gloss_tokens[0].alignment, morph_tokens[0].id)
+        self.assertEqual(gloss_tokens[1].alignment, morph_tokens[0].id)
+        self.assertEqual(gloss_tokens[2].alignment, morph_tokens[0].id)
+        self.assertEqual(gloss_tokens[3].alignment, morph_tokens[1].id)
+        self.assertEqual(gloss_tokens[4].alignment, morph_tokens[1].id)
+        self.assertEqual(gloss_tokens[7].alignment, morph_tokens[2].id)
+        self.assertEqual(gloss_tokens[8].alignment, morph_tokens[3].id)
 
     def more_morph_align_test(self):
         inst = self.xc[1]
 
         # Align the gloss/lang words (Needed for aligning morphs)
-        inst.add_gloss_lang_alignments()
+        add_gloss_lang_alignments(inst)
 
-        glosses = inst.glosses
-        morphs = inst.morphemes
+        gloss_tokens = glosses(inst)
+        morph_tokens = morphemes(inst)
 
         # Do the alignment
-        morph_align(glosses, morphs)
+        morph_align(gloss_tokens, morph_tokens)
 
         # Assert that the glosses are aligned...
-        self.assertIsNotNone(glosses[0].alignment)
+        self.assertIsNotNone(gloss_tokens[0].alignment)
 
-        self.assertEquals(glosses[11].alignment, morphs[6].id)
-        self.assertEquals(glosses[12].alignment, morphs[6].id)
-        self.assertEquals(glosses[13].alignment, morphs[7].id)
-        self.assertEquals(glosses[14].alignment, morphs[7].id)
+        self.assertEquals(gloss_tokens[11].alignment, morph_tokens[6].id)
+        self.assertEquals(gloss_tokens[12].alignment, morph_tokens[6].id)
+        self.assertEquals(gloss_tokens[13].alignment, morph_tokens[7].id)
+        self.assertEquals(gloss_tokens[14].alignment, morph_tokens[7].id)

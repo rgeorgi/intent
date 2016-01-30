@@ -10,7 +10,9 @@ Subclassing of the xigt package to add a few convenience methods.
 import logging
 
 # Set up logging ---------------------------------------------------------------
+from intent.igt.create_tiers import trans_line, get_raw_tier, generate_clean_tier, add_normal_line_to_tier, generate_normal_tier, morphemes
 from intent.utils.string_utils import replace_invalid_xml
+from xigt.errors import XigtError
 
 PARSELOG = logging.getLogger(__name__)
 ALIGN_LOG = logging.getLogger('GIZA_LN')
@@ -19,19 +21,12 @@ CONVERT_LOG = logging.getLogger('CONVERSION')
 
 # XIGT imports -----------------------------------------------------------------
 from xigt.codecs import xigtxml
+from xigt.model import XigtCorpus, Igt, Item
 
 # INTERNAL imports -------------------------------------------------------------
 
 
-import intent.utils.token
-from intent.alignment.Alignment import Alignment, AlignmentError
-from intent.utils.token import sentence_tokenizer, whitespace_tokenizer
-
-
-# Other imports ----------------------------------------------------------------
-from collections import defaultdict
-
-
+from intent.alignment.Alignment import Alignment
 
 
 # ===============================================================================
@@ -156,35 +151,7 @@ class RGCorpus(XigtCorpus):
         """
         xc = xigtxml.load(path, mode=mode)
         xc.__class__ = RGCorpus
-        xc._finish_load(basic_processing)
-
-
-
-
         return xc
-
-    def _finish_load(self, basic_processing=False):
-        # Now, convert all the IGT instances to RGIgt instances.
-        for igt in self.igts:
-            igt.__class__ = RGIgt
-
-            for tier in igt.tiers:
-                tier.__class__ = RGTier
-
-                for i, item in enumerate(tier):
-                    item.__class__ = RGItem
-                    item.index = i+1
-
-       # If asked, we will also do some
-        # basic-level enrichment...
-        if basic_processing:
-            for inst in self:
-                try:
-                    inst.basic_processing()
-                except XigtFormatException as xfe:
-                    PARSELOG.warn("Basic processing failed for instance {}".format(inst.id))
-                except GlossLangAlignException as gae:
-                    PARSELOG.warn("Gloss and language did not align for instance {}.".format(inst.id))
 
 
     def filter(self, func):
@@ -326,22 +293,13 @@ class RGCorpus(XigtCorpus):
 
 
 
-class RGIgt(Igt, RecursiveFindMixin):
+class RGIgt(Igt):
 
     # • Constructors -----------------------------------------------------------
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # Add a default bit of metadata...
-        self.metadata = [RGMetadata(type='xigt-meta',
-                                text=[RGMeta(type='language',
-                                             attributes={'name':'english',
-                                                        'iso-639-3':'eng',
-                                                        'tiers':'glosses translations'}
-                                            )])]
-
-        #self.metadata = mdt
 
     def all_tags(self):
         tag_list = []
@@ -360,9 +318,6 @@ class RGIgt(Igt, RecursiveFindMixin):
     def has_double_column(self):
         return 'DB' in self.all_tags()
 
-    @classmethod
-    def fromRawText(cls, string, corpus = None, idnum=None):
-        return from_raw_text(string, corpus, idnum)
 
 
     @classmethod
@@ -381,7 +336,7 @@ class RGIgt(Igt, RecursiveFindMixin):
             id = corpus.askIgtId()
         else:
             corpus = RGCorpus()
-            id = corpus.askIgtId()
+            id = 'i{}'.format(len(corpus))
 
         inst = cls(id = id, attributes={'doc-id':docid,
                                             'line-range':'%s %s' % (lnstart, lnstop),
@@ -391,10 +346,10 @@ class RGIgt(Igt, RecursiveFindMixin):
         lines = re.findall('line=([0-9]+)\stag=(\S+):(.*)\n?', string)
 
         # --- 3) Create a raw tier.
-        rt = RGLineTier(id = RAW_ID, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE}, igt=inst)
+        rt = Tier(id = RAW_ID, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE}, igt=inst)
 
         for lineno, linetag, linetxt in lines:
-            l = RGLine(id = rt.askItemId(), text=linetxt, attributes={'tag':linetag, 'line':lineno}, tier=rt)
+            l = RGLine(id = ask_item_id(rt), text=linetxt, attributes={'tag':linetag, 'line':lineno}, tier=rt)
             rt.append(l)
 
         inst.append(rt)
@@ -404,22 +359,6 @@ class RGIgt(Igt, RecursiveFindMixin):
         inst.basic_processing()
 
         return inst
-
-    def copy(self, parent = None):
-        """
-        Perform a custom deepcopy of ourselves.
-        :rtype: RGIgt
-        """
-        new_i = RGIgt(id = self.id, type=self.type,
-                    attributes = copy.deepcopy(self.attributes),
-                    metadata = copy.copy(self.metadata),
-                    corpus=parent)
-
-        for tier in self.tiers:
-            new_i.append(tier.copy(parent=new_i))
-
-        return new_i
-
 
 
     # • Processing of newly created instances ----------------------------------
@@ -436,34 +375,34 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         # Create the word and phrase tiers...
         try:
-            self.trans
+            trans(self)
         except XigtFormatException:
             pass
 
         try:
-            self.gloss
+            gloss(self)
         except XigtFormatException:
             pass
 
         try:
-            haslang = self.lang
+            haslang = lang(self)
         except XigtFormatException:
             haslang = False
 
         # Create the morpheme tiers...
         try:
-            hasgloss = self.glosses
+            hasgloss = glosses(self)
         except NoGlossLineException:
             hasgloss = False
 
         try:
-            self.morphemes
+            morphemes(self)
         except NoLangLineException:
             pass
 
         # And do word-to-word alignment if it's not already done.
-        if hasgloss and haslang and not self.gloss.alignment:
-            word_align(self.gloss, self.lang)
+        if hasgloss and haslang and not gloss(self).alignment:
+            word_align(gloss(self), lang(self))
 
         if hasgloss and haslang:
             self.add_gloss_lang_alignments()
@@ -472,11 +411,11 @@ class RGIgt(Igt, RecursiveFindMixin):
     def add_gloss_lang_alignments(self):
         # Finally, do morpheme-to-morpheme alignment between gloss
         # and language if it's not already done...
-        if not self.glosses.alignment:
-            morph_align(self.glosses, self.morphemes)
+        if not glosses(self).alignment:
+            morph_align(glosses(self), morphemes(self))
 
-        if not self.gloss.alignment:
-            word_align(self.gloss, self.lang)
+        if not gloss(self).alignment:
+            word_align(gloss(self), lang(self))
 
     # • Basic Tier Creation ------------------------------------------------------------
 
@@ -484,7 +423,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         return get_raw_tier(self)
 
     def clean_tier(self, merge=False, generate=True):
-        return get_clean_tier(self, merge, generate)
+        return generate_clean_tier(self, merge, generate)
 
 
     def add_raw_tier(self, lines):
@@ -503,47 +442,7 @@ class RGIgt(Igt, RecursiveFindMixin):
         add_normal_line_to_tier(self, tier, tag, func)
 
     def normal_tier(self, clean=True, generate=True):
-        return get_normal_tier(self, clean, generate)
-
-    # • Words Tiers ------------------------------------------------------------
-
-    @property
-    def lang(self):
-        try:
-            lt = retrieve_lang_words(self)
-        except NoNormLineException:
-            raise NoLangLineException('No lang line available for igt "%s"' % self.id)
-        else:
-            return lt
-
-    @property
-    def gloss(self):
-        try:
-            gt = retrieve_gloss_words(self)
-        except NoNormLineException:
-            raise NoGlossLineException('No gloss line available for igt "%s"' % self.id)
-        else:
-            return gt
-
-    @property
-    def trans(self):
-        try:
-            tt = retrieve_trans_words(self)
-        except NoNormLineException:
-            raise NoTransLineException('No trans line available for igt "%s"' % self.id)
-        else:
-            return tt
-
-    # • Morpheme / Sub-Token Tiers -------------------------------------------------------------
-
-    @property
-    def glosses(self):
-        return glosses(self)
-
-
-    @property
-    def morphemes(self):
-        return morphemes(self)
+        return generate_normal_tier(self, clean, generate)
 
 
 
@@ -584,7 +483,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
         # Create the new pos tier...
         pos_id = gen_tier_id(self, POS_TIER_ID, tier_type=POS_TIER_TYPE, alignment=self.lang.id)
-        pt = RGTokenTier(type=POS_TIER_TYPE, id=pos_id, alignment=self.lang.id)
+        pt = Tier(type=POS_TIER_TYPE, id=pos_id, alignment=self.lang.id)
 
         # Add the metadata about the source of the tags.
         set_intent_method(pt, INTENT_POS_PROJ)
@@ -596,7 +495,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 
             l_word = self.lang.get_index(l_i)
 
-            pt.add(RGToken(id=pt.askItemId(), alignment = l_word.id, text = str(t_tag)))
+            pt.add(RGToken(id=ask_item_id(pt), alignment = l_word.id, text = str(t_tag)))
 
         self.append(pt)
 
@@ -606,7 +505,7 @@ class RGIgt(Igt, RecursiveFindMixin):
 # Items
 #===============================================================================
 
-class RGItem(Item, FindMixin):
+class RGItem(Item):
     """
     Subclass of the xigt core "Item."
     """
@@ -619,23 +518,6 @@ class RGItem(Item, FindMixin):
 
         self.start = kwargs.get('start')
         self.stop = kwargs.get('stop')
-
-    def copy(self, parent=None):
-        """
-        Part of a recursive deep-copy function. Faster to implement here specifically than calling
-        copy.deepcopy.
-
-        :param parent:
-        :type parent:
-        """
-        new_item = RGItem(id=self.id, type=self.type,
-                            alignment=copy.copy(self.alignment),
-                            content=copy.copy(self.content),
-                            segmentation=copy.copy(self.segmentation),
-                            attributes=copy.deepcopy(self.attributes),
-                            text=copy.copy(self.text),
-                            tier=parent)
-        return new_item
 
 
     @property
@@ -732,5 +614,3 @@ class RGBilingualAlignment(RGItem):
 
 
 from .igt_functions import *
-from .igtutils import punc_re
-from intent.trees import IdTree, DepTree

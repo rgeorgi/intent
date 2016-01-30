@@ -2,6 +2,13 @@ import logging
 import sys
 
 from intent.consts import *
+from intent.igt.create_tiers import gloss, trans, gloss_line, trans_line, lang_line
+from intent.igt.create_tiers import lang
+from intent.igt.exceptions import GlossLangAlignException, MultipleNormLineException, PhraseStructureProjectionException, \
+    ProjectionException
+from intent.igt.igt_functions import giza_align_t_g, tag_trans_pos, parse_translation_line, classify_gloss_pos, \
+    word_align, heur_align_inst, project_gloss_pos_to_lang, get_trans_gloss_alignment, project_trans_pos_to_gloss, \
+    project_pt_tier, project_ds_tier
 from intent.interfaces import mallet_maxent, stanford_parser
 from intent.interfaces.giza import GizaAlignmentException
 from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
@@ -271,10 +278,3 @@ def enrich(class_path=None, **kwargs):
         ENRICH_LOG.log(1000, 'Done.')
         ENRICH_LOG.log(1000, "{} instances written.".format(len(corp)))
 
-from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
-    PhraseStructureProjectionException, ProjectionException, \
-    word_align, MultipleNormLineException
-from intent.igt.alignment import heur_align_inst, giza_align_t_g
-from intent.igt.igt_functions import *
-from intent.igt.projection import project_pt_tier, project_ds_tier, project_trans_pos_to_gloss, \
-    project_gloss_pos_to_lang, classify_gloss_pos, tag_trans_pos, parse_translation_line
