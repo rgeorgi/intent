@@ -1105,7 +1105,7 @@ class DepTree(IdTree):
                        key=lambda x: x.index)
         return words
 
-    def to_conll(self, lowercase=True):
+    def to_conll(self, lowercase=True, remove_hyphens=True):
         """
         Return a string in CONLL format
 
@@ -1129,9 +1129,15 @@ class DepTree(IdTree):
             node = nodes[0]
             fields = ['_'] * 10
 
+            node_label = node.label()
+            if lowercase:
+                node_label = node_label.lower()
+            if remove_hyphens:
+                node_label = re.sub('[\-=]', '', node_label)
+
             fields[0] = str(node.word_index)
-            fields[1] = node.label() if not lowercase else node.label().lower()
-            fields[2] = node.label() if not lowercase else node.label().lower()
+            fields[1] = node_label
+            fields[2] = node_label
             fields[3] = node.pos if node.pos else '_'
             fields[4] = node.pos if node.pos else '_'
             fields[6] = head
@@ -1420,4 +1426,4 @@ def fix_tree_parents(t, preceding_parent = None):
 # =============================================================================
 
 from intent.igt.rgxigt import RGWordTier
-from intent.igt.search import item_index
+from intent.igt.igt_functions import item_index

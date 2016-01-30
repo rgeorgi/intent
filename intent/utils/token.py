@@ -3,7 +3,7 @@ Created on Mar 21, 2014
 
 @author: rgeorgi
 """
-
+from intent.consts import word_re, punc_re
 from intent.utils.string_utils import string_compare_with_processing
 import re
 
@@ -277,5 +277,3 @@ class Span(object):
 
 class TokenException(Exception):
     pass
-
-from intent.igt.igtutils import word_re, punc_re

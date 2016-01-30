@@ -220,7 +220,7 @@ def enrich(class_path=None, **kwargs):
                         # POS Projection
                         # -------------------------------------------
                         if ARG_POS_PROJ in pos_args:
-                            pos_tags = get_pos_tags(inst, trans(inst).id)
+                            pos_tags = pos_tags(inst, trans(inst).id)
 
                             if not pos_tags:
                                 fail(F_NO_TRANS_POS)
@@ -275,6 +275,6 @@ from intent.igt.rgxigt import RGCorpus, GlossLangAlignException,\
     PhraseStructureProjectionException, ProjectionException, \
     word_align, MultipleNormLineException
 from intent.igt.alignment import heur_align_inst, giza_align_t_g
-from intent.igt.search import *
+from intent.igt.igt_functions import *
 from intent.igt.projection import project_pt_tier, project_ds_tier, project_trans_pos_to_gloss, \
     project_gloss_pos_to_lang, classify_gloss_pos, tag_trans_pos, parse_translation_line

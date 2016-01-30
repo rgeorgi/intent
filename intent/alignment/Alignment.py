@@ -6,9 +6,8 @@ Created on Feb 21, 2014
 
 import re, unittest, copy
 
-from intent.igt.grams import gramdict
-from intent.utils.string_utils import lemmatize_token
-from intent.utils.token import tokenize_string, whitespace_tokenizer, Token
+
+
 
 
 class HeuristicAlignmentException(Exception): pass
@@ -807,3 +806,6 @@ class GizaAlignmentTest(unittest.TestCase):
         a_snt = AlignedSent.from_giza_lines(self.tgt, self.aln)
         self.assertEquals(a_snt.aln, self.a2)
 
+from intent.igt.grams import gramdict
+from intent.utils.string_utils import lemmatize_token
+from intent.utils.token import tokenize_string, whitespace_tokenizer, Token

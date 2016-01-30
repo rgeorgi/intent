@@ -2,10 +2,12 @@ import logging
 from multiprocessing import cpu_count
 from multiprocessing.pool import Pool
 
+from xigt.codecs import xigtxml
+
 from intent.consts import POS_TIER_TYPE, GLOSS_WORD_ID, LANG_WORD_ID, INTENT_POS_CLASS, \
     INTENT_POS_PROJ, MANUAL_POS, INTENT_ALN_HEUR
 from intent.igt.grams import write_gram
-from intent.igt.search import get_lang_ds
+from intent.igt.igt_functions import get_lang_ds, pos_tags, lang
 from intent.interfaces.mallet_maxent import train_txt
 from intent.interfaces.mst_parser import MSTParser
 from intent.interfaces.stanford_tagger import train_postagger
@@ -29,20 +31,24 @@ __author__ = 'rgeorgi'
 
 def extract_from_xigt(input_filelist = list, classifier_prefix=None,
                       cfg_prefix=None, tagger_prefix=None,
-                      dep_prefix=None, dep_pos=None, dep_align=None,
+                      dep_prefix=None, pos_method=None, dep_align=None,
                       alignment=None, no_alignment_heur=False):
-    """
-
-    Extract certain bits of supervision from a set of
-
-    :param classifier_prefix:
-    :param cfg_prefix:
-    """
 
     # ------- Dictionaries for keeping track of gloss_pos preprocessing. --------
 
     word_tag_dict = TwoLevelCountDict()
     gram_tag_dict = TwoLevelCountDict()
+
+    # -------------------------------------------
+    # Map the argument provided for "dep_pos" to
+    # the alignment type that will be searched
+    # -------------------------------------------
+    if pos_method == 'class':
+        use_pos = INTENT_POS_CLASS
+    elif pos_method == 'proj':
+        use_pos = INTENT_POS_PROJ
+    elif pos_method == 'manual':
+        use_pos = MANUAL_POS
 
     # =============================================================================
     # 1) SET UP
@@ -54,14 +60,11 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
 
     # Set up the tagger training file...
     if tagger_prefix is not None:
-        tagger_train_path = tagger_prefix+'_train.txt'
+        tagger_train_path = tagger_prefix+'_tagger_train.txt'
         tagger_model_path = tagger_prefix+'.tagger'
 
-        print('Opening tagger training file at "{}"'.format(tagger_train_path))
+        EXTRACT_LOG.log(1000, 'Opening tagger training file at "{}"'.format(tagger_train_path))
         tagger_train_f = open(tagger_train_path, 'w', encoding='utf-8')
-
-    cpus = cpu_count()
-    p = Pool(cpus)
 
     # Set up the dependency parser output if it's specified...
     dep_train_f = None
@@ -69,55 +72,82 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     if dep_prefix is not None:
         dep_train_path = dep_prefix+'_train.txt'
         EXTRACT_LOG.log(1000, 'Writing dependency parser training data to "{}"'.format(dep_train_path))
-        # assert not os.path.exists(dep_train_path)
         dep_train_f = open(dep_train_path, 'w', encoding='utf-8')
 
-
-
-
-    # =============================================================================
-    # 2) Callback
-    #
-    #    Callback function for processing the files after being processed by
-    #    process_file
-    # =============================================================================
-    def callback(result):
-        """
-        :type result: tuple[dict,dict,dict,list[DepTree]]
-        """
-        new_wt, new_gt, tag_sequences, dep_trees = result
-        word_tag_dict.combine(new_wt)
-        gram_tag_dict.combine(new_gt)
-
-        # If the tagger stuff is enabled...
-        if tagger_prefix is not None:
-            for tag_sequence in tag_sequences:
-                for token in tag_sequence:
-                    content = token.seq
-
-                    # TODO: Replacing the grammatical markers...?
-                    content = content.replace('*', '')
-                    content = content.replace('#', '')
-
-                    label   = token.label
-
-                    # FIXME: Also, should not indiscriminately drop words, but come up with a better way to fix this
-                    if content.strip():
-                        tagger_train_f.write('{}/{} '.format(content,label))
-
-                tagger_train_f.write('\n')
-                tagger_train_f.flush()
-
-            for t in ['?','“','"',"''","'",',','…','/','--','-','``','`',':',';','«','»']:
-                tagger_train_f.write('{}{}{}\n'.format(t,'/','PUNC'))
-
-        for dt in dep_trees:
-            dep_train_f.write(dt.to_conll()+'\n')
-
-
+    # -------------------------------------------
+    # Iterate over the provided files.
+    # -------------------------------------------
     for path in input_filelist:
-        # p.apply_async(process_file, args=[path, classifier_prefix, cfg_prefix, tagger_prefix, dep_prefix, dep_pos, dep_align], callback=callback)
-        callback(process_file(path, classifier_prefix, cfg_prefix, tagger_prefix, dep_prefix, dep_pos, dep_align))
+        f = open(path, 'r', encoding='utf-8')
+        xc = xigtxml.load(f)
+
+        cur_word_tag_dict = TwoLevelCountDict()
+        cur_gram_tag_dict = TwoLevelCountDict()
+        lang_tag_sequences = []
+
+        # Gather a list of the dependency trees
+        dep_trees = []
+
+        for inst in xc:
+
+            # -------------------------------------------
+            # Handle tagger output.
+            # -------------------------------------------
+            if tagger_prefix is not None:
+                lang_tags  = pos_tags(inst, lang(inst).id, tag_method=use_pos)
+                lang_words = lang(inst)
+
+
+
+                for tag_sequence in lang_tag_sequences:
+                    for token in tag_sequence:
+                        content = token.seq
+
+                        # TODO: Replacing the grammatical markers...?
+                        content = content.replace('*', '')
+                        content = content.replace('#', '')
+
+                        label   = token.label
+
+                        # FIXME: Also, should not indiscriminately drop words, but come up with a better way to fix this
+                        if content.strip():
+                            tagger_train_f.write('{}/{} '.format(content,label))
+
+                    tagger_train_f.write('\n')
+                    tagger_train_f.flush()
+
+                for t in ['?','“','"',"''","'",',','…','/','--','-','``','`',':',';','«','»']:
+                    tagger_train_f.write('{}{}{}\n'.format(t,'/','PUNC'))
+
+            for dt in dep_trees:
+                dep_train_f.write(dt.to_conll()+'\n')
+
+
+                try:
+                    ds = get_lang_ds(inst, pos_source=use_pos)
+                except RuntimeError as re:
+                    print(re)
+                    EXTRACT_LOG.error("Runtime error in instance {}".format(inst.id))
+                    continue
+                except RGXigtException as rgxe:
+                    EXTRACT_LOG.warn('Instance "{}" failed with "{}"'.format(inst.id, rgxe))
+                    continue
+
+                if ds is not None:
+                    dep_trees.append(ds)
+
+                # Get the gloss POS stats for the classifier...
+                if classifier_prefix is not None:
+                    gather_gloss_pos_stats(inst, cur_word_tag_dict, cur_gram_tag_dict)
+
+                # Also gather the tag sequences from the language line.
+                if tagger_prefix is not None:
+                    try:
+                        lang_tag_sequences.append(inst.get_lang_sequence())
+                    except ProjectionException as pe:
+                        EXTRACT_LOG.warn('Unable to extract tags from instance "{}"'.format(inst.id))
+
+            return cur_word_tag_dict, cur_gram_tag_dict, lang_tag_sequences, dep_trees
 
     # p.close()
     # p.join()
@@ -217,120 +247,6 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
         dep_parser_path = dep_prefix+'.parser'
         mp = MSTParser()
         mp.train(dep_train_path, dep_parser_path)
-
-
-
-
-def extract_from_instances(inst_list, classifier_prefix, feat_out_path, cfg_prefix, threshold=1):
-    """
-    Given a list of instances, extract the specified items.
-
-    :param inst_list:
-    :param classifier_prefix:
-    :param feat_out_path:
-    :param cfg_prefix:
-    :param threshold:
-    """
-    cpus = cpu_count()
-    p = Pool(cpus)
-
-    wtd = TwoLevelCountDict()
-    gtd = TwoLevelCountDict()
-
-    for chunk in chunkIt(inst_list, cpus):
-        p.apply_async(process_instances, args=[chunk, classifier_prefix, cfg_prefix], callback=lambda x: callback(x, wtd, gtd))
-
-    p.close()
-    p.join()
-
-
-    # Write out the features...
-    write_out_gram_dict(wtd, feat_out_path, threshold=threshold)
-
-    # Write out the classifier...
-    return train_txt(feat_out_path, classifier_prefix)
-
-# =============================================================================
-# PARALLELIZATION FUNCTIONS
-#
-# Functions to handle single files in parallel, and the callback to merge their
-# results.
-# =============================================================================
-
-def process_file(path, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos, dep_align):
-    """
-    Given a XIGT-XML file, load it and do preprocessing.
-
-    :param path:
-    :return:
-    """
-    EXTRACT_LOG.info('Opening "{}"...'.format(path))
-    with open(path, 'r', encoding='utf-8') as f:
-        xc = RGCorpus.load(f, mode=INCREMENTAL)
-
-        # Now, iterate through each instance in the corpus...
-        return process_instances(xc, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos, dep_align)
-
-# =============================================================================
-# Process the list of instances...
-# =============================================================================
-
-def process_instances(inst_list, classifier_prefix, cfg_prefix, tagger_prefix, dep_parser, dep_pos, dep_align):
-    """
-    Given a list of instances, gather the necessary stats to train a classifier.
-
-    :param inst_list: List of instances to process
-    :type inst_list: list[RGIgt]
-    :type classifier_prefix: str
-    :type cfg_prefix: str
-    :type tagger_prefix: str
-    :return:
-    """
-    cur_word_tag_dict = TwoLevelCountDict()
-    cur_gram_tag_dict = TwoLevelCountDict()
-
-    lang_tag_sequences = []
-
-    # Gather a list of the dependency trees
-    dep_trees = []
-
-    for inst in inst_list:
-
-        # Extract the dependency trees...
-        if dep_pos == 'class':
-            use_pos = INTENT_POS_CLASS
-        elif dep_pos == 'proj':
-            use_pos = INTENT_POS_PROJ
-        elif dep_pos == 'manual':
-            use_pos = MANUAL_POS
-
-
-        try:
-            ds = get_lang_ds(inst, pos_source=use_pos)
-        except RuntimeError as re:
-            print(re)
-            EXTRACT_LOG.error("Runtime error in instance {}".format(inst.id))
-            continue
-        except RGXigtException as rgxe:
-            EXTRACT_LOG.warn('Instance "{}" failed with "{}"'.format(inst.id, rgxe))
-            continue
-
-        if ds is not None:
-            dep_trees.append(ds)
-
-        # Get the gloss POS stats for the classifier...
-        if classifier_prefix is not None:
-            gather_gloss_pos_stats(inst, cur_word_tag_dict, cur_gram_tag_dict)
-
-        # Also gather the tag sequences from the language line.
-        if tagger_prefix is not None:
-            try:
-                lang_tag_sequences.append(inst.get_lang_sequence())
-            except ProjectionException as pe:
-                EXTRACT_LOG.warn('Unable to extract tags from instance "{}"'.format(inst.id))
-
-    return cur_word_tag_dict, cur_gram_tag_dict, lang_tag_sequences, dep_trees
-
 
 
 # =============================================================================

@@ -8,7 +8,9 @@ from unittest import TestCase
 
 from intent.alignment.Alignment import Alignment
 from intent.consts import INTENT_ALN_HEUR, INTENT_ALN_GIZA, INTENT_POS_PROJ
+from intent.igt.projection import project_gloss_pos_to_lang
 from intent.igt.rgxigt import RGCorpus, RGIgt
+from intent.igt.igt_functions import pos_tags
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.utils.env import posdict, classifier, tagger_model, testfile_dir
@@ -20,18 +22,14 @@ class GlossAlignTest(TestCase):
     def test_gloss_projection_unaligned(self):
         xc = RGCorpus.load(os.path.join(testfile_dir, "xigt/project_gloss_lang_tests.xml"))
         igt = xc[0]
-        igt.project_gloss_to_lang(tag_method=INTENT_POS_PROJ, unk_handling='keep')
-
-        self.assertEqual('UNK', igt.get_pos_tags(igt.lang.id, INTENT_POS_PROJ)[-1].value())
+        project_gloss_pos_to_lang(igt, tag_method=INTENT_POS_PROJ, unk_handling='keep')
+        self.assertEqual('UNK', pos_tags(igt, igt.lang.id, INTENT_POS_PROJ)[-1].value())
 
 
 
 #===============================================================================
 # Unit Tests
 #===============================================================================
-
-
-
 
 
 class TextParseTest(TestCase):

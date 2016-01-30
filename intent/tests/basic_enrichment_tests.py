@@ -82,4 +82,4 @@ class L_G_WordAlignTests(TestCase):
         inst = self.xc[0]
         word_align(gloss(inst), lang(inst))
 
-from intent.igt.search import *
+from intent.igt.igt_functions import *

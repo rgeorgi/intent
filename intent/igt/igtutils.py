@@ -12,17 +12,9 @@ import string
 # ===============================================================================
 # Sub-tasks of cleaning
 # ===============================================================================
+from intent.consts import punc_chars, list_re
 from xigt.model import Tier, Item, Igt, XigtCorpus
 from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xigtcorpus
-
-punc_chars   = '\.,\'\"\?!\xc2'
-punc_re      = '[{}]'.format(punc_chars)
-punc_re_mult = '{}+'.format(punc_re)
-no_punc_re   = '[^{}]'.format(punc_chars)
-word_re      = '[^{}\s]+'.format(punc_chars)
-
-list_re = '(?:[0-9]+|[a-z]|i+)'
-quote_re = '[\'"\`]'
 
 
 def grammaticality(ret_str):
@@ -470,32 +462,7 @@ class TestLangLines(unittest.TestCase):
         self.assertEquals(l1_clean, l1_target)
 
 
-class TestGlossLines(unittest.TestCase):
-    def test_gloss(self):
-        g1 = 'Agnès     1SG . REC   3SG . M . THM   present. FUT .3 SG'
-
-        g1_clean = clean_gloss_string(g1)
-        g1_target = 'Agnès     1SG.REC   3SG.M.THM   present.FUT.3SG'
-
-        self.assertEquals(g1_clean, g1_target)
 
 
-class TestHyphenate(unittest.TestCase):
-    def runTest(self):
-        h1 = 'the guests wanted to visit the other pavilion'
-        h1f = 'the guests wanted to-visit the other pavilion'
 
-        self.assertEqual(hyphenate_infinitive(h1), h1f)
-
-
-class TestMergeLines(unittest.TestCase):
-    def runTest(self):
-        l1 = 'This        an example          merged lines'
-        l2 = '      is         sdfa     of                '
-
-        merged = merge_lines([l1, l2])
-        tgt = 'This  is    an example    of    merged lines'
-        self.assertEqual(merged, tgt)
-
-from .search import find_in_obj
 from intent.alignment.Alignment import Alignment

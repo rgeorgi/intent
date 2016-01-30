@@ -11,7 +11,7 @@ from intent.igt.exceptions import NoTransLineException, NoNormLineException, Mul
     ProjectionException
 from intent.igt.projection import project_pt_tier, project_ds_tier, project_trans_pos_to_gloss, \
     project_gloss_pos_to_lang
-from intent.igt.search import lang, gloss, get_bilingual_alignment
+from intent.igt.igt_functions import lang, gloss, get_bilingual_alignment
 from intent.trees import NoAlignmentProvidedError
 from xigt.codecs import xigtxml
 

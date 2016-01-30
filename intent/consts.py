@@ -223,4 +223,13 @@ PARSE_VAR = 'parse_list'
 morpheme_boundary_chars = ['-','=']
 morpheme_interior_chars = ['.',':']
 
+punc_chars   = '\.,\'\"\?!\xc2'
+punc_re      = '[{}]'.format(punc_chars)
+punc_re_mult = '{}+'.format(punc_re)
+no_punc_re   = '[^{}]'.format(punc_chars)
+word_re      = '[^{}\s]+'.format(punc_chars)
+
+list_re = '(?:[0-9]+|[a-z]|i+)'
+quote_re = '[\'"\`]'
+
 PUNC_TAG = 'PUNC'

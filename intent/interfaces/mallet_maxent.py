@@ -19,7 +19,7 @@ from intent.utils.dicts import TwoLevelCountDict
 import intent.igt.grams
 from intent.utils.systematizing import piperunner, ProcessCommunicator
 from intent.utils.token import GoldTagPOSToken
-from intent.utils.env import c, mallet, mallet_bin
+from intent.utils.env import c, mallet, mallet_bin, classifier
 
 
 class ClassifierException(Exception): pass
@@ -29,8 +29,11 @@ class EmptyStringException(ClassifierException): pass
 
 class MalletMaxent(object):
 
-    def __init__(self, model):
-        self._model = model
+    def __init__(self, model=None):
+        if model is None:
+            self._model = classifier
+        else:
+            self._model = model
 
         mallet_bin = os.path.join(os.path.join(mallet, 'bin'), 'mallet')
 

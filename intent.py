@@ -257,7 +257,7 @@ elif args.subcommand == CMD_FILTER:
 # EXTRACT
 elif args.subcommand == CMD_EXTRACT:
     extract_from_xigt(flatten_list(args.FILE), args.gloss_classifier, args.cfg_rules, args.lang_tagger,
-                      dep_prefix=args.dep_parser, dep_pos=args.dep_pos, dep_align=args.dep_align,
+                      dep_prefix=args.dep_parser, pos_method=args.dep_pos, dep_align=args.dep_align,
                       alignment=args.alignment, no_alignment_heur=args.no_alignment_heur)
 
 # EVAL
