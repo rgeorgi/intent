@@ -2,24 +2,23 @@ import os
 from unittest import TestCase
 
 from intent.igt.create_tiers import morphemes, get_raw_tier, generate_normal_tier, generate_clean_tier
+from intent.igt.parsing import xc_load
 from intent.igt.references import cleaned_tier, normalized_tier
 from xigt.codecs import xigtxml
 
-from intent.igt.igtutils import rgp
-from intent.igt.rgxigt import RGCorpus, NoODINRawException, morph_align, word_align
 from intent.utils.env import proj_root, testfile_dir
 
 __author__ = 'rgeorgi'
 
 class NoRawTest(TestCase):
     def setUp(self):
-        self.xc = RGCorpus.load(os.path.join(testfile_dir, 'xigt/no_raw.xml'))
+        self.xc = xc_load(os.path.join(testfile_dir, 'xigt/no_raw.xml'))
 
     def no_raw_test(self):
         """
         There is no raw tier in this instance, so it should return a failure.
         """
-        self.assertRaises(NoODINRawException, get_raw_tier(self.xc[0]))
+        self.assertRaises(NoODINRawException, get_raw_tier, self.xc[0])
 
     def clean_test(self):
         """
@@ -70,7 +69,7 @@ class NullGlossTest(TestCase):
         self.path = os.path.join(testfile_dir, 'xigt/deu_no_gloss_line.xml')
 
     def test_basic_processing(self):
-        xc = RGCorpus.load(self.path, basic_processing=True)
+        xc = xc_load(self.path, do_basic_processing=True)
 
 class L_G_WordAlignTests(TestCase):
 

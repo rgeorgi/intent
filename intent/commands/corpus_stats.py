@@ -16,6 +16,12 @@ import os
 import argparse
 import sys
 from multiprocessing import cpu_count
+
+from intent.igt.parsing import raw_txt_to_xc
+from xigt.codecs import xigtxml
+
+from intent.igt.exceptions import MultipleNormLineException, NoLangLineException, NoGlossLineException, \
+    NoTransLineException
 from intent.trees import read_conll_file
 from intent.utils.fileutils import globlist
 
@@ -30,8 +36,6 @@ STATS_LOGGER = logging.getLogger(__name__)
 
 from collections import defaultdict
 
-from intent.igt.rgxigt import RGCorpus, RGIgt, MultipleNormLineException, NoGlossLineException, NoLangLineException, \
-    NoTransLineException
 from intent.utils.dicts import StatDict, CountDict, TwoLevelCountDict
 from intent.utils.token import tokenize_string, tag_tokenizer
 
@@ -188,17 +192,17 @@ def igt_stats(filelist, type='text', logpath=None, show_header=True, show_filena
 
         if type == 'xigt':
             STATS_LOGGER.info('Processing xigt file: "%s"' % path)
-            rc = RGCorpus.load(path)
-
+            xc = xigtxml.load(open(path, 'r', encoding='utf-8'))
 
         elif type == 'text':
             STATS_LOGGER.info('Processing text file: "%s"' % path)
-            rc = RGCorpus.from_txt(path)
+            with open(path, 'r', encoding='utf-8') as f:
+                data = f.read()
+                xc = raw_txt_to_xc(data)
 
-        # pool = Pool(cpu_count())
 
         # Divide the file into roughly equal chunks
-        chunks = chunkIt(rc.igts, cpu_count())
+        chunks = chunkIt(xc.igts, cpu_count())
 
         for chunk in chunks:
             # pool.apply_async(inst_list_stats, args=[chunk], callback=sd.combine)

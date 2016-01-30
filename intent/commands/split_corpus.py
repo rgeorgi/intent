@@ -1,10 +1,11 @@
 import logging
 import os
+
+from xigt import XigtCorpus
 from xigt.codecs import xigtxml
 
 SPLIT_LOG = logging.getLogger('SPLIT')
 
-from intent.igt.rgxigt import RGCorpus, RGIgt, sort_corpus
 
 __author__ = 'rgeorgi'
 
@@ -111,7 +112,7 @@ def split_corpus(filelist, train=0, dev=0, test=0, prefix='', overwrite=False):
     # -- 1) Load all the files
     for f in filelist:
         SPLIT_LOG.info("Loading file {}".format(f))
-        xc = RGCorpus.load(f)
+        xc = xigtxml.load(open(f, 'r', encoding='utf-8'))
         instances.extend(xc)
 
     train_instances, dev_instances, test_instances = split_instances(instances, train, dev, test)
@@ -150,13 +151,13 @@ def write_instances(instance_list, out_path, type, overwrite=False):
 
         num_sents = len(instance_list)
         if num_sents > 0:
-            xc = RGCorpus()
+            xc = XigtCorpus()
             for i in instance_list:
                 xc.append(i)
 
             print("Writing {} instances to {}...".format(num_sents, out_path))
             f = open(out_path, 'w', encoding='utf-8')
-            sort_corpus(xc)
+            xc.sort()
             xigtxml.dump(f, xc)
             f.close()
         else:

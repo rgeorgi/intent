@@ -13,6 +13,8 @@ from intent.consts import *
 import logging
 TIER_LOG = logging.getLogger("TIER_CREATION")
 
+
+
 # -------------------------------------------
 # Create a words tier.
 # -------------------------------------------

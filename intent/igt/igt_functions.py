@@ -6,9 +6,10 @@ import re
 import logging
 from collections import defaultdict
 
-from intent.igt.create_tiers import lang, trans, pos_tags, gloss, glosses, lang_tags, morphemes
+from intent.igt.create_tiers import lang, trans, pos_tags, gloss, glosses, lang_tags, morphemes, generate_clean_tier, \
+    generate_normal_tier
 from intent.igt.references import xigt_find, ask_item_id, cleaned_tier, normalized_tier, \
-    gen_tier_id, odin_ancestor, findall_in_obj, gen_item_id, item_index
+    gen_tier_id, odin_ancestor, xigt_findall, gen_item_id, item_index
 from intent.interfaces.fast_align import fast_align_sents
 from intent.interfaces.giza import GizaAligner
 from intent.interfaces.mallet_maxent import MalletMaxent
@@ -259,7 +260,7 @@ def find_glosses(inst, gloss_word):
 
     # This filter should find elements that have a content tag that has
     others = [lambda x: gloss_word.id in ids(x.attributes.get(CONTENT, ''))]
-    return findall_in_obj(inst, others=others)
+    return xigt_findall(inst, others=others)
 
 def get_gloss_lang_alignment(inst):
     """
@@ -365,6 +366,15 @@ def create_text_tier_from_lines(inst, lines, id_base, state):
 def add_text_tier_from_lines(inst, lines, id_base, state):
     tier = create_text_tier_from_lines(inst, lines, id_base, state)
     inst.append(tier)
+
+def add_raw_tier(inst, lines):
+    add_text_tier_from_lines(inst, lines, RAW_ID, RAW_STATE)
+
+def add_clean_tier(inst, lines):
+    add_text_tier_from_lines(inst, lines, CLEAN_ID, CLEAN_STATE)
+
+def add_normal_tier(inst, lines):
+    add_text_tier_from_lines(inst, lines, NORM_ID, NORM_STATE)
 
 # -------------------------------------------
 #
@@ -673,6 +683,47 @@ def heur_align_inst(inst, **kwargs):
         set_bilingual_alignment(inst, trans(inst), glosses(inst), aln, aln_method=aln_method)
 
     return get_trans_gloss_alignment(inst, aln_method=aln_method)
+
+def giza_align_l_t(inst, symmetric = None):
+    """
+    Perform giza alignments directly from language to translation lines, for comparison
+
+    :rtype: Alignment
+    """
+
+    l_sents = [tier_text(lang(i), return_list=True) for i in inst]
+    t_sents = [tier_text(trans(i), return_list=True) for i in inst]
+
+    ga = GizaAligner()
+
+    t_l_sents = ga.temp_train(t_sents, l_sents)
+
+    assert len(t_l_sents) == len(inst)
+
+    if symmetric is not None:
+        l_t_sents = ga.temp_train(l_sents, t_sents)
+
+
+    for i, igt in enumerate(inst):
+        t_l = t_l_sents[i]
+
+        # If we want these symmetricized...
+        if symmetric is not None:
+
+            # Get the l_t (the "reverse" alignment)
+            l_t = l_t_sents[i]
+
+            # Ensure that the requested symmetricization heuristic is implemented...
+            if not hasattr(t_l, symmetric):
+                raise AlignmentError('Unimplemented symmetricization heuristic "{}"'.format(symmetric))
+
+            # Now, apply it (and make sure to flip the reversed alignment)
+            t_l = getattr(t_l, symmetric)(l_t.flip())
+
+        # Finally, set the resulting trans-to-lang alignment in the instance
+        set_bilingual_alignment(igt, trans(igt), lang(igt), t_l, aln_method = INTENT_ALN_GIZA)
+
+
 
 def giza_align_t_g(xc, aligner=ALIGNER_GIZA, resume = True, use_heur = False, symmetric = SYMMETRIC_INTERSECT):
     """
@@ -1615,6 +1666,51 @@ def read_pt(tier):
 
     return child_n.root()
 
+def basic_processing(inst):
+    # Create the clean tier
+    """
+    Finish the loading actions of an IGT instance. (Create the normal and
+    clean tiers if they don't exist...)
+
+    """
+    generate_clean_tier(inst)
+    generate_normal_tier(inst)
+
+    # Create the word and phrase tiers...
+    try:
+        trans(inst)
+    except XigtFormatException:
+        pass
+
+    try:
+        gloss(inst)
+    except XigtFormatException:
+        pass
+
+    try:
+        haslang = lang(inst)
+    except XigtFormatException:
+        haslang = False
+
+    # Create the morpheme tiers...
+    try:
+        hasgloss = glosses(inst)
+    except (NoGlossLineException, EmptyGlossException):
+        hasgloss = False
+
+    try:
+        morphemes(inst)
+    except NoLangLineException:
+        pass
+
+    # And do word-to-word alignment if it's not already done.
+    if hasgloss and haslang and not gloss(inst).alignment:
+        word_align(gloss(inst), lang(inst))
+
+    if hasgloss and haslang:
+
+        add_gloss_lang_alignments(inst)
+
 def add_gloss_lang_alignments(inst):
     # Finally, do morpheme-to-morpheme alignment between gloss
     # and language if it's not already done...
@@ -1624,6 +1720,17 @@ def add_gloss_lang_alignments(inst):
     if not gloss(inst).alignment:
         word_align(gloss(inst), lang(inst))
 
+def remove_alignments(self, aln_method=None):
+    """
+    Remove alignment information from all instances.
+    """
+    filters = []
+    if aln_method is not None:
+        filters = [lambda x: get_intent_method(x) == aln_method]
+
+    for inst in self:
+        for t in xigt_findall(inst, type=ALN_TIER_TYPE, others=filters):
+            t.delete()
 
 # -------------------------------------------
 # Imports

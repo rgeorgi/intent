@@ -1,5 +1,10 @@
 import logging
 import pickle
+
+from build.lib.xigt.core import XigtCorpus, Item
+from intent.igt.igt_functions import strip_pos
+from intent.igt.parsing import xc_load
+
 root_logger = logging.getLogger()
 root_logger.setLevel(logging.DEBUG)
 
@@ -18,7 +23,6 @@ from xigt.consts import ALIGNMENT
 
 from intent.eval.pos_eval import poseval
 from intent.consts import GLOSS_WORD_ID, INTENT_POS_PROJ, MANUAL_POS, INTENT_POS_CLASS
-from intent.igt.rgxigt import RGCorpus, strip_pos, RGIgt, RGToken
 from intent.scripts.classification.xigt_to_classifier import instances_to_classifier
 from intent.utils.token import POSToken
 
@@ -39,7 +43,7 @@ def eval_classifier(c, inst_list, context_feats=False, posdict=None):
     gold_sents = []
     eval_sents = []
 
-    to_dump = RGCorpus()
+    to_dump = XigtCorpus()
 
     for inst in inst_list:
 
@@ -138,7 +142,7 @@ def fix_ctn_gloss_line(inst, tag_method=None):
         if new_tag:
             gpos = gpos_tier.find(alignment=gw.id)
             if not gpos:
-                gpt = RGToken(id=gpos_tier.askItemId(), alignment=gw.id, text=new_tag)
+                gpt = Item(id=gpos_tier.askItemId(), alignment=gw.id, text=new_tag)
                 gpos_tier.add(gpt)
             else:
                 gpos.text = new_tag
@@ -203,11 +207,11 @@ if __name__ == '__main__':
     # sys.exit()
 
     print("Loading Processed CTN Train corpus...", end=" ", flush=True)
-    train_xc    = RGCorpus.load(ctn_train_processed)
+    train_xc    = xc_load(ctn_train_processed)
     print("Done.")
 
     print("Loading Processed CTN Dev corpus...", end=" ", flush=True)
-    dev_xc    = RGCorpus.load(ctn_dev_processed)
+    dev_xc    = xc_load(ctn_dev_processed)
     print("Done.")
 
     #

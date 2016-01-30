@@ -122,7 +122,7 @@ def xigt_find(obj, **kwargs):
                 break
         return found
 
-def findall_in_obj(obj, **kwargs):
+def xigt_findall(obj, **kwargs):
     found = []
     found_item = _find_in_self(obj, _build_filterlist(**kwargs))
     if found_item is not None:
@@ -132,7 +132,7 @@ def findall_in_obj(obj, **kwargs):
     # the children.
     if isinstance(obj, XigtContainerMixin):
         for child in obj:
-            found += findall_in_obj(child, **kwargs)
+            found += xigt_findall(child, **kwargs)
 
 
     return found
@@ -196,7 +196,7 @@ def gen_tier_id(inst, id_base, tier_type=None, alignment=None, no_hyphenate=Fals
     if not filters:
         num_tiers = 0
     else:
-        prev_tiers = findall_in_obj(inst, others=filters)
+        prev_tiers = xigt_findall(inst, others=filters)
         num_tiers = len(prev_tiers)
 
 

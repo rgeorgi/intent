@@ -7,7 +7,7 @@ from intent.consts import *
 from intent.igt.create_tiers import trans, lang
 from intent.igt.igt_functions import get_lang_ds, get_ds, project_ds_tier, heur_align_inst, parse_translation_line, \
     get_trans_gloss_alignment
-from intent.igt.rgxigt import RGCorpus
+from intent.igt.parsing import xc_load
 from intent.interfaces.stanford_parser import StanfordParser
 from intent.trees import DepTree, DEPSTR_PTB, project_ds
 from intent.utils.env import testfile_dir, classifier
@@ -49,7 +49,7 @@ class ReadTreeTests(TestCase):
 
     def setUp(self):
         logging.basicConfig(level=logging.DEBUG)
-        self.xc = RGCorpus.load(xigt_proj, basic_processing=True)
+        self.xc = xc_load(xigt_proj, do_basic_processing=True)
         self.inst1 = self.xc[0]
         self.inst2 = self.xc[1]
 
@@ -107,7 +107,7 @@ class ReadTreeTests(TestCase):
         The tree in the ds_cycle file has "woman" depend both
         on "arriving" and "browse."
         """
-        xc = RGCorpus.load(ds_cycle)
+        xc = xc_load(ds_cycle)
         inst = xc[0]
 
         #  1    2       4        5       7    8    9
@@ -136,7 +136,7 @@ class ReadTreeTests(TestCase):
 class UnknownErrorTests(TestCase):
 
     def test_ds_project(self):
-        xc = RGCorpus.load(os.path.join(testfile_dir, 'xigt/index_error.xml'), basic_processing=True)
+        xc = xc_load(os.path.join(testfile_dir, 'xigt/index_error.xml'), do_basic_processing=True)
         inst = xc[0]
         heur_align_inst(inst)
         parse_translation_line(inst)
@@ -154,9 +154,9 @@ class UnknownErrorTests(TestCase):
         self.assertTrue(tgt_t.similar(proj_t))
 
         inst2 = xc[1]
-        inst2.heur_align()
-        inst2.parse_translation_line(sp, dt=True)
-        inst2.project_ds()
+        heur_align_inst(inst2)
+        parse_translation_line(inst2, dt=True)
+        project_ds_tier(inst2)
 
         tgt2_t = DepTree.fromstring("""(ROOT[0]
                                             (unohta-a[2] (*Minua[1])
@@ -167,7 +167,7 @@ class UnknownErrorTests(TestCase):
                                             ))
                                         """, stype=DEPSTR_PTB)
 
-        self.assertTrue(inst2.get_lang_ds(), tgt2_t)
+        self.assertTrue(get_lang_ds(inst2), tgt2_t)
 
     def harness(self, name):
         d = all_enrich_args.copy()

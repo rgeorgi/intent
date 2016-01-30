@@ -5,8 +5,8 @@ from multiprocessing import Lock
 
 from intent.igt.exceptions import NoNormLineException, MultipleNormLineException, EmptyGlossException, \
     GlossLangAlignException
-from intent.igt.rgxigt import RGCorpus, sort_corpus, word_align
-from intent.igt.igt_functions import lang, gloss, trans, pos_tags
+from intent.igt.igt_functions import lang, gloss, trans, pos_tags, word_align
+from xigt import XigtCorpus
 from xigt.codecs import xigtxml
 from xigt.consts import INCREMENTAL
 
@@ -18,7 +18,7 @@ FILTER_LOG = logging.getLogger('FILTERING')
 
 
 def filter_corpus(filelist, outpath, require_lang=True, require_gloss=True, require_trans=True, require_aln=True, require_gloss_pos=False):
-    new_corp = RGCorpus()
+    new_corp = XigtCorpus()
 
 
     FILTER_LOG.log(1000, "Beginning filtering...")
@@ -99,7 +99,7 @@ def filter_corpus(filelist, outpath, require_lang=True, require_gloss=True, requ
 
         with open(outpath, 'w', encoding='utf-8') as out_f:
             FILTER_LOG.log(1000, "{} instances processed, {} filtered out, {} remain.".format(examined, failures, successes))
-            sort_corpus(new_corp)
+            new_corp.sort()
             FILTER_LOG.log(1000, 'Writing remaining instances to file "{}"...'.format(os.path.basename(outpath)))
             xigtxml.dump(out_f, new_corp)
             FILTER_LOG.log(1000, "Success.")

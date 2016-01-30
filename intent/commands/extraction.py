@@ -2,12 +2,13 @@ import logging
 from multiprocessing import cpu_count
 from multiprocessing.pool import Pool
 
+from intent.igt.exceptions import RGXigtException, ProjectionException
 from xigt.codecs import xigtxml
 
 from intent.consts import POS_TIER_TYPE, GLOSS_WORD_ID, LANG_WORD_ID, INTENT_POS_CLASS, \
     INTENT_POS_PROJ, MANUAL_POS, INTENT_ALN_HEUR
 from intent.igt.grams import write_gram
-from intent.igt.igt_functions import get_lang_ds, pos_tags, lang
+from intent.igt.igt_functions import get_lang_ds, pos_tags, lang, get_lang_ps
 from intent.interfaces.mallet_maxent import train_txt
 from intent.interfaces.mst_parser import MSTParser
 from intent.interfaces.stanford_tagger import train_postagger
@@ -17,7 +18,6 @@ from xigt.consts import ALIGNMENT, INCREMENTAL
 
 EXTRACT_LOG = logging.getLogger("EXTRACT")
 
-from intent.igt.rgxigt import RGCorpus, RGIgt, ProjectionException, RGXigtException
 from intent.utils.dicts import TwoLevelCountDict
 
 __author__ = 'rgeorgi'
@@ -191,7 +191,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
 
         for input_file in input_filelist:
             print('Extracting alignment from file {}'.format(input_file))
-            xc = RGCorpus.load(input_file)
+            xc = xigtxml.load(open(input_file, 'r', encoding='utf-8'), mode=INCREMENTAL)
             for inst in xc:
                 try:
                     EXTRACT_LOG.info('Attempting to extract alignment from instance "{}"'.format(inst.id))
@@ -231,9 +231,9 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     if cfg_prefix:
         with open(cfg_prefix, 'w', encoding='utf-8') as cfg_f:
             for f in input_filelist:
-                xc = RGCorpus.load(f)
+                xc = xigtxml.load(open(f, 'r', encoding='utf-8'), mode=INCREMENTAL)
                 for inst in xc:
-                    t = inst.get_lang_ps()
+                    t = get_lang_ps(inst)
                     if t is not None:
                         for prod in t.productions():
                             cfg_f.write('{}\n'.format(prod))

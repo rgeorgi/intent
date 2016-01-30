@@ -1,16 +1,18 @@
 import os
 from collections import defaultdict
 
+from xigt.codecs import xigtxml
 
 from intent.consts import *
 from intent.eval.AlignEval import AlignEval
 from intent.eval.pos_eval import poseval
-from intent.igt.rgxigt import RGCorpus, RGIgt
+from intent.igt.igt_functions import heur_align_corp, giza_align_t_g, remove_alignments
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.utils.dicts import POSEvalDict
 from intent.utils.env import tagger_model, classifier
 from intent.utils.token import POSToken
+from xigt.consts import INCREMENTAL
 
 __author__ = 'rgeorgi'
 
@@ -49,7 +51,7 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
     # Go through all the files in the list...
     for f in filelist:
         print('Evaluating on file: {}'.format(f))
-        xc = RGCorpus.load(f)
+        xc = xigtxml.load(open(f, 'r', encoding='utf-8'), mode=INCREMENTAL)
 
         # Test the classifier if evaluation is requested.
         if classifier_path is not None:
@@ -173,36 +175,35 @@ def evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger):
     :type xc: RGCorpus
     :type mas: MultAlignScorer
     """
-
-    xc.heur_align()
+    heur_align_corp(xc)
 
     # Start by adding the manual alignments...
     mas.add_corpus('gold', INTENT_ALN_MANUAL, f, xc)
 
-    EVAL_LOG.info("")
-    xc.giza_align_t_g(aligner=ALIGNER_FASTALIGN, use_heur=False)
+    EVAL_LOG.info("")    
+    giza_align_t_g(xc, aligner=ALIGNER_FASTALIGN, use_heur=False)
     mas.add_corpus('fast_align', INTENT_ALN_GIZA, f, xc)
-    xc.remove_alignments(INTENT_ALN_GIZA)
+    remove_alignments(xc, INTENT_ALN_GIZA)
 
-    xc.giza_align_t_g(aligner=ALIGNER_FASTALIGN, use_heur=True)
+    giza_align_t_g(xc, aligner=ALIGNER_FASTALIGN, use_heur=True)
     mas.add_corpus('fast_align_heur', INTENT_ALN_GIZA, f, xc)
-    xc.remove_alignments(INTENT_ALN_GIZA)
+    remove_alignments(xc, INTENT_ALN_GIZA)
 
-    xc.giza_align_t_g(use_heur=False, resume=False)
+    giza_align_t_g(xc, use_heur=False, resume=False)
     mas.add_corpus('statistic', INTENT_ALN_GIZA, f, xc)
-    xc.remove_alignments(INTENT_ALN_GIZA)
+    remove_alignments(xc, INTENT_ALN_GIZA)
 
-    xc.giza_align_t_g(use_heur=True, resume=False)
+    giza_align_t_g(xc, use_heur=True, resume=False)
     mas.add_corpus('statistic_heur', INTENT_ALN_GIZA, f, xc)
-    xc.remove_alignments(INTENT_ALN_GIZA)
+    remove_alignments(xc, INTENT_ALN_GIZA)
 
-    xc.giza_align_t_g(use_heur=False, resume=True)
+    giza_align_t_g(xc, use_heur=False, resume=True)
     mas.add_corpus('statistic+', INTENT_ALN_GIZA, f, xc)
-    xc.remove_alignments(INTENT_ALN_GIZA)
+    remove_alignments(xc, INTENT_ALN_GIZA)
 
-    xc.giza_align_t_g(use_heur=True, resume=True)
+    giza_align_t_g(xc, use_heur=True, resume=True)
     mas.add_corpus('statistic+_heur', INTENT_ALN_GIZA, f, xc)
-    xc.remove_alignments(INTENT_ALN_GIZA)
+    remove_alignments(xc, INTENT_ALN_GIZA)
 
 
 

@@ -7,24 +7,25 @@ import copy
 import os
 from unittest import TestCase
 
+from build.lib.xigt.codecs import xigtxml
 from intent.alignment.Alignment import Alignment
 from intent.consts import INTENT_ALN_HEUR, INTENT_ALN_GIZA, INTENT_POS_PROJ, INTENT_ALN_MANUAL
 from intent.igt.create_tiers import lang, glosses, gloss, trans
+from intent.igt.parsing import xc_load, parse_odin_xc, parse_odin_inst
 from intent.igt.references import xigt_find, item_index
-from intent.igt.rgxigt import RGCorpus, RGIgt
-from intent.igt.igt_functions import pos_tags, project_gloss_pos_to_lang, giza_align_t_g, heur_align_inst, \
-    heur_align_corp, add_pos_tags, tier_tokens, classify_gloss_pos, tag_trans_pos, tier_text, set_bilingual_alignment, \
+from intent.igt.igt_functions import pos_tags, project_gloss_pos_to_lang, giza_align_t_g, heur_align_corp, add_pos_tags, tier_tokens, classify_gloss_pos, tag_trans_pos, tier_text, set_bilingual_alignment, \
     get_trans_glosses_alignment
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.utils.env import posdict, classifier, tagger_model, testfile_dir
+from xigt.consts import INCREMENTAL
 
-xc = RGCorpus.load(os.path.join(testfile_dir, "xigt/kor-ex.xml"))
+xc = xc_load(os.path.join(testfile_dir, "xigt/kor-ex.xml"))
 
 class GlossAlignTest(TestCase):
 
     def test_gloss_projection_unaligned(self):
-        xc = RGCorpus.load(os.path.join(testfile_dir, "xigt/project_gloss_lang_tests.xml"))
+        xc = xc_load(os.path.join(testfile_dir, "xigt/project_gloss_lang_tests.xml"))
         igt = xc[0]
         project_gloss_pos_to_lang(igt, tag_method=INTENT_POS_PROJ, unk_handling='keep')
         self.assertEqual('UNK', pos_tags(igt, lang(igt).id, INTENT_POS_PROJ)[-1].value())
@@ -47,7 +48,7 @@ line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
 line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
 line=961 tag=T:     `I made the child eat rice.\''''
 
-        self.igt = RGIgt.fromString(self.txt)
+        self.igt = parse_odin_inst(self.txt)
 
 
     def line_test(self):
@@ -93,7 +94,7 @@ class XigtParseTest(TestCase):
     Testcase to make sure we can load from XIGT objects.
     """
     def setUp(self):
-        self.xc = RGCorpus.load(os.path.join(testfile_dir, 'xigt/kor-ex.xml'))
+        self.xc = xc_load(os.path.join(testfile_dir, 'xigt/kor-ex.xml'))
 
     def xigt_load_test(self):
         pass
@@ -123,7 +124,7 @@ note: lang_chosen_idx=0
 line=959 tag=L:   1 Nay-ka ai-eykey pap-ul mek-i-ess-ta
 line=960 tag=G:     I-Nom child-Dat rice-Acc eat-Caus-Pst-Dec
 line=961 tag=T:     `I made the child eat rice.\''''
-        self.igt = RGIgt.fromString(self.txt)
+        self.igt = parse_odin_inst(self.txt)
         self.tags = ['PRON', 'NOUN', 'NOUN', 'VERB']
 
     def test_add_pos_tags(self):

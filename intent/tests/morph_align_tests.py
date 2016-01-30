@@ -2,9 +2,8 @@ import os
 from unittest import TestCase
 
 from intent.igt.create_tiers import morphemes, glosses
-from intent.igt.igt_functions import add_gloss_lang_alignments
-from intent.igt.igtutils import rgp
-from intent.igt.rgxigt import RGCorpus, odin_ancestor, intervening_characters, morph_align
+from intent.igt.igt_functions import add_gloss_lang_alignments, intervening_characters, morph_align
+from intent.igt.parsing import xc_load
 from intent.utils.env import proj_root, testfile_dir
 
 __author__ = 'rgeorgi'
@@ -13,7 +12,7 @@ __author__ = 'rgeorgi'
 class MorphAlignTests(TestCase):
 
     def setUp(self):
-        self.xc = RGCorpus.load(os.path.join(testfile_dir, 'xigt/morph_align_567.xml'))
+        self.xc = xc_load(os.path.join(testfile_dir, 'xigt/morph_align_567.xml'))
 
     def test_intervening_characters(self):
         inst = self.xc[0]

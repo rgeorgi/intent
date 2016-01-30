@@ -1,8 +1,9 @@
 import os
 from unittest import TestCase
 
+from intent.igt.igt_functions import odin_span, x_contains_y, x_span_contains_y
+from intent.igt.parsing import xc_load
 from intent.igt.references import xigt_find
-from intent.igt.rgxigt import RGCorpus, odin_span, x_span_contains_y, x_contains_y
 from intent.utils.env import testfile_dir
 from xigt.model import Item
 
@@ -10,7 +11,7 @@ __author__ = 'rgeorgi'
 
 class span_test(TestCase):
     def setUp(self):
-        self.xc1 = RGCorpus.load(os.path.join(testfile_dir, 'xigt/kor-ex.xml'))
+        self.xc1 = xc_load(os.path.join(testfile_dir, 'xigt/kor-ex.xml'))
         self.inst = self.xc1[0]
         self.g1_2 = xigt_find(self.inst, id='g1.2')
         self.m2_1 = xigt_find(self.inst, id="m2.1")
