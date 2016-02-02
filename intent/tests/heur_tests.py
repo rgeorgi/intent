@@ -2,7 +2,7 @@ import copy
 from unittest import TestCase
 
 from intent.alignment.Alignment import heur_alignments, Alignment
-from intent.igt.igt_functions import heur_align_inst, tier_tokens, classify_gloss_pos, tag_trans_pos
+from intent.igt.igt_functions import heur_align_inst, tier_tokens, classify_gloss_pos, tag_trans_pos, copy_xigt
 from intent.igt.parsing import raw_txt_to_inst, create_words_tier_from_string
 from intent.utils.token import tokenize_string
 
@@ -38,7 +38,7 @@ class heur_tests(TestCase):
         self.assertEqual(self.a2, h)
 
     def test_inst_pos_heur(self):
-        inst = copy.deepcopy(self.inst)
+        inst = copy_xigt(self.inst)
         print(classify_gloss_pos(inst))
         print(tag_trans_pos(inst))
         print(heur_align_inst(inst, use_pos=True))

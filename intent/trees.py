@@ -11,6 +11,8 @@ from nltk.tree import ParentedTree, Tree
 #===============================================================================
 # Constants / Strings
 #===============================================================================
+from intent.consts import punc_re_mult, PUNC_TAG
+from intent.igt.igtutils import clean_lang_token
 from intent.igt.references import item_index
 
 DEPSTR_STANFORD = 'stanford'
@@ -1105,7 +1107,7 @@ class DepTree(IdTree):
                        key=lambda x: x.index)
         return words
 
-    def to_conll(self, lowercase=True, remove_hyphens=True):
+    def to_conll(self, lowercase=True, clean_token=True, match_punc=True):
         """
         Return a string in CONLL format
 
@@ -1132,8 +1134,11 @@ class DepTree(IdTree):
             node_label = node.label()
             if lowercase:
                 node_label = node_label.lower()
-            if remove_hyphens:
-                node_label = re.sub('[\-=]', '', node_label)
+            if clean_token:
+                node_label = clean_lang_token(node_label)
+            if match_punc and not node.pos:
+                if re.match(punc_re_mult, node_label, flags=re.U):
+                    node.pos = PUNC_TAG
 
             fields[0] = str(node.word_index)
             fields[1] = node_label

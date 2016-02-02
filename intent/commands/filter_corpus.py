@@ -5,7 +5,7 @@ from multiprocessing import Lock
 
 from intent.igt.exceptions import NoNormLineException, MultipleNormLineException, EmptyGlossException, \
     GlossLangAlignException
-from intent.igt.igt_functions import lang, gloss, trans, pos_tags, word_align
+from intent.igt.igt_functions import lang, gloss, trans, pos_tag_tier, word_align
 from xigt import XigtCorpus
 from xigt.codecs import xigtxml
 from xigt.consts import INCREMENTAL
@@ -79,7 +79,7 @@ def filter_corpus(filelist, outpath, require_lang=True, require_gloss=True, requ
                         fail("ALIGN")
                         continue
                 if require_gloss_pos:
-                    if pos_tags(inst, gt.id) is None:
+                    if pos_tag_tier(inst, gt.id) is None:
                         fail("GLOSS_POS")
                         continue
 

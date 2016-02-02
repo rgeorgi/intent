@@ -17,12 +17,12 @@ import logging
 PARSELOG = logging.getLogger("TEXTPARSER")
 
 def xc_load(path, mode=FULL, do_basic_processing=False):
-    with open(path, 'r', encoding='utf-8') as f:
-        xc = xigtxml.load(f, mode=mode)
-        if do_basic_processing:
-            for inst in xc:
-                basic_processing(inst)
-        return xc
+    f = open(path, 'r', encoding='utf-8')
+    xc = xigtxml.load(f, mode=mode)
+    if do_basic_processing:
+        for inst in xc:
+            basic_processing(inst)
+    return xc
 
 def raw_txt_to_xc(txt):
     """

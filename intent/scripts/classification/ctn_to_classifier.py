@@ -22,7 +22,7 @@ from xigt.consts import ALIGNMENT
 
 
 from intent.eval.pos_eval import poseval
-from intent.consts import GLOSS_WORD_ID, INTENT_POS_PROJ, MANUAL_POS, INTENT_POS_CLASS
+from intent.consts import GLOSS_WORD_ID, INTENT_POS_PROJ, INTENT_POS_MANUAL, INTENT_POS_CLASS
 from intent.scripts.classification.xigt_to_classifier import instances_to_classifier
 from intent.utils.token import POSToken
 
@@ -63,7 +63,7 @@ def eval_classifier(c, inst_list, context_feats=False, posdict=None):
 
         # Now, retrieve eval/gold.
         eval_tags = [v.value() for v in to_tag.get_pos_tags(GLOSS_WORD_ID, tag_method=INTENT_POS_CLASS)]
-        gold_tags = [v.value() for v in inst.get_pos_tags(GLOSS_WORD_ID, tag_method=MANUAL_POS)]
+        gold_tags = [v.value() for v in inst.get_pos_tags(GLOSS_WORD_ID, tag_method=INTENT_POS_MANUAL)]
 
 
         tag_tokens = [POSToken('a', label=l) for l in eval_tags]
@@ -89,7 +89,7 @@ def eval_proj(xc):
     for inst in xc:
         fix_ctn_gloss_line(inst, tag_method=INTENT_POS_PROJ)
         # Do the projection comparison
-        sup = inst.get_pos_tags(GLOSS_WORD_ID, tag_method=MANUAL_POS)
+        sup = inst.get_pos_tags(GLOSS_WORD_ID, tag_method=INTENT_POS_MANUAL)
         prj = inst.get_pos_tags(GLOSS_WORD_ID, tag_method=INTENT_POS_PROJ)
 
         sup_tags = []
@@ -236,7 +236,7 @@ if __name__ == '__main__':
 
         print("Training Classifier...", end=" ", flush=True)
         c = instances_to_classifier(train_instances, './ctn-train.class',
-                                    tag_method=MANUAL_POS,
+                                    tag_method=INTENT_POS_MANUAL,
                                     posdict=posdict,
                                     context_feats=True,
                                     feat_path='./ctn-train_feats.txt')

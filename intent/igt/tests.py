@@ -11,10 +11,11 @@ from build.lib.xigt.codecs import xigtxml
 from intent.alignment.Alignment import Alignment
 from intent.consts import INTENT_ALN_HEUR, INTENT_ALN_GIZA, INTENT_POS_PROJ, INTENT_ALN_MANUAL
 from intent.igt.create_tiers import lang, glosses, gloss, trans
+from intent.igt.igtutils import rgp
 from intent.igt.parsing import xc_load, parse_odin_xc, parse_odin_inst
 from intent.igt.references import xigt_find, item_index
-from intent.igt.igt_functions import pos_tags, project_gloss_pos_to_lang, giza_align_t_g, heur_align_corp, add_pos_tags, tier_tokens, classify_gloss_pos, tag_trans_pos, tier_text, set_bilingual_alignment, \
-    get_trans_glosses_alignment
+from intent.igt.igt_functions import pos_tag_tier, project_gloss_pos_to_lang, giza_align_t_g, heur_align_corp, add_pos_tags, tier_tokens, classify_gloss_pos, tag_trans_pos, tier_text, set_bilingual_alignment, \
+    get_trans_glosses_alignment, copy_xigt
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.utils.env import posdict, classifier, tagger_model, testfile_dir
@@ -28,7 +29,7 @@ class GlossAlignTest(TestCase):
         xc = xc_load(os.path.join(testfile_dir, "xigt/project_gloss_lang_tests.xml"))
         igt = xc[0]
         project_gloss_pos_to_lang(igt, tag_method=INTENT_POS_PROJ, unk_handling='keep')
-        self.assertEqual('UNK', pos_tags(igt, lang(igt).id, INTENT_POS_PROJ)[-1].value())
+        self.assertEqual('UNK', pos_tag_tier(igt, lang(igt).id, INTENT_POS_PROJ)[-1].value())
 
 
 
@@ -100,16 +101,16 @@ class XigtParseTest(TestCase):
         pass
 
     def giza_align_test(self):
-        new_c = copy.deepcopy(self.xc)
+        new_c = copy_xigt(self.xc)
         giza_align_t_g(new_c)
-        giza_aln = new_c[0].get_trans_glosses_alignment(aln_method=INTENT_ALN_GIZA)
-
-        self.assertIsNotNone(giza_aln)
+        giza_aln = get_trans_glosses_alignment(new_c[0], aln_method=INTENT_ALN_GIZA)
+        print(giza_aln)
+        self.assertEqual(giza_aln, Alignment([(5, 7), (1, 1), (4, 3), (6, 5)]))
 
     def heur_align_test(self):
-        new_c = copy.deepcopy(self.xc)
-        heur_align_corp(xc)
-        aln = new_c[0].get_trans_glosses_alignment(aln_method=INTENT_ALN_HEUR)
+        new_c = copy_xigt(self.xc)
+        heur_align_corp(new_c)
+        aln = get_trans_glosses_alignment(new_c[0], aln_method=INTENT_ALN_HEUR)
         a = Alignment([(5, 7), (6, 5), (1, 1), (4, 3)])
         self.assertEquals(a, aln)
 
@@ -130,7 +131,7 @@ line=961 tag=T:     `I made the child eat rice.\''''
     def test_add_pos_tags(self):
         add_pos_tags(self.igt, 'gw', self.tags)
 
-        self.assertEquals(tier_tokens(pos_tags(self.igt, 'gw')), self.tags)
+        self.assertEquals(tier_tokens(pos_tag_tier(self.igt, 'gw')), self.tags)
 
     def test_classify_pos_tags(self):
         tags = classify_gloss_pos(self.igt, MalletMaxent(), posdict=posdict)

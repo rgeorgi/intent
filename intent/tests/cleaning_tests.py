@@ -31,7 +31,7 @@ class CleanTests(TestCase):
         self.assertEqual(result, '          Procetox        statija-ta=i.               *Procetox statija=i ')
 
     def clean_trans_test(self):
-        result = "      `I read her article.'                     `I read one of her articles "
+        result = "             I read her article.'                     `I read one of her articles  "
         self.assertEqual(clean_trans_string(self.l3), result)
 
 

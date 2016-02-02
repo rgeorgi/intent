@@ -583,16 +583,16 @@ def words_to_morph_tier(tier, type, id, aln_attribute):
 # POS TAG RETRIEVAL
 # -------------------------------------------
 
-def lang_tags(inst, tag_method=None):
-    return pos_tags(inst, lang(inst).id, tag_method=tag_method)
+def lang_tag_tier(inst, tag_method=None):
+    return pos_tag_tier(inst, lang(inst).id, tag_method=tag_method)
 
-def gloss_tags(inst, tag_method=None):
-    return pos_tags(inst, gloss(inst).id, tag_method=tag_method)
+def gloss_tag_tier(inst, tag_method=None):
+    return pos_tag_tier(inst, gloss(inst).id, tag_method=tag_method)
 
-def trans_tags(inst, tag_method=None):
-    return pos_tags(inst, trans(inst).id, tag_method=tag_method)
+def trans_tag_tier(inst, tag_method=None):
+    return pos_tag_tier(inst, trans(inst).id, tag_method=tag_method)
 
-def pos_tags(inst, tier_id, tag_method = None):
+def pos_tag_tier(inst, tier_id, tag_method = None):
     """
     Retrieve the pos tags if they exist for the given tier id...
 
@@ -610,3 +610,6 @@ def pos_tags(inst, tier_id, tag_method = None):
     pos_tier = xigt_find(inst, alignment=tier_id, type=POS_TIER_TYPE, others = filters)
 
     return pos_tier
+
+def pos_tags(inst, tier_id, tag_method = None):
+    ptt = pos_tag_tier(inst, tier_id, tag_method=tag_method)

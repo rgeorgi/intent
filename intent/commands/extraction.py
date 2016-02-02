@@ -1,26 +1,170 @@
 import logging
-from multiprocessing import cpu_count
-from multiprocessing.pool import Pool
 
+import re
+
+from os import unlink
+
+from intent.igt.create_tiers import gloss, gloss_tag_tier, lang_tag_tier, trans, glosses
 from intent.igt.exceptions import RGXigtException, ProjectionException
+from intent.igt.igtutils import clean_lang_token
+from intent.igt.parsing import xc_load
+from intent.igt.references import xigt_find
 from xigt.codecs import xigtxml
+from xigt.consts import *
+from xigt.model import Igt, Item
 
-from intent.consts import POS_TIER_TYPE, GLOSS_WORD_ID, LANG_WORD_ID, INTENT_POS_CLASS, \
-    INTENT_POS_PROJ, MANUAL_POS, INTENT_ALN_HEUR
+from intent.consts import *
 from intent.igt.grams import write_gram
-from intent.igt.igt_functions import get_lang_ds, pos_tags, lang, get_lang_ps
+from intent.igt.igt_functions import get_lang_ds, pos_tag_tier, lang, get_lang_ps, add_gloss_lang_alignments, \
+    project_lang_to_gloss, tier_text, get_trans_glosses_alignment, heur_align_inst, get_trans_gloss_wordpairs, \
+    get_trans_gloss_lang_alignment, word_align, handle_unknown_pos
 from intent.interfaces.mallet_maxent import train_txt
 from intent.interfaces.mst_parser import MSTParser
 from intent.interfaces.stanford_tagger import train_postagger
-from intent.utils.listutils import chunkIt
 from intent.utils.token import GoldTagPOSToken, tokenize_string, morpheme_tokenizer
-from xigt.consts import ALIGNMENT, INCREMENTAL
+
 
 EXTRACT_LOG = logging.getLogger("EXTRACT")
 
 from intent.utils.dicts import TwoLevelCountDict
 
 __author__ = 'rgeorgi'
+
+def extract_parser_from_instance(inst: Igt, output_stream, pos_source):
+    """
+    Given an IGT instance, extract the projected dependency structure from
+    it (along with the POS tags from the given pos_source)
+
+    :param inst: Input instance
+    :param output_stream: The output stream to write the training data to.
+    """
+    try:
+        ds = get_lang_ds(inst, pos_source=pos_source, unk_pos_handling=None)
+        if ds is not None:
+            output_stream.write(ds.to_conll()+'\n')
+            output_stream.flush()
+
+    except RuntimeError as re:
+        print(re)
+        EXTRACT_LOG.error("Runtime error in instance {}".format(inst.id))
+        return None
+    except RGXigtException as rgxe:
+        EXTRACT_LOG.warn('Instance "{}" failed with "{}"'.format(inst.id, rgxe))
+        return None
+
+
+def extract_tagger_from_instance(inst: Igt, output_stream, pos_source):
+    """
+    Given an instance, retrieve the language-line words and POS tags.
+
+    :param inst:
+    :param output_stream:
+    :param pos_source:
+    """
+    lang_pos_tags = lang_tag_tier(inst, tag_method=pos_source)
+    lang_words     = lang(inst)
+
+    training_sentences = 0
+
+    if lang_pos_tags is not None:
+
+        first = True
+        for lang_word in lang_words:
+            lang_pos_tag = xigt_find(inst, alignment=lang_word.id, others=[lambda x: isinstance(x, Item) and x.tier.type == POS_TIER_TYPE])
+            tag_string = lang_pos_tag.value() if lang_pos_tag is not None else handle_unknown_pos(inst, lang_word)
+            word_string = lang_word.value()
+
+            # -------------------------------------------
+            # Do some cleaning on the output words
+            # -------------------------------------------
+            word_string = clean_lang_token(word_string, lowercase=True)
+
+            # For every instance after the first,
+            # add a space.
+            out_str = ' {}/{}'
+            if first:
+                first = False
+                out_str = out_str.strip()
+
+            output_stream.write(out_str.format(word_string, tag_string))
+        output_stream.write('\n')
+        output_stream.flush()
+        training_sentences += 1
+
+    return training_sentences
+
+def write_wordpairs(aln, src_words, tgt_words, out_src, out_tgt):
+    for src_i, tgt_i in aln:
+        src_word = src_words[src_i-1].value()
+        tgt_word = tgt_words[tgt_i-1].value()
+
+        out_src.write(src_word.lower() + '\n')
+        out_tgt.write(tgt_word.lower() + '\n')
+
+        out_src.flush()
+        out_tgt.flush()
+
+
+
+def extract_sents_from_inst(inst: Igt, out_src, out_tgt, aln_method=None, no_alignment_heur = True, sent_type=SENT_TYPE_T_G):
+    """
+    Extract parallel sentences from an instance. Either:
+
+    1) Translation--Gloss
+    2) Translation--Language
+    """
+
+    # -------------------------------------------
+    # 1) Get the source string (translation)
+    # -------------------------------------------
+    src_str = tier_text(trans(inst), remove_whitespace_inside_tokens=True).lower()
+
+
+    # -------------------------------------------
+    # 2) Decide whether the target string is gloss or language.
+    # -------------------------------------------
+    if sent_type == SENT_TYPE_T_L:
+        tgt_str = tier_text(lang(inst), remove_whitespace_inside_tokens=True).lower()
+    elif sent_type == SENT_TYPE_T_G:
+        tgt_str = tier_text(gloss(inst), remove_whitespace_inside_tokens=True).lower()
+    else:
+        raise Exception("Invalid sent type")
+
+    # -------------------------------------------
+    # 3) Write the choice out to disk.
+    # -------------------------------------------
+    out_src.write(src_str + '\n')
+    out_tgt.write(tgt_str + '\n')
+    out_src.flush()
+    out_tgt.flush()
+
+    # -------------------------------------------
+    # 4) Add heuristic alignments, if asked for.
+    # -------------------------------------------
+    if not no_alignment_heur:
+
+        aln = get_trans_glosses_alignment(inst, aln_method=aln_method)
+        if aln is None:
+            heur_align_inst(inst)
+            add_gloss_lang_alignments(inst)
+            aln = get_trans_glosses_alignment(inst, aln_method=aln_method)
+
+        # -------------------------------------------
+        # 4a) Get the translation-language
+        # -------------------------------------------
+        if sent_type == SENT_TYPE_T_L:
+            aln = get_trans_gloss_lang_alignment(inst, aln_method=aln_method)
+            if aln is not None:
+                write_wordpairs(aln, trans(inst), lang(inst), out_src, out_tgt)
+
+        # -------------------------------------------
+        # 4b) Get translation-gloss (sub-words)
+        # -------------------------------------------
+        elif sent_type == SENT_TYPE_T_G:
+            write_wordpairs(aln, trans(inst), glosses(inst), out_src, out_tgt)
+
+
+
 
 # =============================================================================
 # EXTRACTION FUNCTION
@@ -30,9 +174,9 @@ __author__ = 'rgeorgi'
 # =============================================================================
 
 def extract_from_xigt(input_filelist = list, classifier_prefix=None,
-                      cfg_prefix=None, tagger_prefix=None,
-                      dep_prefix=None, pos_method=None, dep_align=None,
-                      alignment=None, no_alignment_heur=False):
+                      cfg_path=None, tagger_prefix=None,
+                      dep_prefix=None, pos_method=None, aln_method=None,
+                      sent_prefix=None, no_alignment_heur=False, sent_type=SENT_TYPE_T_G, **kwargs):
 
     # ------- Dictionaries for keeping track of gloss_pos preprocessing. --------
 
@@ -43,12 +187,8 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     # Map the argument provided for "dep_pos" to
     # the alignment type that will be searched
     # -------------------------------------------
-    if pos_method == 'class':
-        use_pos = INTENT_POS_CLASS
-    elif pos_method == 'proj':
-        use_pos = INTENT_POS_PROJ
-    elif pos_method == 'manual':
-        use_pos = MANUAL_POS
+    use_pos = ARG_POS_MAP[pos_method]
+    use_aln = ALN_ARG_MAP[aln_method]
 
     # =============================================================================
     # 1) SET UP
@@ -62,6 +202,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     if tagger_prefix is not None:
         tagger_train_path = tagger_prefix+'_tagger_train.txt'
         tagger_model_path = tagger_prefix+'.tagger'
+        tagged_sents = 0
 
         EXTRACT_LOG.log(1000, 'Opening tagger training file at "{}"'.format(tagger_train_path))
         tagger_train_f = open(tagger_train_path, 'w', encoding='utf-8')
@@ -74,83 +215,61 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
         EXTRACT_LOG.log(1000, 'Writing dependency parser training data to "{}"'.format(dep_train_path))
         dep_train_f = open(dep_train_path, 'w', encoding='utf-8')
 
+    # Set up the files for writing out alignment.
+    if sent_prefix is not None:
+        e_f = open(sent_prefix + '_e.txt', 'w', encoding='utf-8')
+        f_f = open(sent_prefix + '_f.txt', 'w', encoding='utf-8')
+
+    # Set up the CFG path for writing.
+    if cfg_path is not None:
+        cfg_f = open(cfg_path, 'w', encoding='utf-8')
+
     # -------------------------------------------
     # Iterate over the provided files.
     # -------------------------------------------
     for path in input_filelist:
-        f = open(path, 'r', encoding='utf-8')
-        xc = xigtxml.load(f)
+        xc = xc_load(path, mode=INCREMENTAL)
 
-        cur_word_tag_dict = TwoLevelCountDict()
-        cur_gram_tag_dict = TwoLevelCountDict()
-        lang_tag_sequences = []
-
-        # Gather a list of the dependency trees
-        dep_trees = []
-
+        # -------------------------------------------
+        # Do the appropriate extraction for each
+        # -------------------------------------------
         for inst in xc:
-
-            # -------------------------------------------
-            # Handle tagger output.
-            # -------------------------------------------
             if tagger_prefix is not None:
-                lang_tags  = pos_tags(inst, lang(inst).id, tag_method=use_pos)
-                lang_words = lang(inst)
+                tagged_sents += extract_tagger_from_instance(inst, tagger_train_f, use_pos)
+
+            if dep_prefix is not None:
+                extract_parser_from_instance(inst, dep_train_f, use_pos)
+
+            if classifier_prefix is not None:
+                gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict)
+
+            if sent_prefix is not None:
+                extract_sents_from_inst(inst, e_f, f_f, no_alignment_heur=no_alignment_heur,
+                                        sent_type=sent_type, aln_method=use_aln)
+
+            if cfg_path:
+                extract_cfg_rules_from_inst(inst, cfg_f)
+
+    # -------------------------------------------
+    # After looping
+    # -------------------------------------------
+
+    # Add punctuation marks to the tagger.
+    if tagger_prefix is not None:
+        if tagged_sents == 0:
+            EXTRACT_LOG.error("No tags were found. Not writing out file.")
+            tagger_train_f.close()
+            unlink(tagger_train_path)
+        else:
+            for t in ['?','“','"',"''","'",',','…','/','--','-','``','`',':',';','«','»']:
+                tagger_train_f.write('{}{}{}\n'.format(t,'/','PUNC'))
+            tagger_train_f.close()
+            print('Training postagger using "{}"'.format(tagger_train_path))
+            # Now, train the POStagger...
+            train_postagger(tagger_train_path, tagger_model_path)
+            print("Tagger training complete.")
 
 
-
-                for tag_sequence in lang_tag_sequences:
-                    for token in tag_sequence:
-                        content = token.seq
-
-                        # TODO: Replacing the grammatical markers...?
-                        content = content.replace('*', '')
-                        content = content.replace('#', '')
-
-                        label   = token.label
-
-                        # FIXME: Also, should not indiscriminately drop words, but come up with a better way to fix this
-                        if content.strip():
-                            tagger_train_f.write('{}/{} '.format(content,label))
-
-                    tagger_train_f.write('\n')
-                    tagger_train_f.flush()
-
-                for t in ['?','“','"',"''","'",',','…','/','--','-','``','`',':',';','«','»']:
-                    tagger_train_f.write('{}{}{}\n'.format(t,'/','PUNC'))
-
-            for dt in dep_trees:
-                dep_train_f.write(dt.to_conll()+'\n')
-
-
-                try:
-                    ds = get_lang_ds(inst, pos_source=use_pos)
-                except RuntimeError as re:
-                    print(re)
-                    EXTRACT_LOG.error("Runtime error in instance {}".format(inst.id))
-                    continue
-                except RGXigtException as rgxe:
-                    EXTRACT_LOG.warn('Instance "{}" failed with "{}"'.format(inst.id, rgxe))
-                    continue
-
-                if ds is not None:
-                    dep_trees.append(ds)
-
-                # Get the gloss POS stats for the classifier...
-                if classifier_prefix is not None:
-                    gather_gloss_pos_stats(inst, cur_word_tag_dict, cur_gram_tag_dict)
-
-                # Also gather the tag sequences from the language line.
-                if tagger_prefix is not None:
-                    try:
-                        lang_tag_sequences.append(inst.get_lang_sequence())
-                    except ProjectionException as pe:
-                        EXTRACT_LOG.warn('Unable to extract tags from instance "{}"'.format(inst.id))
-
-            return cur_word_tag_dict, cur_gram_tag_dict, lang_tag_sequences, dep_trees
-
-    # p.close()
-    # p.join()
 
     # =============================================================================
     # Classifier output...
@@ -168,76 +287,9 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
         train_txt(feat_path, class_path)
         print("Complete.")
 
-    # =============================================================================
-    # Tagger output...
-    # =============================================================================
-    if tagger_prefix is not None:
-        tagger_train_f.close()
 
-
-        print('Training postagger using "{}"'.format(tagger_train_path))
-        # Now, train the POStagger...
-        train_postagger(tagger_train_path, tagger_model_path)
-        print("Tagger training complete.")
-
-
-    # =============================================================================
-    # Alignment
-    # =============================================================================
-    if alignment:
-        print("Extracting alignment...")
-        e = open(alignment+'_e.txt', 'w', encoding='utf-8')
-        f = open(alignment+'_f.txt', 'w', encoding='utf-8')
-
-        for input_file in input_filelist:
-            print('Extracting alignment from file {}'.format(input_file))
-            xc = xigtxml.load(open(input_file, 'r', encoding='utf-8'), mode=INCREMENTAL)
-            for inst in xc:
-                try:
-                    EXTRACT_LOG.info('Attempting to extract alignment from instance "{}"'.format(inst.id))
-
-                    # -------------------------------------------
-                    # 1) First, let's start with the entire sentences.
-                    e.write(inst.trans.text(remove_whitespace_inside_tokens=True).lower() + '\n')
-                    f.write(inst.glosses.text(remove_whitespace_inside_tokens=True).lower() + '\n')
-
-                    # -------------------------------------------
-                    # 2) Now, return the word pairs.
-                    if not no_alignment_heur:
-
-                        if inst.get_trans_gloss_alignment(INTENT_ALN_HEUR) is None:
-                            inst.heur_align()
-
-                        # -------------------------------------------
-                        # 3) Now, get the heuristically aligned words...
-                        for t_w, g_m in inst.get_trans_gloss_wordpairs(INTENT_ALN_HEUR, all_morphs=True):
-                            e.write(t_w.lower()+'\n')
-                            f.write(g_m.lower()+'\n')
-
-
-
-
-                except IndexError as ie:
-                    print(ie)
-                # except RGXigtException as rgxe:
-                #     EXTRACT_LOG.warn('Instance "{}" encountered an error retrieving alignment.'.format(inst.id))
-
-        e.close()
-        f.close()
-    #
-    # =============================================================================
-    # CFG Rules
-    # =============================================================================
-    if cfg_prefix:
-        with open(cfg_prefix, 'w', encoding='utf-8') as cfg_f:
-            for f in input_filelist:
-                xc = xigtxml.load(open(f, 'r', encoding='utf-8'), mode=INCREMENTAL)
-                for inst in xc:
-                    t = get_lang_ps(inst)
-                    if t is not None:
-                        for prod in t.productions():
-                            cfg_f.write('{}\n'.format(prod))
-
+    if cfg_path:
+        cfg_f.close()
 
     # -------------------------------------------
     # Train
@@ -248,6 +300,15 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
         mp = MSTParser()
         mp.train(dep_train_path, dep_parser_path)
 
+def extract_cfg_rules_from_inst(inst, out_f):
+    """
+    Given an instance, write out the cfg rules.
+    """
+    t = get_lang_ps(inst)
+    if t is not None:
+        for prod in t.productions():
+            out_f.write('{}\n'.format(prod))
+        out_f.flush()
 
 # =============================================================================
 # Preprocessing
@@ -272,14 +333,14 @@ def gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict):
     """
 
     # Grab the gloss POS tier...
-    gpos_tier = inst.get_pos_tags(GLOSS_WORD_ID)
-    lpos_tier = inst.get_pos_tags(LANG_WORD_ID)
+    gpos_tier = gloss_tag_tier(inst)
+    lpos_tier = lang_tag_tier(inst)
 
     # If there are POS tags on the language line but not the gloss line...
     if gpos_tier is None and lpos_tier is not None:
-        inst.add_gloss_lang_alignments()
-        inst.project_lang_to_gloss()
-        gpos_tier = inst.get_pos_tags(GLOSS_WORD_ID)
+        add_gloss_lang_alignments(inst)
+        project_lang_to_gloss(inst)
+        gpos_tier = gloss_tag_tier(inst)
 
     # If this tier exists, then let's process it.
     if gpos_tier is not None:
@@ -293,7 +354,7 @@ def gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict):
                 EXTRACT_LOG.debug("No alignment found for {} in tier {} igt {}".format(gpos.id, gpos.tier.id, gpos.igt.id))
                 continue
 
-            word = gpos.igt.find(id=gpos.alignment).value()
+            word = xigt_find(inst, id=gpos.alignment).value()
             tag  = gpos.value()
 
             word_tag_dict.add(word.lower(), tag)

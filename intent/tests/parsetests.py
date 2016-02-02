@@ -139,7 +139,7 @@ class UnknownErrorTests(TestCase):
         xc = xc_load(os.path.join(testfile_dir, 'xigt/index_error.xml'), do_basic_processing=True)
         inst = xc[0]
         heur_align_inst(inst)
-        parse_translation_line(inst)
+        parse_translation_line(inst, dt=True)
         project_ds_tier(inst)
         proj_t = get_lang_ds(inst)
 
@@ -149,7 +149,7 @@ class UnknownErrorTests(TestCase):
                                             (sata-a[3])
                                             (rake-i-ta[4])
                                             (ja[5])
-                                            (tuhka-a[6]) ))""", stype=DEPSTR_PTB)
+                                            (tuhka-a[6] (.[7]))))""", stype=DEPSTR_PTB)
 
         self.assertTrue(tgt_t.similar(proj_t))
 
@@ -157,6 +157,8 @@ class UnknownErrorTests(TestCase):
         heur_align_inst(inst2)
         parse_translation_line(inst2, dt=True)
         project_ds_tier(inst2)
+
+        print(inst2)
 
         tgt2_t = DepTree.fromstring("""(ROOT[0]
                                             (unohta-a[2] (*Minua[1])

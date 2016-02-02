@@ -116,9 +116,9 @@ enrich_p.add_argument('--giza-symmetric', dest=ALN_SYM_VAR, choices=ALN_SYM_TYPE
                       default=None)
 
 enrich_p.add_argument('--pos', dest=POS_VAR,
-                      type=csv_choices(ARG_POS_METHODS), default=[],
+                      type=csv_choices(ARG_POS_ENRICH_METHODS), default=[],
                       help='''Comma-separated list of POS tags to add (no spaces):
-                     {}'''.format(ARG_POS_METHODS))
+                     {}'''.format(ARG_POS_ENRICH_METHODS))
 
 enrich_p.add_argument('--parse', dest=PARSE_VAR,
                       type=csv_choices(PARSE_TYPES), default=[],
@@ -178,14 +178,15 @@ filter_p.add_argument('--require-aln', help='Require instances to have 1-to-1 gl
 extract_p = register_subparser(CMD_EXTRACT, help='Command to extract data from enriched XIGT-XML files')
 
 extract_p.add_argument('FILE', nargs='+', help='XIGT files to include.', type=globfiles)
-extract_p.add_argument('--gloss-classifier', help='Output prefix for gloss-line classifier (No extension).', default=None)
-extract_p.add_argument('--lang-tagger', help='Output prefix for lang-line tagger.', default=None)
-extract_p.add_argument('--cfg-rules', help='Output path for cfg-rules.', default=None)
-extract_p.add_argument('--dep-parser', help='Output prefix for dependency parser', default=None)
-extract_p.add_argument('--dep-pos', choices=['class','proj','manual','none'], default='none')
-extract_p.add_argument('--dep-align', choices=ARG_ALN_METHODS)
-extract_p.add_argument('--alignment', help='The file to output bootstrapped alignment as.')
-extract_p.add_argument('--no-alignment-heur', action='store_true', help='Add heuristic alignment results to aligned sentences.', default=False)
+extract_p.add_argument('--classifier-prefix', dest='classifier_prefix', help='Output prefix for gloss-line classifier (No extension).', default=None)
+extract_p.add_argument('--tagger-prefix', dest="tagger_prefix", help='Output prefix for lang-line tagger.', default=None)
+extract_p.add_argument('--cfg-rules', dest="cfg_path", help='Output path for cfg-rules.', default=None)
+extract_p.add_argument('--dep-prefix', dest="dep_prefix", help='Output prefix for dependency parser', default=None)
+extract_p.add_argument('--use-pos', dest="pos_method", choices=ARG_POS_EXTRACT_METHODS, default='none', help="POS tagging method to extract for dependencies and tagger")
+extract_p.add_argument('--use-align', dest="aln_method", choices=ARG_ALN_METHODS, help="Alignment method to use for extracting projected items, or heuristic additions to parallel sentences.", default=ARG_ALN_ANY)
+extract_p.add_argument('--sent-prefix', dest='sent_prefix', help='Prefix with which to output parallel sentences.')
+extract_p.add_argument('--sent-type', dest='sent_type', choices=[SENT_TYPE_T_G, SENT_TYPE_T_L], help="Choose between translation-gloss and translation-lang", default="tl")
+extract_p.add_argument('--no-alignment-heur', action='store_true', help='Disable adding heuristic alignment results to aligned sentences.', default=False)
 
 #===============================================================================
 # EVAL subcommand
@@ -256,9 +257,7 @@ elif args.subcommand == CMD_FILTER:
 
 # EXTRACT
 elif args.subcommand == CMD_EXTRACT:
-    extract_from_xigt(flatten_list(args.FILE), args.gloss_classifier, args.cfg_rules, args.lang_tagger,
-                      dep_prefix=args.dep_parser, pos_method=args.dep_pos, dep_align=args.dep_align,
-                      alignment=args.alignment, no_alignment_heur=args.no_alignment_heur)
+    extract_from_xigt(input_filelist = flatten_list(args.FILE), **vars(args))
 
 # EVAL
 elif args.subcommand == CMD_EVAL:

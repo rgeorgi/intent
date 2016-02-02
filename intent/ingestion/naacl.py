@@ -54,7 +54,7 @@ def naacl_to_xigt(naacl_path):
 
         try:
             lang_dt = parse_naacl_dep(lang(inst), lang_ds_lines)
-            create_dt_tier(inst, lang_dt, lang(inst), parse_method=MANUAL_POS)
+            create_dt_tier(inst, lang_dt, lang(inst), parse_method=INTENT_POS_MANUAL)
         except TreeError as te:
             pass
         except IndexError as ie:
@@ -66,7 +66,7 @@ def naacl_to_xigt(naacl_path):
 
         try:
             eng_dt = parse_naacl_dep(trans(inst), eng_ds_lines)
-            create_dt_tier(inst, eng_dt, trans(inst), parse_method=MANUAL_POS)
+            create_dt_tier(inst, eng_dt, trans(inst), parse_method=INTENT_POS_MANUAL)
         except TreeError as te:
             pass
         except IndexError as ie:

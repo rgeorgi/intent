@@ -1,12 +1,13 @@
 # -------------------------------------------
 # FILTERS
 # -------------------------------------------
+import copy
 import re
 
 import logging
 from collections import defaultdict
 
-from intent.igt.create_tiers import lang, trans, pos_tags, gloss, glosses, lang_tags, morphemes, generate_clean_tier, \
+from intent.igt.create_tiers import lang, trans, pos_tag_tier, gloss, glosses, lang_tag_tier, morphemes, generate_clean_tier, \
     generate_normal_tier
 from intent.igt.references import xigt_find, ask_item_id, cleaned_tier, normalized_tier, \
     gen_tier_id, odin_ancestor, xigt_findall, gen_item_id, item_index
@@ -17,7 +18,7 @@ from intent.interfaces.stanford_parser import StanfordParser
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.pos.TagMap import TagMap
 from intent.trees import project_ps, project_ds, Terminal, DepEdge, build_dep_edges, IdTree, DepTree
-from intent.utils.env import c, tagger_model
+from intent.utils.env import c, tagger_model, posdict
 from intent.utils.token import Token
 from xigt.errors import XigtStructureError
 from xigt.ref import ids, selection_re, span_re
@@ -57,13 +58,13 @@ def get_trans_ps(inst):
 def get_ds_tier(inst, dep):
     return xigt_find(inst, type=DS_TIER_TYPE, attributes={DS_DEP_ATTRIBUTE:dep.id})
 
-def get_ds(inst, target, pos_source=None):
+def get_ds(inst, target, pos_source=None, unk_pos_handling=None):
     t = get_ds_tier(inst, target)
     if t is not None:
-        return read_ds(t, pos_source=pos_source)
+        return read_ds(t, pos_source=pos_source, unk_pos_handling=unk_pos_handling)
 
-def get_lang_ds(inst, pos_source=None):
-    return get_ds(inst, lang(inst), pos_source)
+def get_lang_ds(inst, pos_source=None, unk_pos_handling=None):
+    return get_ds(inst, lang(inst), pos_source, unk_pos_handling=unk_pos_handling)
 
 def get_trans_ds(inst, pos_source=None):
     return get_ds(inst, trans(inst), pos_source)
@@ -89,7 +90,7 @@ def add_pos_tags(inst, tier_id, tags, tag_method = None):
     """
 
     # See if we have a pos tier that's already been assigned by this method.
-    prev_tier = pos_tags(inst, tier_id, tag_method=tag_method)
+    prev_tier = pos_tag_tier(inst, tier_id, tag_method=tag_method)
 
     # And delete it if so.
     if prev_tier: delete_tier(prev_tier)
@@ -169,10 +170,14 @@ def get_bilingual_alignment(inst, src_id, tgt_id, aln_method = None):
         return a
 
 
-
 def get_trans_gloss_alignment(inst, aln_method=None):
     # -------------------------------------------
     # 1) If we already have this alignment, just return it.
+    # -------------------------------------------
+    """
+    Retrieve the alignment between translation and gloss line, travelling through the
+    sub-token level "glosses" tokens if necessary.
+    """
     trans_gloss = get_bilingual_alignment(inst, trans(inst).id, gloss(inst).id, aln_method)
     trans_glosses = get_bilingual_alignment(inst, trans(inst).id, glosses(inst).id, aln_method)
 
@@ -183,6 +188,7 @@ def get_trans_gloss_alignment(inst, aln_method=None):
     # 2) Otherwise, if we have alignment between the translation line
     #    and the morpheme-level glosses, let's return a new
     #    alignment created from these.
+    # -------------------------------------------
     elif trans_glosses is not None:
         new_trans_gloss = Alignment(type=trans_glosses.type)
 
@@ -196,11 +202,13 @@ def get_trans_gloss_alignment(inst, aln_method=None):
 
     # -------------------------------------------
     # 3) Otherwise, return None.
+    # -------------------------------------------
     else:
         return None
 
 def get_trans_glosses_alignment(inst, aln_method=None):
     return get_bilingual_alignment(inst, trans(inst).id, glosses(inst).id, aln_method=aln_method)
+
 
 def get_trans_gloss_wordpairs(inst, aln_method=None, all_morphs=True):
     """
@@ -269,9 +277,10 @@ def get_gloss_lang_alignment(inst):
     """
     return tier_alignment(gloss(inst))
 
-def tier_alignment(tier):
+def tier_alignment(tier: Tier):
     """
-    :type tier: Tier
+    Return the alignment that is stored between items and their attributes (e.g. between morphemes
+    and glosses).
     """
     a = Alignment()
     for item in tier:
@@ -286,18 +295,29 @@ def get_trans_gloss_lang_alignment(inst, aln_method=None):
     Get the translation to lang alignment, travelling through the gloss line.
     """
 
+    # -------------------------------------------
+    # 1) Obtain the alignment between translation line
+    #    and gloss line, using the specified method.
+    # -------------------------------------------
     tg_aln = get_trans_gloss_alignment(inst, aln_method=aln_method)
 
     # -------------------------------------------
-    # If we don't have an existing alignment, return None.
-
+    # 2) If there is no such alignment with the
+    #    given method, return None.
+    # -------------------------------------------
     if tg_aln is None:
         return None
 
+    # -------------------------------------------
+    # 2) If there is an alignment between the
+    #    translation line and gloss line, obtain
+    #    the alignment between the gloss and language
+    #    line, and then return an alignment that maps
+    #    translation line to language line directly.
+    # -------------------------------------------
     else:
         gl_aln = get_gloss_lang_alignment(inst)
 
-        # Combine the two alignments...
         a = Alignment(type=tg_aln.type)
         for t_i, g_i in tg_aln:
             l_js = [l_j for (g_j, l_j) in gl_aln if g_j == g_i]
@@ -630,6 +650,10 @@ def heur_align_corp(xc, **kwargs):
 def heur_align_inst(inst, **kwargs):
     """
     Heuristically align the gloss and translation lines of this instance.
+
+    Has the following effects.
+
+    1) Create bilingual alignment between the translation line and the "glosses" tier.
     :rtype Alignment:
     """
 
@@ -645,8 +669,8 @@ def heur_align_inst(inst, **kwargs):
 
     # Use POS tags from the classifier if available.
     if kwargs.get('use_pos', False):
-        gloss_pos_tier = pos_tags(inst, gloss(inst).id, tag_method=INTENT_POS_CLASS)
-        trans_pos_tier = pos_tags(inst, trans(inst).id, tag_method=INTENT_POS_TAGGER)
+        gloss_pos_tier = pos_tag_tier(inst, gloss(inst).id, tag_method=INTENT_POS_CLASS)
+        trans_pos_tier = pos_tag_tier(inst, trans(inst).id, tag_method=INTENT_POS_TAGGER)
 
         if gloss_pos_tier is None:
             ALIGN_LOG.warn(ARG_ALN_HEURPOS + ' alignment requested, but gloss tags were not available. Skipping for instance {}.'.format(inst.id))
@@ -751,7 +775,7 @@ def giza_align_t_g(xc, aligner=ALIGNER_GIZA, resume = True, use_heur = False, sy
     g_morphs = []
     t_words = []
 
-    i = 0
+    sent_num = 0
 
     ALIGN_LOG.info("Building up parallel sentences for training...")
     for inst in xc:
@@ -788,8 +812,8 @@ def giza_align_t_g(xc, aligner=ALIGNER_GIZA, resume = True, use_heur = False, sy
                             t_words.append([t_w.lower()])
                             g_morphs.append([g_m.lower()])
 
-                id_pairs[inst.id] = i
-                i+=1
+                id_pairs[inst.id] = sent_num
+                sent_num+=1
 
         except (NoNormLineException, MultipleNormLineException) as nnle:
             continue
@@ -851,8 +875,8 @@ def giza_align_t_g(xc, aligner=ALIGNER_GIZA, resume = True, use_heur = False, sy
     # Check to make sure the correct number of alignments
     # is returned
     # -------------------------------------------
-    if len(g_t_alignments) != i:
-        raise AlignmentError('Something went wrong with statistical alignment, {} alignments were returned, {} expected.'.format(len(g_t_alignments), i))
+    if len(g_t_alignments) != sent_num:
+        raise AlignmentError('Something went wrong with statistical alignment, {} alignments were returned, {} expected.'.format(len(g_t_alignments), sent_num))
 
     # -------------------------------------------
     # Next, iterate through the aligned sentences and assign their alignments
@@ -932,12 +956,12 @@ def project_trans_pos_to_gloss(inst, aln_method=None, trans_tag_method=None):
     attributes = {ALIGNMENT:gloss(inst).id}
 
     # Remove the previous gloss tags if they are present...
-    prev_t = pos_tags(inst, gloss(inst).id, tag_method=INTENT_POS_PROJ)
+    prev_t = pos_tag_tier(inst, gloss(inst).id, tag_method=INTENT_POS_PROJ)
     if prev_t is not None:
         delete_tier(prev_t)
 
     # Get the trans tags...
-    trans_tags = pos_tags(inst, trans(inst).id, tag_method=trans_tag_method)
+    trans_tags = pos_tag_tier(inst, trans(inst).id, tag_method=trans_tag_method)
 
     # If we don't get any trans tags back, throw an exception:
     if not trans_tags:
@@ -996,7 +1020,7 @@ def project_lang_to_gloss(inst, tagmap=None):
     :param tag_method:
     """
 
-    lang_pos_tags = lang_tags(inst)
+    lang_pos_tags = lang_tag_tier(inst)
     if not lang_pos_tags:
         project_creator_except("No lang-line POS tags found.", None, None)
 
@@ -1012,7 +1036,7 @@ def project_lang_to_gloss(inst, tagmap=None):
     pt = Tier(type=POS_TIER_TYPE, id=new_id, alignment=gloss(inst).id)
 
     # And add the metadata for the source (intent) and tagging method
-    set_intent_method(pt, MANUAL_POS)
+    set_intent_method(pt, INTENT_POS_MANUAL)
 
     for lang_tag in lang_pos_tags:
         # Get the gloss word related to this tag. It should share
@@ -1033,6 +1057,19 @@ def project_lang_to_gloss(inst, tagmap=None):
 
     inst.append(pt)
 
+def handle_unknown_pos(inst, token, handling_method=None, classifier=None):
+    token_index = item_index(token)
+    pos = UNKNOWN_TAG
+    if re.match(punc_re_mult, token.value(), flags=re.U):
+        pos = PUNC_TAG
+    elif handling_method == 'noun':
+        pos = 'NOUN'
+    elif handling_method in ['keep', None]:
+        pass
+    elif handling_method == 'classify':
+        raise Exception("HANDLING METHOD NOT IMPLEMENTED.")
+    return pos
+
 
 def project_gloss_pos_to_lang(inst, tag_method = None, unk_handling=None, classifier=None, posdict=None):
     """
@@ -1040,11 +1077,11 @@ def project_gloss_pos_to_lang(inst, tag_method = None, unk_handling=None, classi
     alignment tags on the gloss words already that align them to the language words.
     """
 
-    lang_tag_tier = pos_tags(inst, lang(inst).id, tag_method=tag_method)
+    lang_tag_tier = pos_tag_tier(inst, lang(inst).id, tag_method=tag_method)
     if lang_tag_tier is not None:
         delete_tier(lang_tag_tier)
 
-    gloss_tag_tier = pos_tags(inst, gloss(inst).id, tag_method=tag_method)
+    gloss_tag_tier = pos_tag_tier(inst, gloss(inst).id, tag_method=tag_method)
 
     # If we don't have gloss tags by that creator...
     if not gloss_tag_tier:
@@ -1171,7 +1208,7 @@ def classify_gloss_pos(inst, classifier_obj=None, **kwargs):
     attributes = {ALIGNMENT:gloss(inst).id}
 
     # Search for a previous run and remove if found...
-    prev_tier = pos_tags(inst, gloss(inst).id, tag_method = INTENT_POS_CLASS)
+    prev_tier = pos_tag_tier(inst, gloss(inst).id, tag_method = INTENT_POS_CLASS)
 
     if prev_tier:
         delete_tier(prev_tier)
@@ -1255,7 +1292,7 @@ def parse_translation_line(inst, parser=None, pt=False, dt=False):
 # -------------------------------------------
 # Dependency
 # -------------------------------------------
-def read_ds(tier, pos_source=None):
+def read_ds(tier, pos_source=None, unk_pos_handling=None):
     """
     Like read_pt above, given a DS tier, return the DepTree object
 
@@ -1273,7 +1310,7 @@ def read_ds(tier, pos_source=None):
     edges = []
 
     # --2b) Retrieve the POS tier, if it exists, in advance.
-    pos_tier = pos_tags(tier.igt, tier.attributes.get(DS_DEP_ATTRIBUTE), tag_method=pos_source)
+    pos_tier = pos_tag_tier(tier.igt, tier.attributes.get(DS_DEP_ATTRIBUTE), tag_method=pos_source)
 
     for item in tier:
         dep  = item.attributes.get(DS_DEP_ATTRIBUTE)
@@ -1292,8 +1329,8 @@ def read_ds(tier, pos_source=None):
         dep_t = Terminal(dep_w_string, item_index(dep_w))
 
         # If the pos is "None" but it's clearly a punctuation tag...
-        if pos_tier is not None and pos is None and re.match(punc_re+'+', dep_w_string, flags=re.UNICODE):
-            pos = PUNC_TAG
+        if pos_tier is not None and pos is None:
+            handle_unknown_pos(tier.igt, dep_w, handling_method=unk_pos_handling)
 
         if head is not None:
             head_w = xigt_find(tier.igt, id=head)
@@ -1732,6 +1769,27 @@ def remove_alignments(self, aln_method=None):
         for t in xigt_findall(inst, type=ALN_TIER_TYPE, others=filters):
             t.delete()
 
+def copy_xigt(obj, **kwargs):
+    if isinstance(obj, XigtCorpus):
+        ret_obj = XigtCorpus(id=obj.id, type=obj.type, attributes=copy.copy(obj.attributes), metadata=copy.copy(obj.metadata), namespace=obj.namespace, nsmap=obj.nsmap)
+        for inst in obj:
+            ret_obj.append(copy_xigt(inst, corp=ret_obj))
+    elif isinstance(obj, Igt):
+        ret_obj = Igt(id=obj.id, type=obj.type, attributes=copy.copy(obj.attributes), metadata=copy.copy(obj.metadata), corpus=kwargs.get('corp'), namespace=obj.namespace, nsmap=obj.nsmap)
+        for tier in obj:
+            ret_obj.append(copy_xigt(tier, igt=ret_obj))
+
+    elif isinstance(obj, Tier):
+        ret_obj = Tier(id=obj.id, type=obj.type, alignment=obj.alignment, content=obj.content, segmentation=obj.segmentation, attributes=copy.copy(obj.attributes), metadata=copy.copy(obj.metadata), igt=kwargs.get('igt'), namespace=obj.namespace, nsmap=obj.nsmap)
+        for item in obj:
+            ret_obj.append(copy_xigt(item, tier=ret_obj))
+
+    elif isinstance(obj, Item):
+        ret_obj = Item(id=obj.id, type=obj.type, alignment=obj.alignment, content=obj.content, segmentation=obj.segmentation, attributes=copy.copy(obj.attributes), text=obj.text, tier=kwargs.get('tier'), namespace=obj.namespace, nsmap=obj.nsmap)
+    else:
+        raise XigtFormatException("Attempt to copy non-xigt object.")
+
+    return ret_obj
 # -------------------------------------------
 # Imports
 

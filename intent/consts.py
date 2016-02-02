@@ -141,6 +141,7 @@ INTENT_ALN_1TO1   = '1to1'
 INTENT_POS_CLASS  = 'classifier'
 INTENT_POS_PROJ   = 'projection'
 INTENT_POS_TAGGER = 'stanford-tagger'
+INTENT_POS_MANUAL = 'supervised'
 
 INTENT_PS_PARSER  = 'stanford-parser'
 INTENT_PS_PROJ    = 'projection'
@@ -148,7 +149,7 @@ INTENT_PS_PROJ    = 'projection'
 INTENT_DS_PARSER  = 'stanford-parser'
 INTENT_DS_PROJ    = 'projection'
 
-MANUAL_POS        = 'supervised'
+
 
 
 # ===============================================================================
@@ -202,8 +203,17 @@ ALN_SYM_TYPES = [None, SYMMETRIC_INTERSECT, SYMMETRIC_UNION, SYMMETRIC_GROW_DIAG
 ARG_POS_TRANS = 'trans'
 ARG_POS_CLASS = 'class'
 ARG_POS_PROJ  = 'proj'
+ARG_POS_NONE  = 'none'
+ARG_POS_MANUAL= 'manual'
 
-ARG_POS_METHODS = [ARG_POS_CLASS, ARG_POS_PROJ, ARG_POS_TRANS]
+ARG_POS_ENRICH_METHODS = [ARG_POS_CLASS, ARG_POS_PROJ, ARG_POS_TRANS]
+ARG_POS_EXTRACT_METHODS= [ARG_POS_CLASS, ARG_POS_PROJ, ARG_POS_NONE, ARG_POS_MANUAL]
+
+ARG_POS_MAP = {ARG_POS_CLASS:INTENT_POS_CLASS,
+               ARG_POS_PROJ:INTENT_POS_CLASS,
+               ARG_POS_NONE:ARG_POS_NONE,
+               ARG_POS_MANUAL:INTENT_POS_MANUAL}
+
 
 POS_VAR = 'pos_list'
 
@@ -223,7 +233,7 @@ PARSE_VAR = 'parse_list'
 morpheme_boundary_chars = ['-','=']
 morpheme_interior_chars = ['.',':']
 
-punc_chars   = '\.,\'\"\?!\xc2'
+punc_chars   = '\.,\'\"\?!\xc2\]\[\(\):\{\}\-'
 punc_re      = '[{}]'.format(punc_chars)
 punc_re_mult = '{}+'.format(punc_re)
 no_punc_re   = '[^{}]'.format(punc_chars)
@@ -233,3 +243,10 @@ list_re = '(?:[0-9]+|[a-z]|i+)'
 quote_re = '[\'"\`]'
 
 PUNC_TAG = 'PUNC'
+UNKNOWN_TAG  = 'UNK'
+
+# -------------------------------------------
+# For extraction
+# -------------------------------------------
+SENT_TYPE_T_G = 'tg'
+SENT_TYPE_T_L = 'tl'

@@ -2,9 +2,8 @@ import os
 from glob import glob
 
 from intent.commands.evaluation import evaluate_classifier_on_instances
-from intent.commands.extraction import extract_from_instances
 from intent.commands.split_corpus import split_instances
-from intent.igt.rgxigt import RGCorpus
+from intent.igt.parsing import xc_load
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.utils.dicts import POSEvalDict
@@ -23,7 +22,7 @@ def nfold_xaml():
 
     for xaml_path in xaml_paths:
         lang = os.path.basename(xaml_path)[:3]
-        xc = RGCorpus.load(xaml_path)
+        xc = xc_load(xaml_path)
 
         train, dev, test = split_instances(xc, train=0.5, test=0.5, dev=0.0)
 

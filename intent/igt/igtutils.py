@@ -12,7 +12,7 @@ import string
 # ===============================================================================
 # Sub-tasks of cleaning
 # ===============================================================================
-from intent.consts import punc_chars, list_re
+from intent.consts import punc_chars, list_re, word_re, punc_re
 from xigt.model import Tier, Item, Igt, XigtCorpus
 from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xigtcorpus
 
@@ -142,8 +142,14 @@ def remove_numbering(ret_str):
 
 
 def remove_hyphens(ret_str):
-    return re.sub('[\-=]', '', ret_str)
+    return re.sub('[\-=:]', '', ret_str)
 
+def remove_extra_parens(ret_str):
+    parens = r'[\{\}\(\)\[\]]'
+    return re.sub('{}*({}){}*'.format(parens, word_re, parens), r'\1', ret_str)
+
+def remove_extra_punc(ret_str):
+    return re.sub('{}*({}){}*'.format(punc_re, word_re, punc_re), r'\1', ret_str)
 
 def remove_leading_punctuation(ret_str):
     return re.sub('^[%s]+' % string.punctuation, '', ret_str)
@@ -367,6 +373,14 @@ def clean_lang_string(ret_str):
 
     # ret_str = remove_hyphens(ret_str)
 
+    return ret_str
+
+def clean_lang_token(ret_str, lowercase=True):
+    ret_str = remove_hyphens(ret_str)
+    ret_str = remove_extra_parens(ret_str)
+    ret_str = remove_extra_punc(ret_str)
+    if lowercase:
+        ret_str = ret_str.lower()
     return ret_str
 
 def strict_columnar_alignment(s_a, s_b):
