@@ -38,19 +38,21 @@ def extract_parser_from_instance(inst: Igt, output_stream, pos_source):
     :param inst: Input instance
     :param output_stream: The output stream to write the training data to.
     """
+    extracted = 0
     try:
         ds = get_lang_ds(inst, pos_source=pos_source, unk_pos_handling=None)
         if ds is not None:
             output_stream.write(ds.to_conll()+'\n')
             output_stream.flush()
+            extracted += 1
 
     except RuntimeError as re:
         print(re)
         EXTRACT_LOG.error("Runtime error in instance {}".format(inst.id))
-        return None
     except RGXigtException as rgxe:
         EXTRACT_LOG.warn('Instance "{}" failed with "{}"'.format(inst.id, rgxe))
-        return None
+
+    return extracted
 
 
 def extract_tagger_from_instance(inst: Igt, output_stream, pos_source):
@@ -194,6 +196,10 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     # 1) SET UP
     # =============================================================================
 
+    extracted_tagged_snts = 0
+    extracted_parsed_snts = 0
+
+
     # Set up the classifier....
     if classifier_prefix is not None:
         print("Gathering statistics on POS tags...")
@@ -202,7 +208,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     if tagger_prefix is not None:
         tagger_train_path = tagger_prefix+'_tagger_train.txt'
         tagger_model_path = tagger_prefix+'.tagger'
-        tagged_sents = 0
+
 
         EXTRACT_LOG.log(1000, 'Opening tagger training file at "{}"'.format(tagger_train_path))
         tagger_train_f = open(tagger_train_path, 'w', encoding='utf-8')
@@ -211,7 +217,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     dep_train_f = None
     dep_train_path = None
     if dep_prefix is not None:
-        dep_train_path = dep_prefix+'_train.txt'
+        dep_train_path = dep_prefix+'_dep_train.txt'
         EXTRACT_LOG.log(1000, 'Writing dependency parser training data to "{}"'.format(dep_train_path))
         dep_train_f = open(dep_train_path, 'w', encoding='utf-8')
 
@@ -235,10 +241,10 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
         # -------------------------------------------
         for inst in xc:
             if tagger_prefix is not None:
-                tagged_sents += extract_tagger_from_instance(inst, tagger_train_f, use_pos)
+                extracted_tagged_snts += extract_tagger_from_instance(inst, tagger_train_f, use_pos)
 
             if dep_prefix is not None:
-                extract_parser_from_instance(inst, dep_train_f, use_pos)
+                extracted_parsed_snts += extract_parser_from_instance(inst, dep_train_f, use_pos)
 
             if classifier_prefix is not None:
                 gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict)
@@ -256,7 +262,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
 
     # Add punctuation marks to the tagger.
     if tagger_prefix is not None:
-        if tagged_sents == 0:
+        if extracted_tagged_snts == 0:
             EXTRACT_LOG.error("No tags were found. Not writing out file.")
             tagger_train_f.close()
             unlink(tagger_train_path)
@@ -295,10 +301,16 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     # Train
     # -------------------------------------------
     if dep_prefix:
-        dep_train_f.close()
-        dep_parser_path = dep_prefix+'.parser'
-        mp = MSTParser()
-        mp.train(dep_train_path, dep_parser_path)
+        if extracted_parsed_snts == 0:
+            EXTRACT_LOG.error("No dependency parses were found. Not training parser.")
+            dep_train_f.close()
+            unlink(dep_train_path)
+        else:
+            EXTRACT_LOG.log(1000, "{} dependency parses found. Training parser...".format(extracted_parsed_snts))
+            dep_train_f.close()
+            dep_parser_path = dep_prefix+'.depparser'
+            mp = MSTParser()
+            mp.train(dep_train_path, dep_parser_path)
 
 def extract_cfg_rules_from_inst(inst, out_f):
     """
