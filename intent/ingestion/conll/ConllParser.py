@@ -3,6 +3,7 @@ Created on Jan 31, 2014
 
 @author: rgeorgi
 '''
+from intent.consts import UNKNOWN_TAG
 from intent.ingestion.TextParser import TextParser
 from intent.utils.ConfigFile import ConfigFile
 import argparse
@@ -111,6 +112,10 @@ class ConllParser(TextParser):
 
             if line.strip():
                 index, form, lemma, cpos, postag, feats, head, deprel, phead, pdeprel = line.split()
+                if cpos == '_':
+                    cpos = UNKNOWN_TAG
+                if postag == '_':
+                    cpos = UNKNOWN_TAG
                 t = POSToken(form, label=cpos, index=int(index))
                 t.finepos = postag
                 inst.append(t)

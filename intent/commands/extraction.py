@@ -199,6 +199,9 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     extracted_tagged_snts = 0
     extracted_parsed_snts = 0
 
+    if dep_prefix or tagger_prefix:
+        EXTRACT_LOG.log(1000, 'Using language line tags produced by method "{}"...'.format(use_pos))
+
 
     # Set up the classifier....
     if classifier_prefix is not None:

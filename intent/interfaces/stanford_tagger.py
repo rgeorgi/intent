@@ -9,6 +9,9 @@ import subprocess as sub
 from optparse import OptionParser
 
 # Internal Imports -------------------------------------------------------------
+from tempfile import NamedTemporaryFile
+
+from intent.scripts.conversion.conll_to_slashtags import conll_to_slashtags
 from intent.utils.argutils import require_opt, existsfile
 from intent.utils.systematizing import piperunner, ProcessCommunicator
 from intent.utils.ConfigFile import ConfigFile
@@ -109,6 +112,12 @@ class StanfordPOSTagger(object):
 #===============================================================================
 # Functions to call for testing and training.
 #===============================================================================
+
+def train_postagger_on_conll(train_file, model_path, delimeter = '/'):
+    temp_path = NamedTemporaryFile('w', encoding='utf-8', delete=False)
+    temp_path.close()
+    conll_to_slashtags([train_file], temp_path.name)
+    train_postagger(temp_path.name, model_path, delimeter=delimeter)
 
 def train_postagger(train_file, model_path, delimeter = '/'):
     """
