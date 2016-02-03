@@ -14,6 +14,7 @@ from nltk.tree import ParentedTree, Tree
 from intent.consts import punc_re_mult, PUNC_TAG
 from intent.igt.igtutils import clean_lang_token
 from intent.igt.references import item_index
+from intent.ingestion.conll.ConllCorpus import ConllSentence, ConllWord
 
 DEPSTR_STANFORD = 'stanford'
 DEPSTR_CONLL    = 'conll'
@@ -1107,7 +1108,7 @@ class DepTree(IdTree):
                        key=lambda x: x.index)
         return words
 
-    def to_conll(self, lowercase=True, clean_token=True, match_punc=True):
+    def to_conll(self, lowercase=False, clean_token=False, match_punc=False, multiple_heads=False):
         """
         Return a string in CONLL format
 
@@ -1119,42 +1120,53 @@ class DepTree(IdTree):
 
         indices = sorted(set([st.word_index for st in self.subtrees()]))
 
-        ret_str = ''
-
+        cs = ConllSentence()
         # Add support for a node having multiple heads...
         for index in indices:
+
             nodes = self.findall_indices(index)
-            head_indices = sorted(set([n.parent().word_index for n in nodes]))
-            # head = ','.join([str(i) for i in head_indices])
-            head = str(head_indices[0])
-
             node = nodes[0]
-            fields = ['_'] * 10
+            head_indices = sorted(set([n.parent().word_index for n in nodes]))
 
+            # -------------------------------------------
+            # Really, we should have comma-separated lists of head indices
+            # but, that doesn't seem to be supported in training the parser.
+            # -------------------------------------------
+            if multiple_heads:
+                head = ','.join([str(i) for i in head_indices])
+            else:
+                head = str(head_indices[0])
+
+
+            # -------------------------------------------
+            # Process the node label...
+            # -------------------------------------------
             node_label = node.label()
-            if lowercase:
+            if lowercase is True:
                 node_label = node_label.lower()
             if clean_token:
-                node_label = clean_lang_token(node_label)
+                node_label = clean_lang_token(node_label, lowercase=False)
             if match_punc and not node.pos:
                 if re.match(punc_re_mult, node_label, flags=re.U):
                     node.pos = PUNC_TAG
 
-            fields[0] = str(node.word_index)
-            fields[1] = node_label
-            fields[2] = node_label
-            fields[3] = node.pos if node.pos else '_'
-            fields[4] = node.pos if node.pos else '_'
-            fields[6] = head
-            fields[7] = node.type if node.type else '_'
+            # -------------------------------------------
+            # Assign the conll word stuff.
+            # -------------------------------------------
+            cw = ConllWord()
 
-            # Set the type to root if the parent is root
+            cw.id = index
+            cw.form = node_label
+            cw.lemma = node_label
+            cw.cpostag = node.pos
+            cw.postag  = node.pos
+            cw.head    = head
+            cw.deprel  = node.type
             if 0 in head_indices:
-                fields[7] = 'root'
+                cw.deprel = 'root'
+            cs.append(cw)
 
-            ret_str += '\t'.join(fields)+'\n'
-
-        return ret_str
+        return str(cs)
 
 
 

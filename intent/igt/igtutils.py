@@ -379,7 +379,7 @@ def clean_lang_token(ret_str, lowercase=True):
     ret_str = remove_hyphens(ret_str)
     ret_str = remove_extra_parens(ret_str)
     ret_str = remove_extra_punc(ret_str)
-    if lowercase:
+    if lowercase is True:
         ret_str = ret_str.lower()
     return ret_str
 

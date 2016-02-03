@@ -205,14 +205,16 @@ ARG_POS_CLASS = 'class'
 ARG_POS_PROJ  = 'proj'
 ARG_POS_NONE  = 'none'
 ARG_POS_MANUAL= 'manual'
+ARG_POS_ANY   = 'any'
 
 ARG_POS_ENRICH_METHODS = [ARG_POS_CLASS, ARG_POS_PROJ, ARG_POS_TRANS]
-ARG_POS_EXTRACT_METHODS= [ARG_POS_CLASS, ARG_POS_PROJ, ARG_POS_NONE, ARG_POS_MANUAL]
+ARG_POS_EXTRACT_METHODS= [ARG_POS_CLASS, ARG_POS_PROJ, ARG_POS_NONE, ARG_POS_MANUAL, ARG_POS_ANY]
 
 ARG_POS_MAP = {ARG_POS_CLASS:INTENT_POS_CLASS,
                ARG_POS_PROJ:INTENT_POS_PROJ,
                ARG_POS_NONE:ARG_POS_NONE,
-               ARG_POS_MANUAL:INTENT_POS_MANUAL}
+               ARG_POS_MANUAL:INTENT_POS_MANUAL,
+               ARG_POS_ANY:None}
 
 
 POS_VAR = 'pos_list'
@@ -233,7 +235,7 @@ PARSE_VAR = 'parse_list'
 morpheme_boundary_chars = ['-','=']
 morpheme_interior_chars = ['.',':']
 
-punc_chars   = '\.,\'\"\?!\xc2\]\[\(\):\{\}\-'
+punc_chars   = '\.,\'\"\?!\xc2\]\[\(\):\{\}'
 punc_re      = '[{}]'.format(punc_chars)
 punc_re_mult = '{}+'.format(punc_re)
 no_punc_re   = '[^{}]'.format(punc_chars)
@@ -250,3 +252,5 @@ UNKNOWN_TAG  = 'UNK'
 # -------------------------------------------
 SENT_TYPE_T_G = 'tg'
 SENT_TYPE_T_L = 'tl'
+
+NORM_LEVEL = 1000

@@ -4,9 +4,72 @@ Created on Mar 6, 2014
 @author: rgeorgi
 """
 import os, codecs, re
-from intent.trees import IdTree
+
+import collections
+
 from intent.utils.token import tokenize_string, tag_tokenizer, POSToken
 
+
+class POSCorpusInstance(list):
+    def __init__(self, seq=[], id_ref=None):
+        self.id_ref = id_ref
+        list.__init__(self, seq)
+
+    def matches(self, other):
+        if not isinstance(other, POSCorpusInstance):
+            raise POSCorpusException('Attempting to compare non-POSCorpusInstance to POSCorpusInstance')
+        if len(self) != len(other):
+            raise POSCorpusException('Mismatched length in POSCorpus compare')
+
+        zipped = zip(self, other)
+
+        count = 0
+
+        for my_token, o_token in zipped:
+            if my_token.label == o_token.label:
+                count+=1
+        return count
+
+    def append(self, token):
+        if not isinstance(token, POSToken):
+            raise POSCorpusException('Attempting to add non-token to POSCorpusInstance')
+        else:
+            if not token.index: token.index = len(self)+1
+            list.append(self, token)
+
+
+    def __str__(self):
+        return '<POSCorpusInstance: %s>' % self.slashtags()
+
+    def raw(self, lowercase=True):
+        ret_str = ''
+        for token in self:
+            form = token.get_content()
+            if lowercase:
+                form = form.lower()
+            ret_str += form+' '
+        return ret_str.strip()
+
+    def slashtags(self, delimeter = '/', lowercase=True):
+        ret_str = ''
+        for token in self:
+            form = token.seq
+            if lowercase:
+                form = token.seq.lower()
+            ret_str += '%s/%s ' % (form, token.label)
+        return ret_str.strip()
+
+    def __iter__(self):
+        yield super().__iter__()
+
+    def mallet(self, lowercase=True):
+        ret_str = ''
+        for token in self:
+            form = token.form
+            if lowercase:
+                form = token.form.lower()
+            ret_str += '%s %s\n' % (form, token.label)
+        return ret_str
 
 
 class POSCorpus(list):
@@ -105,12 +168,12 @@ class POSCorpus(list):
             test.write(test_path, format, delimeter, outdir, lowercase)
 
     @classmethod
-    def read_slashtags(cls, fp, **kwargs):
+    def read_slashtags(cls, path, **kwargs):
         """
         Method to read in a corpus in the form of Token/TAG. (Assumes the default delimiter "/")
 
-        :param fp: File path to the slashtagged file to read in.
-        :type fp: str
+        :param path: File path to the slashtagged file to read in.
+        :type path: str
         :param delimiter: Delimiter between token and Tag
         :type delimiter: str
 
@@ -128,10 +191,10 @@ class POSCorpus(list):
             if inst:
                 c.append(inst)
 
-        process_slashtag_file(fp, func, delimeter)
+        process_slashtag_file(path, func, delimeter)
 
         return c
-
+            
 
     @classmethod
     def read_simpletagger(cls, fp, **kwargs):
@@ -175,7 +238,8 @@ class POSCorpus(list):
                 c.append(inst)
         return c
 
-
+    def __iter__(self) -> POSCorpusInstance:
+        yield super().__iter__()
 
 
     def token_handler(self, tokens):
@@ -191,16 +255,16 @@ class POSCorpus(list):
 # Universal POS Tag Tools
 # =============================================================================
 
-def process_slashtag_file(fp, token_func, delimeter = '/'):
+def process_slashtag_file(path, token_func, delimeter ='/'):
     """
     A universal function to process "slashtag"-style (e.g. Fountain/NOUN) files.
 
-    :param fp: Path to the slashtag file.
+    :param path: Path to the slashtag file.
     :param func: Function to apply to each token.
     """
 
     # Start by opening the file.
-    f = open(fp, 'r', encoding='utf-8')
+    f = open(path, 'r', encoding='utf-8')
 
     tokens = 0
     lines = 0
@@ -251,6 +315,7 @@ def process_wsj_file(fp, token_func):
         # we should have a complete tree.
         if open_parens == 0:
             # Parse the tree...
+            from intent.trees import IdTree
             t = IdTree.fromstring(cur_tree, remove_empty_top_bracketing=True)
 
             # Now, process the tokens...
@@ -272,63 +337,4 @@ class POSCorpusException(Exception):
     def __init__(self, msg = None):
         Exception.__init__(self, msg)
 
-
-class POSCorpusInstance(list):
-    def __init__(self, seq=[], id_ref=None):
-        self.id_ref = id_ref
-        list.__init__(self, seq)
-
-    def matches(self, other):
-        if not isinstance(other, POSCorpusInstance):
-            raise POSCorpusException('Attempting to compare non-POSCorpusInstance to POSCorpusInstance')
-        if len(self) != len(other):
-            raise POSCorpusException('Mismatched length in POSCorpus compare')
-
-        zipped = zip(self, other)
-
-        count = 0
-
-        for my_token, o_token in zipped:
-            if my_token.label == o_token.label:
-                count+=1
-        return count
-
-    def append(self, token):
-        if not isinstance(token, POSToken):
-            raise POSCorpusException('Attempting to add non-token to POSCorpusInstance')
-        else:
-            if not token.index: token.index = len(self)+1
-            list.append(self, token)
-
-
-    def __str__(self):
-        return '<POSCorpusInstance: %s>' % self.slashtags()
-
-    def raw(self, lowercase=True):
-        ret_str = ''
-        for token in self:
-            form = token.get_content()
-            if lowercase:
-                form = form.lower()
-            ret_str += form+' '
-        return ret_str.strip()
-
-    def slashtags(self, delimeter = '/', lowercase=True):
-        ret_str = ''
-        for token in self:
-            form = token.seq
-            if lowercase:
-                form = token.seq.lower()
-            ret_str += '%s/%s ' % (form, token.label)
-        return ret_str.strip()
-
-
-    def mallet(self, lowercase=True):
-        ret_str = ''
-        for token in self:
-            form = token.form
-            if lowercase:
-                form = token.form.lower()
-            ret_str += '%s %s\n' % (form, token.label)
-        return ret_str
 

@@ -6,7 +6,7 @@ from intent.commands.enrich import enrich
 from intent.consts import *
 from intent.igt.create_tiers import trans, lang
 from intent.igt.igt_functions import get_lang_ds, get_ds, project_ds_tier, heur_align_inst, parse_translation_line, \
-    get_trans_gloss_alignment
+    get_trans_gloss_alignment, tier_text
 from intent.igt.parsing import xc_load
 from intent.interfaces.stanford_parser import StanfordParser
 from intent.trees import DepTree, DEPSTR_PTB, project_ds
@@ -143,13 +143,7 @@ class UnknownErrorTests(TestCase):
         project_ds_tier(inst)
         proj_t = get_lang_ds(inst)
 
-        tgt_t = DepTree.fromstring("""(ROOT[0]
-                                        (salli-i[2]
-                                            (Jumala[1])
-                                            (sata-a[3])
-                                            (rake-i-ta[4])
-                                            (ja[5])
-                                            (tuhka-a[6] (.[7]))))""", stype=DEPSTR_PTB)
+        tgt_t = DepTree.fromstring("""(ROOT[0] (salli-i[2] (Jumala[1]) (sata-a[4] ([[3])) (rake-i-ta[5]) (ja[6]) (tuhka-a[7] (].[8]))))""", stype=DEPSTR_PTB)
 
         self.assertTrue(tgt_t.similar(proj_t))
 

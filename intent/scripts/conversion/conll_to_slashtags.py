@@ -8,7 +8,6 @@ Created on Sep 12, 2014
 import argparse, os
 
 # Internal imports -------------------------------------------------------------
-from intent.ingestion.conll.ConllParser import ConllParser
 from intent.corpora.POSCorpus import POSCorpus
 
 def conll_to_slashtags(infiles, outpath):
@@ -19,7 +18,8 @@ def conll_to_slashtags(infiles, outpath):
     '''
     main_c = POSCorpus()
     for f in infiles:
-        cp = ConllParser()
+        from intent.ingestion.conll.ConllCorpus import ConllCorpus
+        cp = ConllCorpus()
         c = cp.parse_file(root=f)
         main_c.extend(c)
 

@@ -11,12 +11,13 @@ from optparse import OptionParser
 # Internal Imports -------------------------------------------------------------
 from tempfile import NamedTemporaryFile
 
+from intent.corpora.POSCorpus import POSCorpus
 from intent.scripts.conversion.conll_to_slashtags import conll_to_slashtags
 from intent.utils.argutils import require_opt, existsfile
 from intent.utils.systematizing import piperunner, ProcessCommunicator
 from intent.utils.ConfigFile import ConfigFile
 from intent.eval.pos_eval import slashtags_eval
-from intent.utils.token import tag_tokenizer, tokenize_string
+from intent.utils.token import tag_tokenizer, tokenize_string, Token, POSToken
 
 from intent.utils.env import c, tagger_jar, tagger_model, java_bin
 
@@ -90,6 +91,9 @@ class StanfordPOSTagger(object):
     def tag(self, s, **kwargs):
 
         # Lowercase if asked for
+        """
+        :rtype: list[POSToken]
+        """
         if kwargs.get('lowercase', True):
             s = s.lower()
 
@@ -118,6 +122,14 @@ def train_postagger_on_conll(train_file, model_path, delimeter = '/'):
     temp_path.close()
     conll_to_slashtags([train_file], temp_path.name)
     train_postagger(temp_path.name, model_path, delimeter=delimeter)
+    os.remove(temp_path.name)
+
+def test_postagger_on_conll(test_file, model_path, out_file, delimeter='/'):
+    test_temp_path = NamedTemporaryFile('w', encoding='utf-8', delete=False)
+    test_temp_path.close()
+    conll_to_slashtags([test_file], test_temp_path.name)
+    test_postagger(test_temp_path.name, model_path, out_file, delimeter)
+
 
 def train_postagger(train_file, model_path, delimeter = '/'):
     """
@@ -171,8 +183,6 @@ def test_postagger(test_file, model_path, out_file, delimeter = '/'):
     p = sub.Popen(cmd)
     p.wait()
 
-    #p = ProcessCommunicator(cmd)
-    #p.wait()
 
 # Make sure nosetests doesn't think this is a unit test
 test_postagger.__test__ = False
@@ -204,21 +214,19 @@ if __name__ == '__main__':
 
     # Now do the testing and training
     train_postagger(c['train_file'],
-          c['model'],
-          c['delimeter'])
-    test(c['test_file'],
-         c['model'],
-         c['out_file'],
-         c['delimeter'])
+                    c['model'],
+                    c['delimeter'])
+    test_postagger(c['test_file'],
+                   c['model'],
+                   c['out_file'],
+                   c['delimeter'])
     time.sleep(1)
 
     # Evaluate...
     slashtags_eval(c['gold_file'], c['out_file'], c['delimeter'], log_f)
 
 class TestPeriodTagging(unittest.TestCase):
-    """
 
-    """
 
     def runTest(self, result=None):
         p = StanfordPOSTagger(tagger_model)

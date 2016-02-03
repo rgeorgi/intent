@@ -68,30 +68,32 @@ def extract_tagger_from_instance(inst: Igt, output_stream, pos_source):
 
     training_sentences = 0
 
-    if lang_pos_tags is not None:
+    first = True
+    for lang_word in lang_words:
 
-        first = True
-        for lang_word in lang_words:
-            lang_pos_tag = xigt_find(inst, alignment=lang_word.id, others=[lambda x: isinstance(x, Item) and x.tier.type == POS_TIER_TYPE])
-            tag_string = lang_pos_tag.value() if lang_pos_tag is not None else handle_unknown_pos(inst, lang_word)
-            word_string = lang_word.value()
+        lang_pos_tag = None
+        if lang_pos_tags is not None:
+            lang_pos_tag = xigt_find(lang_pos_tags, alignment=lang_word.id)
 
-            # -------------------------------------------
-            # Do some cleaning on the output words
-            # -------------------------------------------
-            word_string = clean_lang_token(word_string, lowercase=True)
+        tag_string = lang_pos_tag.value() if lang_pos_tag is not None else handle_unknown_pos(inst, lang_word)
+        word_string = lang_word.value()
 
-            # For every instance after the first,
-            # add a space.
-            out_str = ' {}/{}'
-            if first:
-                first = False
-                out_str = out_str.strip()
+        # -------------------------------------------
+        # Do some cleaning on the output words
+        # -------------------------------------------
+        word_string = clean_lang_token(word_string, lowercase=True)
 
-            output_stream.write(out_str.format(word_string, tag_string))
-        output_stream.write('\n')
-        output_stream.flush()
-        training_sentences += 1
+        # For every instance after the first,
+        # add a space.
+        out_str = ' {}/{}'
+        if first:
+            first = False
+            out_str = out_str.strip()
+
+        output_stream.write(out_str.format(word_string, tag_string))
+    output_stream.write('\n')
+    output_stream.flush()
+    training_sentences += 1
 
     return training_sentences
 
@@ -198,14 +200,21 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
 
     extracted_tagged_snts = 0
     extracted_parsed_snts = 0
+    inst_count = 0
+
 
     if dep_prefix or tagger_prefix:
-        EXTRACT_LOG.log(1000, 'Using language line tags produced by method "{}"...'.format(use_pos))
+        if use_pos == ARG_POS_NONE:
+            EXTRACT_LOG.log(NORM_LEVEL, 'Not using POS tags for extraction.')
+        elif use_pos is None:
+            EXTRACT_LOG.log(NORM_LEVEL, "Using any available POS tags for extraction.")
+        else:
+            EXTRACT_LOG.log(NORM_LEVEL, 'Using language line tags produced by method "{}"...'.format(use_pos))
 
 
     # Set up the classifier....
     if classifier_prefix is not None:
-        print("Gathering statistics on POS tags...")
+        EXTRACT_LOG.log(NORM_LEVEL, "Gathering statistics on POS tags...")
 
     # Set up the tagger training file...
     if tagger_prefix is not None:
@@ -213,7 +222,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
         tagger_model_path = tagger_prefix+'.tagger'
 
 
-        EXTRACT_LOG.log(1000, 'Opening tagger training file at "{}"'.format(tagger_train_path))
+        EXTRACT_LOG.log(NORM_LEVEL, 'Opening tagger training file at "{}"'.format(tagger_train_path))
         tagger_train_f = open(tagger_train_path, 'w', encoding='utf-8')
 
     # Set up the dependency parser output if it's specified...
@@ -221,7 +230,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     dep_train_path = None
     if dep_prefix is not None:
         dep_train_path = dep_prefix+'_dep_train.txt'
-        EXTRACT_LOG.log(1000, 'Writing dependency parser training data to "{}"'.format(dep_train_path))
+        EXTRACT_LOG.log(NORM_LEVEL, 'Writing dependency parser training data to "{}"'.format(dep_train_path))
         dep_train_f = open(dep_train_path, 'w', encoding='utf-8')
 
     # Set up the files for writing out alignment.
@@ -243,6 +252,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
         # Do the appropriate extraction for each
         # -------------------------------------------
         for inst in xc:
+            inst_count += 1
             if tagger_prefix is not None:
                 extracted_tagged_snts += extract_tagger_from_instance(inst, tagger_train_f, use_pos)
 
@@ -263,6 +273,8 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     # After looping
     # -------------------------------------------
 
+    EXTRACT_LOG.log(NORM_LEVEL, "{} instances processed.".format(inst_count))
+
     # Add punctuation marks to the tagger.
     if tagger_prefix is not None:
         if extracted_tagged_snts == 0:
@@ -273,10 +285,10 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
             for t in ['?','“','"',"''","'",',','…','/','--','-','``','`',':',';','«','»']:
                 tagger_train_f.write('{}{}{}\n'.format(t,'/','PUNC'))
             tagger_train_f.close()
-            print('Training postagger using "{}"'.format(tagger_train_path))
+            EXTRACT_LOG.log(NORM_LEVEL, 'Training postagger using "{}"'.format(tagger_train_path))
             # Now, train the POStagger...
             train_postagger(tagger_train_path, tagger_model_path)
-            print("Tagger training complete.")
+            EXTRACT_LOG.log(NORM_LEVEL, "Tagger training complete.")
 
 
 
@@ -292,10 +304,9 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
 
         write_out_gram_dict(word_tag_dict, feat_path)
 
-        print("Training classifier... ", end='')
+        EXTRACT_LOG.log(NORM_LEVEL)
         train_txt(feat_path, class_path)
-        print("Complete.")
-
+        EXTRACT_LOG.log(NORM_LEVEL, "Complete.")
 
     if cfg_path:
         cfg_f.close()
@@ -309,7 +320,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
             dep_train_f.close()
             unlink(dep_train_path)
         else:
-            EXTRACT_LOG.log(1000, "{} dependency parses found. Training parser...".format(extracted_parsed_snts))
+            EXTRACT_LOG.log(NORM_LEVEL, "{} dependency parses found. Training parser...".format(extracted_parsed_snts))
             dep_train_f.close()
             dep_parser_path = dep_prefix+'.depparser'
             mp = MSTParser()

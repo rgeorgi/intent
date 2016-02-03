@@ -83,7 +83,7 @@ class Token(object):
 
 class POSToken(Token):
     def __init__(self, content, **kwargs):
-        Token.__init__(self, content, **kwargs)
+        super().__init__(content, **kwargs)
         if 'label' in kwargs:
             self.label = kwargs.get('label')
 

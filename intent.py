@@ -182,8 +182,15 @@ extract_p.add_argument('--classifier-prefix', dest='classifier_prefix', help='Ou
 extract_p.add_argument('--tagger-prefix', dest="tagger_prefix", help='Output prefix for lang-line tagger.', default=None)
 extract_p.add_argument('--cfg-rules', dest="cfg_path", help='Output path for cfg-rules.', default=None)
 extract_p.add_argument('--dep-prefix', dest="dep_prefix", help='Output prefix for dependency parser', default=None)
-extract_p.add_argument('--use-pos', dest="pos_method", choices=ARG_POS_EXTRACT_METHODS, default='none', help="POS tagging method to extract for dependencies and tagger")
-extract_p.add_argument('--use-align', dest="aln_method", choices=ARG_ALN_METHODS, help="Alignment method to use for extracting projected items, or heuristic additions to parallel sentences.", default=ARG_ALN_ANY)
+extract_p.add_argument('--use-pos',
+                       help="POS tagging method to extract for dependencies and tagger",
+                       dest="pos_method",
+                       choices=ARG_POS_EXTRACT_METHODS,
+                       default=ARG_POS_ANY)
+extract_p.add_argument('--use-align', dest="aln_method",
+                       help="Alignment method to use for extracting projected items, or heuristic additions to parallel sentences.",
+                       choices=ARG_ALN_METHODS,
+                       default=ARG_ALN_ANY)
 extract_p.add_argument('--sent-prefix', dest='sent_prefix', help='Prefix with which to output parallel sentences.')
 extract_p.add_argument('--sent-type', dest='sent_type', choices=[SENT_TYPE_T_G, SENT_TYPE_T_L], help="Choose between translation-gloss and translation-lang", default="tl")
 extract_p.add_argument('--no-alignment-heur', action='store_true', help='Disable adding heuristic alignment results to aligned sentences.', default=False)

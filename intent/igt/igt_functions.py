@@ -1740,13 +1740,9 @@ def basic_processing(inst):
     except NoLangLineException:
         pass
 
-    # And do word-to-word alignment if it's not already done.
-    if hasgloss and haslang and not gloss(inst).alignment:
-        word_align(gloss(inst), lang(inst))
-
     if hasgloss and haslang:
-
         add_gloss_lang_alignments(inst)
+
 
 def add_gloss_lang_alignments(inst):
     # Finally, do morpheme-to-morpheme alignment between gloss
