@@ -19,13 +19,14 @@ from xigt.consts import INCREMENTAL
 
 
 def do_projection(**kwargs):
-
+    """
+    (Re)project the
+    :param aln_method: The alignment method
+    """
     aln_method = ALN_ARG_MAP[kwargs.get('aln_method', ARG_ALN_ANY)]
 
     successes = 0
     failures  = 0
-
-
 
     in_path = kwargs.get(ARG_INFILE)
     with open(in_path, 'r', encoding='utf-8') as f:
@@ -56,12 +57,11 @@ def do_projection(**kwargs):
                 success()
             finally:
                 PROJ_LOG.info(success_fail_string)
-
+                inst.sort_tiers()
 
         out_path = kwargs.get(ARG_OUTFILE)
         PROJ_LOG.log(1000, 'Writing new file "{}"...'.format(os.path.basename(out_path)))
         with open(out_path, 'w', encoding='utf-8') as out_f:
-            xc.sort()
             xigtxml.dump(out_f, xc)
 
     PROJ_LOG.log(1000, '{} instances processed, {} successful, {} failed.'.format(len(xc), successes, failures))

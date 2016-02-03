@@ -1157,7 +1157,6 @@ class DepTree(IdTree):
 
             cw.id = index
             cw.form = node_label
-            cw.lemma = node_label
             cw.cpostag = node.pos
             cw.postag  = node.pos
             cw.head    = head

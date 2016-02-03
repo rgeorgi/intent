@@ -2,73 +2,84 @@
 # -------------------------------------------
 # Script to evaluate dependency parser
 # -------------------------------------------
+import os
 from argparse import ArgumentParser
-from tempfile import NamedTemporaryFile
+import sys, logging
 
-from os import unlink
-
-import sys
-
+from intent.ingestion.conll.ConllCorpus import ConllCorpus
 from intent.interfaces.mst_parser import MSTParser
+from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.utils.argutils import existsfile
 
+LOG = logging.getLogger('DEPENDENCIES')
 
-def eval_mst(model_path, test_path, out_path=None, lowercase=True):
+
+def eval_mst(model_path, test_path, out_prefix, lowercase=True, tagger=None, force=False):
     mp = MSTParser()
 
-    # Get the output file name...
-    if out_path is None:
-        out_f = NamedTemporaryFile('w', delete=False)
-        out_f.close()
-        out_path = out_f.name
+    # -------------------------------------------
+    # Use the output prefix to create some new files.
+    # -------------------------------------------
+    eval_path = out_prefix + '_eval_tagged.txt'
+    out_path  = out_prefix + '_out_tagged.txt'
+
 
     # -------------------------------------------
-    # Rewrite the test file with lowercase
-    # Tokens
+    # Rewrite the test file; POS tag the data
+    # with the POS tags from our tagger,
+    # and strip features.
     # -------------------------------------------
-    if lowercase:
-        test_lower_f = NamedTemporaryFile('w', delete=False)
-        test_lower_path = test_lower_f.name
-        with open(test_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                if line.strip():
-                    token = line.split()[0].lower()
-                    rest  = line.split()[1:]
-                    test_lower_f.write('\t'.join([token]+rest)+'\n')
-                else:
-                    test_lower_f.write(line)
-        test_lower_f.close()
-        test_path = test_lower_path
+    if not os.path.exists(eval_path) or force:
+        LOG.log(1000, "")
+        cc = ConllCorpus.read(test_path)
+        if lowercase:
+            cc.lower()
+        cc.strip_tags()
+        cc.strip_feats()
+        if tagger is not None:
+            LOG.log(1000, "POS Tagging evaluation ")
+            cc.tag(StanfordPOSTagger(tagger))
+        cc.write(eval_path)
+    # -------------------------------------------
 
 
-    mp.test(model_path, test_path, out_path)
+    mp.test(model_path, eval_path, out_path)
     mp.eval(test_path, out_path)
 
-    if out_path is None:
-        unlink(out_path)
-    if lowercase:
-        unlink(test_lower_path)
 
 if __name__ == '__main__':
     p = ArgumentParser()
     p.add_argument('CMD', choices=['train', 'test'])
-    p.add_argument('-m', '--model', help='Parser model file')
+    p.add_argument('-p', '--parser', help='Parser model file')
+    p.add_argument('-t', '--tagger', help='Tagger model file')
     p.add_argument('--test', help='Testing file in CoNLL Format', type=existsfile)
     p.add_argument('--train', help='Training file in CoNLL format', type=existsfile)
-    p.add_argument('-o', '--output', help="Save the output file", default=None)
+    p.add_argument('-o', '--output', help="Output prefix", default=None, required=True)
+    p.add_argument('-f', '--force', help='Force overwrite of precursor files', default=False, action='store_true')
 
     args = p.parse_args()
 
+    # -------------------------------------------
+    # Sanity check the arguments
+    # -------------------------------------------
     if args.CMD == 'test':
-        if args.model is None or args.test is None:
+        if args.parser is None or args.test is None:
             print("\nERROR: --model and --test args are required for test CMD.\n")
             p.print_help()
             sys.exit(1)
-        eval_mst(args.model, args.test, args.output)
+        elif not os.path.exists(args.parser):
+            LOG.error('Error: parser file "{}" does not exist.'.format(args.parser))
+            sys.exit(1)
+        elif not os.path.exists(args.test):
+            LOG.error('Error: eval file "{}" does not exist.'.format(args.parser))
+            sys.exit()
+
+        LOG.log(1000, "Beginning test of parser...")
+        eval_mst(args.parser, args.test, args.output, tagger=args.tagger)
     elif args.CMD == 'train':
-        if args.train is None or args.model is None:
+        if args.train is None or args.parser is None:
             print("\nERROR: --train and --model args are required for train CMD.")
             p.print_help()
             sys.exit(1)
         mp = MSTParser()
-        mp.train(args.train, args.model)
+        mp.train(args.train, args.parser)

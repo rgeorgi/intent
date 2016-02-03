@@ -42,7 +42,7 @@ def extract_parser_from_instance(inst: Igt, output_stream, pos_source):
     try:
         ds = get_lang_ds(inst, pos_source=pos_source, unk_pos_handling=None)
         if ds is not None:
-            output_stream.write(ds.to_conll()+'\n')
+            output_stream.write(ds.to_conll(lowercase=True, match_punc=True, clean_token=True)+'\n\n')
             output_stream.flush()
             extracted += 1
 

@@ -81,8 +81,8 @@ class ConllWord(object):
         return '{}{}{}'.format(self.form, delimiter, self.cpostag)
 
     def lower(self):
-        self.form = self.form.lower()
-        self.lemma = self.lemma.lower()
+        self.form = self.form.lower() if self.form else None
+        self.lemma = self.lemma.lower() if self.lemma else None
 
     def apply_func(self, func):
         self.form = func(self.form)
@@ -122,6 +122,14 @@ class ConllSentence(list):
         for word in self:
             word.apply_func()
 
+    def strip_tags(self):
+        for word in self:
+            word.cpostag = None
+            word.postag = None
+
+    def strip_feats(self):
+        for word in self:
+            word.feats = None
 
 
 class ConllCorpus(list):
@@ -146,7 +154,7 @@ class ConllCorpus(list):
                 else:
                     if cur_sent is None:
                         cur_sent = ConllSentence()
-                    w = ConllWord(*line.split(), lowercase=lowercase)
+                    w = ConllWord(*line.split())
                     cur_sent.append(w)
 
         return corp
@@ -174,8 +182,23 @@ class ConllCorpus(list):
         with open(path, 'w', encoding='utf-8') as f:
             f.write(str(self))
 
-    def __iter__(self) -> ConllSentence:
+    def __iter__(self):
+        """
+        :rtype: ConllSentence
+        """
         return super().__iter__()
+
+    def lower(self):
+        for sent in self:
+            sent.lower()
+
+    def strip_tags(self):
+        for sent in self:
+            sent.strip_tags()
+
+    def strip_feats(self):
+        for sent in self:
+            sent.strip_feats()
 
 if __name__ == '__main__':
     cc = ConllCorpus.read(sys.argv[1])
