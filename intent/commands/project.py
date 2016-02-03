@@ -61,6 +61,7 @@ def do_projection(**kwargs):
         out_path = kwargs.get(ARG_OUTFILE)
         PROJ_LOG.log(1000, 'Writing new file "{}"...'.format(os.path.basename(out_path)))
         with open(out_path, 'w', encoding='utf-8') as out_f:
+            xc.sort()
             xigtxml.dump(out_f, xc)
 
     PROJ_LOG.log(1000, '{} instances processed, {} successful, {} failed.'.format(len(xc), successes, failures))
