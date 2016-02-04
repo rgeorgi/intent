@@ -7,9 +7,6 @@ import sys
 # -------------------------------------------
 # Start the logger.
 # -------------------------------------------
-from intent.commands.enrich import enrich
-from intent.commands.project import do_projection
-
 logging.basicConfig(format=logging.BASIC_FORMAT)
 MAIN_LOG = logging.getLogger('INTENT')
 
@@ -47,6 +44,7 @@ CMD_TEXT    = 'text'
 # Import the env module, since there are some
 # additional tests there.
 # -------------------------------------------
+from intent.utils import env
 
 # -------------------------------------------
 # Start the logger and set it up.
@@ -57,6 +55,8 @@ from intent.commands.split_corpus import split_corpus
 from intent.commands.text_to_xigt import text_to_xigtxml
 from intent.commands.evaluation import evaluate_intent
 from intent.commands.extraction import extract_from_xigt
+from intent.commands.enrich import enrich
+from intent.commands.project import do_projection
 from intent.consts import *
 from intent.utils.listutils import flatten_list
 from xigt.codecs.xigtxml import dump

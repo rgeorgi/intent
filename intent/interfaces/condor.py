@@ -27,7 +27,7 @@ def which(app):
     p = subprocess.Popen(['which',app], stdout=subprocess.PIPE)
     out = None
     for line in p.stdout:
-        out = line.strip()
+        out = line.decode(encoding='utf-8').strip()
     return out
 
 def condor_submit(file):
@@ -42,7 +42,7 @@ def condor_wait():
     while True:
         p = subprocess.Popen(['condor_q', getpass.getuser()], stdout=subprocess.PIPE)
         p.wait()
-        result = p.stdout.read()
+        result = p.stdout.read().decode(encoding='utf-8')
         jobs_re = re.search('([0-9]+) jobs;', result)
         num_jobs = int(jobs_re.group(1))
 
