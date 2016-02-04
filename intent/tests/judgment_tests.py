@@ -3,7 +3,7 @@ from unittest import TestCase
 from xigt.codecs import xigtxml
 
 from intent.consts import ODIN_LANG_TAG, ODIN_JUDGMENT_ATTRIBUTE, ODIN_TRANS_TAG
-from intent.igt.create_tiers import retrieve_normal_line, retrieve_lang_phrase_tier, retrieve_trans_phrase
+from intent.igt.create_tiers import retrieve_normal_lines, generate_lang_phrase_tier, generate_trans_phrase_tier
 from intent.igt.igtutils import get_judgment, extract_judgment
 from intent.tests.parsetests import ger_file
 
@@ -67,16 +67,16 @@ class JudgmentPropogationTests(TestCase):
     def test_lang_line_propogation(self):
 
         # Get the language line...
-        lang_line = retrieve_normal_line(self.inst, ODIN_LANG_TAG)
+        lang_line = retrieve_normal_lines(self.inst, ODIN_LANG_TAG)[0]
         lang_line.attributes[ODIN_JUDGMENT_ATTRIBUTE] = '*'
 
-        phrase_item = retrieve_lang_phrase_tier(self.inst)[0]
+        phrase_item = generate_lang_phrase_tier(self.inst)[0]
 
         self.assertEqual(phrase_item.attributes.get(ODIN_JUDGMENT_ATTRIBUTE), '*')
 
     def test_trans_line_propogation(self):
-        trans_line = retrieve_normal_line(self.inst, ODIN_TRANS_TAG)
+        trans_line = retrieve_normal_lines(self.inst, ODIN_TRANS_TAG)[0]
         trans_line.attributes[ODIN_JUDGMENT_ATTRIBUTE] = '*'
 
-        phrase_item = retrieve_trans_phrase(self.inst)[0]
+        phrase_item = generate_trans_phrase_tier(self.inst)[0]
         self.assertEqual(phrase_item.attributes.get(ODIN_JUDGMENT_ATTRIBUTE), '*')

@@ -4,7 +4,7 @@ from intent.igt.igt_functions import basic_processing
 from xigt.codecs import xigtxml
 
 from intent.consts import *
-from intent.igt.create_tiers import trans_line
+from intent.igt.create_tiers import trans_lines
 from intent.igt.exceptions import RawTextParseError, GlossLangAlignException, NoTransLineException, NoGlossLineException, \
     NoLangLineException
 from intent.igt.references import gen_item_id, ask_item_id
@@ -159,7 +159,7 @@ def parse_odin_xc(text, require_trans = True, require_gloss = True, require_lang
 
         # Try to get the translation line. ---------------------------------
         try:
-            hastrans = trans_line(i)
+            hastrans = trans_lines(i)
         except NoTransLineException as ntle:
             PARSELOG.info(ntle)
             hastrans = False

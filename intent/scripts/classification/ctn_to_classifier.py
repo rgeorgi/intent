@@ -1,9 +1,9 @@
 import logging
 import pickle
 
-from build.lib.xigt.core import XigtCorpus, Item
 from intent.igt.igt_functions import strip_pos
 from intent.igt.parsing import xc_load
+from xigt import XigtCorpus, Item
 
 root_logger = logging.getLogger()
 root_logger.setLevel(logging.DEBUG)

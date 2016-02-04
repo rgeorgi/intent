@@ -10,7 +10,7 @@ Subclassing of the xigt package to add a few convenience methods.
 import logging
 
 # Set up logging ---------------------------------------------------------------
-from intent.igt.create_tiers import trans_line, get_raw_tier, generate_clean_tier, add_normal_line_to_tier, generate_normal_tier, morphemes
+from intent.igt.create_tiers import trans_lines, get_raw_tier, generate_clean_tier, add_normal_line_to_tier, generate_normal_tier, morphemes
 from intent.utils.string_utils import replace_invalid_xml
 from xigt.errors import XigtError
 

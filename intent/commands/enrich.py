@@ -2,7 +2,7 @@ import logging
 import sys
 
 from intent.consts import *
-from intent.igt.create_tiers import gloss, trans, gloss_line, trans_line, lang_line
+from intent.igt.create_tiers import gloss, trans, gloss_line, trans_lines, lang_lines
 from intent.igt.create_tiers import lang
 from intent.igt.exceptions import GlossLangAlignException, MultipleNormLineException, PhraseStructureProjectionException, \
     ProjectionException
@@ -154,8 +154,8 @@ def enrich(class_path=None, **kwargs):
                 # Get the different lines
                 # -------------------------------------------
                 gl = gloss_line(inst)
-                tl = trans_line(inst)
-                ll  = lang_line(inst)
+                tl = trans_lines(inst)
+                ll  = lang_lines(inst)
 
                 has_gl = gl is not None
                 has_tl = tl is not None
