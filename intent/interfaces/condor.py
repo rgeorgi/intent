@@ -21,6 +21,7 @@ transfer_executable = false
 +Research = False
 requirements = (Memory > 1000)
 request_memory = 2*1024
+%s
 Queue"""
 
 def which(app):
@@ -51,7 +52,7 @@ def condor_wait():
         else:
             time.sleep(2)
 
-def run_cmd(args, prefix, name, email, stdin = "", cwd = os.getcwd()):
+def run_cmd(args, prefix, name, email, stdin = "", cwd = os.getcwd(), env = ''):
 
     # First, make sure the program can be found.
     exe      = args[0]
@@ -63,6 +64,9 @@ def run_cmd(args, prefix, name, email, stdin = "", cwd = os.getcwd()):
         sys.stderr.write('ERROR: The stdin file "%s" could not be found' % stdin)
         sys.exit(-127)
     exe = exe_path
+
+    if env:
+        env = 'environment="{}"'.format(env)
 
     # Create the directory for the prefix, if needed.
     create_parents(prefix)
@@ -91,7 +95,7 @@ def run_cmd(args, prefix, name, email, stdin = "", cwd = os.getcwd()):
         stdin = '# No stdin given'
     else:
         stdin = 'input = %s' % stdin
-    cmdfile.write(vanilla % (exe, stdin, outpath, errpath, arg_str, logpath, notification, cwd))
+    cmdfile.write(vanilla % (exe, stdin, outpath, errpath, arg_str, logpath, notification, cwd, env))
     cmdfile.close()
 
     condor_submit(cmdpath)
