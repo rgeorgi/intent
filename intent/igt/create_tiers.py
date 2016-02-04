@@ -242,7 +242,7 @@ def generate_phrase_tier(inst, tag, id, type) -> Tier:
             # add it to the phrase tier.
             # -------------------------------------------
             pt.append(Item(id=ask_item_id(pt), content=normal_line.id, attributes=phrase_attributes))
-            inst.append(pt)
+        inst.append(pt)
 
     return pt
 

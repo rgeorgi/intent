@@ -5,13 +5,14 @@ from intent.consts import *
 from intent.igt.create_tiers import gloss, trans, gloss_line, trans_lines, lang_lines
 from intent.igt.create_tiers import lang
 from intent.igt.exceptions import GlossLangAlignException, MultipleNormLineException, PhraseStructureProjectionException, \
-    ProjectionException
+    ProjectionException, NoNormLineException
 from intent.igt.igt_functions import giza_align_t_g, tag_trans_pos, parse_translation_line, classify_gloss_pos, \
     word_align, heur_align_inst, project_gloss_pos_to_lang, get_trans_gloss_alignment, project_trans_pos_to_gloss, \
-    project_pt_tier, project_ds_tier
+    project_pt_tier, project_ds_tier, add_gloss_lang_alignments
 from intent.interfaces import mallet_maxent, stanford_parser
 from intent.interfaces.giza import GizaAlignmentException
 from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
+from intent.trees import NoAlignmentProvidedError
 from intent.utils.argutils import writefile
 from intent.utils.env import c, posdict, classifier
 from xigt.codecs import xigtxml
@@ -153,9 +154,16 @@ def enrich(class_path=None, **kwargs):
                 # -------------------------------------------
                 # Get the different lines
                 # -------------------------------------------
-                gl = gloss_line(inst)
-                tl = trans_lines(inst)
-                ll  = lang_lines(inst)
+                def tryline(func):
+                    nonlocal inst
+                    try:
+                        return func(inst)
+                    except NoNormLineException as nnle:
+                        return None
+
+                gl = tryline(gloss_line)
+                tl = tryline(trans_lines)
+                ll  = tryline(lang_lines)
 
                 has_gl = gl is not None
                 has_tl = tl is not None
@@ -190,7 +198,7 @@ def enrich(class_path=None, **kwargs):
                 # -------------------------------------------
                 if has_gl and has_ll:
                     try:
-                        word_align(gloss(inst), lang(inst))
+                        add_gloss_lang_alignments(inst)
                     except GlossLangAlignException as glae:
                         fail(F_L_G_ALN)
                     except MultipleNormLineException as mnle:
@@ -246,11 +254,14 @@ def enrich(class_path=None, **kwargs):
                                 project_pt_tier(inst, proj_aln_method=proj_aln_method)
                             except PhraseStructureProjectionException as pspe:
                                 fail(F_PROJECTION)
+                            except NoAlignmentProvidedError as nape:
+                                fail(F_L_G_ALN)
 
                             try:
                                 project_ds_tier(inst, proj_aln_method=proj_aln_method)
                             except ProjectionException as pe:
                                 fail(F_PROJECTION)
+
 
 
                 # Sort the tiers... ----------------------------------------------------
@@ -259,7 +270,7 @@ def enrich(class_path=None, **kwargs):
             except Exception as e:
                 # ENRICH_LOG.warn("Unknown Error occurred processing instance {}".format(inst.id))
                 # ENRICH_LOG.warn(e)
-                # raise(e)
+                raise(e)
                 fail(F_UNKNOWN)
 
             if not reasons:
