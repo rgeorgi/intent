@@ -261,6 +261,8 @@ def enrich(class_path=None, **kwargs):
                                 project_ds_tier(inst, proj_aln_method=proj_aln_method)
                             except ProjectionException as pe:
                                 fail(F_PROJECTION)
+                            except NoAlignmentProvidedError as nape:
+                                fail(F_L_G_ALN)
 
 
 
