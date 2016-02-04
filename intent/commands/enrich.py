@@ -271,8 +271,8 @@ def enrich(class_path=None, **kwargs):
 
             except Exception as e:
                 # ENRICH_LOG.warn("Unknown Error occurred processing instance {}".format(inst.id))
-                # ENRICH_LOG.warn(e)
-                raise(e)
+                ENRICH_LOG.debug(e)
+                # raise(e)
                 fail(F_UNKNOWN)
 
             if not reasons:
