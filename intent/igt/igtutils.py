@@ -12,7 +12,7 @@ import string
 # ===============================================================================
 # Sub-tasks of cleaning
 # ===============================================================================
-from intent.consts import punc_chars, list_re, word_re, punc_re
+from intent.consts import punc_chars, list_re, word_re, punc_re, paren_chars, all_punc_re
 from xigt.model import Tier, Item, Igt, XigtCorpus
 from xigt.codecs.xigtxml import encode_tier, encode_item, encode_igt, encode_xigtcorpus
 
@@ -55,7 +55,7 @@ def fix_grams(ret_str):
 
     For instance "3 SG" will become "3SG"
     """
-    for gram in ['3SG', '1PL', '2SG', '2PL']:
+    for gram in ['3SG', '2SG', '1SG', '1PL', '2PL', '3PL', 'NOM', 'ACC']:
         for i in range(1, len(gram) + 1):
             first, last = gram[:i], gram[i:]
 
@@ -145,11 +145,11 @@ def remove_hyphens(ret_str):
     return re.sub('[\-=:]', '', ret_str)
 
 def remove_extra_parens(ret_str):
-    parens = r'[\{\}\(\)\[\]]'
+    parens = r'[{}]'.format(paren_chars)
     return re.sub('{}*({}){}*'.format(parens, word_re, parens), r'\1', ret_str)
 
 def remove_extra_punc(ret_str):
-    return re.sub('{}*({}){}*'.format(punc_re, word_re, punc_re), r'\1', ret_str)
+    return re.sub('{}*({}){}*'.format(all_punc_re, word_re, all_punc_re), r'\1', ret_str)
 
 def remove_leading_punctuation(ret_str):
     return re.sub('^[%s]+' % string.punctuation, '', ret_str)

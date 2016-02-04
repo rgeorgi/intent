@@ -1,8 +1,9 @@
 import os
 from unittest import TestCase
 
-from intent.igt.create_tiers import morphemes, glosses
+from intent.igt.create_tiers import morphemes, glosses, gloss, lang
 from intent.igt.igt_functions import add_gloss_lang_alignments, intervening_characters, morph_align
+from intent.igt.igtutils import rgp
 from intent.igt.parsing import xc_load
 from intent.utils.env import proj_root, testfile_dir
 
@@ -77,3 +78,18 @@ class MorphAlignTests(TestCase):
         self.assertEquals(gloss_tokens[12].alignment, morph_tokens[6].id)
         self.assertEquals(gloss_tokens[13].alignment, morph_tokens[7].id)
         self.assertEquals(gloss_tokens[14].alignment, morph_tokens[7].id)
+
+class NewMorphAlignTests(TestCase):
+    def setUp(self):
+        self.xc = xc_load(os.path.join(testfile_dir, 'xigt/word_align.xml'))
+
+    def test_line_lengths(self):
+        inst = self.xc[1]
+        self.assertEqual(5, len(gloss(inst)))
+        self.assertEqual(6, len(lang(inst)))
+
+    def test_word_alignment(self):
+        inst = self.xc[1]
+        add_gloss_lang_alignments(inst)
+        rgp(inst)
+

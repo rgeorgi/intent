@@ -235,9 +235,18 @@ PARSE_VAR = 'parse_list'
 morpheme_boundary_chars = ['-','=']
 morpheme_interior_chars = ['.',':']
 
-punc_chars   = '\.,\'\"\?!\xc2\]\[\(\):\{\}'
+punc_chars   = '\.,\?!\]\[\(\)\;\{\}\xbf\xa1\u2026'
+quote_chars  = '\"\'\`\xab\xbb\x8b\x9b'
+other_chars  = ':-=<>/\\\*\+'
+paren_chars  = '\[\]\{\}\(\)'
+
+all_punc_chars = punc_chars+quote_chars+other_chars
+all_punc_re = '[{}]'.format(all_punc_chars)
+all_punc_re_mult = '{}+'.format(all_punc_re)
+
 punc_re      = '[{}]'.format(punc_chars)
 punc_re_mult = '{}+'.format(punc_re)
+
 no_punc_re   = '[^{}]'.format(punc_chars)
 word_re      = '[^{}\s]+'.format(punc_chars)
 

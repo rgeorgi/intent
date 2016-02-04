@@ -3,6 +3,7 @@ from unittest import TestCase
 from intent.alignment.Alignment import Alignment
 from intent.igt.igtutils import strip_leading_whitespace, clean_lang_string, clean_trans_string, strict_columnar_alignment, \
     is_strict_columnar_alignment
+from intent.utils.token import tokenize_string, sentence_tokenizer
 
 
 class CleanTests(TestCase):
@@ -35,7 +36,16 @@ class CleanTests(TestCase):
         self.assertEqual(clean_trans_string(self.l3), result)
 
 
+    def clean_new_trans_test(self):
+        orig = '"I don\'t understand any of it; I don\'t understand it at all"'
+        expected = " I don\'t understand any of it; I don\'t understand it at all "
+        result = clean_trans_string(orig)
 
+        self.assertEqual(result, expected)
+
+        tokenized          = tokenize_string(result, tokenizer=sentence_tokenizer).text()
+        tokenized_expected = "I don't understand any of it ; I don't understand it at all"
+        self.assertEqual(tokenized, tokenized_expected)
 
 class AlignTests(TestCase):
 
