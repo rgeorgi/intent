@@ -74,12 +74,24 @@ class NullGlossTest(TestCase):
 class L_G_WordAlignTests(TestCase):
 
     def setUp(self):
-        path = os.path.join(testfile_dir, 'xigt/multiple_lang_lines.xml')
+        path = os.path.join(testfile_dir, 'xigt/multiple_line_tests.xml')
         with open(path, 'r', encoding='utf-8') as f:
             self.xc = xigtxml.load(f)
 
     def align_test(self):
+        """
+        Confirm that the question mark gets split and is its own token,
+        but also that the lang and gloss lines still align correctly.
+        """
+        inst = self.xc[1]
+        self.assertEqual(len(lang(inst)), 4)
+        self.assertEqual(len(gloss(inst)), 3)
+        self.assertIsNone(word_align(gloss(inst), lang(inst)))
+
+    def test_correct_multiple_lang_behavior(self):
         inst = self.xc[0]
-        word_align(gloss(inst), lang(inst))
+        inst2 = self.xc[1]
+        self.assertRaises(GlossLangAlignException, word_align, gloss(inst), lang(inst))
+        self.assertIsNone(word_align(gloss(inst2), lang(inst2)))
 
 from intent.igt.igt_functions import *

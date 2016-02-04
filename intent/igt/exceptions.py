@@ -8,6 +8,7 @@ class RGXigtException(Exception): pass
 
 class XigtFormatException(RGXigtException): pass
 class NoNormLineException(XigtFormatException): pass
+class NoCleanLineException(XigtFormatException): pass
 class MultipleNormLineException(XigtFormatException): pass
 
 class NoTransLineException(NoNormLineException): pass

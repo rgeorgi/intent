@@ -312,6 +312,12 @@ def sort_lines(l):
     tags = l.attributes[ODIN_TAG_ATTRIBUTE].split('+')
     return (l.attributes.get(ODIN_JUDGMENT_ATTRIBUTE, ''), tags)
 
+def retrieve_cleaned_lines(inst, tag):
+    clean_tier = generate_clean_tier(inst)
+    lines = [line for line in clean_tier if tag in line.attributes[ODIN_TAG_ATTRIBUTE].split('+')]
+    return sorted(lines, key=sort_lines)
+
+
 def retrieve_normal_lines(inst, tag):
     """
     Get all the normalized lines .
@@ -529,14 +535,11 @@ def add_normal_line_to_tier(inst, tier, tag, func):
     :param func:
     """
     clean_tier = generate_clean_tier(inst)
-    clean_lines = [l for l in clean_tier if tag in l.attributes[ODIN_TAG_ATTRIBUTE].split('+')]
-
-    if len(clean_lines) > 1:
-        raise XigtFormatException("Clean tier should not have multiple lines of same tag.")
+    clean_lines = retrieve_cleaned_lines(inst, tag)
 
     # If there are clean lines for this tag... There must be only 1...
     # create it and add it to the tier.
-    elif clean_lines:
+    if clean_lines:
 
         attributes = {ODIN_TAG_ATTRIBUTE:clean_lines[0].attributes[ODIN_TAG_ATTRIBUTE]}
 

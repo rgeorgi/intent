@@ -1,0 +1,42 @@
+  <xigt-corpus xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <igt id="igt911-23" doc-id="911" line-range="663-666" tag-types="L+CR L+CN G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="hau" xsi:type="olac:language">Hausa</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="663" tag="L+CR">          Wa¥     ka         ganê?</item>
+      <item id="r2" line="664" tag="L">          asdfasdf</item>
+      <item id="r3" line="665" tag="G">           whom 2m.FOC.PF see</item>
+      <item id="r4" line="666" tag="T">          `Whom did you see?'</item>
+    </tier>
+    <tier id="c" type="odin" state="cleaned">
+      <item id="r1" line="663" tag="L+CR">          Wa¥     ka         ganê?</item>
+      <item id="r2" line="664" tag="L">          asdfasdf</item>
+      <item id="r3" line="665" tag="G">           whom 2m.FOC.PF see</item>
+      <item id="r4" line="666" tag="T">          `Whom did you see?'</item>
+    </tier>
+  </igt>
+    <igt id="igt911-23b" doc-id="911" line-range="663-666" tag-types="L+CR L+CN G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="hau" xsi:type="olac:language">Hausa</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="663" tag="L">          Wa¥     ka         ganê?</item>
+      <item id="r2" line="664" tag="L+CR">          asdfasdf</item>
+      <item id="r3" line="665" tag="G">           whom 2m.FOC.PF see</item>
+      <item id="r4" line="666" tag="T">          `Whom did you see?'</item>
+    </tier>
+    <tier id="c" type="odin" state="cleaned">
+      <item id="r1" line="663" tag="L">          Wa¥     ka         ganê?</item>
+      <item id="r2" line="664" tag="L+CR">          asdfasdf</item>
+      <item id="r3" line="665" tag="G">           whom 2m.FOC.PF see</item>
+      <item id="r4" line="666" tag="T">          `Whom did you see?'</item>
+    </tier>
+  </igt>
+</xigt-corpus>
