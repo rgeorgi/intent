@@ -5,7 +5,8 @@ Created on Sep 12, 2014
 '''
 
 # Global Imports ---------------------------------------------------------------
-import argparse, os
+import argparse
+import os
 
 # Internal imports -------------------------------------------------------------
 from intent.corpora.POSCorpus import POSCorpus
@@ -18,7 +19,7 @@ def conll_to_slashtags(infiles, outpath):
     '''
     main_c = POSCorpus()
     for f in infiles:
-        from intent.ingestion.conll.ConllCorpus import ConllCorpus
+        from intent.corpora.conll import ConllCorpus
         cp = ConllCorpus()
         c = cp.parse_file(root=f)
         main_c.extend(c)

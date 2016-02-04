@@ -2,11 +2,12 @@
 # -------------------------------------------
 # Script to evaluate dependency parser
 # -------------------------------------------
+import logging
 import os
+import sys
 from argparse import ArgumentParser
-import sys, logging
 
-from intent.ingestion.conll.ConllCorpus import ConllCorpus
+from intent.corpora.conll import ConllCorpus, eval_conll_paths
 from intent.interfaces.mst_parser import MSTParser
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.utils.argutils import existsfile
@@ -44,7 +45,7 @@ def eval_mst(model_path, test_path, out_prefix, lowercase=True, tagger=None, for
 
 
     mp.test(model_path, eval_path, out_path)
-    mp.eval(test_path, out_path)
+    eval_conll_paths(test_path, out_path)
 
 
 if __name__ == '__main__':

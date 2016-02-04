@@ -6,6 +6,7 @@ Created on Jan 31, 2014
 import sys
 
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
+from intent.utils.dicts import CountDict
 from intent.utils.env import tagger_model
 import collections
 
@@ -157,6 +158,10 @@ class ConllCorpus(list):
                     w = ConllWord(*line.split())
                     cur_sent.append(w)
 
+            # If the end of the file is reached without a blank line,
+            # Make sure to still add the last sentence.
+            if line.strip():
+                corp.append(cur_sent)
         return corp
 
     def raw(self):
@@ -200,9 +205,55 @@ class ConllCorpus(list):
         for sent in self:
             sent.strip_feats()
 
+# =============================================================================
+# EVALUATION
+# =============================================================================
+
+def eval_conll_paths(gold_path, target_path):
+    """
+    Given the paths to a gold file and target file, parse them
+    and then evaluate
+    """
+    g = ConllCorpus.read(gold_path)
+    t = ConllCorpus.read(target_path)
+
+    assert len(g) == len(t)
+    print(target_path)
+    eval_conll(g, t)
+
+def eval_conll(gold: ConllCorpus, target: ConllCorpus):
+    stats = collections.defaultdict(int)
+
+    assert len(gold) == len(target)
+    for goldsent, targetsent in zip(gold, target):
+        assert len(goldsent) == len(targetsent)
+        for goldword, targetword in zip(goldsent, targetsent):
+            # Do the pos tags match?
+            if goldword.postag == targetword.postag:
+                stats['pos_acc'] += 1
+            if goldword.head == targetword.head:
+                stats['ul_acc'] += 1
+                if goldword.deprel == targetword.deprel:
+                    stats['l_acc'] += 1
+
+            stats['words'] += 1
+
+    def acc(k):
+        nonlocal stats
+        return stats[k]/stats['words']*100
+
+    def print_acc(k):
+        fmt = '{:10s}{:<10.2f}'
+        print(fmt.format(k+',', acc(k)))
+# Now, print out the results.
+
+    print_acc('pos_acc')
+    print_acc('ul_acc')
+    print_acc('l_acc')
+
+
+
 if __name__ == '__main__':
-    cc = ConllCorpus.read(sys.argv[1])
-    sp = StanfordPOSTagger('/Users/rgeorgi/Documents/code/intent/experiments/dependencies/proj-heur/sv.tagger')
-    cc.tag(sp)
-    print(cc)
+    eval_conll_paths('/Users/rgeorgi/Documents/code/intent/experiments/dependencies/proj-heur/deu_proj_eval_tagged.txt',
+                     '/Users/rgeorgi/Documents/code/intent/experiments/dependencies/proj-heur/deu_proj_out_tagged.txt')
 

@@ -1,20 +1,19 @@
+import itertools
+import logging
 import re
 from collections import defaultdict
 from copy import copy
-import itertools
-import logging
-from intent.alignment.Alignment import Alignment
-
 
 from nltk.tree import ParentedTree, Tree
 
+from intent.alignment.Alignment import Alignment
 #===============================================================================
 # Constants / Strings
 #===============================================================================
 from intent.consts import punc_re_mult, PUNC_TAG
 from intent.igt.igtutils import clean_lang_token
 from intent.igt.references import item_index
-from intent.ingestion.conll.ConllCorpus import ConllSentence, ConllWord
+from intent.corpora.conll import ConllSentence, ConllWord
 
 DEPSTR_STANFORD = 'stanford'
 DEPSTR_CONLL    = 'conll'
