@@ -220,7 +220,7 @@ def get_trans_glosses_alignment(inst, aln_method=None):
     return get_bilingual_alignment(inst, trans(inst).id, glosses(inst).id, aln_method=aln_method)
 
 
-def obtain_wordpairs(aln, src_words, tgt_words):
+def obtain_wordpairs(aln, src_words, tgt_words, lowercase=True, clean_tokens=True):
     """
     Given two tiers and an alignment, return the pairs of words
     that are specified by that alignment.
@@ -229,6 +229,15 @@ def obtain_wordpairs(aln, src_words, tgt_words):
     for src_i, tgt_i in aln:
         src_word = src_words[src_i-1].value()
         tgt_word = tgt_words[tgt_i-1].value()
+
+        if lowercase:
+            src_word = src_word.lower()
+            tgt_word = tgt_word.lower()
+
+        if clean_tokens:
+            src_word = clean_lang_token(src_word, lowercase=False)
+            tgt_word = clean_lang_token(tgt_word, lowercase=False)
+
         word_pairs.append((src_word, tgt_word))
     return word_pairs
 
@@ -804,6 +813,7 @@ def giza_align_l_t(xc, use_heur = False, symmetric_heur = None):
             for trans_word, lang_word in wordpairs:
                 l_words.append(lang_word)
                 t_words.append(trans_word)
+                ALIGN_LOG.debug('LANG/TRANS: {}/{}'.format(lang_word, trans_word))
 
         l_sents.extend(l_words)
         t_sents.extend(t_words)
