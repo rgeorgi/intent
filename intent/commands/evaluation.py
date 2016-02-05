@@ -2,7 +2,8 @@ import os, sys
 from collections import defaultdict
 
 from intent.consts import NORM_LEVEL, ARG_ALN_MANUAL, INTENT_ALN_MANUAL, INTENT_ALN_GIZA, ALIGNER_FASTALIGN, \
-    GLOSS_WORD_ID, LANG_WORD_ID, INTENT_ALN_HEUR, INTENT_POS_TAGGER, INTENT_POS_PROJ, INTENT_POS_CLASS
+    GLOSS_WORD_ID, LANG_WORD_ID, INTENT_ALN_HEUR, INTENT_POS_TAGGER, INTENT_POS_PROJ, INTENT_POS_CLASS, \
+    INTENT_ALN_GIZAHEUR
 
 from intent.igt.parsing import xc_load
 
@@ -11,8 +12,8 @@ from intent.eval.AlignEval import AlignEval
 from intent.eval.pos_eval import poseval
 from intent.igt.igt_functions import heur_align_corp, giza_align_t_g, remove_alignments, copy_xigt, heur_align_inst, \
     classify_gloss_pos, tag_trans_pos, get_trans_gloss_lang_alignment, get_trans_gloss_alignment, giza_align_l_t, \
-    get_trans_lang_alignment, get_bilingual_alignment_tier
-from intent.igt.create_tiers import trans, gloss, gloss_tag_tier
+    get_trans_lang_alignment, get_bilingual_alignment_tier, add_gloss_lang_alignments, tier_alignment
+from intent.igt.create_tiers import trans, gloss, gloss_tag_tier, glosses
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.utils.dicts import POSEvalDict
@@ -58,6 +59,7 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
     for f in filelist:
         print('Evaluating on file: {}'.format(f))
         xc = xc_load(f, mode=INCREMENTAL)
+        xc.id = "GER"
 
         # Test the classifier if evaluation is requested.
         if classifier_path is not None:
@@ -69,11 +71,13 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
         # Test alignment if requested.
 
         if eval_alignment:
+            lang = os.path.basename(f)
+            mas.add_corpus('gold', INTENT_ALN_MANUAL, lang, xc)
             EVAL_LOG.log(NORM_LEVEL, "Evaluating heuristic methods...")
-            evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger)
+            evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang)
+
             EVAL_LOG.log(NORM_LEVEL, "Evaluating statistical methods...")
-            evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger)
-            print(mas.methods)
+            evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang)
 
 
     mas.eval_all()
@@ -100,21 +104,19 @@ class MultAlignScorer(object):
         :type xc: RGCorpus
         """
         for inst in xc:
+            # -------------------------------------------
+            # Only continue when there is a gold standard
+            # alignment to compare against.
+            # -------------------------------------------
+            gold = get_trans_gloss_lang_alignment(inst, aln_method=ARG_ALN_MANUAL)
+            if gold is None:
+                continue
             if lang_trans:
-                gold = get_trans_gloss_lang_alignment(inst, aln_method=ARG_ALN_MANUAL)
-                if gold is None:
-                    continue
-                else:
-                    aln = get_trans_lang_alignment(inst)
-                    self.add_alignment(name, lang, aln)
-
+                aln = get_trans_lang_alignment(inst)
+                self.add_alignment(name, lang, aln)
             else:
-                gold = get_trans_gloss_alignment(inst, aln_method=ARG_ALN_MANUAL)
-                if gold is None:
-                    continue
-                else:
-                    aln = get_trans_gloss_alignment(inst, aln_method=method)
-                    self.add_alignment(name, lang, aln)
+                aln = get_trans_gloss_alignment(inst, aln_method=method)
+                self.add_alignment(name, lang, aln)
 
     def eval_all(self):
         overall_dict = defaultdict(list)
@@ -137,7 +139,7 @@ class MultAlignScorer(object):
             print(','.join(['overall',method]+[str(i) for i in overall_dict[method].all()]))
 
 
-def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj):
+def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj, lang):
     EVAL_LOG.info('Evaluating heuristic methods on file "{}"'.format(os.path.basename(f)))
 
     for inst in xc:
@@ -148,10 +150,6 @@ def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj):
 
         if not manual:
             continue
-
-        lang = os.path.basename(f)
-
-        mas.add_alignment('gold', lang, manual)
 
         # heur = inst.heur_align(lowercase=True, stem=True, tokenize=True, no_multiples=False, use_pos=True)
         heur = heur_align_inst(copy_xigt(inst), lowercase=False, stem=False, tokenize=False, no_multiples=True, use_pos=False)
@@ -178,16 +176,9 @@ def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj):
         heur = heur_align_inst(b, lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=True)
         mas.add_alignment('POS', lang, heur)
 
-        
 
 
-
-        # inst.heur_align(stem=False)
-        # inst.heur_align(tokenize=False)
-        # inst.heur_align(no_multiples=True)
-        # heur = inst.get_trans_gloss_alignment(INTENT_ALN_HEUR)
-
-def evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger):
+def evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang):
     """
     :type xc: RGCorpus
     :type mas: MultAlignScorer
@@ -195,36 +186,36 @@ def evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger):
     heur_align_corp(xc)
 
     # Start by adding the manual alignments...
-    mas.add_corpus('gold', INTENT_ALN_MANUAL, f, xc)
+
 
     giza_align_l_t(xc)
-    mas.add_corpus('lang_trans', INTENT_ALN_GIZA, f, xc, lang_trans=True)
+    mas.add_corpus('lang_trans', INTENT_ALN_GIZA, lang, xc, lang_trans=True)
     remove_alignments(xc, INTENT_ALN_GIZA)
 
     EVAL_LOG.info("")
     giza_align_t_g(xc, aligner=ALIGNER_FASTALIGN, use_heur=False)
-    mas.add_corpus('fast_align', INTENT_ALN_GIZA, f, xc)
+    mas.add_corpus('fast_align', INTENT_ALN_GIZA, lang, xc)
     remove_alignments(xc, INTENT_ALN_GIZA)
 
     giza_align_t_g(xc, aligner=ALIGNER_FASTALIGN, use_heur=True)
-    mas.add_corpus('fast_align_heur', INTENT_ALN_GIZA, f, xc)
-    remove_alignments(xc, INTENT_ALN_GIZA)
+    mas.add_corpus('fast_align_heur', INTENT_ALN_GIZAHEUR, lang, xc)
+    remove_alignments(xc, INTENT_ALN_GIZAHEUR)
 
     giza_align_t_g(xc, use_heur=False, resume=False)
-    mas.add_corpus('statistic', INTENT_ALN_GIZA, f, xc)
+    mas.add_corpus('statistic', INTENT_ALN_GIZA, lang, xc)
     remove_alignments(xc, INTENT_ALN_GIZA)
 
     giza_align_t_g(xc, use_heur=True, resume=False)
-    mas.add_corpus('statistic_heur', INTENT_ALN_GIZA, f, xc)
-    remove_alignments(xc, INTENT_ALN_GIZA)
+    mas.add_corpus('statistic_heur', INTENT_ALN_GIZAHEUR, lang, xc)
+    remove_alignments(xc, INTENT_ALN_GIZAHEUR)
 
     giza_align_t_g(xc, use_heur=False, resume=True)
-    mas.add_corpus('statistic+', INTENT_ALN_GIZA, f, xc)
+    mas.add_corpus('statistic+', INTENT_ALN_GIZA, lang, xc)
     remove_alignments(xc, INTENT_ALN_GIZA)
 
     giza_align_t_g(xc, use_heur=True, resume=True)
-    mas.add_corpus('statistic+_heur', INTENT_ALN_GIZA, f, xc)
-    remove_alignments(xc, INTENT_ALN_GIZA)
+    mas.add_corpus('statistic+_heur', INTENT_ALN_GIZAHEUR, lang, xc)
+    remove_alignments(xc, INTENT_ALN_GIZAHEUR)
 
 
 

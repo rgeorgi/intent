@@ -28,7 +28,7 @@ class AlignEval():
         if gold_alignments is None:
             gold_alignments = []
 
-        assert len(test_alignments) == len(gold_alignments)
+        assert len(test_alignments) == len(gold_alignments), '{} vs. {}'.format(len(test_alignments), len(gold_alignments))
 
         for model_aln, gold_aln in zip(test_alignments, gold_alignments):
 

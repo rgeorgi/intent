@@ -430,10 +430,7 @@ class Alignment(set):
         super().add(*args, **kwargs)
 
     def __str__(self):
-        ret_str = ''
-        for elt in self:
-            ret_str += str(elt)+', '
-        return ret_str[:-2]
+        return 'Alignment{'+', '.join([str(e) for e in sorted(self)])+'}'
 
     def contains_tgt(self, key):
         return bool([tgt for src,tgt in self if tgt==key])
