@@ -2,7 +2,7 @@ import logging
 import sys
 
 from intent.consts import *
-from intent.igt.create_tiers import gloss, trans, gloss_line, trans_lines, lang_lines, pos_tags, trans_tag_tier
+from intent.igt.create_tiers import gloss, trans, gloss_line, trans_lines, lang_lines, trans_tag_tier
 from intent.igt.create_tiers import lang
 from intent.igt.exceptions import GlossLangAlignException, MultipleNormLineException, PhraseStructureProjectionException, \
     ProjectionException, NoNormLineException
