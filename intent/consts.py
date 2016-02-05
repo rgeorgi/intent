@@ -237,7 +237,7 @@ morpheme_interior_chars = ['.',':']
 
 punc_chars   = '\.,\?!\]\[\(\)\;\{\}\xbf\xa1\u2026'
 quote_chars  = '\"\'\`\xab\xbb\x8b\x9b'
-other_chars  = ':-=<>/\\\*\+'
+other_chars  = ':-=<>/\\\*\+_'
 paren_chars  = '\[\]\{\}\(\)'
 
 all_punc_chars = punc_chars+quote_chars+other_chars
