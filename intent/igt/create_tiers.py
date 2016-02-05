@@ -640,6 +640,3 @@ def pos_tag_tier(inst, tier_id, tag_method = None):
     pos_tier = xigt_find(inst, alignment=tier_id, type=POS_TIER_TYPE, others = filters)
 
     return pos_tier
-
-def pos_tags(inst, tier_id, tag_method = None):
-    ptt = pos_tag_tier(inst, tier_id, tag_method=tag_method)

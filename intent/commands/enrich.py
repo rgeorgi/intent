@@ -2,7 +2,7 @@ import logging
 import sys
 
 from intent.consts import *
-from intent.igt.create_tiers import gloss, trans, gloss_line, trans_lines, lang_lines
+from intent.igt.create_tiers import gloss, trans, gloss_line, trans_lines, lang_lines, pos_tags, trans_tag_tier
 from intent.igt.create_tiers import lang
 from intent.igt.exceptions import GlossLangAlignException, MultipleNormLineException, PhraseStructureProjectionException, \
     ProjectionException, NoNormLineException
@@ -235,9 +235,9 @@ def enrich(class_path=None, **kwargs):
                         # POS Projection
                         # -------------------------------------------
                         if ARG_POS_PROJ in pos_args:
-                            pos_tags = pos_tags(inst, trans(inst).id)
+                            trans_tags = trans_tag_tier(inst)
 
-                            if not pos_tags:
+                            if not trans_tags:
                                 fail(F_NO_TRANS_POS)
                             else:
                                 project_trans_pos_to_gloss(inst)
