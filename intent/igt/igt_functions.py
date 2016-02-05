@@ -155,8 +155,13 @@ def get_bilingual_alignment(inst, src_id, tgt_id, aln_method = None):
     if ba_tier is not None:
         a = Alignment(type=get_intent_method(ba_tier))
         for ba in ba_tier:
-            src_id = ba.attributes[SOURCE_ATTRIBUTE]
-            tgt_id = ba.attributes[TARGET_ATTRIBUTE]
+            # If either of the attributes is "None,"
+            # continue.
+            src_id = ba.attributes.get(SOURCE_ATTRIBUTE)
+            tgt_id = ba.attributes.get(TARGET_ATTRIBUTE)
+
+            if src_id is None or tgt_id is None:
+                continue
 
             src_item = xigt_find(inst, id=src_id)
             tgt_ids = ids(tgt_id)
