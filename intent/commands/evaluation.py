@@ -1,12 +1,18 @@
-import os
+import os, sys
 from collections import defaultdict
 
-from xigt.codecs import xigtxml
+from intent.consts import NORM_LEVEL, ARG_ALN_MANUAL, INTENT_ALN_MANUAL, INTENT_ALN_GIZA, ALIGNER_FASTALIGN, \
+    GLOSS_WORD_ID, LANG_WORD_ID, INTENT_ALN_HEUR, INTENT_POS_TAGGER, INTENT_POS_PROJ, INTENT_POS_CLASS
 
-from intent.consts import *
+from intent.igt.parsing import xc_load
+
+
 from intent.eval.AlignEval import AlignEval
 from intent.eval.pos_eval import poseval
-from intent.igt.igt_functions import heur_align_corp, giza_align_t_g, remove_alignments
+from intent.igt.igt_functions import heur_align_corp, giza_align_t_g, remove_alignments, copy_xigt, heur_align_inst, \
+    classify_gloss_pos, tag_trans_pos, get_trans_gloss_lang_alignment, get_trans_gloss_alignment, giza_align_l_t, \
+    get_trans_lang_alignment, get_bilingual_alignment_tier
+from intent.igt.create_tiers import trans, gloss, gloss_tag_tier
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.utils.dicts import POSEvalDict
@@ -51,7 +57,7 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
     # Go through all the files in the list...
     for f in filelist:
         print('Evaluating on file: {}'.format(f))
-        xc = xigtxml.load(open(f, 'r', encoding='utf-8'), mode=INCREMENTAL)
+        xc = xc_load(f, mode=INCREMENTAL)
 
         # Test the classifier if evaluation is requested.
         if classifier_path is not None:
@@ -63,8 +69,12 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
         # Test alignment if requested.
 
         if eval_alignment:
-            # evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger)
+            EVAL_LOG.log(NORM_LEVEL, "Evaluating heuristic methods...")
+            evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger)
+            EVAL_LOG.log(NORM_LEVEL, "Evaluating statistical methods...")
             evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger)
+            print(mas.methods)
+
 
     mas.eval_all()
     # Report the POS tagging accuracy...
@@ -84,18 +94,27 @@ class MultAlignScorer(object):
         if method != 'gold' and method not in self.methods:
             self.methods.append(method)
 
-    def add_corpus(self, name, method, lang, xc):
+    def add_corpus(self, name, method, lang, xc, lang_trans = False):
         """
         :type method: str
         :type xc: RGCorpus
         """
         for inst in xc:
-            gold = inst.get_trans_gloss_alignment(aln_method=ARG_ALN_MANUAL)
-            if gold is None:
-                continue
+            if lang_trans:
+                gold = get_trans_gloss_lang_alignment(inst, aln_method=ARG_ALN_MANUAL)
+                if gold is None:
+                    continue
+                else:
+                    aln = get_trans_lang_alignment(inst)
+                    self.add_alignment(name, lang, aln)
+
             else:
-                aln = inst.get_trans_gloss_alignment(aln_method=method)
-                self.add_alignment(name, lang, aln)
+                gold = get_trans_gloss_alignment(inst, aln_method=ARG_ALN_MANUAL)
+                if gold is None:
+                    continue
+                else:
+                    aln = get_trans_gloss_alignment(inst, aln_method=method)
+                    self.add_alignment(name, lang, aln)
 
     def eval_all(self):
         overall_dict = defaultdict(list)
@@ -121,14 +140,12 @@ class MultAlignScorer(object):
 def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj):
     EVAL_LOG.info('Evaluating heuristic methods on file "{}"'.format(os.path.basename(f)))
 
-    manual_alignments = []
-    heur_alignments = []
-
     for inst in xc:
 
         # -------------------------------------------
         # Only evaluate against instances that have a gold alignment.
-        manual = inst.get_trans_gloss_alignment(aln_method=INTENT_ALN_MANUAL)
+        manual = get_trans_gloss_alignment(inst, aln_method=INTENT_ALN_MANUAL)
+
         if not manual:
             continue
 
@@ -137,28 +154,28 @@ def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj):
         mas.add_alignment('gold', lang, manual)
 
         # heur = inst.heur_align(lowercase=True, stem=True, tokenize=True, no_multiples=False, use_pos=True)
-        heur = inst.copy().heur_align(lowercase=False, stem=False, tokenize=False, no_multiples=True, use_pos=False)
+        heur = heur_align_inst(copy_xigt(inst), lowercase=False, stem=False, tokenize=False, no_multiples=True, use_pos=False)
         mas.add_alignment('baseline', lang, heur)
 
-        heur = inst.copy().heur_align(lowercase=True, stem=False, tokenize=False, no_multiples=True, use_pos=False)
+        heur = heur_align_inst(copy_xigt(inst), lowercase=True, stem=False, tokenize=False, no_multiples=True, use_pos=False)
         mas.add_alignment('lowercasing', lang, heur)
 
-        heur = inst.copy().heur_align(lowercase=True, stem=False, tokenize=True, no_multiples=True, use_pos=False)
+        heur = heur_align_inst(copy_xigt(inst), lowercase=True, stem=False, tokenize=True, no_multiples=True, use_pos=False)
         mas.add_alignment('Tokenization', lang, heur)
 
-        heur = inst.copy().heur_align(lowercase=True, stem=False, tokenize=True, no_multiples=False, use_pos=False)
+        heur = heur_align_inst(copy_xigt(inst), lowercase=True, stem=False, tokenize=True, no_multiples=False, use_pos=False)
         mas.add_alignment('Multiple Matches', lang, heur)
 
-        heur = inst.copy().heur_align(lowercase=True, stem=True, tokenize=True, no_multiples=False, use_pos=False)
+        heur = heur_align_inst(copy_xigt(inst), lowercase=True, stem=True, tokenize=True, no_multiples=False, use_pos=False)
         mas.add_alignment('Morphing', lang, heur)
 
-        heur = inst.copy().heur_align(lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=False)
+        heur = heur_align_inst(copy_xigt(inst), lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=False)
         mas.add_alignment('Grams', lang, heur)
 
-        b = inst.copy()
-        b.classify_gloss_pos(classifier_obj)
-        b.tag_trans_pos(tagger_obj)
-        heur = b.heur_align(lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=True)
+        b = copy_xigt(inst)
+        classify_gloss_pos(b, classifier_obj)
+        tag_trans_pos(b, tagger_obj)
+        heur = heur_align_inst(b, lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=True)
         mas.add_alignment('POS', lang, heur)
 
         
@@ -180,7 +197,11 @@ def evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger):
     # Start by adding the manual alignments...
     mas.add_corpus('gold', INTENT_ALN_MANUAL, f, xc)
 
-    EVAL_LOG.info("")    
+    giza_align_l_t(xc)
+    mas.add_corpus('lang_trans', INTENT_ALN_GIZA, f, xc, lang_trans=True)
+    remove_alignments(xc, INTENT_ALN_GIZA)
+
+    EVAL_LOG.info("")
     giza_align_t_g(xc, aligner=ALIGNER_FASTALIGN, use_heur=False)
     mas.add_corpus('fast_align', INTENT_ALN_GIZA, f, xc)
     remove_alignments(xc, INTENT_ALN_GIZA)

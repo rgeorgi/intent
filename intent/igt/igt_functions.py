@@ -169,6 +169,10 @@ def get_bilingual_alignment(inst, src_id, tgt_id, aln_method = None):
 
         return a
 
+def get_trans_lang_alignment(inst, aln_method=None):
+    trans_lang_aln = get_bilingual_alignment(inst, trans(inst).id, lang(inst).id, aln_method=aln_method)
+    return trans_lang_aln
+
 
 def get_trans_gloss_alignment(inst, aln_method=None):
     # -------------------------------------------
@@ -681,7 +685,7 @@ def heur_align_inst(inst, **kwargs):
             # TODO: In order to do the alignment with POS tags, they need to be at the morpheme level. Find a better way to do this?
             # Make sure to expand the POS tags to function at the morpheme-level...
             if kwargs.get('tokenize', True):
-                glosses_tags = [gloss_pos_tier[item_index(find_gloss_word(inst, gloss))-1] for gloss in glosses(inst)]
+                glosses_tags = [gloss_pos_tier[item_index(find_gloss_word(inst, glosses_item))-1] for glosses_item in glosses(inst)]
                 kwargs['gloss_pos'] = glosses_tags
             else:
                 kwargs['gloss_pos'] = gloss_pos_tier
@@ -704,31 +708,31 @@ def heur_align_inst(inst, **kwargs):
     if kwargs.get('tokenize', True):
         set_bilingual_alignment(inst, trans(inst), glosses(inst), aln, aln_method=aln_method)
     else:
-        set_bilingual_alignment(inst, trans(inst), glosses(inst), aln, aln_method=aln_method)
+        set_bilingual_alignment(inst, trans(inst), gloss(inst), aln, aln_method=aln_method)
 
     return get_trans_gloss_alignment(inst, aln_method=aln_method)
 
-def giza_align_l_t(inst, symmetric = None):
+def giza_align_l_t(xc, symmetric = None):
     """
     Perform giza alignments directly from language to translation lines, for comparison
 
     :rtype: Alignment
     """
 
-    l_sents = [tier_text(lang(i), return_list=True) for i in inst]
-    t_sents = [tier_text(trans(i), return_list=True) for i in inst]
+    l_sents = [tier_text(lang(i), return_list=True) for i in xc]
+    t_sents = [tier_text(trans(i), return_list=True) for i in xc]
 
     ga = GizaAligner()
 
     t_l_sents = ga.temp_train(t_sents, l_sents)
 
-    assert len(t_l_sents) == len(inst)
+    assert len(t_l_sents) == len(xc)
 
     if symmetric is not None:
         l_t_sents = ga.temp_train(l_sents, t_sents)
 
 
-    for i, igt in enumerate(inst):
+    for i, igt in enumerate(xc):
         t_l = t_l_sents[i]
 
         # If we want these symmetricized...
@@ -871,12 +875,22 @@ def giza_align_t_g(xc, aligner=ALIGNER_GIZA, resume = True, use_heur = False, sy
 
             g_t_alignments[i] = getattr(g_t, symmetric)(t_g.flip())
 
+    # =============================================================================
+    # Check to make sure the correct number of alignments are returned.
+    # =============================================================================
+
+
     # -------------------------------------------
-    # Check to make sure the correct number of alignments
-    # is returned
+    # If we are using heuristic alignment to augment,
+    # then we expect the correct number of sentences AND
+    # the number of aligned tokens that we gathered.
     # -------------------------------------------
-    if len(g_t_alignments) != sent_num:
-        raise AlignmentError('Something went wrong with statistical alignment, {} alignments were returned, {} expected.'.format(len(g_t_alignments), sent_num))
+    expected_sents = sent_num
+    if use_heur:
+        expected_sents += len(g_morphs)
+
+    if len(g_t_alignments) != expected_sents:
+        raise AlignmentError('Something went wrong with statistical alignment, {} alignments were returned, {} expected.'.format(len(g_t_alignments), expected_sents))
 
     # -------------------------------------------
     # Next, iterate through the aligned sentences and assign their alignments
@@ -1763,7 +1777,7 @@ def remove_alignments(self, aln_method=None):
 
     for inst in self:
         for t in xigt_findall(inst, type=ALN_TIER_TYPE, others=filters):
-            t.delete()
+            delete_tier(t)
 
 def copy_xigt(obj, **kwargs):
     if isinstance(obj, XigtCorpus):
