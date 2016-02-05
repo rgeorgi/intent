@@ -1,0 +1,765 @@
+<xigt-corpus xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <igt id="igt10-1" doc-id="10" line-range="28-31" tag-types="L+CR L+CR G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="28" tag="L+CR">                                  ye-di.1</item>
+      <item id="r2" line="29" tag="L+CR">    (1)    Emine elma-yi</item>
+      <item id="r3" line="30" tag="G">           Emine apple-ACC eat-PAST.3sg</item>
+      <item id="r4" line="31" tag="T">           `Emine ate the apple.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="28 29" tag="L">    (1)    Emine elma-yi          ye-di.1</item>
+      <item id="c2" alignment="r3" line="30" tag="G">           Emine apple-ACC eat-PAST.3sg</item>
+      <item id="c3" alignment="r4" line="31" tag="T">           `Emine ate the apple.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="28 29" tag="L">Emine elma-yi          ye-di.1</item>
+      <item id="n2" alignment="c2" line="30" tag="G">Emine apple-ACC eat-PAST.3sg</item>
+      <item id="n3" alignment="c3" line="31" tag="T">Emine ate the apple.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-2" doc-id="10" line-range="45-47" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="45" tag="L">    (2)   stanbul-a       gid-iyor-um.</item>
+      <item id="r2" line="46" tag="G">          Istanbul-DAT go-PROG-1sg</item>
+      <item id="r3" line="47" tag="T">          `I am going to Istanbul.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="45" tag="L">    (2)   stanbul-a       gid-iyor-um.</item>
+      <item id="c2" alignment="r2" line="46" tag="G">          Istanbul-DAT go-PROG-1sg</item>
+      <item id="c3" alignment="r3" line="47" tag="T">          `I am going to Istanbul.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="45" tag="L">stanbul-a       gid-iyor-um.</item>
+      <item id="n2" alignment="c2" line="46" tag="G">Istanbul-DAT go-PROG-1sg</item>
+      <item id="n3" alignment="c3" line="47" tag="T">I am going to Istanbul.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-3" doc-id="10" line-range="49-51" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="49" tag="L">    (3)   stanbul-a       git-me-yecek-ti-m.</item>
+      <item id="r2" line="50" tag="G">          Istanbul-DAT go-NEG-FUT-PAST-1sg</item>
+      <item id="r3" line="51" tag="T">          `I wasn't going to go to Istanbul.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="49" tag="L">    (3)   stanbul-a       git-me-yecek-ti-m.</item>
+      <item id="c2" alignment="r2" line="50" tag="G">          Istanbul-DAT go-NEG-FUT-PAST-1sg</item>
+      <item id="c3" alignment="r3" line="51" tag="T">          `I wasn't going to go to Istanbul.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="49" tag="L">stanbul-a       git-me-yecek-ti-m.</item>
+      <item id="n2" alignment="c2" line="50" tag="G">Istanbul-DAT go-NEG-FUT-PAST-1sg</item>
+      <item id="n3" alignment="c3" line="51" tag="T">I wasn't going to go to Istanbul.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-4" doc-id="10" line-range="90-91" tag-types="L T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="ita" xsi:type="olac:language">Italian</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="90" tag="L">    (5) a. Alle due, Gianni non ha solitamente mica mangiato, ancora.</item>
+      <item id="r2" line="91" tag="T">           `At two, Gianni has usually not eaten yet.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="90" tag="L">    (5) a. Alle due, Gianni non ha solitamente mica mangiato, ancora.</item>
+      <item id="c2" alignment="r2" line="91" tag="T">           `At two, Gianni has usually not eaten yet.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="90" tag="L">Alle due, Gianni non ha solitamente mica mangiato, ancora.</item>
+      <item id="n2" alignment="c2" line="91" tag="T">At two, Gianni has usually not eaten yet.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-5" doc-id="10" line-range="93-94" tag-types="L T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="ita" xsi:type="olac:language">Italian</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="93" tag="L">          b. *Alle due, Gianni non ha mica solitamente mangiato, ancora.</item>
+      <item id="r2" line="94" tag="T">             `At two, Gianni has not usually eaten yet.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="93" tag="L">          b. *Alle due, Gianni non ha mica solitamente mangiato, ancora.</item>
+      <item id="c2" alignment="r2" line="94" tag="T">             `At two, Gianni has not usually eaten yet.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" judgment="*" line="93" tag="L">Alle due, Gianni non ha mica solitamente mangiato, ancora.</item>
+      <item id="n2" alignment="c2" line="94" tag="T">At two, Gianni has not usually eaten yet.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-6" doc-id="10" line-range="103-105" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="103" tag="L">    (6)     Ahmet hizli     ko-uyor-du</item>
+      <item id="r2" line="104" tag="G">            Ahmet quickly run-PROG-PAST.3sg</item>
+      <item id="r3" line="105" tag="T">            `Ahmet was running quickly.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="103" tag="L">    (6)     Ahmet hizli     ko-uyor-du</item>
+      <item id="c2" alignment="r2" line="104" tag="G">            Ahmet quickly run-PROG-PAST.3sg</item>
+      <item id="c3" alignment="r3" line="105" tag="T">            `Ahmet was running quickly.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="103" tag="L">Ahmet hizli     ko-uyor-du</item>
+      <item id="n2" alignment="c2" line="104" tag="G">Ahmet quickly run-PROG-PAST.3sg</item>
+      <item id="n3" alignment="c3" line="105" tag="T">Ahmet was running quickly.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-7" doc-id="10" line-range="114-116" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="114" tag="L">    (7) a. Acikcasi muhtemelen gel-me-yece-im.</item>
+      <item id="r2" line="115" tag="G">           frankly     probably    come-NEG-FUT-1sg</item>
+      <item id="r3" line="116" tag="T">           `Frankly, I probably won't come.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="114" tag="L">    (7) a. Acikcasi muhtemelen gel-me-yece-im.</item>
+      <item id="c2" alignment="r2" line="115" tag="G">           frankly     probably    come-NEG-FUT-1sg</item>
+      <item id="c3" alignment="r3" line="116" tag="T">           `Frankly, I probably won't come.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="114" tag="L">Acikcasi muhtemelen gel-me-yece-im.</item>
+      <item id="n2" alignment="c2" line="115" tag="G">frankly     probably    come-NEG-FUT-1sg</item>
+      <item id="n3" alignment="c3" line="116" tag="T">Frankly, I probably won't come.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-8" doc-id="10" line-range="118-120" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="118" tag="L">          b. *Muhtemelen acikcasi gel-me-yece-im.</item>
+      <item id="r2" line="119" tag="G">             probably        frankly    come-NEG-FUT-1sg</item>
+      <item id="r3" line="120" tag="T">             `Probably I frankly won't come.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="118" tag="L">          b. *Muhtemelen acikcasi gel-me-yece-im.</item>
+      <item id="c2" alignment="r2" line="119" tag="G">             probably        frankly    come-NEG-FUT-1sg</item>
+      <item id="c3" alignment="r3" line="120" tag="T">             `Probably I frankly won't come.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" judgment="*" line="118" tag="L">Muhtemelen acikcasi gel-me-yece-im.</item>
+      <item id="n2" alignment="c2" line="119" tag="G">probably        frankly    come-NEG-FUT-1sg</item>
+      <item id="n3" alignment="c3" line="120" tag="T">Probably I frankly won't come.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-9" doc-id="10" line-range="122-125" tag-types="L G B T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="122" tag="L">    (8) a. Her zaman     iyi  yaz-ar.</item>
+      <item id="r2" line="123" tag="G">           always        good write-AOR.3sg</item>
+      <item id="r3" line="124" tag="B" />
+      <item id="r4" line="125" tag="T">           `He always writes well.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="122" tag="L">    (8) a. Her zaman     iyi  yaz-ar.</item>
+      <item id="c2" alignment="r2" line="123" tag="G">           always        good write-AOR.3sg</item>
+      <item id="c3" alignment="r3" line="124" tag="B" />
+      <item id="c4" alignment="r4" line="125" tag="T">           `He always writes well.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="122" tag="L">Her zaman     iyi  yaz-ar.</item>
+      <item id="n2" alignment="c2" line="123" tag="G">always        good write-AOR.3sg</item>
+      <item id="n3" alignment="c4" line="125" tag="T">He always writes well.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-10" doc-id="10" line-range="127-129" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="127" tag="L">        b. *Iyi her zaman yaz-ar.</item>
+      <item id="r2" line="128" tag="G">           Good always      write-AOR.3sg</item>
+      <item id="r3" line="129" tag="T">           `He well always writes.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="127" tag="L">        b. *Iyi her zaman yaz-ar.</item>
+      <item id="c2" alignment="r2" line="128" tag="G">           Good always      write-AOR.3sg</item>
+      <item id="c3" alignment="r3" line="129" tag="T">           `He well always writes.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" judgment="*" line="127" tag="L">Iyi her zaman yaz-ar.</item>
+      <item id="n2" alignment="c2" line="128" tag="G">Good always      write-AOR.3sg</item>
+      <item id="n3" alignment="c3" line="129" tag="T">He well always writes.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-11" doc-id="10" line-range="140-142" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="140" tag="L">    (9) a. Ahmet imdi akillica teslim       ol-du.</item>
+      <item id="r2" line="141" tag="G">           Ahmet now wisely surrender be-PAST.3sg</item>
+      <item id="r3" line="142" tag="T">           `Ahmet has now wisely surrendered.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="140" tag="L">    (9) a. Ahmet imdi akillica teslim       ol-du.</item>
+      <item id="c2" alignment="r2" line="141" tag="G">           Ahmet now wisely surrender be-PAST.3sg</item>
+      <item id="c3" alignment="r3" line="142" tag="T">           `Ahmet has now wisely surrendered.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="140" tag="L">Ahmet imdi akillica teslim       ol-du.</item>
+      <item id="n2" alignment="c2" line="141" tag="G">Ahmet now wisely surrender be-PAST.3sg</item>
+      <item id="n3" alignment="c3" line="142" tag="T">Ahmet has now wisely surrendered.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-12" doc-id="10" line-range="144-146" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="144" tag="L">        b. Ahmet akillica imdi teslim       ol-du.</item>
+      <item id="r2" line="145" tag="G">           Ahmet wisely now surrender be-PAST.3sg</item>
+      <item id="r3" line="146" tag="T">           `Ahmet has wisely now surrendered.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="144" tag="L">        b. Ahmet akillica imdi teslim       ol-du.</item>
+      <item id="c2" alignment="r2" line="145" tag="G">           Ahmet wisely now surrender be-PAST.3sg</item>
+      <item id="c3" alignment="r3" line="146" tag="T">           `Ahmet has wisely now surrendered.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="144" tag="L">Ahmet akillica imdi teslim       ol-du.</item>
+      <item id="n2" alignment="c2" line="145" tag="G">Ahmet wisely now surrender be-PAST.3sg</item>
+      <item id="n3" alignment="c3" line="146" tag="T">Ahmet has wisely now surrendered.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-13" doc-id="10" line-range="155-159" tag-types="L G L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="155" tag="L">    (10) a. Ders-e       gel-di-imiz-de,         Can {her zaman/genelde}</item>
+      <item id="r2" line="156" tag="G">            class-DAT come-NOM-1pl-LOC Can {always/usually}</item>
+      <item id="r3" line="157" tag="L">            zaten ora-da-dir.</item>
+      <item id="r4" line="158" tag="G">            already there-LOC-3sg</item>
+      <item id="r5" line="159" tag="T">            `When we get to class, Can is {always/usually} already there.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="155" tag="L">    (10) a. Ders-e       gel-di-imiz-de,         Can {her zaman/genelde}</item>
+      <item id="c2" alignment="r2" line="156" tag="G">            class-DAT come-NOM-1pl-LOC Can {always/usually}</item>
+      <item id="c3" alignment="r3" line="157" tag="L">            zaten ora-da-dir.</item>
+      <item id="c4" alignment="r4" line="158" tag="G">            already there-LOC-3sg</item>
+      <item id="c5" alignment="r5" line="159" tag="T">            `When we get to class, Can is {always/usually} already there.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1,c3" line="155 157" tag="L">Ders-e       gel-di-imiz-de,         Can {her zaman/genelde}             zaten ora-da-dir.    </item>
+      <item id="n2" alignment="c2,c4" line="156 158" tag="G">class-DAT come-NOM-1pl-LOC Can {always/usually}                          already there-LOC-3sg</item>
+      <item id="n3" alignment="c5" line="159" tag="T">When we get to class, Can is {always/usually} already there.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-14" doc-id="10" line-range="163-165" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="163" tag="L">    (11) a. Can       zaten {her zaman/genelde} ders-e           gel-ir.</item>
+      <item id="r2" line="164" tag="G">            Can       already {always/usually}      class-DAT    come-AOR.3sg</item>
+      <item id="r3" line="165" tag="T">            `Can    already {always/usually} comes to class.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="163" tag="L">    (11) a. Can       zaten {her zaman/genelde} ders-e           gel-ir.</item>
+      <item id="c2" alignment="r2" line="164" tag="G">            Can       already {always/usually}      class-DAT    come-AOR.3sg</item>
+      <item id="c3" alignment="r3" line="165" tag="T">            `Can    already {always/usually} comes to class.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="163" tag="L">Can       zaten {her zaman/genelde} ders-e           gel-ir.</item>
+      <item id="n2" alignment="c2" line="164" tag="G">Can       already {always/usually}      class-DAT    come-AOR.3sg</item>
+      <item id="n3" alignment="c3" line="165" tag="T">Can    already {always/usually} comes to class.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-15" doc-id="10" line-range="212-214" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="212" tag="L">    (15)      Ahmet dün         oku-yor-du.</item>
+      <item id="r2" line="213" tag="G">              Ahmet yesterday read-PROG-PAST.3sg</item>
+      <item id="r3" line="214" tag="T">              `Ahmet was reading yesterday.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="212" tag="L">    (15)      Ahmet dün         oku-yor-du.</item>
+      <item id="c2" alignment="r2" line="213" tag="G">              Ahmet yesterday read-PROG-PAST.3sg</item>
+      <item id="c3" alignment="r3" line="214" tag="T">              `Ahmet was reading yesterday.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="212" tag="L">Ahmet dün         oku-yor-du.</item>
+      <item id="n2" alignment="c2" line="213" tag="G">Ahmet yesterday read-PROG-PAST.3sg</item>
+      <item id="n3" alignment="c3" line="214" tag="T">Ahmet was reading yesterday.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-16" doc-id="10" line-range="219-221" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="219" tag="L">    (16) a. Cüneyt yarin     oku-yor       ol-acak.</item>
+      <item id="r2" line="220" tag="G">            Cüneyt tomorrow read-PROG be-FUT.3sg</item>
+      <item id="r3" line="221" tag="T">            `Tomorrow Cüneyt will be reading.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="219" tag="L">    (16) a. Cüneyt yarin     oku-yor       ol-acak.</item>
+      <item id="c2" alignment="r2" line="220" tag="G">            Cüneyt tomorrow read-PROG be-FUT.3sg</item>
+      <item id="c3" alignment="r3" line="221" tag="T">            `Tomorrow Cüneyt will be reading.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="219" tag="L">Cüneyt yarin     oku-yor       ol-acak.</item>
+      <item id="n2" alignment="c2" line="220" tag="G">Cüneyt tomorrow read-PROG be-FUT.3sg</item>
+      <item id="n3" alignment="c3" line="221" tag="T">Tomorrow Cüneyt will be reading.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-17" doc-id="10" line-range="229-231" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="229" tag="L">    (17) a. Deniz gel-ebil-ecek.</item>
+      <item id="r2" line="230" tag="G">            Deniz come-ABIL-FUT.3sg</item>
+      <item id="r3" line="231" tag="T">            `Deniz will be able to come.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="229" tag="L">    (17) a. Deniz gel-ebil-ecek.</item>
+      <item id="c2" alignment="r2" line="230" tag="G">            Deniz come-ABIL-FUT.3sg</item>
+      <item id="c3" alignment="r3" line="231" tag="T">            `Deniz will be able to come.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="229" tag="L">Deniz gel-ebil-ecek.</item>
+      <item id="n2" alignment="c2" line="230" tag="G">Deniz come-ABIL-FUT.3sg</item>
+      <item id="n3" alignment="c3" line="231" tag="T">Deniz will be able to come.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-18" doc-id="10" line-range="239-241" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="239" tag="L">    (18)      *Ahmet dün         oku-du-yor.</item>
+      <item id="r2" line="240" tag="G">              Ahmet yesterday read-PAST-PROG.3sg</item>
+      <item id="r3" line="241" tag="T">              `Ahmet is having read yesterday.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="239" tag="L">    (18)      *Ahmet dün         oku-du-yor.</item>
+      <item id="c2" alignment="r2" line="240" tag="G">              Ahmet yesterday read-PAST-PROG.3sg</item>
+      <item id="c3" alignment="r3" line="241" tag="T">              `Ahmet is having read yesterday.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" judgment="*" line="239" tag="L">Ahmet dün         oku-du-yor.</item>
+      <item id="n2" alignment="c2" line="240" tag="G">Ahmet yesterday read-PAST-PROG.3sg</item>
+      <item id="n3" alignment="c3" line="241" tag="T">Ahmet is having read yesterday.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-19" doc-id="10" line-range="249-251" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="249" tag="L">    (19)      Saat iki-de       Can genelde yi-yecek ol-ur.</item>
+      <item id="r2" line="250" tag="G">              hour two-LOC Can usually           eat-FUT be-AOR.3sg</item>
+      <item id="r3" line="251" tag="T">              `At two o'clock, Can is usually about to eat.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="249" tag="L">    (19)      Saat iki-de       Can genelde yi-yecek ol-ur.</item>
+      <item id="c2" alignment="r2" line="250" tag="G">              hour two-LOC Can usually           eat-FUT be-AOR.3sg</item>
+      <item id="c3" alignment="r3" line="251" tag="T">              `At two o'clock, Can is usually about to eat.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="249" tag="L">Saat iki-de       Can genelde yi-yecek ol-ur.</item>
+      <item id="n2" alignment="c2" line="250" tag="G">hour two-LOC Can usually           eat-FUT be-AOR.3sg</item>
+      <item id="n3" alignment="c3" line="251" tag="T">At two o'clock, Can is usually about to eat.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-20" doc-id="10" line-range="253-256" tag-types="L B G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="253" tag="L">    (20)      On sene sonra hala bu lokanta-ya            gid-er    ol-acak.</item>
+      <item id="r2" line="254" tag="B" />
+      <item id="r3" line="255" tag="G">             ten year after still this restaurant-DAT go-AOR be-FUT.3sg</item>
+      <item id="r4" line="256" tag="T">             `In ten years, he will still be going to this restaurant.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="253" tag="L">    (20)      On sene sonra hala bu lokanta-ya            gid-er    ol-acak.</item>
+      <item id="c2" alignment="r2" line="254" tag="B" />
+      <item id="c3" alignment="r3" line="255" tag="G">             ten year after still this restaurant-DAT go-AOR be-FUT.3sg</item>
+      <item id="c4" alignment="r4" line="256" tag="T">             `In ten years, he will still be going to this restaurant.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="253" tag="L"> On sene sonra hala bu lokanta-ya            gid-er    ol-acak.</item>
+      <item id="n2" alignment="c3" line="255" tag="G">ten year after still this restaurant-DAT go-AOR be-FUT.3sg</item>
+      <item id="n3" alignment="c4" line="256" tag="T">In ten years, he will still be going to this restaurant.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-21" doc-id="10" line-range="275-277" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="275" tag="L">    (21)     Ahmet gel-ebil-di.</item>
+      <item id="r2" line="276" tag="G">             Ahmet come-ABIL-PAST.3sg</item>
+      <item id="r3" line="277" tag="T">             `Ahmet was able to come.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="275" tag="L">    (21)     Ahmet gel-ebil-di.</item>
+      <item id="c2" alignment="r2" line="276" tag="G">             Ahmet come-ABIL-PAST.3sg</item>
+      <item id="c3" alignment="r3" line="277" tag="T">             `Ahmet was able to come.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="275" tag="L">Ahmet gel-ebil-di.</item>
+      <item id="n2" alignment="c2" line="276" tag="G">Ahmet come-ABIL-PAST.3sg</item>
+      <item id="n3" alignment="c3" line="277" tag="T">Ahmet was able to come.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-22" doc-id="10" line-range="283-285" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="283" tag="L">    (22) a. Ahmet gel-mi        ol-abil-ir.</item>
+      <item id="r2" line="284" tag="G">            Ahmet come-ANT be-POSS-AOR.3sg</item>
+      <item id="r3" line="285" tag="T">            `Ahmet might have come.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="283" tag="L">    (22) a. Ahmet gel-mi        ol-abil-ir.</item>
+      <item id="c2" alignment="r2" line="284" tag="G">            Ahmet come-ANT be-POSS-AOR.3sg</item>
+      <item id="c3" alignment="r3" line="285" tag="T">            `Ahmet might have come.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="283" tag="L">Ahmet gel-mi        ol-abil-ir.</item>
+      <item id="n2" alignment="c2" line="284" tag="G">Ahmet come-ANT be-POSS-AOR.3sg</item>
+      <item id="n3" alignment="c3" line="285" tag="T">Ahmet might have come.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-23" doc-id="10" line-range="287-289" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="287" tag="L">           b. *Ahmet gel-mi     ol-ur.</item>
+      <item id="r2" line="288" tag="G">              Ahmet come-ANT be-AOR.3sg</item>
+      <item id="r3" line="289" tag="T">              `Ahmet has come.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="287" tag="L">           b. *Ahmet gel-mi     ol-ur.</item>
+      <item id="c2" alignment="r2" line="288" tag="G">              Ahmet come-ANT be-AOR.3sg</item>
+      <item id="c3" alignment="r3" line="289" tag="T">              `Ahmet has come.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" judgment="*" line="287" tag="L">Ahmet gel-mi     ol-ur.</item>
+      <item id="n2" alignment="c2" line="288" tag="G">Ahmet come-ANT be-AOR.3sg</item>
+      <item id="n3" alignment="c3" line="289" tag="T">Ahmet has come.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-24" doc-id="10" line-range="298-300" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="298" tag="L">    (23) a. Abla-m arki söylü-yor         ol-abil-ir-di.</item>
+      <item id="r2" line="299" tag="G">            sister-1sg song sing-PROG be-POSS-AOR-PAST.3sg</item>
+      <item id="r3" line="300" tag="T">            `My sister might have been singing songs.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="298" tag="L">    (23) a. Abla-m arki söylü-yor         ol-abil-ir-di.</item>
+      <item id="c2" alignment="r2" line="299" tag="G">            sister-1sg song sing-PROG be-POSS-AOR-PAST.3sg</item>
+      <item id="c3" alignment="r3" line="300" tag="T">            `My sister might have been singing songs.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="298" tag="L">Abla-m arki söylü-yor         ol-abil-ir-di.</item>
+      <item id="n2" alignment="c2" line="299" tag="G">sister-1sg song sing-PROG be-POSS-AOR-PAST.3sg</item>
+      <item id="n3" alignment="c3" line="300" tag="T">My sister might have been singing songs.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-25" doc-id="10" line-range="302-304" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="302" tag="L">           b. *Abla-m arki söylü-yor-du            ol-abil-ir.</item>
+      <item id="r2" line="303" tag="G">              sister-1sg song sing-PROG-PAST be-POSS-AOR.3sg</item>
+      <item id="r3" line="304" tag="T">              `My sister might have been singing songs.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="302" tag="L">           b. *Abla-m arki söylü-yor-du            ol-abil-ir.</item>
+      <item id="c2" alignment="r2" line="303" tag="G">              sister-1sg song sing-PROG-PAST be-POSS-AOR.3sg</item>
+      <item id="c3" alignment="r3" line="304" tag="T">              `My sister might have been singing songs.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" judgment="*" line="302" tag="L">Abla-m arki söylü-yor-du            ol-abil-ir.</item>
+      <item id="n2" alignment="c2" line="303" tag="G">sister-1sg song sing-PROG-PAST be-POSS-AOR.3sg</item>
+      <item id="n3" alignment="c3" line="304" tag="T">My sister might have been singing songs.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-26" doc-id="10" line-range="306-308" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="306" tag="L">    (24) a. Ahmet gel-ecek      ol-abil-ir.</item>
+      <item id="r2" line="307" tag="G">            Ahmet come-FUT be-POSS-AOR.3sg</item>
+      <item id="r3" line="308" tag="T">            `Ahmet might come.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="306" tag="L">    (24) a. Ahmet gel-ecek      ol-abil-ir.</item>
+      <item id="c2" alignment="r2" line="307" tag="G">            Ahmet come-FUT be-POSS-AOR.3sg</item>
+      <item id="c3" alignment="r3" line="308" tag="T">            `Ahmet might come.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="306" tag="L">Ahmet gel-ecek      ol-abil-ir.</item>
+      <item id="n2" alignment="c2" line="307" tag="G">Ahmet come-FUT be-POSS-AOR.3sg</item>
+      <item id="n3" alignment="c3" line="308" tag="T">Ahmet might come.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-27" doc-id="10" line-range="311-313" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="311" tag="L">           b. *Ahmet gel-ebil-ir</item>
+      <item id="r2" line="312" tag="G">              Ahmet come-POSS-AOR be-FUT.3sg</item>
+      <item id="r3" line="313" tag="T">              `Ahmet might come.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="311" tag="L">           b. *Ahmet gel-ebil-ir</item>
+      <item id="c2" alignment="r2" line="312" tag="G">              Ahmet come-POSS-AOR be-FUT.3sg</item>
+      <item id="c3" alignment="r3" line="313" tag="T">              `Ahmet might come.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" judgment="*" line="311" tag="L">Ahmet gel-ebil-ir</item>
+      <item id="n2" alignment="c2" line="312" tag="G">Ahmet come-POSS-AOR be-FUT.3sg</item>
+      <item id="n3" alignment="c3" line="313" tag="T">Ahmet might come.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-28" doc-id="10" line-range="324-326" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="324" tag="L">    (25)     Abla-m belki      arki söyl-üyor-du</item>
+      <item id="r2" line="325" tag="G">             sister-1sg maybe song sing-PROG-PAST.3sg</item>
+      <item id="r3" line="326" tag="T">             `Maybe my sister was singing songs.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="324" tag="L">    (25)     Abla-m belki      arki söyl-üyor-du</item>
+      <item id="c2" alignment="r2" line="325" tag="G">             sister-1sg maybe song sing-PROG-PAST.3sg</item>
+      <item id="c3" alignment="r3" line="326" tag="T">             `Maybe my sister was singing songs.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="324" tag="L">Abla-m belki      arki söyl-üyor-du</item>
+      <item id="n2" alignment="c2" line="325" tag="G">sister-1sg maybe song sing-PROG-PAST.3sg</item>
+      <item id="n3" alignment="c3" line="326" tag="T">Maybe my sister was singing songs.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-29" doc-id="10" line-range="330-333" tag-types="L+CR L+CR G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="330" tag="L+CR">             Gel-e-me-yebil-ecek.3</item>
+      <item id="r2" line="331" tag="L+CR">    (26)</item>
+      <item id="r3" line="332" tag="G">             come-ABIL-NEG-ABIL-FUT.3sg</item>
+      <item id="r4" line="333" tag="T">             `She will in the future be able to be unable to come.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="330 331" tag="L">    (26)     Gel-e-me-yebil-ecek.3</item>
+      <item id="c2" alignment="r3" line="332" tag="G">             come-ABIL-NEG-ABIL-FUT.3sg</item>
+      <item id="c3" alignment="r4" line="333" tag="T">             `She will in the future be able to be unable to come.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="330 331" tag="L">Gel-e-me-yebil-ecek.3</item>
+      <item id="n2" alignment="c2" line="332" tag="G">come-ABIL-NEG-ABIL-FUT.3sg</item>
+      <item id="n3" alignment="c3" line="333" tag="T">She will in the future be able to be unable to come.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-30" doc-id="10" line-range="351-353" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="351" tag="L">    (27)     *Ahmet gel-meli        ol-acak.</item>
+      <item id="r2" line="352" tag="G">             Ahmet come-OBLIG be-FUT.3sg</item>
+      <item id="r3" line="353" tag="T">             `Ahmet will have to come.'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="351" tag="L">    (27)     *Ahmet gel-meli        ol-acak.</item>
+      <item id="c2" alignment="r2" line="352" tag="G">             Ahmet come-OBLIG be-FUT.3sg</item>
+      <item id="c3" alignment="r3" line="353" tag="T">             `Ahmet will have to come.'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" judgment="*" line="351" tag="L">Ahmet gel-meli        ol-acak.</item>
+      <item id="n2" alignment="c2" line="352" tag="G">Ahmet come-OBLIG be-FUT.3sg</item>
+      <item id="n3" alignment="c3" line="353" tag="T">Ahmet will have to come.</item>
+    </tier>
+  </igt>
+  <igt id="igt10-31" doc-id="10" line-range="358-360" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="358" tag="L">    (28)     Ahmet-in    gel-me-si        gerek-ecek.</item>
+      <item id="r2" line="359" tag="G">             Ahmet-GEN come-NOM-3sg necessary-FUT.3sg</item>
+      <item id="r3" line="360" tag="T">             `Ahmet's coming will be necessary (i.e. Ahmet will have to come).'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="358" tag="L">    (28)     Ahmet-in    gel-me-si        gerek-ecek.</item>
+      <item id="c2" alignment="r2" line="359" tag="G">             Ahmet-GEN come-NOM-3sg necessary-FUT.3sg</item>
+      <item id="c3" alignment="r3" line="360" tag="T">             `Ahmet's coming will be necessary (i.e. Ahmet will have to come).'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="358" tag="L">Ahmet-in    gel-me-si        gerek-ecek.</item>
+      <item id="n2" alignment="c2" line="359" tag="G">Ahmet-GEN come-NOM-3sg necessary-FUT.3sg</item>
+      <item id="n3" alignment="c3" line="360" tag="T">Ahmet's coming will be necessary (i.e.Ahmet will have to come).</item>
+    </tier>
+  </igt>
+  <igt id="igt10-32" doc-id="10" line-range="368-370" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="368" tag="L">    (29)     Bil-iyor-mu-sun?</item>
+      <item id="r2" line="369" tag="G">             know-PROG-QST-2sg</item>
+      <item id="r3" line="370" tag="T">             `Do you know?'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="368" tag="L">    (29)     Bil-iyor-mu-sun?</item>
+      <item id="c2" alignment="r2" line="369" tag="G">             know-PROG-QST-2sg</item>
+      <item id="c3" alignment="r3" line="370" tag="T">             `Do you know?'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="368" tag="L">Bil-iyor-mu-sun?</item>
+      <item id="n2" alignment="c2" line="369" tag="G">know-PROG-QST-2sg</item>
+      <item id="n3" alignment="c3" line="370" tag="T">Do you know?</item>
+    </tier>
+  </igt>
+  <igt id="igt10-33" doc-id="10" line-range="374-376" tag-types="L G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="tur" xsi:type="olac:language">Turkish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="374" tag="L">    (30)     Can gel-ecek-mi-y-di?</item>
+      <item id="r2" line="375" tag="G">             Can come-FUT-QST-AUX-PAST</item>
+      <item id="r3" line="376" tag="T">             `Was Can going to come?'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="374" tag="L">    (30)     Can gel-ecek-mi-y-di?</item>
+      <item id="c2" alignment="r2" line="375" tag="G">             Can come-FUT-QST-AUX-PAST</item>
+      <item id="c3" alignment="r3" line="376" tag="T">             `Was Can going to come?'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="374" tag="L">Can gel-ecek-mi-y-di?</item>
+      <item id="n2" alignment="c2" line="375" tag="G">Can come-FUT-QST-AUX-PAST</item>
+      <item id="n3" alignment="c3" line="376" tag="T">Was Can going to come?</item>
+    </tier>
+  </igt>
+</xigt-corpus>

@@ -17,7 +17,7 @@ class test_dep_proj(TestCase):
         kwargs = {ARG_INFILE:dep_path,
                   ARG_OUTFILE:'/dev/null',
                   ALN_VAR:[ARG_ALN_HEUR],
-                  PARSE_VAR:[ARG_PARSE_LANG, ARG_PARSE_TRANS]}
+                  PARSE_VAR:[ARG_PARSE_PROJ, ARG_PARSE_TRANS]}
         self.assertIsNone(enrich(**kwargs))
 
 

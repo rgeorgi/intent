@@ -1,0 +1,34 @@
+<xigt-corpus xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <igt id="igt66-30" doc-id="66" line-range="548-553" tag-types="M+AC+LN B L B G T">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="cmn" xsi:type="olac:language">Chinese</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="548" tag="M+AC+LN">  (Chinese, from Hooi-Ling Soh)</item>
+      <item id="r2" line="549" tag="B" />
+      <item id="r3" line="550" tag="L">  21.    a. *Tade mama       ai   meigeren</item>
+      <item id="r4" line="551" tag="B" />
+      <item id="r5" line="552" tag="G">              his   mother love everyone</item>
+      <item id="r6" line="553" tag="T">                `Hisi mother loves everyonei'</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="548" tag="M+AC+LN">  (Chinese, from Hooi-Ling Soh)</item>
+      <item id="c2" alignment="r2" line="549" tag="B" />
+      <item id="c3" alignment="r3" line="550" tag="L">  21.    a. *Tade mama       ai   meigeren</item>
+      <item id="c4" alignment="r4" line="551" tag="B" />
+      <item id="c5" alignment="r5" line="552" tag="G">              his   mother love everyone</item>
+      <item id="c6" alignment="r6" line="553" tag="T">                `Hisi mother loves everyonei'</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="548" tag="M+AC+LN">Chinese, from Hooi-Ling Soh</item>
+      <item id="n2" alignment="c2" line="549" tag="B" />
+      <item id="n3" alignment="c3" line="550" tag="L">a. *Tade mama       ai   meigeren</item>
+      <item id="n4" alignment="c4" line="551" tag="B" />
+      <item id="n5" alignment="c5" line="552" tag="G">his   mother love everyone</item>
+      <item id="n6" alignment="c6" line="553" tag="T">Hisi mother loves everyonei</item>
+    </tier>
+  </igt>
+</xigt-corpus>

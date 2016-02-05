@@ -3,6 +3,7 @@ Created on Oct 22, 2013
 
 @author: rgeorgi
 """
+import os
 import subprocess
 import sys
 import logging
@@ -10,6 +11,8 @@ from threading import Thread
 from queue import Empty, Queue
 from unittest.case import TestCase
 import time
+
+from intent.utils.env import set_env_lang_utf8
 
 
 def enqueue_output(out, queue):
@@ -52,9 +55,17 @@ class ProcessCommunicator(object):
         :type stderr_func: func
         """
 
+        # -------------------------------------------
+        # Make sure that UTF-8 is the default encoding for
+        # the environment
+        # -------------------------------------------
+        env = os.environ
+        env['LANG'] = 'en_US.UTF-8'
+
         # 1) Initialize the subprocess ---------------------------------------------
         self.p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1,
-                                  shell=shell)
+                                  shell=shell,
+                                  env=env)
 
 
         # -------------------------------------------
@@ -117,7 +128,8 @@ def piperunner(cmd, log_name=None):
     out_func('-'*35+' COMMAND: ' + '-'*35+'\n')
     out_func(cmd+'\n'+'-'*80+'\n')
 
-    p = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1)
+    env = set_env_lang_utf8()
+    p = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1, env=env)
     q = Queue()
     t = Thread(target=enqueue_output, args=(p.stdout, q))
     t.daemon = True

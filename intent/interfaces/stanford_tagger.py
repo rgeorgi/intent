@@ -11,9 +11,8 @@ from optparse import OptionParser
 # Internal Imports -------------------------------------------------------------
 from tempfile import NamedTemporaryFile
 
-from intent.corpora.POSCorpus import POSCorpus
 from intent.scripts.conversion.conll_to_slashtags import conll_to_slashtags
-from intent.utils.argutils import require_opt, existsfile
+from intent.utils.argutils import require_opt
 from intent.utils.systematizing import piperunner, ProcessCommunicator
 from intent.utils.ConfigFile import ConfigFile
 from intent.eval.pos_eval import slashtags_eval

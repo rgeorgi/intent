@@ -27,7 +27,7 @@ def enrich(class_path=None, **kwargs):
 
     ENRICH_LOG = logging.getLogger('ENRICH')
 
-    if 'OUT_FILE' not in kwargs:
+    if ARG_OUTFILE not in kwargs:
         ENRICH_LOG.critical("No output file specified.")
         sys.exit()
 
@@ -55,7 +55,7 @@ def enrich(class_path=None, **kwargs):
     #===========================================================================
 
     # Check that alignment is asked for if projection is asked for.
-    if (ARG_POS_PROJ in pos_args or ARG_PARSE_LANG in parse_args) and (not aln_args):
+    if (ARG_POS_PROJ in pos_args or ARG_PARSE_PROJ in parse_args) and (not aln_args):
         ENRICH_LOG.warn("You have asked for projection methods but have not requested " + \
                         "alignments to be generated. Projection may fail if alignment not already present in file.")
 
@@ -84,7 +84,7 @@ def enrich(class_path=None, **kwargs):
         #    A) "trans" option is given for parse
         #    B) "proj" option is given for parse.
         # -------------------------------------------
-        if ARG_PARSE_TRANS in parse_args or ARG_PARSE_LANG in parse_args:
+        if ARG_PARSE_TRANS in parse_args or ARG_PARSE_PROJ in parse_args:
             ENRICH_LOG.log(1000, "Intializing English parser...")
             sp = stanford_parser.StanfordParser()
 
@@ -162,12 +162,12 @@ def enrich(class_path=None, **kwargs):
                         return None
 
                 gl = tryline(gloss_line)
-                tl = tryline(trans_lines)
-                ll  = tryline(lang_lines)
+                tls = tryline(trans_lines)
+                lls  = tryline(lang_lines)
 
                 has_gl = gl is not None
-                has_tl = tl is not None
-                has_ll = ll is not None
+                has_tl = tls is not None
+                has_ll = lls is not None
 
                 has_all = lambda: (has_gl and has_tl and has_ll)
 
@@ -185,7 +185,7 @@ def enrich(class_path=None, **kwargs):
                             ENRICH_LOG.critical(str(cte))
                             sys.exit(2)
 
-                    if ARG_PARSE_LANG in parse_args or ARG_PARSE_TRANS in parse_args:
+                    if ARG_PARSE_PROJ in parse_args or ARG_PARSE_TRANS in parse_args:
                         parse_translation_line(inst, sp, pt=True, dt=True)
 
                 # 4) POS tag the gloss line --------------------------------------------
@@ -249,7 +249,7 @@ def enrich(class_path=None, **kwargs):
                         # -------------------------------------------
                         # Parse projection
                         # -------------------------------------------
-                        if ARG_PARSE_LANG in parse_args:
+                        if ARG_PARSE_PROJ in parse_args:
                             try:
                                 project_pt_tier(inst, proj_aln_method=proj_aln_method)
                             except PhraseStructureProjectionException as pspe:

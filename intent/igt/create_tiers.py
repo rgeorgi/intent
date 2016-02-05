@@ -324,7 +324,7 @@ def retrieve_normal_lines(inst, tag):
     :rtype: list[Item]
     """
     norm_tier = generate_normal_tier(inst)
-    lines = [line for line in norm_tier if tag in line.attributes[ODIN_TAG_ATTRIBUTE].split('+')]
+    lines = [line for line in norm_tier if tag in line.attributes[ODIN_TAG_ATTRIBUTE].split('+') and line.value() is not None and line.value().strip()]
     if not lines:
         raise NoNormLineException('No normalized lines were available for tag "{}" in instance "{}"'.format(tag, inst.id))
     return sorted(lines, key=sort_lines)

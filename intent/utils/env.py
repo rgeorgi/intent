@@ -15,7 +15,7 @@ logging.addLevelName(1000, "NORMAL")
 # 2) Determine the project root directory --------------------------------------
 proj_root = dir_above(__file__, 3)
 
-testfile_dir = os.path.join(proj_root, "data/testcases")
+
 
 # 3) Load the "env.conf" file. -------------------------------------------------
 env_path = os.path.join(proj_root, 'env.conf')
@@ -45,9 +45,27 @@ mst_parser       = c.getpath('mst_parser')
 fast_align_bin   = c.getpath('fast_align_bin')
 fast_align_atool = c.getpath('fast_align_atool')
 
+# =============================================================================
+# Where the files for testcases are
+# =============================================================================
+testfile_dir = os.path.join(proj_root, "data/testcases")
+xigt_testfiles = os.path.join(testfile_dir, 'xigt')
+
+def xigt_testfile(s):
+    return os.path.join(xigt_testfiles, s)
+
+# =============================================================================
+# Set the default environ lang to UTF-8
+# =============================================================================
+def set_env_lang_utf8():
+    env = os.environ
+    env['LANG'] = 'en_US.UTF-8'
+    return env
+
 #===============================================================================
 # Try to import the XIGT module.
 #===============================================================================
+
 
 # First, if there is a version of XIGT specified in the env file, use that
 

@@ -1,18 +1,16 @@
-import os
 from unittest import TestCase
 
-from intent.igt.create_tiers import morphemes, get_raw_tier, generate_normal_tier, generate_clean_tier
+from intent.commands.enrich import enrich
+from intent.igt.create_tiers import get_raw_tier
 from intent.igt.parsing import xc_load
-from intent.igt.references import cleaned_tier, normalized_tier
-from xigt.codecs import xigtxml
-
-from intent.utils.env import proj_root, testfile_dir
+from intent.utils.env import xigt_testfile
+from intent.consts import *
 
 __author__ = 'rgeorgi'
 
 class NoRawTest(TestCase):
     def setUp(self):
-        self.xc = xc_load(os.path.join(testfile_dir, 'xigt/no_raw.xml'))
+        self.xc = xc_load(xigt_testfile('no_raw.xml'))
 
     def no_raw_test(self):
         """
@@ -66,7 +64,7 @@ class NoRawTest(TestCase):
 class NullGlossTest(TestCase):
 
     def setUp(self):
-        self.path = os.path.join(testfile_dir, 'xigt/deu_no_gloss_line.xml')
+        self.path = xigt_testfile('deu_no_gloss_line.xml')
 
     def test_basic_processing(self):
         xc = xc_load(self.path, do_basic_processing=True)
@@ -74,9 +72,9 @@ class NullGlossTest(TestCase):
 class L_G_WordAlignTests(TestCase):
 
     def setUp(self):
-        path = os.path.join(testfile_dir, 'xigt/multiple_line_tests.xml')
-        with open(path, 'r', encoding='utf-8') as f:
-            self.xc = xigtxml.load(f)
+        path = xigt_testfile('multiple_line_tests.xml')
+        self.xc = xc_load(path)
+
 
     def align_test(self):
         """
@@ -93,5 +91,23 @@ class L_G_WordAlignTests(TestCase):
         inst2 = self.xc[1]
         self.assertRaises(GlossLangAlignException, word_align, gloss(inst), lang(inst))
         self.assertIsNone(word_align(gloss(inst2), lang(inst2)))
+
+def_enrich_args = {ARG_OUTFILE:'/dev/null',
+                   ALN_VAR:ARG_ALN_HEUR,
+                   PARSE_VAR:ARG_PARSE_PROJ,
+                   POS_VAR:ARG_POS_CLASS}
+
+class EncodingTests(TestCase):
+
+    def test_encoding(self):
+        xp = xigt_testfile('encoding-error-test.xml')
+        def_enrich_args[ARG_INFILE] = xp
+        enrich(**def_enrich_args)
+
+    def test_hanging(self):
+        xp = xigt_testfile('hang_test.xml')
+        def_enrich_args[ARG_INFILE] = xp
+        enrich(**def_enrich_args)
+
 
 from intent.igt.igt_functions import *

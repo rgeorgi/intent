@@ -223,9 +223,9 @@ POS_VAR = 'pos_list'
 # Parse Stuff
 # -------------------------------------------
 ARG_PARSE_TRANS = 'trans'
-ARG_PARSE_LANG = 'proj'
+ARG_PARSE_PROJ = 'proj'
 
-PARSE_TYPES = [ARG_PARSE_TRANS, ARG_PARSE_LANG]
+PARSE_TYPES = [ARG_PARSE_TRANS, ARG_PARSE_PROJ]
 
 PARSE_VAR = 'parse_list'
 

@@ -19,13 +19,12 @@ from intent.utils.dicts import TwoLevelCountDict
 import intent.igt.grams
 from intent.utils.systematizing import piperunner, ProcessCommunicator
 from intent.utils.token import GoldTagPOSToken
-from intent.utils.env import c, mallet, mallet_bin, classifier
+from intent.utils.env import c, mallet, mallet_bin, classifier, set_env_lang_utf8
 
 
 class ClassifierException(Exception): pass
 
 class EmptyStringException(ClassifierException): pass
-
 
 class MalletMaxent(object):
 
@@ -37,12 +36,13 @@ class MalletMaxent(object):
 
         mallet_bin = os.path.join(os.path.join(mallet, 'bin'), 'mallet')
 
+        env = set_env_lang_utf8()
         self.c = sub.Popen([mallet_bin,
                             'classify-file',
                             '--classifier', self._model,
                             '--input', '-',
                             '--output', '-'],
-                stdout=sub.PIPE, stdin=sub.PIPE)
+                           stdout=sub.PIPE, stdin=sub.PIPE, env=env)
         self._first = True
 
     def info(self):
@@ -50,9 +50,10 @@ class MalletMaxent(object):
         Print the feature statistics for the given model. (Assumes MaxEnt)
         """
         mallet = c['mallet']
+        env = set_env_lang_utf8()
         info_bin = os.path.join(os.path.join(mallet, 'bin'), 'classifier2info')
         info_p = sub.Popen([info_bin, '--classifier', self._model],
-                            stdout=sub.PIPE, stdin=sub.PIPE, stderr=sub.PIPE)
+                            stdout=sub.PIPE, stdin=sub.PIPE, stderr=sub.PIPE, env=env)
 
         cur_class = None
         feats = TwoLevelCountDict()

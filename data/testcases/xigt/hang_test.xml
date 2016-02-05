@@ -1,0 +1,27 @@
+<xigt-corpus xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:olac="http://www.language-archives.org/OLAC/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <igt id="igt3998-41" doc-id="3998" line-range="20028-20031" tag-types="L+CR L+CR G+SY T+SY+EX">
+    <metadata>
+      <meta id="meta1">
+        <dc:subject olac:code="gle" xsi:type="olac:language">Irish</dc:subject>
+        <dc:language olac:code="en" xsi:type="olac:language">English</dc:language>
+      </meta>
+    </metadata>
+    <tier id="r" type="odin" state="raw">
+      <item id="r1" line="20028" tag="L+CR">   (v) an fear      aL       sh´ il         goN     mbeadh s´ ann</item>
+      <item id="r2" line="20029" tag="L+CR">                                                              e</item>
+      <item id="r3" line="20030" tag="G+SY">        [the man]j COMP thought             COMP would-be hej there</item>
+      <item id="r4" line="20031" tag="T+SY+EX">        `[the man]j that thought hej would be there' [M 4a]</item>
+    </tier>
+    <tier id="c" type="odin" alignment="r" state="cleaned">
+      <item id="c1" alignment="r1" line="20028" tag="L+CR">   (v) an fear      aL       sh´ il         goN     mbeadh s´ ann</item>
+      <item id="c2" alignment="r3" line="20030" tag="G+SY">        [the man]j COMP thought             COMP would-be hej there</item>
+      <item id="c3" alignment="r4" line="20031" tag="T+SY+EX">        `[the man]j that thought hej would be there' [M 4a]</item>
+    </tier>
+    <tier id="n" type="odin" alignment="c" state="normalized">
+      <item id="n1" alignment="c1" line="20028" tag="L+CR">an fear      aL       sh´ il         goN     mbeadh s´ ann</item>
+      <item id="n2" alignment="c2" line="20030" tag="G+SY"> [the man]j COMP thought             COMP would-be hej there</item>
+      <item id="n3" alignment="c3" line="20031" tag="T+SY+EX" />
+      <item id="n4" alignment="c3" line="20031" tag="M">[the man]j that thought hej would be there' [M 4a]</item>
+    </tier>
+  </igt>
+</xigt-corpus>
