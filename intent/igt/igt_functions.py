@@ -18,8 +18,9 @@ from intent.interfaces.stanford_parser import StanfordParser
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.pos.TagMap import TagMap
 from intent.trees import project_ps, project_ds, Terminal, DepEdge, build_dep_edges, IdTree, DepTree
-from intent.utils.env import c, tagger_model, posdict
+from intent.utils.env import c, tagger_model
 from intent.utils.token import Token
+from intent.consts import *
 from xigt.errors import XigtStructureError
 from xigt.ref import ids, selection_re, span_re
 
@@ -214,6 +215,62 @@ def get_trans_glosses_alignment(inst, aln_method=None):
     return get_bilingual_alignment(inst, trans(inst).id, glosses(inst).id, aln_method=aln_method)
 
 
+def obtain_wordpairs(aln, src_words, tgt_words):
+    """
+    Given two tiers and an alignment, return the pairs of words
+    that are specified by that alignment.
+    """
+    word_pairs = []
+    for src_i, tgt_i in aln:
+        src_word = src_words[src_i-1].value()
+        tgt_word = tgt_words[tgt_i-1].value()
+        word_pairs.append((src_word, tgt_word))
+    return word_pairs
+
+def get_trans_aligned_wordpairs(inst: Igt, aln_method=None, add_align = True, sent_type = SENT_TYPE_T_G):
+    """
+    Extract wordpairs from the alignment with the translation line; either between translation
+    and gloss, or fromt translation, through the gloss line.
+
+    :rtype: list[tup[str]]
+    """
+    aln = get_trans_glosses_alignment(inst, aln_method=aln_method)
+    pairs = []
+
+    # -------------------------------------------
+    # Make sure that there's alignment between
+    # gloss and language line if possible.
+    # -------------------------------------------
+    try:
+        add_gloss_lang_alignments(inst)
+    except GlossLangAlignException as glae:
+        pass
+
+    # -------------------------------------------
+    # First, check to see if we have an alignment,
+    # and we want to generate one.
+    # -------------------------------------------
+    if aln is None and add_align:
+        heur_align_inst(inst)
+        aln = get_trans_glosses_alignment(inst, aln_method=aln_method)
+
+    # -------------------------------------------
+    # If we now have an alignment, proceed.
+    # -------------------------------------------
+    if aln is not None:
+        if sent_type == SENT_TYPE_T_L:
+            pair_aln = get_trans_gloss_lang_alignment(inst, aln_method=aln_method)
+            pairs    = obtain_wordpairs(pair_aln, trans(inst), lang(inst))
+        elif sent_type == SENT_TYPE_T_G:
+            pair_aln = get_trans_glosses_alignment(inst, aln_method=aln_method)
+            pairs    = obtain_wordpairs(pair_aln, trans(inst), glosses(inst))
+        else:
+            raise Exception("Invalid SENT TYPE")
+
+
+    return pairs
+
+
 def get_trans_gloss_wordpairs(inst, aln_method=None, all_morphs=True):
     """
     Return a list of (trans_word, gloss_morph) pairs
@@ -281,6 +338,8 @@ def get_gloss_lang_alignment(inst):
     """
     return tier_alignment(gloss(inst))
 
+
+
 def tier_alignment(tier: Tier):
     """
     Return the alignment that is stored between items and their attributes (e.g. between morphemes
@@ -297,6 +356,9 @@ def tier_alignment(tier: Tier):
 def get_trans_gloss_lang_alignment(inst, aln_method=None):
     """
     Get the translation to lang alignment, travelling through the gloss line.
+
+    The "aln_method" here refers to the method by which translation and gloss
+    lines is obtained.
     """
 
     # -------------------------------------------
@@ -321,6 +383,7 @@ def get_trans_gloss_lang_alignment(inst, aln_method=None):
     # -------------------------------------------
     else:
         gl_aln = get_gloss_lang_alignment(inst)
+
 
         a = Alignment(type=tg_aln.type)
         for t_i, g_i in tg_aln:
@@ -595,7 +658,7 @@ def resolve_objects(container, expression):
 # -------------------------------------------
 
 
-from intent.consts import *
+
 
 def set_bilingual_alignment(inst, src_tier, tgt_tier, aln, aln_method):
     """
@@ -712,7 +775,7 @@ def heur_align_inst(inst, **kwargs):
 
     return get_trans_gloss_alignment(inst, aln_method=aln_method)
 
-def giza_align_l_t(xc, symmetric = None):
+def giza_align_l_t(xc, use_heur = False, symmetric_heur = None):
     """
     Perform giza alignments directly from language to translation lines, for comparison
 
@@ -724,11 +787,39 @@ def giza_align_l_t(xc, symmetric = None):
 
     ga = GizaAligner()
 
+    # -------------------------------------------
+    # If we are using heuristic alignments as a
+    # bootstrap, add those to the wordpairs.
+    # -------------------------------------------
+    t_words = []
+    l_words = []
+    if use_heur:
+        for inst in xc:
+            wordpairs = get_trans_aligned_wordpairs(inst, aln_method=INTENT_ALN_HEUR, sent_type=SENT_TYPE_T_L)
+            for trans_word, lang_word in wordpairs:
+                l_words.append(lang_word)
+                t_words.append(trans_word)
+
+        l_sents.extend(l_words)
+        t_sents.extend(t_words)
+
     t_l_sents = ga.temp_train(t_sents, l_sents)
 
-    assert len(t_l_sents) == len(xc)
+    # -------------------------------------------
+    # Make sure we get back the same number of
+    # aligned sentences as we put in.
+    # -------------------------------------------
 
-    if symmetric is not None:
+    expected_sents = len(xc)
+    if use_heur:
+        expected_sents += len(t_words)
+
+    assert len(t_l_sents) == expected_sents
+
+
+
+
+    if symmetric_heur is not None:
         l_t_sents = ga.temp_train(l_sents, t_sents)
 
 
@@ -736,17 +827,17 @@ def giza_align_l_t(xc, symmetric = None):
         t_l = t_l_sents[i]
 
         # If we want these symmetricized...
-        if symmetric is not None:
+        if symmetric_heur is not None:
 
             # Get the l_t (the "reverse" alignment)
             l_t = l_t_sents[i]
 
             # Ensure that the requested symmetricization heuristic is implemented...
-            if not hasattr(t_l, symmetric):
-                raise AlignmentError('Unimplemented symmetricization heuristic "{}"'.format(symmetric))
+            if not hasattr(t_l, symmetric_heur):
+                raise AlignmentError('Unimplemented symmetricization heuristic "{}"'.format(symmetric_heur))
 
             # Now, apply it (and make sure to flip the reversed alignment)
-            t_l = getattr(t_l, symmetric)(l_t.flip())
+            t_l = getattr(t_l, symmetric_heur)(l_t.flip())
 
         # Finally, set the resulting trans-to-lang alignment in the instance
         set_bilingual_alignment(igt, trans(igt), lang(igt), t_l, aln_method = INTENT_ALN_GIZA)
@@ -1066,7 +1157,7 @@ def project_lang_to_gloss(inst, tagmap=None):
             postag = lang_tag.value()
 
 
-        gpos = Item(id=pt.askItemId(), alignment = gloss_word.id, text=postag)
+        gpos = Item(id=ask_item_id(pt), alignment = gloss_word.id, text=postag)
         pt.append(gpos)
 
     inst.append(pt)

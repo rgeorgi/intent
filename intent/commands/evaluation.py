@@ -108,15 +108,16 @@ class MultAlignScorer(object):
             # Only continue when there is a gold standard
             # alignment to compare against.
             # -------------------------------------------
-            gold = get_trans_gloss_lang_alignment(inst, aln_method=ARG_ALN_MANUAL)
+            gold = get_trans_gloss_alignment(inst, aln_method=ARG_ALN_MANUAL)
             if gold is None:
                 continue
+
             if lang_trans:
                 aln = get_trans_lang_alignment(inst)
-                self.add_alignment(name, lang, aln)
             else:
                 aln = get_trans_gloss_alignment(inst, aln_method=method)
-                self.add_alignment(name, lang, aln)
+
+            self.add_alignment(name, lang, aln)
 
     def eval_all(self):
         overall_dict = defaultdict(list)
@@ -130,7 +131,11 @@ class MultAlignScorer(object):
             for method in self.methods:
                 test_snts = self.by_lang_dict[lang][method]
                 gold_snts = self.by_lang_dict[lang]['gold']
-                ae = AlignEval(test_snts, gold_snts)
+                try:
+                    ae = AlignEval(test_snts, gold_snts)
+                except AssertionError as ae:
+                    print("ERROR IN METHOD {}".format(method))
+                    raise(ae)
                 print(','.join([lang,method]+[str(i) for i in ae.all()]))
 
                 overall_dict[method] += ae
@@ -148,7 +153,7 @@ def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj, l
         # Only evaluate against instances that have a gold alignment.
         manual = get_trans_gloss_alignment(inst, aln_method=INTENT_ALN_MANUAL)
 
-        if not manual:
+        if manual is None:
             continue
 
         # heur = inst.heur_align(lowercase=True, stem=True, tokenize=True, no_multiples=False, use_pos=True)
@@ -192,7 +197,10 @@ def evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang)
     mas.add_corpus('lang_trans', INTENT_ALN_GIZA, lang, xc, lang_trans=True)
     remove_alignments(xc, INTENT_ALN_GIZA)
 
-    EVAL_LOG.info("")
+    giza_align_l_t(xc, use_heur=True)
+    mas.add_corpus('lang_trans_heur', INTENT_ALN_GIZA, lang, xc, lang_trans=True)
+    remove_alignments(xc, INTENT_ALN_GIZA)
+
     giza_align_t_g(xc, aligner=ALIGNER_FASTALIGN, use_heur=False)
     mas.add_corpus('fast_align', INTENT_ALN_GIZA, lang, xc)
     remove_alignments(xc, INTENT_ALN_GIZA)

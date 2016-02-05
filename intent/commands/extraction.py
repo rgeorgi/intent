@@ -17,7 +17,7 @@ from intent.consts import *
 from intent.igt.grams import write_gram
 from intent.igt.igt_functions import get_lang_ds, pos_tag_tier, lang, get_lang_ps, add_gloss_lang_alignments, \
     project_lang_to_gloss, tier_text, get_trans_glosses_alignment, heur_align_inst, get_trans_gloss_wordpairs, \
-    get_trans_gloss_lang_alignment, word_align, handle_unknown_pos
+    get_trans_gloss_lang_alignment, word_align, handle_unknown_pos, get_trans_aligned_wordpairs
 from intent.interfaces.mallet_maxent import train_txt
 from intent.interfaces.mst_parser import MSTParser
 from intent.interfaces.stanford_tagger import train_postagger
@@ -97,17 +97,6 @@ def extract_tagger_from_instance(inst: Igt, output_stream, pos_source):
 
     return training_sentences
 
-def write_wordpairs(aln, src_words, tgt_words, out_src, out_tgt):
-    for src_i, tgt_i in aln:
-        src_word = src_words[src_i-1].value()
-        tgt_word = tgt_words[tgt_i-1].value()
-
-        out_src.write(src_word.lower() + '\n')
-        out_tgt.write(tgt_word.lower() + '\n')
-
-        out_src.flush()
-        out_tgt.flush()
-
 
 
 def extract_sents_from_inst(inst: Igt, out_src, out_tgt, aln_method=None, no_alignment_heur = True, sent_type=SENT_TYPE_T_G):
@@ -147,25 +136,10 @@ def extract_sents_from_inst(inst: Igt, out_src, out_tgt, aln_method=None, no_ali
     # -------------------------------------------
     if not no_alignment_heur:
 
-        aln = get_trans_glosses_alignment(inst, aln_method=aln_method)
-        if aln is None:
-            heur_align_inst(inst)
-            add_gloss_lang_alignments(inst)
-            aln = get_trans_glosses_alignment(inst, aln_method=aln_method)
-
-        # -------------------------------------------
-        # 4a) Get the translation-language
-        # -------------------------------------------
-        if sent_type == SENT_TYPE_T_L:
-            aln = get_trans_gloss_lang_alignment(inst, aln_method=aln_method)
-            if aln is not None:
-                write_wordpairs(aln, trans(inst), lang(inst), out_src, out_tgt)
-
-        # -------------------------------------------
-        # 4b) Get translation-gloss (sub-words)
-        # -------------------------------------------
-        elif sent_type == SENT_TYPE_T_G:
-            write_wordpairs(aln, trans(inst), glosses(inst), out_src, out_tgt)
+        pairs = get_trans_aligned_wordpairs(inst, aln_method=aln_method, add_align=True, sent_type=sent_type)
+        for src_word, tgt_word in pairs:
+            out_src.write(src_word.lower() + '\n')
+            out_tgt.write(tgt_word.lower() + '\n')
 
 
 
