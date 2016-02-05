@@ -1237,10 +1237,15 @@ def project_gloss_pos_to_lang(inst, tag_method = None, unk_handling=None, classi
         else:
             g_indices = alignment.tgt_to_src(l_idx+1)
             assert len(g_indices) <= 1, 'Number of gloss tokens aligned to for id: "{}-{}": {}'.format(inst.id, l_w.id, len(g_indices))
-            g_idx = g_indices[0] - 1
-            g_w = gloss(inst)[g_idx]
-            # Find the tag associated with this word.
-            g_tag = xigt_find(gloss_tag_tier, attributes={ALIGNMENT:g_w.id})
+
+            # Only look for the gloss tag if we have an alignment
+            # between the lang line and the gloss token.
+            g_tag = None
+            if g_indices:
+                g_idx = g_indices[0] - 1
+                g_w = gloss(inst)[g_idx]
+                # Find the tag associated with this word.
+                g_tag = xigt_find(gloss_tag_tier, attributes={ALIGNMENT:g_w.id})
 
             # If no gloss tag exists for this...
             if g_tag is None:
