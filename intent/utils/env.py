@@ -39,11 +39,17 @@ tagger_jar       = c.getpath('stanford_tagger_jar')
 tagger_model     = c.getpath('stanford_tagger_trans')
 parser_dir       = c.getpath('stanford_parser_dir')
 parser_model     = c.get('stanford_parser_model')
-posdict          = 0 if not c.getpath('pos_dict') else pickle.load(open(c.getpath('pos_dict'), 'rb'))
+posdict          = c.getpath('pos_dict')
 odin_data		 = c.getpath('odin_data')
 mst_parser       = c.getpath('mst_parser')
 fast_align_bin   = c.getpath('fast_align_bin')
 fast_align_atool = c.getpath('fast_align_atool')
+
+# =============================================================================
+# Load the pickle when requested
+# =============================================================================
+def load_posdict():
+    return pickle.load(open(posdict, 'rb'))
 
 # =============================================================================
 # Where the files for testcases are

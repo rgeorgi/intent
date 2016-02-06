@@ -15,7 +15,7 @@ from intent.igt.igt_functions import pos_tag_tier, project_gloss_pos_to_lang, gi
     get_trans_glosses_alignment, copy_xigt
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
-from intent.utils.env import posdict, tagger_model, testfile_dir
+from intent.utils.env import posdict, tagger_model, testfile_dir, load_posdict
 
 xc = xc_load(os.path.join(testfile_dir, "xigt/kor-ex.xml"))
 
@@ -130,7 +130,7 @@ line=961 tag=T:     `I made the child eat rice.\''''
         self.assertEquals(tier_tokens(pos_tag_tier(self.igt, 'gw')), self.tags)
 
     def test_classify_pos_tags(self):
-        tags = classify_gloss_pos(self.igt, MalletMaxent(), posdict=posdict)
+        tags = classify_gloss_pos(self.igt, MalletMaxent(), posdict=load_posdict())
         self.assertEqual(tags, self.tags)
 
 

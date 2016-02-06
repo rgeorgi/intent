@@ -2,8 +2,7 @@ import logging
 import sys
 
 from intent.consts import *
-from intent.igt.create_tiers import gloss, trans, gloss_line, trans_lines, lang_lines, trans_tag_tier
-from intent.igt.create_tiers import lang
+from intent.igt.create_tiers import gloss_line, trans_lines, lang_lines, trans_tag_tier
 from intent.igt.exceptions import GlossLangAlignException, MultipleNormLineException, PhraseStructureProjectionException, \
     ProjectionException, NoNormLineException
 from intent.igt.igt_functions import giza_align_t_g, tag_trans_pos, parse_translation_line, classify_gloss_pos, \
@@ -14,7 +13,7 @@ from intent.interfaces.giza import GizaAlignmentException
 from intent.interfaces.stanford_tagger import StanfordPOSTagger, TaggerError, CriticalTaggerError
 from intent.trees import NoAlignmentProvidedError
 from intent.utils.argutils import writefile
-from intent.utils.env import c, posdict, classifier
+from intent.utils.env import c, posdict, classifier, load_posdict
 from xigt.codecs import xigtxml
 
 #===============================================================================
@@ -96,7 +95,7 @@ def enrich(class_path=None, **kwargs):
         m = None
         if ARG_POS_CLASS in pos_args or ARG_ALN_HEURPOS in aln_args:
             ENRICH_LOG.log(1000, "Initializing gloss-line classifier...")
-            p = posdict
+            p = load_posdict()
             m = mallet_maxent.MalletMaxent(classifier)
 
 
