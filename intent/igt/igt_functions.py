@@ -1622,33 +1622,33 @@ def word_align(this, other):
         remove_word_level_info(this)
         remove_word_level_info(other)
 
-def morph_align(gloss_tier, morph_tier):
+def morph_align(glosses_tier, morpheme_tier):
     """
     Given the gloss morphemes and language morphemes, add
     the alignment attributes to the gloss line tokens.
 
-    :param gloss_tier:
-    :param morph_tier:
+    :param glosses_tier:
+    :param morpheme_tier:
     """
+    #TODO: FIXME: Morpheme alignment doesn't work if word alignment isn't done first! Maybe this restriction should be removed.
+
     # First, set the alignment...
-    gloss_tier.alignment = morph_tier.id
+    glosses_tier.alignment = morpheme_tier.id
 
     # Let's count up how many morphemes there are
     # for each word on the translation line...
     lang_word_dict = defaultdict(list)
 
-    for morph in morph_tier:
+    for morph in morpheme_tier:
         # Add this morpheme to the dictionary, so we can keep
         # count of how many morphemes align to a given word.
-        lang_word_dict[find_lang_word(gloss_tier.igt, morph).id].append(morph)
-
-    # FIXME: Somewhere here, we are adding alignment to morphemes instead of glosses.
+        lang_word_dict[find_lang_word(glosses_tier.igt, morph).id].append(morph)
 
     # Now, iterate over our morphs.
-    for i, gloss in enumerate(gloss_tier):
+    for i, gloss in enumerate(glosses_tier):
 
         # Find the word that this gloss aligns to...
-        gloss_word = find_gloss_word(gloss_tier.igt, gloss)
+        gloss_word = find_gloss_word(glosses_tier.igt, gloss)
         word_id = gloss_word.alignment # And the id of the lang word
 
         # Next, let's see what unaligned morphs there are
@@ -1659,8 +1659,8 @@ def morph_align(gloss_tier, morph_tier):
         if len(aligned_lang_morphs) >= 1:
             # If this isn't the last morph, try and see if we are
             # at a morpheme boundary...
-            if i < len(gloss_tier)-1:
-                split_chars = intervening_characters(gloss_tier[i], gloss_tier[i+1]).strip()
+            if i < len(glosses_tier)-1:
+                split_chars = intervening_characters(glosses_tier[i], glosses_tier[i + 1]).strip()
 
                 # If the character following this morph is a morpheme bounadry
                 # character or whitespace, then "pop" the morph. Otherwise,
@@ -1781,11 +1781,8 @@ def basic_processing(inst):
 def add_gloss_lang_alignments(inst):
     # Finally, do morpheme-to-morpheme alignment between gloss
     # and language if it's not already done...
-    if not glosses(inst).alignment:
-        morph_align(glosses(inst), morphemes(inst))
-
-    if not gloss(inst).alignment:
-        word_align(gloss(inst), lang(inst))
+    word_align(gloss(inst), lang(inst))
+    morph_align(glosses(inst), morphemes(inst))
 
 def remove_alignments(self, aln_method=None):
     """

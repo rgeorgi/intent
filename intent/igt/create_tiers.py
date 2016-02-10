@@ -70,7 +70,7 @@ def lang(inst) -> Tier:
     return _word_tier(inst, generate_lang_words, NoLangLineException)
 
 def gloss(inst) -> Tier:
-    return _word_tier(inst, generate_gloss_glosses, NoGlossLineException)
+    return _word_tier(inst, generate_gloss_words, NoGlossLineException)
 
 def trans(inst) -> Tier:
     return _word_tier(inst, generate_trans_words, NoTransLineException)
@@ -98,7 +98,7 @@ def generate_lang_words(inst, create=True):
 
     return lwt
 
-def generate_gloss_glosses(inst, create=True):
+def generate_gloss_words(inst, create=True):
     """
     Given an IGT instance, create the gloss "words" and "glosses" tiers.
 
@@ -189,7 +189,6 @@ def glosses(inst) -> Tier:
     f = [lambda x: not is_word_level_gloss(x)]
 
     gt = xigt_find(inst, type=GLOSS_MORPH_TYPE, others=f)
-
 
     # If we don't already have a sub-token-level glosses tier, let's create
     # it. Remembering that we want to use CONTENT to align the tier, not

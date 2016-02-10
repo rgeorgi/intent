@@ -50,7 +50,7 @@ from intent.utils import env
 # Start the logger and set it up.
 # -------------------------------------------
 from intent.commands.corpus_stats import igt_stats
-from intent.commands.filter_corpus import filter_corpus
+from intent.commands.filter import filter_corpus
 from intent.commands.split_corpus import split_corpus
 from intent.commands.text_to_xigt import text_to_xigtxml
 from intent.commands.evaluation import evaluate_intent
