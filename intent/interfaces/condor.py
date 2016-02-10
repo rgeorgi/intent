@@ -52,6 +52,10 @@ def condor_wait():
         else:
             time.sleep(2)
 
+def condor_wait_notify(body, email, subject="Condor Notification"):
+    condor_wait()
+    os.system('echo "{}" | mail -s "{}" {}'.format(body, subject, email))
+
 def run_cmd(args, prefix, name, email, stdin = "", cwd = os.getcwd(), env = ''):
 
     # First, make sure the program can be found.

@@ -33,8 +33,14 @@ This module is used to:
 
 # Whether or not to use the condor-submit capability
 # for paralellization
+from collections import defaultdict
 
+from intent.commands.enrich import enrich
+from intent.commands.filter_corpus import filter_corpus
+
+# Use condor, and email when tasks finish.
 USE_CONDOR = False
+email_address = 'rgeorgi@uw.edu'
 
 # The directory where the universal dependency treebanks are stored.
 eval_dir = '/Users/rgeorgi/Documents/treebanks/universal_treebanks_v2.0/std'
@@ -44,6 +50,7 @@ odin_lang_dir = '/Users/rgeorgi/Documents/code/intent/experiments/dependencies/o
 
 # The directory in which the files will be created for this experiment.
 experiment_dir = '/Users/rgeorgi/Documents/code/intent/experiments/dependencies/'
+
 
 # -------------------------------------------
 import os, sys, logging
@@ -57,7 +64,7 @@ sys.path.insert(0, intent_dir)
 from intent.utils import env
 from intent.commands.extraction import extract_from_xigt
 from intent.commands.project import do_projection
-from intent.interfaces.condor import run_cmd, condor_wait
+from intent.interfaces.condor import run_cmd, condor_wait, condor_wait_notify
 from intent.scripts.eval.dep_parser import eval_mst
 from intent.consts import *
 
@@ -79,12 +86,88 @@ aln_methods = ARG_ALN_METHODS
 filenames = {l:l+'.xml' for l in lang_map.keys()}
 
 # -------------------------------------------
-# 2) Enriched data
+# 0) Start by building up a list of all the
+#    directories we wish to create
 # -------------------------------------------
-enriched_files = [os.path.join(enrich_dir, fn) for fn in sorted(filenames.values())]
+
+
+class ExperimentFiles(object):
+    def __init__(self, langs):
+        self.langs = langs
+
+    def get_original_file(self, lang):
+        return os.path.join(odin_lang_dir, '{}.xml'.format(lang))
+
+    def _enriched_dir(self):
+        return os.path.join(experiment_dir, 'enriched')
+
+    def _filtered_dir(self):
+        return os.path.join(experiment_dir, 'filtered')
+
+    def get_enriched_file(self, lang):
+        return os.path.join(os.path.join(self._enriched_dir(), '{}_enriched.xml'.format(lang)))
+
+    def get_filtered_file(self, lang):
+        return os.path.join(os.path.join(self._filtered_dir(), '{}_filtered.xml'.format(lang)))
+
+    def get_projected_file(self, aln_method, lang):
+        proj_dir = os.path.join(experiment_dir, 'projected')
+        filename = '{}_{}_projected.xml'.format(lang, aln_method)
+        return os.path.join(proj_dir, filename)
+
+    def get_condor_filter(self, lang):
+        return os.path.join(self._filtered_dir(), 'condor', '{}_filtered'.format(lang))
+
+    def get_condor_enrich(self, lang):
+        return os.path.join(self._enriched_dir(), 'condor'), '{}_enrich'.format(lang)
+
+    def filtered_done(self):
+        all_present = True
+        for lang in self.langs:
+            if not os.path.exists(self.get_filtered_file(lang)):
+                all_present = False
+                break
+        return all_present
+
+
+ef = ExperimentFiles(lang_map.keys())
 
 # -------------------------------------------
-# 3)
+# 1) Filter the data
+# -------------------------------------------
+if not ef.filtered_done():
+    for lang in ef.langs:
+        orig_f = ef.get_original_file(lang)
+        filtered_f = ef.get_filtered_file(lang)
+
+        if USE_CONDOR:
+            prefix, name = ef.get_condor_filter(lang)
+            run_cmd(['intent.py', 'filter', '--require-aln', '--require-gloss', '--require-trans', '--require-lang'], prefix, name)
+        else:
+            filter_corpus([orig_f], filtered_f, require_lang=True, require_gloss=True, require_trans=True, require_aln=True)
+
+    if USE_CONDOR:
+        condor_wait_notify("Data has been filtered.", email_address)
+
+
+# -------------------------------------------
+# 2) Enriched data
+# -------------------------------------------
+for lang in ef.langs:
+    filtered_f = ef.get_original_file(lang)
+    enriched_f = ef.get_enriched_file(lang)
+
+    if USE_CONDOR:
+        prefix, name = ef.get_condor_enrich(lang)
+        run_cmd(['intent.py', 'enrich', '--align', 'heur,heurpos,giza,gizaheur', '--pos class', '--parse trans', filtered_f, enriched_f],
+                prefix, name, False)
+    else:
+        enrich(**{ARG_INFILE:filtered_f, ARG_OUTFILE:enriched_f, ALN_VAR:ARG_ALN_METHODS, POS_VAR:ARG_POS_CLASS, PARSE_VAR:ARG_PARSE_TRANS})
+
+sys.exit()
+
+# -------------------------------------------
+# 3) Re-project the data...
 # -------------------------------------------
 proj_method_dirs = {m:os.path.join(experiment_dir+'proj-{}'.format(m)) for m in aln_methods}
 
@@ -104,16 +187,12 @@ for aln_method in proj_method_dirs.keys():
             else:
                 do_projection(**{ARG_INFILE:enriched_file, aln_method:aln_method, ARG_OUTFILE:projected_file})
 
-
 # -------------------------------------------
 # Wait for the condor tasks to complete, and
 # send an email at this point.
 # -------------------------------------------
 if USE_CONDOR:
-    condor_wait()
-    os.system('echo "{}" | mail -s "{}" {}'.format("All projection processes have finished.",
-                                                   "Condor Notification",
-                                                   "rgeorgi@uw.edu"))
+    condor_wait_notify()
 
 # -------------------------------------------
 # 4) Now, extract the parsers.
@@ -122,6 +201,10 @@ parse_tag_pairs = []
 
 for aln_method in proj_method_dirs.keys():
     proj_dir = proj_method_dirs[aln_method]
+
+    # -------------------------------------------
+    # Each one of these basenames will be like "fra.xml...
+    # -------------------------------------------
     for basename in sorted(filenames.values()):
 
         lang = os.path.splitext(basename)[0]
@@ -131,23 +214,25 @@ for aln_method in proj_method_dirs.keys():
         # Now, extract using both classifier and projection methods
         for pos_source in pos_methods:
 
-            prefix = os.path.join(proj_dir, os.path.splitext(os.path.basename(proj_file))[0] + '_' + pos_source)
+            # This will look like "$dir/fra_class.tagger"
+            prefix = os.path.join(proj_dir, lang + '_' + pos_source)
             parser = prefix+'.depparser'
             tagger = prefix+'.tagger'
             parse_tag_pairs.append((lang, parser, tagger))
 
-            print(parser, tagger)
+            print(proj_file)
             # if not os.path.exists(parser) or not os.path.exists(tagger):
-            if False:
-                if USE_CONDOR:
-                    run_cmd(['intent.py', 'extract', '--tagger-prefix', prefix, '--dep-prefix', prefix,
-                             '--use-pos', pos_source],
-                            os.path.join(proj_dir, 'condor'),
-                            'extract_'+os.path.splitext(basename)[0],
-                            False)
-                else:
-                    extract_from_xigt([proj_file], tagger_prefix=prefix,
-                                      dep_prefix=prefix, pos_method=pos_source, aln_method=aln_method)
+            if USE_CONDOR:
+                run_cmd(['intent.py', 'extract', '--tagger-prefix', prefix, '--dep-prefix', prefix,
+                         '--use-pos', pos_source],
+                        os.path.join(proj_dir, 'condor'),
+                        'extract_{}_{}'.format(lang, pos_source),
+                        False)
+            else:
+                extract_from_xigt([proj_file], tagger_prefix=prefix,
+                                  dep_prefix=prefix, pos_method=pos_source, aln_method=aln_method)
+
+condor_wait_notify()
 
 # -------------------------------------------
 # 5) Finally, evaluate all the parsers.
