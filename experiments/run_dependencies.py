@@ -35,8 +35,6 @@ This module is used to:
 # for paralellization
 from collections import defaultdict
 
-from intent.commands.enrich import enrich
-from intent.commands.filter_corpus import filter_corpus
 
 # Use condor, and email when tasks finish.
 USE_CONDOR = False
@@ -66,6 +64,8 @@ from intent.commands.extraction import extract_from_xigt
 from intent.commands.project import do_projection
 from intent.interfaces.condor import run_cmd, condor_wait, condor_wait_notify
 from intent.scripts.eval.dep_parser import eval_mst
+from intent.commands.enrich import enrich
+from intent.commands.filter_corpus import filter_corpus
 from intent.consts import *
 
 # -------------------------------------------
