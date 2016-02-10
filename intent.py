@@ -260,7 +260,7 @@ elif args.subcommand == CMD_SPLIT:
 
 # FILTER
 elif args.subcommand == CMD_FILTER:
-    filter_corpus(flatten_list(args.FILE), getattr(args, ARG_OUTFILE), args.require_lang, args.require_gloss, args.require_trans, args.require_aln, args.require_gloss_pos)
+    filter_corpus(flatten_list(getattr(args, ARG_INFILE)), getattr(args, ARG_OUTFILE), args.require_lang, args.require_gloss, args.require_trans, args.require_aln, args.require_gloss_pos)
 
 # EXTRACT
 elif args.subcommand == CMD_EXTRACT:
