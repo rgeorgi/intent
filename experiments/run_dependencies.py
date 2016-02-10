@@ -40,14 +40,18 @@ from collections import defaultdict
 USE_CONDOR = False
 email_address = 'rgeorgi@uw.edu'
 
+this_dir = os.path.dirname(__file__)
+
 # The directory where the universal dependency treebanks are stored.
 eval_dir = '/Users/rgeorgi/Documents/treebanks/universal_treebanks_v2.0/std'
 
-# The directory where the ODIN by-lang XIGT files are found.
-odin_lang_dir = '/Users/rgeorgi/Documents/code/intent/experiments/dependencies/original'
-
 # The directory in which the files will be created for this experiment.
-experiment_dir = '/Users/rgeorgi/Documents/code/intent/experiments/dependencies/'
+experiment_dir = os.path.join(this_dir, 'dependencies')
+
+# The directory where the ODIN by-lang XIGT files are found.
+odin_lang_dir = os.path.join(this_dir, 'odin-data')
+
+
 
 
 # -------------------------------------------
