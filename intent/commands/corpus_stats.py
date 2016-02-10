@@ -20,8 +20,7 @@ from multiprocessing import cpu_count
 from intent.igt.parsing import raw_txt_to_xc
 from xigt.codecs import xigtxml
 
-from intent.igt.exceptions import MultipleNormLineException, NoLangLineException, NoGlossLineException, \
-    NoTransLineException
+from intent.igt.exceptions import NoLangLineException, NoGlossLineException, NoTransLineException
 from intent.trees import read_conll_file
 from intent.utils.fileutils import globlist
 
@@ -164,17 +163,17 @@ def inst_list_stats(inst_list):
 
         try:
             count_words_tags(inst, inst.lang, sd.lang, sd.lang_tags, sd.lang_word_tags)
-        except (MultipleNormLineException, NoLangLineException) as e:
+        except (NoLangLineException) as e:
             STATS_LOGGER.info(str(e))
 
         try:
             count_words_tags(inst, inst.gloss, sd.gloss, sd.gloss_tags, sd.gloss_word_tags)
-        except (MultipleNormLineException, NoGlossLineException) as e:
+        except (NoGlossLineException) as e:
             STATS_LOGGER.info(str(e))
 
         try:
             count_words_tags(inst, inst.trans, sd.trans, sd.trans_tags, sd.trans_word_tags)
-        except (MultipleNormLineException, NoTransLineException) as e:
+        except (NoTransLineException) as e:
             STATS_LOGGER.info(str(e))
 
     return sd

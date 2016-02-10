@@ -1,12 +1,15 @@
 from unittest import TestCase
 
 from intent.commands.enrich import enrich
-from intent.igt.create_tiers import get_raw_tier
+from intent.igt.create_tiers import get_raw_tier, gloss_line
 from intent.igt.parsing import xc_load
 from intent.utils.env import xigt_testfile
 from intent.consts import *
 
+from intent.igt.igt_functions import *
 __author__ = 'rgeorgi'
+
+
 
 class NoRawTest(TestCase):
     def setUp(self):
@@ -109,5 +112,15 @@ class EncodingTests(TestCase):
         def_enrich_args[ARG_INFILE] = xp
         enrich(**def_enrich_args)
 
+class NoLineTests(TestCase):
 
-from intent.igt.igt_functions import *
+    def test_nogloss(self):
+        xp = xigt_testfile('missing_lines.xml')
+        xc = xc_load(xp)
+        no_gloss = xc[0]
+
+        self.assertRaises(NoGlossLineException, gloss_line, no_gloss)
+        self.assertRaises(NoNormLineException, gloss_line, no_gloss)
+
+
+

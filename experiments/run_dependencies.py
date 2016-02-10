@@ -187,7 +187,7 @@ if USE_CONDOR:
 # 2) Enriched data
 # -------------------------------------------
 for lang in ef.langs:
-    filtered_f = ef.get_original_file(lang)
+    filtered_f = ef.get_filtered_file(lang)
     enriched_f = ef.get_enriched_file(lang)
 
     if not os.path.exists(enriched_f):

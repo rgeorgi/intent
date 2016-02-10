@@ -14,7 +14,7 @@ class MultipleNormLineException(XigtFormatException): pass
 class NoTransLineException(NoNormLineException): pass
 class NoLangLineException(NoNormLineException):	pass
 class NoGlossLineException(NoNormLineException): pass
-class EmptyGlossException(XigtFormatException): pass
+class EmptyGlossException(NoNormLineException): pass
 
 class NoODINRawException(XigtFormatException):	pass
 

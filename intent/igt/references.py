@@ -2,11 +2,8 @@ import re
 import string
 
 from intent.consts import *
-from intent.igt.exceptions import NoNormLineException, MultipleNormLineException, EmptyGlossException
-from intent.igt.metadata import get_intent_method
 from xigt import ref, Tier, Item, Igt
 from xigt.ref import ids
-from xigt.xigtpath import find, findall
 from xigt.consts import SEGMENTATION, CONTENT, ALIGNMENT
 from xigt.mixins import XigtContainerMixin
 

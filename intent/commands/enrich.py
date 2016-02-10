@@ -3,7 +3,7 @@ import sys
 
 from intent.consts import *
 from intent.igt.create_tiers import gloss_line, trans_lines, lang_lines, trans_tag_tier
-from intent.igt.exceptions import GlossLangAlignException, MultipleNormLineException, PhraseStructureProjectionException, \
+from intent.igt.exceptions import GlossLangAlignException, PhraseStructureProjectionException, \
     ProjectionException, NoNormLineException
 from intent.igt.igt_functions import giza_align_t_g, tag_trans_pos, parse_translation_line, classify_gloss_pos, \
     word_align, heur_align_inst, project_gloss_pos_to_lang, get_trans_gloss_alignment, project_trans_pos_to_gloss, \
@@ -16,6 +16,8 @@ from intent.utils.argutils import writefile
 from intent.utils.env import c, posdict, classifier, load_posdict
 from xigt.codecs import xigtxml
 
+ENRICH_LOG = logging.getLogger('ENRICH')
+
 #===============================================================================
 # The ENRICH subcommand.
 #===============================================================================
@@ -24,7 +26,7 @@ from xigt.consts import INCREMENTAL
 
 def enrich(class_path=None, **kwargs):
 
-    ENRICH_LOG = logging.getLogger('ENRICH')
+
 
     if ARG_OUTFILE not in kwargs:
         ENRICH_LOG.critical("No output file specified.")
@@ -200,8 +202,6 @@ def enrich(class_path=None, **kwargs):
                         add_gloss_lang_alignments(inst)
                     except GlossLangAlignException as glae:
                         fail(F_L_G_ALN)
-                    except MultipleNormLineException as mnle:
-                        fail(F_BAD_LINES)
 
                 if has_gl and has_tl:
                     if ARG_ALN_HEURPOS in aln_args:

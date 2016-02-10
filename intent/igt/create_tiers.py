@@ -264,8 +264,6 @@ def generate_trans_phrase_tier(inst):
             lpt = generate_lang_phrase_tier(inst)
             tpt.attributes[ALIGNMENT] = lpt.id
             tpt[0].attributes[ALIGNMENT] = lpt[0].id
-        except MultipleNormLineException as mnle:
-            pass
         except NoNormLineException as nlle:
             pass
 
@@ -325,7 +323,12 @@ def retrieve_normal_lines(inst, tag):
     norm_tier = generate_normal_tier(inst)
     lines = [line for line in norm_tier if tag in line.attributes[ODIN_TAG_ATTRIBUTE].split('+') and line.value() is not None and line.value().strip()]
     if not lines:
-        raise NoNormLineException('No normalized lines were available for tag "{}" in instance "{}"'.format(tag, inst.id))
+        if tag == ODIN_LANG_TAG:
+            raise NoLangLineException('Lang line missing in instance "{}"'.format(inst.id))
+        elif tag == ODIN_GLOSS_TAG:
+            raise NoGlossLineException('Gloss line missing in instance "{}"'.format(inst.id))
+        elif tag == ODIN_TRANS_TAG:
+            raise NoTransLineException('Trans line missing in instance "{}"'.format(inst.id))
     return sorted(lines, key=sort_lines)
 
 

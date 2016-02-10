@@ -834,7 +834,7 @@ def giza_align_t_g(xc, aligner=ALIGNER_GIZA, resume = True, use_heur = False, sy
                 id_pairs[inst.id] = sent_num
                 sent_num+=1
 
-        except (NoNormLineException, MultipleNormLineException) as nnle:
+        except (NoNormLineException) as nnle:
             continue
 
 

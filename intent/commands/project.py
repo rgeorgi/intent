@@ -7,9 +7,8 @@ import os
 
 PROJ_LOG = logging.getLogger("REPROJECT")
 
-from intent.igt.exceptions import NoTransLineException, NoNormLineException, MultipleNormLineException, \
-    ProjectionException, GlossLangAlignException
-from intent.igt.igt_functions import lang, gloss, get_bilingual_alignment, project_trans_pos_to_gloss, \
+from intent.igt.exceptions import NoNormLineException, ProjectionException, GlossLangAlignException
+from intent.igt.igt_functions import project_trans_pos_to_gloss, \
     project_gloss_pos_to_lang, project_pt_tier, project_ds_tier
 from intent.trees import NoAlignmentProvidedError
 from xigt.codecs import xigtxml
@@ -49,7 +48,7 @@ def do_projection(**kwargs):
                 project_gloss_pos_to_lang(inst, tag_method=INTENT_POS_PROJ)
                 project_pt_tier(inst, proj_aln_method=aln_method)
                 project_ds_tier(inst, proj_aln_method=aln_method)
-            except (NoTransLineException, MultipleNormLineException) as ntle:
+            except (NoNormLineException) as ntle:
                 fail("Bad Lines")
             except (NoAlignmentProvidedError, ProjectionException) as nape:
                 fail("Alignment")
