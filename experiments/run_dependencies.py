@@ -172,11 +172,12 @@ for lang in ef.langs:
     orig_f = ef.get_original_file(lang)
     filtered_f = ef.get_filtered_file(lang)
 
-    if USE_CONDOR:
-        prefix, name = ef.get_condor_filter(lang)
-        run_cmd(['intent.py', 'filter', '--require-aln', '--require-gloss', '--require-trans', '--require-lang', orig_f, filtered_f], prefix, name, False)
-    else:
-        filter_corpus([orig_f], filtered_f, require_lang=True, require_gloss=True, require_trans=True, require_aln=True)
+    if not os.path.exists(filtered_f):
+        if USE_CONDOR:
+            prefix, name = ef.get_condor_filter(lang)
+            run_cmd(['intent.py', 'filter', '--require-aln', '--require-gloss', '--require-trans', '--require-lang', orig_f, filtered_f], prefix, name, False)
+        else:
+            filter_corpus([orig_f], filtered_f, require_lang=True, require_gloss=True, require_trans=True, require_aln=True)
 
 if USE_CONDOR:
     condor_wait_notify("Data has been filtered.", email_address, "CONDOR: Filtration complete.")
@@ -189,12 +190,13 @@ for lang in ef.langs:
     filtered_f = ef.get_original_file(lang)
     enriched_f = ef.get_enriched_file(lang)
 
-    if USE_CONDOR:
-        prefix, name = ef.get_condor_enrich(lang)
-        run_cmd(['intent.py', 'enrich', '--align', 'heur,heurpos,giza,gizaheur', '--pos class', '--parse trans', filtered_f, enriched_f],
-                prefix, name, False)
-    else:
-        enrich(**{ARG_INFILE:filtered_f, ARG_OUTFILE:enriched_f, ALN_VAR:ARG_ALN_METHODS, POS_VAR:ARG_POS_CLASS, PARSE_VAR:ARG_PARSE_TRANS})
+    if not os.path.exists(enriched_f):
+        if USE_CONDOR:
+            prefix, name = ef.get_condor_enrich(lang)
+            run_cmd(['intent.py', 'enrich', '--align', 'heur,heurpos,giza,gizaheur', '--pos class', '--parse trans', filtered_f, enriched_f],
+                    prefix, name, False)
+        else:
+            enrich(**{ARG_INFILE:filtered_f, ARG_OUTFILE:enriched_f, ALN_VAR:ARG_ALN_METHODS, POS_VAR:ARG_POS_CLASS, PARSE_VAR:ARG_PARSE_TRANS})
 
 if USE_CONDOR:
     condor_wait_notify("Data has been enriched.", email_address, "CONDOR: Enrichment Complete.")
@@ -207,12 +209,13 @@ for lang in ef.langs:
         enriched_f  = ef.get_enriched_file(lang)
         projected_f = ef.get_projected_file(aln_method, lang)
 
-        if USE_CONDOR:
-            prefix, name = ef.get_condor_project(aln_method, lang)
-            run_cmd(['intent.py', 'project', '--aln-method', aln_method, enriched_f, projected_f], prefix, name, False)
+        if not os.path.exists(projected_f):
+            if USE_CONDOR:
+                prefix, name = ef.get_condor_project(aln_method, lang)
+                run_cmd(['intent.py', 'project', '--aln-method', aln_method, enriched_f, projected_f], prefix, name, False)
 
-        else:
-            do_projection(**{ARG_INFILE:enriched_f, aln_method:aln_method, ARG_OUTFILE:projected_f})
+            else:
+                do_projection(**{ARG_INFILE:enriched_f, aln_method:aln_method, ARG_OUTFILE:projected_f})
 
 # -------------------------------------------
 # Wait for the condor tasks to complete, and
