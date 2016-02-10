@@ -5,8 +5,8 @@ Created on Apr 9, 2015
 """
 from datetime import datetime
 
-from intent.consts import DATA_DATE, INTENT_META_SOURCE, DATA_SRC, DATA_PROV, \
-    DATA_METH, DATA_FROM, INTENT_META_TYPE, DATA_ALNF, INTENT_EXTENDED_INFO, INTENT_TOKEN_TYPE, INTENT_GLOSS_WORD
+from intent.consts import DATA_DATE_ATTR, INTENT_META_SOURCE, DATA_SRC_ATTR, DATA_PROV, \
+    DATA_METH_ATTR, DATA_FROM_ATTR, INTENT_META_TYPE, DATA_ALNF_ATTR, INTENT_EXTENDED_INFO, INTENT_TOKEN_TYPE, INTENT_GLOSS_WORD
 from xigt.metadata import Metadata, Meta
 from xigt.mixins import XigtContainerMixin
 
@@ -20,8 +20,8 @@ def get_intent_method(obj):
     :return: str or None
     """
     m = find_meta(obj, DATA_PROV)
-    if m is not None and m.attributes.get(DATA_SRC) == INTENT_META_SOURCE:
-        return m.attributes.get(DATA_METH)
+    if m is not None and m.attributes.get(DATA_SRC_ATTR) == INTENT_META_SOURCE:
+        return m.attributes.get(DATA_METH_ATTR)
 
 def set_intent_method(obj, method):
     """
@@ -31,8 +31,8 @@ def set_intent_method(obj, method):
     :param obj: Object to add metadata to.
     :param method: Method to set as the method attribute on the meta item.
     """
-    set_meta_attr(obj, DATA_PROV, DATA_SRC, INTENT_META_SOURCE)
-    set_meta_attr(obj, DATA_PROV, DATA_METH, method)
+    set_meta_attr(obj, DATA_PROV, DATA_SRC_ATTR, INTENT_META_SOURCE)
+    set_meta_attr(obj, DATA_PROV, DATA_METH_ATTR, method)
 
 
 def set_intent_proj_data(obj, source_tier, aln_type):
@@ -43,9 +43,9 @@ def set_intent_proj_data(obj, source_tier, aln_type):
     :param obj:
     :param source_tier:
     """
-    set_meta_attr(obj, DATA_PROV, DATA_FROM, source_tier.id)
+    set_meta_attr(obj, DATA_PROV, DATA_FROM_ATTR, source_tier.id)
     if aln_type is not None:
-        set_meta_attr(obj, DATA_PROV, DATA_ALNF, aln_type)
+        set_meta_attr(obj, DATA_PROV, DATA_ALNF_ATTR, aln_type)
 
 
 def find_metadata(obj, metadata_type):
@@ -155,15 +155,15 @@ def is_contentful_meta(m):
     has_text = m.text is not None
     # Also, the attributes should be more than just the timestamp
     # (i.e. the timestamp set should be a proper subset of all attributes)
-    keys = [k for k in m.attributes.keys() if k != DATA_DATE]
+    keys = [k for k in m.attributes.keys() if k != DATA_DATE_ATTR]
     return has_text or keys
 
 
 def timestamp_meta(m):
-    m.attributes[DATA_DATE] = datetime.utcnow().replace(microsecond=0).isoformat()
+    m.attributes[DATA_DATE_ATTR] = datetime.utcnow().replace(microsecond=0).isoformat()
 
 def get_meta_timestamp(m):
-    return m.attributes.get(DATA_DATE)
+    return m.attributes.get(DATA_DATE_ATTR)
 
 
 def find_meta(obj, meta_type, metadata_type = INTENT_META_TYPE):

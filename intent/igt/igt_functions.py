@@ -425,58 +425,6 @@ CREATE_LOG = logging.getLogger("IGT_CREATION")
 # -------------------------------------------
 
 
-def create_text_tier_from_lines(inst, lines, id_base, state):
-    """
-    Given a list of lines that are dicts with the attributes 'text' and 'tag', create
-    a text tier of the specified type with the provided line items.
-
-    :type lines: list[dict]
-    """
-    # -------------------------------------------
-    # 1) Generate the parent tier.
-    tier = Tier(id=gen_tier_id(inst, id_base), type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:state})
-
-
-    # -------------------------------------------
-    # 2) Iterate over the list of lines
-    for line in lines:
-
-        # Make sure the line is a dict.
-        if not hasattr(line, 'get') or 'text' not in line or 'tag' not in line:
-            raise RGXigtException("When constructing tier from lines, must be a list of dicts with keys 'text' and 'tag'.")
-
-        # Construct the list of tags.
-        alltags = []
-        if line.get('tag') is not None:
-            alltags.append(line.get('tag'))
-        if line.get('labels') is not None and line.get('labels'):
-            alltags.append(line.get('labels'))
-        tag_str = '+'.join(alltags)
-
-        # Construct the attributes
-        line_attributes = {ODIN_TAG_ATTRIBUTE:tag_str}
-        if line.get('judgment') is not None:
-            line_attributes[ODIN_JUDGMENT_ATTRIBUTE] = line['judgment']
-
-        l = Item(id=gen_item_id(tier.id, len(tier)),
-                   attributes=line_attributes,
-                   text=line.get('text'))
-        tier.append(l)
-    return tier
-
-def add_text_tier_from_lines(inst, lines, id_base, state):
-    tier = create_text_tier_from_lines(inst, lines, id_base, state)
-    inst.append(tier)
-
-def add_raw_tier(inst, lines):
-    add_text_tier_from_lines(inst, lines, RAW_ID, RAW_STATE)
-
-def add_clean_tier(inst, lines):
-    add_text_tier_from_lines(inst, lines, CLEAN_ID, CLEAN_STATE)
-
-def add_normal_tier(inst, lines):
-    add_text_tier_from_lines(inst, lines, NORM_ID, NORM_STATE)
-
 # -------------------------------------------
 #
 # -------------------------------------------
@@ -488,45 +436,6 @@ def add_normal_tier(inst, lines):
 
 
 
-
-
-def replace_lines(inst, clean_lines, norm_lines):
-    """
-    Given an instance and a list of clean lines and normal lines,
-    add a cleaned tier and normalized if they do not already exist,
-    otherwise, replace them.
-
-    :param inst:
-    :type inst: xigt.Igt
-    :param clean_lines:
-    :type clean_lines: list[dict]
-    :param norm_lines:
-    :type norm_lines: list[dict]
-    """
-
-    # -------------------------------------------
-    # Remove the old clean/norm lines.
-    # -------------------------------------------
-    old_clean_tier = cleaned_tier(inst)
-    if old_clean_tier is not None:
-        inst.remove(old_clean_tier)
-
-    old_norm_tier = normalized_tier(inst)
-    if old_norm_tier is not None:
-        inst.remove(old_norm_tier)
-
-    # -------------------------------------------
-    # Now, add the clean/norm lines, if provided.
-    # -------------------------------------------
-    if clean_lines:
-        new_clean_tier = create_text_tier_from_lines(inst, clean_lines, CLEAN_ID, CLEAN_STATE)
-        inst.append(new_clean_tier)
-
-    if norm_lines:
-        new_norm_tier = create_text_tier_from_lines(inst, norm_lines, NORM_ID, NORM_STATE)
-        inst.append(new_norm_tier)
-
-    return inst
 
 
 

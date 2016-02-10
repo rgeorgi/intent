@@ -94,11 +94,11 @@ INTENT_META_TYPE = 'intent-meta'
 # Define the strings for data source and data method
 
 DATA_PROV = 'data-provenance'
-DATA_METH = 'method'             # The attribute for marking which method was used
-DATA_SRC  = 'source'             # The attribute for marking that this was INTENT
-DATA_FROM = 'projected-from'     # The attribute for marking which tier was used to make this one (for projection)
-DATA_ALNF = 'projection-alignment'       # The attribute for marking the alignment used for projection.
-DATA_DATE = 'date'               # The attribute for marking
+DATA_METH_ATTR = 'method'             # The attribute for marking which method was used
+DATA_SRC_ATTR  = 'source'             # The attribute for marking that this was INTENT
+DATA_FROM_ATTR = 'projected-from'     # The attribute for marking which tier was used to make this one (for projection)
+DATA_ALNF_ATTR = 'projection-alignment'       # The attribute for marking the alignment used for projection.
+DATA_DATE_ATTR = 'date'               # The attribute for marking
 
 
 # Now, define intent as the data-source provider...
