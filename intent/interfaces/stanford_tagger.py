@@ -3,7 +3,7 @@ Created on Oct 22, 2013
 
 @author: rgeorgi
 """
-
+import glob
 import os, sys, re, unittest, time, logging
 import subprocess as sub
 from optparse import OptionParser
@@ -18,7 +18,7 @@ from intent.utils.ConfigFile import ConfigFile
 from intent.eval.pos_eval import slashtags_eval
 from intent.utils.token import tag_tokenizer, tokenize_string, Token, POSToken
 
-from intent.utils.env import c, tagger_jar, tagger_model, java_bin
+from intent.utils.env import c, tagger_dir, tagger_model, java_bin
 
 # Logging ----------------------------------------------------------------------
 TAG_LOG = logging.getLogger(__name__)
@@ -67,14 +67,19 @@ class StanfordPOSTagger(object):
         :param model: Path to the model file.
         :type model: str
         """
-        if tagger_jar is None:
+        if tagger_dir is None:
             TAG_LOG.critical('Path to the stanford tagger .jar file is not defined.')
             raise TaggerError('Path to the stanford tagger .jar file is not defined.')
+
+        tagger_jar = os.path.join(tagger_dir, 'stanford-postagger.jar')
+        other_jars = glob.glob(os.path.join(tagger_dir, 'lib/*.jar'))
+
+        classpath = ':'.join([tagger_jar]+other_jars)
 
         self.results_queue = []
 
         self.st = ProcessCommunicator([java_bin,
-                                       '-cp', tagger_jar,
+                                       '-cp', classpath,
                                        'edu.stanford.nlp.tagger.maxent.MaxentTagger',
                                        '-model', model,
                                        '-sentenceDelimiter', 'newline',

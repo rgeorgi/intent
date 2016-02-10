@@ -35,7 +35,7 @@ mgiza            = c.getpath('mgiza')
 mallet           = c.getpath('mallet')
 mallet_bin       = os.path.join(mallet, 'bin/mallet')
 xigt_dir         = c.getpath('xigt_dir')
-tagger_jar       = c.getpath('stanford_tagger_jar')
+tagger_dir       = c.getpath('stanford_tagger_dir')
 tagger_model     = c.getpath('stanford_tagger_trans')
 parser_dir       = c.getpath('stanford_parser_dir')
 parser_model     = c.get('stanford_parser_model')
@@ -56,6 +56,7 @@ def load_posdict():
 # =============================================================================
 testfile_dir = os.path.join(proj_root, "data/testcases")
 xigt_testfiles = os.path.join(testfile_dir, 'xigt')
+
 
 def xigt_testfile(s):
     return os.path.join(xigt_testfiles, s)
@@ -116,6 +117,5 @@ else:
             sys.exit(2)
 
 #===============================================================================
-# Test other paths...
+# Other classpath vars
 #===============================================================================
-
