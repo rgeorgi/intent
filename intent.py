@@ -160,7 +160,7 @@ split_p.add_argument('-f', dest='overwrite', action='store_true', help='Force ov
 filter_p = register_subparser(CMD_FILTER, help='Command to filter input file(s) for instances')
 
 filter_p.add_argument(ARG_INFILE, nargs='+', help='XIGT files to filter.', type=globfiles)
-filter_p.add_argument(ARG_OUTFILE, help="Output file (Combines from inputs)",  required=True)
+filter_p.add_argument(ARG_OUTFILE, help="Output file (Combines from inputs)")
 filter_p.add_argument('--require-lang', help='Require instances to have language line', action='store_true', default=False)
 filter_p.add_argument('--require-gloss', help='Require instances to have gloss line', action='store_true', default=False)
 filter_p.add_argument('--require-trans', help='Require instances to have trans line', action='store_true', default=False)
