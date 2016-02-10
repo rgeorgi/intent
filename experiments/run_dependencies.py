@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os, sys, logging
 """
 This module is used to:
 
@@ -55,7 +56,6 @@ odin_lang_dir = os.path.join(this_dir, 'odin-data')
 
 
 # -------------------------------------------
-import os, sys, logging
 logging.basicConfig(level=logging.INFO)
 enrich_dir = os.path.join(experiment_dir, 'enriched')
 # Directory where INTENT is located...
@@ -120,7 +120,7 @@ class ExperimentFiles(object):
         return os.path.join(proj_dir, filename)
 
     def get_condor_filter(self, lang):
-        return os.path.join(self._filtered_dir(), 'condor', '{}_filtered'.format(lang))
+        return os.path.join(self._filtered_dir(), 'condor'), '{}_filtered'.format(lang)
 
     def get_condor_enrich(self, lang):
         return os.path.join(self._enriched_dir(), 'condor'), '{}_enrich'.format(lang)
@@ -146,7 +146,7 @@ if not ef.filtered_done():
 
         if USE_CONDOR:
             prefix, name = ef.get_condor_filter(lang)
-            run_cmd(['intent.py', 'filter', '--require-aln', '--require-gloss', '--require-trans', '--require-lang'], prefix, name)
+            run_cmd(['intent.py', 'filter', '--require-aln', '--require-gloss', '--require-trans', '--require-lang', orig_f, filtered_f], prefix, name, False)
         else:
             filter_corpus([orig_f], filtered_f, require_lang=True, require_gloss=True, require_trans=True, require_aln=True)
 

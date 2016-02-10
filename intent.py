@@ -159,8 +159,8 @@ split_p.add_argument('-f', dest='overwrite', action='store_true', help='Force ov
 #===============================================================================
 filter_p = register_subparser(CMD_FILTER, help='Command to filter input file(s) for instances')
 
-filter_p.add_argument('FILE', nargs='+', help='XIGT files to filter.', type=globfiles)
-filter_p.add_argument('-o', '--output', help='Output file (Combine from inputs)', required=True)
+filter_p.add_argument(ARG_INFILE, nargs='+', help='XIGT files to filter.', type=globfiles)
+filter_p.add_argument(ARG_OUTFILE, help="Output file (Combines from inputs)",  required=True)
 filter_p.add_argument('--require-lang', help='Require instances to have language line', action='store_true', default=False)
 filter_p.add_argument('--require-gloss', help='Require instances to have gloss line', action='store_true', default=False)
 filter_p.add_argument('--require-trans', help='Require instances to have trans line', action='store_true', default=False)
@@ -260,7 +260,7 @@ elif args.subcommand == CMD_SPLIT:
 
 # FILTER
 elif args.subcommand == CMD_FILTER:
-    filter_corpus(flatten_list(args.FILE), args.output, args.require_lang, args.require_gloss, args.require_trans, args.require_aln, args.require_gloss_pos)
+    filter_corpus(flatten_list(args.FILE), getattr(args, ARG_OUTFILE), args.require_lang, args.require_gloss, args.require_trans, args.require_aln, args.require_gloss_pos)
 
 # EXTRACT
 elif args.subcommand == CMD_EXTRACT:
