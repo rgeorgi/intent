@@ -308,7 +308,7 @@ for lang in ef.langs:
             model_prefix = ef.get_model_prefix(aln_method, pos_source, lang)
 
             tagger_path = ef.get_tagger(aln_method, pos_source, lang)
-            parser_path = ef.get_tagger(aln_method, pos_source, lang)
+            parser_path = ef.get_parser(aln_method, pos_source, lang)
 
             eval_path   = ef.get_eval_file(lang)
             out_prefix  = ef.get_out_prefix(lang, aln_method, pos_source)
