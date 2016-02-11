@@ -313,15 +313,15 @@ for lang in ef.langs:
             eval_path   = ef.get_eval_file(lang)
             out_prefix  = ef.get_out_prefix(lang, aln_method, pos_source)
 
+            if not os.path.exists(eval_path) or not os.path.exists(out_prefix):
 
-
-            if USE_CONDOR:
-                prefix, name = ef.get_condor_result(aln_method, pos_source, lang)
-                eval_script = os.path.join(intent_dir, 'intent/scripts/eval/dep_parser.py')
-                run_cmd([eval_script, 'test', '-p', parser_path, '-t', tagger_path, '--test', eval_path,
-                         '-o', out_prefix], prefix, name, False, env='PYTHONPATH={}'.format(intent_dir))
-            else:
-                eval_mst(parser_path, eval_path, out_prefix, tagger=tagger_path)
+                if USE_CONDOR:
+                    prefix, name = ef.get_condor_result(aln_method, pos_source, lang)
+                    eval_script = os.path.join(intent_dir, 'intent/scripts/eval/dep_parser.py')
+                    run_cmd([eval_script, 'test', '-p', parser_path, '-t', tagger_path, '--test', eval_path,
+                             '-o', out_prefix], prefix, name, False, env='PYTHONPATH={}'.format(intent_dir))
+                else:
+                    eval_mst(parser_path, eval_path, out_prefix, tagger=tagger_path)
 
 if USE_CONDOR:
     condor_wait_notify("Evaluation completed.", email_address, "CONDOR: Evaluation complete.")
