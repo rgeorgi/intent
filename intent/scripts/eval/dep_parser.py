@@ -40,6 +40,7 @@ def eval_mst(model_path, test_path, out_prefix, lowercase=True, tagger=None, for
         if tagger is not None:
             LOG.log(1000, "POS Tagging evaluation ")
             cc.tag(StanfordPOSTagger(tagger))
+        os.makedirs(os.path.dirname(eval_path), exist_ok=True)
         cc.write(eval_path)
     # -------------------------------------------
 
