@@ -61,6 +61,9 @@ def do_projection(**kwargs):
                 inst.sort_tiers()
 
         out_path = kwargs.get(ARG_OUTFILE)
+        # Try to make the folder if it doesn't already exist.
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
+
         PROJ_LOG.log(1000, 'Writing new file "{}"...'.format(os.path.basename(out_path)))
         with open(out_path, 'w', encoding='utf-8') as out_f:
             xigtxml.dump(out_f, xc)

@@ -47,6 +47,14 @@ def set_intent_proj_data(obj, source_tier, aln_type):
     if aln_type is not None:
         set_meta_attr(obj, DATA_PROV, DATA_ALNF_ATTR, aln_type)
 
+def get_intent_proj_aln_method(obj):
+    """
+    Return the alignment method used to do the projection, if such
+    metadata exists.
+    """
+    m = find_meta(obj, DATA_PROV)
+    if m is not None and m.attributes.get(DATA_ALNF_ATTR):
+        return m.attributes.get(DATA_ALNF_ATTR)
 
 def find_metadata(obj, metadata_type):
     found = None

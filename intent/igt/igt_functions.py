@@ -188,8 +188,8 @@ def get_trans_gloss_alignment(inst, aln_method=None):
     Retrieve the alignment between translation and gloss line, travelling through the
     sub-token level "glosses" tokens if necessary.
     """
-    trans_gloss = get_bilingual_alignment(inst, trans(inst).id, gloss(inst).id, aln_method)
-    trans_glosses = get_bilingual_alignment(inst, trans(inst).id, glosses(inst).id, aln_method)
+    trans_gloss = get_bilingual_alignment(inst, trans(inst).id, gloss(inst).id, aln_method=aln_method)
+    trans_glosses = get_bilingual_alignment(inst, trans(inst).id, glosses(inst).id, aln_method=aln_method)
 
     if trans_gloss is not None:
         return trans_gloss
