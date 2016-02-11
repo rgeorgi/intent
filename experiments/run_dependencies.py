@@ -200,29 +200,33 @@ ef = ExperimentFiles(lang_map.keys())
 # -------------------------------------------
 # 1) Filter the data
 # -------------------------------------------
+filtration_done = False
 for lang in ef.langs:
     orig_f = ef.get_original_file(lang)
     filtered_f = ef.get_filtered_file(lang)
 
     if not os.path.exists(filtered_f):
+        filtration_done = True
         if USE_CONDOR:
             model_prefix, name = ef.get_condor_filter(lang)
             run_cmd(['intent.py', 'filter', '--require-aln', '--require-gloss', '--require-trans', '--require-lang', orig_f, filtered_f], model_prefix, name, False)
         else:
             filter_corpus([orig_f], filtered_f, require_lang=True, require_gloss=True, require_trans=True, require_aln=True)
 
-if USE_CONDOR:
+if USE_CONDOR and filtration_done:
     condor_wait_notify("Data has been filtered.", email_address, "CONDOR: Filtration complete.")
 
 
 # -------------------------------------------
 # 2) Enriched data
 # -------------------------------------------
+enrichment_done = False
 for lang in ef.langs:
     filtered_f = ef.get_filtered_file(lang)
     enriched_f = ef.get_enriched_file(lang)
 
     if not os.path.exists(enriched_f):
+        enrichment_done = True
         if USE_CONDOR:
             model_prefix, name = ef.get_condor_enrich(lang)
             run_cmd(['intent.py', 'enrich', '--align', 'heur,heurpos,giza,gizaheur', '--pos class', '--parse trans', filtered_f, enriched_f],
@@ -230,18 +234,20 @@ for lang in ef.langs:
         else:
             enrich(**{ARG_INFILE:filtered_f, ARG_OUTFILE:enriched_f, ALN_VAR:ARG_ALN_METHODS, POS_VAR:ARG_POS_CLASS, PARSE_VAR:ARG_PARSE_TRANS})
 
-if USE_CONDOR:
+if USE_CONDOR and enrichment_done:
     condor_wait_notify("Data has been enriched.", email_address, "CONDOR: Enrichment Complete.")
 
 # -------------------------------------------
 # 3) Re-project the data...
 # -------------------------------------------
+projection_done = False
 for lang in ef.langs:
     for aln_method in aln_methods:
         enriched_f  = ef.get_enriched_file(lang)
         projected_f = ef.get_projected_file(aln_method, lang)
 
         if not os.path.exists(projected_f):
+            projection_done = True
             if USE_CONDOR:
                 model_prefix, name = ef.get_condor_project(aln_method, lang)
                 run_cmd(['intent.py', 'project', '--aln-method', aln_method, enriched_f, projected_f], model_prefix, name, False)
@@ -251,16 +257,13 @@ for lang in ef.langs:
                 # p.wait()
                 do_projection(**{ARG_INFILE:enriched_f, 'aln_method':aln_method, ARG_OUTFILE:projected_f})
 
-# -------------------------------------------
-# Wait for the condor tasks to complete, and
-# send an email at this point.
-# -------------------------------------------
-if USE_CONDOR:
+if USE_CONDOR and projection_done:
     condor_wait_notify("Data has been projected.", email_address, "CONDOR: Projection Complete.")
 
 # -------------------------------------------
 # 4) Now, extract the parsers.
 # -------------------------------------------
+extraction_done = False
 for lang in ef.langs:
     for aln_method in aln_methods:
         for pos_source in pos_methods:
@@ -273,6 +276,7 @@ for lang in ef.langs:
 
 
             if not os.path.exists(tagger_path) or not os.path.exists(parser_path):
+                extraction_done = True
 
                 # -------------------------------------------
                 # Set up the arguments for making the external call
@@ -296,7 +300,7 @@ for lang in ef.langs:
                     p = Popen(args+['-v'])
                     p.wait()
 
-if USE_CONDOR:
+if USE_CONDOR and extraction_done:
     condor_wait_notify("Parsers have been extracted.", email_address, "CONDOR: Extraction complete.")
 
 # -------------------------------------------
