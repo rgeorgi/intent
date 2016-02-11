@@ -630,12 +630,12 @@ def project_ds(src_t, tgt_w, aln):
 
         # If there are no indices to the left, attach to the leftmost of those
         # to the right...
-        if not left_indices:
+        if not left_indices and right_indices:
             attachments_to_make.append((j, right_indices[0]))
 
         # If there are no indices to the right, attach to the rightmost of those
         # to the left...
-        elif not right_indices:
+        elif not right_indices and left_indices:
             attachments_to_make.append((j, left_indices[-1]))
 
         # If we have indices to the left and right, find whether one depends
