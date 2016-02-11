@@ -1465,7 +1465,10 @@ def to_conll(ds, words, lowercase=False, clean_token=False, match_punc=False, mu
     cs = ConllSentence()
 
     # TODO: FIXME: We really shouldn't be reattaching here, but rather in the projection
-    root_word_index = ds.find(lambda x: x.parent() is not None and x.parent().word_index == 0).word_index
+    root_word = ds.find(lambda x: x.parent() is not None and x.parent().word_index == 0)
+    root_word_index = 0
+    if root_word is not None:
+        root_word_index = root_word.word_index
 
     for word in words:
         w_idx = item_index(word)
