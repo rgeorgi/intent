@@ -62,8 +62,9 @@ def write_gram(token, **kwargs):
 
     posdict = kwargs.get('posdict', None)
 
+
     if posdict is None:
-        posdict = env.posdict
+        posdict = env.load_posdict()
 
     # Previous tag info
     prev_gram = kwargs.get('prev_gram')
