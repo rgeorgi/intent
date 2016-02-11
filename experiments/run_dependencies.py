@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 import os, sys, logging
+
+from subprocess import Popen
+
 """
 This module is used to:
 
@@ -63,6 +66,8 @@ intent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 intent_script = os.path.join(intent_dir, 'intent.py')
 sys.path.insert(0, intent_dir)
 
+os.environ["PATH"]=os.getenv("PATH")+':'.join(sys.path)
+
 from intent.utils import env
 from intent.commands.extraction import extract_from_xigt
 from intent.commands.project import do_projection
@@ -114,6 +119,9 @@ class ExperimentFiles(object):
     def _parser_dir(self):
         return os.path.join(experiment_dir, 'parsers')
 
+    def _results_dir(self):
+        return os.path.join(experiment_dir, 'results')
+
     def get_enriched_file(self, lang):
         return os.path.join(os.path.join(self._enriched_dir(), '{}_enriched.xml'.format(lang)))
 
@@ -125,17 +133,22 @@ class ExperimentFiles(object):
         filename = '{}_{}_projected.xml'.format(lang, aln_method)
         return os.path.join(proj_dir, filename)
 
-    def get_parser(self, aln_method, pos_source, lang):
-        return os.path.join(self._parser_dir(), '{}_{}_{}'.format(lang, aln_method, pos_source))
 
-    def get_tagger(self, aln_method, pos_source, lang):
+    def _config_name(self, aln_method, pos_source, lang):
         if aln_method is None:
             filename = '{}_{}'.format(lang, pos_source)
         else:
             filename = '{}_{}_{}'.format(lang, aln_method, pos_source)
+        return filename
 
-        return os.path.join(self._parser_dir(), filename)
+    def get_model_prefix(self, aln_method, pos_source, lang):
+        return os.path.join(self._parser_dir(), self._config_name(aln_method, pos_source, lang))
 
+    def get_tagger(self, aln_method, pos_source, lang):
+        return self.get_model_prefix(aln_method, pos_source, lang) + '.tagger'
+
+    def get_parser(self, aln_method, pos_source, lang):
+        return self.get_model_prefix(aln_method, pos_source, lang) + '.depparser'
 
     def get_condor_filter(self, lang):
         return os.path.join(self._filtered_dir(), 'condor'), '{}_filtered'.format(lang)
@@ -147,12 +160,18 @@ class ExperimentFiles(object):
         return os.path.join(self._project_dir(), 'condor'), '{}_{}_project'.format(lang, aln_method)
 
     def get_condor_extract(self, aln_method, pos_source, lang):
-        if aln_method is not None:
-            name = '{}_{}_{}'.format(lang, aln_method, pos_source)
-        else:
-            name = '{}_{}'.format(lang, pos_source)
-        return os.path.join(self._parser_dir(), 'condor'), name
+        return os.path.join(self._parser_dir(), 'condor'), self._config_name(aln_method, pos_source, lang)
 
+    def get_condor_result(self, aln_method, pos_source, lang):
+        return os.path.join(self._results_dir(), 'condor'), self._config_name(aln_method, pos_source, lang)
+
+    def parser_configs(self):
+        configs = []
+        for lang in self.langs:
+            configs.append((None, ARG_POS_CLASS, lang, self.get_enriched_file(lang)))
+            for aln_method in aln_methods:
+                configs.append((aln_method, ARG_POS_PROJ, lang, self.get_projected_file(aln_method, lang)))
+        return configs
 
     def filtered_done(self):
         all_present = True
@@ -161,6 +180,19 @@ class ExperimentFiles(object):
                 all_present = False
                 break
         return all_present
+
+    # -------------------------------------------
+    # The conll eval files
+    # -------------------------------------------
+    def get_eval_file(self, lang):
+        two_letter_lang = lang_map[lang]
+        eval_path = os.path.join(os.path.join(eval_dir, two_letter_lang), '{}-universal-test.conll'.format(two_letter_lang))
+        return eval_path
+
+    def get_out_prefix(self, lang, aln_method, pos_source):
+        return os.path.join(self._results_dir(), self._config_name(aln_method, pos_source, lang))
+
+
 
 
 ef = ExperimentFiles(lang_map.keys())
@@ -174,8 +206,8 @@ for lang in ef.langs:
 
     if not os.path.exists(filtered_f):
         if USE_CONDOR:
-            prefix, name = ef.get_condor_filter(lang)
-            run_cmd(['intent.py', 'filter', '--require-aln', '--require-gloss', '--require-trans', '--require-lang', orig_f, filtered_f], prefix, name, False)
+            model_prefix, name = ef.get_condor_filter(lang)
+            run_cmd(['intent.py', 'filter', '--require-aln', '--require-gloss', '--require-trans', '--require-lang', orig_f, filtered_f], model_prefix, name, False)
         else:
             filter_corpus([orig_f], filtered_f, require_lang=True, require_gloss=True, require_trans=True, require_aln=True)
 
@@ -192,9 +224,9 @@ for lang in ef.langs:
 
     if not os.path.exists(enriched_f):
         if USE_CONDOR:
-            prefix, name = ef.get_condor_enrich(lang)
+            model_prefix, name = ef.get_condor_enrich(lang)
             run_cmd(['intent.py', 'enrich', '--align', 'heur,heurpos,giza,gizaheur', '--pos class', '--parse trans', filtered_f, enriched_f],
-                    prefix, name, False)
+                    model_prefix, name, False)
         else:
             enrich(**{ARG_INFILE:filtered_f, ARG_OUTFILE:enriched_f, ALN_VAR:ARG_ALN_METHODS, POS_VAR:ARG_POS_CLASS, PARSE_VAR:ARG_PARSE_TRANS})
 
@@ -211,11 +243,13 @@ for lang in ef.langs:
 
         if not os.path.exists(projected_f):
             if USE_CONDOR:
-                prefix, name = ef.get_condor_project(aln_method, lang)
-                run_cmd(['intent.py', 'project', '--aln-method', aln_method, enriched_f, projected_f], prefix, name, False)
+                model_prefix, name = ef.get_condor_project(aln_method, lang)
+                run_cmd(['intent.py', 'project', '--aln-method', aln_method, enriched_f, projected_f], model_prefix, name, False)
 
             else:
-                do_projection(**{ARG_INFILE:enriched_f, aln_method:aln_method, ARG_OUTFILE:projected_f})
+                # p = Popen(['intent.py', 'project', '--aln-method', aln_method, enriched_f, projected_f, '-v'], env={"PATH":os.getenv("PATH")+':/Users/rgeorgi/Documents/code/intent'})
+                # p.wait()
+                do_projection(**{ARG_INFILE:enriched_f, 'aln_method':aln_method, ARG_OUTFILE:projected_f})
 
 # -------------------------------------------
 # Wait for the condor tasks to complete, and
@@ -227,60 +261,67 @@ if USE_CONDOR:
 # -------------------------------------------
 # 4) Now, extract the parsers.
 # -------------------------------------------
-parse_tag_pairs = []
-
 for lang in ef.langs:
-
-    # -------------------------------------------
-    # Get the classifier-based taggers.
-    # -------------------------------------------
-    enriched_f = ef.get_enriched_file(lang)
-    class_tagger_prefix = ef.get_tagger(None, ARG_POS_CLASS, lang)
-    if USE_CONDOR:
-        prefix, name = ef.get_condor_extract(None, ARG_POS_CLASS, lang)
-        run_cmd(['intent.py', 'extract', '--tagger-prefix', class_tagger_prefix, '--use-pos', ARG_POS_CLASS, enriched_f], prefix, name, False)
-    else:
-        extract_from_xigt([enriched_f], tagger_prefix=class_tagger_prefix, pos_method=ARG_POS_CLASS)
-
-    # -------------------------------------------
-    # Now, the projection based taggers and parsers.
-    # -------------------------------------------
     for aln_method in aln_methods:
-        projected_f        = ef.get_projected_file(aln_method, lang)
-        proj_tagger_prefix = ef.get_tagger(aln_method, ARG_POS_PROJ, lang)
-        dep_parser_prefix  = ef.get_parser(aln_method, ARG_POS_PROJ, lang)
+        for pos_source in pos_methods:
+            model_prefix = ef.get_model_prefix(aln_method, pos_source, lang)
 
-        if USE_CONDOR:
-            prefix, name = ef.get_condor_extract(aln_method, ARG_POS_PROJ, lang)
-            run_cmd(['intent.py', 'extract', '--tagger-prefix', proj_tagger_prefix, '--dep-prefix', dep_parser_prefix,
-                     '--use-pos', ARG_POS_PROJ, projected_f], prefix, name, False)
-        else:
-            extract_from_xigt([projected_f], tagger_prefix=proj_tagger_prefix,
-                              dep_prefix=dep_parser_prefix, pos_method=ARG_POS_PROJ, aln_method=aln_method)
+            tagger_path = ef.get_tagger(aln_method, pos_source, lang)
+            parser_path = ef.get_tagger(aln_method, pos_source, lang)
+
+            projected_f = ef.get_projected_file(aln_method, lang)
+
+
+            if not os.path.exists(tagger_path) or not os.path.exists(parser_path):
+
+                # -------------------------------------------
+                # Set up the arguments for making the external call
+                # -------------------------------------------
+                args = ['intent.py', 'extract',
+                        '--tagger-prefix', model_prefix,
+                        '--use-align', aln_method,
+                        '--dep-prefix', model_prefix,
+                        '--use-pos', pos_source, projected_f]
+
+                # -------------------------------------------
+                # CONDOR
+                # -------------------------------------------
+                if USE_CONDOR:
+                    prefix, name = ef.get_condor_extract(aln_method, pos_source, lang)
+                    run_cmd(args, prefix, name, False)
+                else:
+                    # extract_from_xigt([source_file], tagger_prefix=model_prefix,
+                    #                   dep_prefix=model_prefix, pos_method=ARG_POS_PROJ,
+                    #                   aln_method=aln_method)
+                    p = Popen(args+['-v'])
+                    p.wait()
 
 if USE_CONDOR:
     condor_wait_notify("Parsers have been extracted.", email_address, "CONDOR: Extraction complete.")
 
-sys.exit()
 # -------------------------------------------
 # 5) Finally, evaluate all the parsers.
 # -------------------------------------------
-for lang, parser, tagger in parse_tag_pairs:
+for lang in ef.langs:
+    for aln_method in aln_methods:
+        for pos_source in pos_methods:
+            model_prefix = ef.get_model_prefix(aln_method, pos_source, lang)
 
-    parser_dir = os.path.dirname(parser)
+            tagger_path = ef.get_tagger(aln_method, pos_source, lang)
+            parser_path = ef.get_tagger(aln_method, pos_source, lang)
 
-    two_letter_lang = lang_map[lang]
-    eval_path = os.path.join(os.path.join(eval_dir, two_letter_lang), '{}-universal-test.conll'.format(two_letter_lang))
-    out_prefix = os.path.splitext(parser)[0]
+            eval_path   = ef.get_eval_file(lang)
+            out_prefix  = ef.get_out_prefix(lang, aln_method, pos_source)
 
 
 
-    if USE_CONDOR:
-        eval_script = os.path.join(intent_dir, 'intent/scripts/eval/dep_parser.py')
-        run_cmd([eval_script, 'test', '-p', parser, '-t', tagger, '--test', eval_path,
-                 '-o', out_prefix],
-                os.path.join(parser_dir, 'condor'),
-                'eval_'+os.path.basename(os.path.splitext(parser)[0]),
-                False, env='PYTHONPATH={}'.format(intent_dir))
-    else:
-        eval_mst(parser, eval_path, out_prefix, tagger=tagger)
+            if USE_CONDOR:
+                prefix, name = ef.get_condor_result(aln_method, pos_source, lang)
+                eval_script = os.path.join(intent_dir, 'intent/scripts/eval/dep_parser.py')
+                run_cmd([eval_script, 'test', '-p', parser_path, '-t', tagger_path, '--test', eval_path,
+                         '-o', out_prefix], prefix, name, False, env='PYTHONPATH={}'.format(intent_dir))
+            else:
+                eval_mst(parser_path, eval_path, out_prefix, tagger=tagger_path)
+
+if USE_CONDOR:
+    condor_wait_notify("Evaluation completed.", email_address, "CONDOR: Evaluation complete.")

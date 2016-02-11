@@ -228,9 +228,15 @@ def eval_conll(gold: ConllCorpus, target: ConllCorpus):
     for goldsent, targetsent in zip(gold, target):
         assert len(goldsent) == len(targetsent)
         for goldword, targetword in zip(goldsent, targetsent):
+
             # Do the pos tags match?
-            if goldword.postag == targetword.postag:
+            # TODO: FIXME: Lazy fix for "." vs. "PUNC"
+            if goldword.cpostag == '.' and targetword.cpostag == 'PUNC':
                 stats['pos_acc'] += 1
+            elif goldword.cpostag == targetword.cpostag:
+                stats['pos_acc'] += 1
+
+
             if goldword.head == targetword.head:
                 stats['ul_acc'] += 1
                 if goldword.deprel == targetword.deprel:
@@ -254,6 +260,6 @@ def eval_conll(gold: ConllCorpus, target: ConllCorpus):
 
 
 if __name__ == '__main__':
-    eval_conll_paths('/Users/rgeorgi/Documents/code/intent/experiments/dependencies/proj-heur/deu_proj_eval_tagged.txt',
-                     '/Users/rgeorgi/Documents/code/intent/experiments/dependencies/proj-heur/deu_proj_out_tagged.txt')
+    eval_conll_paths('/Users/rgeorgi/Documents/treebanks/universal_treebanks_v2.0/std/de/punctest.conll',
+                     '/Users/rgeorgi/Documents/code/intent/experiments/dependencies/proj-heurpos/deu_class_out_tagged.txt')
 

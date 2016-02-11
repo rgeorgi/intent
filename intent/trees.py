@@ -10,7 +10,7 @@ from intent.alignment.Alignment import Alignment
 #===============================================================================
 # Constants / Strings
 #===============================================================================
-from intent.consts import punc_re_mult, PUNC_TAG
+from intent.consts import punc_re_mult, PUNC_TAG, all_punc_re_mult
 from intent.igt.igtutils import clean_lang_token
 from intent.igt.references import item_index
 from intent.corpora.conll import ConllSentence, ConllWord
@@ -1107,7 +1107,7 @@ class DepTree(IdTree):
                        key=lambda x: x.index)
         return words
 
-    def to_conll(self, lowercase=False, clean_token=False, match_punc=False, multiple_heads=False):
+    def to_conll(self, lowercase=False, clean_token=False, match_punc=False, multiple_heads=False, unk_pos='_'):
         """
         Return a string in CONLL format
 
@@ -1127,14 +1127,24 @@ class DepTree(IdTree):
             node = nodes[0]
             head_indices = sorted(set([n.parent().word_index for n in nodes]))
 
+
+            # -------------------------------------------
+            # Make sure that the head is actually an index
+            # that we see in the sentence.
+            # -------------------------------------------
+            head_indices = [i for i in head_indices if i < len(indices)]
+
             # -------------------------------------------
             # Really, we should have comma-separated lists of head indices
             # but, that doesn't seem to be supported in training the parser.
             # -------------------------------------------
-            if multiple_heads:
+            if not head_indices:
+                head = '_'
+            elif multiple_heads:
                 head = ','.join([str(i) for i in head_indices])
             else:
                 head = str(head_indices[0])
+
 
 
             # -------------------------------------------
@@ -1156,8 +1166,8 @@ class DepTree(IdTree):
 
             cw.id = index
             cw.form = node_label
-            cw.cpostag = node.pos
-            cw.postag  = node.pos
+            cw.cpostag = node.pos if node.pos else unk_pos
+            cw.postag  = node.pos if node.pos else unk_pos
             cw.head    = head
             cw.deprel  = node.type
             if 0 in head_indices:
@@ -1437,5 +1447,80 @@ def fix_tree_parents(t, preceding_parent = None):
             fix_tree_parents(child, preceding_parent=t)
 
 # =============================================================================
-# Move some imports down here so as not to be cyclical.
+# Do a CONLL export with the words from the sentence, so we don't break at training
+# time if we're missing words.
 # =============================================================================
+
+def to_conll(ds, words, lowercase=False, clean_token=False, match_punc=False, multiple_heads=False, unk_pos='_'):
+    """
+    Return a string in CONLL format
+
+    (see:
+        http://ilk.uvt.nl/conll/
+
+    under "Data Format")
+    :type ds: DepTree
+    """
+
+    cs = ConllSentence()
+
+    # TODO: FIXME: We really shouldn't be reattaching here, but rather in the projection
+    root_word_index = ds.find(lambda x: x.parent() is not None and x.parent().word_index == 0).word_index
+
+    for word in words:
+        w_idx = item_index(word)
+        nodes = ds.findall_indices(w_idx)
+        if nodes:
+            node = nodes[0]
+            head_indices = sorted(set([n.parent().word_index for n in nodes]))
+
+            # -------------------------------------------
+            # Really, we should have comma-separated lists of head indices
+            # but, that doesn't seem to be supported in training the parser.
+            # -------------------------------------------
+            if not head_indices:
+                head = '_'
+            elif multiple_heads:
+                head = ','.join([str(i) for i in head_indices])
+            else:
+                head = str(head_indices[0])
+
+            pos = node.pos
+            deprel = node.type
+            if 0 in head_indices:
+                deprel = 'root'
+
+        else:
+            pos = None
+            deprel = None
+            head = root_word_index
+
+
+        # -------------------------------------------
+        # Process the node label...
+        # -------------------------------------------
+        word_form = word.value()
+        if lowercase is True:
+            word_form = word_form.lower()
+        if clean_token:
+            word_form = clean_lang_token(word_form, lowercase=False)
+        if match_punc:
+            if re.match(all_punc_re_mult, word_form, flags=re.U):
+                pos = PUNC_TAG
+                head = root_word_index
+
+
+        # -------------------------------------------
+        # Assign the conll word stuff.
+        # -------------------------------------------
+        cw = ConllWord()
+
+        cw.id = w_idx
+        cw.form = word_form
+        cw.cpostag = pos if pos else unk_pos
+        cw.postag  = pos if pos else unk_pos
+        cw.head    = head
+        cw.deprel  = deprel
+        cs.append(cw)
+
+    return str(cs)

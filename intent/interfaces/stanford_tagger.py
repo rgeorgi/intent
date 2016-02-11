@@ -33,6 +33,8 @@ class CriticalTaggerError(TaggerError): pass
 # Set up the stanford tagger to run via stdin.
 #===============================================================================
 
+tagger_jar = os.path.join(tagger_dir, 'stanford-postagger.jar')
+
 def stanford_stdout_handler(output, queue):
     queue.append(tokenize_string(output, tokenizer=tag_tokenizer))
 
@@ -71,7 +73,6 @@ class StanfordPOSTagger(object):
             TAG_LOG.critical('Path to the stanford tagger .jar file is not defined.')
             raise TaggerError('Path to the stanford tagger .jar file is not defined.')
 
-        tagger_jar = os.path.join(tagger_dir, 'stanford-postagger.jar')
         other_jars = glob.glob(os.path.join(tagger_dir, 'lib/*.jar'))
 
         classpath = ':'.join([tagger_jar]+other_jars)
@@ -149,6 +150,8 @@ def train_postagger(train_file, model_path, delimeter = '/'):
     dirname = os.path.dirname(model_path)
     if dirname:
         os.makedirs(os.path.dirname(model_path), exist_ok=True)
+
+
 
     cmd = '%s -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (java_bin, tagger_jar, model_path, train_file, delimeter)
 
