@@ -71,32 +71,37 @@ def extract_tagger_from_instance(inst: Igt, output_stream, pos_source):
 
     training_sentences = 0
 
-    first = True
-    for lang_word in lang_words:
+    # -------------------------------------------
+    # Only try extracting if there are in fact valid POS tags.
+    # -------------------------------------------
+    if lang_pos_tags:
 
-        lang_pos_tag = None
-        if lang_pos_tags is not None:
-            lang_pos_tag = xigt_find(lang_pos_tags, alignment=lang_word.id)
+        first = True
+        for lang_word in lang_words:
 
-        tag_string = lang_pos_tag.value() if lang_pos_tag is not None else handle_unknown_pos(inst, lang_word)
-        word_string = lang_word.value()
+            lang_pos_tag = None
+            if lang_pos_tags is not None:
+                lang_pos_tag = xigt_find(lang_pos_tags, alignment=lang_word.id)
 
-        # -------------------------------------------
-        # Do some cleaning on the output words
-        # -------------------------------------------
-        word_string = clean_lang_token(word_string, lowercase=True)
+            tag_string = lang_pos_tag.value() if lang_pos_tag is not None else handle_unknown_pos(inst, lang_word)
+            word_string = lang_word.value()
 
-        # For every instance after the first,
-        # add a space.
-        out_str = ' {}/{}'
-        if first:
-            first = False
-            out_str = out_str.strip()
+            # -------------------------------------------
+            # Do some cleaning on the output words
+            # -------------------------------------------
+            word_string = clean_lang_token(word_string, lowercase=True)
 
-        output_stream.write(out_str.format(word_string, tag_string))
-    output_stream.write('\n')
-    output_stream.flush()
-    training_sentences += 1
+            # For every instance after the first,
+            # add a space.
+            out_str = ' {}/{}'
+            if first:
+                first = False
+                out_str = out_str.strip()
+
+            output_stream.write(out_str.format(word_string, tag_string))
+        output_stream.write('\n')
+        output_stream.flush()
+        training_sentences += 1
 
     return training_sentences
 
