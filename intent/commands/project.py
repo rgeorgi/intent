@@ -57,11 +57,12 @@ def do_projection(**kwargs):
 
             try:
                 # Start by removing previous info...
+                #TODO: Find better way to ensure information we want gets overwritten.
                 try:
                     gpos_tiers = xigt_findall(inst, alignment=gloss(inst).id, type=POS_TIER_TYPE)
                     lpos_tiers = xigt_findall(inst, alignment=lang(inst).id, type=POS_TIER_TYPE)
-                    for gt in gpos_tiers:
-                        delete_tier(gt)
+                    # for gt in gpos_tiers:
+                    #     delete_tier(gt)
                     for lt in lpos_tiers:
                         delete_tier(lt)
 
