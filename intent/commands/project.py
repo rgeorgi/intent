@@ -68,7 +68,7 @@ def do_projection(**kwargs):
                 except NoNormLineException:
                     pass
 
-                project_trans_pos_to_gloss(inst, aln_method=aln_method)
+                project_trans_pos_to_gloss(inst, aln_method=aln_method, completeness_requirement=completeness_requirement)
                 project_gloss_pos_to_lang(inst, tag_method=INTENT_POS_PROJ)
                 project_pt_tier(inst, proj_aln_method=aln_method)
                 project_ds_tier(inst, proj_aln_method=aln_method, completeness_requirement=completeness_requirement)

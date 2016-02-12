@@ -978,7 +978,7 @@ def project_ds_tier(inst, proj_aln_method=None, completeness_requirement=0):
 # =============================================================================
 # POS TAG STUFF
 # =============================================================================
-def project_trans_pos_to_gloss(inst, aln_method=None, trans_tag_method=None):
+def project_trans_pos_to_gloss(inst, aln_method=None, trans_tag_method=None, completeness_requirement=0):
     """
     Project POS tags from the translation words to the gloss words.
 
@@ -1004,6 +1004,10 @@ def project_trans_pos_to_gloss(inst, aln_method=None, trans_tag_method=None):
                                INTENT_POS_PROJ)
 
     t_g_aln = get_trans_gloss_alignment(inst, aln_method=aln_method)
+
+    if completeness_requirement:
+        if len(t_g_aln.all_tgt()) < len(non_punc_items(gloss(inst))) * completeness_requirement:
+            raise ProjectionIncompleteAlignment('The alignment "{}" retrieved for instance "{}" is not adequately complete.'.format(t_g_aln.type, inst.id))
 
 
     # Create the new pos tier.
