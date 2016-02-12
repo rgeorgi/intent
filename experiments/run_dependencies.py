@@ -3,7 +3,7 @@ import os, sys, logging
 
 from subprocess import Popen
 
-from intent.corpora.conll import eval_conll_paths
+
 
 """
 This module is used to:
@@ -77,6 +77,7 @@ from intent.interfaces.condor import run_cmd, condor_wait, condor_wait_notify
 from intent.scripts.eval.dep_parser import eval_mst
 from intent.commands.enrich import enrich
 from intent.commands.filter import filter_corpus
+from intent.corpora.conll import eval_conll_paths
 from intent.consts import *
 
 # -------------------------------------------
