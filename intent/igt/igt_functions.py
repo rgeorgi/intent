@@ -947,7 +947,7 @@ def project_pt_tier(inst, proj_aln_method=None):
                    source_tier=get_trans_parse_tier(inst),
                    aln_type=tl_aln.type)
 
-def project_ds_tier(inst, proj_aln_method=None):
+def project_ds_tier(inst, proj_aln_method=None, completeness_requirement=0):
     """
     Project the dependency structure found in this tree.
     """
@@ -964,6 +964,11 @@ def project_ds_tier(inst, proj_aln_method=None):
     else:
         tgt_w = lang(inst)
         aln = get_trans_gloss_lang_alignment(inst, aln_method=proj_aln_method)
+
+        # If we are requiring complete alignment, skip any tree that's not 100% aligned!
+        if completeness_requirement:
+            if len(aln.all_tgt()) < len(non_punc_items(gloss(inst))) * completeness_requirement:
+                raise ProjectionIncompleteAlignment('The alignment "{}" retrieved for instance "{}" is not adequately complete.'.format(aln.type, inst.id))
 
         trans_ds_tier = get_ds_tier(inst, trans(inst))
         proj_t = project_ds(src_t, tgt_w, aln)
@@ -1736,6 +1741,9 @@ def read_pt(tier):
     assert child_n, "There should have been at least one child found..."
 
     return child_n.root()
+
+def non_punc_items(tier):
+    return [item for item in tier if not re.match(all_punc_re_mult, item.value(), flags=re.U)]
 
 def basic_processing(inst):
     # Create the clean tier

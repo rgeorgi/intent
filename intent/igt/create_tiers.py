@@ -100,9 +100,9 @@ def generate_lang_words(inst, create=True):
 
 def generate_gloss_words(inst, create=True):
     """
-    Given an IGT instance, create the gloss "words" and "glosses" tiers.
+    Given an IGT instance, create the gloss word-level tier.
 
-    1. If a "words" type exists, and it's contents are the gloss line, return it.
+    1. If a "glosses" type exists, either referencing the .
     2. If it does not exist, tokenize the gloss line and return it.
     3. If there are NO tokens on the gloss line for whatever reason... Return None.
 

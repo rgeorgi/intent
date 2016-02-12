@@ -24,6 +24,9 @@ ENRICH_LOG = logging.getLogger('ENRICH')
 from xigt.consts import INCREMENTAL
 
 
+def enrich_instance(**kwargs):
+    pass
+
 def enrich(class_path=None, **kwargs):
 
 
@@ -254,14 +257,14 @@ def enrich(class_path=None, **kwargs):
                             except PhraseStructureProjectionException as pspe:
                                 fail(F_PROJECTION)
                             except NoAlignmentProvidedError as nape:
-                                fail(F_L_G_ALN)
+                                fail(F_T_G_ALN)
 
                             try:
                                 project_ds_tier(inst, proj_aln_method=proj_aln_method)
                             except ProjectionException as pe:
                                 fail(F_PROJECTION)
                             except NoAlignmentProvidedError as nape:
-                                fail(F_L_G_ALN)
+                                fail(F_T_G_ALN)
 
 
 

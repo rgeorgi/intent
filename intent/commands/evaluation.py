@@ -1,9 +1,16 @@
 import os, sys
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
+from multiprocessing.pool import Pool
+
+from multiprocessing import Lock
+import threading
+
+import time
 
 from intent.consts import NORM_LEVEL, ARG_ALN_MANUAL, INTENT_ALN_MANUAL, INTENT_ALN_GIZA, ALIGNER_FASTALIGN, \
     GLOSS_WORD_ID, LANG_WORD_ID, INTENT_ALN_HEUR, INTENT_POS_TAGGER, INTENT_POS_PROJ, INTENT_POS_CLASS, \
-    INTENT_ALN_GIZAHEUR
+    INTENT_ALN_GIZAHEUR, ALIGNER_GIZA
 
 from intent.igt.parsing import xc_load
 
@@ -19,13 +26,14 @@ from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.utils.dicts import POSEvalDict
 from intent.utils.env import tagger_model, classifier
 from intent.utils.token import POSToken
-from xigt.consts import INCREMENTAL
+from xigt.consts import INCREMENTAL, FULL
 
 __author__ = 'rgeorgi'
 
 import logging
 EVAL_LOG = logging.getLogger('EVAL')
 
+threadlist = []
 
 def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
     """
@@ -55,10 +63,14 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
 
     mas = MultAlignScorer()
 
+    p = ThreadPoolExecutor(max_workers=8)
+    l = Lock()
+
+    t1 = time.time()
     # Go through all the files in the list...
     for f in filelist:
         print('Evaluating on file: {}'.format(f))
-        xc = xc_load(f, mode=INCREMENTAL)
+        xc = xc_load(f, mode=FULL)
         xc.id = "GER"
 
         # Test the classifier if evaluation is requested.
@@ -74,11 +86,17 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
             lang = os.path.basename(f)
             mas.add_corpus('gold', INTENT_ALN_MANUAL, lang, xc)
             EVAL_LOG.log(NORM_LEVEL, "Evaluating heuristic methods...")
-            evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang)
+            evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang, pool=p, lock=l)
 
             EVAL_LOG.log(NORM_LEVEL, "Evaluating statistical methods...")
-            evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang)
+            evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang, pool=p, lock=l)
 
+
+    for f in threadlist:
+        f.result()
+
+    t2 = time.time()
+    print(t2-t1)
 
     mas.eval_all()
     # Report the POS tagging accuracy...
@@ -89,11 +107,11 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
 class MultAlignScorer(object):
 
     def __init__(self):
-        self.by_lang_dict = defaultdict(lambda: defaultdict(list))
+        self.by_lang_dict = defaultdict(lambda: defaultdict(dict))
         self.methods = []
 
-    def add_alignment(self, method, lang, aln):
-        self.by_lang_dict[lang][method].append(aln)
+    def add_alignment(self, method, lang, snt_id, aln):
+        self.by_lang_dict[lang][method][snt_id] = aln
 
         if method != 'gold' and method not in self.methods:
             self.methods.append(method)
@@ -117,7 +135,7 @@ class MultAlignScorer(object):
             else:
                 aln = get_trans_gloss_alignment(inst, aln_method=method)
 
-            self.add_alignment(name, lang, aln)
+            self.add_alignment(name, lang, inst.id, aln)
 
     def eval_all(self):
         overall_dict = defaultdict(list)
@@ -129,8 +147,15 @@ class MultAlignScorer(object):
         for lang in self.by_lang_dict.keys():
 
             for method in self.methods:
-                test_snts = self.by_lang_dict[lang][method]
-                gold_snts = self.by_lang_dict[lang]['gold']
+                test_snts = []
+                gold_snts = []
+
+                for snt_id in self.by_lang_dict[lang][method].keys():
+                    test_snt = self.by_lang_dict[lang][method][snt_id]
+                    gold_snt = self.by_lang_dict[lang]['gold'][snt_id]
+                    test_snts.append(test_snt)
+                    gold_snts.append(gold_snt)
+
                 try:
                     ae = AlignEval(test_snts, gold_snts)
                 except AssertionError as ae:
@@ -144,8 +169,22 @@ class MultAlignScorer(object):
             print(','.join(['overall',method]+[str(i) for i in overall_dict[method].all()]))
 
 
-def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj, lang):
+def run_heur(inst, classifier_obj, tagger_obj, name, lang, lock, mas, lowercase=False, stem=False, tokenize=False, no_multiples=True, grams=False, use_pos=False):
+    lock.acquire()
+    b = copy_xigt(inst)
+    if use_pos:
+        classify_gloss_pos(b, classifier_obj)
+        tag_trans_pos(b, tagger_obj)
+    lock.release()
+    heur = heur_align_inst(b, lowercase=lowercase, stem=stem, tokenize=tokenize, no_multiples=no_multiples, grams=grams, use_pos=use_pos)
+    mas.add_alignment(name, lang, inst.id, heur)
+
+
+def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj, lang, pool=None, lock=None):
     EVAL_LOG.info('Evaluating heuristic methods on file "{}"'.format(os.path.basename(f)))
+
+
+
 
     for inst in xc:
 
@@ -156,42 +195,60 @@ def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj, l
         if manual is None:
             continue
 
-        # heur = inst.heur_align(lowercase=True, stem=True, tokenize=True, no_multiples=False, use_pos=True)
+        # def run_aln(name, lowercase=False, stem=False, tokenize=False, no_multiples=True, grams=False, use_pos=False):
+            # t = threading.Thread(target=run_heur, args=[inst, name, lang, lock, mas, lowercase, stem, tokenize, no_multiples, grams, use_pos])
+            # args = [inst, classifier_obj, tagger_obj, name, lang, lock, mas, lowercase, stem, tokenize, no_multiples, grams, use_pos]
+            # f = pool.submit(run_heur, *args)
+            # threadlist.append(f)
+            # f.result()
+            # t.start()
+            # run_heur(inst, name, lang, lock, mas, lowercase, stem, tokenize, no_multiples, grams, use_pos)
+
+
+
+        # run_aln('baseline', lowercase=False, stem=False, tokenize=False, no_multiples=True, use_pos=False)
+        # run_aln('lowercasing', lowercase=True, stem=False, tokenize=False, no_multiples=True, use_pos=False)
+        # run_aln('tokenization', lowercase=True, stem=False, tokenize=True, no_multiples=True, use_pos=False)
+        # run_aln('mult_matches', lowercase=True, stem=False, tokenize=True, no_multiples=False, use_pos=False)
+        # run_aln('morphing', lowercase=True, stem=True, tokenize=True, no_multiples=False, use_pos=False)
+        # run_aln('grams', lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=False)
+        # run_aln('POS', lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=True)
+        #
+        # continue
+
         heur = heur_align_inst(copy_xigt(inst), lowercase=False, stem=False, tokenize=False, no_multiples=True, use_pos=False)
-        mas.add_alignment('baseline', lang, heur)
+        mas.add_alignment('baseline', lang, inst.id, heur)
 
         heur = heur_align_inst(copy_xigt(inst), lowercase=True, stem=False, tokenize=False, no_multiples=True, use_pos=False)
-        mas.add_alignment('lowercasing', lang, heur)
+        mas.add_alignment('lowercasing', lang, inst.id, heur)
 
         heur = heur_align_inst(copy_xigt(inst), lowercase=True, stem=False, tokenize=True, no_multiples=True, use_pos=False)
-        mas.add_alignment('Tokenization', lang, heur)
+        mas.add_alignment('Tokenization', lang, inst.id, heur)
 
         heur = heur_align_inst(copy_xigt(inst), lowercase=True, stem=False, tokenize=True, no_multiples=False, use_pos=False)
-        mas.add_alignment('Multiple Matches', lang, heur)
+        mas.add_alignment('Multiple Matches', lang, inst.id, heur)
 
         heur = heur_align_inst(copy_xigt(inst), lowercase=True, stem=True, tokenize=True, no_multiples=False, use_pos=False)
-        mas.add_alignment('Morphing', lang, heur)
+        mas.add_alignment('Morphing', lang, inst.id, heur)
 
         heur = heur_align_inst(copy_xigt(inst), lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=False)
-        mas.add_alignment('Grams', lang, heur)
+        mas.add_alignment('Grams', lang, inst.id, heur)
+
 
         b = copy_xigt(inst)
         classify_gloss_pos(b, classifier_obj)
         tag_trans_pos(b, tagger_obj)
         heur = heur_align_inst(b, lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=True)
-        mas.add_alignment('POS', lang, heur)
+        mas.add_alignment('POS', lang, inst.id, heur)
 
 
 
-def evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang):
+def evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang, pool=None, lock=None):
     """
     :type xc: RGCorpus
     :type mas: MultAlignScorer
     """
     heur_align_corp(xc)
-
-    # Start by adding the manual alignments...
-
 
     giza_align_l_t(xc)
     mas.add_corpus('lang_trans', INTENT_ALN_GIZA, lang, xc, lang_trans=True)

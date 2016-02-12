@@ -3,6 +3,8 @@ import os, sys, logging
 
 from subprocess import Popen
 
+from intent.corpora.conll import eval_conll_paths
+
 """
 This module is used to:
 
@@ -250,12 +252,13 @@ for lang in ef.langs:
             projection_done = True
             if USE_CONDOR:
                 model_prefix, name = ef.get_condor_project(aln_method, lang)
-                run_cmd(['intent.py', 'project', '--aln-method', aln_method, enriched_f, projected_f], model_prefix, name, False)
+                run_cmd(['intent.py', 'project', '--aln-method', aln_method, '--completeness', '1.0',
+                         enriched_f, projected_f], model_prefix, name, False)
 
             else:
                 # p = Popen(['intent.py', 'project', '--aln-method', aln_method, enriched_f, projected_f, '-v'], env={"PATH":os.getenv("PATH")+':/Users/rgeorgi/Documents/code/intent'})
                 # p.wait()
-                do_projection(**{ARG_INFILE:enriched_f, 'aln_method':aln_method, ARG_OUTFILE:projected_f})
+                do_projection(**{ARG_INFILE:enriched_f, 'aln_method':aln_method, ARG_OUTFILE:projected_f, 'completeness':1.0})
 
 if USE_CONDOR and projection_done:
     condor_wait_notify("Data has been projected.", email_address, "CONDOR: Projection Complete.")
@@ -306,6 +309,35 @@ if USE_CONDOR and extraction_done:
 # -------------------------------------------
 # 5) Finally, evaluate all the parsers.
 # -------------------------------------------
+class DepEvals():
+    def __init__(self):
+        self.statdict = defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
+        self.overall = defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
+
+    def add(self, lang, aln_method, pos_source, val, matches, compares):
+        self.statdict[lang][aln_method][pos_source] = val
+        self.overall[aln_method][pos_source]['matches'] += matches
+        self.overall[aln_method][pos_source]['compares'] += compares
+
+    def overall_acc(self, am, pos_source):
+        return self.overall[am][pos_source]['matches'] / self.overall[am][pos_source]['compares'] * 100
+
+    def print_stats(self, pos_source):
+        print(','.join(['lang']+[a for a in sorted(aln_methods)]))
+        for lang in sorted(self.statdict.keys()):
+            print(lang, end=',')
+            accs = [self.statdict[lang][aln_method][pos_source] for aln_method in sorted(aln_methods)]
+            accs = ['{:.2f}'.format(a) for a in accs]
+            print(','.join(accs))
+        print('overall',end=',')
+        overallaccs = ['{:.2f}'.format(self.overall_acc(am, pos_source)) for am in sorted(aln_methods)]
+        print(','.join(overallaccs))
+
+
+
+de_short = DepEvals()
+de_long  = DepEvals()
+
 for lang in ef.langs:
     for aln_method in aln_methods:
         for pos_source in pos_methods:
@@ -325,7 +357,17 @@ for lang in ef.langs:
                     run_cmd([eval_script, 'test', '-p', parser_path, '-t', tagger_path, '--test', eval_path,
                              '-o', out_prefix], prefix, name, False, env='PYTHONPATH={}'.format(intent_dir))
                 else:
-                    eval_mst(parser_path, eval_path, out_prefix, tagger=tagger_path)
+                    # eval_mst(parser_path, eval_path, out_prefix, tagger=tagger_path)
+                    ce = eval_conll_paths(eval_path, out_prefix+'_out_tagged.txt')
+                    de_short.add(lang, aln_method, pos_source, ce.short_ul(), ce.short_ul_count(), ce.short_words())
+                    de_long.add(lang, aln_method, pos_source, ce.long_ul(), ce.long_ul_count(), ce.long_words())
+
+
+de_short.print_stats(ARG_POS_PROJ)
+de_long.print_stats(ARG_POS_PROJ)
+
+de_short.print_stats(ARG_POS_CLASS)
+de_long.print_stats(ARG_POS_CLASS)
 
 if USE_CONDOR:
     condor_wait_notify("Evaluation completed.", email_address, "CONDOR: Evaluation complete.")

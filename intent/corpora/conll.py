@@ -5,8 +5,11 @@ Created on Jan 31, 2014
 '''
 import sys
 
+from Cython.Compiler.Code import defaultdict
+
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
-from intent.utils.dicts import CountDict
+
+from intent.utils.dicts import CountDict, TwoLevelCountDict
 from intent.utils.env import tagger_model
 import collections
 
@@ -209,7 +212,57 @@ class ConllCorpus(list):
 # EVALUATION
 # =============================================================================
 
-def eval_conll_paths(gold_path, target_path):
+
+
+class ConllEval(object):
+    def __init__(self):
+        self.dep_acc_by_pos = TwoLevelCountDict()
+        self.head_acc_by_pos = TwoLevelCountDict()
+
+        self.long_sent_stats = CountDict()
+        self.short_sent_stats = CountDict()
+
+        self.fields = ['pos_acc', 'ul_acc', 'l_acc']
+
+    def add(self, k, sent):
+        self.long_sent_stats.add(k)
+        if len(sent) < 10:
+            self.short_sent_stats.add(k)
+
+    def pos_stats(self):
+
+        for pos in sorted(set(self.dep_acc_by_pos.keys()).union(set(self.head_acc_by_pos.keys()))):
+            print(','.join([pos, str(self.dep_acc_by_pos.sub_distribution(pos).get(True, 0.)), str(self.head_acc_by_pos.sub_distribution(pos).get(True, 0.))]))
+
+    def acc(self, d, k):
+        return d[k]/d['words']*100
+
+    def long_stats(self):
+        return [self.acc(self.long_sent_stats, k) for k in self.fields]
+
+    def short_stats(self):
+        return [self.acc(self.short_sent_stats, k) for k in self.fields]
+
+    def short_ul(self):
+        return self.acc(self.short_sent_stats, 'ul_acc')
+
+    def short_ul_count(self):
+        return self.short_sent_stats.get('ul_acc', 0)
+
+    def short_words(self):
+        return self.short_sent_stats.get('words', 0)
+
+    def long_ul(self):
+        return self.acc(self.long_sent_stats, 'ul_acc')
+
+    def long_ul_count(self):
+        return self.long_sent_stats.get('ul_acc', 0)
+
+    def long_words(self):
+        return self.long_sent_stats.get('words', 0)
+
+
+def eval_conll_paths(gold_path, target_path) -> ConllEval:
     """
     Given the paths to a gold file and target file, parse them
     and then evaluate
@@ -218,45 +271,69 @@ def eval_conll_paths(gold_path, target_path):
     t = ConllCorpus.read(target_path)
 
     assert len(g) == len(t)
-    print(target_path)
-    eval_conll(g, t)
+    return eval_conll(g, t)
 
-def eval_conll(gold: ConllCorpus, target: ConllCorpus):
-    stats = collections.defaultdict(int)
+def eval_conll(gold: ConllCorpus, target: ConllCorpus, out_stream = sys.stdout, pos_breakdown=False) -> ConllEval:
+
+    # -------------------------------------------
+    # Gather statistics
+    # -------------------------------------------
+    ce = ConllEval()
+
+    # -------------------------------------------
 
     assert len(gold) == len(target)
     for goldsent, targetsent in zip(gold, target):
+
         assert len(goldsent) == len(targetsent)
         for goldword, targetword in zip(goldsent, targetsent):
 
-            # Do the pos tags match?
+            assert isinstance(goldword, ConllWord)
+            assert isinstance(targetword, ConllWord)
+
+            def add_stat(k):
+                ce.add(k, goldsent)
+
+            # -------------------------------------------
+            # Enter the childpos-parentpos pair in the matrix
+            # -------------------------------------------
             # TODO: FIXME: Lazy fix for "." vs. "PUNC"
-            if goldword.cpostag == '.' and targetword.cpostag == 'PUNC':
-                stats['pos_acc'] += 1
-            elif goldword.cpostag == targetword.cpostag:
-                stats['pos_acc'] += 1
+            def getpos(w):
+                if w.cpostag in ['.','PUNC']:
+                    return 'PUNC'
+                else:
+                    return w.cpostag
+
+            def getparentpos(w, sent):
+                if w.head and int(w.head) > 0:
+                    return getpos(sent[int(w.head)-1])
+                else:
+                    return 'ROOT'
 
 
+            # Do the pos tags match?
+            if getpos(goldword) == getpos(targetword):
+                add_stat('pos_acc')
+
+            # Do the dependency types match
             if goldword.head == targetword.head:
-                stats['ul_acc'] += 1
-                if goldword.deprel == targetword.deprel:
-                    stats['l_acc'] += 1
+                add_stat('ul_acc')
 
-            stats['words'] += 1
+                golddep = None if goldword.deprel is None else goldword.deprel.lower()
+                tgtdep  = None if targetword.deprel is None else targetword.deprel.lower()
+                if golddep == tgtdep:
+                    add_stat('l_acc')
 
-    def acc(k):
-        nonlocal stats
-        return stats[k]/stats['words']*100
 
-    def print_acc(k):
-        fmt = '{:10s}{:<10.2f}'
-        print(fmt.format(k+',', acc(k)))
-# Now, print out the results.
+                ce.dep_acc_by_pos.add(getpos(targetword), True)
+                ce.head_acc_by_pos.add(getparentpos(targetword, targetsent), True)
+            else:
+                ce.dep_acc_by_pos.add(getpos(targetword), False)
+                ce.head_acc_by_pos.add(getparentpos(targetword, targetsent), False)
 
-    print_acc('pos_acc')
-    print_acc('ul_acc')
-    print_acc('l_acc')
+            add_stat('words')
 
+    return ce
 
 
 if __name__ == '__main__':

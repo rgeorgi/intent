@@ -164,9 +164,7 @@ filter_p.add_argument(ARG_OUTFILE, help="Output file (Combines from inputs)")
 filter_p.add_argument('--require-lang', help='Require instances to have language line', action='store_true', default=False)
 filter_p.add_argument('--require-gloss', help='Require instances to have gloss line', action='store_true', default=False)
 filter_p.add_argument('--require-trans', help='Require instances to have trans line', action='store_true', default=False)
-
 filter_p.add_argument('--require-gloss-pos', help='Require instance to have gloss pos tags', action='store_true', default=False)
-
 filter_p.add_argument('--require-aln', help='Require instances to have 1-to-1 gloss/lang alignment.', action='store_true', default=False)
 
 #===============================================================================
@@ -228,6 +226,8 @@ project_p.add_argument(ARG_INFILE, type=existsfile)
 project_p.add_argument(ARG_OUTFILE)
 project_p.add_argument('--aln-method', dest='aln_method',
                        choices=ARG_ALN_METHODS_ALL, help="The alignment method to use for projection.", default=ARG_ALN_ANY)
+project_p.add_argument('--completeness', dest='completeness',
+                       type=float, default=0, help="Ratio of words which must be aligned in order to project an instance.")
 
 # Parse the args. --------------------------------------------------------------
 try:

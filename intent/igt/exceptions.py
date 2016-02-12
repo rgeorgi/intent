@@ -28,6 +28,8 @@ class ProjectionException(RGXigtException): pass
 
 class ProjectionTransGlossException(ProjectionException): pass
 
+class ProjectionIncompleteAlignment(ProjectionException): pass
+
 class PhraseStructureProjectionException(RGXigtException): pass
 
 

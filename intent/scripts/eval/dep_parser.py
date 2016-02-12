@@ -15,7 +15,7 @@ from intent.utils.argutils import existsfile
 LOG = logging.getLogger('DEPENDENCIES')
 
 
-def eval_mst(model_path, test_path, out_prefix, lowercase=True, tagger=None, force=False):
+def eval_mst(model_path, test_path, out_prefix, lowercase=True, tagger=None, force=False, result_strem=None):
     mp = MSTParser()
 
     # -------------------------------------------

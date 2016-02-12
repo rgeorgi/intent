@@ -21,8 +21,13 @@ class CountDict(object):
         return self._dict.__repr__()
 
     def distribution(self, use_keys = list, add_n = 0):
-        return {k:(self[k] + add_n)/(self.total()*add_n) for k in self.keys()}
+        if add_n > 0:
+            return {k:(self[k] + add_n)/(self.total()*add_n) for k in self.keys()}
+        else:
+            return {k:(self[k])/self.total() for k in self.keys()}
 
+    def get(self, k, d=0):
+        return self._dict.get(k, d)
 
     def total(self):
         values = self._dict.values()
