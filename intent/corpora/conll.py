@@ -5,13 +5,9 @@ Created on Jan 31, 2014
 '''
 import sys
 
-from Cython.Compiler.Code import defaultdict
-
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 
 from intent.utils.dicts import CountDict, TwoLevelCountDict
-from intent.utils.env import tagger_model
-import collections
 
 """
 Field number: 	Field name: 	Description:
