@@ -6,6 +6,9 @@ import logging
 import os
 import sys
 from argparse import ArgumentParser
+from os.path import dirname
+
+sys.path.insert(0,dirname(dirname(dirname(dirname(__file__)))))
 
 from intent.corpora.conll import ConllCorpus, eval_conll_paths
 from intent.interfaces.mst_parser import MSTParser
@@ -56,7 +59,7 @@ if __name__ == '__main__':
     p.add_argument('-t', '--tagger', help='Tagger model file')
     p.add_argument('--test', help='Testing file in CoNLL Format', type=existsfile)
     p.add_argument('--train', help='Training file in CoNLL format', type=existsfile)
-    p.add_argument('-o', '--output', help="Output prefix", default=None, required=True)
+    p.add_argument('-o', '--output', help="Output prefix", default=None)
     p.add_argument('-f', '--force', help='Force overwrite of precursor files', default=False, action='store_true')
 
     args = p.parse_args()
@@ -74,7 +77,10 @@ if __name__ == '__main__':
             sys.exit(1)
         elif not os.path.exists(args.test):
             LOG.error('Error: eval file "{}" does not exist.'.format(args.parser))
-            sys.exit()
+            sys.exit(1)
+        elif not args.output:
+            LOG.error('Error: "-o" argument is required for output.')
+            sys.exit(1)
 
         LOG.log(1000, "Beginning test of parser...")
         eval_mst(args.parser, args.test, args.output, tagger=args.tagger)

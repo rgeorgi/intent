@@ -56,18 +56,7 @@ def do_projection(**kwargs):
             completeness_requirement = kwargs.get('completeness', default=0, t=float)
 
             try:
-                # Start by removing previous info...
-                #TODO: Find better way to ensure information we want gets overwritten.
-                try:
-                    gpos_tiers = xigt_findall(inst, alignment=gloss(inst).id, type=POS_TIER_TYPE)
-                    lpos_tiers = xigt_findall(inst, alignment=lang(inst).id, type=POS_TIER_TYPE)
-                    # for gt in gpos_tiers:
-                    #     delete_tier(gt)
-                    for lt in lpos_tiers:
-                        delete_tier(lt)
-
-                except NoNormLineException:
-                    pass
+                # TODO: Find better way
 
                 project_trans_pos_to_gloss(inst, aln_method=aln_method, completeness_requirement=completeness_requirement)
                 project_gloss_pos_to_lang(inst, tag_method=INTENT_POS_PROJ)
