@@ -243,6 +243,7 @@ paren_chars  = '\[\]\{\}\(\)'
 all_punc_chars = punc_chars+quote_chars+other_chars
 all_punc_re = '[{}]'.format(all_punc_chars)
 all_punc_re_mult = '{}+'.format(all_punc_re)
+entirely_punctuation = '^'+all_punc_re_mult+'$'
 
 punc_re      = '[{}]'.format(punc_chars)
 punc_re_mult = '{}+'.format(punc_re)

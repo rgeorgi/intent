@@ -1613,9 +1613,10 @@ def word_align(this, other):
     :type other:
     """
 
+
     # First, let's discard all the punctuation from both lines.
-    these_words = [w for w in this if not re.match(all_punc_re_mult, w.value().strip())]
-    those_words = [w for w in other if not re.match(all_punc_re_mult, w.value().strip())]
+    these_words = [w for w in this if not re.match(entirely_punctuation, w.value().strip())]
+    those_words = [w for w in other if not re.match(entirely_punctuation, w.value().strip())]
 
     if len(these_words) != len(those_words):
         raise GlossLangAlignException('Gloss and language lines could not be auto-aligned for igt "%s"' % this.igt.id)
