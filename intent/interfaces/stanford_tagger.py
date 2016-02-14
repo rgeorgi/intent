@@ -11,6 +11,8 @@ from optparse import OptionParser
 # Internal Imports -------------------------------------------------------------
 from tempfile import NamedTemporaryFile
 
+from nose.tools import nottest
+
 from intent.scripts.conversion.conll_to_slashtags import conll_to_slashtags
 from intent.utils.argutils import require_opt
 from intent.utils.systematizing import piperunner, ProcessCommunicator
@@ -129,6 +131,7 @@ def train_postagger_on_conll(train_file, model_path, delimeter = '/'):
     train_postagger(temp_path.name, model_path, delimeter=delimeter)
     os.remove(temp_path.name)
 
+@nottest
 def test_postagger_on_conll(test_file, model_path, out_file, delimeter='/'):
     test_temp_path = NamedTemporaryFile('w', encoding='utf-8', delete=False)
     test_temp_path.close()

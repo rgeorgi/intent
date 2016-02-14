@@ -5,7 +5,7 @@ from intent.igt.create_tiers import morphemes, glosses, gloss, lang
 from intent.igt.igt_functions import add_gloss_lang_alignments, intervening_characters, morph_align
 from intent.igt.igtutils import rgp
 from intent.igt.parsing import xc_load
-from intent.utils.env import proj_root, testfile_dir
+from intent.utils.env import proj_root, testfile_dir, xigt_testfile
 
 __author__ = 'rgeorgi'
 
@@ -81,7 +81,7 @@ class MorphAlignTests(TestCase):
 
 class NewMorphAlignTests(TestCase):
     def setUp(self):
-        self.xc = xc_load(os.path.join(testfile_dir, 'xigt/word_align.xml'))
+        self.xc = xc_load(xigt_testfile('word_align.xml'))
 
     def test_line_lengths(self):
         inst = self.xc[1]

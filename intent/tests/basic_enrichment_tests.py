@@ -115,7 +115,7 @@ class EncodingTests(TestCase):
 class NoLineTests(TestCase):
 
     def test_nogloss(self):
-        xp = xigt_testfile('missing_lines.xml')
+        xp = xigt_testfile('missing_line_tests.xml')
         xc = xc_load(xp)
         no_gloss = xc[0]
 

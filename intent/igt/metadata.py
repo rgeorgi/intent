@@ -211,7 +211,7 @@ def find_meta_attr(obj, meta_type, attr, metadata_type = INTENT_META_TYPE):
         return None
 
 def set_meta_text(obj, meta_type, text, metadata_type=INTENT_META_TYPE):
-    m = find_meta(obj, meta_type)
+    m = find_meta(obj, meta_type, metadata_type=metadata_type)
     if m is not None:
         m.text = text
     else:

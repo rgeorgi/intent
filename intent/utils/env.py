@@ -4,6 +4,9 @@ Created on Feb 12, 2015
 @author: rgeorgi
 '''
 import os, sys, logging
+
+from nose.tools import nottest
+
 from .fileutils import dir_above
 from .ConfigFile import ConfigFile
 import pickle
@@ -57,7 +60,7 @@ def load_posdict():
 testfile_dir = os.path.join(proj_root, "data/testcases")
 xigt_testfiles = os.path.join(testfile_dir, 'xigt')
 
-
+@nottest
 def xigt_testfile(s):
     return os.path.join(xigt_testfiles, s)
 
