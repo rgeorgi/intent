@@ -1026,7 +1026,7 @@ class DepEdge(object):
 
 
 class DepTree(IdTree):
-    def __init__(self, label, children=None, id=None, type=None, word_index=None, pos=None):
+    def __init__(self, label, children=(), id=None, type=None, word_index=None, pos=None):
         super().__init__(label, children=children, id=id)
         self.type = type
         self._word_index = word_index

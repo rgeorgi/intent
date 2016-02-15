@@ -1,3 +1,5 @@
+import sys
+
 from intent.igt.metadata import get_intent_method, get_word_level_info, add_word_level_info, remove_word_level_info
 from intent.utils.dicts import DefaultOrderedDict
 from xigt import Tier, Item
@@ -173,6 +175,64 @@ def generate_trans_words(inst, create=True):
 
     return twt
 
+# =============================================================================
+# WORDS/TIERS ADDING
+# =============================================================================
+
+def create_word_tier(tag, words, src_item=None):
+    """
+    Given the word type, a list of the word strings, and optionally the source item
+     that the words are drawn from. If no source item is given, the words will be
+     generated with "text" for each item, otherwise it will segment the provided line.
+
+    :type words: list[str]
+    :type src_item: xigt.model.Item
+    """
+
+    if tag == ODIN_TRANS_TAG:
+        wt = Tier(id=TRANS_WORD_ID, type=TRANS_WORD_TYPE, segmentation=TRANS_PHRASE_ID)
+        aln_attr = SEGMENTATION
+    elif tag == ODIN_GLOSS_TAG:
+        wt = Tier(id=GLOSS_WORD_ID, type=GLOSS_WORD_TYPE, content=NORM_ID, alignment=LANG_WORD_ID)
+        aln_attr = CONTENT
+    elif tag == ODIN_LANG_TAG:
+        wt = Tier(id=LANG_WORD_ID, type=LANG_WORD_TYPE, segmentation=LANG_PHRASE_ID)
+        aln_attr = SEGMENTATION
+
+
+    # If we are providing a item that we
+    # want the words to be segmenting, set up
+    # a text string that we'll incrementally trim
+    # and a counter to keep track of the offset from start.
+    src_text = None
+    offset   = 0
+    if src_item:
+        src_text = src_item.value()
+
+    for w in words:
+
+        # Use the text from the source line to index
+        # the words being added, rather than making them text.
+        # use a sliding window, kind of like a "pop()" would
+        if src_text:
+            start = src_text.index(w)
+            stop  = start+len(w)
+            src_text = src_text[stop:]
+            cur_range = (start+offset, stop+offset)
+            offset += stop
+
+        if src_text:
+            i = Item(id=ask_item_id(wt), attributes={aln_attr:create_aln_expr(src_item.id, *cur_range)})
+        else:
+            i = Item(id=ask_item_id(wt), text=w)
+
+        wt.append(i)
+
+    if tag == ODIN_GLOSS_TAG:
+        add_word_level_info(wt, INTENT_GLOSS_WORD)
+
+    return wt
+
 # -------------------------------------------
 # Morpheme/Gloss Tiers
 # -------------------------------------------
@@ -210,6 +270,23 @@ def glosses(inst) -> Tier:
 # =============================================================================
 # PHRASES
 # =============================================================================
+
+
+# -------------------------------------------
+# Quick retrieval functions
+# -------------------------------------------
+def _phrase(inst, type, tag) -> Tier:
+    f = lambda x: tag in odin_tags(x)
+    pt = xigt_find(inst, type=type, others=[f])
+    return pt
+
+def lang_phrase(inst) -> Tier:
+    return _phrase(inst, LANG_PHRASE_TYPE, ODIN_LANG_TAG)
+
+def trans_phrase(inst) -> Tier:
+    return _phrase(inst, TRANS_PHRASE_TYPE, ODIN_TRANS_TAG)
+
+# -------------------------------------------
 
 def generate_phrase_tier(inst, tag, id, type) -> Tier:
     """

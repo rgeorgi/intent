@@ -148,6 +148,7 @@ INTENT_PS_PROJ    = 'projection'
 
 INTENT_DS_PARSER  = 'stanford-parser'
 INTENT_DS_PROJ    = 'projection'
+INTENT_DS_MANUAL  = 'manual'
 
 
 
