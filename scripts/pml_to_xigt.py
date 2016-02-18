@@ -37,7 +37,7 @@ def find_ancestor(e):
     else:
         return find_ancestor(e.getparent())
 
-def assemble_ds(sent, index_pairs, cur_head = -1, parent_node = None, seen_indices=set(())):
+def _assemble_ds(sent, index_pairs, cur_head = -1, parent_node = None, seen_indices=set(())):
     """
     :type sent: Sentence
     """
@@ -57,10 +57,18 @@ def assemble_ds(sent, index_pairs, cur_head = -1, parent_node = None, seen_indic
             word = sent.getorder(dep_order)
             dt = DepTree(word.text, word_index=int(dep_order), pos=word.pos)
             parent_node.append(dt)
-            assemble_ds(sent, index_pairs, cur_head = dep_order, parent_node=dt)
+            _assemble_ds(sent, index_pairs, cur_head = dep_order, parent_node=dt, seen_indices=seen_indices|set([cur_head]))
             dt.sort(key=lambda x: x.word_index)
 
         return parent_node
+
+def assemble_ds(sent, index_pairs, reorder=True):
+    ds = _assemble_ds(sent, index_pairs)
+    if reorder:
+        for i, st in enumerate(sorted(ds.subtrees(), key=lambda x: x.word_index)):
+            st._word_index = i+1
+    return ds
+
 
 class Word():
     def __init__(self, text, pos=None, order=-1, id=None, gloss=None):
@@ -152,6 +160,20 @@ def load_sents(pml_path):
 
     return refs, is_glossed
 
+def retrieve_hindi():
+    hindi_file = '/Users/rgeorgi/Documents/treebanks/hindi_ds/Glosses-DSguidelines.txt'
+    igt_data = {}
+    with open(hindi_file, 'r', encoding='utf-8', errors='replace') as f:
+        data = f.read()
+        instances = re.findall('<Sentence[\s\S]+?</Sentence>', data)
+        for instance in instances:
+            inst_id = re.search('sentence id="(.*?)">', instance, flags=re.I).group(1)
+            lang    = re.search('<original>(.*?)</original>', instance, flags=re.I).group(1)
+            gloss   = re.search('<gloss>(.*?)</gloss>', instance, flags=re.I).group(1)
+            trans   = re.search('<translation>(.*?)</tr', instance, flags=re.I).group(1)
+            igt_data[inst_id] = [None, lang, gloss, trans]
+    return igt_data
+
 def retrieve_naacl():
     naacl_dir = '/Users/rgeorgi/Documents/treebanks/NAACL_igt'
     igt_data = {}
@@ -161,14 +183,17 @@ def retrieve_naacl():
             data = f.read()
             instances = re.findall('(Igt_id=[\s\S]+?)\s+########', data)
             for instance in instances:
-                inst_id = int(re.search('Igt_id=([0-9]+)', instance).group(1))
-                igt_data[inst_id] = instance
+                inst_id = re.search('Igt_id=([0-9]+)', instance).group(1)
+                igt_data[inst_id] = instance.split('\n')
 
     return igt_data
 
-def convert_pml(aln_path, out_path):
+def convert_pml(aln_path, out_path, hindi=False):
 
-    igt_data = retrieve_naacl()
+    if hindi:
+        igt_data = retrieve_hindi()
+    else:
+        igt_data = retrieve_naacl()
 
     a_root = load_xml(aln_path)
     doc_a  = a_root.find(".//reffile[@name='document_a']").get('href')
@@ -195,12 +220,12 @@ def convert_pml(aln_path, out_path):
 
         # Get the sentence id...
         aln_id = sent_alignment.attrib.get('id')
-        a_snt_id = int(re.search('-([0-9]+)$', aln_id).group(1))
+        a_snt_id = re.search('^.+?-(.*)$', aln_id).group(1)
         if a_snt_id not in igt_data:
             continue
 
         # Get the text and tokens from the naacl data.
-        pre_txt, lang_txt, gloss_txt, trans_txt = igt_data[a_snt_id].split('\n')
+        pre_txt, lang_txt, gloss_txt, trans_txt = igt_data[a_snt_id]
         lang_tokens = lang_txt.split()
         gloss_tokens = gloss_txt.split()
         trans_tokens = trans_txt.split()
@@ -230,6 +255,21 @@ def convert_pml(aln_path, out_path):
         if a_glossed:
             trans_snt, trans_indices = b_snt, b_edges
             gloss_snt, gloss_indices = a_snt, a_edges
+
+        # Hindi stuff...
+        if hindi:
+            lang_tokens = [w.text for w in gloss_snt]
+            lang_postags   = [w.pos  for w in gloss_snt]
+            lang_txt    = ' '.join(lang_tokens)
+
+            trans_tokens = [w.text for w in trans_snt]
+            trans_postags   = [w.pos  for w in trans_snt]
+            trans_txt    = ' '.join(trans_tokens)
+
+            gloss_tokens  = [w.gloss if w.gloss else 'NULL' for w in gloss_snt]
+            gloss_postags = lang_postags
+            gloss_txt     = ' '.join(gloss_tokens)
+
 
 
         inst = Igt(id=re.sub('s-', 'igt', a_snt_ref))
@@ -263,7 +303,9 @@ def convert_pml(aln_path, out_path):
         tt = create_word_tier(ODIN_TRANS_TAG, trans_tokens, trans_phrase(inst)[0])
         inst.append(tt)
 
-        trans_postags = process_postags(trans_snt, trans_tokens)
+        if not hindi:
+            trans_postags = process_postags(trans_snt, trans_tokens)
+
         add_pos_tags(inst, tt.id, trans_postags, tag_method=INTENT_POS_MANUAL)
 
 
@@ -278,13 +320,16 @@ def convert_pml(aln_path, out_path):
             gw.alignment = w.id
 
 
-        lang_postags = process_postags(gloss_snt, gloss_tokens)
+        if not hindi:
+            lang_postags = process_postags(gloss_snt, gloss_tokens)
+            gloss_postags = lang_postags
 
         add_pos_tags(inst, wt.id, lang_postags, tag_method=INTENT_POS_MANUAL)
-        add_pos_tags(inst, gwt.id, lang_postags, tag_method=INTENT_POS_MANUAL)
+        add_pos_tags(inst, gwt.id, gloss_postags, tag_method=INTENT_POS_MANUAL)
 
         create_dt_tier(inst, assemble_ds(gloss_snt, gloss_indices), wt, INTENT_DS_MANUAL)
         create_dt_tier(inst, assemble_ds(trans_snt, trans_indices), tt, INTENT_DS_MANUAL)
+
 
 
         # -------------------------------------------
@@ -301,8 +346,12 @@ def convert_pml(aln_path, out_path):
             if a_word is None or b_word is None:
                 continue
 
-            a_idx  = a_word.order
-            b_idx  = b_word.order
+            if not hindi:
+                a_idx  = a_word.order
+                b_idx  = b_word.order
+            else:
+                a_idx  = a_snt.index(a_word)
+                b_idx  = b_snt.index(b_word)
 
             # Make sure the gloss is in the
             if a_glossed:
@@ -313,6 +362,7 @@ def convert_pml(aln_path, out_path):
                 lang_idx  = b_idx
 
             a.add((trans_idx, lang_idx))
+
 
         set_bilingual_alignment(inst, trans(inst), lang(inst), a, INTENT_ALN_MANUAL)
         set_bilingual_alignment(inst, trans(inst), gloss(inst), a, INTENT_ALN_MANUAL)
