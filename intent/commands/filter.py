@@ -1,7 +1,8 @@
 from multiprocessing.pool import Pool
 import os
 
-from intent.consts import NORM_LEVEL
+from intent.consts import NORM_LEVEL, ODIN_JUDGMENT_ATTRIBUTE
+from intent.igt.create_tiers import lang_lines, gloss_line, trans_lines
 from intent.igt.exceptions import NoNormLineException, EmptyGlossException, \
     GlossLangAlignException
 from intent.igt.igt_functions import lang, gloss, trans, pos_tag_tier, word_align
@@ -16,14 +17,27 @@ import logging
 logging.getLogger()
 FILTER_LOG = logging.getLogger('FILTERING')
 
-def filter_corpus(filelist, outpath, require_lang=False, require_gloss=False, require_trans=False, require_aln=False, require_gloss_pos=False):
-    xc, examined, failures, successes = do_filter(filelist, require_lang, require_gloss, require_trans, require_aln, require_gloss_pos)
+def filter_corpus(filelist, outpath, **kwargs):
+
+    require_lang      = kwargs.get('require_lang', False)
+    require_gloss     = kwargs.get('require_gloss', False)
+    require_trans     = kwargs.get('require_trans', False)
+    require_aln       = kwargs.get('require_aln', False)
+    require_gloss_pos = kwargs.get('require_gloss_pos', False)
+    require_grammatical=kwargs.get('require_grammatical', False)
+    max_instances      =kwargs.get('max_instances', 0)
+
+    xc, examined, failures, successes = do_filter(filelist, require_lang, require_gloss, require_trans,
+                                                  require_aln, require_gloss_pos, require_grammatical, max_instances)
+
+
 
     # Only create a file if there are some instances to create...
     if len(xc) > 0:
 
         # Make sure the directory exists that contains the output.
-        os.makedirs(os.path.dirname(outpath), exist_ok=True)
+        if os.path.dirname(outpath):
+            os.makedirs(os.path.dirname(outpath), exist_ok=True)
 
         with open(outpath, 'w', encoding='utf-8') as out_f:
             FILTER_LOG.log(1000, "{} instances processed, {} filtered out, {} remain.".format(examined, failures, successes))
@@ -38,7 +52,7 @@ def filter_string(inst):
     return 'Filter result for {:15s} {{:10s}}{{}}'.format(inst.id+':')
 
 
-def filter_xc(xc, require_lang=False, require_gloss=False, require_trans=False, require_aln=False, require_gloss_pos=False):
+def filter_xc(xc, require_lang=False, require_gloss=False, require_trans=False, require_aln=False, require_gloss_pos=False, require_grammatical=False, max_instances=0, prev_good_instances=0):
 
     new_corp = XigtCorpus()
 
@@ -103,6 +117,20 @@ def filter_xc(xc, require_lang=False, require_gloss=False, require_trans=False, 
                 fail("ALIGN")
                 continue
 
+        if require_grammatical:
+            if lt:
+                grammatical_ll = [l for l in lang_lines(inst) if l.get_attribute(ODIN_JUDGMENT_ATTRIBUTE)]
+            if gt:
+                grammatical_gl = gloss_line(inst).get_attribute(ODIN_JUDGMENT_ATTRIBUTE)
+            if tt:
+                grammatical_tl = [l for l in trans_lines(inst) if l.get_attribute(ODIN_JUDGMENT_ATTRIBUTE)]
+
+            if grammatical_ll or grammatical_gl or grammatical_tl:
+                fail("UNGRAMMATICAL")
+                continue
+
+
+
         if require_gloss_pos:
             if pos_tag_tier(inst, gt.id) is None:
                 fail("GLOSS_POS")
@@ -115,9 +143,16 @@ def filter_xc(xc, require_lang=False, require_gloss=False, require_trans=False, 
         FILTER_LOG.info(my_filter)
         inst.sort_tiers()
 
+        # -------------------------------------------
+        # Break out of the loop if we've hit the maximum
+        # number of good instances.
+        # -------------------------------------------
+        if max_instances and prev_good_instances+successes >= max_instances:
+            break
+
     return new_corp, examined, successes, failures
 
-def do_filter(filelist, require_lang=False, require_gloss=False, require_trans=False, require_aln=False, require_gloss_pos=False):
+def do_filter(filelist, require_lang=False, require_gloss=False, require_trans=False, require_aln=False, require_gloss_pos=False, require_grammatical=False, max_instances=0):
     new_corp = XigtCorpus()
 
     FILTER_LOG.log(NORM_LEVEL, "Beginning filtering...")
@@ -129,7 +164,7 @@ def do_filter(filelist, require_lang=False, require_gloss=False, require_trans=F
     for path in filelist:
         FILTER_LOG.log(1000, 'Opening file "{}" for filtering.'.format(os.path.basename(path)))
         xc = xc_load(path, mode=INCREMENTAL)
-        instances, iter_examined, iter_success, iter_failures = filter_xc(xc, require_lang, require_gloss, require_trans, require_aln, require_gloss_pos)
+        instances, iter_examined, iter_success, iter_failures = filter_xc(xc, require_lang, require_gloss, require_trans, require_aln, require_gloss_pos, require_grammatical, max_instances, successes)
         for instance in instances:
             new_corp.append(instance)
 

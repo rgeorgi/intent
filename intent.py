@@ -165,6 +165,8 @@ filter_p.add_argument('--require-lang', help='Require instances to have language
 filter_p.add_argument('--require-gloss', help='Require instances to have gloss line', action='store_true', default=False)
 filter_p.add_argument('--require-trans', help='Require instances to have trans line', action='store_true', default=False)
 filter_p.add_argument('--require-gloss-pos', help='Require instance to have gloss pos tags', action='store_true', default=False)
+filter_p.add_argument('--require-grammatical', help='Filter out ungrammatical instances', action='store_true', default=False)
+filter_p.add_argument('--max-instances', help='Limit the number of output instances', default=0, type=int)
 filter_p.add_argument('--require-aln', help='Require instances to have 1-to-1 gloss/lang alignment.', action='store_true', default=False)
 
 #===============================================================================
@@ -260,7 +262,7 @@ elif args.subcommand == CMD_SPLIT:
 
 # FILTER
 elif args.subcommand == CMD_FILTER:
-    filter_corpus(flatten_list(getattr(args, ARG_INFILE)), getattr(args, ARG_OUTFILE), args.require_lang, args.require_gloss, args.require_trans, args.require_aln, args.require_gloss_pos)
+    filter_corpus(flatten_list(getattr(args, ARG_INFILE)), getattr(args, ARG_OUTFILE), **vars(args))
 
 # EXTRACT
 elif args.subcommand == CMD_EXTRACT:
