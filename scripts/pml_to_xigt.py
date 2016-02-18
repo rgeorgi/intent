@@ -13,7 +13,9 @@ from intent.consts import ODIN_TYPE, STATE_ATTRIBUTE, NORM_STATE, NORM_ID, ODIN_
 from intent.igt.create_tiers import lang, gloss, generate_lang_phrase_tier, \
     generate_trans_phrase_tier, lang_phrase, create_word_tier, trans_phrase, trans
 from intent.igt.igt_functions import create_dt_tier, add_pos_tags, set_bilingual_alignment
+from intent.igt.igtutils import rgp
 from intent.trees import DepTree
+from intent.utils.fileutils import matching_files
 from xigt import Igt, Tier, Item
 from xigt.codecs import xigtxml
 from xigt.model import XigtCorpus
@@ -35,11 +37,15 @@ def find_ancestor(e):
     else:
         return find_ancestor(e.getparent())
 
-def assemble_ds(words, index_pairs, cur_head = -1, parent_node = None, seen_indices=set(())):
+def assemble_ds(sent, index_pairs, cur_head = -1, parent_node = None, seen_indices=set(())):
+    """
+    :type sent: Sentence
+    """
+    # Get all the words that depend on the current index,
+    # starting with the root (-1)
 
-    # Get all the dependents
-    dep_indices = [i[1] for i in index_pairs if i[0] == cur_head]
-    if not dep_indices:
+    dep_orders = [i[1] for i in index_pairs if i[0] == cur_head]
+    if not dep_orders:
         return None
     elif cur_head in seen_indices:
         return None
@@ -47,12 +53,11 @@ def assemble_ds(words, index_pairs, cur_head = -1, parent_node = None, seen_indi
         if parent_node is None:
             parent_node = DepTree.root()
 
-        for dep_index in dep_indices:
-            word = words[dep_index-1]
-            dt = DepTree(word.text, word_index=int(dep_index), pos=word.pos)
+        for dep_order in dep_orders:
+            word = sent.getorder(dep_order)
+            dt = DepTree(word.text, word_index=int(dep_order), pos=word.pos)
             parent_node.append(dt)
-            seen_indices.add(dep_index)
-            assemble_ds(words, index_pairs, cur_head = dep_index, parent_node=dt, seen_indices=seen_indices)
+            assemble_ds(sent, index_pairs, cur_head = dep_order, parent_node=dt)
             dt.sort(key=lambda x: x.word_index)
 
         return parent_node
@@ -72,6 +77,11 @@ class Sentence(list):
     def __init__(self, seq=()):
         super().__init__(seq)
 
+    def getorder(self, k):
+        found = None
+        for w in self:
+            if  w.order == k:
+                return w
 
     def getid(self, k):
         found = None
@@ -98,10 +108,8 @@ def parse_pml_sent(sent):
 
     # -------------------------------------------
     # Make a list of all the words, and their attributes.
-    # also, keep track o
     # -------------------------------------------
-    indices_map = {}
-    for idx, word in enumerate(pml_words):
+    for word in pml_words:
         container = word.getparent()
         nodeid    = container.get('id')
         order     = int(container.get('order'))
@@ -109,19 +117,12 @@ def parse_pml_sent(sent):
         pos       = None if container.find('pos') is None else container.find('pos').text
         parent    = find_ancestor(container.getparent())
         parentid  = parent.get('id')
-        parentidx = int(parent.get('order'))
+        parent_order = int(parent.get('order'))
         gloss     = None if container.find('gloss') is None else container.find('gloss').text
 
         w = Word(text, order=order, id=nodeid, pos=pos, gloss=gloss)
         words.append(w)
-        index_pairs.append((parentidx, order))
-        indices_map[order] = idx+1
-
-    for i, pair in enumerate(index_pairs):
-        head, child = pair
-        head = indices_map[head] if head != -1 else -1
-        child= indices_map[child]
-        index_pairs[i] = (head, child)
+        index_pairs.append((parent_order, order))
 
     words.sort(key=lambda x: x.order)
     return words, index_pairs
@@ -133,6 +134,10 @@ def load_xml(path):
     return root
 
 def load_sents(pml_path):
+    """
+
+    :rtype: tuple[dict[str,Sentence],bool]
+    """
     root = load_xml(pml_path)
     root_idx = -1
     sents = root.findall(".//LM[@order='-1']")
@@ -147,7 +152,23 @@ def load_sents(pml_path):
 
     return refs, is_glossed
 
+def retrieve_naacl():
+    naacl_dir = '/Users/rgeorgi/Documents/treebanks/NAACL_igt'
+    igt_data = {}
+    for oracle_path in matching_files(naacl_dir, '^or\.111$', recursive=True):
+        print(oracle_path)
+        with open(oracle_path, 'r', encoding='utf-8', errors='replace') as f:
+            data = f.read()
+            instances = re.findall('(Igt_id=[\s\S]+?)\s+########', data)
+            for instance in instances:
+                inst_id = int(re.search('Igt_id=([0-9]+)', instance).group(1))
+                igt_data[inst_id] = instance
+
+    return igt_data
+
 def convert_pml(aln_path, out_path):
+
+    igt_data = retrieve_naacl()
 
     a_root = load_xml(aln_path)
     doc_a  = a_root.find(".//reffile[@name='document_a']").get('href')
@@ -171,6 +192,19 @@ def convert_pml(aln_path, out_path):
     xc = XigtCorpus()
 
     for sent_alignment in sent_alignments:
+
+        # Get the sentence id...
+        aln_id = sent_alignment.attrib.get('id')
+        a_snt_id = int(re.search('-([0-9]+)$', aln_id).group(1))
+        if a_snt_id not in igt_data:
+            continue
+
+        # Get the text and tokens from the naacl data.
+        pre_txt, lang_txt, gloss_txt, trans_txt = igt_data[a_snt_id].split('\n')
+        lang_tokens = lang_txt.split()
+        gloss_tokens = gloss_txt.split()
+        trans_tokens = trans_txt.split()
+
         a_snt_ref = sent_alignment.find('./tree_a.rf').text.split('#')[1]
         b_snt_ref = sent_alignment.find('./tree_b.rf').text.split('#')[1]
 
@@ -179,6 +213,8 @@ def convert_pml(aln_path, out_path):
         a_snt, a_edges = a_sents[a_snt_ref]
         b_snt, b_edges = b_sents[b_snt_ref]
 
+        assert isinstance(a_snt, Sentence)
+        assert isinstance(b_snt, Sentence)
         # -------------------------------------------
         # Skip sentences if they are not found for whatever reason
         # -------------------------------------------
@@ -195,13 +231,15 @@ def convert_pml(aln_path, out_path):
             trans_snt, trans_indices = b_snt, b_edges
             gloss_snt, gloss_indices = a_snt, a_edges
 
+
         inst = Igt(id=re.sub('s-', 'igt', a_snt_ref))
         nt   = Tier(type=ODIN_TYPE, id=NORM_ID, attributes={STATE_ATTRIBUTE:NORM_STATE})
-        ll   = Item(id='n1', attributes={ODIN_TAG_ATTRIBUTE:ODIN_LANG_TAG}, text=' '.join([w.text for w in gloss_snt]))
-        gl   = Item(id='n2', attributes={ODIN_TAG_ATTRIBUTE:ODIN_GLOSS_TAG}, text=' '.join([w.gloss if w.gloss else '---' for w in gloss_snt]))
-        tl   = Item(id='n3', attributes={ODIN_TAG_ATTRIBUTE:ODIN_TRANS_TAG}, text=' '.join([w.text for w in trans_snt]))
+        ll   = Item(id='n1', attributes={ODIN_TAG_ATTRIBUTE:ODIN_LANG_TAG}, text=lang_txt)
+        gl   = Item(id='n2', attributes={ODIN_TAG_ATTRIBUTE:ODIN_GLOSS_TAG}, text=gloss_txt)
+        tl   = Item(id='n3', attributes={ODIN_TAG_ATTRIBUTE:ODIN_TRANS_TAG}, text=trans_txt)
         nt.extend([ll,gl,tl])
         inst.append(nt)
+
 
         # -------------------------------------------
         # Handle the phrase tiers
@@ -209,27 +247,41 @@ def convert_pml(aln_path, out_path):
         generate_lang_phrase_tier(inst)
         generate_trans_phrase_tier(inst)
 
+        def process_postags(sent, tokens):
+            postags = []
+            for i, token in enumerate(tokens):
+                word = sent.getorder(i+1)
+                if word is None:
+                    postags.append(None)
+                else:
+                    postags.append(word.pos)
+            return postags
+
         # -------------------------------------------
         # Now, handle the translation words.
         # -------------------------------------------
-        tt = create_word_tier(ODIN_TRANS_TAG, [w.text for w in trans_snt], trans_phrase(inst)[0])
+        tt = create_word_tier(ODIN_TRANS_TAG, trans_tokens, trans_phrase(inst)[0])
         inst.append(tt)
-        add_pos_tags(inst, tt.id, [tw.pos for tw in trans_snt], tag_method=INTENT_POS_MANUAL)
+
+        trans_postags = process_postags(trans_snt, trans_tokens)
+        add_pos_tags(inst, tt.id, trans_postags, tag_method=INTENT_POS_MANUAL)
 
 
         # -------------------------------------------
         # Handle the words tiers...
         # -------------------------------------------
-        wt = create_word_tier(ODIN_LANG_TAG, [w.text for w in gloss_snt], lang_phrase(inst)[0])
-        gwt= create_word_tier(ODIN_GLOSS_TAG,[w.gloss if w.gloss else '---' for w in gloss_snt], gl)
+        wt = create_word_tier(ODIN_LANG_TAG, lang_tokens, lang_phrase(inst)[0])
+        gwt= create_word_tier(ODIN_GLOSS_TAG, gloss_tokens, gl)
         inst.extend([wt, gwt])
         # Quickly set the alignment for the gloss words.
         for w, gw in zip(wt, gwt):
             gw.alignment = w.id
 
 
-        add_pos_tags(inst, wt.id, [w.pos for w in gloss_snt], tag_method=INTENT_POS_MANUAL)
-        add_pos_tags(inst, gwt.id,[w.pos for w in gloss_snt], tag_method=INTENT_POS_MANUAL)
+        lang_postags = process_postags(gloss_snt, gloss_tokens)
+
+        add_pos_tags(inst, wt.id, lang_postags, tag_method=INTENT_POS_MANUAL)
+        add_pos_tags(inst, gwt.id, lang_postags, tag_method=INTENT_POS_MANUAL)
 
         create_dt_tier(inst, assemble_ds(gloss_snt, gloss_indices), wt, INTENT_DS_MANUAL)
         create_dt_tier(inst, assemble_ds(trans_snt, trans_indices), tt, INTENT_DS_MANUAL)
@@ -249,8 +301,8 @@ def convert_pml(aln_path, out_path):
             if a_word is None or b_word is None:
                 continue
 
-            a_idx  = a_snt.index(a_word)
-            b_idx  = b_snt.index(b_word)
+            a_idx  = a_word.order
+            b_idx  = b_word.order
 
             # Make sure the gloss is in the
             if a_glossed:
