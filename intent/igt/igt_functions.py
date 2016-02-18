@@ -117,8 +117,9 @@ def add_pos_tags(inst, tier_id, tags, tag_method = None):
 
     # Go through the words and add the tags.
     for w, tag in zip(tier.items, tags):
-        p = Item(id=ask_item_id(pt), alignment=w.id, text=tag)
-        pt.append(p)
+        if tag is not None:
+            p = Item(id=ask_item_id(pt), alignment=w.id, text=tag)
+            pt.append(p)
 
 
 # -------------------------------------------

@@ -1,26 +1,19 @@
 #!/usr/bin/env python3
 import common
 import os
+import re
 from argparse import ArgumentParser
 
 import sys
 from lxml import etree as ET
 
-import re
-
 from intent.alignment.Alignment import Alignment
 from intent.consts import ODIN_TYPE, STATE_ATTRIBUTE, NORM_STATE, NORM_ID, ODIN_TAG_ATTRIBUTE, ODIN_LANG_TAG, \
-    ODIN_GLOSS_TAG, ODIN_TRANS_TAG, LANG_WORD_ID, LANG_WORD_TYPE, LANG_PHRASE_TYPE, LANG_PHRASE_ID, TRANS_PHRASE_ID, \
-    TRANS_PHRASE_TYPE, GLOSS_WORD_ID, GLOSS_WORD_TYPE, POS_TIER_ID, POS_TIER_TYPE, INTENT_DS_PARSER, INTENT_DS_MANUAL, \
-    TRANS_WORD_ID, TRANS_WORD_TYPE, INTENT_POS_MANUAL, INTENT_ALN_MANUAL
-from intent.igt.create_tiers import lang, gloss, generate_phrase_tier, generate_lang_phrase_tier, \
+    ODIN_GLOSS_TAG, ODIN_TRANS_TAG, INTENT_DS_MANUAL, INTENT_POS_MANUAL, INTENT_ALN_MANUAL
+from intent.igt.create_tiers import lang, gloss, generate_lang_phrase_tier, \
     generate_trans_phrase_tier, lang_phrase, create_word_tier, trans_phrase, trans
-from intent.igt.igt_functions import create_dt_tier, add_pos_tags, word_align, set_bilingual_alignment, \
-    get_bilingual_alignment
-from intent.igt.igtutils import rgp
-from intent.igt.references import ask_item_id, gen_tier_id
-from intent.trees import DepTree, Terminal
-from intent.utils.token import POSToken
+from intent.igt.igt_functions import create_dt_tier, add_pos_tags, set_bilingual_alignment
+from intent.trees import DepTree
 from xigt import Igt, Tier, Item
 from xigt.codecs import xigtxml
 from xigt.model import XigtCorpus
@@ -42,11 +35,13 @@ def find_ancestor(e):
     else:
         return find_ancestor(e.getparent())
 
-def assemble_ds(words, index_pairs, cur_head = -1, parent_node = None):
+def assemble_ds(words, index_pairs, cur_head = -1, parent_node = None, seen_indices=set(())):
 
     # Get all the dependents
     dep_indices = [i[1] for i in index_pairs if i[0] == cur_head]
     if not dep_indices:
+        return None
+    elif cur_head in seen_indices:
         return None
     else:
         if parent_node is None:
@@ -56,7 +51,8 @@ def assemble_ds(words, index_pairs, cur_head = -1, parent_node = None):
             word = words[dep_index-1]
             dt = DepTree(word.text, word_index=int(dep_index), pos=word.pos)
             parent_node.append(dt)
-            assemble_ds(words, index_pairs, cur_head = dep_index, parent_node=dt)
+            seen_indices.add(dep_index)
+            assemble_ds(words, index_pairs, cur_head = dep_index, parent_node=dt, seen_indices=seen_indices)
             dt.sort(key=lambda x: x.word_index)
 
         return parent_node
@@ -138,6 +134,7 @@ def load_xml(path):
 
 def load_sents(pml_path):
     root = load_xml(pml_path)
+    root_idx = -1
     sents = root.findall(".//LM[@order='-1']")
     refs = {}
     for sent in sents:
@@ -150,18 +147,22 @@ def load_sents(pml_path):
 
     return refs, is_glossed
 
-def convert_pml(f_path, e_path, aln_path, out_path):
+def convert_pml(aln_path, out_path):
 
     a_root = load_xml(aln_path)
     doc_a  = a_root.find(".//reffile[@name='document_a']").get('href')
     doc_b  = a_root.find(".//reffile[@name='document_b']").get('href')
 
-    doc_a = os.path.join(os.path.relpath(doc_a, os.path.dirname(aln_path)))
-    doc_b  = os.path.join(os.path.relpath(doc_b, os.path.dirname(aln_path)))
+
+
+    doc_a = os.path.join(os.path.join(os.path.dirname(aln_path), doc_a))
+    doc_b  = os.path.join(os.path.join(os.path.dirname(aln_path), doc_b))
 
     # Load the sentences for each document.
     a_sents, a_glossed = load_sents(doc_a)
     b_sents, b_glossed = load_sents(doc_b)
+
+
 
     sent_alignments = a_root.findall(".//body/LM")
 
@@ -177,6 +178,12 @@ def convert_pml(f_path, e_path, aln_path, out_path):
 
         a_snt, a_edges = a_sents[a_snt_ref]
         b_snt, b_edges = b_sents[b_snt_ref]
+
+        # -------------------------------------------
+        # Skip sentences if they are not found for whatever reason
+        # -------------------------------------------
+        if not a_snt or not b_snt:
+            continue
 
         # -------------------------------------------
         # Start constructing the IGT Instance.
@@ -239,6 +246,9 @@ def convert_pml(f_path, e_path, aln_path, out_path):
             a_word = a_snt.getid(a_ref)
             b_word = b_snt.getid(b_ref)
 
+            if a_word is None or b_word is None:
+                continue
+
             a_idx  = a_snt.index(a_word)
             b_idx  = b_snt.index(b_word)
 
@@ -262,11 +272,9 @@ def convert_pml(f_path, e_path, aln_path, out_path):
 
 if __name__ == '__main__':
     p = ArgumentParser()
-    p.add_argument('-f', help='Foreign language file.', required=True)
-    p.add_argument('-e', help='English language file.', required=True)
     p.add_argument('-a', help='Alignment file.', required=True)
     p.add_argument('-o', help='Output XIGT file', required=True)
 
     args = p.parse_args()
 
-    convert_pml(args.f, args.e, args.a, args.o)
+    convert_pml(args.a, args.o)

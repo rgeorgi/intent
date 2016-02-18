@@ -214,14 +214,14 @@ def create_word_tier(tag, words, src_item=None):
         # Use the text from the source line to index
         # the words being added, rather than making them text.
         # use a sliding window, kind of like a "pop()" would
-        if src_text:
+        if src_item:
             start = src_text.index(w)
             stop  = start+len(w)
             src_text = src_text[stop:]
             cur_range = (start+offset, stop+offset)
             offset += stop
 
-        if src_text:
+        if src_item:
             i = Item(id=ask_item_id(wt), attributes={aln_attr:create_aln_expr(src_item.id, *cur_range)})
         else:
             i = Item(id=ask_item_id(wt), text=w)
