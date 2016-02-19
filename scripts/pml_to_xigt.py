@@ -350,8 +350,8 @@ def convert_pml(aln_path, out_path, hindi=True):
                 a_idx  = a_word.order
                 b_idx  = b_word.order
             else:
-                a_idx  = a_snt.index(a_word)
-                b_idx  = b_snt.index(b_word)
+                a_idx  = a_snt.index(a_word)+1
+                b_idx  = b_snt.index(b_word)+1
 
             # Make sure the gloss is in the
             if a_glossed:
