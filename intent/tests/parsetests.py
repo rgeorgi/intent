@@ -49,7 +49,7 @@ class ReadTreeTests(TestCase):
 
     def setUp(self):
         logging.basicConfig(level=logging.DEBUG)
-        self.xc = xc_load(xigt_proj, do_basic_processing=True)
+        self.xc = xc_load(xigt_proj, do_basic_processing=False)
         self.inst1 = self.xc[0]
         self.inst2 = self.xc[1]
 

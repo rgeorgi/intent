@@ -3,6 +3,9 @@ This module is meant to
 """
 import os
 
+import re
+
+
 class TagMapException(Exception):
     pass
 
@@ -10,7 +13,6 @@ class TagMap(object):
     """
     This is a simple class for reading/writing the prototype files used by Haghighi's prototype system.
     """
-
 
     def __init__(self, path):
         # Open the path, this assumes universal mapping
@@ -27,6 +29,13 @@ class TagMap(object):
         # mapping
         self.mapping = {}
         for line in f:
+            # Remove comments
+            line = re.sub('#.*$', '', line)
+
+            # Skip blank lines
+            if not line.strip():
+                continue
+
             fine, course = line.split()
             self.mapping[fine] = course
 
@@ -51,5 +60,3 @@ class TagMap(object):
 
     def __nonzero__(self):
         return True
-
-

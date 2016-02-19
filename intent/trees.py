@@ -1451,7 +1451,7 @@ def fix_tree_parents(t, preceding_parent = None):
 # time if we're missing words.
 # =============================================================================
 
-def to_conll(ds, words, lowercase=False, clean_token=False, match_punc=False, multiple_heads=False, unk_pos='_'):
+def to_conll(ds, words, lowercase=False, clean_token=False, match_punc=False, multiple_heads=False, unk_pos='_', tagmap=None):
     """
     Return a string in CONLL format
 
@@ -1489,6 +1489,12 @@ def to_conll(ds, words, lowercase=False, clean_token=False, match_punc=False, mu
                 head = str(head_indices[0])
 
             pos = node.pos
+            # -------------------------------------------
+            # If the tagmap is specified, remap the POS tags.
+            # -------------------------------------------
+            if tagmap and pos:
+                pos = tagmap[pos]
+
             deprel = node.type
             if 0 in head_indices:
                 deprel = 'root'

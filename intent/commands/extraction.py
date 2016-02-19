@@ -10,7 +10,9 @@ from intent.igt.exceptions import RGXigtException, ProjectionException
 from intent.igt.igtutils import clean_lang_token
 from intent.igt.parsing import xc_load
 from intent.igt.references import xigt_find
+from intent.pos.TagMap import TagMap
 from intent.trees import to_conll
+from intent.utils import fileutils
 from xigt.codecs import xigtxml
 from xigt.consts import *
 from xigt.model import Igt, Item
@@ -32,7 +34,7 @@ from intent.utils.dicts import TwoLevelCountDict
 
 __author__ = 'rgeorgi'
 
-def extract_parser_from_instance(inst: Igt, output_stream, pos_source):
+def extract_parser_from_instance(inst: Igt, output_stream, pos_source, tm):
     """
     Given an IGT instance, extract the projected dependency structure from
     it (along with the POS tags from the given pos_source)
@@ -44,7 +46,7 @@ def extract_parser_from_instance(inst: Igt, output_stream, pos_source):
     try:
         ds = get_lang_ds(inst, pos_source=pos_source, unk_pos_handling=None)
         if ds is not None:
-            conll_string = to_conll(ds, lang(inst), lowercase=True, match_punc=True, clean_token=True, unk_pos='UNK')
+            conll_string = to_conll(ds, lang(inst), lowercase=True, match_punc=True, clean_token=True, unk_pos='UNK', tagmap=tm)
             output_stream.write(conll_string+'\n\n')
             output_stream.flush()
             extracted += 1
@@ -58,7 +60,7 @@ def extract_parser_from_instance(inst: Igt, output_stream, pos_source):
     return extracted
 
 
-def extract_tagger_from_instance(inst: Igt, output_stream, pos_source):
+def extract_tagger_from_instance(inst: Igt, output_stream, pos_source, tm):
     """
     Given an instance, retrieve the language-line words and POS tags.
 
@@ -84,6 +86,9 @@ def extract_tagger_from_instance(inst: Igt, output_stream, pos_source):
                 lang_pos_tag = xigt_find(lang_pos_tags, alignment=lang_word.id)
 
             tag_string = lang_pos_tag.value() if lang_pos_tag is not None else handle_unknown_pos(inst, lang_word)
+            if tag_string and tm:
+                tag_string = tm[tag_string]
+
             word_string = lang_word.value()
 
             # -------------------------------------------
@@ -176,6 +181,12 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     use_pos = ARG_POS_MAP[pos_method]
     use_aln = ALN_ARG_MAP[aln_method]
 
+    # -------------------------------------------
+    # Get the tagset mapping if provided
+    # -------------------------------------------
+    tagpath = kwargs.get('tagmap')
+    tm = None if tagpath is None else TagMap(tagpath)
+
     # =============================================================================
     # 1) SET UP
     # =============================================================================
@@ -205,7 +216,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
 
 
         EXTRACT_LOG.log(NORM_LEVEL, 'Opening tagger training file at "{}"'.format(tagger_train_path))
-        os.makedirs(os.path.dirname(tagger_train_path), exist_ok=True)
+        fileutils.makedirs(os.path.dirname(tagger_train_path))
         tagger_train_f = open(tagger_train_path, 'w', encoding='utf-8')
 
     # Set up the dependency parser output if it's specified...
@@ -214,18 +225,22 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     if dep_prefix is not None:
         dep_train_path = dep_prefix+'_dep_train.txt'
         EXTRACT_LOG.log(NORM_LEVEL, 'Writing dependency parser training data to "{}"'.format(dep_train_path))
-        os.makedirs(os.path.dirname(dep_prefix), exist_ok=True)
+
+        # Make the containing directory if it does not exist.
+        fileutils.makedirs(os.path.dirname(dep_prefix))
+
+        # Write out the training file.
         dep_train_f = open(dep_train_path, 'w', encoding='utf-8')
 
     # Set up the files for writing out alignment.
     if sent_prefix is not None:
-        os.makedirs(os.path.dirname(sent_prefix), exist_ok=True)
+        fileutils.makedirs(os.path.dirname(sent_prefix))
         e_f = open(sent_prefix + '_e.txt', 'w', encoding='utf-8')
         f_f = open(sent_prefix + '_f.txt', 'w', encoding='utf-8')
 
     # Set up the CFG path for writing.
     if cfg_path is not None:
-        os.makedirs(os.path.dirname(cfg_path), exist_ok=True)
+        fileutils.makedirs(os.path.dirname(cfg_path))
         cfg_f = open(cfg_path, 'w', encoding='utf-8')
 
     # -------------------------------------------
@@ -240,10 +255,10 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
         for inst in xc:
             inst_count += 1
             if tagger_prefix is not None:
-                extracted_tagged_snts += extract_tagger_from_instance(inst, tagger_train_f, use_pos)
+                extracted_tagged_snts += extract_tagger_from_instance(inst, tagger_train_f, use_pos, tm)
 
             if dep_prefix is not None:
-                extracted_parsed_snts += extract_parser_from_instance(inst, dep_train_f, use_pos)
+                extracted_parsed_snts += extract_parser_from_instance(inst, dep_train_f, use_pos, tm)
 
             if classifier_prefix is not None:
                 gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict)

@@ -6,6 +6,7 @@ Created on Jan 31, 2014
 import sys
 
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
+from intent.pos.TagMap import TagMap
 
 from intent.utils.dicts import CountDict, TwoLevelCountDict
 
@@ -136,10 +137,13 @@ class ConllCorpus(list):
 
 
     @classmethod
-    def read(cls, path, lowercase=True):
+    def read(cls, path, lowercase=False, tagmap=None):
         """
         :rtype: ConllCorpus
         """
+        if tagmap is not None:
+            tm = TagMap(tagmap)
+
         with open(path, 'r', encoding='utf-8') as f:
             corp = cls()
 
@@ -155,6 +159,16 @@ class ConllCorpus(list):
                     if cur_sent is None:
                         cur_sent = ConllSentence()
                     w = ConllWord(*line.split())
+
+                    # Lowercase the word if requested (and its lemma)
+                    if lowercase:
+                        w.form = w.form.lower() if w.form else None
+                        w.lemma= w.lemma.lower() if w.lemma else None
+
+                    # Remap the tags if a tagmap is provided.
+                    if tagmap is not None:
+                        w.cpostag = tm[w.cpostag] if w.cpostag else None
+
                     cur_sent.append(w)
 
             # If the end of the file is reached without a blank line,

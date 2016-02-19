@@ -1,33 +1,38 @@
-'''
+"""
 Created on Oct 24, 2013
 
 @author: rgeorgi
-'''
+"""
 import os
 import re
 import sys
 import glob
 
 def lc(fname):
-    '''
+    """
     Get the linecount for a file.
     :param fname:
-    '''
+    """
     with open(fname, encoding='utf-8') as f:
         i = 0
         for i, l in enumerate(f):
             pass
         return i + 1
 
+def makedirs(path):
+    if path.strip():
+        os.makedirs(path, exist_ok=True)
+
+
 def swapext(path, ext):
-    '''
+    """
     Swap the extension on a file
 
     :param path: Path to the file
     :type path: filepath
     :param ext: new extension (if not starting with "." one will be added)
     :type ext: str
-    '''
+    """
     return os.path.splitext(path)[0]+ext
 
 def remove_safe(path):
@@ -41,14 +46,14 @@ def dir_above(path, n=1):
     return path
 
 def matching_files(dirpath, pattern, recursive=False):
-    '''
+    """
     Return the paths matching a pattern in a directory, optionally recurse
     into the subdirectories.
 
     @param dirpath: directory to scan
     @param pattern: regular expression to match paths upon
     @param recursive: whether or not to recurse into the directories.
-    '''
+    """
 
     # Get absolute paths for all the current files.
     paths = [os.path.join(dirpath, p) for p in os.listdir(dirpath)]

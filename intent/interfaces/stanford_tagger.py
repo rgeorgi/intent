@@ -139,12 +139,12 @@ def test_postagger_on_conll(test_file, model_path, out_file, delimeter='/'):
     test_postagger(test_temp_path.name, model_path, out_file, delimeter)
 
 
-def train_postagger(train_file, model_path, delimeter = '/'):
+def train_postagger(train_path, model_path, delimeter ='/'):
     """
     Given the slashtag file train_file, train a tagger model from it and
     output it to model_path.
 
-    :param train_file: Path to input slashtag file
+    :param train_path: Path to input slashtag file
     :param model_path: Path to output the model
     :param delimeter: Delimeter to separate words/tags
     """
@@ -156,7 +156,7 @@ def train_postagger(train_file, model_path, delimeter = '/'):
 
 
 
-    cmd = '%s -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (java_bin, tagger_jar, model_path, train_file, delimeter)
+    cmd = '%s -Xmx4096m -cp %s edu.stanford.nlp.tagger.maxent.MaxentTagger -arch generic -model %s -trainFile %s -tagSeparator %s' % (java_bin, tagger_jar, model_path, train_path, delimeter)
 
     piperunner(cmd, 'stanford_tagger')
 

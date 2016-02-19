@@ -47,7 +47,7 @@ class StanfordParser(object):
         jars = glob(os.path.join(parser_dir, "*.jar"))
 
         self.parse_queue = ''
-        args = [java_bin, '-Xmx1200m',
+        args = [java_bin, '-Xmx4096m',
                 '-cp', ':'.join(jars),
                 'edu.stanford.nlp.parser.lexparser.LexicalizedParser',
                 '-outputFormat', 'penn,typedDependencies',

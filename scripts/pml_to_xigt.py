@@ -188,7 +188,7 @@ def retrieve_naacl():
 
     return igt_data
 
-def convert_pml(aln_path, out_path, hindi=False):
+def convert_pml(aln_path, out_path, hindi=True):
 
     if hindi:
         igt_data = retrieve_hindi()

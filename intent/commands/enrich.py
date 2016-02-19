@@ -2,7 +2,7 @@ import logging
 import sys
 
 from intent.consts import *
-from intent.igt.create_tiers import gloss_line, trans_lines, lang_lines, trans_tag_tier
+from intent.igt.create_tiers import gloss_line, trans_lines, lang_lines, trans_tag_tier, trans
 from intent.igt.exceptions import GlossLangAlignException, PhraseStructureProjectionException, \
     ProjectionException, NoNormLineException
 from intent.igt.igt_functions import giza_align_t_g, tag_trans_pos, parse_translation_line, classify_gloss_pos, \
@@ -50,6 +50,8 @@ def enrich(class_path=None, **kwargs):
     parse_args = kwargs.get(PARSE_VAR, [])
     pos_args = kwargs.get(POS_VAR, [])
     aln_args = kwargs.get(ALN_VAR, [])
+
+    max_parse_length = kwargs['max_parse_length']
 
     if not (parse_args or pos_args or aln_args):
         ENRICH_LOG.warning("No enrichment specified. Basic processing only will be performed.")
@@ -151,6 +153,7 @@ def enrich(class_path=None, **kwargs):
             F_NO_TRANS_POS="NO_POS_TRANS"
             F_PROJECTION = "PROJECTION"
             F_UNKNOWN    = "UNKNOWN"
+            F_PARSELEN   = "OVER_MAX_LENGTH"
 
 
             try:
@@ -190,7 +193,10 @@ def enrich(class_path=None, **kwargs):
                             sys.exit(2)
 
                     if ARG_PARSE_PROJ in parse_args or ARG_PARSE_TRANS in parse_args:
-                        parse_translation_line(inst, sp, pt=True, dt=True)
+                        if len(trans(inst)) <= max_parse_length:
+                            parse_translation_line(inst, sp, pt=True, dt=True)
+                        else:
+                            fail(F_PARSELEN)
 
                 # 4) POS tag the gloss line --------------------------------------------
                 if has_gl:

@@ -124,6 +124,9 @@ enrich_p.add_argument('--parse', dest=PARSE_VAR,
                       type=csv_choices(PARSE_TYPES), default=[],
                       help='List of parses to create. {}'.format(PARSE_TYPES))
 
+enrich_p.add_argument('--max-parse-length', dest='max_parse_length', default=25,
+                      help='What is the maximum length to attempt parsing on?')
+
 enrich_p.add_argument('--class', dest='class_path', default=classifier)
 
 enrich_p.add_argument('--proj-aln', dest='proj_aln', choices=ARG_ALN_METHODS_ALL, default=ARG_ALN_ANY,
@@ -178,6 +181,7 @@ filter_p.add_argument('--require-aln', help='Require instances to have 1-to-1 gl
 extract_p = register_subparser(CMD_EXTRACT, help='Command to extract data from enriched XIGT-XML files')
 
 extract_p.add_argument('FILE', nargs='+', help='XIGT files to include.', type=globfiles)
+extract_p.add_argument("--tagmap", dest='tagmap', help='Provide a tagset mapping to convert POS tags for this file.', type=existsfile)
 extract_p.add_argument('--classifier-prefix', dest='classifier_prefix', help='Output prefix for gloss-line classifier (No extension).', default=None)
 extract_p.add_argument('--tagger-prefix', dest="tagger_prefix", help='Output prefix for lang-line tagger.', default=None)
 extract_p.add_argument('--cfg-rules', dest="cfg_path", help='Output path for cfg-rules.', default=None)
