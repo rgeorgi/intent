@@ -82,8 +82,8 @@ class ConllWord(object):
         return '{}{}{}'.format(self.form, delimiter, self.cpostag)
 
     def lower(self):
-        self.form = self.form.lower() if self.form else None
-        self.lemma = self.lemma.lower() if self.lemma else None
+        self.form  = self.form.lower()  if self.form  is not None else None
+        self.lemma = self.lemma.lower() if self.lemma is not None else None
 
     def apply_func(self, func):
         self.form = func(self.form)
@@ -91,7 +91,6 @@ class ConllWord(object):
 
 class ConllSentence(list):
     def __str__(self):
-        ret_str = ''
         return '\n'.join([str(i) for i in self])
 
     def slashtags(self, delimiter='/'):
@@ -112,7 +111,10 @@ class ConllSentence(list):
             self[i].cpostag = tag.label
             self[i].postag  = tag.label
 
-    def __iter__(self) -> ConllWord:
+    def __iter__(self):
+        """
+        :rtype: collections.Iterable[ConllWord]
+        """
         return super().__iter__()
 
     def lower(self):
@@ -162,8 +164,7 @@ class ConllCorpus(list):
 
                     # Lowercase the word if requested (and its lemma)
                     if lowercase:
-                        w.form = None or w.form.lower()
-                        w.lemma= None or w.lemma.lower()
+                        w.lower()
 
                     # Remap the tags if a tagmap is provided.
                     if tagmap is not None:
@@ -202,7 +203,7 @@ class ConllCorpus(list):
 
     def __iter__(self):
         """
-        :rtype: ConllSentence
+        :rtype: collections.Iterable[ConllSentence]
         """
         return super().__iter__()
 
@@ -211,10 +212,16 @@ class ConllCorpus(list):
             sent.lower()
 
     def strip_tags(self):
+        """
+        Remove the POS tag information from the sentences.
+        """
         for sent in self:
             sent.strip_tags()
 
     def strip_feats(self):
+        """
+        Remove the features from the sentences.
+        """
         for sent in self:
             sent.strip_feats()
 
