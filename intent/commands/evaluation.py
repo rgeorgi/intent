@@ -131,7 +131,7 @@ class MultAlignScorer(object):
                 continue
 
             if lang_trans:
-                aln = get_trans_lang_alignment(inst)
+                aln = get_trans_lang_alignment(inst, aln_method=method)
             else:
                 aln = get_trans_gloss_alignment(inst, aln_method=method)
 
@@ -169,17 +169,6 @@ class MultAlignScorer(object):
             print(','.join(['overall',method]+[str(i) for i in overall_dict[method].all()]))
 
 
-def run_heur(inst, classifier_obj, tagger_obj, name, lang, lock, mas, lowercase=False, stem=False, tokenize=False, no_multiples=True, grams=False, use_pos=False):
-    lock.acquire()
-    b = copy_xigt(inst)
-    if use_pos:
-        classify_gloss_pos(b, classifier_obj)
-        tag_trans_pos(b, tagger_obj)
-    lock.release()
-    heur = heur_align_inst(b, lowercase=lowercase, stem=stem, tokenize=tokenize, no_multiples=no_multiples, grams=grams, use_pos=use_pos)
-    mas.add_alignment(name, lang, inst.id, heur)
-
-
 def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj, lang, pool=None, lock=None):
     EVAL_LOG.info('Evaluating heuristic methods on file "{}"'.format(os.path.basename(f)))
 
@@ -215,6 +204,8 @@ def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj, l
         # run_aln('POS', lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=True)
         #
         # continue
+
+        EVAL_LOG.debug('Running heuristic alignments on instance "{}"'.format(inst.id))
 
         heur = heur_align_inst(copy_xigt(inst), lowercase=False, stem=False, tokenize=False, no_multiples=True, use_pos=False)
         mas.add_alignment('baseline', lang, inst.id, heur)
