@@ -178,7 +178,7 @@ def retrieve_naacl():
     naacl_dir = '/Users/rgeorgi/Documents/treebanks/NAACL_igt'
     igt_data = {}
     for oracle_path in matching_files(naacl_dir, '^or\.111$', recursive=True):
-        print(oracle_path)
+
         with open(oracle_path, 'r', encoding='utf-8', errors='replace') as f:
             data = f.read()
             instances = re.findall('(Igt_id=[\s\S]+?)\s+########', data)
@@ -376,6 +376,7 @@ if __name__ == '__main__':
     p = ArgumentParser()
     p.add_argument('-a', help='Alignment file.', required=True)
     p.add_argument('-o', help='Output XIGT file', required=True)
+    p.add_argument('--hindi', help='Converting hindi data', default=False, action='store_true')
 
     args = p.parse_args()
 
