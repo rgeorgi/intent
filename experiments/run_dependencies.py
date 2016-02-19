@@ -49,7 +49,7 @@ email_address = 'rgeorgi@uw.edu'
 this_dir = os.path.dirname(__file__)
 
 # The directory where the universal dependency treebanks are stored.
-eval_dir = '/Users/rgeorgi/Documents/treebanks/universal_treebanks_v2.0/std'
+eval_dir = '/Users/rgeorgi/Dropbox/riples/data/xigt_data/NAACL/deps'
 
 # -------------------------------------------
 # Here is a map to go from the three-letter codes
@@ -60,6 +60,7 @@ lang_map = {'deu':'ger',
             'gla':'gli',
             'hau':'hua',
             'kor':'kkn',
+            'hin':'hindi',
             'cym':'wls',
             'yaq':'yaq'}
 
@@ -193,7 +194,7 @@ class ExperimentFiles(object):
     # -------------------------------------------
     def get_eval_file(self, lang):
         mapped_lang = lang_map[lang]
-        eval_path = os.path.join(os.path.join(eval_dir, mapped_lang), '{}{}'.format(mapped_lang, eval_suffix))
+        eval_path = os.path.join(eval_dir, '{}{}'.format(mapped_lang, eval_suffix))
         return eval_path
 
     def get_out_prefix(self, lang, aln_method, pos_source):
@@ -363,9 +364,11 @@ for lang in ef.langs:
                              '-o', out_prefix], prefix, name, False, env='PYTHONPATH={}'.format(intent_dir))
                 else:
                     # eval_mst(parser_path, eval_path, out_prefix, tagger=tagger_path)
-                    ce = eval_conll_paths(eval_path, out_prefix+'_out_tagged.txt')
-                    de_short.add(lang, aln_method, pos_source, ce.short_ul(), ce.short_ul_count(), ce.short_words())
-                    de_long.add(lang, aln_method, pos_source, ce.long_ul(), ce.long_ul_count(), ce.long_words())
+                    out_path = os.path.join(out_prefix + '_out_tagged.txt')
+                    if os.path.exists(out_path):
+                        ce = eval_conll_paths(eval_path, out_path)
+                        de_short.add(lang, aln_method, pos_source, ce.short_ul(), ce.short_ul_count(), ce.short_words())
+                        de_long.add(lang, aln_method, pos_source, ce.long_ul(), ce.long_ul_count(), ce.long_words())
 
 
 de_short.print_stats(ARG_POS_PROJ)

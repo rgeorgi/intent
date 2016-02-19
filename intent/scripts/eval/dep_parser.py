@@ -35,7 +35,7 @@ def eval_mst(model_path, test_path, out_prefix, lowercase=True, tagger=None, for
     # -------------------------------------------
     if not os.path.exists(eval_path) or force:
         LOG.log(1000, "")
-        cc = ConllCorpus.read(test_path)
+        cc = ConllCorpus.read(test_path, lowercase=True)
         if lowercase:
             cc.lower()
         cc.strip_tags()
