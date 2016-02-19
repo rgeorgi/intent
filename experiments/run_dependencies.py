@@ -51,11 +51,26 @@ this_dir = os.path.dirname(__file__)
 # The directory where the universal dependency treebanks are stored.
 eval_dir = '/Users/rgeorgi/Documents/treebanks/universal_treebanks_v2.0/std'
 
+# -------------------------------------------
+# Here is a map to go from the three-letter codes
+# used in ODIN to the two letter codes used in the
+# universal dependency treebank.
+# -------------------------------------------
+lang_map = {'deu':'ger',
+            'gla':'gli',
+            'hau':'hua',
+            'kor':'kkn',
+            'cym':'wls',
+            'yaq':'yaq'}
+
+eval_suffix = '_dep_train.txt'
+
 # The directory in which the files will be created for this experiment.
 experiment_dir = os.path.join(this_dir, 'dependencies')
 
 # The directory where the ODIN by-lang XIGT files are found.
 odin_lang_dir = os.path.join(this_dir, 'odin-data')
+
 
 
 
@@ -80,17 +95,6 @@ from intent.commands.filter import filter_corpus
 from intent.corpora.conll import eval_conll_paths
 from intent.consts import *
 
-# -------------------------------------------
-# Here is a map to go from the three-letter codes
-# used in ODIN to the two letter codes used in the
-# universal dependency treebank.
-# -------------------------------------------
-lang_map = {'deu':'de',
-            'fra':'fr',
-            'ind':'id',
-            'spa':'es',
-            'ita':'it',
-            'swe':'sv'}
 
 pos_methods = [ARG_POS_PROJ, ARG_POS_CLASS]
 aln_methods = ARG_ALN_METHODS
@@ -188,8 +192,8 @@ class ExperimentFiles(object):
     # The conll eval files
     # -------------------------------------------
     def get_eval_file(self, lang):
-        two_letter_lang = lang_map[lang]
-        eval_path = os.path.join(os.path.join(eval_dir, two_letter_lang), '{}-universal-test.conll'.format(two_letter_lang))
+        mapped_lang = lang_map[lang]
+        eval_path = os.path.join(os.path.join(eval_dir, mapped_lang), '{}{}'.format(mapped_lang, eval_suffix))
         return eval_path
 
     def get_out_prefix(self, lang, aln_method, pos_source):
