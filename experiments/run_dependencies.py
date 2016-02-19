@@ -98,7 +98,7 @@ from intent.consts import *
 
 
 pos_methods = [ARG_POS_PROJ, ARG_POS_CLASS]
-aln_methods = ARG_ALN_METHODS
+aln_methods = ARG_ALN_METHODS+ARG_ALN_MANUAL
 
 filenames = {l:l+'.xml' for l in lang_map.keys()}
 
@@ -371,11 +371,13 @@ for lang in ef.langs:
                         de_long.add(lang, aln_method, pos_source, ce.long_ul(), ce.long_ul_count(), ce.long_words())
 
 
+
+if USE_CONDOR:
+    condor_wait_notify("Evaluation completed.", email_address, "CONDOR: Evaluation complete.")
+
+
 de_short.print_stats(ARG_POS_PROJ)
 de_long.print_stats(ARG_POS_PROJ)
 
 de_short.print_stats(ARG_POS_CLASS)
 de_long.print_stats(ARG_POS_CLASS)
-
-if USE_CONDOR:
-    condor_wait_notify("Evaluation completed.", email_address, "CONDOR: Evaluation complete.")
