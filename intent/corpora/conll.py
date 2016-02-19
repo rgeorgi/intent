@@ -162,8 +162,8 @@ class ConllCorpus(list):
 
                     # Lowercase the word if requested (and its lemma)
                     if lowercase:
-                        w.form = w.form.lower() if w.form else None
-                        w.lemma= w.lemma.lower() if w.lemma else None
+                        w.form = None or w.form.lower()
+                        w.lemma= None or w.lemma.lower()
 
                     # Remap the tags if a tagmap is provided.
                     if tagmap is not None:

@@ -1516,7 +1516,8 @@ def to_conll(ds, words, lowercase=False, clean_token=False, match_punc=False, mu
         if match_punc:
             if re.match(all_punc_re_mult, word_form, flags=re.U):
                 pos = PUNC_TAG
-                head = root_word_index
+                # TODO: Should we really be attaching punc to the root here?
+                # head = root_word_index
 
 
         # -------------------------------------------

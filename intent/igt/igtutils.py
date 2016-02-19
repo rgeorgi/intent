@@ -4,7 +4,7 @@ Created on Mar 11, 2014
 
 @author: rgeorgi
 """
-
+import copy
 import re
 import unittest
 import string
@@ -375,12 +375,19 @@ def clean_lang_string(ret_str):
 
     return ret_str
 
-def clean_lang_token(ret_str, lowercase=True):
+def clean_lang_token(orig_str, lowercase=True):
+    ret_str = copy.copy(orig_str)
     ret_str = remove_hyphens(ret_str)
     ret_str = remove_extra_parens(ret_str)
     ret_str = remove_extra_punc(ret_str)
+
+    # If we've cleaned it away to nothing...
+    if not ret_str:
+        ret_str = orig_str
+    
     if lowercase is True:
         ret_str = ret_str.lower()
+
     return ret_str
 
 def strict_columnar_alignment(s_a, s_b):
