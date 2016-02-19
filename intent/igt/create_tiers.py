@@ -463,7 +463,7 @@ def generate_normal_tier(inst, clean=True, generate=True, force_generate=False):
     :return:
     """
     # If a normal tier already exists, return it.
-    normal_tier = xigt_find(inst, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:NORM_STATE})
+    normal_tier = xigt_find(inst, type=ODIN_TIER_TYPE, attributes={STATE_ATTRIBUTE:NORM_STATE})
 
 
     # Otherwise, create a new one, with only L, G and T lines.
@@ -472,7 +472,7 @@ def generate_normal_tier(inst, clean=True, generate=True, force_generate=False):
         if normal_tier is not None:
             inst.remove(normal_tier)
 
-        normal_tier = Tier(id = NORM_ID, type=ODIN_TYPE,
+        normal_tier = Tier(id = NORM_ID, type=ODIN_TIER_TYPE,
                            attributes={STATE_ATTRIBUTE:NORM_STATE, ALIGNMENT:generate_clean_tier(inst).id})
 
         # Get one item per...
@@ -506,7 +506,7 @@ def generate_clean_tier(inst, merge=False, generate=True, force_generate=False):
     # -------------------------------------------
     # Search for the clean tier
     # -------------------------------------------
-    clean_tier = xigt_find(inst, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:CLEAN_STATE})
+    clean_tier = xigt_find(inst, type=ODIN_TIER_TYPE, attributes={STATE_ATTRIBUTE:CLEAN_STATE})
 
     # Remove the clean tier if we are regenerating.
     if clean_tier is not None and force_generate:
@@ -523,7 +523,7 @@ def generate_clean_tier(inst, merge=False, generate=True, force_generate=False):
 
 
         # Initialize the clean tier...
-        clean_tier = Tier(id = CLEAN_ID, type=ODIN_TYPE,
+        clean_tier = Tier(id = CLEAN_ID, type=ODIN_TIER_TYPE,
                           attributes={STATE_ATTRIBUTE:CLEAN_STATE,
                                       ALIGNMENT:raw_tier.id})
 

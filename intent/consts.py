@@ -8,7 +8,7 @@ Store the constants that are used in the XIGT formats.
 #===============================================================================
 
 # Lines ------------------------------------------------------------------------
-ODIN_TYPE  = 'odin'
+ODIN_TIER_TYPE  = 'odin'
 
 STATE_ATTRIBUTE = 'state'
 

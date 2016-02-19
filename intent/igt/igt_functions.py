@@ -1421,7 +1421,7 @@ def odin_span(item):
 
     # The base case, if we have arrived at an ODIN_TYPE tier
     # already, we should return the full span of the item.
-    if item.tier.type == ODIN_TYPE:
+    if item.tier.type == ODIN_TIER_TYPE:
         return [(0, len(item.value()))]
 
     else:

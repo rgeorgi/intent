@@ -81,7 +81,7 @@ def raw_txt_to_inst(string, corpus=None, idnum=None):
         id = 'i{}'.format(len(corpus))
 
     inst = Igt(id = id)
-    rt = Tier(id = RAW_ID, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE}, igt=inst)
+    rt = Tier(id = RAW_ID, type=ODIN_TIER_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE}, igt=inst)
 
     for i, l in enumerate(lines):
 
@@ -226,7 +226,7 @@ def parse_odin_inst(string, corpus = None, idnum=None):
     lines = re.findall('line=([0-9]+)\stag=(\S+):(.*)\n?', string)
 
     # --- 3) Create a raw tier.
-    rt = Tier(id = RAW_ID, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE}, igt=inst)
+    rt = Tier(id = RAW_ID, type=ODIN_TIER_TYPE, attributes={STATE_ATTRIBUTE:RAW_STATE}, igt=inst)
 
     for lineno, linetag, linetxt in lines:
         l = Item(id = ask_item_id(rt), text=linetxt, attributes={'tag':linetag, 'line':lineno}, tier=rt)

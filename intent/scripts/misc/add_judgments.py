@@ -5,7 +5,7 @@ from os import makedirs
 
 JUDG_LOG = logging.getLogger("JUDGMENTS")
 
-from intent.consts import ODIN_TYPE, ODIN_JUDGMENT_ATTRIBUTE
+from intent.consts import ODIN_TIER_TYPE, ODIN_JUDGMENT_ATTRIBUTE
 from xigt import xigtpath
 
 from intent.igt.igtutils import get_judgment
@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
             for inst in xc:
                 JUDG_LOG.info('Processing instance "{}"'.format(inst.id))
-                for item in xigtpath.findall(inst, 'tier[@type='+ODIN_TYPE+']/item'):
+                for item in xigtpath.findall(inst, 'tier[@type='+ODIN_TIER_TYPE+ ']/item'):
 
                     # Skip blank lines
                     if item.value() is None:

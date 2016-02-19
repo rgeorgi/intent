@@ -8,7 +8,7 @@ import sys
 from lxml import etree as ET
 
 from intent.alignment.Alignment import Alignment
-from intent.consts import ODIN_TYPE, STATE_ATTRIBUTE, NORM_STATE, NORM_ID, ODIN_TAG_ATTRIBUTE, ODIN_LANG_TAG, \
+from intent.consts import ODIN_TIER_TYPE, STATE_ATTRIBUTE, NORM_STATE, NORM_ID, ODIN_TAG_ATTRIBUTE, ODIN_LANG_TAG, \
     ODIN_GLOSS_TAG, ODIN_TRANS_TAG, INTENT_DS_MANUAL, INTENT_POS_MANUAL, INTENT_ALN_MANUAL
 from intent.igt.create_tiers import lang, gloss, generate_lang_phrase_tier, \
     generate_trans_phrase_tier, lang_phrase, create_word_tier, trans_phrase, trans
@@ -273,7 +273,7 @@ def convert_pml(aln_path, out_path, hindi=True):
 
 
         inst = Igt(id=re.sub('s-', 'igt', a_snt_ref))
-        nt   = Tier(type=ODIN_TYPE, id=NORM_ID, attributes={STATE_ATTRIBUTE:NORM_STATE})
+        nt   = Tier(type=ODIN_TIER_TYPE, id=NORM_ID, attributes={STATE_ATTRIBUTE:NORM_STATE})
         ll   = Item(id='n1', attributes={ODIN_TAG_ATTRIBUTE:ODIN_LANG_TAG}, text=lang_txt)
         gl   = Item(id='n2', attributes={ODIN_TAG_ATTRIBUTE:ODIN_GLOSS_TAG}, text=gloss_txt)
         tl   = Item(id='n3', attributes={ODIN_TAG_ATTRIBUTE:ODIN_TRANS_TAG}, text=trans_txt)

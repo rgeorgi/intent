@@ -139,7 +139,7 @@ def xigt_findall(obj, **kwargs):
 # Some convenience methods for common searches
 # -------------------------------------------
 def text_tier(inst, state):
-    return xigt_find(inst, type=ODIN_TYPE, attributes={STATE_ATTRIBUTE:state})
+    return xigt_find(inst, type=ODIN_TIER_TYPE, attributes={STATE_ATTRIBUTE:state})
 
 def raw_tier(inst) -> Tier:
     return text_tier(inst, RAW_STATE)
@@ -246,7 +246,7 @@ def odin_ancestor(obj):
     # ODIN_LOG.debug("Looking up the odin ancestor for {}".format(str(obj)))
     # If we are at an ODIN item, return.
 
-    if isinstance(obj, Item) and obj.tier.type == ODIN_TYPE:
+    if isinstance(obj, Item) and obj.tier.type == ODIN_TIER_TYPE:
         return obj
 
     # An Igt instance can't have a tier ancestor.
@@ -254,7 +254,7 @@ def odin_ancestor(obj):
         return None
 
     # Also, an ODIN tier can't get a specific item...
-    elif isinstance(obj, Tier) and obj.type == ODIN_TYPE:
+    elif isinstance(obj, Tier) and obj.type == ODIN_TIER_TYPE:
         return None
 
     else:
