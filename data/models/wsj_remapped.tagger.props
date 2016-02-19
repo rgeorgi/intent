@@ -1,8 +1,8 @@
-## tagger training invoked at Wed Mar 19 23:24:54 EDT 2014 with arguments:
-                   model = /Users/rgeorgi/Dropbox/code/eclipse/dissertation/data/wsj_remapped.tagger
+## tagger training invoked at Thu Feb 18 19:42:30 CST 2016 with arguments:
+                   model = data/models/wsj_remapped.tagger
                     arch = generic
             wordFunction = 
-               trainFile = /Users/rgeorgi/Dropbox/code/eclipse/prototype-sequence/data/wsj_remapped_train_tagged.txt
+               trainFile = /var/folders/r_/2vym8zdd6sxdmyv8lwxsf8b40000gn/T/tmp3jkb675a
          closedClassTags = 
  closedClassTagThreshold = 40
  curWordMinFeatureThresh = 2
@@ -22,7 +22,7 @@ rareWordMinFeatureThresh = 10
             sigmaSquared = 0.5
                    regL1 = 1.0
                tagInside = 
-                tokenize = false
+                tokenize = true
         tokenizerFactory = 
         tokenizerOptions = 
                  verbose = false
