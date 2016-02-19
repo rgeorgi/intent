@@ -97,8 +97,8 @@ from intent.corpora.conll import eval_conll_paths
 from intent.consts import *
 
 
-pos_methods = [ARG_POS_PROJ, ARG_POS_CLASS, ARG_POS_MANUAL]
-aln_methods = ARG_ALN_METHODS+[ARG_ALN_MANUAL]
+pos_methods = [ARG_POS_PROJ, ARG_POS_CLASS]
+aln_methods = ARG_ALN_METHODS
 
 filenames = {l:l+'.xml' for l in lang_map.keys()}
 
