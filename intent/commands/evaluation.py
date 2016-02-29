@@ -10,7 +10,8 @@ import time
 
 from intent.consts import NORM_LEVEL, ARG_ALN_MANUAL, INTENT_ALN_MANUAL, INTENT_ALN_GIZA, ALIGNER_FASTALIGN, \
     GLOSS_WORD_ID, LANG_WORD_ID, INTENT_ALN_HEUR, INTENT_POS_TAGGER, INTENT_POS_PROJ, INTENT_POS_CLASS, \
-    INTENT_ALN_GIZAHEUR, ALIGNER_GIZA
+    INTENT_ALN_GIZAHEUR, ALIGNER_GIZA, INTENT_DS_MANUAL, INTENT_DS_PARSER, INTENT_DS_PROJ, INTENT_ALN_HEURPOS
+from intent.igt.igtutils import rgp
 
 from intent.igt.parsing import xc_load
 
@@ -19,12 +20,15 @@ from intent.eval.AlignEval import AlignEval
 from intent.eval.pos_eval import poseval
 from intent.igt.igt_functions import heur_align_corp, giza_align_t_g, remove_alignments, copy_xigt, heur_align_inst, \
     classify_gloss_pos, tag_trans_pos, get_trans_gloss_lang_alignment, get_trans_gloss_alignment, giza_align_l_t, \
-    get_trans_lang_alignment, get_bilingual_alignment_tier, add_gloss_lang_alignments, tier_alignment
+    get_trans_lang_alignment, get_bilingual_alignment_tier, add_gloss_lang_alignments, tier_alignment, get_lang_ds, \
+    parse_translation_line, project_ds_tier
 from intent.igt.create_tiers import trans, gloss, gloss_tag_tier, glosses
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
+from intent.trees import TreeProjectionError
 from intent.utils.dicts import POSEvalDict
 from intent.utils.env import tagger_model, classifier
+from intent.utils.listutils import flatten_list
 from intent.utils.token import POSToken
 from xigt.consts import INCREMENTAL, FULL
 
@@ -33,9 +37,7 @@ __author__ = 'rgeorgi'
 import logging
 EVAL_LOG = logging.getLogger('EVAL')
 
-threadlist = []
-
-def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
+def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds=None):
     """
     Given a list of files that have manual POS tags and manual alignment,
     evaluate the various INTENT methods on that file.
@@ -62,47 +64,173 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None):
     overall_cls = POSEvalDict()
 
     mas = MultAlignScorer()
+    plma = PerLangMethodAccuracies()
 
-    p = ThreadPoolExecutor(max_workers=8)
-    l = Lock()
-
-    t1 = time.time()
     # Go through all the files in the list...
     for f in filelist:
         print('Evaluating on file: {}'.format(f))
         xc = xc_load(f, mode=FULL)
-        xc.id = "GER"
+        lang = os.path.basename(f)
 
+        # -------------------------------------------
         # Test the classifier if evaluation is requested.
+        # -------------------------------------------
         if classifier_path is not None:
             prj_eval, cls_eval = evaluate_classifier_on_instances(xc, classifier, tagger)
 
             overall_prj += prj_eval
             overall_cls += cls_eval
 
+        # -------------------------------------------
         # Test alignment if requested.
-
+        # -------------------------------------------
         if eval_alignment:
-            lang = os.path.basename(f)
             mas.add_corpus('gold', INTENT_ALN_MANUAL, lang, xc)
             EVAL_LOG.log(NORM_LEVEL, "Evaluating heuristic methods...")
-            evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang, pool=p, lock=l)
+            evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang)
 
             EVAL_LOG.log(NORM_LEVEL, "Evaluating statistical methods...")
-            evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang, pool=p, lock=l)
+            evaluate_statistic_methods_on_file(f, xc, mas, classifier_obj, tagger, lang)
+
+        # -------------------------------------------
+        # Test DS Projection if requested
+        # -------------------------------------------
+        if eval_ds:
+            evaluate_ds_projections_on_file(lang, xc, plma)
+            print(plma)
 
 
-    for f in threadlist:
-        f.result()
+    if eval_alignment:
+        mas.eval_all()
 
-    t2 = time.time()
-    print(t2-t1)
+    if eval_ds:
+        print(plma)
 
-    mas.eval_all()
     # Report the POS tagging accuracy...
     if classifier_path is not None:
         print("ALL...")
         print('{:.2f},{:.2f}'.format(overall_prj.accuracy(), overall_cls.accuracy()))
+
+
+
+def evaluate_ds_projections_on_file(lang, xc, plma):
+    """
+    :type plma: PerLangMethodAccuracies
+    """
+    matches    = 0
+    compares   = 0
+
+    aln_methods=[INTENT_ALN_GIZA, INTENT_ALN_GIZAHEUR, INTENT_ALN_HEUR, INTENT_ALN_HEURPOS, INTENT_ALN_MANUAL]
+
+    for inst in xc:
+        # giza_align_t_g(inst)
+
+        gold_ds = get_lang_ds(inst, parse_method=INTENT_DS_MANUAL)
+        if not gold_ds:
+            continue
+
+        # -------------------------------------------
+        # If we have a gold standard DS, let's continue.
+        # -------------------------------------------
+        def eval_method(aln_method):
+
+            # Set up the gold instances
+            gold_edges = set(gold_ds.to_indices())
+            # Add the number of compares, (the gold edges)
+            # and currently 0 for matches...
+            plma.add(lang, aln_method, 0, len(gold_edges))
+
+            # Try to do the projection
+            try:
+                project_ds_tier(inst, proj_aln_method=aln_method, ds_source=INTENT_DS_PARSER)
+                ds = get_lang_ds(inst, parse_method=INTENT_DS_PROJ)
+                tgt_edges  = set(ds.to_indices())
+                # Add the number of matches, with 0 compares, since we added
+                # those previously.
+                plma.add(lang, aln_method, len(gold_edges & tgt_edges), 0)
+
+            except TreeProjectionError:
+                pass
+
+        for aln_method in aln_methods:
+            eval_method(aln_method)
+
+
+class PerMethodAccuracies(object):
+    def __init__(self):
+        self._dict = defaultdict(lambda: {'matches':0, 'compares':0})
+
+    def add_match(self, m, n=1):
+        self._dict[m]['matches'] += n
+
+    def add_compare(self, m, n=1):
+        self._dict[m]['compares'] += n
+
+    def add(self, method, matches, compares):
+        self.add_match(method, matches)
+        self.add_compare(method, compares)
+
+    def __add__(self, other):
+        for m in set(self._dict.keys())|set(other._dict.keys()):
+            self._dict[m]['matches'] += other._dict[m]['matches']
+            self._dict[m]['compares'] += other._dict[m]['compares']
+
+    def matches(self, m):
+        return self._dict[m]['matches']
+
+    def compares(self, m):
+        return self._dict[m]['compares']
+
+    def acc(self, m):
+        return self.matches(m)/ self.compares(m) * 100
+
+    def keys(self):
+        return self._dict.keys()
+
+    def __str__(self):
+        accs = ['{:.2f}'.format(self.acc(m)) for m in self._dict.keys()]
+        return ','.join(accs)
+
+class PerLangMethodAccuracies(object):
+    def __init__(self):
+        self._mdict = defaultdict(lambda: PerMethodAccuracies())
+        self._methods = []
+
+    def add(self, lang, method, matches, compares):
+        self._mdict[lang].add(method, matches, compares)
+        if method not in self._methods:
+            self._methods.append(method)
+
+    def lang_acc(self, lang, m):
+        return self._mdict[lang].acc(m)
+
+    def overall_acc(self, m):
+        matches = 0
+        compares = 0
+        for lang in self._mdict.keys():
+            matches  += self._mdict[lang].matches(m)
+            compares += self._mdict[lang].compares(m)
+        return matches/compares * 100
+
+    def __add__(self, other):
+        for lang in set(self._mdict.keys()|other._mdict.keys()):
+            self._mdict[lang] += other._mdict[lang]
+
+    def __str__(self):
+        ret_str = self.header_str()+'\n'
+        for lang in sorted(self._mdict.keys()):
+            accs = ['{:.2f}'.format(self._mdict[lang].acc(m)) for m in self._methods]
+            for method in self._methods:
+                acc = self._mdict[lang].acc(method)
+            ret_str += ','.join([lang]+accs)+'\n'
+
+        overall_accs = ['{:.2f}'.format(self.overall_acc(m)) for m in self._methods]
+        ret_str += ','.join(['overall']+overall_accs)+'\n'
+        return ret_str
+
+    def header_str(self):
+        return ','.join(['lang']+self._methods)
+
 
 class MultAlignScorer(object):
 
@@ -183,27 +311,6 @@ def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj, l
 
         if manual is None:
             continue
-
-        # def run_aln(name, lowercase=False, stem=False, tokenize=False, no_multiples=True, grams=False, use_pos=False):
-            # t = threading.Thread(target=run_heur, args=[inst, name, lang, lock, mas, lowercase, stem, tokenize, no_multiples, grams, use_pos])
-            # args = [inst, classifier_obj, tagger_obj, name, lang, lock, mas, lowercase, stem, tokenize, no_multiples, grams, use_pos]
-            # f = pool.submit(run_heur, *args)
-            # threadlist.append(f)
-            # f.result()
-            # t.start()
-            # run_heur(inst, name, lang, lock, mas, lowercase, stem, tokenize, no_multiples, grams, use_pos)
-
-
-
-        # run_aln('baseline', lowercase=False, stem=False, tokenize=False, no_multiples=True, use_pos=False)
-        # run_aln('lowercasing', lowercase=True, stem=False, tokenize=False, no_multiples=True, use_pos=False)
-        # run_aln('tokenization', lowercase=True, stem=False, tokenize=True, no_multiples=True, use_pos=False)
-        # run_aln('mult_matches', lowercase=True, stem=False, tokenize=True, no_multiples=False, use_pos=False)
-        # run_aln('morphing', lowercase=True, stem=True, tokenize=True, no_multiples=False, use_pos=False)
-        # run_aln('grams', lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=False)
-        # run_aln('POS', lowercase=True, stem=True, tokenize=True, no_multiples=False, grams=True, use_pos=True)
-        #
-        # continue
 
         EVAL_LOG.debug('Running heuristic alignments on instance "{}"'.format(inst.id))
 

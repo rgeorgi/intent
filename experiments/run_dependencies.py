@@ -49,7 +49,7 @@ email_address = 'rgeorgi@uw.edu'
 this_dir = os.path.dirname(__file__)
 
 # The directory where the universal dependency treebanks are stored.
-eval_dir = '/Users/rgeorgi/Dropbox/riples/data/xigt_data/NAACL/deps'
+eval_dir = '/Users/rgeorgi/Dropbox/riples/data/xigt_data/PML/deps'
 
 # -------------------------------------------
 # Here is a map to go from the three-letter codes
@@ -264,6 +264,7 @@ for lang in ef.langs:
             else:
                 # p = Popen(['intent.py', 'project', '--aln-method', aln_method, enriched_f, projected_f, '-v'], env={"PATH":os.getenv("PATH")+':/Users/rgeorgi/Documents/code/intent'})
                 # p.wait()
+                print(enriched_f)
                 do_projection(**{ARG_INFILE:enriched_f, 'aln_method':aln_method, ARG_OUTFILE:projected_f, 'completeness':1.0})
 
 if USE_CONDOR and projection_done:

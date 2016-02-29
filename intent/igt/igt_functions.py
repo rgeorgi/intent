@@ -10,7 +10,7 @@ from collections import defaultdict
 from intent.igt.create_tiers import lang, trans, pos_tag_tier, gloss, glosses, lang_tag_tier, morphemes, generate_clean_tier, \
     generate_normal_tier
 from intent.igt.references import xigt_find, ask_item_id, cleaned_tier, normalized_tier, \
-    gen_tier_id, odin_ancestor, xigt_findall, gen_item_id, item_index
+    gen_tier_id, odin_ancestor, xigt_findall, gen_item_id, item_index, dep_match
 from intent.interfaces.fast_align import fast_align_sents
 from intent.interfaces.giza import GizaAligner
 from intent.interfaces.mallet_maxent import MalletMaxent
@@ -56,19 +56,29 @@ def get_lang_ps(inst):
 def get_trans_ps(inst):
     return get_ps(inst, trans(inst))
 
-def get_ds_tier(inst, dep):
-    return xigt_find(inst, type=DS_TIER_TYPE, attributes={DS_DEP_ATTRIBUTE:dep.id})
+def get_ds_tier(inst, dep, parse_method=None):
+    f = []
+    if parse_method is not None:
+        f = [lambda x: get_intent_method(x) == parse_method]
 
-def get_ds(inst, target, pos_source=None, unk_pos_handling=None):
-    t = get_ds_tier(inst, target)
+    return xigt_find(inst, type=DS_TIER_TYPE, attributes={DS_DEP_ATTRIBUTE:dep.id}, others=f)
+
+def get_ds(inst, target, pos_source=None, unk_pos_handling=None, parse_method=None):
+    t = get_ds_tier(inst, target, parse_method=parse_method)
     if t is not None:
         return read_ds(t, pos_source=pos_source, unk_pos_handling=unk_pos_handling)
 
-def get_lang_ds(inst, pos_source=None, unk_pos_handling=None):
-    return get_ds(inst, lang(inst), pos_source, unk_pos_handling=unk_pos_handling)
+def get_lang_ds(inst, pos_source=None, unk_pos_handling=None, parse_method=None):
+    return get_ds(inst, lang(inst), pos_source, unk_pos_handling=unk_pos_handling, parse_method=parse_method)
 
-def get_trans_ds(inst, pos_source=None):
-    return get_ds(inst, trans(inst), pos_source)
+def get_lang_ds_tier(inst, parse_method=None):
+    return get_ds_tier(inst, lang(inst), parse_method=parse_method)
+
+def get_trans_ds(inst, pos_source=None, parse_method=None):
+    return get_ds(inst, trans(inst), pos_source, parse_method=parse_method)
+
+def get_trans_ds_tier(inst, parse_method=None):
+    return get_ds_tier(inst, trans(inst), parse_method=parse_method)
 
 def get_trans_parse_tier(inst):
     """
@@ -948,18 +958,19 @@ def project_pt_tier(inst, proj_aln_method=None):
                    source_tier=get_trans_parse_tier(inst),
                    aln_type=tl_aln.type)
 
-def project_ds_tier(inst, proj_aln_method=None, completeness_requirement=0):
+def project_ds_tier(inst, proj_aln_method=None, completeness_requirement=0, ds_source=None):
     """
     Project the dependency structure found in this tree.
     """
 
     # If a tier previously existed, overwrite it...
-    old_lang_ds_tier = get_ds_tier(inst, lang(inst))
+    old_lang_ds_tier = get_ds_tier(inst, lang(inst), parse_method=INTENT_DS_PROJ)
     if old_lang_ds_tier is not None:
         delete_tier(old_lang_ds_tier)
 
     # Get the trans DS, if it exists.
-    src_t = get_trans_ds(inst)
+    trans_ds_tier = get_ds_tier(inst, trans(inst), parse_method=ds_source)
+    src_t = get_trans_ds(inst, parse_method=ds_source)
     if src_t is None:
         raise ProjectionException('No dependency tree found for igt "{}"'.format(inst.id))
     else:
@@ -971,7 +982,6 @@ def project_ds_tier(inst, proj_aln_method=None, completeness_requirement=0):
             if len(aln.all_tgt()) < len(non_punc_items(gloss(inst))) * completeness_requirement:
                 raise ProjectionIncompleteAlignment('The alignment "{}" retrieved for instance "{}" is not adequately complete.'.format(aln.type, inst.id))
 
-        trans_ds_tier = get_ds_tier(inst, trans(inst))
         proj_t = project_ds(src_t, tgt_w, aln)
 
         create_dt_tier(inst, proj_t, lang(inst), parse_method=INTENT_DS_PROJ, source_tier=trans_ds_tier, aln_type=aln.type)

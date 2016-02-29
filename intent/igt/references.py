@@ -1,6 +1,8 @@
 import re
 import string
 
+import sys
+
 from intent.consts import *
 from xigt import ref, Tier, Item, Igt
 from xigt.ref import ids
@@ -41,8 +43,8 @@ def get_id_base(id_str):
     return s
 
 def ref_match(o, target_ref, ref_type):
-    if hasattr(o, ref_type):
-        my_ref = getattr(o, ref_type)
+    if ref_type in o.attributes:
+        my_ref = o.attributes.get(ref_type)
         if my_ref and target_ref in ref.ids(my_ref):
             return True
     return False
@@ -50,6 +52,7 @@ def ref_match(o, target_ref, ref_type):
 def seg_match(seg): return lambda o: ref_match(o, seg, SEGMENTATION)
 def cnt_match(cnt): return lambda o: ref_match(o, cnt, CONTENT)
 def aln_match(aln): return lambda o: ref_match(o, aln, ALIGNMENT)
+def dep_match(dep): return lambda o: ref_match(o, dep, DS_DEP_ATTRIBUTE)
 
 def type_match(type): return lambda o: o.type == type
 def id_match(id): return lambda o: o.id == id
@@ -183,7 +186,7 @@ def gen_tier_id(inst, id_base, tier_type=None, alignment=None, no_hyphenate=Fals
 
     # First, do we align with another item? (Either segmentation, alignment, or head/dep)
     if alignment is not None:
-        filters.append(lambda x: aln_match(alignment)(x) or seg_match(alignment)(x) or ref_match(x, alignment, DS_HEAD_ATTRIBUTE))
+        filters.append(lambda x: aln_match(alignment)(x) or seg_match(alignment)(x) or dep_match(alignment)(x))
 
     # Next, does the type match ours?
     if tier_type is not None:
