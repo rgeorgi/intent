@@ -125,7 +125,7 @@ enrich_p.add_argument('--parse', dest=PARSE_VAR,
                       help='List of parses to create. {}'.format(PARSE_TYPES))
 
 enrich_p.add_argument('--max-parse-length', dest='max_parse_length', default=25,
-                      help='What is the maximum length to attempt parsing on?')
+                      help='What is the maximum length to attempt parsing on?', type=int)
 
 enrich_p.add_argument('--class', dest='class_path', default=classifier)
 
