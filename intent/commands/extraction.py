@@ -6,7 +6,7 @@ import re
 from os import unlink
 
 from intent.igt.create_tiers import gloss, gloss_tag_tier, lang_tag_tier, trans, glosses
-from intent.igt.exceptions import RGXigtException, ProjectionException
+from intent.igt.exceptions import RGXigtException, ProjectionException, NoNormLineException
 from intent.igt.igtutils import clean_lang_token
 from intent.igt.parsing import xc_load
 from intent.igt.references import xigt_find
@@ -264,8 +264,11 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
                 gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict)
 
             if sent_prefix is not None:
-                extract_sents_from_inst(inst, e_f, f_f, no_alignment_heur=no_alignment_heur,
-                                        sent_type=sent_type, aln_method=use_aln)
+                try:
+                    extract_sents_from_inst(inst, e_f, f_f, no_alignment_heur=no_alignment_heur,
+                                            sent_type=sent_type, aln_method=use_aln)
+                except NoNormLineException:
+                    pass
 
             if cfg_path:
                 extract_cfg_rules_from_inst(inst, cfg_f)
