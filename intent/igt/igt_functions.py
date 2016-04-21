@@ -8,7 +8,7 @@ import logging
 from collections import defaultdict
 
 from intent.igt.create_tiers import lang, trans, pos_tag_tier, gloss, glosses, lang_tag_tier, morphemes, generate_clean_tier, \
-    generate_normal_tier
+    generate_normal_tier, trans_tag_tier, gloss_tag_tier
 from intent.igt.references import xigt_find, ask_item_id, cleaned_tier, normalized_tier, \
     gen_tier_id, odin_ancestor, xigt_findall, gen_item_id, item_index, dep_match
 from intent.interfaces.fast_align import fast_align_sents
@@ -1001,18 +1001,18 @@ def project_trans_pos_to_gloss(inst, aln_method=None, trans_tag_method=None, com
     attributes = {ALIGNMENT:gloss(inst).id}
 
     # Remove the previous gloss tags if they are present...
-    prev_t = pos_tag_tier(inst, gloss(inst).id, tag_method=INTENT_POS_PROJ)
+    prev_t = gloss_tag_tier(inst, tag_method=INTENT_POS_PROJ)
     if prev_t is not None:
         delete_tier(prev_t)
 
     # Get the trans tags...
-    trans_tags = pos_tag_tier(inst, trans(inst).id, tag_method=trans_tag_method)
+    trans_tags = trans_tag_tier(inst, tag_method=trans_tag_method)
 
     # If we don't get any trans tags back, throw an exception:
     if not trans_tags:
         project_creator_except("There were no translation-line POS tags found",
                                "Please create the appropriate translation-line POS tags before projecting.",
-                               INTENT_POS_PROJ)
+                               trans_tag_method)
 
     t_g_aln = get_trans_gloss_alignment(inst, aln_method=aln_method)
 

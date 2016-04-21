@@ -16,6 +16,7 @@ from intent.consts import NORM_LEVEL, ARG_ALN_MANUAL, INTENT_ALN_MANUAL, INTENT_
     INTENT_POS_MANUAL
 from intent.igt.exceptions import GlossLangAlignException, RGXigtException
 from intent.igt.igtutils import rgp
+from intent.igt.metadata import get_intent_method, set_intent_method
 
 from intent.igt.parsing import xc_load
 
@@ -26,7 +27,7 @@ from intent.igt.igt_functions import heur_align_corp, giza_align_t_g, remove_ali
     classify_gloss_pos, tag_trans_pos, get_trans_gloss_lang_alignment, get_trans_gloss_alignment, giza_align_l_t, \
     get_trans_lang_alignment, get_bilingual_alignment_tier, add_gloss_lang_alignments, tier_alignment, get_lang_ds, \
     parse_translation_line, project_ds_tier, project_trans_pos_to_gloss, project_lang_to_gloss
-from intent.igt.create_tiers import trans, gloss, gloss_tag_tier, glosses, pos_tag_tier
+from intent.igt.create_tiers import trans, gloss, gloss_tag_tier, glosses, pos_tag_tier, lang_tag_tier, trans_tag_tier
 from intent.igt.references import xigt_find
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
@@ -35,14 +36,16 @@ from intent.utils.dicts import POSEvalDict
 from intent.utils.env import tagger_model, classifier
 from intent.utils.listutils import flatten_list
 from intent.utils.token import POSToken
+from xigt.codecs import xigtxml
 from xigt.consts import INCREMENTAL, FULL
+from xigt.model import XigtCorpus
 
 __author__ = 'rgeorgi'
 
 import logging
 EVAL_LOG = logging.getLogger('EVAL')
 
-def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds=None):
+def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds=None, eval_posproj=None):
     """
     Given a list of files that have manual POS tags and manual alignment,
     evaluate the various INTENT methods on that file.
@@ -69,7 +72,8 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
     overall_cls = POSEvalDict()
 
     mas = MultAlignScorer()
-    plma = PerLangMethodAccuracies()
+    ds_plma = PerLangMethodAccuracies()
+    pos_plma= PerLangMethodAccuracies()
 
     # Go through all the files in the list...
     for f in filelist:
@@ -101,22 +105,78 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
         # Test DS Projection if requested
         # -------------------------------------------
         if eval_ds:
-            evaluate_ds_projections_on_file(lang, xc, plma)
-            print(plma)
+            evaluate_ds_projections_on_file(lang, xc, ds_plma)
+            print(ds_plma)
+
+        # -------------------------------------------
+        #  Test POS Projection
+        # -------------------------------------------
+        if eval_posproj:
+            evaluate_pos_projections_on_file(lang, xc, pos_plma, tagger)
+
 
 
     if eval_alignment:
         mas.eval_all()
 
     if eval_ds:
-        print(plma)
+        print(ds_plma)
 
     # Report the POS tagging accuracy...
     if classifier_path is not None:
         print("ALL...")
         print('{:.2f},{:.2f},{:.2f}'.format(overall_prj.accuracy(), overall_prj.unaligned(), overall_cls.accuracy()))
 
+def evaluate_pos_projections_on_file(lang, xc, plma, tagger):
+    """
+    :type plma: PerLangMethodAccuracies
+    """
+    new_xc = XigtCorpus(xc.id)
+    for inst in xc:
 
+        gtt = gloss_tag_tier(inst, INTENT_POS_MANUAL)
+        ttt = trans_tag_tier(inst, INTENT_POS_MANUAL)
+        m_aln = get_trans_gloss_alignment(inst, INTENT_ALN_MANUAL)
+
+        # Only continue if we have manual gloss tags, trans tags, and manual alignment.
+        if gtt is None or m_aln is None or ttt is None:
+            continue
+
+        # Get the heuristic alignment...
+        h_aln = heur_align_inst(inst)
+
+        # And tag the translation line.
+        tag_trans_pos(inst, tagger=tagger)
+
+        # Now, iterate through each alignment method and set of tags.
+        for aln_method in [INTENT_ALN_MANUAL, INTENT_ALN_HEUR]:
+            for trans_tag_method in [INTENT_POS_MANUAL, INTENT_POS_TAGGER]:
+                project_trans_pos_to_gloss(inst, aln_method=aln_method, trans_tag_method=trans_tag_method)
+                proj_gtt = gloss_tag_tier(inst, tag_method=INTENT_POS_PROJ)
+
+                # Go through each word in the gloss line and, if it has a gold
+                # tag, was it correct?
+                matches = 0
+                compares = 0
+                for gw in gloss(inst):
+                    gold_tag = xigt_find(gtt, alignment=gw.id)
+                    proj_tag = xigt_find(proj_gtt, alignment=gw.id)
+
+                    if gold_tag is not None:
+                        if proj_tag is not None and proj_tag.value() == gold_tag.value():
+                            matches += 1
+                        compares += 1
+
+
+                plma.add(lang, '{}:{}'.format(aln_method, trans_tag_method), matches, compares)
+
+    print(plma)
+
+
+
+
+
+    return new_xc
 
 def evaluate_ds_projections_on_file(lang, xc, plma):
     """
