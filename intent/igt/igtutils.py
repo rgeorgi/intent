@@ -2,7 +2,7 @@
 """
 Created on Mar 11, 2014
 
-@author: rgeorgi
+:author: rgeorgi
 """
 import copy
 import re
@@ -43,7 +43,7 @@ def join_morphs(ret_str):
     Find tokens that have letters or numbers on two sides separated by a
     period or morph and join them.
 
-    E.g. MASC . 1SG becomes "MASC.1SG"
+    E.g. ``MASC . 1SG`` becomes ``MASC.1SG``
     """
     m = re.sub('([\w\d])\s*([\.\-])\s*(?=[\w\d])', r'\1\2', ret_str)
     return m
@@ -82,7 +82,6 @@ def remove_final_punctuation(ret_str):
 def rejoin_letter(ret_str, letter='t', direction='right'):
     """
     Reattach lone letters hanging out by their lonesome.
-    @param ret_str:
     """
     if direction == 'right':
         ret_str = re.sub(r'\s(%s)\s+(\S+)' % letter, r' \1\2', ret_str)
@@ -121,8 +120,8 @@ def remove_parenthetical_numbering(ret_str):
 def remove_period_numbering(ret_str):
     """
     Remove period-initial numbering like:
-    |
-    1.   a.  ii.
+
+    ``1.   a.  ii.``
     """
     number_search = '^\s*((?:[a-z]|[ivx]+)\.)'.format(list_re)
 
@@ -188,8 +187,6 @@ def merge_lines(linelist):
     """
     Given two lines, merge characters that fall into blank space on
     the other line.
-
-    @param linelist:
     """
 
     newline = ''

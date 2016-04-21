@@ -32,7 +32,7 @@ def which(app):
     return out
 
 def condor_submit(file):
-    p = subprocess.Popen(['condor_submit', file])
+    p = subprocess.Popen(['/condor/bin/condor_submit', file])
 
 def create_parents(file):
     p = subprocess.Popen(['mkdir','-p',file])
@@ -41,7 +41,7 @@ def create_parents(file):
 
 def condor_wait():
     while True:
-        p = subprocess.Popen(['condor_q', getpass.getuser()], stdout=subprocess.PIPE)
+        p = subprocess.Popen(['/condor/bin/condor_q', getpass.getuser()], stdout=subprocess.PIPE)
         p.wait()
         result = p.stdout.read().decode(encoding='utf-8')
         jobs_re = re.search('([0-9]+) jobs;', result)
@@ -56,7 +56,7 @@ def condor_wait_notify(body, email, subject="Condor Notification"):
     condor_wait()
     os.system('echo "{}" | mail -s "{}" {}'.format(body, subject, email))
 
-def run_cmd(args, prefix, name, email, stdin = "", cwd = os.getcwd(), env = ''):
+def run_cmd(args, prefix, name, email = False, stdin = "", cwd = os.getcwd(), env = ''):
 
     # First, make sure the program can be found.
     exe      = args[0]

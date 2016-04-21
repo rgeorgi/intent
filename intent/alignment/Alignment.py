@@ -415,6 +415,14 @@ class AlignmentError(Exception):
 # Alignment Class
 #===============================================================================
 
+class AlignPair(tuple):
+
+    def __new__(cls, seq=tuple(), type=None):
+        ap = super().__new__(cls, tuple(seq))
+        ap.type = type
+        return ap
+
+
 class Alignment(set):
     """
     Simply, a set of (src_index, tgt_index) pairs in a set.

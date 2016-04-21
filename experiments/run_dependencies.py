@@ -60,7 +60,7 @@ lang_map = {'deu':'ger',
             'gla':'gli',
             'hau':'hua',
             'kor':'kkn',
-            'hin':'hindi',
+            # 'hin':'hindi',
             'cym':'wls',
             'yaq':'yaq'}
 

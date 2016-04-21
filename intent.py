@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.4
+#!/usr/bin/env python3
 
 import argparse
 import logging
@@ -196,7 +196,7 @@ extract_p.add_argument('--use-align', dest="aln_method",
                        choices=ARG_ALN_METHODS,
                        default=ARG_ALN_ANY)
 extract_p.add_argument('--sent-prefix', dest='sent_prefix', help='Prefix with which to output parallel sentences.')
-extract_p.add_argument('--sent-type', dest='sent_type', choices=[SENT_TYPE_T_G, SENT_TYPE_T_L], help="Choose between translation-gloss and translation-lang", default="tl")
+extract_p.add_argument('--sent-type', dest='sent_type', choices=[SENT_TYPE_T_G, SENT_TYPE_T_L], help="Choose between translation-gloss and translation-lang", default=SENT_TYPE_T_L)
 extract_p.add_argument('--no-alignment-heur', action='store_true', help='Disable adding heuristic alignment results to aligned sentences.', default=False)
 
 #===============================================================================

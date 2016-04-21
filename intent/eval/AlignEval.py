@@ -23,6 +23,12 @@ class AlignEval():
         self.total_gold = 0.
         self._instances = 0
 
+        self.prob_matches = 0
+        self.sure_matches = 0
+
+        self.total_prob = 0
+        self.total_sure = 0
+
         if test_alignments is None:
             test_alignments = []
         if gold_alignments is None:
@@ -64,40 +70,67 @@ class AlignEval():
             #===================================================================
             # Debugging to show where we are missing alignments.
             #===================================================================
+            prob_gold_aln  = Alignment([a for a in gold_aln if a.type == 'p'])
+            sure_gold_aln  = Alignment([a for a in gold_aln if a.type == 's'])
 
+            self.prob_matches += len(model_aln & prob_gold_aln)
+            self.sure_matches += len(model_aln & sure_gold_aln)
+
+            self.total_prob += len(prob_gold_aln)
+            self.total_sure += len(sure_gold_aln)
 
             self.matches += len(model_aln & gold_aln)
             self.total_test += len(model_aln)
             self.total_gold += len(gold_aln)
 
-    def aer(self):
+    def aer(self, p_s = False):
         '''
-        Return the Average Error Rate (AER).
+        Return the Alignment Error Rate (AER).
         '''
-        if not self.total_gold:
-            return 0
+        if not p_s:
+            if not self.total_gold:
+                return 0
+            else:
+                return 1.0 - 2*self.matches/(self.total_test + self.total_gold)
         else:
-            return 1.0 - 2*self.matches/(self.total_test + self.total_gold)
+            if not (self.total_prob + self.total_sure):
+                return 0
+            else:
+                return 1.0 - (self.sure_matches+self.prob_matches) / (self.total_test+self.total_gold)
 
-    def precision(self):
+
+    def precision(self, p_s = None):
         if not self.total_test:
             return 0
-        else:
+        elif p_s is None:
             return self.matches / self.total_test
+        elif p_s is 'p':
+            return self.prob_matches / self.total_test
+        elif p_s is 's':
+            return self.sure_matches / self.total_test
+        else:
+            raise NotImplementedError
 
-    def recall(self):
-        try:
-            return self.matches / self.total_gold
-        except ZeroDivisionError:
+    def recall(self, p_s = None):
+        if not self.total_gold:
             return 0
+        elif p_s is None:
+            return self.matches / self.total_gold
+        elif p_s is 'p':
+            return self.prob_matches / self.total_prob
+        elif p_s is 's':
+            return self.sure_matches / self.total_sure
+        else:
+            raise NotImplementedError
+
 
     @property
     def instances(self):
         return self._instances
 
-    def fmeasure(self):
+    def fmeasure(self, p_s = None):
         try:
-            return 2*(self.precision()*self.recall())/(self.precision()+self.recall())
+            return 2*(self.precision(p_s)*self.recall(p_s))/(self.precision(p_s)+self.recall(p_s))
         except ZeroDivisionError:
             return 0
 
@@ -105,8 +138,8 @@ class AlignEval():
     def header(cls):
         return '{},{},{},{},{},{},{}'.format('aer','precision','recall', 'fmeasure','matches','total_gold','total_test')
 
-    def all(self):
-        return (self.aer(), self.precision(), self.recall(), self.fmeasure(), self.matches, self.total_gold, self.total_test)
+    def all(self, p_s=False):
+        return (self.aer(p_s), self.precision(), self.recall(), self.fmeasure(), self.matches, self.total_gold, self.total_test)
 
     def all_str(self):
         return '%f,%f,%f,%f,%d,%d,%d' % self.all()
