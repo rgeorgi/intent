@@ -166,6 +166,12 @@ def item_index(item):
     """
     return list(item.tier).index(item)+1
 
+def get_index(tier, i):
+    """
+    :type tier: Tier
+    """
+    return tier[i-1]
+
 # -------------------------------------------
 # GENERATING ID STRINGS
 # -------------------------------------------
@@ -290,3 +296,22 @@ def odin_ancestor(obj):
             return None
         else:
             return odin_ancestor(item)
+
+
+def all_tags(inst):
+    tag_list = []
+    for item in raw_tier(inst):
+        item_tags = re.split('[\+\-]', item.attributes['tag'])
+        tag_list.extend(item_tags)
+    return tag_list
+
+
+def has_corruption(inst):
+    """
+    Return True if instance has "CR" in it, indicating corruption.
+    """
+    return 'CR' in all_tags(inst)
+
+
+def has_double_column(inst):
+    return 'DB' in all_tags(inst)

@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     args = p.parse_args()
 
-    if not args.train or args.tagger:
+    if not (args.train or args.tagger):
         sys.stderr.write("Either a training file or a pre-trained tagger is required.")
         p.print_help()
         sys.exit(11)
@@ -76,5 +76,9 @@ if __name__ == '__main__':
     print('Running tagger on "{}"'.format(args.test))
     test_postagger(raw_tmp.name, tagger_path, outpath)
 
-    slashtags_eval(args.test, outpath, args.delimiter, matrix=True)
+    print("RESULTS ON SENTENCES OF ALL LENGTHS")
+    slashtags_eval(args.test, outpath, args.delimiter, details=True, matrix=False, length_limit=None)
+
+    print("RESULTS ON SENTENCES OF <=10")
+    slashtags_eval(args.test, outpath, args.delimiter, details=True, matrix=False, length_limit=10)
 

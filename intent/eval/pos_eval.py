@@ -24,7 +24,7 @@ from intent.utils.dicts import POSEvalDict
 # 
 #===============================================================================
 
-def slashtags_eval(goldpath, testpath, delimiter, out_f=sys.stdout, tagmap=None, matrix=False, details=False):
+def slashtags_eval(goldpath, testpath, delimiter, out_f=sys.stdout, tagmap=None, matrix=False, details=False, length_limit=None):
     '''
     Evaluate a "slashtags" format file
 
@@ -45,7 +45,7 @@ def slashtags_eval(goldpath, testpath, delimiter, out_f=sys.stdout, tagmap=None,
     gold_c = POSCorpus.read_slashtags(goldpath)
     test_c = POSCorpus.read_slashtags(testpath)
 
-    poseval(test_c, gold_c, out_f, matrix=matrix, details=details)
+    poseval(test_c, gold_c, out_f, matrix=matrix, details=details, length_limit=length_limit)
 
 #===============================================================================
 # 
@@ -62,7 +62,7 @@ def simple_tagger_eval(eval_path, gold_path, out_f = sys.stdout, csv=True):
 
 def poseval(eval_sents, gold_sents, out_f = sys.stdout, csv=True,
             ansi=False, greedy_1_to_1=False, greedy_n_to_1=False,
-            matrix=False, details=False):
+            matrix=False, details=False, length_limit=None):
 
     if len(eval_sents) != len(gold_sents):
         raise EvalException('Number of eval sents does not match number of gold sents.')
@@ -76,6 +76,9 @@ def poseval(eval_sents, gold_sents, out_f = sys.stdout, csv=True,
     i = 1
 
     for eval_sent, gold_sent in zip(eval_sents, gold_sents):
+
+        if length_limit is not None and len(eval_sent) > length_limit:
+            continue
 
         # Check whether the whole sentence is correct.
         sent_correct = True

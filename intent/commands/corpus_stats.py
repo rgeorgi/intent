@@ -17,7 +17,9 @@ import argparse
 import sys
 from multiprocessing import cpu_count
 
+from intent.igt.create_tiers import lang, gloss, trans, pos_tag_tier
 from intent.igt.parsing import raw_txt_to_xc
+from intent.igt.references import has_corruption, has_double_column, xigt_find
 from xigt.codecs import xigtxml
 
 from intent.igt.exceptions import NoLangLineException, NoGlossLineException, NoTransLineException
@@ -81,10 +83,10 @@ class IGTStatDict(object):
 
     @staticmethod
     def header():
-        keys = ['instances',
+        keys = ['lang','instances',
                 'lang_types', 'lang_tokens',
                 'gloss_types','gloss_tokens',
-                'lang_types','lang_tokens','corrupt_instances','double_column_instances']
+                'trans_types','trans_tokens','corrupt_instances','double_column_instances']
 
         return ','.join(keys)
 
@@ -128,14 +130,14 @@ def count_words_tags(inst, tier, word_dict, tag_dict, word_tag_dict):
         word_dict.add(word.value().lower())
 
     # Now, count the tags...
-    pos_tier = inst.get_pos_tags(tier.id)
+    pos_tier = pos_tag_tier(inst, tier.id)
     if pos_tier is not None:
         for tag in pos_tier:
             tag_val = tag.value()
 
             # If there are more POS tags than words,
             # we may occasionally get this "broken"  system.
-            wrd_aln = inst.find(id = tag.alignment)
+            wrd_aln = xigt_find(inst, id = tag.alignment)
             if wrd_aln:
                 wrd_val = wrd_aln.value()
                 tag_dict.add(tag_val, wrd_val)
@@ -155,24 +157,24 @@ def inst_list_stats(inst_list):
 
         sd.instances += 1
 
-        if inst.has_corruption():
+        if has_corruption(inst):
             sd.corrupt_instances += 1
 
-        if inst.has_double_column():
+        if has_double_column(inst):
             sd.double_column_instances += 1
 
         try:
-            count_words_tags(inst, inst.lang, sd.lang, sd.lang_tags, sd.lang_word_tags)
+            count_words_tags(inst, lang(inst), sd.lang, sd.lang_tags, sd.lang_word_tags)
         except (NoLangLineException) as e:
             STATS_LOGGER.info(str(e))
 
         try:
-            count_words_tags(inst, inst.gloss, sd.gloss, sd.gloss_tags, sd.gloss_word_tags)
+            count_words_tags(inst, gloss(inst), sd.gloss, sd.gloss_tags, sd.gloss_word_tags)
         except (NoGlossLineException) as e:
             STATS_LOGGER.info(str(e))
 
         try:
-            count_words_tags(inst, inst.trans, sd.trans, sd.trans_tags, sd.trans_word_tags)
+            count_words_tags(inst, trans(inst), sd.trans, sd.trans_tags, sd.trans_word_tags)
         except (NoTransLineException) as e:
             STATS_LOGGER.info(str(e))
 
@@ -353,7 +355,6 @@ if __name__ == '__main__':
 
 
     #  -----------------------------------------------------------------------------
-
 
     igt_stats(args.xigt, type='xigt')
     igt_stats(args.igt_txt, type='text')

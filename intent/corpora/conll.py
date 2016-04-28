@@ -225,6 +225,16 @@ class ConllCorpus(list):
         for sent in self:
             sent.strip_feats()
 
+    def prune_to_token_length(self, max_tokens):
+        new_cc = ConllCorpus()
+        total_tokens = 0
+        for sent in self:
+            total_tokens += len(sent)
+            new_cc.append(sent)
+            if total_tokens >= max_tokens:
+                break
+        return new_cc
+
 # =============================================================================
 # EVALUATION
 # =============================================================================

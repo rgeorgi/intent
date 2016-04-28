@@ -1,6 +1,8 @@
 import logging
 import os
 
+from intent.igt.create_tiers import lang
+from intent.igt.igt_functions import sort_corpus
 from xigt import XigtCorpus
 from xigt.codecs import xigtxml
 
@@ -72,9 +74,9 @@ def split_instances(instances, train=0, dev=0, test=0):
     wc = WordCount()
 
     for i, inst in enumerate(instances):
-        num_words = len(inst.lang)
+        num_words = len(lang(inst))
         SPLIT_LOG.debug('{} words in sentence {} (id {})'.format(num_words, i, inst.id))
-        wc.add(i, len(inst.lang))
+        wc.add(i, num_words)
 
     # -- 2) Figure out the number of words.
     num_train_words = round(train * wc.num_words)
@@ -157,7 +159,7 @@ def write_instances(instance_list, out_path, type, overwrite=False):
 
             print("Writing {} instances to {}...".format(num_sents, out_path))
             f = open(out_path, 'w', encoding='utf-8')
-            xc.sort()
+            sort_corpus(xc)
             xigtxml.dump(f, xc)
             f.close()
         else:

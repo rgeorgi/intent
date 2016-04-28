@@ -55,13 +55,14 @@ def do_projection(**kwargs):
             # where the alignment is 100%.
             completeness_requirement = kwargs.get('completeness', default=0, t=float)
 
+            # TODO: Find better way to do this?
             try:
-                # TODO: Find better way
-
-                project_trans_pos_to_gloss(inst, aln_method=aln_method, completeness_requirement=completeness_requirement)
-                project_gloss_pos_to_lang(inst, tag_method=INTENT_POS_PROJ)
-                project_pt_tier(inst, proj_aln_method=aln_method)
-                project_ds_tier(inst, proj_aln_method=aln_method, completeness_requirement=completeness_requirement)
+                if kwargs.get('pos', True):
+                    project_trans_pos_to_gloss(inst, aln_method=aln_method, completeness_requirement=completeness_requirement)
+                    project_gloss_pos_to_lang(inst, tag_method=INTENT_POS_PROJ)
+                if kwargs.get('ds', True):
+                    project_pt_tier(inst, proj_aln_method=aln_method)
+                    project_ds_tier(inst, proj_aln_method=aln_method, completeness_requirement=completeness_requirement)
             except (NoNormLineException) as ntle:
                 fail("Bad Lines")
             except (NoAlignmentProvidedError, ProjectionException) as nape:

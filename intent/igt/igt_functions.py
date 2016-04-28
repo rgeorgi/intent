@@ -1841,6 +1841,8 @@ def copy_xigt(obj, **kwargs):
         raise XigtFormatException("Attempt to copy non-xigt object.")
 
     return ret_obj
+
+
 # -------------------------------------------
 # Imports
 

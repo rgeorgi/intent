@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.4
 import os, sys, logging
 
 from subprocess import Popen
@@ -43,28 +43,39 @@ from collections import defaultdict
 
 
 # Use condor, and email when tasks finish.
-USE_CONDOR = False
+USE_CONDOR = True
 email_address = 'rgeorgi@uw.edu'
 
 this_dir = os.path.dirname(__file__)
 
 # The directory where the universal dependency treebanks are stored.
-eval_dir = '/Users/rgeorgi/Dropbox/riples/data/xigt_data/PML/deps'
+eval_dir = '/home2/rgeorgi/universal_treebanks_v2.0/std'
 
 # -------------------------------------------
 # Here is a map to go from the three-letter codes
 # used in ODIN to the two letter codes used in the
 # universal dependency treebank.
 # -------------------------------------------
-lang_map = {'deu':'ger',
-            'gla':'gli',
-            'hau':'hua',
-            'kor':'kkn',
-            # 'hin':'hindi',
-            'cym':'wls',
-            'yaq':'yaq'}
+lang_map = {'deu': 'de',
+            'fra': 'fr',
+            'ind': 'id',
+            'ita': 'it',
+            'spa': 'es',
+            'swe': 'sv',
+            'por': 'pt-br'}
 
-eval_suffix = '_dep_train.txt'
+
+# The directory in which the files will be created for this experiment.
+experiment_dir = os.path.join(this_dir, 'dependencies')
+
+# The directory where the ODIN by-lang XIGT files are found.
+odin_lang_dir = os.path.join(this_dir, 'odin-data')
+
+
+
+# -------------------------------------------
+logging.basicConfig(level=logging.INFO)
+enrich_dir = os.path.join(experiment_dir, 'enriched')
 
 # The directory in which the files will be created for this experiment.
 experiment_dir = os.path.join(this_dir, 'dependencies')
@@ -75,14 +86,18 @@ odin_lang_dir = os.path.join(this_dir, 'odin-data')
 
 
 
-
+# -------------------------------------------
+logging.basicConfig(level=logging.INFO)
 # -------------------------------------------
 logging.basicConfig(level=logging.INFO)
 enrich_dir = os.path.join(experiment_dir, 'enriched')
 # Directory where INTENT is located...
 intent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 intent_script = os.path.join(intent_dir, 'intent.py')
+p3path = '/opt/python-3.4/bin/python3'
 sys.path.insert(0, intent_dir)
+sys.path.insert(0, '/NLP_TOOLS/uwcl/xigt/latest/')
+
 
 os.environ["PATH"]=os.getenv("PATH")+':'.join(sys.path)
 
@@ -194,7 +209,7 @@ class ExperimentFiles(object):
     # -------------------------------------------
     def get_eval_file(self, lang):
         mapped_lang = lang_map[lang]
-        eval_path = os.path.join(eval_dir, '{}{}'.format(mapped_lang, eval_suffix))
+        eval_path = os.path.join(eval_dir, '{0}/{0}-universal-dev.conll'.format(mapped_lang))
         return eval_path
 
     def get_out_prefix(self, lang, aln_method, pos_source):
@@ -217,7 +232,9 @@ for lang in ef.langs:
         filtration_done = True
         if USE_CONDOR:
             model_prefix, name = ef.get_condor_filter(lang)
-            run_cmd(['intent.py', 'filter', '--require-aln', '--require-gloss', '--require-trans', '--require-lang', orig_f, filtered_f], model_prefix, name, False)
+            run_cmd([p3path, intent_script, 'filter',
+                     '--require-aln', '--require-gloss', '--require-trans', '--require-lang',
+                     orig_f, filtered_f], model_prefix, name, False)
         else:
             filter_corpus([orig_f], filtered_f, require_lang=True, require_gloss=True, require_trans=True, require_aln=True)
 
@@ -237,7 +254,10 @@ for lang in ef.langs:
         enrichment_done = True
         if USE_CONDOR:
             model_prefix, name = ef.get_condor_enrich(lang)
-            run_cmd(['intent.py', 'enrich', '--align', 'heur,heurpos,giza,gizaheur', '--pos class', '--parse trans', filtered_f, enriched_f],
+            run_cmd([p3path, intent_script, 'enrich',
+                     '--align', 'heur,heurpos,giza,gizaheur',
+                     '--pos class', '--parse trans',
+                     filtered_f, enriched_f],
                     model_prefix, name, False)
         else:
             enrich(**{ARG_INFILE:filtered_f, ARG_OUTFILE:enriched_f, ALN_VAR:ARG_ALN_METHODS, POS_VAR:ARG_POS_CLASS, PARSE_VAR:ARG_PARSE_TRANS})
@@ -258,14 +278,15 @@ for lang in ef.langs:
             projection_done = True
             if USE_CONDOR:
                 model_prefix, name = ef.get_condor_project(aln_method, lang)
-                run_cmd(['intent.py', 'project', '--aln-method', aln_method, '--completeness', '1.0',
+                run_cmd([p3path, intent_script, 'project', '--aln-method',
+                         aln_method, '--completeness', '0.0',
                          enriched_f, projected_f], model_prefix, name, False)
 
             else:
                 # p = Popen(['intent.py', 'project', '--aln-method', aln_method, enriched_f, projected_f, '-v'], env={"PATH":os.getenv("PATH")+':/Users/rgeorgi/Documents/code/intent'})
                 # p.wait()
                 print(enriched_f)
-                do_projection(**{ARG_INFILE:enriched_f, 'aln_method':aln_method, ARG_OUTFILE:projected_f, 'completeness':1.0})
+                do_projection(**{ARG_INFILE:enriched_f, 'aln_method':aln_method, ARG_OUTFILE:projected_f, 'completeness':0.0})
 
 if USE_CONDOR and projection_done:
     condor_wait_notify("Data has been projected.", email_address, "CONDOR: Projection Complete.")
@@ -291,7 +312,7 @@ for lang in ef.langs:
                 # -------------------------------------------
                 # Set up the arguments for making the external call
                 # -------------------------------------------
-                args = ['intent.py', 'extract',
+                args = [p3path, intent_script, 'extract',
                         '--tagger-prefix', model_prefix,
                         '--use-align', aln_method,
                         '--dep-prefix', model_prefix,
@@ -358,10 +379,11 @@ for lang in ef.langs:
 
             if not os.path.exists(eval_path) or not os.path.exists(out_prefix):
 
-                if USE_CONDOR:
+                # if USE_CONDOR:
+                if False:
                     prefix, name = ef.get_condor_result(aln_method, pos_source, lang)
                     eval_script = os.path.join(intent_dir, 'intent/scripts/eval/dep_parser.py')
-                    run_cmd([eval_script, 'test', '-p', parser_path, '-t', tagger_path, '--test', eval_path,
+                    run_cmd([p3path, eval_script, 'test', '-p', parser_path, '-t', tagger_path, '--test', eval_path,
                              '-o', out_prefix], prefix, name, False, env='PYTHONPATH={}'.format(intent_dir))
                 else:
                     # eval_mst(parser_path, eval_path, out_prefix, tagger=tagger_path)

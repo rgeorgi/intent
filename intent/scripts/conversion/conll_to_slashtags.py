@@ -20,8 +20,8 @@ def conll_to_slashtags(infiles, outpath):
     main_c = POSCorpus()
     for f in infiles:
         from intent.corpora.conll import ConllCorpus
-        cp = ConllCorpus()
-        c = cp.parse_file(root=f)
+        cp = ConllCorpus.read(f)
+
         main_c.extend(c)
 
     st = c.slashtags('/', lowercase=True)

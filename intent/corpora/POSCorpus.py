@@ -59,8 +59,6 @@ class POSCorpusInstance(list):
             ret_str += '%s/%s ' % (form, token.label)
         return ret_str.strip()
 
-    def __iter__(self):
-        yield super().__iter__()
 
     def mallet(self, lowercase=True):
         ret_str = ''
@@ -77,8 +75,10 @@ class POSCorpus(list):
     POS Tag corpus object to attempt to unify inputs and outputs.
     """
 
-    def __init__(self, seq = []):
-        list.__init__(self, seq)
+    def __init__(self, seq = None):
+        if seq is None:
+            seq = []
+        super().__init__(seq)
 
     def add(self, inst):
         if not isinstance(inst, POSCorpusInstance):
@@ -237,9 +237,6 @@ class POSCorpus(list):
             if inst:
                 c.append(inst)
         return c
-
-    def __iter__(self) -> POSCorpusInstance:
-        yield super().__iter__()
 
 
     def token_handler(self, tokens):

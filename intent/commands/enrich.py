@@ -27,7 +27,7 @@ from xigt.consts import INCREMENTAL
 def enrich_instance(**kwargs):
     pass
 
-def enrich(class_path=None, **kwargs):
+def enrich(**kwargs):
 
 
 
@@ -39,8 +39,9 @@ def enrich(class_path=None, **kwargs):
     # Set up the alternate classifier path...
     # =============================================================================
 
+    class_path = kwargs.get('class_path')
     if class_path:
-        classifier_path = mallet_maxent.MalletMaxent(class_path)
+        classifier = class_path
 
     #===========================================================================
     # Set up the different arguments...

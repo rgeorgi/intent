@@ -40,24 +40,6 @@ class RGIgt(Igt):
         super().__init__(**kwargs)
 
 
-    def all_tags(self):
-        tag_list = []
-        for item in self.raw_tier():
-            item_tags = re.split('[\+\-]', item.attributes['tag'])
-            tag_list.extend(item_tags)
-        return tag_list
-
-
-    def has_corruption(self):
-        """
-        Return True if instance has "CR" in it, indicating corruption.
-        """
-        return 'CR' in self.all_tags()
-
-    def has_double_column(self):
-        return 'DB' in self.all_tags()
-
-
 
 
     # • Processing of newly created instances ----------------------------------

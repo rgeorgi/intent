@@ -38,6 +38,7 @@ mgiza            = c.getpath('mgiza')
 mallet           = c.getpath('mallet')
 mallet_bin       = os.path.join(mallet, 'bin/mallet')
 xigt_dir         = c.getpath('xigt_dir')
+nltk_dir         = c.getpath('nltk_dir')
 tagger_dir       = c.getpath('stanford_tagger_dir')
 tagger_model     = c.getpath('stanford_tagger_trans')
 parser_dir       = c.getpath('stanford_parser_dir')
@@ -122,3 +123,9 @@ else:
 #===============================================================================
 # Other classpath vars
 #===============================================================================
+if nltk_dir:
+    if not os.path.exists(nltk_dir):
+        ENV_LOG.critical('NLTK dir is specified but "{}" not found.'.format(nltk_dir))
+        sys.exit(2)
+    else:
+        sys.path.insert(0, nltk_dir)
