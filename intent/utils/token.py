@@ -21,6 +21,8 @@ class Token(object):
         self.attributes = {}
         self._parent = kwargs.get('parent')
 
+    def __hash__(self):
+        return hash(self.content)
 
     def __str__(self):
         return self.content

@@ -183,6 +183,7 @@ extract_p = register_subparser(CMD_EXTRACT, help='Command to extract data from e
 extract_p.add_argument('FILE', nargs='+', help='XIGT files to include.', type=globfiles)
 extract_p.add_argument("--tagmap", dest='tagmap', help='Provide a tagset mapping to convert POS tags for this file.', type=existsfile)
 extract_p.add_argument('--classifier-prefix', dest='classifier_prefix', help='Output prefix for gloss-line classifier (No extension).', default=None)
+extract_p.add_argument('--classifier-feats', dest='classifier_feats', help='Features to use for training the classifier. ' + str(CLASS_FEATS_ALL), default=CLASS_FEATS_DEFAULT, type=csv_choices(CLASS_FEATS_ALL))
 extract_p.add_argument('--tagger-prefix', dest="tagger_prefix", help='Output prefix for lang-line tagger.', default=None)
 extract_p.add_argument('--cfg-rules', dest="cfg_path", help='Output path for cfg-rules.', default=None)
 extract_p.add_argument('--dep-prefix', dest="dep_prefix", help='Output prefix for dependency parser', default=None)

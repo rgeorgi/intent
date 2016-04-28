@@ -2,6 +2,7 @@ import logging
 import os
 
 import re
+from collections import defaultdict
 
 from os import unlink
 
@@ -13,6 +14,7 @@ from intent.igt.references import xigt_find
 from intent.pos.TagMap import TagMap
 from intent.trees import to_conll
 from intent.utils import fileutils
+from intent.utils.env import posdict, load_posdict
 from xigt.codecs import xigtxml
 from xigt.consts import *
 from xigt.model import Igt, Item
@@ -155,6 +157,24 @@ def extract_sents_from_inst(inst: Igt, out_src, out_tgt, aln_method=None, no_ali
             out_tgt.write(tgt_word.lower() + '\n')
 
 
+class SubwordDict(object):
+    def __init__(self):
+        self.sw_dict = defaultdict(lambda: dict())
+
+    def keys(self):
+        return self.sw_dict.keys()
+
+    def __getitem__(self, k):
+        return self.sw_dict[k]
+
+    def add_word_tag(self, word, tag, prev_word=None, next_word=None, count=1):
+        for subword in tokenize_string(word, tokenizer=morpheme_tokenizer):
+            subword = subword.seq
+            if tag not in self.sw_dict[subword].keys():
+                self.sw_dict[subword][tag] = {'contexts':[(prev_word,next_word)], 'count':count}
+            else:
+                self.sw_dict[subword][tag]['contexts'].append((prev_word, next_word))
+                self.sw_dict[subword][tag]['count'] += count
 
 
 # =============================================================================
@@ -164,15 +184,15 @@ def extract_sents_from_inst(inst: Igt, out_src, out_tgt, aln_method=None, no_ali
 # tagger, etc.
 # =============================================================================
 
-def extract_from_xigt(input_filelist = list, classifier_prefix=None,
+def extract_from_xigt(input_filelist = list, classifier_prefix=None, classifier_feats=CLASS_FEATS_DEFAULT,
                       cfg_path=None, tagger_prefix=None,
                       dep_prefix=None, pos_method=None, aln_method=None,
                       sent_prefix=None, no_alignment_heur=False, sent_type=SENT_TYPE_T_G, **kwargs):
 
     # ------- Dictionaries for keeping track of gloss_pos preprocessing. --------
 
-    word_tag_dict = TwoLevelCountDict()
-    gram_tag_dict = TwoLevelCountDict()
+    # This dictionary will first, be a list of "words" (full word-level)
+    subword_dict = SubwordDict()
 
     # -------------------------------------------
     # Map the argument provided for "dep_pos" to
@@ -261,7 +281,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
                 extracted_parsed_snts += extract_parser_from_instance(inst, dep_train_f, use_pos, tm)
 
             if classifier_prefix is not None:
-                gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict)
+                gather_gloss_pos_stats(inst, subword_dict)
 
             if sent_prefix is not None:
                 try:
@@ -303,12 +323,15 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None,
     if classifier_prefix is not None:
 
         # The path for the svm-light-based features.
+        class_dir  = os.path.dirname(classifier_prefix)
+        os.makedirs(class_dir, exist_ok=True)
+
         feat_path  =  classifier_prefix+'.feats.txt'
         class_path  = classifier_prefix+'.classifier'
 
-        write_out_gram_dict(word_tag_dict, feat_path)
+        write_out_gram_dict(subword_dict, feat_path, classifier_feats)
 
-        EXTRACT_LOG.log(NORM_LEVEL)
+        EXTRACT_LOG.log(NORM_LEVEL, "Training classifier.")
         train_txt(feat_path, class_path)
         EXTRACT_LOG.log(NORM_LEVEL, "Complete.")
 
@@ -347,7 +370,7 @@ def extract_cfg_rules_from_inst(inst, out_f):
 # to only those subsets that occur frequently enough.
 # =============================================================================
 
-def gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict):
+def gather_gloss_pos_stats(inst, subword_dict):
     """
     Given an instance, look for the gloss pos tags, and save the statistics
     about them, so that we can filter by the number of times each kind was
@@ -355,9 +378,9 @@ def gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict):
 
     :param inst: Instance to process.
     :type inst: RGIgt
-    :param word_tag_dict: This dictionary will record the number of times each (word, TAG)
+    :param subword_dict: This dictionary will record the number of times each (word, TAG)
                           pair has been seen.
-    :type word_tag_dict: TwoLevelCountDict
+    :type subword_dict: SubwordDict
     :param gram_tag_dict: This dictionary will record the number of times individual grams are seen.
     :type gram_tag_dict: TwoLevelCountDict
     """
@@ -365,6 +388,7 @@ def gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict):
     # Grab the gloss POS tier...
     gpos_tier = gloss_tag_tier(inst)
     lpos_tier = lang_tag_tier(inst)
+    gw_tier = gloss(inst)
 
     # If there are POS tags on the language line but not the gloss line...
     if gpos_tier is None and lpos_tier is not None:
@@ -372,27 +396,21 @@ def gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict):
         project_lang_to_gloss(inst)
         gpos_tier = gloss_tag_tier(inst)
 
+
     # If this tier exists, then let's process it.
     if gpos_tier is not None:
 
         # Iterate over each gloss POS tag...
-        for gpos in gpos_tier:
+        for i, gw in enumerate(gw_tier):
+            tag = xigt_find(inst, alignment=gw.id)
 
-            # Skip this tag if for some reason it doesn't align with
-            # a gloss word.
-            if ALIGNMENT not in gpos.attributes or not gpos.alignment:
-                EXTRACT_LOG.debug("No alignment found for {} in tier {} igt {}".format(gpos.id, gpos.tier.id, gpos.igt.id))
+            if tag is None:
                 continue
 
-            word = xigt_find(inst, id=gpos.alignment).value()
-            tag  = gpos.value()
+            prev_word = gw_tier[i-1].value().lower() if i > 0 else None
+            next_word = gw_tier[i+1].value().lower() if i < len(gw_tier)-1 else None
 
-            word_tag_dict.add(word.lower(), tag)
-
-            # Now, let's split the word into its composite grams, and add those.
-            morphs = tokenize_string(word, tokenizer=morpheme_tokenizer)
-            for morph in morphs:
-                gram_tag_dict.add(morph.seq.lower(), tag)
+            subword_dict.add_word_tag(gw.value().lower(), tag.value(), prev_word, next_word)
 
 
 
@@ -403,34 +421,54 @@ def gather_gloss_pos_stats(inst, word_tag_dict, gram_tag_dict):
 # that have been seen enough to meet our threshold, and train the classifier.
 # =============================================================================
 
-def write_out_gram_dict(gram_tag_dict, feat_path, threshold = 1):
+def write_out_gram_dict(subword_dict, feat_path, feat_list, threshold = 1):
     """
     Given the gram+tag dict, write out grams for those that have been seen enough to
     meet our threshold.
 
-    :param gram_tag_dict:
-    :type gram_tag_dict: TwoLevelCountDict
+    :param subword_dict:
+    :type subword_dict: TwoLevelCountDict
     :param feat_path:
     :param class_path:
     """
 
-    print('Writing out svm-lite style features to "{}"...'.format(feat_path))
+    EXTRACT_LOG.log(NORM_LEVEL, 'Writing out svm-lite style features to "{}"...'.format(feat_path))
     feat_file = open(feat_path, 'w', encoding='utf-8')
 
-    for gram in gram_tag_dict.keys():
+    # Load the posdict if needed...
+    pd = load_posdict() if (CLASS_FEATS_DICT in feat_list) or (CLASS_FEATS_PDICT in feat_list) or (CLASS_FEATS_NDICT in feat_list) else False
 
-        # Only write out the gram if we've seen it at least as many
-        # times as in threshold.
-        if gram_tag_dict.total(gram) >= threshold:
-            for tag in gram_tag_dict[gram].keys():
+    for subword in subword_dict.keys():
+        for tag in subword_dict[subword].keys():
+            # Write out the gram with this tag as many times as it appears...
+            for prev_word, next_word in subword_dict[subword][tag]['contexts']:
+                gt = GoldTagPOSToken(subword, goldlabel=tag)
 
-                # Write out the gram with this tag as many times as it appears...
-                for i in range(gram_tag_dict[gram][tag]):
+                # -------------------------------------------
+                # Now, vary the features depending on whats in the list
+                # -------------------------------------------
+                if CLASS_FEATS_NEXSW not in feat_list:
+                    next_word = None
+                if CLASS_FEATS_PRESW not in feat_list:
+                    prev_word = None
 
-                    gt = GoldTagPOSToken(gram, goldlabel=tag)
-                    write_gram(gt, feat_next_gram=False, feat_prev_gram=False, lowercase=True, output=feat_file)
+
+
+
+                write_gram(gt, feat_next_gram=next_word, feat_prev_gram=prev_word, lowercase=True,
+                           feat_suffix=CLASS_FEATS_SUF in feat_list,
+                           feat_prefix=CLASS_FEATS_PRE in feat_list,
+                           feat_has_number=CLASS_FEATS_NUM in feat_list,
+                           feat_morph_num=CLASS_FEATS_NUMSW in feat_list,
+                           feat_prev_gram_dict=CLASS_FEATS_PDICT in feat_list,
+                           feat_next_gram_dict=CLASS_FEATS_NDICT in feat_list,
+                           feat_basic=CLASS_FEATS_SW in feat_list,
+                           feat_dict=CLASS_FEATS_DICT in feat_list,
+                           posdict=pd,
+                           output=feat_file)
+
     feat_file.close()
-
+    EXTRACT_LOG.log(NORM_LEVEL, 'Written')
 
 
 

@@ -221,6 +221,31 @@ ARG_POS_MAP = {ARG_POS_CLASS:INTENT_POS_CLASS,
 POS_VAR = 'pos_list'
 
 # -------------------------------------------
+# Classifier Feature list
+# -------------------------------------------
+CLASS_FEATS_SW    = 'sw'
+CLASS_FEATS_ALN   = 'aln'
+CLASS_FEATS_NUM   = 'num'
+CLASS_FEATS_SUF   = 'suf'
+CLASS_FEATS_PRE   = 'pre'
+CLASS_FEATS_NUMSW = 'numsw'
+CLASS_FEATS_PRESW = 'prevsw'
+CLASS_FEATS_NEXSW = 'nextsw'
+CLASS_FEATS_DICT  = 'dict'
+CLASS_FEATS_NDICT = 'nextdict'
+CLASS_FEATS_PDICT = 'prevdict'
+
+CLASS_FEATS_CONTEXT = [CLASS_FEATS_PRESW, CLASS_FEATS_NEXSW]
+CLASS_FEATS_DICTS   = [CLASS_FEATS_DICT, CLASS_FEATS_NDICT, CLASS_FEATS_PDICT]
+CLASS_FEATS_AFFIX   = [CLASS_FEATS_PRE, CLASS_FEATS_SUF]
+CLASS_FEATS_BASIC   = [CLASS_FEATS_SW, CLASS_FEATS_ALN, CLASS_FEATS_NUM]
+
+CLASS_FEATS_DEFAULT = CLASS_FEATS_AFFIX + [CLASS_FEATS_DICT, CLASS_FEATS_SW]
+
+CLASS_FEATS_ALL     = CLASS_FEATS_BASIC + CLASS_FEATS_AFFIX + [CLASS_FEATS_NUMSW] + CLASS_FEATS_CONTEXT + CLASS_FEATS_DICTS
+
+
+# -------------------------------------------
 # Parse Stuff
 # -------------------------------------------
 ARG_PARSE_TRANS = 'trans'
