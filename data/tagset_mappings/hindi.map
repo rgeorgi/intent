@@ -1,0 +1,67 @@
+# Proper Noun
+NNP	NOUN
+NNPC	NOUN
+
+# Common Noun (+Compound)
+NN 	NOUN
+NNC	NOUN
+
+# Noun denoting spatial relationship
+NST	NOUN
+
+# Personal Pronoun
+PRP	PRON
+WQ	PRON
+
+# Demonstrative
+DEM	PRON
+
+# Postposition
+PSP	ADP
+
+# Main Verb / Aux Verb
+VM	VERB
+VAUX	VERB
+
+# Adverb
+RB	ADV
+
+# Particle
+RP	PRT
+
+# Conjunction (Subordinating & Coordinating)
+CC	CONJ
+
+# Quantifier (e.g. lots, some)
+QF	ADJ
+
+# Cardinal (two, three)
+QC	NUM
+
+# Ordinals (first, third)
+QO	NUM
+
+# Intensifier
+INTF	ADJ
+
+# Interjection
+INJ	PRT
+
+# Reduplication
+RDP	PRT
+
+# Echo words
+ECH	PRT
+
+# Negative
+NEG	ADV
+
+# Quotative
+UT	VERB
+
+# Special symbol
+SYM	X
+
+JJ	ADJ
+
+PUNC	PUNC
