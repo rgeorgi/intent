@@ -1,6 +1,7 @@
 import os, sys
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 from multiprocessing.pool import Pool
 
 from multiprocessing import Lock
@@ -10,10 +11,7 @@ import time
 
 from nltk.tag import pos_tag_sents
 
-from intent.consts import NORM_LEVEL, ARG_ALN_MANUAL, INTENT_ALN_MANUAL, INTENT_ALN_GIZA, ALIGNER_FASTALIGN, \
-    GLOSS_WORD_ID, LANG_WORD_ID, INTENT_ALN_HEUR, INTENT_POS_TAGGER, INTENT_POS_PROJ, INTENT_POS_CLASS, \
-    INTENT_ALN_GIZAHEUR, ALIGNER_GIZA, INTENT_DS_MANUAL, INTENT_DS_PARSER, INTENT_DS_PROJ, INTENT_ALN_HEURPOS, \
-    INTENT_POS_MANUAL
+from intent.consts import *
 from intent.igt.exceptions import GlossLangAlignException, RGXigtException
 from intent.igt.igtutils import rgp
 from intent.igt.metadata import get_intent_method, set_intent_method
@@ -33,7 +31,7 @@ from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.trees import TreeProjectionError
 from intent.utils.dicts import POSEvalDict
-from intent.utils.env import tagger_model, classifier
+from intent.utils.env import tagger_model, classifier, load_posdict
 from intent.utils.listutils import flatten_list
 from intent.utils.token import POSToken
 from xigt.codecs import xigtxml
@@ -45,7 +43,7 @@ __author__ = 'rgeorgi'
 import logging
 EVAL_LOG = logging.getLogger('EVAL')
 
-def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds=None, eval_posproj=None):
+def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds=None, eval_posproj=None, classifier_feats=CLASS_FEATS_DEFAULT):
     """
     Given a list of files that have manual POS tags and manual alignment,
     evaluate the various INTENT methods on that file.
@@ -67,13 +65,14 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
     if classifier_path is not None:
         classifier_obj = MalletMaxent(classifier_path)
 
-
-    overall_prj = POSEvalDict()
-    overall_cls = POSEvalDict()
+    class_matches, class_compares = 0, 0
 
     mas = MultAlignScorer()
     ds_plma = PerLangMethodAccuracies()
     pos_plma= PerLangMethodAccuracies()
+
+    pos_proj_matrix = POSMatrix()
+    pos_class_matrix = POSMatrix()
 
     # Go through all the files in the list...
     for f in filelist:
@@ -85,10 +84,10 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
         # Test the classifier if evaluation is requested.
         # -------------------------------------------
         if classifier_path is not None:
-            prj_eval, cls_eval = evaluate_classifier_on_instances(xc, classifier_obj, tagger)
-
-            overall_prj += prj_eval
-            overall_cls += cls_eval
+            matches, compares, acc = evaluate_classifier_on_instances(xc, classifier_obj, classifier_feats, pos_class_matrix)
+            print('{},{},{},{:.2f}'.format(lang, matches, compares, acc))
+            class_matches += matches
+            class_compares += compares
 
         # -------------------------------------------
         # Test alignment if requested.
@@ -112,7 +111,7 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
         #  Test POS Projection
         # -------------------------------------------
         if eval_posproj:
-            evaluate_pos_projections_on_file(lang, xc, pos_plma, tagger)
+            evaluate_pos_projections_on_file(lang, xc, pos_plma, pos_proj_matrix, tagger)
 
 
 
@@ -125,11 +124,94 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
     # Report the POS tagging accuracy...
     if classifier_path is not None:
         print("ALL...")
-        print('{:.2f},{:.2f},{:.2f}'.format(overall_prj.accuracy(), overall_prj.unaligned(), overall_cls.accuracy()))
+        print('{},{},{:.2f}'.format(class_matches, class_compares, class_matches/class_compares*100))
+        print(pos_class_matrix)
 
-def evaluate_pos_projections_on_file(lang, xc, plma, tagger):
+    if eval_posproj:
+        print(pos_proj_matrix)
+
+class POSMatrix(object):
+    def __init__(self):
+        self._dict = defaultdict(partial(defaultdict, int))
+
+    def add(self, goldpos, tgtpos, n=1):
+        self._dict[goldpos][tgtpos] += n
+
+    def row_keys(self):
+        rows = set()
+        for ckey in self._dict.keys():
+            for rkey in self._dict[ckey]:
+                rows.add(rkey)
+        return sorted(rows)
+
+    def row_total(self, tgt_key):
+        tot = 0
+        for ckey in self._dict.keys():
+            tot += self._dict[ckey][tgt_key]
+        return tot
+
+    def col_total(self, tgt_key):
+        tot = 0
+        for rkey in self._dict[tgt_key]:
+            tot += self._dict[tgt_key][rkey]
+        return tot
+
+    def precision(self, tgt_key):
+        if self.row_total(tgt_key) == 0:
+            return 0
+        else:
+            return self._dict[tgt_key][tgt_key] / self.row_total(tgt_key)
+
+    def recall(self, tgt_key):
+        if self.col_total(tgt_key) == 0:
+            return 0
+        else:
+            return self._dict[tgt_key][tgt_key] / self.col_total(tgt_key)
+
+    def total(self):
+        tot = 0
+        for ckey in self._dict.keys():
+            for rkey in self._dict[ckey].keys():
+               tot += self._dict[ckey][rkey]
+        return tot
+
+    def all_keys(self):
+        return sorted(set(self._dict.keys()) | set(self.row_keys()))
+
+    def __str__(self):
+        all_but_unk_keys = sorted(set(self.all_keys()) - set(['**UNK']))
+
+        ret_str = ',' + ','.join(all_but_unk_keys) + '\n'
+        for rkey in all_but_unk_keys:
+            ret_str += str(rkey)
+            for ckey in all_but_unk_keys:
+                ret_str += ',{}'.format(self._dict[ckey][rkey])
+            ret_str += ',{:.2f}\n'.format(self.precision(rkey))
+
+        ret_str += ','+ ','.join(['{:.2f}'.format(self.recall(k)) for k in self.all_keys()])
+
+        if '**UNK' in self.all_keys():
+            ret_str += '\nUnaligned'
+            for ckey in all_but_unk_keys:
+                ret_str += ',{}'.format(self._dict[ckey]['**UNK'])
+            ret_str += '\n% Unaligned'
+            for ckey in all_but_unk_keys:
+                num_un = self._dict[ckey]['**UNK']
+                per_un = 0 if self.col_total(ckey) == 0 else num_un / self.col_total(ckey)*100
+                ret_str += ',{:.1f}'.format(per_un)
+            ret_str += '\n'
+
+            unaligned = self.row_total('**UNK')
+            full_total = self.total()
+            ret_str += '\n' + 'Unaligned: {} / {} = {:.1f}%'.format(unaligned, full_total, unaligned/full_total*100)
+        return ret_str
+
+
+
+def evaluate_pos_projections_on_file(lang, xc, plma, pos_proj_matrix, tagger):
     """
     :type plma: PerLangMethodAccuracies
+    :type pos_proj_matrix: POSMatrix
     """
     new_xc = XigtCorpus(xc.id)
     for inst in xc:
@@ -163,6 +245,9 @@ def evaluate_pos_projections_on_file(lang, xc, plma, tagger):
                     proj_tag = xigt_find(proj_gtt, alignment=gw.id)
 
                     if gold_tag is not None:
+                        proj_str = '**UNK' if proj_tag is None else proj_tag.value()
+                        pos_proj_matrix.add(gold_tag.value(), proj_str)
+
                         if proj_tag is not None and proj_tag.value() == gold_tag.value():
                             matches += 1
                         compares += 1
@@ -482,18 +567,6 @@ def evaluate_instance(inst, classifier, tagger):
 
         # Do the classification
         classify_gloss_pos(inst, classifier)
-
-        # Do the projection...
-        heur_align_inst(inst)
-
-        tag_trans_pos(inst, tagger)
-
-        project_trans_pos_to_gloss(inst, aln_method=INTENT_ALN_HEUR, trans_tag_method=INTENT_POS_TAGGER)
-
-        # Now, go through each aligned ID for the supervised tags, and match them with those in the other
-        # tiers... IF they exist.
-
-        prj_tier = pos_tag_tier(inst, GLOSS_WORD_ID, tag_method=INTENT_POS_PROJ)
         cls_tier = pos_tag_tier(inst, GLOSS_WORD_ID, tag_method=INTENT_POS_CLASS)
 
         for sup_item in sup_gloss_tier:
@@ -503,11 +576,11 @@ def evaluate_instance(inst, classifier, tagger):
             else:
                 word = word.value()
 
-            prj_item = xigt_find(prj_tier, alignment=sup_item.alignment)
-            if prj_item is None:
-                prj_tag = 'UNK'
-            else:
-                prj_tag = prj_item.value()
+            # prj_item = xigt_find(prj_tier, alignment=sup_item.alignment)
+            # if prj_item is None:
+            #     prj_tag = 'UNK'
+            # else:
+            #     prj_tag = prj_item.value()
 
             cls_item = xigt_find(cls_tier, alignment=sup_item.alignment)
             if cls_item is None:
@@ -516,13 +589,13 @@ def evaluate_instance(inst, classifier, tagger):
                 cls_tag = cls_item.value()
 
             sup_tags.append(POSToken(word, label=sup_item.value()))
-            prj_tags.append(POSToken(word, label=prj_tag))
+            # prj_tags.append(POSToken(word, label=prj_tag))
             cls_tags.append(POSToken(word, label=cls_tag))
 
-    return sup_tags, prj_tags, cls_tags
+    return sup_tags, cls_tags
 
 
-def evaluate_classifier_on_instances(inst_list, classifier, tagger):
+def evaluate_classifier_on_instances(inst_list, classifier, feat_list, pos_class_matrix):
     """
     Given a list of instances, do the evaluation on them.
 
@@ -531,19 +604,44 @@ def evaluate_classifier_on_instances(inst_list, classifier, tagger):
     :param tagger:
     :return:
     """
-    sup_sents, prj_sents, cls_sents = [], [], []
+
+    pd = load_posdict() if (CLASS_FEATS_DICT in feat_list) or (CLASS_FEATS_PDICT in feat_list) or (CLASS_FEATS_NDICT in feat_list) else False
+
+    matches = 0
+    compares = 0
 
     for inst in inst_list:
-        sup_tags, prj_tags, cls_tags = evaluate_instance(copy_xigt(inst), classifier, tagger)
+        sup_postier = gloss_tag_tier(inst, tag_method=INTENT_POS_MANUAL)
+        if sup_postier is None:
+            continue
+        gw_tier = gloss(inst)
+        classify_gloss_pos(inst, classifier,
+                           posdict=pd,
+                           feat_prev_gram=CLASS_FEATS_PRESW in feat_list,
+                           feat_next_gram=CLASS_FEATS_NEXSW in feat_list,
+                           feat_dict=CLASS_FEATS_DICT in feat_list,
+                           feat_prev_gram_dict=CLASS_FEATS_PDICT in feat_list,
+                           feat_next_gram_dict=CLASS_FEATS_NDICT in feat_list,
+                           feat_suffix=CLASS_FEATS_SUF in feat_list,
+                           feat_prefix=CLASS_FEATS_PRE in feat_list,
+                           feat_morph_num=CLASS_FEATS_NUMSW in feat_list,
+                           feat_has_number=CLASS_FEATS_NUM in feat_list,
+                           feat_basic=CLASS_FEATS_SW in feat_list)
 
-        sup_sents.append(sup_tags)
-        prj_sents.append(prj_tags)
-        cls_sents.append(cls_tags)
 
-    prj_eval = poseval(prj_sents, sup_sents, out_f=open('/dev/null', 'w'))
-    cls_eval = poseval(cls_sents, sup_sents, out_f=open('/dev/null', 'w'))
+        cls_postier = gloss_tag_tier(inst, tag_method=INTENT_POS_CLASS)
 
-    print('{:.2f},{:.2f},{:.2f}'.format(prj_eval.accuracy(), prj_eval.unaligned(), cls_eval.accuracy()))
-    print(prj_eval.error_matrix())
 
-    return prj_eval, cls_eval
+        for cls_tag in cls_postier:
+            word = xigt_find(gw_tier, id=cls_tag.alignment)
+            sup_tag = xigt_find(sup_postier, alignment=cls_tag.alignment)
+
+            if sup_tag is None:
+                continue
+
+            pos_class_matrix.add(sup_tag.value(), cls_tag.value())
+            if cls_tag.value() == sup_tag.value():
+                matches += 1
+            compares += 1
+
+    return matches, compares, matches/compares*100

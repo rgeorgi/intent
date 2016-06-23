@@ -210,6 +210,7 @@ eval_p = register_subparser(CMD_EVAL, help='Command to eval INTENT functions aga
 
 eval_p.add_argument('FILE', nargs='+', help='XIGT files to test against.', type=globfiles)
 eval_p.add_argument('--classifier', help='Specify a gloss-line POS classifier to test.', type=existsfile, default=None)
+eval_p.add_argument('--classifier-feats', dest='classifier_feats', help='Features to use for training the classifier. ' + str(CLASS_FEATS_ALL), default=CLASS_FEATS_DEFAULT, type=csv_choices(CLASS_FEATS_ALL))
 eval_p.add_argument('--ds-projection', help='Evaluate DS projection methods against the gold standard DS provided in the file', action='store_true', default=False)
 eval_p.add_argument('--pos-projection', help='Evaluate POS projection method against gold standard POS tags in the file.', action='store_true', default=False)
 eval_p.add_argument('--alignment', help='Test alignment methods against the alignment provided in the file.', action='store_true', default=False)
@@ -277,7 +278,7 @@ elif args.subcommand == CMD_EXTRACT:
 
 # EVAL
 elif args.subcommand == CMD_EVAL:
-    evaluate_intent(flatten_list(args.FILE), args.classifier, args.alignment, args.ds_projection, args.pos_projection)
+    evaluate_intent(flatten_list(args.FILE), args.classifier, args.alignment, args.ds_projection, args.pos_projection, args.classifier_feats)
 
 # TEXT CONVERT
 elif args.subcommand == CMD_TEXT:

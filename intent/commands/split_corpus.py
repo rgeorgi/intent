@@ -1,5 +1,6 @@
 import logging
 import os
+import random
 
 from intent.igt.create_tiers import lang
 from intent.igt.igt_functions import sort_corpus
@@ -102,7 +103,7 @@ def split_instances(instances, train=0, dev=0, test=0):
     # And return...
     return train_instances, dev_instances, test_instances
 
-def split_corpus(filelist, train=0, dev=0, test=0, prefix='', overwrite=False):
+def split_corpus(filelist, train=0, dev=0, test=0, prefix='', seed=None, offset=0, overwrite=False):
 
     # At least one must be specified
     assert train or dev or test
@@ -116,6 +117,16 @@ def split_corpus(filelist, train=0, dev=0, test=0, prefix='', overwrite=False):
         SPLIT_LOG.info("Loading file {}".format(f))
         xc = xigtxml.load(open(f, 'r', encoding='utf-8'))
         instances.extend(xc)
+
+    # -- 2) Shuffle with the specified seed if requested
+    if seed is not None:
+        r = random.Random()
+        random.shuffle(instances, r.seed(seed))
+
+    # -- 3) Move the files by the sliding offset if specified...
+    offset_start = int(len(instances) * offset)
+
+    instances = instances[offset_start:] + instances[:offset_start]
 
     train_instances, dev_instances, test_instances = split_instances(instances, train, dev, test)
 
@@ -154,8 +165,9 @@ def write_instances(instance_list, out_path, type, overwrite=False):
         num_sents = len(instance_list)
         if num_sents > 0:
             xc = XigtCorpus()
-            for i in instance_list:
-                xc.append(i)
+            for i, inst in enumerate(instance_list):
+                inst.id = 'i{}'.format(i)
+                xc.append(inst)
 
             print("Writing {} instances to {}...".format(num_sents, out_path))
             f = open(out_path, 'w', encoding='utf-8')

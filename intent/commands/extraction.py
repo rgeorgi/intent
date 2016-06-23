@@ -23,7 +23,8 @@ from intent.consts import *
 from intent.igt.grams import write_gram
 from intent.igt.igt_functions import get_lang_ds, pos_tag_tier, lang, get_lang_ps, add_gloss_lang_alignments, \
     project_lang_to_gloss, tier_text, get_trans_glosses_alignment, heur_align_inst, get_trans_gloss_wordpairs, \
-    get_trans_gloss_lang_alignment, word_align, handle_unknown_pos, get_trans_aligned_wordpairs
+    get_trans_gloss_lang_alignment, word_align, handle_unknown_pos, get_trans_aligned_wordpairs, \
+    get_bilingual_alignment_tier
 from intent.interfaces.mallet_maxent import train_txt
 from intent.interfaces.mst_parser import MSTParser
 from intent.interfaces.stanford_tagger import train_postagger
@@ -281,7 +282,7 @@ def extract_from_xigt(input_filelist = list, classifier_prefix=None, classifier_
                 extracted_parsed_snts += extract_parser_from_instance(inst, dep_train_f, use_pos, tm)
 
             if classifier_prefix is not None:
-                gather_gloss_pos_stats(inst, subword_dict)
+                gather_gloss_pos_stats(inst, subword_dict, classifier_feats)
 
             if sent_prefix is not None:
                 try:
@@ -370,7 +371,7 @@ def extract_cfg_rules_from_inst(inst, out_f):
 # to only those subsets that occur frequently enough.
 # =============================================================================
 
-def gather_gloss_pos_stats(inst, subword_dict):
+def gather_gloss_pos_stats(inst, subword_dict, feat_list):
     """
     Given an instance, look for the gloss pos tags, and save the statistics
     about them, so that we can filter by the number of times each kind was
@@ -389,6 +390,10 @@ def gather_gloss_pos_stats(inst, subword_dict):
     gpos_tier = gloss_tag_tier(inst)
     lpos_tier = lang_tag_tier(inst)
     gw_tier = gloss(inst)
+
+    if CLASS_FEATS_ALN in feat_list:
+        heur_align_inst(inst)
+        get_trans_glosses_alignment(inst, aln_method=INTENT_ALN_HEUR)
 
     # If there are POS tags on the language line but not the gloss line...
     if gpos_tier is None and lpos_tier is not None:
@@ -410,7 +415,8 @@ def gather_gloss_pos_stats(inst, subword_dict):
             prev_word = gw_tier[i-1].value().lower() if i > 0 else None
             next_word = gw_tier[i+1].value().lower() if i < len(gw_tier)-1 else None
 
-            subword_dict.add_word_tag(gw.value().lower(), tag.value(), prev_word, next_word)
+            if CLASS_FEATS_ALN in feat_list:
+                subword_dict.add_word_tag(gw.value().lower(), tag.value(), prev_word, next_word)
 
 
 
@@ -447,15 +453,10 @@ def write_out_gram_dict(subword_dict, feat_path, feat_list, threshold = 1):
                 # -------------------------------------------
                 # Now, vary the features depending on whats in the list
                 # -------------------------------------------
-                if CLASS_FEATS_NEXSW not in feat_list:
-                    next_word = None
-                if CLASS_FEATS_PRESW not in feat_list:
-                    prev_word = None
 
-
-
-
-                write_gram(gt, feat_next_gram=next_word, feat_prev_gram=prev_word, lowercase=True,
+                write_gram(gt, lowercase=True,
+                           feat_next_gram=CLASS_FEATS_NEXSW in feat_list,
+                           feat_prev_gram=CLASS_FEATS_PRESW in feat_list,
                            feat_suffix=CLASS_FEATS_SUF in feat_list,
                            feat_prefix=CLASS_FEATS_PRE in feat_list,
                            feat_has_number=CLASS_FEATS_NUM in feat_list,
@@ -465,6 +466,8 @@ def write_out_gram_dict(subword_dict, feat_path, feat_list, threshold = 1):
                            feat_basic=CLASS_FEATS_SW in feat_list,
                            feat_dict=CLASS_FEATS_DICT in feat_list,
                            posdict=pd,
+                           next_gram=next_word,
+                           prev_gram=prev_word,
                            output=feat_file)
 
     feat_file.close()

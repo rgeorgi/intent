@@ -52,7 +52,7 @@ def enrich(**kwargs):
     pos_args = kwargs.get(POS_VAR, [])
     aln_args = kwargs.get(ALN_VAR, [])
 
-    max_parse_length = kwargs['max_parse_length']
+    max_parse_length = kwargs.get('max_parse_length', 10)
 
     if not (parse_args or pos_args or aln_args):
         ENRICH_LOG.warning("No enrichment specified. Basic processing only will be performed.")
@@ -83,7 +83,8 @@ def enrich(**kwargs):
 
             try:
                 s = StanfordPOSTagger(tagger)
-            except TaggerError:
+            except TaggerError as te:
+                ENRICH_LOG.critical(te)
                 sys.exit(2)
 
         # -------------------------------------------
@@ -113,13 +114,13 @@ def enrich(**kwargs):
 
             try:
                 if ARG_ALN_GIZAHEUR in aln_args:
-                    giza_align_t_g(corp, resume=True, use_heur=True, symmetric=kwargs.get(ALN_SYM_VAR))
+                    giza_align_t_g(corp, resume=True, use_heur=True, symmetric=kwargs.get(ALN_SYM_VAR, SYMMETRIC_INTERSECT))
                 if ARG_ALN_GIZA in aln_args:
-                    giza_align_t_g(corp, resume=True, use_heur=False, symmetric=kwargs.get(ALN_SYM_VAR))
+                    giza_align_t_g(corp, resume=True, use_heur=False, symmetric=kwargs.get(ALN_SYM_VAR, SYMMETRIC_INTERSECT))
             except GizaAlignmentException as gae:
                 gl = logging.getLogger('giza')
                 gl.critical(str(gae))
-                sys.exit(2)
+                raise gae
 
         # -------------------------------------------
         # Begin iterating through the corpus
