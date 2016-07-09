@@ -18,7 +18,7 @@ import sys
 from multiprocessing import cpu_count
 
 from intent.igt.create_tiers import lang, gloss, trans, pos_tag_tier
-from intent.igt.parsing import raw_txt_to_xc
+from intent.igt.parsing import raw_txt_to_xc, xc_load
 from intent.igt.references import has_corruption, has_double_column, xigt_find
 from xigt.codecs import xigtxml
 
@@ -186,14 +186,21 @@ def igt_stats(filelist, type='text', logpath=None, show_header=True, show_filena
 
     sd = IGTStatDict()
 
+    if show_header:
+        print(sd.header())
+
     # Load the corpus.
     for path in filelist:
 
         row = [os.path.splitext(os.path.basename(path))[0]]
 
+        # -------------------------------------------
+        # Switch between loading methods
+        # depending on the file format.
+        # -------------------------------------------
         if type == 'xigt':
             STATS_LOGGER.info('Processing xigt file: "%s"' % path)
-            xc = xigtxml.load(open(path, 'r', encoding='utf-8'))
+            xc = xc_load(path)
 
         elif type == 'text':
             STATS_LOGGER.info('Processing text file: "%s"' % path)
@@ -201,32 +208,29 @@ def igt_stats(filelist, type='text', logpath=None, show_header=True, show_filena
                 data = f.read()
                 xc = raw_txt_to_xc(data)
 
+        # Get the stats on the single file.
+        single_file_d = inst_list_stats(xc)
 
-        # Divide the file into roughly equal chunks
-        chunks = chunkIt(xc.igts, cpu_count())
+        # If we have asked to show the filename, prepend that.
+        if show_filename:
+            sys.stdout.write('{},'.format(os.path.splitext(os.path.basename(path))[0]))
 
-        for chunk in chunks:
-            # pool.apply_async(inst_list_stats, args=[chunk], callback=sd.combine)
-            sd.combine(inst_list_stats(chunk))
+        # Now, dump the stats.
+        sys.stdout.write('{}\n'.format(single_file_d))
+        sys.stdout.flush()
+
+        # And add these to the overall dict.
+        sd.combine(single_file_d)
 
 
-        # pool.close()
-        # pool.join()
 
-    if show_header:
-        print(sd.header())
+    # words = sorted(sd.gloss_word_tags.keys(), key=lambda x: sd.gloss_word_tags[x].total(), reverse=True)[:100]
 
-    words = sorted(sd.gloss_word_tags.keys(), key=lambda x: sd.gloss_word_tags[x].total(), reverse=True)[:100]
-
-    if show_filename:
-        print(os.path.splitext(os.path.basename(path))[0], end=',')
+    sys.stdout.write('total,{}'.format(sd))
 
     # for word in words:
     #     countdict = sd.gloss_word_tags[word]
     #     print('{},{},{}'.format(word, countdict.total(), countdict))
-
-
-    print(sd)
 
 class UndefinedPOSTypeError(Exception): pass
 
