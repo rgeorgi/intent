@@ -29,6 +29,7 @@ from intent.igt.create_tiers import trans, gloss, gloss_tag_tier, glosses, pos_t
 from intent.igt.references import xigt_find
 from intent.interfaces.mallet_maxent import MalletMaxent
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
+from intent.pos.TagMap import TagMap, TagMapException
 from intent.trees import TreeProjectionError
 from intent.utils.dicts import POSEvalDict
 from intent.utils.env import tagger_model, classifier, load_posdict
@@ -43,7 +44,9 @@ __author__ = 'rgeorgi'
 import logging
 EVAL_LOG = logging.getLogger('EVAL')
 
-def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds=None, eval_posproj=None, classifier_feats=CLASS_FEATS_DEFAULT):
+def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds=None, eval_posproj=None,
+                    classifier_feats=CLASS_FEATS_DEFAULT,
+                    gold_tagmap=None, trans_tagmap=None):
     """
     Given a list of files that have manual POS tags and manual alignment,
     evaluate the various INTENT methods on that file.
@@ -74,6 +77,12 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
     pos_proj_matrix = POSMatrix()
     pos_class_matrix = POSMatrix()
 
+    # -------------------------------------------
+    # If a tag map is specified, let's load it.
+    # -------------------------------------------
+    g_tm = TagMap(gold_tagmap) if gold_tagmap is not None else None
+    t_tm = TagMap(trans_tagmap) if trans_tagmap is not None else None
+
     # Go through all the files in the list...
     for f in filelist:
         print('Evaluating on file: {}'.format(f))
@@ -84,7 +93,8 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
         # Test the classifier if evaluation is requested.
         # -------------------------------------------
         if classifier_path is not None:
-            matches, compares, acc = evaluate_classifier_on_instances(xc, classifier_obj, classifier_feats, pos_class_matrix)
+            matches, compares, acc = evaluate_classifier_on_instances(xc, classifier_obj, classifier_feats,
+                                                                      pos_class_matrix, gold_tagmap=g_tm)
             print('{},{},{},{:.2f}'.format(lang, matches, compares, acc))
             class_matches += matches
             class_compares += compares
@@ -111,7 +121,7 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
         #  Test POS Projection
         # -------------------------------------------
         if eval_posproj:
-            evaluate_pos_projections_on_file(lang, xc, pos_plma, pos_proj_matrix, tagger)
+            evaluate_pos_projections_on_file(lang, xc, pos_plma, pos_proj_matrix, tagger, gold_tagmap=g_tm, trans_tagmap=t_tm)
 
 
 
@@ -208,7 +218,7 @@ class POSMatrix(object):
 
 
 
-def evaluate_pos_projections_on_file(lang, xc, plma, pos_proj_matrix, tagger):
+def evaluate_pos_projections_on_file(lang, xc, plma, pos_proj_matrix, tagger, gold_tagmap=None, trans_tagmap=None):
     """
     :type plma: PerLangMethodAccuracies
     :type pos_proj_matrix: POSMatrix
@@ -245,10 +255,29 @@ def evaluate_pos_projections_on_file(lang, xc, plma, pos_proj_matrix, tagger):
                     proj_tag = xigt_find(proj_gtt, alignment=gw.id)
 
                     if gold_tag is not None:
-                        proj_str = '**UNK' if proj_tag is None else proj_tag.value()
-                        pos_proj_matrix.add(gold_tag.value(), proj_str)
+                        gold_tag_v = gold_tag.value()
 
-                        if proj_tag is not None and proj_tag.value() == gold_tag.value():
+                        # Remap the tags if asked...
+                        if gold_tagmap is not None:
+                            try:
+                                gold_tag_v = gold_tagmap.get(gold_tag_v)
+                            except TagMapException:
+                                pass
+
+                        if proj_tag is None:
+                            proj_str = '**UNK'
+                        else:
+                            proj_str = proj_tag.value()
+                            if trans_tagmap is not None:
+                                # Try to remap the tag, but keep it if it can't be remapped.
+                                try:
+                                    proj_str = trans_tagmap.get(proj_str)
+                                except TagMapException:
+                                    pass
+
+                        pos_proj_matrix.add(gold_tag_v, proj_str)
+
+                        if proj_tag is not None and proj_str == gold_tag_v:
                             matches += 1
                         compares += 1
 
@@ -595,7 +624,7 @@ def evaluate_instance(inst, classifier, tagger):
     return sup_tags, cls_tags
 
 
-def evaluate_classifier_on_instances(inst_list, classifier, feat_list, pos_class_matrix):
+def evaluate_classifier_on_instances(inst_list, classifier, feat_list, pos_class_matrix, gold_tagmap=None):
     """
     Given a list of instances, do the evaluation on them.
 
@@ -638,9 +667,13 @@ def evaluate_classifier_on_instances(inst_list, classifier, feat_list, pos_class
 
             if sup_tag is None:
                 continue
+            else:
+                sup_tag_v = sup_tag.value()
+                if gold_tagmap is not None:
+                    sup_tag_v = gold_tagmap.get(sup_tag_v)
 
-            pos_class_matrix.add(sup_tag.value(), cls_tag.value())
-            if cls_tag.value() == sup_tag.value():
+            pos_class_matrix.add(sup_tag_v, cls_tag.value())
+            if cls_tag.value() == sup_tag_v:
                 matches += 1
             compares += 1
 

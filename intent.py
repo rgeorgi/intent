@@ -197,6 +197,8 @@ eval_p.add_argument('--classifier-feats', dest='classifier_feats', help='Feature
 eval_p.add_argument('--ds-projection', help='Evaluate DS projection methods against the gold standard DS provided in the file', action='store_true', default=False)
 eval_p.add_argument('--pos-projection', help='Evaluate POS projection method against gold standard POS tags in the file.', action='store_true', default=False)
 eval_p.add_argument('--alignment', help='Test alignment methods against the alignment provided in the file.', action='store_true', default=False)
+eval_p.add_argument('--tagmap-gold', help='Use this tag mapping on gold tags to', default=None, type=existsfile)
+eval_p.add_argument('--tagmap-trans', help='Use this tag mapping on translation-line tags', default=None, type=existsfile)
 
 #===============================================================================
 # TEXT subcommand
@@ -261,7 +263,8 @@ elif args.subcommand == CMD_EXTRACT:
 
 # EVAL
 elif args.subcommand == CMD_EVAL:
-    evaluate_intent(flatten_list(args.FILE), args.classifier, args.alignment, args.ds_projection, args.pos_projection, args.classifier_feats)
+    evaluate_intent(flatten_list(args.FILE), args.classifier, args.alignment, args.ds_projection, args.pos_projection, args.classifier_feats,
+                    gold_tagmap=args.tagmap_gold, trans_tagmap=args.tagmap_trans)
 
 # TEXT CONVERT
 elif args.subcommand == CMD_TEXT:
