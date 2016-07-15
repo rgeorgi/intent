@@ -226,7 +226,7 @@ def igt_stats(filelist, type='text', logpath=None, show_header=True, show_filena
 
     # words = sorted(sd.gloss_word_tags.keys(), key=lambda x: sd.gloss_word_tags[x].total(), reverse=True)[:100]
 
-    sys.stdout.write('total,{}'.format(sd))
+    sys.stdout.write('total,{}\n'.format(sd))
 
     # for word in words:
     #     countdict = sd.gloss_word_tags[word]
