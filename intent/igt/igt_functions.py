@@ -1032,10 +1032,12 @@ def project_trans_pos_to_gloss(inst, aln_method=None, trans_tag_method=None, com
     set_intent_method(pt, INTENT_POS_PROJ)
     set_intent_proj_data(pt, trans_tags, t_g_aln.type)
 
-
     for t_i, g_i in sorted(t_g_aln):
         g_word = gloss(inst)[g_i - 1]
-        t_tag = trans_tags[t_i-1]
+        t_word = trans(inst)[t_i - 1]
+        t_tag = xigt_find(trans_tags, alignment=t_word.id)
+        if t_tag is None:
+            continue
 
         # Order of precedence:
         # NOUN > VERB > ADJ > ADV > PRON > DET > ADP > CONJ > PRT > NUM > PUNC > X
