@@ -135,6 +135,7 @@ split_p.add_argument('FILE', nargs='+', help='XIGT files to gather together in o
 split_p.add_argument('--train', default=0.8, help='The proportion of the data to set aside for training.', type=proportion)
 split_p.add_argument('--dev', default=0.1, help='The proportion of data to set aside for development.', type=proportion)
 split_p.add_argument('--test', default=0.1, help='The proportion of data to set aside for testing.', type=proportion)
+split_p.add_argument('--nfold', default=1, help='Do an nfold train/test split.', type=int)
 split_p.add_argument('-o', dest='prefix', default=None, help='Destination prefix for the output.', required=True)
 split_p.add_argument('-f', dest='overwrite', action='store_true', help='Force overwrite of existing files.')
 
@@ -251,7 +252,7 @@ elif args.subcommand == CMD_STATS:
 
 # SPLIT
 elif args.subcommand == CMD_SPLIT:
-    split_corpus(flatten_list(args.FILE), args.train, args.dev, args.test, prefix=args.prefix, overwrite=args.overwrite)
+    split_corpus(flatten_list(args.FILE), args.train, args.dev, args.test, prefix=args.prefix, overwrite=args.overwrite, nfold=args.nfold)
 
 # FILTER
 elif args.subcommand == CMD_FILTER:

@@ -103,12 +103,17 @@ def split_instances(instances, train=0, dev=0, test=0):
     # And return...
     return train_instances, dev_instances, test_instances
 
-def split_corpus(filelist, train=0, dev=0, test=0, prefix='', seed=None, offset=0, overwrite=False):
-
-    # At least one must be specified
-    assert train or dev or test
+def split_corpus(filelist, train=0, dev=0, test=0, prefix='', seed=None, overwrite=False, nfold=1):
 
     # TODO: Make it so we automatically get to one
+
+    # -------------------------------------------
+    # Check the arguments
+    # -------------------------------------------
+    split_sum = train + dev + test
+    if split_sum != 1.0:
+        SPLIT_LOG.critical('Sum of train({}) + dev({}) + test({}) should = 1, not {}'.format(train, dev, test, split_sum))
+        raise CorpusSplitException()
 
     instances = []
 
@@ -118,33 +123,49 @@ def split_corpus(filelist, train=0, dev=0, test=0, prefix='', seed=None, offset=
         xc = xigtxml.load(open(f, 'r', encoding='utf-8'))
         instances.extend(xc)
 
-    # -- 2) Shuffle with the specified seed if requested
-    if seed is not None:
-        r = random.Random()
-        random.shuffle(instances, r.seed(seed))
+    # -------------------------------------------
+    # Run the requested number of folds
+    # -------------------------------------------
+    offset = 0
+    for fold in range(0, nfold):
 
-    # -- 3) Move the files by the sliding offset if specified...
-    offset_start = int(len(instances) * offset)
+        # -- 2) Shuffle with the specified seed if requested
+        if seed is not None:
+            r = random.Random()
+            random.shuffle(instances, r.seed(seed))
 
-    instances = instances[offset_start:] + instances[:offset_start]
+        # -- 3) Move the files by the sliding offset if specified...
+        offset_start = int(len(instances) * offset)
 
-    train_instances, dev_instances, test_instances = split_instances(instances, train, dev, test)
 
-    # -- 5) Create the output file names.
-    train_path = outpath_name(prefix, 'train')
-    dev_path   = outpath_name(prefix, 'dev')
-    test_path  = outpath_name(prefix, 'test')
+        instances = instances[offset_start:] + instances[:offset_start]
 
-    # -- 6) Write out the output files.
-    write_instances(train_instances, train_path, 'train', overwrite)
-    write_instances(dev_instances, dev_path, 'dev', overwrite)
-    write_instances(test_instances, test_path, 'test', overwrite)
+        # Actually split the instances
+        train_instances, dev_instances, test_instances = split_instances(instances, train, dev, test)
 
-def outpath_name(prefix, type):
-    if prefix:
-        return prefix + '_{}.xml'.format(type)
+        train_path = outpath_name(prefix, 'train', nfold, fold)
+        dev_path   = outpath_name(prefix, 'dev', nfold, fold)
+        test_path  = outpath_name(prefix, 'test', nfold, fold)
+
+        # -- 6) Write out the output files.
+        write_instances(train_instances, train_path, 'train', overwrite)
+        write_instances(dev_instances, dev_path, 'dev', overwrite)
+        write_instances(test_instances, test_path, 'test', overwrite)
+
+        offset += (1 / nfold)
+
+def outpath_name(prefix, type, nfold, fold):
+
+    fileformat = '{}.xml'.format(type)
+    if nfold > 1:
+        fileformat = '{}_{:02d}.xml'.format(type, fold+1)
+
+    if not (os.path.isdir(prefix) or prefix.endswith('/')) and prefix:
+        return '{}_{}'.format(prefix, fileformat)
+    elif os.path.isdir(prefix) or prefix.endswith('/'):
+        return os.path.join(prefix, fileformat)
     else:
-        return prefix + '{}.xml'.format(type)
+        return fileformat
 
 
 def write_instances(instance_list, out_path, type, overwrite=False):
@@ -166,7 +187,7 @@ def write_instances(instance_list, out_path, type, overwrite=False):
         if num_sents > 0:
             xc = XigtCorpus()
             for i, inst in enumerate(instance_list):
-                inst.id = 'i{}'.format(i)
+                # inst.id = 'i{}'.format(i)
                 xc.append(inst)
 
             print("Writing {} instances to {}...".format(num_sents, out_path))
