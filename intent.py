@@ -11,20 +11,9 @@ logging.basicConfig(format=logging.BASIC_FORMAT)
 MAIN_LOG = logging.getLogger('INTENT')
 
 # -------------------------------------------
-# Check for dependencies.
+# Check for dependencies and set up environment.
 # -------------------------------------------
-
-import_errors = False
-
-try:
-    import nltk
-except ImportError:
-    MAIN_LOG.critical('NLTK module not installed')
-    import_errors = True
-
-if import_errors:
-    MAIN_LOG.critical('Necessary python modules were not found. Please install and try again.')
-    sys.exit(2)
+import intent.utils.env
 
 # =============================================================================
 # Commands
@@ -39,12 +28,6 @@ CMD_EXTRACT = 'extract'
 CMD_TEXT    = 'text'
 # =============================================================================
 
-
-# -------------------------------------------
-# Import the env module, since there are some
-# additional tests there.
-# -------------------------------------------
-from intent.utils import env
 
 # -------------------------------------------
 # Start the logger and set it up.
