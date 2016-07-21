@@ -17,9 +17,9 @@ from tempfile import NamedTemporaryFile
 from intent.classify.Classification import Classification
 from intent.utils.dicts import TwoLevelCountDict
 import intent.igt.grams
-from intent.utils.systematizing import piperunner, ProcessCommunicator
+from intent.utils.systematizing import piperunner, ProcessCommunicator, set_env_lang_utf8
 from intent.utils.token import GoldTagPOSToken
-from intent.utils.env import c, mallet, mallet_bin, classifier, set_env_lang_utf8
+from intent.utils.env import c, mallet, mallet_bin, classifier
 
 
 class ClassifierException(Exception): pass

@@ -3,17 +3,20 @@ Created on Oct 22, 2013
 
 @author: rgeorgi
 """
-import os
+import os, sys, logging
 import subprocess
-import sys
-import logging
 from threading import Thread
 from queue import Empty, Queue
 from unittest.case import TestCase
 import time
 
-from intent.utils.env import set_env_lang_utf8
-
+# =============================================================================
+# Set the default environ lang to UTF-8
+# =============================================================================
+def set_env_lang_utf8():
+    env = os.environ
+    env['LANG'] = 'en_US.UTF-8'
+    return env
 
 def enqueue_output(out, queue):
     for line in iter(out.readline, b''):
