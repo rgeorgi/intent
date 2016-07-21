@@ -24,7 +24,7 @@ from intent.eval.pos_eval import poseval
 from intent.igt.igt_functions import heur_align_corp, giza_align_t_g, remove_alignments, copy_xigt, heur_align_inst, \
     classify_gloss_pos, tag_trans_pos, get_trans_gloss_lang_alignment, get_trans_gloss_alignment, giza_align_l_t, \
     get_trans_lang_alignment, get_bilingual_alignment_tier, add_gloss_lang_alignments, tier_alignment, get_lang_ds, \
-    parse_translation_line, project_ds_tier, project_trans_pos_to_gloss, project_lang_to_gloss
+    parse_translation_line, project_ds_tier, project_trans_pos_to_gloss, project_lang_to_gloss, tag_lang_pos
 from intent.igt.create_tiers import trans, gloss, gloss_tag_tier, glosses, pos_tag_tier, lang_tag_tier, trans_tag_tier
 from intent.igt.references import xigt_find
 from intent.interfaces.mallet_maxent import MalletMaxent
@@ -46,6 +46,7 @@ EVAL_LOG = logging.getLogger('EVAL')
 
 def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds=None, eval_posproj=None,
                     classifier_feats=CLASS_FEATS_DEFAULT,
+                    eval_tagger=None,
                     gold_tagmap=None, trans_tagmap=None):
     """
     Given a list of files that have manual POS tags and manual alignment,
@@ -64,15 +65,20 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
     # =============================================================================
 
     classifier_obj = MalletMaxent(classifier)
-
     if classifier_path is not None:
         classifier_obj = MalletMaxent(classifier_path)
 
     class_matches, class_compares = 0, 0
 
+    e_tagger = None
+    if eval_tagger is not None:
+        e_tagger = StanfordPOSTagger(eval_tagger)
+
     mas = MultAlignScorer()
     ds_plma = PerLangMethodAccuracies()
     pos_plma= PerLangMethodAccuracies()
+
+    pos_pla = POSEvalDict()
 
     pos_proj_matrix = POSMatrix()
     pos_class_matrix = POSMatrix()
@@ -123,6 +129,9 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
         if eval_posproj:
             evaluate_pos_projections_on_file(lang, xc, pos_plma, pos_proj_matrix, tagger, gold_tagmap=g_tm, trans_tagmap=t_tm)
 
+        if e_tagger is not None:
+            evaluate_lang_pos(lang, xc, e_tagger, pos_pla, gold_tagmap=g_tm)
+
 
 
     if eval_alignment:
@@ -130,6 +139,10 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
 
     if eval_ds:
         print(ds_plma)
+
+    if e_tagger is not None:
+        print('{},{},{},{:.2f}'.format(lang, pos_pla.all_matches(), pos_pla.fulltotal(), pos_pla.accuracy()))
+        e_tagger.close()
 
     # Report the POS tagging accuracy...
     if classifier_path is not None:
@@ -139,6 +152,7 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
 
     if eval_posproj:
         print(pos_proj_matrix)
+
 
 class POSMatrix(object):
     def __init__(self):
@@ -216,6 +230,48 @@ class POSMatrix(object):
             ret_str += '\n' + 'Unaligned: {} / {} = {:.1f}%'.format(unaligned, full_total, unaligned/full_total*100)
         return ret_str
 
+
+def evaluate_lang_pos(lang, xc, e_tagger, pos_pla, gold_tagmap=None):
+    """
+
+    :type pos_pla: POSEvalDict
+    """
+    matches = 0
+    compares = 0
+
+    # Iterate through each instance in the corpus.
+    for inst in xc:
+        gold_tag_tier = lang_tag_tier(inst, INTENT_POS_MANUAL)
+
+        # If there are no gold tags for this instance, skip it.
+        if gold_tag_tier is None:
+            continue
+
+        # Create the eval tag tier and retrieve it
+        tag_lang_pos(inst, e_tagger)
+        eval_tag_tier = lang_tag_tier(inst, INTENT_POS_TAGGER)
+
+        # For each gold tag...
+        for gold_tag in gold_tag_tier:
+
+            # Find it's matching tag on the eval side, and compare.
+            eval_tag = xigt_find(eval_tag_tier, alignment=gold_tag.alignment)
+            gold_tag_v = gold_tag.value()
+
+            if gold_tag_v is not None:
+                if gold_tagmap:
+                    try:
+                        gold_tag_v = gold_tagmap.get(gold_tag_v)
+                    except TagMapException:
+                        pass
+
+                if gold_tag_v != 'JUNK':
+                    if gold_tag_v == eval_tag.value():
+                        matches += 1
+                    compares += 1
+
+                pos_pla.add(gold_tag.value(), eval_tag.value())
+    return matches, compares
 
 
 def evaluate_pos_projections_on_file(lang, xc, plma, pos_proj_matrix, tagger, gold_tagmap=None, trans_tagmap=None):
