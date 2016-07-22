@@ -60,7 +60,7 @@ class ConfigFile(ArgPasser):
                 if refname in self:
                     string = string.replace(ref, self[refname])
 
-            string = string.replace('"', '')
+            # string = string.replace('"', '')
 
             #===================================================================
             # Attempt to evaluate the strings.
@@ -92,6 +92,11 @@ class ConfigFile(ArgPasser):
         for key in dict:
             self.set(key, dict[key], overwrite = False)
 
+    def getbool(self, key, default=None):
+        if self.get(key) is None:
+            return default
+        else:
+            return bool(self.get(key))
 
 #===============================================================================
 # Test Cases
