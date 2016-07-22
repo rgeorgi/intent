@@ -18,7 +18,7 @@ from intent.interfaces.stanford_parser import StanfordParser
 from intent.interfaces.stanford_tagger import StanfordPOSTagger
 from intent.pos.TagMap import TagMap
 from intent.trees import project_ps, project_ds, Terminal, DepEdge, build_dep_edges, IdTree, DepTree
-from intent.utils.env import c, tagger_model
+from intent.utils.env import c, tagger_model, g_t_dir, g_t_reverse_dir
 from intent.utils.token import Token
 from intent.consts import *
 from xigt.errors import XigtStructureError
@@ -868,7 +868,7 @@ def giza_align_t_g(xc, aligner=ALIGNER_GIZA, resume = True, use_heur = False, sy
         if resume:
             ALIGN_LOG.info('Using pre-saved giza alignment.')
             # Next, load up the saved gloss-trans giza alignment model
-            ga = GizaAligner.load(c.getpath('g_t_dir'))
+            ga = GizaAligner.load(g_t_dir)
 
             # ...and use it to align the gloss line to the translation line.
             g_t_alignments = ga.force_align(g_sents, t_sents)
@@ -876,7 +876,7 @@ def giza_align_t_g(xc, aligner=ALIGNER_GIZA, resume = True, use_heur = False, sy
             # If we are applying a symmetricization heuristic AND we are
             # forcing alignment, load the reverse model.
             if symmetric is not None:
-                ga_reverse = GizaAligner.load(c.getpath('g_t_reverse_dir'))
+                ga_reverse = GizaAligner.load(g_t_reverse_dir)
                 t_g_alignments = ga_reverse.force_align(t_sents, g_sents)
 
 
@@ -1250,6 +1250,17 @@ def tag_trans_pos(inst, tagger=None):
     # Add the generated pos tags to the tier.
     add_pos_tags(inst, trans(inst).id, trans_tags, tag_method=INTENT_POS_TAGGER)
     return trans_tags
+
+def tag_lang_pos(inst, tagger_model):
+    """
+    Run a language-line tagger on the language words and return the POS tags.
+
+    :type tagger_model: StanfordPOSTagger
+    :return:
+    """
+    lang_tags = [i.label for i in tagger_model.tag(tier_text(lang(inst)))]
+    add_pos_tags(inst, lang(inst).id, lang_tags, tag_method=INTENT_POS_TAGGER)
+    return lang_tags
 
 def classify_gloss_pos(inst, classifier_obj=None, **kwargs):
     """
@@ -1849,8 +1860,7 @@ def copy_xigt(obj, **kwargs):
 # Imports
 
 from .exceptions import *
-from .igtutils import *
-from .metadata import get_intent_method, get_word_level_info, set_intent_method, remove_word_level_info, \
+from .metadata import get_intent_method, set_intent_method, remove_word_level_info, \
     set_intent_proj_data
 from intent.alignment.Alignment import Alignment, heur_alignments, AlignmentError
 from intent.consts import *

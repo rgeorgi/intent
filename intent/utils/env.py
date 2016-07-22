@@ -127,26 +127,29 @@ def java_version_correct(v):
 
 java_error = False
 
-java_bin = c.getpath('java_bin') # Is the java binary specified in the config?
-
+java_conf_path = c.getpath('java_bin') # Is the java binary specified in the config?
+java_bin      = None
 # If not, look for it on the path.
-if java_bin is None:
+
+if java_conf_path is None:
     which_java = which('java')
     if which_java is None:
         ENV_LOG.critical('The java_bin is not specified in the config, and does not appear to be on the path.')
         java_error = True
     else:
         v = java_version(which_java)
+        java_bin = which_java
 else:
-    if not os.path.exists(java_bin):
-        ENV_LOG.critical('The path to the java executable "{}" specified in the config was not found.'.format(java_bin))
+    if not os.path.exists(java_conf_path):
+        ENV_LOG.critical('The path to the java executable "{}" specified in the config was not found.'.format(java_conf_path))
         java_error = True
     else:
-        v = java_version(java_bin)
+        java_bin = java_conf_path
+        v = java_version(java_conf_path)
 
 # If we haven't yet hit an error, check the version.
 if (not java_error) and (not java_version_correct(v)):
-    if java_bin is not None:
+    if java_conf_path is not None:
         ENV_LOG.critical('The path to java is specified in env.conf, but is not version 1.8.0 or higher.')
     else:
         ENV_LOG.critical('The installed java is not version 1.8.0 or higher. Install a newer version, or specify the path with "java_bin" in the config.')
@@ -198,6 +201,7 @@ ctn_xigt      = c.getpath('ctn_xigt')
 exp_dir       = c.getpath('exp_dir')
 USE_CONDOR    = c.getbool('use_condor', False)
 condor_email  = c.get('condor_email')
+class_dict    = c.get('classifiers', t=dict)
 
 # =============================================================================
 # Load the pickle when requested

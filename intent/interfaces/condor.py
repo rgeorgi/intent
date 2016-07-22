@@ -6,6 +6,7 @@ import subprocess
 import re
 
 import time
+from shutil import which
 
 vanilla = """Executable = %s
 Universe = vanilla
@@ -18,39 +19,37 @@ log = %s
 notification = %s
 initialdir = %s
 transfer_executable = false
-+Research = False
-requirements = (Memory > 1000)
++Research = True
 request_memory = 2*1024
 %s
 Queue"""
 
-def which(app):
-    p = subprocess.Popen(['which',app], stdout=subprocess.PIPE)
-    out = None
-    for line in p.stdout:
-        out = line.decode(encoding='utf-8').strip()
-    return out
 
 def condor_submit(file):
-    p = subprocess.Popen(['/condor/bin/condor_submit', file])
+    """
+    Submit a config file to condor.
 
-def create_parents(file):
-    p = subprocess.Popen(['mkdir','-p',file])
+    :param file:
+    """
+    p = subprocess.Popen([which('condor_submit'), file])
     p.wait()
-
 
 def condor_wait():
     while True:
-        p = subprocess.Popen(['/condor/bin/condor_q', getpass.getuser()], stdout=subprocess.PIPE)
+        p = subprocess.Popen([which('condor_q'), getpass.getuser()], stdout=subprocess.PIPE)
         p.wait()
-        result = p.stdout.read().decode(encoding='utf-8')
-        jobs_re = re.search('([0-9]+) jobs;', result)
-        num_jobs = int(jobs_re.group(1))
+        try:
+            result = p.stdout.read().decode(encoding='utf-8')
+            jobs_re = re.search('([0-9]+) jobs;', result)
+            num_jobs = int(jobs_re.group(1))
 
-        if num_jobs == 0:
-            break
-        else:
+            if num_jobs == 0:
+                break
+            else:
+                time.sleep(2)
+        except AttributeError:
             time.sleep(2)
+            pass
 
 def condor_wait_notify(body, email, subject="Condor Notification"):
     condor_wait()
@@ -73,7 +72,7 @@ def run_cmd(args, prefix, name, email = False, stdin = "", cwd = os.getcwd(), en
         env = 'environment="{}"'.format(env)
 
     # Create the directory for the prefix, if needed.
-    create_parents(prefix)
+    os.makedirs(prefix, exist_ok=True)
 
     # Now, make the commandline back into a string.
     arg_str = ''

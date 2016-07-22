@@ -24,8 +24,6 @@ ENRICH_LOG = logging.getLogger('ENRICH')
 from xigt.consts import INCREMENTAL
 
 
-def enrich_instance(**kwargs):
-    pass
 
 def enrich(**kwargs):
 

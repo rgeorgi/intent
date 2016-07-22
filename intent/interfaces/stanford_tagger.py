@@ -20,7 +20,8 @@ from intent.utils.ConfigFile import ConfigFile
 from intent.eval.pos_eval import slashtags_eval
 from intent.utils.token import tag_tokenizer, tokenize_string, Token, POSToken
 
-from intent.utils.env import c, tagger_dir, tagger_model, java_bin
+from intent.utils.env import tagger_dir, tagger_model, java_bin
+
 
 # Logging ----------------------------------------------------------------------
 TAG_LOG = logging.getLogger(__name__)
@@ -71,9 +72,21 @@ class StanfordPOSTagger(object):
         :param model: Path to the model file.
         :type model: str
         """
+        # -------------------------------------------
+        # Do some error checking.
+        # -------------------------------------------
         if tagger_dir is None:
             TAG_LOG.critical('Path to the stanford tagger .jar file is not defined.')
             raise TaggerError('Path to the stanford tagger .jar file is not defined.')
+
+        elif not os.path.exists(tagger_dir):
+            raise TaggerError('Path to the stanford tagger "{}" is not found.'.format(tagger_dir))
+
+
+        if java_bin is None:
+            raise TaggerError("Path to java bin is undefined!")
+        # -------------------------------------------
+
 
         other_jars = glob.glob(os.path.join(tagger_dir, 'lib/*.jar'))
 

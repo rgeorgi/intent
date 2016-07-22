@@ -290,3 +290,11 @@ SENT_TYPE_T_G = 'tg'
 SENT_TYPE_T_L = 'tl'
 
 NORM_LEVEL = 1000
+
+# -------------------------------------------
+# For reproduction
+# -------------------------------------------
+REPRO_DS       = 'ds'
+REPRO_POS_IGT  = 'pos-igt'
+REPRO_POS_MONO = 'pos-mono'
+REPRO_CHOICES = [REPRO_DS, REPRO_POS_IGT, REPRO_POS_MONO]

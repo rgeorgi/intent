@@ -3,10 +3,9 @@ from os import unlink
 from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
-from intent.alignment.Alignment import AlignmentError, Alignment, AlignedCorpus, AlignedSent
-from intent.utils.env import fast_align_bin, fast_align_atool
-from intent.utils.systematizing import piperunner, ProcessCommunicator
-import subprocess as sub
+from intent.alignment.Alignment import AlignmentError, Alignment
+from intent.utils.env import fast_align_bin
+from intent.utils.systematizing import ProcessCommunicator
 
 
 

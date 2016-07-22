@@ -26,6 +26,7 @@ CMD_ENRICH  = 'enrich'
 CMD_SPLIT   = 'split'
 CMD_EXTRACT = 'extract'
 CMD_TEXT    = 'text'
+CMD_REPRO   = 'repro'
 # =============================================================================
 
 
@@ -40,6 +41,7 @@ from intent.commands.evaluation import evaluate_intent
 from intent.commands.extraction import extract_from_xigt
 from intent.commands.enrich import enrich
 from intent.commands.project import do_projection
+from intent.reproduction import reproduce
 from intent.consts import *
 from intent.utils.listutils import flatten_list
 from xigt.codecs.xigtxml import dump
@@ -226,6 +228,16 @@ project_p.add_argument('--aln-method', dest='aln_method',
 project_p.add_argument('--completeness', dest='completeness',
                        type=float, default=0, help="Ratio of words which must be aligned in order to project an instance.")
 
+
+# =============================================================================
+# REPRO subcommand
+#
+# Command for reproducing results.
+# =============================================================================
+repro_p = register_subparser(CMD_REPRO, help='Series of commands for reproducing results in the dissertation.')
+
+repro_p.add_argument('action', choices=REPRO_CHOICES)
+
 # Parse the args. --------------------------------------------------------------
 try:
     args = main.parse_args()
@@ -279,6 +291,10 @@ elif args.subcommand == CMD_TEXT:
     xc = text_to_xigtxml(args.FILE)
     dump(args.OUT_FILE, xc)
 
+# PROJECT
 elif args.subcommand == CMD_PROJECT:
     do_projection(**vars(args))
 
+# REPRO
+elif args.subcommand == CMD_REPRO:
+    reproduce(args.action)

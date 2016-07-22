@@ -3,10 +3,7 @@ Created on Oct 24, 2013
 
 @author: rgeorgi
 """
-import os
-import re
-import sys
-import glob
+import os, re, glob
 
 def lc(fname):
     """
