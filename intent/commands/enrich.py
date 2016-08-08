@@ -27,7 +27,7 @@ from xigt.consts import INCREMENTAL
 
 def enrich(**kwargs):
 
-
+    global classifier
 
     if ARG_OUTFILE not in kwargs:
         ENRICH_LOG.critical("No output file specified.")
