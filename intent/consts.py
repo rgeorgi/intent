@@ -294,7 +294,8 @@ NORM_LEVEL = 1000
 # -------------------------------------------
 # For reproduction
 # -------------------------------------------
-REPRO_DS       = 'ds'
+REPRO_DS_IGT   = 'ds-igt'
+REPRO_DS_MONO  = 'ds-mono'
 REPRO_POS_IGT  = 'pos-igt'
 REPRO_POS_MONO = 'pos-mono'
-REPRO_CHOICES = [REPRO_DS, REPRO_POS_IGT, REPRO_POS_MONO]
+REPRO_CHOICES = [REPRO_DS_IGT, REPRO_DS_MONO, REPRO_POS_IGT, REPRO_POS_MONO]

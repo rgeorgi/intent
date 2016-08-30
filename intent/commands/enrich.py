@@ -38,8 +38,6 @@ def enrich(**kwargs):
     # =============================================================================
 
     class_path = kwargs.get('class_path')
-    if class_path:
-        classifier = mallet_maxent.MalletMaxent(class_path)
 
     #===========================================================================
     # Set up the different arguments...

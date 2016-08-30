@@ -114,7 +114,7 @@ c = 1
 d = False
 
 e = "quoted string"
-f = $e "also this"
+f = $e also this
 
         ''')
         self.nt.close()

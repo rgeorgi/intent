@@ -47,7 +47,7 @@ EVAL_LOG = logging.getLogger('EVAL')
 def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds=None, eval_posproj=None,
                     classifier_feats=CLASS_FEATS_DEFAULT,
                     eval_tagger=None,
-                    gold_tagmap=None, trans_tagmap=None):
+                    gold_tagmap=None, trans_tagmap=None, outpath=None):
     """
     Given a list of files that have manual POS tags and manual alignment,
     evaluate the various INTENT methods on that file.
@@ -59,6 +59,10 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
     :param eval_alignment:
     """
     tagger = StanfordPOSTagger(tagger_model)
+
+    outstream = sys.stdout
+    if outpath is not None:
+        outstream = open(outpath, mode='w', encoding='utf-8')
 
     # =============================================================================
     # Set up the objects to run as "servers"
@@ -91,7 +95,7 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
 
     # Go through all the files in the list...
     for f in filelist:
-        print('Evaluating on file: {}'.format(f))
+        outstream.write('Evaluating on file: {}\n'.format(f))
         xc = xc_load(f, mode=FULL)
         lang = os.path.basename(f)
 
@@ -101,7 +105,7 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
         if classifier_path is not None:
             matches, compares, acc = evaluate_classifier_on_instances(xc, classifier_obj, classifier_feats,
                                                                       pos_class_matrix, gold_tagmap=g_tm)
-            print('{},{},{},{:.2f}'.format(lang, matches, compares, acc))
+            outstream.write('{},{},{},{:.2f}\n'.format(lang, matches, compares, acc))
             class_matches += matches
             class_compares += compares
 
@@ -120,38 +124,40 @@ def evaluate_intent(filelist, classifier_path=None, eval_alignment=None, eval_ds
         # Test DS Projection if requested
         # -------------------------------------------
         if eval_ds:
-            evaluate_ds_projections_on_file(lang, xc, ds_plma)
-            print(ds_plma)
+            evaluate_ds_projections_on_file(lang, xc, ds_plma, outstream=outstream)
+            outstream.write('{}\n'.format(ds_plma))
 
         # -------------------------------------------
         #  Test POS Projection
         # -------------------------------------------
         if eval_posproj:
-            evaluate_pos_projections_on_file(lang, xc, pos_plma, pos_proj_matrix, tagger, gold_tagmap=g_tm, trans_tagmap=t_tm)
+            evaluate_pos_projections_on_file(lang, xc, pos_plma, pos_proj_matrix, tagger, gold_tagmap=g_tm, trans_tagmap=t_tm, outstream=outstream)
 
         if e_tagger is not None:
-            evaluate_lang_pos(lang, xc, e_tagger, pos_pla, gold_tagmap=g_tm)
+            evaluate_lang_pos(lang, xc, e_tagger, pos_pla, gold_tagmap=g_tm, outstream=outstream)
 
 
 
     if eval_alignment:
-        mas.eval_all()
+        mas.eval_all(outstream=outstream)
 
     if eval_ds:
-        print(ds_plma)
+        outstream.write('{}\n'.format(ds_plma))
 
     if e_tagger is not None:
-        print('{},{},{},{:.2f}'.format(lang, pos_pla.all_matches(), pos_pla.fulltotal(), pos_pla.accuracy()))
+        outstream.write('{},{},{},{:.2f}\n'.format(lang, pos_pla.all_matches(), pos_pla.fulltotal(), pos_pla.accuracy()))
         e_tagger.close()
 
     # Report the POS tagging accuracy...
     if classifier_path is not None:
-        print("ALL...")
-        print('{},{},{:.2f}'.format(class_matches, class_compares, class_matches/class_compares*100))
-        print(pos_class_matrix)
+        outstream.write("ALL...\n")
+        outstream.write('{},{},{:.2f}\n'.format(class_matches, class_compares, class_matches/class_compares*100))
+        outstream.write('{}\n'.format(pos_class_matrix))
 
     if eval_posproj:
-        print(pos_proj_matrix)
+        outstream.write('{}\n'.format(pos_proj_matrix))
+
+    outstream.close()
 
 
 class POSMatrix(object):
@@ -231,7 +237,7 @@ class POSMatrix(object):
         return ret_str
 
 
-def evaluate_lang_pos(lang, xc, e_tagger, pos_pla, gold_tagmap=None):
+def evaluate_lang_pos(lang, xc, e_tagger, pos_pla, gold_tagmap=None, outstream=sys.stdout):
     """
 
     :type pos_pla: POSEvalDict
@@ -274,7 +280,7 @@ def evaluate_lang_pos(lang, xc, e_tagger, pos_pla, gold_tagmap=None):
     return matches, compares
 
 
-def evaluate_pos_projections_on_file(lang, xc, plma, pos_proj_matrix, tagger, gold_tagmap=None, trans_tagmap=None):
+def evaluate_pos_projections_on_file(lang, xc, plma, pos_proj_matrix, tagger, gold_tagmap=None, trans_tagmap=None, outstream=sys.stdout):
     """
     :type plma: PerLangMethodAccuracies
     :type pos_proj_matrix: POSMatrix
@@ -340,7 +346,7 @@ def evaluate_pos_projections_on_file(lang, xc, plma, pos_proj_matrix, tagger, go
 
                 plma.add(lang, '{}:{}'.format(aln_method, trans_tag_method), matches, compares)
 
-    print(plma)
+    outstream.write('{}\n'.format(plma))
 
 
 
@@ -348,7 +354,7 @@ def evaluate_pos_projections_on_file(lang, xc, plma, pos_proj_matrix, tagger, go
 
     return new_xc
 
-def evaluate_ds_projections_on_file(lang, xc, plma):
+def evaluate_ds_projections_on_file(lang, xc, plma, outstream=sys.stdout):
     """
     :type plma: PerLangMethodAccuracies
     """
@@ -500,7 +506,7 @@ class MultAlignScorer(object):
 
             self.add_alignment(name, lang, inst.id, aln)
 
-    def eval_all(self):
+    def eval_all(self, outstream=sys.stdout):
         overall_dict = defaultdict(list)
 
         for method in self.methods:
@@ -522,14 +528,16 @@ class MultAlignScorer(object):
                 try:
                     ae = AlignEval(test_snts, gold_snts)
                 except AssertionError as ae:
-                    print("ERROR IN METHOD {}".format(method))
+                    sys.stderr.write("ERROR IN METHOD {}\n".format(method))
                     raise(ae)
-                print(','.join([lang,method]+[str(i) for i in ae.all()]))
+                outstream.write(','.join([lang,method]+[str(i) for i in ae.all()]))
+                outstream.write('\n')
 
                 overall_dict[method] += ae
 
         for method in self.methods:
-            print(','.join(['overall',method]+[str(i) for i in overall_dict[method].all()]))
+            outstream.write(','.join(['overall',method]+[str(i) for i in overall_dict[method].all()]))
+            outstream.write('\n')
 
 
 def evaluate_heuristic_methods_on_file(f, xc, mas, classifier_obj, tagger_obj, lang, pool=None, lock=None):

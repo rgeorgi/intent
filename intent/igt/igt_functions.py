@@ -1053,6 +1053,7 @@ def project_trans_pos_to_gloss(inst, aln_method=None, trans_tag_method=None, com
         # If it has been specified, see if it has higher precedence than the tag
         # that already exists and replace it if it does.
         elif g_tag.value() in precedence and t_tag.value() in precedence:
+            ALIGN_LOG.critical("Alert")
             old_index = precedence.index(g_tag.value())
             new_index = precedence.index(t_tag.value())
             if new_index < old_index:
