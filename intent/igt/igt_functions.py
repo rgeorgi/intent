@@ -363,19 +363,28 @@ def get_gloss_lang_alignment(inst):
     """
     return tier_alignment(gloss(inst))
 
+def get_glosses_morphs_alignment(inst):
+    """
+    Convenience method for getting the gloss-morph to lang-morph
+    token based alignment.
+    """
+    return tier_alignment(glosses(inst))
 
 
-def tier_alignment(tier: Tier):
+def tier_alignment(tier):
     """
     Return the alignment that is stored between items and their attributes (e.g. between morphemes
     and glosses).
+    :type tier: Tier[Item]
+    :rtype: Alignment
     """
     a = Alignment()
     for item in tier:
         if ALIGNMENT in item.attributes:
-            ia = item.attributes[ALIGNMENT]
-            aligned_w = xigt_find(tier.igt, id=ia)
-            a.add((item_index(item), item_index(aligned_w)))
+            align_ids = item.attributes[ALIGNMENT].split(',')
+            for aligned_id in align_ids:
+                aligned_item = xigt_find(tier.igt, id=aligned_id)
+                a.add((item_index(item), item_index(aligned_item)))
     return a
 
 def get_trans_gloss_lang_alignment(inst, aln_method=None):
@@ -1512,20 +1521,20 @@ def x_span_contains_y(x_spans, y_spans):
     return True
 
 
-def find_gloss_word(inst, morph):
+def find_gloss_word(inst, gloss_morph):
     """
     Find the gloss word to which this gloss morph is aligned. This will search the word-level "glosses" tier to
     find overlaps.
 
-    :param morph: Gloss line morph to find alignment for.
-    :type morph: RGMorph
+    :param gloss_morph: Gloss line morph to find alignment for.
+    :type gloss_morph: Item
 
     :rtype: RGWord
     """
 
     for g in gloss(inst):
 
-        if x_contains_y(inst, g, morph):
+        if x_contains_y(inst, g, gloss_morph):
             return g
 
     # If we reached this far, there is no gloss word that contains this
@@ -1667,17 +1676,23 @@ def morph_align(glosses_tier, morpheme_tier):
     """
     #TODO: FIXME: Morpheme alignment doesn't work if word alignment isn't done first! Maybe this restriction should be removed.
 
+
     # First, set the alignment...
     glosses_tier.alignment = morpheme_tier.id
 
     # Let's count up how many morphemes there are
     # for each word on the translation line...
     lang_word_dict = defaultdict(list)
+    gloss_word_dict = defaultdict(list)
 
     for morph in morpheme_tier:
         # Add this morpheme to the dictionary, so we can keep
         # count of how many morphemes align to a given word.
         lang_word_dict[find_lang_word(glosses_tier.igt, morph).id].append(morph)
+
+    # Also get an idea how many glosses exist per word.
+    for gloss in glosses_tier:
+        gloss_word_dict[find_gloss_word(glosses_tier.igt, gloss).id].append(gloss)
 
     # Now, iterate over our morphs.
     for i, gloss in enumerate(glosses_tier):
@@ -1690,8 +1705,14 @@ def morph_align(glosses_tier, morpheme_tier):
         aligned_lang_morphs = lang_word_dict[word_id]
 
         # If we don't have any aligned morphs,
-        # just skip.
-        if len(aligned_lang_morphs) >= 1:
+        # just skip, if we have one, assign it to
+        # all of the morphs in the aligned lang word.
+
+        if len(gloss_word_dict[gloss_word.id]) == 1:
+            gloss.alignment = ','.join([alm.id for alm in aligned_lang_morphs])
+
+
+        elif len(aligned_lang_morphs) >= 1:
             # If this isn't the last morph, try and see if we are
             # at a morpheme boundary...
             if i < len(glosses_tier)-1:
