@@ -148,12 +148,12 @@ else:
         v = java_version(java_conf_path)
 
 # If we haven't yet hit an error, check the version.
-if (not java_error) and (not java_version_correct(v)):
-    if java_conf_path is not None:
-        ENV_LOG.critical('The path to java is specified in env.conf, but is not version 1.8.0 or higher.')
-    else:
-        ENV_LOG.critical('The installed java is not version 1.8.0 or higher. Install a newer version, or specify the path with "java_bin" in the config.')
-    java_error = True
+# if (not java_error) and (not java_version_correct(v)):
+#     if java_conf_path is not None:
+#         ENV_LOG.critical('The path to java is specified in env.conf, but is not version 1.8.0 or higher.')
+#     else:
+#         ENV_LOG.critical('The installed java is not version 1.8.0 or higher. Install a newer version, or specify the path with "java_bin" in the config.')
+#     java_error = True
 
 # =============================================================================
 # Exit with notifications.

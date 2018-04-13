@@ -2,7 +2,7 @@ import sys
 
 from intent.igt.metadata import get_intent_method, get_word_level_info, add_word_level_info, remove_word_level_info
 from intent.utils.dicts import DefaultOrderedDict
-from xigt import Tier, Item
+from xigt import Tier, Item, Igt
 from xigt.consts import ALIGNMENT, SEGMENTATION, CONTENT
 
 from .exceptions import *
@@ -70,6 +70,19 @@ def _word_tier(inst, r_func, ex):
 
 def lang(inst) -> Tier:
     return _word_tier(inst, generate_lang_words, NoLangLineException)
+
+def has_tier(inst, tier_type, tier_id):
+    """:type inst: Igt"""
+    for t in inst.tiers:
+        if t.type == tier_type and t.id == tier_id:
+            return True
+    return False
+
+def has_lang(inst): return has_tier(inst, LANG_WORD_TYPE, LANG_WORD_ID)
+def has_trans(inst): return has_tier(inst, TRANS_WORD_TYPE, TRANS_WORD_ID)
+def has_gloss(inst): return has_tier(inst, GLOSS_WORD_TYPE, GLOSS_WORD_ID)
+def has_morphemes(inst): return has_tier(inst, LANG_MORPH_TYPE, LANG_MORPH_ID)
+def has_glosses(inst): return has_tier(inst, GLOSS_MORPH_TYPE, GLOSS_MORPH_ID)
 
 def gloss(inst) -> Tier:
     return _word_tier(inst, generate_gloss_words, NoGlossLineException)
